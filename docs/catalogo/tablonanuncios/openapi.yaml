@@ -1,0 +1,76 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - tablonanuncios"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/tablonanuncios/anuncio_delete":
+    post:
+      operationId: "post_tablonanuncios_anuncio_delete"
+      summary: "Anuncio Delete"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/tablonanuncios/api/anuncio_delete.md`
+      tags:
+        - "tablonanuncios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+                uuid_item:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

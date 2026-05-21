@@ -1,0 +1,42 @@
+---
+tipo: "ayuda_ia"
+subtipo: "pantalla"
+modulo: "certificados"
+titulo: "Certificado Recibido Pdf Download"
+pantalla: "certificados.pantalla.certificado_recibido_pdf_download"
+preguntas: ["Que se puede hacer en Certificado Recibido Pdf Download?", "Que campos tiene Certificado Recibido Pdf Download?", "Que acciones hay en Certificado Recibido Pdf Download?"]
+capacidades: []
+endpoints: ["/src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_download"]
+source: "docs/catalogo/certificados/pantallas/certificado_recibido_pdf_download.md"
+estado_revision: "generado"
+---
+
+# Ayuda IA Pantalla - Certificado Recibido Pdf Download
+
+## Resumen
+
+Descripcion funcional pendiente de revisar.
+
+## Uso En Ayuda
+
+Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos o sus acciones.
+
+## Campos Detectados
+
+- No hay campos detectados.
+
+## Acciones Detectadas
+
+- No hay acciones detectadas.
+
+## Capacidades Relacionadas
+
+- No hay capacidades relacionadas.
+
+## Endpoints Relacionados
+
+- `/src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_download`
+
+## Precauciones
+
+- Esta ficha puede contener nombres tecnicos. Para respuesta final, convertirlos a lenguaje de usuario cuando sea posible.

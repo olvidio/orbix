@@ -49,6 +49,12 @@ php docs/scripts/generar_api_modulo_md.php actividadtarifas --output=docs/catalo
 
 El contenido generado es una primera version: extrae rutas, parametros, respuesta y referencias frontend, pero requiere revision manual para completar objetivo funcional, permisos, efectos y ejemplos reales.
 
+Convenciones transversales: [`docs/catalogo/_convenciones_api.md`](../catalogo/_convenciones_api.md).
+
+El generador enriquece cada ficha con datos del application layer (`execute`/`build`): campos de entrada, obligatoriedad, errores, forma de respuesta, HashB y efectos colaterales. Campos nuevos en el front matter: `operacion`, `entrada_obligatoria`, `respuesta_data`, `respuesta_data_schema`, `requiere_hashb`, `errores`.
+
+Los pasos posteriores (capacidades, flujos, manual, ayuda IA) propagan objetivos funcionales, errores conocidos y permisos inferidos desde el catalogo API.
+
 ## Generar Capacidades Desde El Catalogo API
 
 ```bash

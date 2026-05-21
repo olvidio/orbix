@@ -19,11 +19,13 @@ paths:
       description: |
         Endpoint backend: elimina una `RelacionTarifaTipoActividad`.
         
+        Operacion: `mutacion`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/relacion_tarifa_eliminar.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -51,11 +53,13 @@ paths:
       description: |
         Endpoint backend: datos del formulario modificar/nuevo de `RelacionTarifaTipoActividad`.
         
+        Operacion: `form_data`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/relacion_tarifa_form_data.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -69,19 +73,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_RelacionTarifaFormDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_RelacionTarifaFormDataDataResponse"
   "/src/actividadtarifas/relacion_tarifa_lista_data":
     post:
       operationId: "post_actividadtarifas_relacion_tarifa_lista_data"
       summary: "Relacion Tarifa Lista Data"
       description: |
         Endpoint backend: listado de relaciones tarifa ↔ tipo actividad.
+        
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/relacion_tarifa_lista_data.md`
       tags:
@@ -102,13 +108,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_RelacionTarifaListaDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_RelacionTarifaListaDataDataResponse"
   "/src/actividadtarifas/relacion_tarifa_update":
     post:
       operationId: "post_actividadtarifas_relacion_tarifa_update"
@@ -116,11 +122,13 @@ paths:
       description: |
         Endpoint backend: crea o actualiza una `RelacionTarifaTipoActividad`.
         
+        Operacion: `mutacion`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/relacion_tarifa_update.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -152,18 +160,28 @@ paths:
       description: |
         Endpoint backend: copiar tarifas del año anterior.
         
+        Requiere cápsula HashB en `ctx_copiar` (accion `tarifa_ubi_copiar`).
+        
+        Operacion: `mutacion`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tarifa_ubi_copiar.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx_copiar"
               properties:
                 ctx_copiar:
                   type: "string"
+                id_ubi:
+                  type: "integer"
+                year:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -184,18 +202,26 @@ paths:
       description: |
         Endpoint backend: elimina una `TarifaUbi`.
         
+        Requiere cápsula HashB en `ctx_eliminar` (accion `tarifa_ubi_eliminar`).
+        
+        Operacion: `mutacion`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tarifa_ubi_eliminar.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx_eliminar"
               properties:
                 ctx_eliminar:
                   type: "string"
+                id_item:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -216,11 +242,13 @@ paths:
       description: |
         Endpoint backend: datos del formulario modificar/nuevo de `TarifaUbi`.
         
+        Operacion: `form_data`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tarifa_ubi_form_data.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -240,13 +268,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_TarifaUbiFormDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_TarifaUbiFormDataDataResponse"
   "/src/actividadtarifas/tarifa_ubi_lista_data":
     post:
       operationId: "post_actividadtarifas_tarifa_ubi_lista_data"
@@ -254,11 +282,13 @@ paths:
       description: |
         Endpoint backend: listado de `TarifaUbi` por `id_ubi` + `year`.
         
+        Operacion: `lista_data`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tarifa_ubi_lista_data.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -274,13 +304,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_TarifaUbiListaDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_TarifaUbiListaDataDataResponse"
   "/src/actividadtarifas/tarifa_ubi_update":
     post:
       operationId: "post_actividadtarifas_tarifa_ubi_update"
@@ -288,26 +318,38 @@ paths:
       description: |
         Endpoint backend: crea o actualiza una `TarifaUbi`.
         
+        Requiere cápsula HashB en `ctx_update` (accion `tarifa_ubi_update`).
+        
+        Operacion: `mutacion`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tarifa_ubi_update.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "ctx_update"
               properties:
                 cantidad:
                   type: "string"
                 ctx_update:
                   type: "string"
+                id_item:
+                  type: "integer"
                 id_serie:
                   type: "integer"
                 id_tarifa:
                   type: "integer"
+                id_ubi:
+                  type: "integer"
                 observ:
                   type: "string"
+                year:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -328,11 +370,13 @@ paths:
       description: |
         Endpoint backend: actualiza en lote las cantidades de varias `TarifaUbi` desde el estudio economico de casa.
         
+        Operacion: `mutacion`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tarifa_ubi_update_inc.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -362,11 +406,13 @@ paths:
       description: |
         Endpoint backend: elimina un `TipoTarifa`.
         
+        Operacion: `mutacion`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tipo_tarifa_eliminar.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -394,11 +440,13 @@ paths:
       description: |
         Endpoint backend: datos del formulario modificar/nuevo de `TipoTarifa`.
         
+        Operacion: `form_data`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tipo_tarifa_form_data.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -412,19 +460,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_TipoTarifaFormDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_TipoTarifaFormDataDataResponse"
   "/src/actividadtarifas/tipo_tarifa_lista_data":
     post:
       operationId: "post_actividadtarifas_tipo_tarifa_lista_data"
       summary: "Tipo Tarifa Lista Data"
       description: |
         Endpoint backend: listado del catalogo de tipos de tarifa.
+        
+        Operacion: `lista_data`.
         
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tipo_tarifa_lista_data.md`
       tags:
@@ -445,13 +495,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_TipoTarifaListaDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadtarifas_TipoTarifaListaDataDataResponse"
   "/src/actividadtarifas/tipo_tarifa_update":
     post:
       operationId: "post_actividadtarifas_tipo_tarifa_update"
@@ -459,11 +509,13 @@ paths:
       description: |
         Endpoint backend: crea o actualiza un `TipoTarifa`.
         
+        Operacion: `mutacion`.
+        
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tipo_tarifa_update.md`
       tags:
         - "actividadtarifas"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -497,6 +549,184 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    actividadtarifas_RelacionTarifaFormDataData:
+      type: object
+      properties:
+        es_nuevo:
+          type: "boolean"
+        id_item:
+          type: "string"
+        id_tipo_activ:
+          type: "integer"
+        nom_tipo_activ:
+          type: "string"
+        isfsv:
+          type: "integer"
+        id_tarifa_sel:
+          type: "integer"
+        opciones_tarifa:
+          type: array
+          items: {}
+    actividadtarifas_RelacionTarifaFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadtarifas_RelacionTarifaFormDataData"
+    actividadtarifas_RelacionTarifaListaDataData:
+      type: object
+      properties:
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
+        puede_anadir:
+          type: "boolean"
+    actividadtarifas_RelacionTarifaListaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadtarifas_RelacionTarifaListaDataData"
+    actividadtarifas_TarifaUbiFormDataData:
+      type: object
+      properties:
+        es_nuevo:
+          type: "boolean"
+        id_item:
+          type: "string"
+        id_ubi:
+          type: "integer"
+        year:
+          type: "integer"
+        letra:
+          type: "string"
+        cantidad:
+          type: "string"
+        opciones_tarifa:
+          type: array
+          items: {}
+        opciones_serie:
+          type: array
+          items: {}
+        id_serie_sel:
+          type: "integer"
+        token_update:
+          type: "string"
+        token_eliminar:
+          type: "string"
+    actividadtarifas_TarifaUbiFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadtarifas_TarifaUbiFormDataData"
+    actividadtarifas_TarifaUbiListaDataData:
+      type: object
+      properties:
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
+        any_anterior:
+          type: "integer"
+        any_actual:
+          type: "integer"
+        puede_anadir:
+          type: "boolean"
+        id_ubi:
+          type: "integer"
+        year:
+          type: "integer"
+        token_copiar:
+          type: "string"
+    actividadtarifas_TarifaUbiListaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadtarifas_TarifaUbiListaDataData"
+    actividadtarifas_TipoTarifaFormDataData:
+      type: object
+      properties:
+        id_tarifa:
+          type: "string"
+        es_nuevo:
+          type: "boolean"
+        letra:
+          type: "string"
+        modo:
+          type: "integer"
+        observ:
+          type: "string"
+        opciones_modo:
+          type: array
+          items: {}
+    actividadtarifas_TipoTarifaFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadtarifas_TipoTarifaFormDataData"
+    actividadtarifas_TipoTarifaListaDataData:
+      type: object
+      properties:
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
+        puede_editar:
+          type: "boolean"
+        puede_anadir:
+          type: "boolean"
+    actividadtarifas_TipoTarifaListaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadtarifas_TipoTarifaListaDataData"
     OrbixStandardResponseStringData:
       type: object
       required:

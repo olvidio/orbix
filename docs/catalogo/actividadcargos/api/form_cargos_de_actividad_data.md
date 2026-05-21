@@ -4,9 +4,12 @@ tipo: "endpoint"
 modulo: "actividadcargos"
 url: "/src/actividadcargos/form_cargos_de_actividad_data"
 metodos: ["GET", "POST"]
+operacion: "mutacion"
 controller: "src/actividadcargos/infrastructure/ui/http/controllers/form_cargos_de_actividad_data.php"
-entrada: []
+entrada: ["post.id_dossier:integer", "post.id_nom:integer", "post.id_pau:integer", "post.mod:string", "post.obj_pau:string", "post.pau:string", "post.permiso:string", "post.sel:mixed"]
+entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+requiere_hashb: false
 frontend_referencias: ["frontend/actividadcargos/controller/form_cargos_de_actividad.php"]
 casos_uso: ["src\\actividadcargos\\application\\FormCargosDeActividadData"]
 tags: ["actividadcargos", "form", "cargos", "de", "actividad", "data"]
@@ -15,26 +18,39 @@ estado_revision: "generado"
 
 # Form Cargos De Actividad Data
 
-Descripcion funcional pendiente de revisar.
+Datos para `form_cargos_de_actividad`. Los desplegables se construyen en el front ({
+
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Endpoint
 
 - URL: `/src/actividadcargos/form_cargos_de_actividad_data`
 - Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
 - Controller: `src/actividadcargos/infrastructure/ui/http/controllers/form_cargos_de_actividad_data.php`
 
-## Entrada Inferida
+## Entrada
 
-No se han detectado parametros individuales mediante `filter_input`, `$_POST[...]` o `$_GET[...]`.
-- Nota: el controller usa `$_POST` directamente; revisar si acepta mas campos que los listados.
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_dossier` | `integer` | application | No | application |
+| `id_nom` | `integer` | application | No | application |
+| `id_pau` | `integer` | application | No | application |
+| `mod` | `string` | application | No | application |
+| `obj_pau` | `string` | application | No | application |
+| `pau` | `string` | application | No | application |
+| `permiso` | `string` | application | No | application |
+| `sel` | `mixed` | application | No | application |
 
-## Salida Inferida
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
+## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Evidencia: `$error, $result`
+- Exito: `success: true`, `data: "ok"`.
 
-## Casos De Uso Detectados
+## Casos De Uso
 
 - `src\actividadcargos\application\FormCargosDeActividadData`
 
@@ -44,8 +60,6 @@ No se han detectado parametros individuales mediante `filter_input`, `$_POST[...
 
 ## Revision Manual
 
-- Completar objetivo funcional.
-- Confirmar permisos/autorizacion.
-- Confirmar efectos sobre datos.
+- Confirmar permisos/autorizacion de oficina.
 - Anadir ejemplos reales de request/response.
-- Marcar procesos parecidos o duplicados si aplica.
+- Marcar `estado_revision: "revisado"` cuando este validado.

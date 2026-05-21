@@ -1,0 +1,370 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - dossiers"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/dossiers/dossiers_lista_fichas_data":
+    post:
+      operationId: "post_dossiers_dossiers_lista_fichas_data"
+      summary: "Dossiers Lista Fichas Data"
+      description: |
+        Filas de la tabla de relación de dossiers (modo lista en dossiers_ver). `href_ver` / `href_abrir` se firman en el borde HTTP (ver `dossiers_lista_fichas_data.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dossiers/api/dossiers_lista_fichas_data.md`
+      tags:
+        - "dossiers"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_pau:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                pau:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dossiers_DossiersListaFichasDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dossiers_DossiersListaFichasDataDataResponse"
+  "/src/dossiers/dossiers_ver_pantalla_data":
+    post:
+      operationId: "post_dossiers_dossiers_ver_pantalla_data"
+      summary: "Dossiers Ver Pantalla Data"
+      description: |
+        Cuerpo de dossiers_ver: datos de cabecera + lista o ficha. El backend NO firma URLs: devuelve `*_link_spec` ({path, query}) que firma el frontend. En modo ficha, `ficha_segmentos` mezcla: - Segmentos `html` ya generados por los `Select_*` (TODO: refactorizar para que tampoco lleven HTML/HashFront desde `src/`). - Segmentos `datos_tabla` con datos puros (`action_tabla_link_spec`, `ins_traslado_link_spec`, `script_ctx`, `hash`, `tabla`, `permiso`) que el frontend compone con HashFront, Lista y el script JS de `DatosTablaRepo`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dossiers/api/dossiers_ver_pantalla_data.md`
+      tags:
+        - "dossiers"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clase_info:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_dossier:
+                  type: "string"
+                id_pau:
+                  type: "integer"
+                mod:
+                  type: "string"
+                modo_curso:
+                  type: "integer"
+                obj_pau:
+                  type: "string"
+                pau:
+                  type: "string"
+                permiso:
+                  type: "string"
+                que:
+                  type: "string"
+                queSel:
+                  type: "string"
+                refresh:
+                  type: "integer"
+                restored_id_sel:
+                  type: "string"
+                restored_scroll_id:
+                  type: "integer"
+                scroll_id:
+                  type: "integer"
+                sel:
+                  type: "string"
+                stack:
+                  type: "string"
+                stack_actual:
+                  type: "integer"
+                todos:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dossiers_DossiersVerPantallaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dossiers_DossiersVerPantallaDataDataResponse"
+  "/src/dossiers/perm_dossier_ver_data":
+    post:
+      operationId: "post_dossiers_perm_dossier_ver_data"
+      summary: "Perm Dossier Ver Data"
+      description: |
+        Formulario "permisos de acceso" para un tipo de dossier. El backend devuelve sólo datos: - `go_to_link_spec` ({path, query}) para que el frontend firme con HashFront. - `hash_config` (campos_form, campos_no, campos_hidden) para que el frontend componga el bloque hidden con HashFront; el valor de `go_to` dentro de `campos_hidden` se inyecta firmado en el borde del frontend. - `permiso_dossier_bit_map` + enteros `permiso_lectura` / `permiso_escritura`; el HTML de checkboxes lo genera el controlador frontend con {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dossiers/api/perm_dossier_ver_data.md`
+      tags:
+        - "dossiers"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tipo_dossier:
+                  type: "string"
+                tipo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dossiers/perm_dossiers_data":
+    post:
+      operationId: "post_dossiers_perm_dossiers_data"
+      summary: "Perm Dossiers Data"
+      description: |
+        Listado de tipos de dossier para pantalla de permisos. `pagina_link_spec` se firma en `perm_dossiers_data.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dossiers/api/perm_dossiers_data.md`
+      tags:
+        - "dossiers"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                tipo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dossiers_PermDossiersListaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dossiers_PermDossiersListaDataDataResponse"
+  "/src/dossiers/tipo_dossier_eliminar":
+    post:
+      operationId: "post_dossiers_tipo_dossier_eliminar"
+      summary: "Tipo Dossier Eliminar"
+      description: |
+        Elimina un `TipoDossier`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dossiers/api/tipo_dossier_eliminar.md`
+      tags:
+        - "dossiers"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tipo_dossier:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dossiers/tipo_dossier_guardar":
+    post:
+      operationId: "post_dossiers_tipo_dossier_guardar"
+      summary: "Tipo Dossier Guardar"
+      description: |
+        Guarda los cambios a un `TipoDossier`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dossiers/api/tipo_dossier_guardar.md`
+      tags:
+        - "dossiers"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                Permiso_escritura:
+                  type: "array"
+                  items:
+                    type: string
+                Permiso_lectura:
+                  type: "array"
+                  items:
+                    type: string
+                app:
+                  type: "string"
+                campo_to:
+                  type: "string"
+                class:
+                  type: "string"
+                codigo:
+                  type: "string"
+                depende_modificar:
+                  type: "string"
+                descripcion:
+                  type: "string"
+                id_tipo_dossier:
+                  type: "integer"
+                id_tipo_dossier_rel:
+                  type: "integer"
+                tabla_from:
+                  type: "string"
+                tabla_to:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    dossiers_DossiersListaFichasDataData:
+      type: object
+      properties:
+        a_filas:
+          type: "string"
+    dossiers_DossiersListaFichasDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/dossiers_DossiersListaFichasDataData"
+    dossiers_DossiersVerPantallaDataData:
+      type: object
+      properties:
+        top_data:
+          type: array
+          items: {}
+        modo:
+          type: "string"
+    dossiers_DossiersVerPantallaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/dossiers_DossiersVerPantallaDataData"
+    dossiers_PermDossiersListaDataData:
+      type: object
+      properties:
+        a_filas:
+          type: "string"
+    dossiers_PermDossiersListaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/dossiers_PermDossiersListaDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

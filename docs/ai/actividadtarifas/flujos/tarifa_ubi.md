@@ -99,8 +99,22 @@ Referencias tecnicas para verificar la respuesta:
 - `actividadtarifas.pantalla.tarifa_ubi_form`
 - `actividadtarifas.pantalla.tarifa_ubi_lista`
 
+## Objetivo
+
+Gestiona TarifaUbi. actualiza en lote las cantidades de varias TarifaUbi desde el estudio economico de casa. copiar tarifas del año anterior. crea o actualiza una TarifaUbi. datos del formulario modificar/nuevo de TarifaUbi. elimina una TarifaUbi. listado de TarifaUbi por id_ubi + year.
+
+## Errores Documentados
+
+- `Operación no autorizada`
+- `función de copiar tarifas pendiente de reimplementar`
+- `hay un error, no se ha borrado`
+- `hay un error, no se ha guardado`
+- `no se encuentra la tarifa`
+- `no sé cuál he de borrar`
+- `no sé qué casa/año tengo que copiar`
+
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

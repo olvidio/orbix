@@ -4,7 +4,7 @@ modulo: "actividadtarifas"
 pantallas: 9
 endpoints_api: 14
 capacidades: 3
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Relacion Pantallas API - actividadtarifas
@@ -296,10 +296,14 @@ Pantallas via capacidad:
 ## Alertas De Revision
 
 Endpoints sin pantalla directa detectada:
-- `/src/actividadtarifas/tarifa_ubi_update_inc`
+- `/src/actividadtarifas/tarifa_ubi_update_inc` — **resuelto**: consumido desde `frontend/casas/controller/calendario_ubi_resumen.php` (modulo `casas`). Ver `relaciones/modulos_relacionados.md`.
 
 Endpoints sin pantalla directa ni capacidad relacionada:
-- Ninguno.
+- Ninguno — los endpoints listados arriba se consumen via AJAX, forms `.phtml`/`.twig` o login; ver `docs/REPASSO_FINAL.md` § B.
+
+## Revision Manual
+
+- Repaso 2026-05-21: huerfanos aceptados como patron normal Orbix (PostRequest / fetch desde vista).
 
 ## Revision Manual
 

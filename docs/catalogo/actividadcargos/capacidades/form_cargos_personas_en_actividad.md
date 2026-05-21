@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `form
 
 ## Objetivo Funcional
 
-Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad.
+Gestiona FormCargosPersonasEnActividad. Datos para form_cargos_personas_en_actividad (vista por persona).
 
 ## Acciones Detectadas
 
@@ -38,7 +38,11 @@ Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad
 
 ## Pistas Desde Endpoints
 
-- Descripcion funcional pendiente de revisar.
+- Datos para `form_cargos_personas_en_actividad` (vista por persona).
+
+## Errores Conocidos
+
+No se han agregado errores desde el catalogo API.
 
 ## Revision Manual
 

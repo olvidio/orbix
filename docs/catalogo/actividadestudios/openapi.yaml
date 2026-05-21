@@ -1,0 +1,1452 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - actividadestudios"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/actividadestudios/acta_notas_data":
+    post:
+      operationId: "post_actividadestudios_acta_notas_data"
+      summary: "Acta Notas Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/acta_notas_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "string"
+                id_asignatura:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_ActaNotasDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_ActaNotasDataDataResponse"
+  "/src/actividadestudios/acta_notas_definitivas_grabar":
+    post:
+      operationId: "post_actividadestudios_acta_notas_definitivas_grabar"
+      summary: "Acta Notas Definitivas Grabar"
+      description: |
+        Convierte las matriculas/notas borrador en `PersonaNota` definitivas (rama `que=3` del legacy `apps/actividadestudios/controller/acta_notas_update.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/acta_notas_definitivas_grabar.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_asignatura:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/acta_notas_matricula_guardar":
+    post:
+      operationId: "post_actividadestudios_acta_notas_matricula_guardar"
+      summary: "Acta Notas Matricula Guardar"
+      description: |
+        Guarda el borrador de notas sobre cada matricula (rama `que=1` del legacy `apps/actividadestudios/controller/acta_notas_update.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/acta_notas_matricula_guardar.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                acta_nota:
+                  type: "array"
+                  items:
+                    type: string
+                form_preceptor:
+                  type: "array"
+                  items:
+                    type: string
+                id_activ:
+                  type: "integer"
+                id_asignatura:
+                  type: "integer"
+                id_nom:
+                  type: "array"
+                  items:
+                    type: string
+                nota_max:
+                  type: "array"
+                  items:
+                    type: string
+                nota_num:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/actividad_asignatura_editar":
+    post:
+      operationId: "post_actividadestudios_actividad_asignatura_editar"
+      summary: "Actividad Asignatura Editar"
+      description: |
+        Edita una `ActividadAsignatura` existente. Sustituye al case `editar` del antiguo `update_3005.php` dispatcher.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/actividad_asignatura_editar.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                avis_profesor:
+                  type: "string"
+                f_fin:
+                  type: "string"
+                f_ini:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_asignatura:
+                  type: "integer"
+                id_profesor:
+                  type: "integer"
+                tipo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/actividad_asignatura_eliminar":
+    post:
+      operationId: "post_actividadestudios_actividad_asignatura_eliminar"
+      summary: "Actividad Asignatura Eliminar"
+      description: |
+        Elimina una `ActividadAsignatura` (asignatura impartida en un ca). Sustituye al case `eliminar` del antiguo `update_3005.php` dispatcher.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/actividad_asignatura_eliminar.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_asignatura:
+                  type: "integer"
+                pau:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/actividad_asignatura_nueva":
+    post:
+      operationId: "post_actividadestudios_actividad_asignatura_nueva"
+      summary: "Actividad Asignatura Nueva"
+      description: |
+        Crea una `ActividadAsignatura` (asignatura impartida en un ca) y abre el dossier 3005 de la actividad. Sustituye al case `nuevo` del antiguo `update_3005.php` dispatcher.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/actividad_asignatura_nueva.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                avis_profesor:
+                  type: "string"
+                f_fin:
+                  type: "string"
+                f_ini:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_asignatura:
+                  type: "integer"
+                id_profesor:
+                  type: "integer"
+                tipo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/asistente_observ":
+    post:
+      operationId: "post_actividadestudios_asistente_observ"
+      summary: "Asistente Observ"
+      description: |
+        Guarda el texto `observ` de un Asistente. Sustituye al case `observ` de `update_3103.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/asistente_observ.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                observ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/asistente_observ_est":
+    post:
+      operationId: "post_actividadestudios_asistente_observ_est"
+      summary: "Asistente Observ Est"
+      description: |
+        Guarda el texto `observ_est` de un Asistente (persona en una actividad de estudios). Sustituye al case `observ_est` de `update_3103.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/asistente_observ_est.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                observ_est:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/asistente_plan_est_ok":
+    post:
+      operationId: "post_actividadestudios_asistente_plan_est_ok"
+      summary: "Asistente Plan Est Ok"
+      description: |
+        Marca el flag `est_ok` (plan de estudios confirmado) de un Asistente. Sustituye al case `plan` de `update_3103.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/asistente_plan_est_ok.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                est_ok:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/ca_posibles_data":
+    post:
+      operationId: "post_actividadestudios_ca_posibles_data"
+      summary: "Ca Posibles Data"
+      description: |
+        Misma lógica que `frontend/.../ca_posibles.php`; respuesta serializable. En modo `lista`, `pagina_link_spec` lo firma el front ({
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/ca_posibles_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ca_estudios:
+                  type: "string"
+                ca_repaso:
+                  type: "string"
+                ca_todos:
+                  type: "string"
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                grupo_estudios:
+                  type: "string"
+                id_ctr_agd:
+                  type: "integer"
+                id_ctr_n:
+                  type: "integer"
+                idca:
+                  type: "string"
+                na:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                periodo:
+                  type: "string"
+                ref:
+                  type: "string"
+                sel:
+                  type: "string"
+                texto:
+                  type: "string"
+                year:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/ca_posibles_que_data":
+    post:
+      operationId: "post_actividadestudios_ca_posibles_que_data"
+      summary: "Ca Posibles Que Data"
+      description: |
+        Desplegables y texto de grupo para `ca_posibles_que.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/ca_posibles_que_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_CaPosiblesQueDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_CaPosiblesQueDataDataResponse"
+  "/src/actividadestudios/docencia_actualizar":
+    post:
+      operationId: "post_actividadestudios_docencia_actualizar"
+      summary: "Docencia Actualizar"
+      description: |
+        Ejecuta {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/docencia_actualizar.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                periodo:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/e43_data":
+    post:
+      operationId: "post_actividadestudios_e43_data"
+      summary: "E43 Data"
+      description: |
+        Datos certificado E43 (pantalla e imprimible).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/e43_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "string"
+                id_nom:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_E43CertificadoDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_E43CertificadoDataDataResponse"
+  "/src/actividadestudios/e43_imprimir_mpdf_data":
+    post:
+      operationId: "post_actividadestudios_e43_imprimir_mpdf_data"
+      summary: "E43 Imprimir Mpdf Data"
+      description: |
+        Datos certificado E43 (pantalla e imprimible).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/e43_imprimir_mpdf_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "string"
+                id_nom:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_E43CertificadoDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_E43CertificadoDataDataResponse"
+  "/src/actividadestudios/form_asignaturas_de_una_actividad_data":
+    post:
+      operationId: "post_actividadestudios_form_asignaturas_de_una_actividad_data"
+      summary: "Form Asignaturas De Una Actividad Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/form_asignaturas_de_una_actividad_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "string"
+                id_asignatura:
+                  type: "string"
+                id_pau:
+                  type: "string"
+                pau:
+                  type: "string"
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_FormAsignaturasDeUnaActividadDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_FormAsignaturasDeUnaActividadDataDataResponse"
+  "/src/actividadestudios/form_matriculas_de_una_persona_data":
+    post:
+      operationId: "post_actividadestudios_form_matriculas_de_una_persona_data"
+      summary: "Form Matriculas De Una Persona Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/form_matriculas_de_una_persona_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "string"
+                id_asignatura:
+                  type: "string"
+                id_pau:
+                  type: "string"
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_FormMatriculasDeUnaPersonaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_FormMatriculasDeUnaPersonaDataDataResponse"
+  "/src/actividadestudios/lista_clases_ca_data":
+    post:
+      operationId: "post_actividadestudios_lista_clases_ca_data"
+      summary: "Lista Clases Ca Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/lista_clases_ca_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_ListaClasesCaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_ListaClasesCaDataDataResponse"
+  "/src/actividadestudios/matricula_automatica":
+    post:
+      operationId: "post_actividadestudios_matricula_automatica"
+      summary: "Matricula Automatica"
+      description: |
+        Matricula masivamente a una o varias personas en las asignaturas del plan de estudios de su actividad vigente.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/matricula_automatica.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/matricula_editar":
+    post:
+      operationId: "post_actividadestudios_matricula_editar"
+      summary: "Matricula Editar"
+      description: |
+        Edita una matricula.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/matricula_editar.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_asignatura:
+                  type: "integer"
+                id_nivel:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                id_preceptor:
+                  type: "integer"
+                id_situacion:
+                  type: "integer"
+                preceptor:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/matricula_eliminar":
+    post:
+      operationId: "post_actividadestudios_matricula_eliminar"
+      summary: "Matricula Eliminar"
+      description: |
+        Elimina una o varias matriculas.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/matricula_eliminar.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_asignatura:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                pau:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/matricula_nueva":
+    post:
+      operationId: "post_actividadestudios_matricula_nueva"
+      summary: "Matricula Nueva"
+      description: |
+        Crea una matricula.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/matricula_nueva.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_asignatura:
+                  type: "integer"
+                id_nivel:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                id_preceptor:
+                  type: "integer"
+                id_situacion:
+                  type: "integer"
+                preceptor:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadestudios/matriculas_lista_data":
+    post:
+      operationId: "post_actividadestudios_matriculas_lista_data"
+      summary: "Matriculas Lista Data"
+      description: |
+        Listado de matrículas en un intervalo de fechas (actividades cuyo `f_ini` cae en el periodo). Usado por `matriculas_lista` vía PostRequest.
+        
+        Operacion: `lista_data`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/matriculas_lista_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                finIso:
+                  type: "string"
+                inicioIso:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_MatriculasListaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_MatriculasListaDataDataResponse"
+  "/src/actividadestudios/matriculas_lista_otras_r_data":
+    post:
+      operationId: "post_actividadestudios_matriculas_lista_otras_r_data"
+      summary: "Matriculas Lista Otras R Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/matriculas_lista_otras_r_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                apellido1:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_MatriculasListaOtrasRDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_MatriculasListaOtrasRDataDataResponse"
+  "/src/actividadestudios/matriculas_pendientes_data":
+    post:
+      operationId: "post_actividadestudios_matriculas_pendientes_data"
+      summary: "Matriculas Pendientes Data"
+      description: |
+        Filas para `frontend/actividadestudios/controller/matriculas_pendientes.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/matriculas_pendientes_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_MatriculasPendientesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_MatriculasPendientesDataDataResponse"
+  "/src/actividadestudios/plan_estudios_ca_data":
+    post:
+      operationId: "post_actividadestudios_plan_estudios_ca_data"
+      summary: "Plan Estudios Ca Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/plan_estudios_ca_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_PlanEstudiosCaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_PlanEstudiosCaDataDataResponse"
+  "/src/actividadestudios/posibles_asignaturas_ca_data":
+    post:
+      operationId: "post_actividadestudios_posibles_asignaturas_ca_data"
+      summary: "Posibles Asignaturas Ca Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/posibles_asignaturas_ca_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "string"
+                nom_activ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_PosiblesAsignaturasCaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadestudios_PosiblesAsignaturasCaDataDataResponse"
+  "/src/actividadestudios/profesores_desplegable_data":
+    post:
+      operationId: "post_actividadestudios_profesores_desplegable_data"
+      summary: "Profesores Desplegable Data"
+      description: |
+        Devuelve JSON con los datos para construir el desplegable de profesores.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadestudios/api/profesores_desplegable_data.md`
+      tags:
+        - "actividadestudios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_asignatura:
+                  type: "integer"
+                salida:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    actividadestudios_ActaNotasDataData:
+      type: object
+      properties:
+        msg_err:
+          type: "string"
+        permiso:
+          type: "integer"
+        nom_activ:
+          type: "string"
+        matriculados:
+          type: "integer"
+        matriculas_rows:
+          type: "string"
+        notas:
+          type: "string"
+        despl_actas_opciones:
+          type: array
+          items: {}
+        acta_principal:
+          type: "string"
+        acta_notas_a_actas:
+          type: "string"
+        acta_txt_cursada:
+          type: "string"
+    actividadestudios_ActaNotasDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_ActaNotasDataData"
+    actividadestudios_CaPosiblesQueDataData:
+      type: object
+      properties:
+        grupo_estudios:
+          type: "string"
+        mi_grupo:
+          type: "string"
+        aCentrosNExt:
+          type: array
+          items: {}
+        aCentrosAgdExt:
+          type: array
+          items: {}
+    actividadestudios_CaPosiblesQueDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_CaPosiblesQueDataData"
+    actividadestudios_E43CertificadoDataData:
+      type: object
+      properties:
+        msg_err:
+          type: "string"
+        nom:
+          type: "string"
+        txt_nacimiento:
+          type: "string"
+        dl_origen:
+          type: "string"
+        dl_destino:
+          type: "string"
+        txt_actividad:
+          type: "string"
+        matriculas:
+          type: "integer"
+        aAsignaturasMatriculadas:
+          type: "string"
+    actividadestudios_E43CertificadoDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_E43CertificadoDataData"
+    actividadestudios_FormAsignaturasDeUnaActividadDataData:
+      type: object
+      properties:
+        mod:
+          type: "string"
+        id_activ:
+          type: "integer"
+        id_asignatura:
+          type: "integer"
+        nombre_corto:
+          type: "string"
+        chk_avisado:
+          type: "string"
+        chk_confirmado:
+          type: "string"
+        chk_preceptor:
+          type: "string"
+        f_ini:
+          type: "string"
+        f_fin:
+          type: "string"
+        oDesplProfesores_opciones:
+          type: array
+          items: {}
+        id_profesor_sel:
+          type: "string"
+        oDesplAsignaturas_opciones:
+          type: array
+          items: {}
+        primary_key_s:
+          type: "string"
+        camposForm:
+          type: "string"
+        a_camposHidden:
+          type: array
+          items: {}
+    actividadestudios_FormAsignaturasDeUnaActividadDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_FormAsignaturasDeUnaActividadDataData"
+    actividadestudios_FormMatriculasDeUnaPersonaDataData:
+      type: object
+      properties:
+        nom_activ:
+          type: "string"
+        mod:
+          type: "string"
+        id_asignatura_real:
+          type: "integer"
+        nombre_corto:
+          type: "string"
+        chk_preceptor:
+          type: "string"
+        id_preceptor:
+          type: "string"
+        oDesplProfesores_opciones:
+          type: array
+          items: {}
+        oDesplNiveles_opciones:
+          type: array
+          items: {}
+        condicion_js:
+          type: "string"
+        camposForm:
+          type: "string"
+        a_camposHidden:
+          type: array
+          items: {}
+    actividadestudios_FormMatriculasDeUnaPersonaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_FormMatriculasDeUnaPersonaDataData"
+    actividadestudios_ListaClasesCaDataData:
+      type: object
+      properties:
+        msg_err:
+          type: "string"
+        nom_activ:
+          type: "string"
+        nom_director_est:
+          type: "string"
+        datos_asignatura:
+          type: array
+          items: {}
+    actividadestudios_ListaClasesCaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_ListaClasesCaDataData"
+    actividadestudios_MatriculasListaDataData:
+      type: object
+      properties:
+        titulo:
+          type: "string"
+        msg_err:
+          type: "string"
+        a_valores:
+          type: array
+          items: {}
+    actividadestudios_MatriculasListaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_MatriculasListaDataData"
+    actividadestudios_MatriculasListaOtrasRDataData:
+      type: object
+      properties:
+        titulo:
+          type: "string"
+        titulo_busqueda_por_apellidos:
+          type: "string"
+        msg_err:
+          type: "string"
+        aviso:
+          type: "string"
+        a_valores:
+          type: array
+          items: {}
+    actividadestudios_MatriculasListaOtrasRDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_MatriculasListaOtrasRDataData"
+    actividadestudios_MatriculasPendientesDataData:
+      type: object
+      properties:
+        msg_err:
+          type: "string"
+    actividadestudios_MatriculasPendientesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_MatriculasPendientesDataData"
+    actividadestudios_PlanEstudiosCaDataData:
+      type: object
+      properties:
+        msg_err:
+          type: "string"
+        nom_activ:
+          type: "string"
+        nom_director_est:
+          type: "string"
+        aPreceptores:
+          type: array
+          items: {}
+        aProfesores:
+          type: array
+          items: {}
+        aAlumnos:
+          type: array
+          items: {}
+    actividadestudios_PlanEstudiosCaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_PlanEstudiosCaDataData"
+    actividadestudios_PosiblesAsignaturasCaDataData:
+      type: object
+      properties:
+        nom_activ:
+          type: "string"
+        aAsignaturas_alumnos:
+          type: "string"
+        a_alumnos_fin_c:
+          type: "string"
+    actividadestudios_PosiblesAsignaturasCaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_PosiblesAsignaturasCaDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

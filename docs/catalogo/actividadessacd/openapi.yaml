@@ -1,0 +1,678 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - actividadessacd"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/actividadessacd/com_sacd_activ_periodo_page_data":
+    post:
+      operationId: "post_actividadessacd_com_sacd_activ_periodo_page_data"
+      summary: "Com Sacd Activ Periodo Page Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/com_sacd_activ_periodo_page_data.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadessacd/comunicacion_activ_sacd_data":
+    post:
+      operationId: "post_actividadessacd_comunicacion_activ_sacd_data"
+      summary: "Comunicacion Activ Sacd Data"
+      description: |
+        Endpoint backend: construye el listado de atencion de actividades a comunicar a los sacd (incluidas las de los "sacd de paso" cuando procede).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/comunicacion_activ_sacd_data.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_nom:
+                  type: "integer"
+                periodo:
+                  type: "string"
+                propuesta:
+                  type: "string"
+                que:
+                  type: "string"
+                sel:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadessacd_ComunicacionActividadesSacdDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadessacd_ComunicacionActividadesSacdDataDataResponse"
+  "/src/actividadessacd/comunicacion_activ_sacd_enviar":
+    post:
+      operationId: "post_actividadessacd_comunicacion_activ_sacd_enviar"
+      summary: "Comunicacion Activ Sacd Enviar"
+      description: |
+        Endpoint backend: encola los mails de comunicacion de actividades a los sacd y al ctr del sacd, con copia al jefe de calendario.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/comunicacion_activ_sacd_enviar.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadessacd/lista_actividades_sacd_data":
+    post:
+      operationId: "post_actividadessacd_lista_actividades_sacd_data"
+      summary: "Lista Actividades Sacd Data"
+      description: |
+        Endpoint backend: devuelve el listado de actividades del tipo + periodo elegidos junto con los sacd encargados y los flags de permiso.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/lista_actividades_sacd_data.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                periodo:
+                  type: "string"
+                tipo:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadessacd_ListaActividadesSacdDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadessacd_ListaActividadesSacdDataDataResponse"
+  "/src/actividadessacd/locales_desplegable_data":
+    post:
+      operationId: "post_actividadessacd_locales_desplegable_data"
+      summary: "Locales Desplegable Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/locales_desplegable_data.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadessacd_LocalesDesplegableDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadessacd_LocalesDesplegableDataDataResponse"
+  "/src/actividadessacd/sacd_asignar":
+    post:
+      operationId: "post_actividadessacd_sacd_asignar"
+      summary: "Sacd Asignar"
+      description: |
+        Endpoint backend: asigna un sacd a una actividad (y, si es sv, tambien crea la asistencia).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/sacd_asignar.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "id_activ"
+                - "id_nom"
+              properties:
+                id_activ:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadessacd/sacd_asignar_auto":
+    post:
+      operationId: "post_actividadessacd_sacd_asignar_auto"
+      summary: "Sacd Asignar Auto"
+      description: |
+        Endpoint backend: auto-asignacion masiva del sacd titular del centro encargado a actividades sr/sg sin sacd.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/sacd_asignar_auto.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                f_ini_iso:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadessacd_SacdAsignarAutoDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadessacd_SacdAsignarAutoDataResponse"
+  "/src/actividadessacd/sacd_eliminar":
+    post:
+      operationId: "post_actividadessacd_sacd_eliminar"
+      summary: "Sacd Eliminar"
+      description: |
+        Endpoint backend: elimina el sacd ({id_activ, id_cargo}) de una actividad y la asistencia asociada.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/sacd_eliminar.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "id_activ"
+                - "id_cargo"
+              properties:
+                id_activ:
+                  type: "integer"
+                id_cargo:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadessacd/sacd_reordenar":
+    post:
+      operationId: "post_actividadessacd_sacd_reordenar"
+      summary: "Sacd Reordenar"
+      description: |
+        Endpoint backend: reordena un sacd dentro de una actividad (mas / menos prioridad).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/sacd_reordenar.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "id_activ"
+                - "id_nom"
+              properties:
+                id_activ:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                num_orden:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadessacd/sacds_disponibles_data":
+    post:
+      operationId: "post_actividadessacd_sacds_disponibles_data"
+      summary: "Sacds Disponibles Data"
+      description: |
+        Endpoint backend: devuelve los sacd candidatos para asignar a una actividad (sacd del centro encargado + sacd globales segun bitmask `seleccion`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/sacds_disponibles_data.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                seleccion:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadessacd/sacds_encargados_data":
+    post:
+      operationId: "post_actividadessacd_sacds_encargados_data"
+      summary: "Sacds Encargados Data"
+      description: |
+        Endpoint backend: devuelve los sacd encargados actuales de una actividad en un array serializable, junto con los flags de permiso.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/sacds_encargados_data.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl_org:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_tipo_activ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadessacd/solapes_sacd_data":
+    post:
+      operationId: "post_actividadessacd_solapes_sacd_data"
+      summary: "Solapes Sacd Data"
+      description: |
+        Endpoint backend: devuelve el listado de sacd con actividades incompatibles (solapes) en el periodo.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/solapes_sacd_data.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                periodo:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadessacd/texto_comunicacion_data":
+    post:
+      operationId: "post_actividadessacd_texto_comunicacion_data"
+      summary: "Texto Comunicacion Data"
+      description: |
+        Endpoint backend: devuelve el texto de comunicacion (`clave`, `idioma`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/texto_comunicacion_data.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clave:
+                  type: "string"
+                idioma:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadessacd_TextoComunicacionDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadessacd_TextoComunicacionDataDataResponse"
+  "/src/actividadessacd/texto_comunicacion_guardar":
+    post:
+      operationId: "post_actividadessacd_texto_comunicacion_guardar"
+      summary: "Texto Comunicacion Guardar"
+      description: |
+        Endpoint backend: upsert/delete del texto de comunicacion (`clave`, `idioma`, `texto`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadessacd/api/texto_comunicacion_guardar.md`
+      tags:
+        - "actividadessacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clave:
+                  type: "string"
+                idioma:
+                  type: "string"
+                texto:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    actividadessacd_ComunicacionActividadesSacdDataData:
+      type: object
+      properties:
+        que:
+          type: "string"
+        propuesta:
+          type: "string"
+        mi_dele:
+          type: "string"
+        lugar_fecha:
+          type: "string"
+        periodo_txt:
+          type: "string"
+        sacds:
+          type: array
+          items: {}
+        sacds_paso:
+          type: array
+          items: {}
+    actividadessacd_ComunicacionActividadesSacdDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadessacd_ComunicacionActividadesSacdDataData"
+    actividadessacd_ListaActividadesSacdDataData:
+      type: object
+      properties:
+        "0":
+          type: "string"
+    actividadessacd_ListaActividadesSacdDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadessacd_ListaActividadesSacdDataData"
+    actividadessacd_LocalesDesplegableDataData:
+      type: object
+      properties:
+        a_locales:
+          type: array
+          items: {}
+    actividadessacd_LocalesDesplegableDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadessacd_LocalesDesplegableDataData"
+    actividadessacd_SacdAsignarAutoData:
+      type: object
+      properties:
+        asignadas:
+          type: "string"
+    actividadessacd_SacdAsignarAutoDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadessacd_SacdAsignarAutoData"
+    actividadessacd_TextoComunicacionDataData:
+      type: object
+      properties:
+        texto:
+          type: "string"
+    actividadessacd_TextoComunicacionDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadessacd_TextoComunicacionDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

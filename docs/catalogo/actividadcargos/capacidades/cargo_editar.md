@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `carg
 
 ## Objetivo Funcional
 
-Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad.
+Gestiona ActividadCargoEditar. Edita un ActividadCargo existente.
 
 ## Acciones Detectadas
 
@@ -39,6 +39,15 @@ No se han detectado pantallas relacionadas.
 ## Pistas Desde Endpoints
 
 - Edita un `ActividadCargo` existente.
+
+## Errores Conocidos
+
+- `faltan parametros id_activ / id_nom / id_cargo`
+- `hay un error, no se ha eliminado el asistente`
+- `hay un error, no se ha guardado`
+- `hay un error, no se ha guardado el asistente`
+- `no encuentro el cargo`
+- `ya existe este cargo para esta actividad`
 
 ## Revision Manual
 

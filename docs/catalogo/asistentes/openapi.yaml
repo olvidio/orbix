@@ -1,0 +1,811 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - asistentes"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/asistentes/activ_pendientes_select_data":
+    post:
+      operationId: "post_asistentes_activ_pendientes_select_data"
+      summary: "Activ Pendientes Select Data"
+      description: |
+        Actividades pendientes por curso (`activ_pendientes_select.php`). Datos y `link_spec` sin firmar; hash, firmas y tablas en {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/activ_pendientes_select_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                any:
+                  type: "integer"
+                sactividad:
+                  type: "string"
+                tipo_personas:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/asistentes/asistente_eliminar":
+    post:
+      operationId: "post_asistentes_asistente_eliminar"
+      summary: "Asistente Eliminar"
+      description: |
+        Elimina un `Asistente` y sus matriculas.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/asistente_eliminar.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                pau:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/asistentes/asistente_guardar":
+    post:
+      operationId: "post_asistentes_asistente_guardar"
+      summary: "Asistente Guardar"
+      description: |
+        Crea, edita o mueve un `Asistente`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/asistente_guardar.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                cfi:
+                  type: "string"
+                cfi_con:
+                  type: "integer"
+                encargo:
+                  type: "string"
+                est_ok:
+                  type: "string"
+                falta:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_activ_old:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                mod:
+                  type: "string"
+                observ:
+                  type: "string"
+                observ_est:
+                  type: "string"
+                pau:
+                  type: "string"
+                plaza:
+                  type: "integer"
+                propietario:
+                  type: "string"
+                propio:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/asistentes/asistente_mover_data":
+    post:
+      operationId: "post_asistentes_asistente_mover_data"
+      summary: "Asistente Mover Data"
+      description: |
+        JSON para {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/asistente_mover_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/asistentes/asistente_plaza_asignar":
+    post:
+      operationId: "post_asistentes_asistente_plaza_asignar"
+      summary: "Asistente Plaza Asignar"
+      description: |
+        Cambia la plaza de un lote de asistentes.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/asistente_plaza_asignar.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                lista_json:
+                  type: "string"
+                plaza:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/asistentes/form_actividades_de_una_persona_data":
+    post:
+      operationId: "post_asistentes_form_actividades_de_una_persona_data"
+      summary: "Form Actividades De Una Persona Data"
+      description: |
+        Dossier actividades de una persona (1301). Datos puros para el formulario; la UI (HashFront, Desplegable) se compone en frontend.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/form_actividades_de_una_persona_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_pau:
+                  type: "integer"
+                id_tipo:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                que_dl:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/asistentes/form_asistentes_a_una_actividad_data":
+    post:
+      operationId: "post_asistentes_form_asistentes_a_una_actividad_data"
+      summary: "Form Asistentes A Una Actividad Data"
+      description: |
+        Dossier asistentes a una actividad (3101). Datos puros; la UI vive en {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/form_asistentes_a_una_actividad_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                na:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/asistentes/lista_activ_ctr_data":
+    post:
+      operationId: "post_asistentes_lista_activ_ctr_data"
+      summary: "Lista Activ Ctr Data"
+      description: |
+        Asistentes a actividades por centro (`lista_activ_ctr.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/lista_activ_ctr_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                n_agd:
+                  type: "string"
+                periodo:
+                  type: "string"
+                sactividad:
+                  type: "string"
+                sasistentes:
+                  type: "string"
+                ssfsv:
+                  type: "string"
+                year:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asistentes_ListaActivCtrDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asistentes_ListaActivCtrDataDataResponse"
+  "/src/asistentes/lista_asis_conjunto_activ_data":
+    post:
+      operationId: "post_asistentes_lista_asis_conjunto_activ_data"
+      summary: "Lista Asis Conjunto Activ Data"
+      description: |
+        Listados conjuntos de plazas/actividades (`lista_asis_conjunto_activ.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/lista_asis_conjunto_activ_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl_org:
+                  type: "string"
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_tipo_activ:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                modo:
+                  type: "string"
+                nom_activ:
+                  type: "string"
+                periodo:
+                  type: "string"
+                que:
+                  type: "string"
+                sactividad:
+                  type: "string"
+                sasistentes:
+                  type: "string"
+                sfsv:
+                  type: "string"
+                snom_tipo:
+                  type: "string"
+                status:
+                  type: "integer"
+                year:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/asistentes/lista_asistentes_data":
+    post:
+      operationId: "post_asistentes_lista_asistentes_data"
+      summary: "Lista Asistentes Data"
+      description: |
+        Listado de asistentes a una actividad (`lista_asistentes.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/lista_asistentes_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_pau:
+                  type: "integer"
+                queSel:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asistentes_ListaAsistentesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asistentes_ListaAsistentesDataDataResponse"
+  "/src/asistentes/lista_est_ctr_data":
+    post:
+      operationId: "post_asistentes_lista_est_ctr_data"
+      summary: "Lista Est Ctr Data"
+      description: |
+        Listado estudios por centro (`lista_est_ctr.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/lista_est_ctr_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                n_agd:
+                  type: "string"
+                periodo:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asistentes_ListaEstCtrDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asistentes_ListaEstCtrDataDataResponse"
+  "/src/asistentes/lista_ultim_que_ctr_data":
+    post:
+      operationId: "post_asistentes_lista_ultim_que_ctr_data"
+      summary: "Lista Ultim Que Ctr Data"
+      description: |
+        JSON para {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/lista_ultim_que_ctr_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                curso:
+                  type: "string"
+                que:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asistentes_ListaUltimQueCtrDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asistentes_ListaUltimQueCtrDataDataResponse"
+  "/src/asistentes/lista_ultima_activ_data":
+    post:
+      operationId: "post_asistentes_lista_ultima_activ_data"
+      summary: "Lista Ultima Activ Data"
+      description: |
+        Listado última actividad / seguimiento (`lista_ultima_activ.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/lista_ultima_activ_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                curso:
+                  type: "string"
+                id_ubi:
+                  type: "string"
+                que:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asistentes_ListaUltimaActivDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asistentes_ListaUltimaActivDataDataResponse"
+  "/src/asistentes/que_ctr_lista_data":
+    post:
+      operationId: "post_asistentes_que_ctr_lista_data"
+      summary: "Que Ctr Lista Data"
+      description: |
+        JSON para {
+        
+        Operacion: `lista_data`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/que_ctr_lista_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "integer"
+                lista:
+                  type: "string"
+                n_agd:
+                  type: "string"
+                periodo:
+                  type: "string"
+                sactividad:
+                  type: "string"
+                sasistentes:
+                  type: "string"
+                ssfsv:
+                  type: "string"
+                tipo:
+                  type: "string"
+                year:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/asistentes/tabla_peticiones_data":
+    post:
+      operationId: "post_asistentes_tabla_peticiones_data"
+      summary: "Tabla Peticiones Data"
+      description: |
+        JSON para {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asistentes/api/tabla_peticiones_data.md`
+      tags:
+        - "asistentes"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ_old:
+                  type: "integer"
+                restored_id_sel:
+                  type: "string"
+                restored_scroll_id:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+                stack:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    asistentes_ListaActivCtrDataData:
+      type: object
+      properties:
+        aCentros:
+          type: array
+          items: {}
+    asistentes_ListaActivCtrDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/asistentes_ListaActivCtrDataData"
+    asistentes_ListaAsistentesDataData:
+      type: object
+      properties:
+        nom_activ:
+          type: "string"
+    asistentes_ListaAsistentesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/asistentes_ListaAsistentesDataData"
+    asistentes_ListaEstCtrDataData:
+      type: object
+      properties:
+        lista_html:
+          type: "string"
+    asistentes_ListaEstCtrDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/asistentes_ListaEstCtrDataData"
+    asistentes_ListaUltimQueCtrDataData:
+      type: object
+      properties:
+        opciones_centros:
+          type: array
+          items: {}
+    asistentes_ListaUltimQueCtrDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/asistentes_ListaUltimQueCtrDataData"
+    asistentes_ListaUltimaActivDataData:
+      type: object
+      properties:
+        alert_html:
+          type: "string"
+    asistentes_ListaUltimaActivDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/asistentes_ListaUltimaActivDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

@@ -4,9 +4,13 @@ tipo: "endpoint"
 modulo: "actividadcargos"
 url: "/src/actividadcargos/cargo_nuevo"
 metodos: ["GET", "POST"]
+operacion: "mutacion"
 controller: "src/actividadcargos/infrastructure/ui/http/controllers/cargo_nuevo.php"
-entrada: []
+entrada: ["post.asis:string", "post.id_activ:integer", "post.id_cargo:integer", "post.id_nom:integer", "post.observ:string", "post.puede_agd:string"]
+entrada_obligatoria: ["id_activ", "id_nom", "id_cargo"]
 respuesta: "standard_envelope_string_data"
+requiere_hashb: false
+errores: ["faltan parametros id_activ / id_nom / id_cargo", "ya existe este cargo para esta actividad", "hay un error, no se ha guardado el asistente"]
 frontend_referencias: []
 casos_uso: ["src\\actividadcargos\\application\\ActividadCargoNuevo"]
 tags: ["actividadcargos", "cargo", "nuevo"]
@@ -17,24 +21,46 @@ estado_revision: "generado"
 
 Crea un `ActividadCargo`.
 
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
 ## Endpoint
 
 - URL: `/src/actividadcargos/cargo_nuevo`
 - Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
 - Controller: `src/actividadcargos/infrastructure/ui/http/controllers/cargo_nuevo.php`
 
-## Entrada Inferida
+## Entrada
 
-No se han detectado parametros individuales mediante `filter_input`, `$_POST[...]` o `$_GET[...]`.
-- Nota: el controller usa `$_POST` directamente; revisar si acepta mas campos que los listados.
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `asis` | `string` | application | No | application |
+| `id_activ` | `integer` | application | Si | application |
+| `id_cargo` | `integer` | application | Si | application |
+| `id_nom` | `integer` | application | Si | application |
+| `observ` | `string` | application | No | application |
+| `puede_agd` | `string` | application | No | application |
 
-## Salida Inferida
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
+## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Evidencia: `$error_txt, 'ok'`
+- Exito: `success: true`, `data: "ok"`.
 
-## Casos De Uso Detectados
+## Efectos colaterales
+
+- Si llega `asis=true` ademas da de alta al `Asistente` asociado (flujo tipico `nuevo` desde el form 3102/1302).
+- Replica la logica del case `nuevo` del antiguo `update_3102.php`: abrir dossiers `1302`/`3102` (cargos) y, cuando proceda, `1301`/`3101` (asistentes).
+
+## Errores conocidos
+
+- `faltan parametros id_activ / id_nom / id_cargo`
+- `ya existe este cargo para esta actividad`
+- `hay un error, no se ha guardado el asistente`
+
+## Casos De Uso
 
 - `src\actividadcargos\application\ActividadCargoNuevo`
 
@@ -44,8 +70,6 @@ No se han encontrado referencias exactas al endpoint en `frontend/`.
 
 ## Revision Manual
 
-- Completar objetivo funcional.
-- Confirmar permisos/autorizacion.
-- Confirmar efectos sobre datos.
+- Confirmar permisos/autorizacion de oficina.
 - Anadir ejemplos reales de request/response.
-- Marcar procesos parecidos o duplicados si aplica.
+- Marcar `estado_revision: "revisado"` cuando este validado.

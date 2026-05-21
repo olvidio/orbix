@@ -1,0 +1,505 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - cartaspresentacion"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/cartaspresentacion/carta_presentacion_eliminar":
+    post:
+      operationId: "post_cartaspresentacion_carta_presentacion_eliminar"
+      summary: "Carta Presentacion Eliminar"
+      description: |
+        Endpoint backend: elimina una `CartaPresentacion`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/cartaspresentacion/api/carta_presentacion_eliminar.md`
+      tags:
+        - "cartaspresentacion"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_direccion:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionEliminarDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionEliminarDataResponse"
+  "/src/cartaspresentacion/carta_presentacion_form_data":
+    post:
+      operationId: "post_cartaspresentacion_carta_presentacion_form_data"
+      summary: "Carta Presentacion Form Data"
+      description: |
+        Endpoint backend: datos del formulario de modificacion de una `CartaPresentacion` (valida permisos: solo dl propia o `cr`).
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/cartaspresentacion/api/carta_presentacion_form_data.md`
+      tags:
+        - "cartaspresentacion"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_direccion:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionFormDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionFormDataDataResponse"
+  "/src/cartaspresentacion/carta_presentacion_update":
+    post:
+      operationId: "post_cartaspresentacion_carta_presentacion_update"
+      summary: "Carta Presentacion Update"
+      description: |
+        Endpoint backend: crea / actualiza una `CartaPresentacion`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/cartaspresentacion/api/carta_presentacion_update.md`
+      tags:
+        - "cartaspresentacion"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_direccion:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                observ:
+                  type: "string"
+                pres_mail:
+                  type: "string"
+                pres_nom:
+                  type: "string"
+                pres_telf:
+                  type: "string"
+                zona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionUpdateDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionUpdateDataResponse"
+  "/src/cartaspresentacion/cartas_presentacion_buscar_data":
+    post:
+      operationId: "post_cartaspresentacion_cartas_presentacion_buscar_data"
+      summary: "Cartas Presentacion Buscar Data"
+      description: |
+        Endpoint backend: opciones del formulario de busqueda de cartas de presentacion (region, pais, delegacion).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/cartaspresentacion/api/cartas_presentacion_buscar_data.md`
+      tags:
+        - "cartaspresentacion"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionBuscarOpcionesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionBuscarOpcionesDataDataResponse"
+  "/src/cartaspresentacion/cartas_presentacion_lista_data":
+    post:
+      operationId: "post_cartaspresentacion_cartas_presentacion_lista_data"
+      summary: "Cartas Presentacion Lista Data"
+      description: |
+        Endpoint backend: listado agrupado de cartas de presentacion (modo `lista_dl`, `lista_todo` o `get` con filtros).
+        
+        Operacion: `lista_data`.
+        
+        Fuente catalogo: `docs/catalogo/cartaspresentacion/api/cartas_presentacion_lista_data.md`
+      tags:
+        - "cartaspresentacion"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+                pais:
+                  type: "string"
+                poblacion:
+                  type: "string"
+                que:
+                  type: "string"
+                region:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionListaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionListaDataDataResponse"
+  "/src/cartaspresentacion/cartas_presentacion_shell_data":
+    post:
+      operationId: "post_cartaspresentacion_cartas_presentacion_shell_data"
+      summary: "Cartas Presentacion Shell Data"
+      description: |
+        Datos para la shell `cartas_presentacion.php`: delegación y paths relativos. URLs absolutas y fragment Hash: {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/cartaspresentacion/api/cartas_presentacion_shell_data.md`
+      tags:
+        - "cartaspresentacion"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/cartaspresentacion/poblaciones_data":
+    post:
+      operationId: "post_cartaspresentacion_poblaciones_data"
+      summary: "Poblaciones Data"
+      description: |
+        Endpoint backend: opciones del desplegable de poblaciones segun el filtro elegido (`get_H`, `get_r`, `get_dl`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/cartaspresentacion/api/poblaciones_data.md`
+      tags:
+        - "cartaspresentacion"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                filtro:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionPoblacionesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionPoblacionesDataDataResponse"
+  "/src/cartaspresentacion/ubis_lista_data":
+    post:
+      operationId: "post_cartaspresentacion_ubis_lista_data"
+      summary: "Ubis Lista Data"
+      description: |
+        Endpoint backend: listado de centros con el estado de su carta de presentacion, en dos variantes (delegacion del usuario o centros extranjeros).
+        
+        Operacion: `lista_data`.
+        
+        Fuente catalogo: `docs/catalogo/cartaspresentacion/api/ubis_lista_data.md`
+      tags:
+        - "cartaspresentacion"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                poblacion_sel:
+                  type: "string"
+                tipo_lista:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionUbisListaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionUbisListaDataDataResponse"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    cartaspresentacion_CartaPresentacionEliminarData:
+      type: object
+      properties:
+        ok:
+          type: "string"
+    cartaspresentacion_CartaPresentacionEliminarDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionEliminarData"
+    cartaspresentacion_CartaPresentacionFormDataData:
+      type: object
+      properties:
+        ok:
+          type: "boolean"
+        mensaje:
+          type: "string"
+        id_ubi:
+          type: "integer"
+        id_direccion:
+          type: "integer"
+        nombre_ubi:
+          type: "string"
+        pres_nom:
+          type: "string"
+        pres_telf:
+          type: "string"
+        pres_mail:
+          type: "string"
+        zona:
+          type: "string"
+        observ:
+          type: "string"
+    cartaspresentacion_CartaPresentacionFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionFormDataData"
+    cartaspresentacion_CartaPresentacionUpdateData:
+      type: object
+      properties:
+        ok:
+          type: "string"
+    cartaspresentacion_CartaPresentacionUpdateDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/cartaspresentacion_CartaPresentacionUpdateData"
+    cartaspresentacion_CartasPresentacionBuscarOpcionesDataData:
+      type: object
+      properties:
+        opciones_region:
+          type: array
+          items: {}
+        opciones_pais:
+          type: array
+          items: {}
+        opciones_delegacion:
+          type: array
+          items: {}
+        paths:
+          type: array
+          items: {}
+        hash_lista:
+          type: array
+          items: {}
+    cartaspresentacion_CartasPresentacionBuscarOpcionesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionBuscarOpcionesDataData"
+    cartaspresentacion_CartasPresentacionListaDataData:
+      type: object
+      properties:
+        html_lista:
+          type: "string"
+    cartaspresentacion_CartasPresentacionListaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionListaDataData"
+    cartaspresentacion_CartasPresentacionPoblacionesDataData:
+      type: object
+      properties:
+        id:
+          type: "string"
+        opciones:
+          type: array
+          items: {}
+        selected:
+          type: "string"
+        blanco:
+          type: "boolean"
+        val_blanco:
+          type: "string"
+        action:
+          type: "string"
+    cartaspresentacion_CartasPresentacionPoblacionesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionPoblacionesDataData"
+    cartaspresentacion_CartasPresentacionUbisListaDataData:
+      type: object
+      properties:
+        tipo_lista:
+          type: "string"
+        explicacion:
+          type: "string"
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
+    cartaspresentacion_CartasPresentacionUbisListaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/cartaspresentacion_CartasPresentacionUbisListaDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

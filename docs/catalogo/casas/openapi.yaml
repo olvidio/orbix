@@ -1,0 +1,827 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - casas"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/casas/calendario_ubi_resumen_data":
+    post:
+      operationId: "post_casas_calendario_ubi_resumen_data"
+      summary: "Calendario Ubi Resumen Data"
+      description: |
+        Endpoint backend: datos del estudio económico de una casa (`calendario_ubi_resumen`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/calendario_ubi_resumen_data.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                G:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                inc_t:
+                  type: "integer"
+                seccion:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/casas_CalendarioUbiResumenDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/casas_CalendarioUbiResumenDataDataResponse"
+  "/src/casas/casa_actividades_lista_data":
+    post:
+      operationId: "post_casas_casa_actividades_lista_data"
+      summary: "Casa Actividades Lista Data"
+      description: |
+        Endpoint backend: listado de actividades por casa y periodo (`casa_actividades_lista`).
+        
+        Operacion: `lista_data`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/casa_actividades_lista_data.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_cdc:
+                  type: "array"
+                  items:
+                    type: string
+                periodo:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/casas/casa_ec_gastos_form_data":
+    post:
+      operationId: "post_casas_casa_ec_gastos_form_data"
+      summary: "Casa Ec Gastos Form Data"
+      description: |
+        Data builder: formulario anual con gastos y aportaciones (sv/sf) por mes de una casa. Sucesor de la rama `que=getGastos` de `apps/casas/controller/casa_ec_ajax.php`.
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/casa_ec_gastos_form_data.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_cdc:
+                  type: "array"
+                  items:
+                    type: string
+                year:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/casas/casa_ec_gastos_guardar":
+    post:
+      operationId: "post_casas_casa_ec_gastos_guardar"
+      summary: "Casa Ec Gastos Guardar"
+      description: |
+        Use case: guardar los gastos y aportaciones (sv/sf) mensuales de una casa para un año completo. Borra los existentes y los reinserta con fecha 5 de cada mes. Sucesor de la rama `que=guardarGasto` de `apps/casas/controller/casa_ec_ajax.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/casa_ec_gastos_guardar.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                "ap_sf$m":
+                  type: "string"
+                "ap_sv$m":
+                  type: "string"
+                "g$m":
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                year:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/casas/casa_ingreso_eliminar":
+    post:
+      operationId: "post_casas_casa_ingreso_eliminar"
+      summary: "Casa Ingreso Eliminar"
+      description: |
+        Endpoint backend: eliminar el Ingreso de una actividad.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/casa_ingreso_eliminar.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/casas/casa_ingreso_form_data":
+    post:
+      operationId: "post_casas_casa_ingreso_form_data"
+      summary: "Casa Ingreso Form Data"
+      description: |
+        Endpoint backend: datos para el formulario de ingreso de una actividad (`casa_ingreso_form`).
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/casa_ingreso_form_data.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/casas/casa_ingreso_update":
+    post:
+      operationId: "post_casas_casa_ingreso_update"
+      summary: "Casa Ingreso Update"
+      description: |
+        Endpoint backend: crear/actualizar el Ingreso de una actividad.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/casa_ingreso_update.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_tarifa:
+                  type: "string"
+                ingresos:
+                  type: "string"
+                num_asistentes:
+                  type: "integer"
+                observ:
+                  type: "string"
+                precio:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/casas/casa_ingresos_lista_data":
+    post:
+      operationId: "post_casas_casa_ingresos_lista_data"
+      summary: "Casa Ingresos Lista Data"
+      description: |
+        Endpoint backend: listado económico de actividades por casa (`casa_ingresos_lista`).
+        
+        Operacion: `lista_data`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/casa_ingresos_lista_data.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_cdc:
+                  type: "array"
+                  items:
+                    type: string
+                periodo:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/casas/casas_resumen_data":
+    post:
+      operationId: "post_casas_casas_resumen_data"
+      summary: "Casas Resumen Data"
+      description: |
+        Use case: resumen económico de casas (dias ocupados, asistentes previstos/reales, ingresos, gastos, aportaciones, superávit). Sucesor de `apps/casas/controller/casas_resumen_ajax.php`. Dos modos: - `que=''` → un único periodo (año/trimestre/rango) por casa. - `que!=''` → estadística por año (5 años) por casa.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/casas_resumen_data.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                cdc_sel:
+                  type: "integer"
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_cdc:
+                  type: "array"
+                  items:
+                    type: string
+                periodo:
+                  type: "string"
+                que:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/casas_CasasResumenDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/casas_CasasResumenDataDataResponse"
+  "/src/casas/grupo_eliminar":
+    post:
+      operationId: "post_casas_grupo_eliminar"
+      summary: "Grupo Eliminar"
+      description: |
+        Endpoint backend: elimina un `GrupoCasa`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/grupo_eliminar.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/casas/grupo_form_data":
+    post:
+      operationId: "post_casas_grupo_form_data"
+      summary: "Grupo Form Data"
+      description: |
+        Endpoint backend: datos del formulario `GrupoCasa` (nuevo/editar).
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/grupo_form_data.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/casas_GrupoCasaFormDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/casas_GrupoCasaFormDataDataResponse"
+  "/src/casas/grupo_lista_data":
+    post:
+      operationId: "post_casas_grupo_lista_data"
+      summary: "Grupo Lista Data"
+      description: |
+        Endpoint backend: listado de `GrupoCasa` (relaciones padre ↔ hijo).
+        
+        Operacion: `lista_data`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/grupo_lista_data.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/casas_GrupoCasaListaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/casas_GrupoCasaListaDataDataResponse"
+  "/src/casas/grupo_update":
+    post:
+      operationId: "post_casas_grupo_update"
+      summary: "Grupo Update"
+      description: |
+        Endpoint backend: crea o actualiza un `GrupoCasa`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/grupo_update.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "string"
+                id_ubi_hijo:
+                  type: "integer"
+                id_ubi_padre:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/casas/ingreso_plazas_previstas_update":
+    post:
+      operationId: "post_casas_ingreso_plazas_previstas_update"
+      summary: "Ingreso Plazas Previstas Update"
+      description: |
+        Endpoint backend: actualiza `num_asistentes_previstos` de un `Ingreso` desde la `TablaEditable` de `prevision_asistentes`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/ingreso_plazas_previstas_update.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                colName:
+                  type: "string"
+                data:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/casas/prevision_asistentes_data":
+    post:
+      operationId: "post_casas_prevision_asistentes_data"
+      summary: "Prevision Asistentes Data"
+      description: |
+        Endpoint backend: datos de la pantalla `prevision_asistentes`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/casas/api/prevision_asistentes_data.md`
+      tags:
+        - "casas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                fin_iso:
+                  type: "string"
+                inicio_iso:
+                  type: "string"
+                mi_of:
+                  type: "string"
+                periodo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/casas_PrevisionAsistentesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/casas_PrevisionAsistentesDataDataResponse"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    casas_CalendarioUbiResumenDataData:
+      type: object
+      properties:
+        ok:
+          type: "boolean"
+        error:
+          type: "string"
+        any_anterior:
+          type: "integer"
+        any_actual:
+          type: "integer"
+        any_prev:
+          type: "integer"
+        id_ubi:
+          type: "integer"
+        seccion:
+          type: "string"
+        nombre_ubi:
+          type: "string"
+        plazas_min:
+          type: "integer"
+        G:
+          type: "integer"
+        inc_t:
+          type: "integer"
+        p_dv:
+          type: "integer"
+        p_df:
+          type: "integer"
+        a_tarifas_actual:
+          type: array
+          items: {}
+        a_tarifas_prev:
+          type: array
+          items: {}
+        r_it:
+          type: "number"
+        r_idl:
+          type: "number"
+        r_idef:
+          type: "number"
+        r_ip:
+          type: "number"
+        r_ta:
+          type: "integer"
+        r_tia:
+          type: "number"
+        p_ip:
+          type: "number"
+        p_ip_txt:
+          type: "string"
+        p_ta_min:
+          type: "integer"
+        p_ta_min_txt:
+          type: "string"
+        p_dseccion:
+          type: "integer"
+        total_txt:
+          type: "string"
+        a_actividades:
+          type: array
+          items: {}
+        p_tac:
+          type: "integer"
+        p_tda:
+          type: "number"
+        p_tap:
+          type: "integer"
+        p_ta:
+          type: "string"
+        p_tia:
+          type: "number"
+        p_tarifa:
+          type: "number"
+        p_ti_min:
+          type: "number"
+        dias_libres:
+          type: "string"
+        dif_asistencias:
+          type: "number"
+        dif_ingresos:
+          type: "number"
+        inc_p:
+          type: "string"
+        inc_d:
+          type: "string"
+        inc_pt:
+          type: "string"
+    casas_CalendarioUbiResumenDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/casas_CalendarioUbiResumenDataData"
+    casas_CasasResumenDataData:
+      type: object
+      properties:
+        row:
+          type: array
+          items: {}
+    casas_CasasResumenDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/casas_CasasResumenDataData"
+    casas_GrupoCasaFormDataData:
+      type: object
+      properties:
+        es_nuevo:
+          type: "boolean"
+        id_item:
+          type: "string"
+        id_ubi_padre:
+          type: "integer"
+        id_ubi_hijo:
+          type: "integer"
+        opciones_casas:
+          type: array
+          items: {}
+    casas_GrupoCasaFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/casas_GrupoCasaFormDataData"
+    casas_GrupoCasaListaDataData:
+      type: object
+      properties:
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
+        puede_anadir:
+          type: "boolean"
+    casas_GrupoCasaListaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/casas_GrupoCasaListaDataData"
+    casas_PrevisionAsistentesDataData:
+      type: object
+      properties:
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
+        inicio_iso:
+          type: "string"
+        fin_iso:
+          type: "string"
+        inicio_local:
+          type: "string"
+        fin_local:
+          type: "string"
+        mi_of:
+          type: "string"
+        mi_sfsv:
+          type: "integer"
+        permitido:
+          type: "boolean"
+    casas_PrevisionAsistentesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/casas_PrevisionAsistentesDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

@@ -1,0 +1,1491 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - notas"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/notas/acta_eliminar":
+    post:
+      operationId: "post_notas_acta_eliminar"
+      summary: "Acta Eliminar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_eliminar.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                acta:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/acta_imprimir_presentacion_data":
+    post:
+      operationId: "post_notas_acta_imprimir_presentacion_data"
+      summary: "Acta Imprimir Presentacion Data"
+      description: |
+        Datos compartidos por `acta_imprimir` y el HTML de `acta_imprimir_mpdf`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_imprimir_presentacion_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                acta:
+                  type: "string"
+                mode:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/acta_listado_anual_data":
+    post:
+      operationId: "post_notas_acta_listado_anual_data"
+      summary: "Acta Listado Anual Data"
+      description: |
+        Lista las actas en un rango de fechas (ISO) ordenadas por nivel y fecha. En ambito `rstgr` considera todas las delegaciones de la region de stgr; en los demas ambitos, solo la delegacion actual. Cada item es un array asociativo `{id_nivel, acta, f_acta, nombre_corto}`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_listado_anual_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                finIso:
+                  type: "string"
+                inicioIso:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/acta_modificar":
+    post:
+      operationId: "post_notas_acta_modificar"
+      summary: "Acta Modificar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_modificar.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                acta:
+                  type: "string"
+                examinadores:
+                  type: "array"
+                  items:
+                    type: string
+                f_acta:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_asignatura:
+                  type: "integer"
+                libro:
+                  type: "integer"
+                linea:
+                  type: "integer"
+                lugar:
+                  type: "string"
+                observ:
+                  type: "string"
+                pagina:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/acta_nueva":
+    post:
+      operationId: "post_notas_acta_nueva"
+      summary: "Acta Nueva"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_nueva.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                acta:
+                  type: "string"
+                examinadores:
+                  type: "array"
+                  items:
+                    type: string
+                f_acta:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_asignatura:
+                  type: "integer"
+                libro:
+                  type: "integer"
+                linea:
+                  type: "integer"
+                lugar:
+                  type: "string"
+                observ:
+                  type: "string"
+                pagina:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/acta_pdf_download":
+    get:
+      operationId: "get_notas_acta_pdf_download"
+      summary: "Acta Pdf Download"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_pdf_download.md`
+      tags:
+        - "notas"
+      parameters:
+        - name: "tk"
+          in: query
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/acta_pdf_eliminar":
+    post:
+      operationId: "post_notas_acta_pdf_eliminar"
+      summary: "Acta Pdf Eliminar"
+      description: |
+        Elimina el PDF firmado asociado a un `Acta` (sin borrar el acta).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_pdf_eliminar.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                acta_num:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/acta_pdf_subir":
+    post:
+      operationId: "post_notas_acta_pdf_subir"
+      summary: "Acta Pdf Subir"
+      description: |
+        Sube (persiste) el contenido binario de un PDF firmado en el campo `pdf` del acta identificada por `acta_num`. El contenido se lee del array `$files` que tiene la misma forma que `$_FILES` (clave `acta_pdf` generada por bootstrap-fileinput en `acta_ver.phtml`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_pdf_subir.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                acta_num:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_ActaPdfSubirDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_ActaPdfSubirDataResponse"
+  "/src/notas/acta_select_data":
+    post:
+      operationId: "post_notas_acta_select_data"
+      summary: "Acta Select Data"
+      description: |
+        Lista de actas y mapa de asignaturas para `acta_select` (frontend sin repositorios).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_select_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                acta:
+                  type: "string"
+                mes_fin_stgr:
+                  type: "string"
+                titulo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_ActaSelectDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_ActaSelectDataDataResponse"
+  "/src/notas/acta_ver_form_data":
+    post:
+      operationId: "post_notas_acta_ver_form_data"
+      summary: "Acta Ver Form Data"
+      description: |
+        Estado del formulario `acta_ver` (sin HashFront ni vistas).
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/acta_ver_form_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/actividades_buscar_data":
+    post:
+      operationId: "post_notas_actividades_buscar_data"
+      summary: "Actividades Buscar Data"
+      description: |
+        Datos (delegaciones + actividades) para el dialogo "buscar actividad" que abre `frontend/notas/controller/actividad_buscar_form.php` desde `form_notas_de_una_persona.phtml` al modificar una nota asociada a una actividad.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/actividades_buscar_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl_org:
+                  type: "string"
+                f_acta_iso:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/asig_faltan_personas_select_data":
+    post:
+      operationId: "post_notas_asig_faltan_personas_select_data"
+      summary: "Asig Faltan Personas Select Data"
+      description: |
+        Tabla de `asig_faltan_personas_select`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/asig_faltan_personas_select_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                b_c:
+                  type: "string"
+                c1:
+                  type: "string"
+                c2:
+                  type: "string"
+                id_asignatura:
+                  type: "string"
+                personas_agd:
+                  type: "string"
+                personas_n:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_AsigFaltanPersonasSelectTablaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_AsigFaltanPersonasSelectTablaDataDataResponse"
+  "/src/notas/asig_faltan_select_data":
+    post:
+      operationId: "post_notas_asig_faltan_select_data"
+      summary: "Asig Faltan Select Data"
+      description: |
+        Tabla de `asig_faltan_select` (asignaturas pendientes por persona).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/asig_faltan_select_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                b_c:
+                  type: "string"
+                c1:
+                  type: "string"
+                c2:
+                  type: "string"
+                lista:
+                  type: "string"
+                numero:
+                  type: "string"
+                personas_agd:
+                  type: "string"
+                personas_n:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_AsigFaltanSelectTablaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_AsigFaltanSelectTablaDataDataResponse"
+  "/src/notas/asignaturas_pendientes_data":
+    post:
+      operationId: "post_notas_asignaturas_pendientes_data"
+      summary: "Asignaturas Pendientes Data"
+      description: |
+        Datos para la pantalla `asignaturas_pendientes` (matriz alumnos × asignaturas). La UI (`Lista`, desplegable rstgr) se monta en el controlador frontend.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/asignaturas_pendientes_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_AsignaturasPendientesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_AsignaturasPendientesDataDataResponse"
+  "/src/notas/asignaturas_pendientes_resumen_data":
+    post:
+      operationId: "post_notas_asignaturas_pendientes_resumen_data"
+      summary: "Asignaturas Pendientes Resumen Data"
+      description: |
+        Resumen: número de alumnos con cada asignatura pendiente, desglosado por tramo (nb, nc1, nc2, n total, ab, ac1, ac2, a total). Sucesor de la lógica embebida en `frontend/notas/controller/asignaturas_pendientes_resumen.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/asignaturas_pendientes_resumen_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_AsignaturasPendientesResumenDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_AsignaturasPendientesResumenDataDataResponse"
+  "/src/notas/asignaturas_search":
+    post:
+      operationId: "post_notas_asignaturas_search"
+      summary: "Asignaturas Search"
+      description: |
+        Autocomplete jQuery-UI.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/asignaturas_search.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                search:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/buscar_acta":
+    post:
+      operationId: "post_notas_buscar_acta"
+      summary: "Buscar Acta"
+      description: |
+        Busca un acta por su numero abreviado.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/buscar_acta.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                acta:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/comprobar_notas_constants_data":
+    post:
+      operationId: "post_notas_comprobar_notas_constants_data"
+      summary: "Comprobar Notas Constants Data"
+      description: |
+        VO {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/comprobar_notas_constants_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_ComprobarNotasConstantsDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_ComprobarNotasConstantsDataDataResponse"
+  "/src/notas/comprobar_notas_page_data":
+    post:
+      operationId: "post_notas_comprobar_notas_page_data"
+      summary: "Comprobar Notas Page Data"
+      description: |
+        HTML de {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/comprobar_notas_page_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/examinadores_search":
+    post:
+      operationId: "post_notas_examinadores_search"
+      summary: "Examinadores Search"
+      description: |
+        Autocomplete jQuery-UI.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/examinadores_search.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                search:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/informe_stgr_agd_data":
+    post:
+      operationId: "post_notas_informe_stgr_agd_data"
+      summary: "Informe Stgr Agd Data"
+      description: |
+        Calcula el informe anual STGR de "agregados" (puntos 21..33 + `x`). Encapsula el uso de `src\notas\application\legacy\Resumen` (legacy) para que los controllers del frontend no importen la clase legacy directamente. Devuelve un array neutro `{res, textos, curso_txt}` listo para renderizado.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/informe_stgr_agd_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "array"
+                  items:
+                    type: string
+                lista:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_InformeStgrAgregadosDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_InformeStgrAgregadosDataResponse"
+  "/src/notas/informe_stgr_n_data":
+    post:
+      operationId: "post_notas_informe_stgr_n_data"
+      summary: "Informe Stgr N Data"
+      description: |
+        Calcula el informe anual STGR de "numerarios" (puntos 1..18 + `x`). Encapsula el uso de `src\notas\application\legacy\Resumen` (legacy) para que los controllers del frontend no importen la clase legacy directamente. Devuelve un array neutro `{res, textos, curso_txt}` listo para renderizado.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/informe_stgr_n_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "array"
+                  items:
+                    type: string
+                lista:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_InformeStgrNumerariosDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_InformeStgrNumerariosDataResponse"
+  "/src/notas/informe_stgr_profesores_data":
+    post:
+      operationId: "post_notas_informe_stgr_profesores_data"
+      summary: "Informe Stgr Profesores Data"
+      description: |
+        Calcula el informe anual STGR de "profesores" (puntos 36..47). Encapsula el uso de `src\notas\application\legacy\Resumen` (legacy) para que los controllers del frontend no importen la clase legacy directamente. Devuelve un array neutro `{res, textos, curso_txt}` listo para renderizado. Tipos de profesor utilizados: 1 Ordinario 2 Extraordinario 3 Adjunto 4 Encargado 5 Ayudante 6 Asociado 0 (todos)
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/informe_stgr_profesores_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                lista:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_InformeStgrProfesoresDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_InformeStgrProfesoresDataResponse"
+  "/src/notas/nota_persona_form_data":
+    post:
+      operationId: "post_notas_nota_persona_form_data"
+      summary: "Nota Persona Form Data"
+      description: |
+        Endpoint backend que prepara los datos para `form_notas_de_una_persona.phtml` (alta/edicion de `PersonaNota`).
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/nota_persona_form_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_asignatura_real:
+                  type: "string"
+                id_pau:
+                  type: "integer"
+                mod:
+                  type: "string"
+                pau:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_NotaPersonaFormDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notas_NotaPersonaFormDataDataResponse"
+  "/src/notas/persona_nota_editar":
+    post:
+      operationId: "post_notas_persona_nota_editar"
+      summary: "Persona Nota Editar"
+      description: |
+        Edita una `PersonaNota` existente.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/persona_nota_editar.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_asignatura_real:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/persona_nota_eliminar":
+    post:
+      operationId: "post_notas_persona_nota_eliminar"
+      summary: "Persona Nota Eliminar"
+      description: |
+        Elimina una `PersonaNota`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/persona_nota_eliminar.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/persona_nota_nueva":
+    post:
+      operationId: "post_notas_persona_nota_nueva"
+      summary: "Persona Nota Nueva"
+      description: |
+        Crea una `PersonaNota`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/persona_nota_nueva.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/posibles_opcionales_data":
+    post:
+      operationId: "post_notas_posibles_opcionales_data"
+      summary: "Posibles Opcionales Data"
+      description: |
+        Devuelve las asignaturas opcionales que puede cursar la persona con el contrato estandar de desplegable (ver `refactor.md` §"Desplegables devueltos por endpoints AJAX: payload + constructor en frontend").
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/posibles_opcionales_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/posibles_preceptores_data":
+    post:
+      operationId: "post_notas_posibles_preceptores_data"
+      summary: "Posibles Preceptores Data"
+      description: |
+        Devuelve el desplegable de posibles preceptores (profesores STGR) con el contrato estandar de refactor.md.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/posibles_preceptores_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/tessera_copiar":
+    post:
+      operationId: "post_notas_tessera_copiar"
+      summary: "Tessera Copiar"
+      description: |
+        Copia todas las `PersonaNota` de una persona origen hacia una persona destino. Utilizado por `personas_select.phtml` (pagina de traslado de tessera entre numerarios / supernumerarios). Devuelve una cadena con los errores (separados por `<br>`) o vacia si todo ha ido bien.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/tessera_copiar.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom_dst:
+                  type: "integer"
+                id_nom_org:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/tessera_copiar_select_data":
+    post:
+      operationId: "post_notas_tessera_copiar_select_data"
+      summary: "Tessera Copiar Select Data"
+      description: |
+        Prepara los datos para elegir a que persona (con el mismo primer apellido) se copiara la tessera de otra persona. Devuelve `['nom' => string, 'posibles_personas' => [id_nom => nombre]]`. Lanza `RuntimeException` si no encuentra la persona origen ni como numerario ni como agregado.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/tessera_copiar_select_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/tessera_imprimir_data":
+    post:
+      operationId: "post_notas_tessera_imprimir_data"
+      summary: "Tessera Imprimir Data"
+      description: |
+        Datos imprimibles de tessera ya serializados (sin objetos dominio → JSON estable).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/tessera_imprimir_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/notas/tessera_ver_data":
+    post:
+      operationId: "post_notas_tessera_ver_data"
+      summary: "Tessera Ver Data"
+      description: |
+        Dataset JSON para {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/notas/api/tessera_ver_data.md`
+      tags:
+        - "notas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    notas_ActaPdfSubirData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    notas_ActaPdfSubirDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/notas_ActaPdfSubirData"
+    notas_ActaSelectDataData:
+      type: object
+      properties:
+        titulo:
+          type: "string"
+    notas_ActaSelectDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/notas_ActaSelectDataData"
+    notas_AsigFaltanPersonasSelectTablaDataData:
+      type: object
+      properties:
+        titulo:
+          type: "string"
+    notas_AsigFaltanPersonasSelectTablaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/notas_AsigFaltanPersonasSelectTablaDataData"
+    notas_AsigFaltanSelectTablaDataData:
+      type: object
+      properties:
+        titulo:
+          type: "string"
+    notas_AsigFaltanSelectTablaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/notas_AsigFaltanSelectTablaDataData"
+    notas_AsignaturasPendientesDataData:
+      type: object
+      properties:
+        cabeceras:
+          type: array
+          items: {}
+        filas:
+          type: array
+          items: {}
+        delegaciones:
+          type: array
+          items: {}
+        ambito_rstgr:
+          type: "boolean"
+    notas_AsignaturasPendientesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/notas_AsignaturasPendientesDataData"
+    notas_AsignaturasPendientesResumenDataData:
+      type: object
+      properties:
+        pendientes:
+          type: array
+          items: {}
+    notas_AsignaturasPendientesResumenDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/notas_AsignaturasPendientesResumenDataData"
+    notas_ComprobarNotasConstantsDataData:
+      type: object
+      properties:
+        vo:
+          type: array
+          items: {}
+    notas_ComprobarNotasConstantsDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/notas_ComprobarNotasConstantsDataData"
+    notas_InformeStgrAgregadosData:
+      type: object
+      properties:
+        res:
+          type: array
+          items: {}
+        textos:
+          type: array
+          items: {}
+        curso_txt:
+          type: "string"
+    notas_InformeStgrAgregadosDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/notas_InformeStgrAgregadosData"
+    notas_InformeStgrNumerariosData:
+      type: object
+      properties:
+        res:
+          type: array
+          items: {}
+        textos:
+          type: array
+          items: {}
+        curso_txt:
+          type: "string"
+    notas_InformeStgrNumerariosDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/notas_InformeStgrNumerariosData"
+    notas_InformeStgrProfesoresData:
+      type: object
+      properties:
+        res:
+          type: array
+          items: {}
+        textos:
+          type: array
+          items: {}
+        curso_txt:
+          type: "string"
+    notas_InformeStgrProfesoresDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/notas_InformeStgrProfesoresData"
+    notas_NotaPersonaFormDataData:
+      type: object
+      properties:
+        aOpcionesSituacion:
+          type: array
+          items: {}
+        lista_situacion_no_acta:
+          type: "string"
+        vo:
+          type: array
+          items: {}
+        NotaSituacion:
+          type: array
+          items: {}
+        TipoActa:
+          type: array
+          items: {}
+        NotaEpoca:
+          type: array
+          items: {}
+    notas_NotaPersonaFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/notas_NotaPersonaFormDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

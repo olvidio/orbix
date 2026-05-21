@@ -1,0 +1,1798 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - ubis"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/ubis/calendario_periodos_eliminar":
+    post:
+      operationId: "post_ubis_calendario_periodos_eliminar"
+      summary: "Calendario Periodos Eliminar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/calendario_periodos_eliminar.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/calendario_periodos_form_periodo_data":
+    post:
+      operationId: "post_ubis_calendario_periodos_form_periodo_data"
+      summary: "Calendario Periodos Form Periodo Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/calendario_periodos_form_periodo_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/calendario_periodos_get2_data":
+    post:
+      operationId: "post_ubis_calendario_periodos_get2_data"
+      summary: "Calendario Periodos Get2 Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/calendario_periodos_get2_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "integer"
+                year:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/calendario_periodos_get_data":
+    post:
+      operationId: "post_ubis_calendario_periodos_get_data"
+      summary: "Calendario Periodos Get Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/calendario_periodos_get_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/calendario_periodos_guardar":
+    post:
+      operationId: "post_ubis_calendario_periodos_guardar"
+      summary: "Calendario Periodos Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/calendario_periodos_guardar.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                f_fin:
+                  type: "string"
+                f_ini:
+                  type: "string"
+                id_item:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                sfsv:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/calendario_periodos_nuevo_data":
+    post:
+      operationId: "post_ubis_calendario_periodos_nuevo_data"
+      summary: "Calendario Periodos Nuevo Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/calendario_periodos_nuevo_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "integer"
+                year:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/casas_opciones_data":
+    post:
+      operationId: "post_ubis_casas_opciones_data"
+      summary: "Casas Opciones Data"
+      description: |
+        Devuelve el payload (solo datos) para poblar el <select> de casas en `frontend\shared\web\CasasQue`. La vista/componente frontend es quien construye el HTML del desplegable; aquí solo se exponen las opciones. Sustituye el acceso directo desde `CasasQue` al repositorio `CasaDlRepositoryInterface` (separación frontend ↔ backend, ver `refactor.md`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/casas_opciones_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                active:
+                  type: "string"
+                id_ubi_in:
+                  type: "string"
+                sf:
+                  type: "string"
+                sv:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CasasOpcionesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CasasOpcionesDataDataResponse"
+  "/src/ubis/centros_form_labor":
+    post:
+      operationId: "post_ubis_centros_form_labor"
+      summary: "Centros Form Labor"
+      description: |
+        Datos comunes para los formularios de centro dl (labor / num / plazas). Los tres formularios muestran sobre un mismo centro un subconjunto de campos distinto según el modo indicado.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/centros_form_labor.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CentrosFormDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CentrosFormDataDataResponse"
+  "/src/ubis/centros_form_num":
+    post:
+      operationId: "post_ubis_centros_form_num"
+      summary: "Centros Form Num"
+      description: |
+        Datos comunes para los formularios de centro dl (labor / num / plazas). Los tres formularios muestran sobre un mismo centro un subconjunto de campos distinto según el modo indicado.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/centros_form_num.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CentrosFormDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CentrosFormDataDataResponse"
+  "/src/ubis/centros_form_plazas":
+    post:
+      operationId: "post_ubis_centros_form_plazas"
+      summary: "Centros Form Plazas"
+      description: |
+        Datos comunes para los formularios de centro dl (labor / num / plazas). Los tres formularios muestran sobre un mismo centro un subconjunto de campos distinto según el modo indicado.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/centros_form_plazas.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CentrosFormDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CentrosFormDataDataResponse"
+  "/src/ubis/centros_get_labor":
+    post:
+      operationId: "post_ubis_centros_get_labor"
+      summary: "Centros Get Labor"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/centros_get_labor.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/centros_get_num":
+    post:
+      operationId: "post_ubis_centros_get_num"
+      summary: "Centros Get Num"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/centros_get_num.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/centros_get_plazas":
+    post:
+      operationId: "post_ubis_centros_get_plazas"
+      summary: "Centros Get Plazas"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/centros_get_plazas.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/centros_opciones_data":
+    post:
+      operationId: "post_ubis_centros_opciones_data"
+      summary: "Centros Opciones Data"
+      description: |
+        Devuelve el payload (solo datos) para poblar el <select> de centros en `frontend\shared\web\CentrosQue`. Sustituye el acceso directo desde `CentrosQue` al repositorio `CentroDlRepositoryInterface` (separación frontend ↔ backend, ver `refactor.md`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/centros_opciones_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                active:
+                  type: "string"
+                id_ubi_in:
+                  type: "string"
+                sf:
+                  type: "string"
+                sv:
+                  type: "string"
+                tipo_ctr:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CentrosOpcionesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CentrosOpcionesDataDataResponse"
+  "/src/ubis/centros_update":
+    post:
+      operationId: "post_ubis_centros_update"
+      summary: "Centros Update"
+      description: |
+        Actualiza datos de centro DL (labor / num / plazas según POST).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/centros_update.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "integer"
+                labor:
+                  type: "string"
+                n_buzon:
+                  type: "integer"
+                num_cartas:
+                  type: "integer"
+                num_habit_indiv:
+                  type: "integer"
+                num_pi:
+                  type: "integer"
+                plazas:
+                  type: "integer"
+                sede:
+                  type: "string"
+                tipo_ctr:
+                  type: "string"
+                tipo_labor:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/delegacion_que_data":
+    post:
+      operationId: "post_ubis_delegacion_que_data"
+      summary: "Delegacion Que Data"
+      description: |
+        Opciones del formulario delegaciones (traslado de ubis).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/delegacion_que_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_DelegacionQueDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_DelegacionQueDataDataResponse"
+  "/src/ubis/delegaciones_region_stgr_data":
+    post:
+      operationId: "post_ubis_delegaciones_region_stgr_data"
+      summary: "Delegaciones Region Stgr Data"
+      description: |
+        Delegaciones de una región STGR para desplegables (id_dl => sigla_dl).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/delegaciones_region_stgr_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                region_stgr:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_DelegacionesRegionStgrDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_DelegacionesRegionStgrDataDataResponse"
+  "/src/ubis/direccion_update":
+    post:
+      operationId: "post_ubis_direccion_update"
+      summary: "Direccion Update"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/direccion_update.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                a_p:
+                  type: "string"
+                c_p:
+                  type: "string"
+                cp_dcha:
+                  type: "string"
+                direccion:
+                  type: "string"
+                f_direccion:
+                  type: "string"
+                id_direccion:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                idx:
+                  type: "string"
+                latitud:
+                  type: "string"
+                longitud:
+                  type: "string"
+                nom_sede:
+                  type: "string"
+                obj_dir:
+                  type: "string"
+                observ:
+                  type: "string"
+                pais:
+                  type: "string"
+                poblacion:
+                  type: "string"
+                principal:
+                  type: "string"
+                propietario:
+                  type: "string"
+                provincia:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/direcciones_asignar":
+    post:
+      operationId: "post_ubis_direcciones_asignar"
+      summary: "Direcciones Asignar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/direcciones_asignar.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_direccion:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                obj_dir:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/direcciones_editar":
+    post:
+      operationId: "post_ubis_direcciones_editar"
+      summary: "Direcciones Editar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/direcciones_editar.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_direccion:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                idx:
+                  type: "integer"
+                inc:
+                  type: "string"
+                mod:
+                  type: "string"
+                obj_dir:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/direcciones_que":
+    post:
+      operationId: "post_ubis_direcciones_que"
+      summary: "Direcciones Que"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/direcciones_que.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/direcciones_quitar":
+    post:
+      operationId: "post_ubis_direcciones_quitar"
+      summary: "Direcciones Quitar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/direcciones_quitar.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_direccion:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                idx:
+                  type: "integer"
+                obj_dir:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/direcciones_tabla":
+    post:
+      operationId: "post_ubis_direcciones_tabla"
+      summary: "Direcciones Tabla"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/direcciones_tabla.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                c_p:
+                  type: "string"
+                ciudad:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                obj_dir:
+                  type: "string"
+                pais:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/home_ubis_data":
+    post:
+      operationId: "post_ubis_home_ubis_data"
+      summary: "Home Ubis Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/home_ubis_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/list_ctr_data":
+    post:
+      operationId: "post_ubis_list_ctr_data"
+      summary: "List Ctr Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/list_ctr_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_sel:
+                  type: "string"
+                loc:
+                  type: "string"
+                que_lista:
+                  type: "string"
+                scroll_id:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_ListCtrDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_ListCtrDataDataResponse"
+  "/src/ubis/lista_ctrs_data":
+    post:
+      operationId: "post_ubis_lista_ctrs_data"
+      summary: "Lista Ctrs Data"
+      description: |
+        Listado de centros de tipo 's' (sacerdotes) con el número de personas s asignadas en cada uno, y el total global.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/lista_ctrs_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CentrosSListaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_CentrosSListaDataDataResponse"
+  "/src/ubis/teleco_desc_lista":
+    post:
+      operationId: "post_ubis_teleco_desc_lista"
+      summary: "Teleco Desc Lista"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/teleco_desc_lista.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tipo_teleco:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/teleco_editar":
+    post:
+      operationId: "post_ubis_teleco_editar"
+      summary: "Teleco Editar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/teleco_editar.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "integer"
+                mod:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                s_pkey:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/teleco_eliminar":
+    post:
+      operationId: "post_ubis_teleco_eliminar"
+      summary: "Teleco Eliminar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/teleco_eliminar.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                obj_pau:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/teleco_guardar":
+    post:
+      operationId: "post_ubis_teleco_guardar"
+      summary: "Teleco Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/teleco_guardar.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_desc_teleco:
+                  type: "integer"
+                id_tipo_teleco:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                num_teleco:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                observ:
+                  type: "string"
+                s_pkey:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/teleco_tabla":
+    post:
+      operationId: "post_ubis_teleco_tabla"
+      summary: "Teleco Tabla"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/teleco_tabla.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "integer"
+                obj_pau:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/trasladar_ubis":
+    post:
+      operationId: "post_ubis_trasladar_ubis"
+      summary: "Trasladar Ubis"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/trasladar_ubis.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl_dst:
+                  type: "string"
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/ubis_buscar_data":
+    post:
+      operationId: "post_ubis_ubis_buscar_data"
+      summary: "Ubis Buscar Data"
+      description: |
+        Opciones de formulario para frontend/ubis/controller/ubis_buscar.php
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/ubis_buscar_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_UbisBuscarOpcionesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_UbisBuscarOpcionesDataDataResponse"
+  "/src/ubis/ubis_editar_data":
+    post:
+      operationId: "post_ubis_ubis_editar_data"
+      summary: "Ubis Editar Data"
+      description: |
+        Opciones de desplegables para frontend/ubis/controller/ubis_editar.php
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/ubis_editar_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                region:
+                  type: "string"
+                tipo_ubi:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_UbisEditarOpcionesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_UbisEditarOpcionesDataDataResponse"
+  "/src/ubis/ubis_editar_load_data":
+    post:
+      operationId: "post_ubis_ubis_editar_load_data"
+      summary: "Ubis Editar Load Data"
+      description: |
+        Carga ficha ubis (centro/casa) para `frontend/ubis/controller/ubis_editar.php` sin repositorios en el frontend.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/ubis_editar_load_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                nombre_ubi:
+                  type: "string"
+                nuevo:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                region:
+                  type: "string"
+                tipo_ubi:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/ubis_editar_normalize_dl_data":
+    post:
+      operationId: "post_ubis_ubis_editar_normalize_dl_data"
+      summary: "Ubis Editar Normalize Dl Data"
+      description: |
+        Ajusta `obj_pau` a CentroDl/CasaDl cuando la ficha es de la delegación actual.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/ubis_editar_normalize_dl_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "string"
+                nombre_ubi:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                tipo_ubi:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/ubis_eliminar":
+    post:
+      operationId: "post_ubis_ubis_eliminar"
+      summary: "Ubis Eliminar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/ubis_eliminar.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "integer"
+                obj_pau:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/ubis_guardar":
+    post:
+      operationId: "post_ubis_ubis_guardar"
+      summary: "Ubis Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/ubis_guardar.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubis/ubis_lista_data":
+    post:
+      operationId: "post_ubis_ubis_lista_data"
+      summary: "Ubis Lista Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `lista_data`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/ubis_lista_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                nombre_ubi:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_UbisListaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_UbisListaDataDataResponse"
+  "/src/ubis/ubis_tabla_data":
+    post:
+      operationId: "post_ubis_ubis_tabla_data"
+      summary: "Ubis Tabla Data"
+      description: |
+        Normaliza los parámetros de entrada del request.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubis/api/ubis_tabla_data.md`
+      tags:
+        - "ubis"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_UbisTablaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ubis_UbisTablaDataDataResponse"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    ubis_CasasOpcionesDataData:
+      type: object
+      properties:
+        opciones:
+          type: array
+          items: {}
+    ubis_CasasOpcionesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubis_CasasOpcionesDataData"
+    ubis_CentrosFormDataData:
+      type: object
+      properties:
+        tipo_ctr:
+          type: "string"
+        tipo_labor:
+          type: "integer"
+        tipo_labor_bit_map:
+          type: array
+          items: {}
+    ubis_CentrosFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubis_CentrosFormDataData"
+    ubis_CentrosOpcionesDataData:
+      type: object
+      properties:
+        opciones:
+          type: array
+          items: {}
+    ubis_CentrosOpcionesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubis_CentrosOpcionesDataData"
+    ubis_DelegacionQueDataData:
+      type: object
+      properties:
+        opciones_dl_destino:
+          type: array
+          items: {}
+    ubis_DelegacionQueDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubis_DelegacionQueDataData"
+    ubis_DelegacionesRegionStgrDataData:
+      type: object
+      properties:
+        a_delegaciones:
+          type: array
+          items: {}
+    ubis_DelegacionesRegionStgrDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubis_DelegacionesRegionStgrDataData"
+    ubis_ListCtrDataData:
+      type: object
+      properties:
+        opciones_loc:
+          type: array
+          items: {}
+        opciones_que_lista:
+          type: array
+          items: {}
+        a_cabeceras:
+          type: "string"
+        a_valores:
+          type: array
+          items: {}
+        a_botones:
+          type: "string"
+    ubis_ListCtrDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubis_ListCtrDataData"
+    ubis_CentrosSListaDataData:
+      type: object
+      properties:
+        a_cabeceras:
+          type: "string"
+    ubis_CentrosSListaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubis_CentrosSListaDataData"
+    ubis_UbisBuscarOpcionesDataData:
+      type: object
+      properties:
+        opciones_region:
+          type: array
+          items: {}
+        opciones_tipo_ctr:
+          type: array
+          items: {}
+        opciones_tipo_casa:
+          type: array
+          items: {}
+        opciones_pais:
+          type: array
+          items: {}
+    ubis_UbisBuscarOpcionesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubis_UbisBuscarOpcionesDataData"
+    ubis_UbisEditarOpcionesDataData:
+      type: object
+      properties:
+        opciones_dl:
+          type: array
+          items: {}
+        opciones_region:
+          type: array
+          items: {}
+        opciones_tipo_ctr:
+          type: array
+          items: {}
+        opciones_tipo_casa:
+          type: array
+          items: {}
+        opciones_id_ctr_padre:
+          type: array
+          items: {}
+    ubis_UbisEditarOpcionesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubis_UbisEditarOpcionesDataData"
+    ubis_UbisListaDataData:
+      type: object
+      properties:
+        a_cabeceras:
+          type: "string"
+    ubis_UbisListaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubis_UbisListaDataData"
+    ubis_UbisTablaDataData:
+      type: object
+      properties:
+        "0":
+          type: "string"
+    ubis_UbisTablaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubis_UbisTablaDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

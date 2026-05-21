@@ -296,6 +296,150 @@ function userFlowTitle(string $name): string
     return trim($name);
 }
 
+function extractMarkdownSection(string $body, string $heading): string
+{
+    if (!preg_match('/^## ' . preg_quote($heading, '/') . '\R(?P<section>.*?)(?=^## |\z)/ms', $body, $m)) {
+        return '';
+    }
+
+    return trim($m['section']);
+}
+
+/** @return list<string> */
+function extractBulletItems(string $section): array
+{
+    if ($section === '') {
+        return [];
+    }
+
+    preg_match_all('/^- (.+)$/m', $section, $matches);
+    $items = [];
+    foreach ($matches[1] ?? [] as $item) {
+        $item = trim($item);
+        $item = preg_replace('/^`(.+)`$/', '$1', $item) ?? $item;
+        if ($item !== '') {
+            $items[] = $item;
+        }
+    }
+
+    return array_values(array_unique($items));
+}
+
+/**
+ * @return array<string, array<string, mixed>>
+ */
+function readApiByUrl(string $module): array
+{
+    $items = [];
+    foreach (glob(repoRoot() . "/docs/catalogo/{$module}/api/*.md") ?: [] as $file) {
+        $contents = file_get_contents($file);
+        if ($contents === false || !preg_match('/^---\R(?P<yaml>.*?)\R---\R(?P<body>.*)$/s', $contents, $m)) {
+            continue;
+        }
+
+        $frontMatter = parseSimpleYaml($m['yaml']);
+        if (($frontMatter['tipo'] ?? '') !== 'endpoint') {
+            continue;
+        }
+
+        $url = (string)($frontMatter['url'] ?? '');
+        if ($url === '') {
+            continue;
+        }
+
+        $frontMatter['body'] = $m['body'];
+        $frontMatter['permisos'] = extractMarkdownSection($m['body'], 'Permisos');
+        $items[$url] = $frontMatter;
+    }
+
+    return $items;
+}
+
+/** @param list<string> $endpointUrls @param array<string, array<string, mixed>> $apiByUrl */
+function collectFlowErrors(array $endpointUrls, array $apiByUrl, string $flowBody): array
+{
+    $fromFlow = extractBulletItems(extractMarkdownSection($flowBody, 'Errores Conocidos'));
+    $fromFlow = array_values(array_filter(
+        $fromFlow,
+        static fn (string $item): bool => !str_contains($item, 'No se han documentado')
+    ));
+    if ($fromFlow !== []) {
+        return $fromFlow;
+    }
+
+    $errors = [];
+    foreach ($endpointUrls as $url) {
+        if (!isset($apiByUrl[$url])) {
+            continue;
+        }
+        $errors = array_merge($errors, asStringList($apiByUrl[$url]['errores'] ?? []));
+    }
+
+    return array_values(array_unique($errors));
+}
+
+/** @param list<string> $endpointUrls @param array<string, array<string, mixed>> $apiByUrl */
+function collectFlowPermissions(array $endpointUrls, array $apiByUrl): array
+{
+    $permissions = [];
+    foreach ($endpointUrls as $url) {
+        if (!isset($apiByUrl[$url])) {
+            continue;
+        }
+        $body = (string)($apiByUrl[$url]['body'] ?? '');
+        $permissions = array_merge($permissions, extractBulletItems(extractMarkdownSection($body, 'Permisos')));
+    }
+
+    return array_values(array_unique($permissions));
+}
+
+function formatPurposeForUser(string $text): string
+{
+    $text = trim($text);
+    if ($text === '' || str_contains($text, 'Pendiente de revisar')) {
+        return $text;
+    }
+
+    $sentences = preg_split('/\.\s+/', rtrim($text, '.')) ?: [];
+    $sentences = array_values(array_filter(array_map('trim', $sentences)));
+    if (count($sentences) <= 1) {
+        return rtrim($text, '.') . '.';
+    }
+
+    $lines = [];
+    foreach ($sentences as $sentence) {
+        $lines[] = '- ' . rtrim($sentence, '.') . '.';
+    }
+
+    return implode(PHP_EOL, $lines);
+}
+
+function buildFlowPurpose(array $flow, array $capabilities): string
+{
+    $flowBody = (string)($flow['body'] ?? '');
+    $objetivo = extractMarkdownSection($flowBody, 'Objetivo De Usuario');
+    if ($objetivo !== '' && !str_contains($objetivo, 'Pendiente de revisar')) {
+        return preg_replace('/\s+/', ' ', $objetivo) ?? $objetivo;
+    }
+
+    $capabilityId = (string)($flow['capacidad'] ?? '');
+    if ($capabilityId !== '' && isset($capabilities[$capabilityId])) {
+        $capabilityBody = (string)($capabilities[$capabilityId]['body'] ?? '');
+        $objetivoCap = extractMarkdownSection($capabilityBody, 'Objetivo Funcional');
+        if ($objetivoCap !== '' && !str_contains($objetivoCap, 'Pendiente de revisar')) {
+            return preg_replace('/\s+/', ' ', $objetivoCap) ?? $objetivoCap;
+        }
+    }
+
+    return 'Pendiente de revisar. Explicar aqui, con lenguaje de usuario, que permite hacer esta funcion.';
+}
+
+/** @param array<string, array<string, mixed>> $capabilities */
+function readCapabilities(string $module): array
+{
+    return readSection($module, 'capacidades', 'capacidad');
+}
+
 /** @param array<string, array<string, mixed>> $screens */
 function screenLabel(string $screenId, array $screens): string
 {
@@ -327,8 +471,10 @@ function renderScreenList(array $screenIds, array $screens): array
 /**
  * @param array<string, array<string, mixed>> $flows
  * @param array<string, array<string, mixed>> $screens
+ * @param array<string, array<string, mixed>> $capabilities
+ * @param array<string, array<string, mixed>> $apiByUrl
  */
-function renderManual(string $module, array $flows, array $screens): string
+function renderManual(string $module, array $flows, array $screens, array $capabilities, array $apiByUrl): string
 {
     $lines = [
         '---',
@@ -351,13 +497,17 @@ function renderManual(string $module, array $flows, array $screens): string
     foreach ($flows as $flowId => $flow) {
         $title = userFlowTitle((string)($flow['nombre'] ?? $flowId));
         $entryScreens = asStringList($flow['pantallas_principales'] ?? []);
-        $scenarios = extractScenarios((string)($flow['body'] ?? ''));
+        $flowBody = (string)($flow['body'] ?? '');
+        $endpointUrls = asStringList($flow['endpoints'] ?? []);
+        $scenarios = extractScenarios($flowBody);
+        $errors = collectFlowErrors($endpointUrls, $apiByUrl, $flowBody);
+        $permissions = collectFlowPermissions($endpointUrls, $apiByUrl);
 
         $lines[] = '## ' . $title;
         $lines[] = '';
         $lines[] = '### Para Que Sirve';
         $lines[] = '';
-        $lines[] = 'Pendiente de revisar. Explicar aqui, con lenguaje de usuario, que permite hacer esta funcion.';
+        $lines[] = formatPurposeForUser(buildFlowPurpose($flow, $capabilities));
         $lines[] = '';
         $lines[] = '### Donde Entrar';
         $lines[] = '';
@@ -383,8 +533,24 @@ function renderManual(string $module, array $flows, array $screens): string
 
         $lines[] = '### Errores O Avisos Frecuentes';
         $lines[] = '';
-        $lines[] = '- Pendiente de revisar.';
+        if ($errors === []) {
+            $lines[] = '- No hay errores documentados en el catalogo para este flujo.';
+        } else {
+            foreach ($errors as $error) {
+                $lines[] = '- `' . str_replace('`', '', $error) . '`';
+            }
+        }
         $lines[] = '';
+
+        if ($permissions !== []) {
+            $lines[] = '### Permisos';
+            $lines[] = '';
+            foreach ($permissions as $permission) {
+                $lines[] = '- ' . $permission;
+            }
+            $lines[] = '';
+        }
+
         $lines[] = '### Referencias Internas';
         $lines[] = '';
         $lines[] = '- Flujo: `' . $flowId . '`';
@@ -433,6 +599,8 @@ $options = parseOptions($argv);
 $module = $options['module'];
 $flows = readSection($module, 'flujos', 'flujo_frontend');
 $screens = readSection($module, 'pantallas', 'pantalla_frontend');
+$capabilities = readCapabilities($module);
+$apiByUrl = readApiByUrl($module);
 
 if ($flows === []) {
     fail("No se han encontrado flujos en docs/catalogo/{$module}/flujos/*.md");
@@ -447,15 +615,19 @@ if ($options['dry-run']) {
     echo 'WRITE ' . relativePath($target) . PHP_EOL;
     echo 'Flujos leidos: ' . count($flows) . PHP_EOL;
     echo 'Pantallas leidas: ' . count($screens) . PHP_EOL;
+    echo 'Capacidades leidas: ' . count($capabilities) . PHP_EOL;
+    echo 'Endpoints API leidos: ' . count($apiByUrl) . PHP_EOL;
     exit(0);
 }
 
 ensureDirectory(dirname($target));
-if (file_put_contents($target, renderManual($module, $flows, $screens)) === false) {
+if (file_put_contents($target, renderManual($module, $flows, $screens, $capabilities, $apiByUrl)) === false) {
     fail('No se pudo escribir: ' . relativePath($target));
 }
 
 echo 'WRITE ' . relativePath($target) . PHP_EOL;
 echo 'Flujos leidos: ' . count($flows) . PHP_EOL;
 echo 'Pantallas leidas: ' . count($screens) . PHP_EOL;
+echo 'Capacidades leidas: ' . count($capabilities) . PHP_EOL;
+echo 'Endpoints API leidos: ' . count($apiByUrl) . PHP_EOL;
 

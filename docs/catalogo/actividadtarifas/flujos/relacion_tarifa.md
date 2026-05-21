@@ -17,7 +17,9 @@ Propuesta generada automaticamente desde la capacidad `actividadtarifas.relacion
 
 ## Objetivo De Usuario
 
-Pendiente de revisar. Redactar aqui el objetivo en lenguaje de usuario, no tecnico.
+Definir qué tipo de tarifa del catálogo corresponde a cada tipo de actividad.
+
+Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Relacion Tarifa).
 
 ## Punto De Entrada
 
@@ -99,6 +101,15 @@ Acciones JavaScript:
 - `/src/actividadtarifas/relacion_tarifa_form_data`
 - `/src/actividadtarifas/relacion_tarifa_lista_data`
 - `/src/actividadtarifas/relacion_tarifa_update`
+
+## Errores Conocidos
+
+- ``debe indicar el tipo de actividad``
+- ``debe indicar la tarifa``
+- ``hay un error, no se ha borrado``
+- ``hay un error, no se ha guardado``
+- ``no se encuentra la relación``
+- ``no sé cuál he de borrar``
 
 ## Revision Manual
 

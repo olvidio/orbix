@@ -225,7 +225,7 @@ function readSection(string $module, string $section, string $expectedType): arr
     $items = [];
     foreach (catalogFiles($module, $section) as $file) {
         $contents = file_get_contents($file);
-        if ($contents === false || !preg_match('/^---\R(?P<yaml>.*?)\R---/s', $contents, $m)) {
+        if ($contents === false || !preg_match('/^---\R(?P<yaml>.*?)\R---\R(?P<body>.*)$/s', $contents, $m)) {
             continue;
         }
 
@@ -240,6 +240,7 @@ function readSection(string $module, string $section, string $expectedType): arr
         }
 
         $frontMatter['source'] = relativePath($file);
+        $frontMatter['body'] = $m['body'];
         $items[$id] = $frontMatter;
     }
 
@@ -396,6 +397,39 @@ function actionTitle(string $action): string
     return ucwords(str_replace('_', ' ', $action));
 }
 
+function extractMarkdownSection(string $body, string $heading): string
+{
+    if (!preg_match('/^## ' . preg_quote($heading, '/') . '\R(?P<section>.*?)(?=^## |\z)/ms', $body, $m)) {
+        return '';
+    }
+
+    return trim($m['section']);
+}
+
+/** @return list<string> */
+function extractBulletItems(string $section): array
+{
+    if ($section === '') {
+        return [];
+    }
+
+    preg_match_all('/^- (.+)$/m', $section, $matches);
+
+    return array_values(array_filter(array_map('trim', $matches[1] ?? [])));
+}
+
+/** @param array<string, mixed> $capability */
+function buildUserObjective(array $capability): string
+{
+    $body = (string)($capability['body'] ?? '');
+    $objetivo = extractMarkdownSection($body, 'Objetivo Funcional');
+    if ($objetivo !== '' && !str_contains($objetivo, 'Pendiente de revisar')) {
+        return preg_replace('/\s+/', ' ', $objetivo) ?? $objetivo;
+    }
+
+    return 'Pendiente de revisar. Redactar aqui el objetivo en lenguaje de usuario, no tecnico.';
+}
+
 /**
  * @param array<string, mixed> $capability
  * @param array<string, array<string, mixed>> $relatedScreens
@@ -433,7 +467,7 @@ function renderFlow(string $module, array $capability, array $relatedScreens): s
         '',
         '## Objetivo De Usuario',
         '',
-        'Pendiente de revisar. Redactar aqui el objetivo en lenguaje de usuario, no tecnico.',
+        buildUserObjective($capability),
         '',
         '## Punto De Entrada',
         '',
@@ -472,6 +506,15 @@ function renderFlow(string $module, array $capability, array $relatedScreens): s
     $lines[] = '## Endpoints Del Flujo';
     $lines[] = '';
     array_push($lines, ...markdownList($endpoints, 'No se han detectado endpoints.'));
+    $lines[] = '';
+    $errores = extractBulletItems(extractMarkdownSection((string)($capability['body'] ?? ''), 'Errores Conocidos'));
+    $lines[] = '## Errores Conocidos';
+    $lines[] = '';
+    if ($errores === []) {
+        $lines[] = 'No se han documentado errores en la capacidad.';
+    } else {
+        array_push($lines, ...markdownList($errores, 'No se han documentado errores en la capacidad.'));
+    }
     $lines[] = '';
     $lines[] = '## Revision Manual';
     $lines[] = '';

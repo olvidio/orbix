@@ -4,9 +4,13 @@ tipo: "endpoint"
 modulo: "actividadtarifas"
 url: "/src/actividadtarifas/tipo_tarifa_update"
 metodos: ["GET", "POST"]
+operacion: "mutacion"
 controller: "src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_update.php"
 entrada: ["post.id_tarifa:string", "post.letra:string", "post.modo:string", "post.observ:string"]
+entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+requiere_hashb: false
+errores: ["no se encuentra la tarifa", "hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa.php", "frontend/actividadtarifas/controller/tarifa_form.php", "frontend/actividadtarifas/view/tarifa_form.phtml"]
 casos_uso: ["src\\actividadtarifas\\application\\TipoTarifaUpdate"]
 tags: ["actividadtarifas", "tipo", "tarifa", "update"]
@@ -17,26 +21,36 @@ estado_revision: "generado"
 
 Endpoint backend: crea o actualiza un `TipoTarifa`.
 
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
 ## Endpoint
 
 - URL: `/src/actividadtarifas/tipo_tarifa_update`
 - Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
 - Controller: `src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_update.php`
 
-## Entrada Inferida
+## Entrada
 
-- `post.id_tarifa` (`string`)
-- `post.letra` (`string`)
-- `post.modo` (`string`)
-- `post.observ` (`string`)
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_tarifa` | `string` | controller+application | No | controller+application |
+| `letra` | `string` | controller+application | No | controller+application |
+| `modo` | `string` | controller+application | No | controller+application |
+| `observ` | `string` | controller+application | No | controller+application |
 
-## Salida Inferida
+## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Evidencia: `$error, 'ok'`
+- Exito: `success: true`, `data: "ok"`.
 
-## Casos De Uso Detectados
+## Errores conocidos
+
+- `no se encuentra la tarifa`
+- `hay un error, no se ha guardado`
+
+## Casos De Uso
 
 - `src\actividadtarifas\application\TipoTarifaUpdate`
 
@@ -48,8 +62,6 @@ Endpoint backend: crea o actualiza un `TipoTarifa`.
 
 ## Revision Manual
 
-- Completar objetivo funcional.
-- Confirmar permisos/autorizacion.
-- Confirmar efectos sobre datos.
+- Confirmar permisos/autorizacion de oficina.
 - Anadir ejemplos reales de request/response.
-- Marcar procesos parecidos o duplicados si aplica.
+- Marcar `estado_revision: "revisado"` cuando este validado.

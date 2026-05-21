@@ -19,19 +19,37 @@ paths:
       description: |
         Edita un `ActividadCargo` existente.
         
+        Operacion: `mutacion`.
+        
         Fuente catalogo: `docs/catalogo/actividadcargos/api/cargo_editar.md`
       tags:
         - "actividadcargos"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
+                - "id_nom"
+                - "id_cargo"
               properties:
                 asis:
                   type: "string"
                 asis_presente:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_cargo:
+                  type: "integer"
+                id_item:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                observ:
+                  type: "string"
+                puede_agd:
                   type: "string"
       responses:
         "200":
@@ -53,19 +71,28 @@ paths:
       description: |
         Elimina un `ActividadCargo` y, si procede, su `Asistente`.
         
+        Operacion: `mutacion`.
+        
         Fuente catalogo: `docs/catalogo/actividadcargos/api/cargo_eliminar.md`
       tags:
         - "actividadcargos"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_item"
               properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
+                elim_asis:
+                  type: "integer"
+                id_item:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -86,19 +113,34 @@ paths:
       description: |
         Crea un `ActividadCargo`.
         
+        Operacion: `mutacion`.
+        
         Fuente catalogo: `docs/catalogo/actividadcargos/api/cargo_nuevo.md`
       tags:
         - "actividadcargos"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_activ"
+                - "id_nom"
+                - "id_cargo"
               properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
+                asis:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_cargo:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                observ:
+                  type: "string"
+                puede_agd:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -117,21 +159,36 @@ paths:
       operationId: "post_actividadcargos_form_cargos_de_actividad_data"
       summary: "Form Cargos De Actividad Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Datos para `form_cargos_de_actividad`. Los desplegables se construyen en el front ({
+        
+        Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/actividadcargos/api/form_cargos_de_actividad_data.md`
       tags:
         - "actividadcargos"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
+                id_dossier:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                mod:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                pau:
+                  type: "string"
+                permiso:
+                  type: "string"
+                sel:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -150,21 +207,36 @@ paths:
       operationId: "post_actividadcargos_form_cargos_personas_en_actividad_data"
       summary: "Form Cargos Personas En Actividad Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Datos para `form_cargos_personas_en_actividad` (vista por persona).
+        
+        Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/actividadcargos/api/form_cargos_personas_en_actividad_data.md`
       tags:
         - "actividadcargos"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
+                id_dossier:
+                  type: "integer"
+                id_pau:
+                  type: "integer"
+                id_tipo:
+                  type: "integer"
+                mod:
+                  type: "string"
+                pau:
+                  type: "string"
+                permiso:
+                  type: "integer"
+                que_dl:
+                  type: "string"
+                sel:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."

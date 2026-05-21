@@ -1,0 +1,61 @@
+---
+id: "encargossacd.listas_com_sacd_data"
+tipo: "endpoint"
+modulo: "encargossacd"
+url: "/src/encargossacd/listas_com_sacd_data"
+metodos: ["GET", "POST"]
+operacion: "mutacion"
+controller: "src/encargossacd/infrastructure/ui/http/controllers/listas_com_sacd_data.php"
+entrada: ["post.sel:mixed"]
+entrada_obligatoria: []
+respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "encargossacd_ListasComSacdDataData"
+respuesta_data: ["array_modo:array", "lugar_fecha:string"]
+requiere_hashb: false
+frontend_referencias: ["frontend/encargossacd/controller/listas_com_sacd.php"]
+casos_uso: ["src\\encargossacd\\application\\ListasComSacdData"]
+tags: ["encargossacd", "listas", "com", "sacd", "data"]
+estado_revision: "generado"
+---
+
+# Listas Com Sacd Data
+
+Datos para la comunicacion a los SACD. Sustituye la logica de `frontend/encargossacd/controller/listas_com_sacd.php`.
+
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Endpoint
+
+- URL: `/src/encargossacd/listas_com_sacd_data`
+- Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
+- Controller: `src/encargossacd/infrastructure/ui/http/controllers/listas_com_sacd_data.php`
+
+## Entrada
+
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `sel` | `mixed` | controller | No | controller |
+
+## Salida
+
+- Helper: `ContestarJson::enviar`
+- Forma: `standard_envelope_string_data`
+- Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `encargossacd_ListasComSacdDataData`):
+  - `array_modo` (`array`)
+  - `lugar_fecha` (`string`)
+
+## Casos De Uso
+
+- `src\encargossacd\application\ListasComSacdData`
+
+## Frontend Relacionado
+
+- `frontend/encargossacd/controller/listas_com_sacd.php`
+
+## Revision Manual
+
+- Confirmar permisos/autorizacion de oficina.
+- Anadir ejemplos reales de request/response.
+- Marcar `estado_revision: "revisado"` cuando este validado.

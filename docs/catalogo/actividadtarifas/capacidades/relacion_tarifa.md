@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `rela
 
 ## Objetivo Funcional
 
-Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad.
+Gestiona RelacionTarifa. crea o actualiza una RelacionTarifaTipoActividad. datos del formulario modificar/nuevo de RelacionTarifaTipoActividad. elimina una RelacionTarifaTipoActividad. listado de relaciones tarifa ↔ tipo actividad.
 
 ## Acciones Detectadas
 
@@ -54,6 +54,15 @@ Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad
 - Endpoint backend: datos del formulario modificar/nuevo de `RelacionTarifaTipoActividad`.
 - Endpoint backend: elimina una `RelacionTarifaTipoActividad`.
 - Endpoint backend: listado de relaciones tarifa ↔ tipo actividad.
+
+## Errores Conocidos
+
+- `debe indicar el tipo de actividad`
+- `debe indicar la tarifa`
+- `hay un error, no se ha borrado`
+- `hay un error, no se ha guardado`
+- `no se encuentra la relación`
+- `no sé cuál he de borrar`
 
 ## Revision Manual
 

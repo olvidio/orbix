@@ -17,7 +17,9 @@ Propuesta generada automaticamente desde la capacidad `actividadcargos.cargo.ges
 
 ## Objetivo De Usuario
 
-Pendiente de revisar. Redactar aqui el objetivo en lenguaje de usuario, no tecnico.
+Ver, añadir y quitar cargos de personas en una actividad (dossier 3102).
+
+Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Cargo).
 
 ## Punto De Entrada
 
@@ -60,6 +62,16 @@ Acciones JavaScript:
 
 - `/src/actividadcargos/cargo_eliminar`
 - `/src/actividadcargos/cargo_nuevo`
+
+## Errores Conocidos
+
+- ``falta id_item``
+- ``faltan parametros id_activ / id_nom / id_cargo``
+- ``hay un error, no se ha eliminado``
+- ``hay un error, no se ha eliminado el asistente``
+- ``hay un error, no se ha guardado el asistente``
+- ``no encuentro el cargo``
+- ``ya existe este cargo para esta actividad``
 
 ## Revision Manual
 

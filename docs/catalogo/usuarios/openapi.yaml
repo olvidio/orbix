@@ -1,0 +1,1729 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - usuarios"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/usuarios/app_login":
+    post:
+      operationId: "post_usuarios_app_login"
+      summary: "App Login"
+      description: |
+        Login JSON para app móvil (Camino B).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/app_login.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                esquema:
+                  type: "string"
+                password:
+                  type: "string"
+                username:
+                  type: "string"
+                verification_code:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/usuarios_AppMobileLoginDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/usuarios_AppMobileLoginDataResponse"
+  "/src/usuarios/app_session":
+    post:
+      operationId: "post_usuarios_app_session"
+      summary: "App Session"
+      description: |
+        Comprueba si hay sesión autenticada (útil al arrancar la app).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/app_session.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/borrar_pwd":
+    post:
+      operationId: "post_usuarios_borrar_pwd"
+      summary: "Borrar Pwd"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/borrar_pwd.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/check_first_login_2fa":
+    post:
+      operationId: "post_usuarios_check_first_login_2fa"
+      summary: "Check First Login 2fa"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/check_first_login_2fa.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/grupo_eliminar":
+    post:
+      operationId: "post_usuarios_grupo_eliminar"
+      summary: "Grupo Eliminar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/grupo_eliminar.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/grupo_guardar":
+    post:
+      operationId: "post_usuarios_grupo_guardar"
+      summary: "Grupo Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/grupo_guardar.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: "integer"
+                usuario:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/grupo_info":
+    post:
+      operationId: "post_usuarios_grupo_info"
+      summary: "Grupo Info"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/grupo_info.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/grupo_lista":
+    post:
+      operationId: "post_usuarios_grupo_lista"
+      summary: "Grupo Lista"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/grupo_lista.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/mails_contactos_region":
+    post:
+      operationId: "post_usuarios_mails_contactos_region"
+      summary: "Mails Contactos Region"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/mails_contactos_region.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                region:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/perm_activ_eliminar":
+    post:
+      operationId: "post_usuarios_perm_activ_eliminar"
+      summary: "Perm Activ Eliminar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/perm_activ_eliminar.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/perm_activ_guardar":
+    post:
+      operationId: "post_usuarios_perm_activ_guardar"
+      summary: "Perm Activ Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/perm_activ_guardar.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                afecta_a:
+                  type: "array"
+                  items:
+                    type: string
+                dl_propia:
+                  type: "string"
+                fase_ref:
+                  type: "array"
+                  items:
+                    type: string
+                iactividad_val:
+                  type: "string"
+                iasistentes_val:
+                  type: "string"
+                id_item:
+                  type: "integer"
+                id_tipo_activ:
+                  type: "integer"
+                id_usuario:
+                  type: "integer"
+                inom_tipo_val:
+                  type: "string"
+                isfsv_val:
+                  type: "string"
+                perm_off:
+                  type: "array"
+                  items:
+                    type: string
+                perm_on:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/perm_activ_lista":
+    post:
+      operationId: "post_usuarios_perm_activ_lista"
+      summary: "Perm Activ Lista"
+      description: |
+        Para la tabla slickGrid, el width debe ser en pixels No hay que poner unidades, pues da un error de javascript.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/perm_activ_lista.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/perm_menu_eliminar":
+    post:
+      operationId: "post_usuarios_perm_menu_eliminar"
+      summary: "Perm Menu Eliminar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/perm_menu_eliminar.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/perm_menu_guardar":
+    post:
+      operationId: "post_usuarios_perm_menu_guardar"
+      summary: "Perm Menu Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/perm_menu_guardar.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "integer"
+                id_usuario:
+                  type: "integer"
+                menu_perm:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/perm_menu_info":
+    post:
+      operationId: "post_usuarios_perm_menu_info"
+      summary: "Perm Menu Info"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/perm_menu_info.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "integer"
+                id_usuario:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/perm_menu_lista":
+    post:
+      operationId: "post_usuarios_perm_menu_lista"
+      summary: "Perm Menu Lista"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/perm_menu_lista.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/preferencia_tabla_get":
+    post:
+      operationId: "post_usuarios_preferencia_tabla_get"
+      summary: "Preferencia Tabla Get"
+      description: |
+        Devuelve las preferencias de usuario necesarias para renderizar una tabla (HTML simple o SlickGrid) en el front. Entrada: - `id_tabla` (opcional): identificador del grid. Si viene vacío, no se devolverán preferencias específicas del grid (útil cuando sólo se necesita saber si el usuario prefiere HTML o SlickGrid). Salida: array asociativo con la forma: [ 'formato_tabla' => ''|'html'|'slickgrid', // prefs 'tabla_presentacion' 'slickgrid' => null|array, // prefs 'slickGrid_<id_tabla>_<idioma>' ] Para slickgrid se busca primero la preferencia del usuario actual; si no existe, se usa la del usuario 44 (default).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/preferencia_tabla_get.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tabla:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/preferencias_guardar":
+    post:
+      operationId: "post_usuarios_preferencias_guardar"
+      summary: "Preferencias Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/preferencias_guardar.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                estilo_color:
+                  type: "string"
+                idioma_nou:
+                  type: "string"
+                inicio:
+                  type: "string"
+                layout:
+                  type: "string"
+                oficina:
+                  type: "string"
+                ordenApellidos:
+                  type: "string"
+                que:
+                  type: "string"
+                sPrefs:
+                  type: "string"
+                tabla:
+                  type: "string"
+                tipo_menu:
+                  type: "string"
+                tipo_tabla:
+                  type: "string"
+                zona_horaria_nou:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/recuperar_2fa_mail":
+    post:
+      operationId: "post_usuarios_recuperar_2fa_mail"
+      summary: "Recuperar 2fa Mail"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/recuperar_2fa_mail.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                esquema:
+                  type: "string"
+                esquema_web:
+                  type: "string"
+                ubicacion:
+                  type: "string"
+                url_base:
+                  type: "string"
+                username:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/recuperar_password_mail":
+    post:
+      operationId: "post_usuarios_recuperar_password_mail"
+      summary: "Recuperar Password Mail"
+      description: |
+        Página para recuperar la contraseña de un usuario.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/recuperar_password_mail.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                esquema:
+                  type: "string"
+                esquema_web:
+                  type: "string"
+                ubicacion:
+                  type: "string"
+                url_index:
+                  type: "string"
+                username:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/role_eliminar":
+    post:
+      operationId: "post_usuarios_role_eliminar"
+      summary: "Role Eliminar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/role_eliminar.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/role_grupmenu_add":
+    post:
+      operationId: "post_usuarios_role_grupmenu_add"
+      summary: "Role Grupmenu Add"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/role_grupmenu_add.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/role_grupmenu_del":
+    post:
+      operationId: "post_usuarios_role_grupmenu_del"
+      summary: "Role Grupmenu Del"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/role_grupmenu_del.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/role_grupmenu_info":
+    post:
+      operationId: "post_usuarios_role_grupmenu_info"
+      summary: "Role Grupmenu Info"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/role_grupmenu_info.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_role:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/role_guardar":
+    post:
+      operationId: "post_usuarios_role_guardar"
+      summary: "Role Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/role_guardar.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dmz:
+                  type: "integer"
+                id_role:
+                  type: "integer"
+                pau:
+                  type: "string"
+                role:
+                  type: "string"
+                sf:
+                  type: "integer"
+                sv:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/role_info":
+    post:
+      operationId: "post_usuarios_role_info"
+      summary: "Role Info"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/role_info.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_role:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/role_lista":
+    post:
+      operationId: "post_usuarios_role_lista"
+      summary: "Role Lista"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/role_lista.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixCustomJsonResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixCustomJsonResponse"
+  "/src/usuarios/usuario_2fa_info":
+    post:
+      operationId: "post_usuarios_usuario_2fa_info"
+      summary: "Usuario 2fa Info"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_2fa_info.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_2fa_update":
+    post:
+      operationId: "post_usuarios_usuario_2fa_update"
+      summary: "Usuario 2fa Update"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_2fa_update.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                enable_2fa:
+                  type: "boolean"
+                id_usuario:
+                  type: "integer"
+                secret_2fa:
+                  type: "string"
+                verification_code:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_2fa_verify":
+    post:
+      operationId: "post_usuarios_usuario_2fa_verify"
+      summary: "Usuario 2fa Verify"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_2fa_verify.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                secret_2fa:
+                  type: "string"
+                verification_code:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_ayuda_info":
+    post:
+      operationId: "post_usuarios_usuario_ayuda_info"
+      summary: "Usuario Ayuda Info"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_ayuda_info.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                esquema:
+                  type: "string"
+                esquema_web:
+                  type: "string"
+                ubicacion:
+                  type: "string"
+                username:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_check_pwd":
+    post:
+      operationId: "post_usuarios_usuario_check_pwd"
+      summary: "Usuario Check Pwd"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_check_pwd.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: "integer"
+                password:
+                  type: "string"
+                usuario:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_eliminar":
+    post:
+      operationId: "post_usuarios_usuario_eliminar"
+      summary: "Usuario Eliminar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_eliminar.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_form":
+    post:
+      operationId: "post_usuarios_usuario_form"
+      summary: "Usuario Form"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_form.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: "integer"
+                quien:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_grupo_add":
+    post:
+      operationId: "post_usuarios_usuario_grupo_add"
+      summary: "Usuario Grupo Add"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_grupo_add.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ctx:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_grupo_del":
+    post:
+      operationId: "post_usuarios_usuario_grupo_del"
+      summary: "Usuario Grupo Del"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_grupo_del.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ctx:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_grupo_del_lst":
+    post:
+      operationId: "post_usuarios_usuario_grupo_del_lst"
+      summary: "Usuario Grupo Del Lst"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_grupo_del_lst.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_grupo_lst":
+    post:
+      operationId: "post_usuarios_usuario_grupo_lst"
+      summary: "Usuario Grupo Lst"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_grupo_lst.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_guardar":
+    post:
+      operationId: "post_usuarios_usuario_guardar"
+      summary: "Usuario Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_guardar.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                cambio_password:
+                  type: "boolean"
+                casas:
+                  type: "array"
+                  items:
+                    type: string
+                ctx:
+                  type: "string"
+                email:
+                  type: "string"
+                has_2fa:
+                  type: "boolean"
+                id_ctr:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                id_role:
+                  type: "integer"
+                nom_usuario:
+                  type: "string"
+                pass:
+                  type: "string"
+                password:
+                  type: "string"
+                perm_activ:
+                  type: "array"
+                  items:
+                    type: string
+                usuario:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_guardar_mail":
+    post:
+      operationId: "post_usuarios_usuario_guardar_mail"
+      summary: "Usuario Guardar Mail"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_guardar_mail.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: "string"
+                id_usuario:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_guardar_pwd":
+    post:
+      operationId: "post_usuarios_usuario_guardar_pwd"
+      summary: "Usuario Guardar Pwd"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_guardar_pwd.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: "integer"
+                password:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixCustomJsonResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixCustomJsonResponse"
+  "/src/usuarios/usuario_info":
+    post:
+      operationId: "post_usuarios_usuario_info"
+      summary: "Usuario Info"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_info.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/usuarios/usuario_lista":
+    post:
+      operationId: "post_usuarios_usuario_lista"
+      summary: "Usuario Lista"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_lista.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixCustomJsonResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixCustomJsonResponse"
+  "/src/usuarios/usuario_preferencias":
+    post:
+      operationId: "post_usuarios_usuario_preferencias"
+      summary: "Usuario Preferencias"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/usuarios/api/usuario_preferencias.md`
+      tags:
+        - "usuarios"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    usuarios_AppMobileLoginData:
+      type: object
+      properties:
+        ok:
+          type: "string"
+    usuarios_AppMobileLoginDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/usuarios_AppMobileLoginData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."
+    OrbixCustomJsonResponse:
+      type: object
+      additionalProperties: true

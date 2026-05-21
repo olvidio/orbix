@@ -1,0 +1,66 @@
+---
+id: "certificados.certificado_emitido_guardar"
+tipo: "endpoint"
+modulo: "certificados"
+url: "/src/certificados/certificado_emitido_guardar"
+metodos: ["GET", "POST"]
+operacion: "mutacion"
+controller: "src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php"
+entrada: ["post.certificado:string", "post.certificado_old:string", "post.destino:string", "post.f_certificado:string", "post.f_enviado:string", "post.firmado:string", "post.id_item:integer", "post.id_nom:integer", "post.idioma:string", "post.nom:string", "post.nuevo:integer"]
+entrada_obligatoria: []
+respuesta: "standard_envelope_string_data"
+requiere_hashb: false
+frontend_referencias: ["frontend/certificados/controller/certificado_emitido_2_mpdf.php"]
+casos_uso: ["src\\certificados\\application\\CertificadoEmitidoGuardarMessages"]
+tags: ["certificados", "certificado", "emitido", "guardar"]
+estado_revision: "generado"
+---
+
+# Certificado Emitido Guardar
+
+Mensajes legibles al guardar un certificado emitido (errores de BD, etc.).
+
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Endpoint
+
+- URL: `/src/certificados/certificado_emitido_guardar`
+- Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
+- Controller: `src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php`
+
+## Entrada
+
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `certificado` | `string` | controller | No | controller |
+| `certificado_old` | `string` | controller | No | controller |
+| `destino` | `string` | controller | No | controller |
+| `f_certificado` | `string` | controller | No | controller |
+| `f_enviado` | `string` | controller | No | controller |
+| `firmado` | `string` | controller | No | controller |
+| `id_item` | `integer` | controller | No | controller |
+| `id_nom` | `integer` | controller | No | controller |
+| `idioma` | `string` | controller | No | controller |
+| `nom` | `string` | controller | No | controller |
+| `nuevo` | `integer` | controller | No | controller |
+
+## Salida
+
+- Helper: `ContestarJson::enviar`
+- Forma: `standard_envelope_string_data`
+- Exito: `success: true`, `data: "ok"`.
+
+## Casos De Uso
+
+- `src\certificados\application\CertificadoEmitidoGuardarMessages`
+
+## Frontend Relacionado
+
+- `frontend/certificados/controller/certificado_emitido_2_mpdf.php`
+
+## Revision Manual
+
+- Confirmar permisos/autorizacion de oficina.
+- Anadir ejemplos reales de request/response.
+- Marcar `estado_revision: "revisado"` cuando este validado.

@@ -1,0 +1,666 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - actividadplazas"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/actividadplazas/gestion_plazas_data":
+    post:
+      operationId: "post_actividadplazas_gestion_plazas_data"
+      summary: "Gestion Plazas Data"
+      description: |
+        Endpoint backend: devuelve los datos del cuadro de gestion de plazas (cabeceras, valores, a_grupo y metadatos de periodo/tipo) para que el controller frontend monte el `frontend\shared\web\TablaEditable`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadplazas/api/gestion_plazas_data.md`
+      tags:
+        - "actividadplazas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_tipo_activ:
+                  type: "string"
+                periodo:
+                  type: "string"
+                sactividad:
+                  type: "string"
+                sactividad2:
+                  type: "string"
+                sasistentes:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_GestionPlazasDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_GestionPlazasDataDataResponse"
+  "/src/actividadplazas/gestion_plazas_update":
+    post:
+      operationId: "post_actividadplazas_gestion_plazas_update"
+      summary: "Gestion Plazas Update"
+      description: |
+        Endpoint backend: actualiza las plazas (totales, concedidas o pedidas) desde la edicion inline de `frontend\shared\web\TablaEditable`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadplazas/api/gestion_plazas_update.md`
+      tags:
+        - "actividadplazas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                colName:
+                  type: "string"
+                data:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadplazas/peticiones_activ_data":
+    post:
+      operationId: "post_actividadplazas_peticiones_activ_data"
+      summary: "Peticiones Activ Data"
+      description: |
+        Endpoint backend: lista de actividades candidatas + peticiones actuales para una persona+tipo.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadplazas/api/peticiones_activ_data.md`
+      tags:
+        - "actividadplazas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ctr_agd:
+                  type: "integer"
+                id_ctr_n:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                na:
+                  type: "string"
+                que:
+                  type: "string"
+                sactividad:
+                  type: "string"
+                todos:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_PeticionesActivDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_PeticionesActivDataDataResponse"
+  "/src/actividadplazas/peticiones_eliminar":
+    post:
+      operationId: "post_actividadplazas_peticiones_eliminar"
+      summary: "Peticiones Eliminar"
+      description: |
+        Endpoint backend: elimina todas las peticiones de una persona+tipo.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadplazas/api/peticiones_eliminar.md`
+      tags:
+        - "actividadplazas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "id_nom"
+              properties:
+                id_nom:
+                  type: "integer"
+                sactividad:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadplazas/peticiones_guardar":
+    post:
+      operationId: "post_actividadplazas_peticiones_guardar"
+      summary: "Peticiones Guardar"
+      description: |
+        Endpoint backend: guarda las peticiones de una persona+tipo (borra las anteriores y crea las nuevas en orden).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadplazas/api/peticiones_guardar.md`
+      tags:
+        - "actividadplazas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "id_nom"
+              properties:
+                actividades:
+                  type: "array"
+                  items:
+                    type: string
+                id_nom:
+                  type: "integer"
+                sactividad:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadplazas/peticiones_incorporar":
+    post:
+      operationId: "post_actividadplazas_peticiones_incorporar"
+      summary: "Peticiones Incorporar"
+      description: |
+        Endpoint backend: incorpora las primeras peticiones de plaza de cada persona como asistencia con plaza asignada/pedida (segun si la actividad es de midele o de otra dl).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadplazas/api/peticiones_incorporar.md`
+      tags:
+        - "actividadplazas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sactividad:
+                  type: "string"
+                sasistentes:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_PeticionesIncorporarDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_PeticionesIncorporarDataResponse"
+  "/src/actividadplazas/plazas_balance_data":
+    post:
+      operationId: "post_actividadplazas_plazas_balance_data"
+      summary: "Plazas Balance Data"
+      description: |
+        Endpoint backend: datos del grid comparativo A vs B (plazas concedidas y libres entre dos dl para un tipo de actividad).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadplazas/api/plazas_balance_data.md`
+      tags:
+        - "actividadplazas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+                id_tipo_activ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_PlazasBalanceDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_PlazasBalanceDataDataResponse"
+  "/src/actividadplazas/plazas_balance_que_data":
+    post:
+      operationId: "post_actividadplazas_plazas_balance_que_data"
+      summary: "Plazas Balance Que Data"
+      description: |
+        Datos para la pantalla plazas_balance_que (opciones dl + id_tipo_activ).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadplazas/api/plazas_balance_que_data.md`
+      tags:
+        - "actividadplazas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tipo_activ:
+                  type: "string"
+                sactividad:
+                  type: "string"
+                sasistentes:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_PlazasBalanceQueDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_PlazasBalanceQueDataDataResponse"
+  "/src/actividadplazas/plazas_ceder":
+    post:
+      operationId: "post_actividadplazas_plazas_ceder"
+      summary: "Plazas Ceder"
+      description: |
+        Endpoint backend: actualiza el array `cedidas` de `ActividadPlazasDl` para ceder (o quitar) plazas de `mi_dele` a otra dl en una actividad.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadplazas/api/plazas_ceder.md`
+      tags:
+        - "actividadplazas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "id_activ"
+              properties:
+                id_activ:
+                  type: "integer"
+                num_plazas:
+                  type: "integer"
+                region_dl:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadplazas/posibles_propietarios_data":
+    post:
+      operationId: "post_actividadplazas_posibles_propietarios_data"
+      summary: "Posibles Propietarios Data"
+      description: |
+        Endpoint backend: devuelve el payload JSON estandar de desplegable (`id`, `opciones`, `selected`, `blanco`, `val_blanco`) con los posibles propietarios de plaza para la persona+actividad indicadas.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadplazas/api/posibles_propietarios_data.md`
+      tags:
+        - "actividadplazas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_PosiblesPropietariosDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_PosiblesPropietariosDataDataResponse"
+  "/src/actividadplazas/resumen_plazas_data":
+    post:
+      operationId: "post_actividadplazas_resumen_plazas_data"
+      summary: "Resumen Plazas Data"
+      description: |
+        Endpoint backend: datos del resumen de plazas por actividad (calendario/cedidas/conseguidas/disponibles/ocupadas por dl) + opciones del desplegable para "ceder" y flags publicado/otra_dl.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadplazas/api/resumen_plazas_data.md`
+      tags:
+        - "actividadplazas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                nom_activ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_ResumenPlazasDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadplazas_ResumenPlazasDataDataResponse"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    actividadplazas_GestionPlazasDataData:
+      type: object
+      properties:
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
+        a_grupo:
+          type: array
+          items: {}
+        extendida:
+          type: "boolean"
+        id_tipo_activ:
+          type: "string"
+        sactividad:
+          type: "string"
+        year:
+          type: "string"
+        periodo:
+          type: "string"
+        empiezamin:
+          type: "string"
+        empiezamax:
+          type: "string"
+    actividadplazas_GestionPlazasDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadplazas_GestionPlazasDataData"
+    actividadplazas_PeticionesActivDataData:
+      type: object
+      properties:
+        id_nom:
+          type: "integer"
+        ap_nom:
+          type: "string"
+        na:
+          type: "string"
+        sactividad:
+          type: "string"
+        sid_activ:
+          type: "string"
+        opciones:
+          type: array
+          items: {}
+        tipo:
+          type: "string"
+    actividadplazas_PeticionesActivDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadplazas_PeticionesActivDataData"
+    actividadplazas_PeticionesIncorporarData:
+      type: object
+      properties:
+        incorporadas:
+          type: "string"
+    actividadplazas_PeticionesIncorporarDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadplazas_PeticionesIncorporarData"
+    actividadplazas_PlazasBalanceDataData:
+      type: object
+      properties:
+        dlA:
+          type: "string"
+        dlB:
+          type: "string"
+        concedidasA2B:
+          type: "integer"
+        concedidasB2A:
+          type: "integer"
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
+    actividadplazas_PlazasBalanceDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadplazas_PlazasBalanceDataData"
+    actividadplazas_PlazasBalanceQueDataData:
+      type: object
+      properties:
+        id_tipo_activ:
+          type: "string"
+    actividadplazas_PlazasBalanceQueDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadplazas_PlazasBalanceQueDataData"
+    actividadplazas_PosiblesPropietariosDataData:
+      type: object
+      properties:
+        id:
+          type: "string"
+        opciones:
+          type: array
+          items: {}
+        selected:
+          type: "string"
+        blanco:
+          type: "boolean"
+        val_blanco:
+          type: "string"
+    actividadplazas_PosiblesPropietariosDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadplazas_PosiblesPropietariosDataData"
+    actividadplazas_ResumenPlazasDataData:
+      type: object
+      properties:
+        id_activ:
+          type: "integer"
+        nom_activ:
+          type: "string"
+        publicado:
+          type: "boolean"
+        otra_dl:
+          type: "boolean"
+        a_plazas:
+          type: array
+          items: {}
+        plazas_totales:
+          type: "integer"
+        tot_calendario:
+          type: "integer"
+        tot_cedidas:
+          type: "integer"
+        tot_conseguidas:
+          type: "integer"
+        tot_disponibles:
+          type: "integer"
+        tot_ocupadas:
+          type: "integer"
+        dl_opciones:
+          type: array
+          items: {}
+    actividadplazas_ResumenPlazasDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadplazas_ResumenPlazasDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

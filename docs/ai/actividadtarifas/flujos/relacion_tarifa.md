@@ -77,8 +77,21 @@ Referencias tecnicas para verificar la respuesta:
 - `actividadtarifas.pantalla.tarifa_tipo_actividad_form`
 - `actividadtarifas.pantalla.tarifa_tipo_actividad_lista`
 
+## Objetivo
+
+Gestiona RelacionTarifa. crea o actualiza una RelacionTarifaTipoActividad. datos del formulario modificar/nuevo de RelacionTarifaTipoActividad. elimina una RelacionTarifaTipoActividad. listado de relaciones tarifa ↔ tipo actividad.
+
+## Errores Documentados
+
+- `debe indicar el tipo de actividad`
+- `debe indicar la tarifa`
+- `hay un error, no se ha borrado`
+- `hay un error, no se ha guardado`
+- `no se encuentra la relación`
+- `no sé cuál he de borrar`
+
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

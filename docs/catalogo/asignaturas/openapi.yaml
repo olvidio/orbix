@@ -1,0 +1,134 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - asignaturas"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/asignaturas/asignaturas_con_separador_data":
+    post:
+      operationId: "post_asignaturas_asignaturas_con_separador_data"
+      summary: "Asignaturas Con Separador Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asignaturas/api/asignaturas_con_separador_data.md`
+      tags:
+        - "asignaturas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                op_genericas:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asignaturas_AsignaturasConSeparadorOpcionesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asignaturas_AsignaturasConSeparadorOpcionesDataDataResponse"
+  "/src/asignaturas/asignaturas_map_data":
+    post:
+      operationId: "post_asignaturas_asignaturas_map_data"
+      summary: "Asignaturas Map Data"
+      description: |
+        Mapa id_asignatura => nombre_corto para pantallas que no deben usar el contenedor en frontend.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/asignaturas/api/asignaturas_map_data.md`
+      tags:
+        - "asignaturas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asignaturas_AsignaturasMapDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asignaturas_AsignaturasMapDataDataResponse"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    asignaturas_AsignaturasConSeparadorOpcionesDataData:
+      type: object
+      properties:
+        a_opciones:
+          type: array
+          items: {}
+    asignaturas_AsignaturasConSeparadorOpcionesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/asignaturas_AsignaturasConSeparadorOpcionesDataData"
+    asignaturas_AsignaturasMapDataData:
+      type: object
+      properties:
+        a_asignaturas:
+          type: array
+          items: {}
+    asignaturas_AsignaturasMapDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/asignaturas_AsignaturasMapDataData"

@@ -1,0 +1,1672 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - actividades"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/actividades/actividad_cambiar_tipo":
+    post:
+      operationId: "post_actividades_actividad_cambiar_tipo"
+      summary: "Actividad Cambiar Tipo"
+      description: |
+        Endpoint backend AJAX: cambia el tipo de una actividad existente.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_cambiar_tipo.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                desc_activ:
+                  type: "string"
+                dl_org:
+                  type: "string"
+                f_fin:
+                  type: "string"
+                f_ini:
+                  type: "string"
+                h_fin:
+                  type: "string"
+                h_ini:
+                  type: "string"
+                iactividad_val:
+                  type: "integer"
+                iasistentes_val:
+                  type: "integer"
+                id_activ:
+                  type: "integer"
+                id_repeticion:
+                  type: "integer"
+                id_tarifa:
+                  type: "integer"
+                id_tipo_activ:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                inom_tipo_val:
+                  type: "string"
+                isfsv_val:
+                  type: "integer"
+                lugar_esp:
+                  type: "string"
+                nivel_stgr:
+                  type: "integer"
+                nom_activ:
+                  type: "string"
+                num_asistentes:
+                  type: "integer"
+                observ:
+                  type: "string"
+                observ_material:
+                  type: "string"
+                plazas:
+                  type: "integer"
+                precio:
+                  type: "string"
+                status:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_duplicar":
+    post:
+      operationId: "post_actividades_actividad_duplicar"
+      summary: "Actividad Duplicar"
+      description: |
+        Endpoint backend AJAX: duplica la primera actividad seleccionada dentro de la propia delegacion (o de la sf si el usuario tiene permiso `des`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_duplicar.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_editar":
+    post:
+      operationId: "post_actividades_actividad_editar"
+      summary: "Actividad Editar"
+      description: |
+        Endpoint backend AJAX: guarda la edicion de una actividad existente.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_editar.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                desc_activ:
+                  type: "string"
+                dl_org:
+                  type: "string"
+                f_fin:
+                  type: "string"
+                f_ini:
+                  type: "string"
+                h_fin:
+                  type: "string"
+                h_ini:
+                  type: "string"
+                iactividad_val:
+                  type: "integer"
+                iasistentes_val:
+                  type: "integer"
+                id_activ:
+                  type: "integer"
+                id_repeticion:
+                  type: "integer"
+                id_tarifa:
+                  type: "integer"
+                id_tipo_activ:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                idioma:
+                  type: "string"
+                inom_tipo_val:
+                  type: "string"
+                isfsv_val:
+                  type: "integer"
+                lugar_esp:
+                  type: "string"
+                nivel_stgr:
+                  type: "integer"
+                nom_activ:
+                  type: "string"
+                num_asistentes:
+                  type: "integer"
+                observ:
+                  type: "string"
+                observ_material:
+                  type: "string"
+                plazas:
+                  type: "integer"
+                precio:
+                  type: "string"
+                publicado:
+                  type: "string"
+                status:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_eliminar":
+    post:
+      operationId: "post_actividades_actividad_eliminar"
+      summary: "Actividad Eliminar"
+      description: |
+        Endpoint backend AJAX: elimina las actividades indicadas.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_eliminar.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_fase_completada_datos":
+    post:
+      operationId: "post_actividades_actividad_fase_completada_datos"
+      summary: "Actividad Fase Completada Datos"
+      description: |
+        JSON: si una fase concreta está completada (paridad con faseCompletada del repositorio).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_fase_completada_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+                id_fase:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadFaseCompletadaDatosDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadFaseCompletadaDatosDataResponse"
+  "/src/actividades/actividad_fases_completadas_datos":
+    post:
+      operationId: "post_actividades_actividad_fases_completadas_datos"
+      summary: "Actividad Fases Completadas Datos"
+      description: |
+        JSON: lista de fases completadas para id_activ (alimentar setFasesCompletadas en sesión).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_fases_completadas_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadFasesCompletadasDatosDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadFasesCompletadasDatosDataResponse"
+  "/src/actividades/actividad_importar":
+    post:
+      operationId: "post_actividades_actividad_importar"
+      summary: "Actividad Importar"
+      description: |
+        Endpoint backend AJAX: importa las actividades seleccionadas y regenera su proceso cuando la app `procesos` esta instalada.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_importar.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_nivel_stgr_default_datos":
+    post:
+      operationId: "post_actividades_actividad_nivel_stgr_default_datos"
+      summary: "Actividad Nivel Stgr Default Datos"
+      description: |
+        Nivel STGR por defecto según id_tipo_activ ({
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_nivel_stgr_default_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tipo_activ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_nuevo":
+    post:
+      operationId: "post_actividades_actividad_nuevo"
+      summary: "Actividad Nuevo"
+      description: |
+        Endpoint backend AJAX: crea una nueva actividad a partir de los datos del formulario.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_nuevo.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                desc_activ:
+                  type: "string"
+                dl_org:
+                  type: "string"
+                f_fin:
+                  type: "string"
+                f_ini:
+                  type: "string"
+                h_fin:
+                  type: "string"
+                h_ini:
+                  type: "string"
+                id_repeticion:
+                  type: "integer"
+                id_tarifa:
+                  type: "integer"
+                id_tipo_activ:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                idioma:
+                  type: "string"
+                inom_tipo_val:
+                  type: "string"
+                lugar_esp:
+                  type: "string"
+                nivel_stgr:
+                  type: "string"
+                nom_activ:
+                  type: "string"
+                num_asistentes:
+                  type: "integer"
+                observ:
+                  type: "string"
+                observ_material:
+                  type: "string"
+                plazas:
+                  type: "integer"
+                precio:
+                  type: "string"
+                publicado:
+                  type: "string"
+                status:
+                  type: "integer"
+                tipo_horario:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_nuevo_curso_ejecutar":
+    post:
+      operationId: "post_actividades_actividad_nuevo_curso_ejecutar"
+      summary: "Actividad Nuevo Curso Ejecutar"
+      description: |
+        Endpoint backend para `actividad_nuevo_curso` (ejecucion).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_nuevo_curso_ejecutar.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ver_lista:
+                  type: "string"
+                year:
+                  type: "integer"
+                year_ref:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_permiso_crear_datos":
+    post:
+      operationId: "post_actividades_actividad_permiso_crear_datos"
+      summary: "Actividad Permiso Crear Datos"
+      description: |
+        JSON: resultado de {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_permiso_crear_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl_propia:
+                  type: "string"
+                id_tipo_activ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_publicar":
+    post:
+      operationId: "post_actividades_actividad_publicar"
+      summary: "Actividad Publicar"
+      description: |
+        Endpoint backend AJAX: marca como publicadas las actividades seleccionadas.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_publicar.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_que_datos":
+    post:
+      operationId: "post_actividades_actividad_que_datos"
+      summary: "Actividad Que Datos"
+      description: |
+        Endpoint backend: HTML del bloque tipo de actividad (desplegables) para actividad_que.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_que_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                extendida:
+                  type: "string"
+                id_tipo_activ:
+                  type: "string"
+                para:
+                  type: "string"
+                perm_jefe:
+                  type: "string"
+                que:
+                  type: "string"
+                sactividad:
+                  type: "string"
+                sactividad2:
+                  type: "string"
+                sasistentes:
+                  type: "string"
+                sfsv:
+                  type: "string"
+                sfsv_all:
+                  type: "string"
+                snom_tipo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadQueDatosDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadQueDatosDataResponse"
+  "/src/actividades/actividad_que_filtros":
+    post:
+      operationId: "post_actividades_actividad_que_filtros"
+      summary: "Actividad Que Filtros"
+      description: |
+        Genera el HTML del bloque "filtros extra" (filtro_lugar + lugar + organiza + publicada) en la pantalla `actividad_que`. El bloque solo se muestra a usuarios con permiso de control (`perm_ctr`); para el resto devuelve cadena vacia. Encapsula todos los accesos a repositorios y entidades de dominio necesarios (`Role`, `DelegacionDropdown`, `ActividadLugar`) de forma que el frontend controller no tenga que depender directamente de `src/`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_que_filtros.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl_org:
+                  type: "string"
+                filtro_lugar:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                modo:
+                  type: "string"
+                publicado:
+                  type: "integer"
+                sfsv:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_select_datos":
+    post:
+      operationId: "post_actividades_actividad_select_datos"
+      summary: "Actividad Select Datos"
+      description: |
+        JSON del listado para `actividad_select`: filtros POST → {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_select_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                continuar:
+                  type: "string"
+                dl_org:
+                  type: "string"
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                fases_off:
+                  type: "array"
+                  items:
+                    type: string
+                fases_on:
+                  type: "array"
+                  items:
+                    type: string
+                filtro_lugar:
+                  type: "string"
+                id_tipo_activ:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                modo:
+                  type: "string"
+                nom_activ:
+                  type: "string"
+                periodo:
+                  type: "string"
+                publicado:
+                  type: "integer"
+                sactividad:
+                  type: "string"
+                sactividad2:
+                  type: "string"
+                sasistentes:
+                  type: "string"
+                scroll_id:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+                ssfsv:
+                  type: "string"
+                stack_go:
+                  type: "integer"
+                status:
+                  type: "integer"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/actividad_select_ubi_desplegable":
+    post:
+      operationId: "post_actividades_actividad_select_ubi_desplegable"
+      summary: "Actividad Select Ubi Desplegable"
+      description: |
+        Endpoint backend que devuelve las opciones (value => label) de los desplegables de la pantalla "seleccionar lugar para una actividad".
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_select_ubi_desplegable.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl_org:
+                  type: "string"
+                isfsv:
+                  type: "integer"
+                tipo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadSelectUbiDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadSelectUbiDataDataResponse"
+  "/src/actividades/actividad_status_labels_datos":
+    post:
+      operationId: "post_actividades_actividad_status_labels_datos"
+      summary: "Actividad Status Labels Datos"
+      description: |
+        Etiquetas de status ({
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_status_labels_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                with_all:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadStatusLabelsDatosDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadStatusLabelsDatosDataResponse"
+  "/src/actividades/actividad_tipo_get":
+    post:
+      operationId: "post_actividades_actividad_tipo_get"
+      summary: "Actividad Tipo Get"
+      description: |
+        Endpoint backend que devuelve el payload necesario (datos de desplegable, tabla HTML o valor escalar) segun el parametro POST `salida`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_tipo_get.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                salida:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadTipoGetActividadDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ActividadTipoGetActividadDataResponse"
+  "/src/actividades/actividad_ver_datos":
+    post:
+      operationId: "post_actividades_actividad_ver_datos"
+      summary: "Actividad Ver Datos"
+      description: |
+        Endpoint backend: devuelve los fragmentos HTML y valores auxiliares que necesita el formulario "ver/editar actividad" para renderizarse sin que el frontend acceda directamente a `src/`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/actividad_ver_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                Bdl:
+                  type: "string"
+                calc_tarifa_inicial:
+                  type: "integer"
+                dl_org:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_repeticion:
+                  type: "integer"
+                id_tipo_activ:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                idioma:
+                  type: "string"
+                isfsv:
+                  type: "integer"
+                lugar_esp:
+                  type: "string"
+                nivel_stgr:
+                  type: "string"
+                tarifa:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/calendario_listas_datos":
+    post:
+      operationId: "post_actividades_calendario_listas_datos"
+      summary: "Calendario Listas Datos"
+      description: |
+        Endpoint backend para `calendario_listas`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/calendario_listas_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_cdc:
+                  type: "array"
+                  items:
+                    type: string
+                periodo:
+                  type: "string"
+                que:
+                  type: "string"
+                ver_ctr:
+                  type: "string"
+                year:
+                  type: "string"
+                yeardefault:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/lista_activ_datos":
+    post:
+      operationId: "post_actividades_lista_activ_datos"
+      summary: "Lista Activ Datos"
+      description: |
+        JSON del listado `lista_activ`: filtros POST → {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/lista_activ_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                asist:
+                  type: "array"
+                  items:
+                    type: string
+                c_activ:
+                  type: "array"
+                  items:
+                    type: string
+                dl_org:
+                  type: "string"
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                filtro_lugar:
+                  type: "string"
+                id_tipo_activ:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                periodo:
+                  type: "string"
+                que:
+                  type: "string"
+                sactividad:
+                  type: "string"
+                sasistentes:
+                  type: "string"
+                seccion:
+                  type: "array"
+                  items:
+                    type: string
+                snom_tipo:
+                  type: "string"
+                ssfsv:
+                  type: "string"
+                status:
+                  type: "string"
+                titulo:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ListaActivTablaDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_ListaActivTablaDataResponse"
+  "/src/actividades/lista_actividades_sg_datos":
+    post:
+      operationId: "post_actividades_lista_actividades_sg_datos"
+      summary: "Lista Actividades Sg Datos"
+      description: |
+        JSON del listado para `lista_actividades_sg`: POST → {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/lista_actividades_sg_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                continuar:
+                  type: "string"
+                dl_org:
+                  type: "string"
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                periodo:
+                  type: "string"
+                scroll_id:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+                stack_go:
+                  type: "integer"
+                status:
+                  type: "integer"
+                tipo_activ_sg:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/lista_centros_activ_datos":
+    post:
+      operationId: "post_actividades_lista_centros_activ_datos"
+      summary: "Lista Centros Activ Datos"
+      description: |
+        Endpoint backend para `lista_centros_activ`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/lista_centros_activ_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_ctr:
+                  type: "array"
+                  items:
+                    type: string
+                id_ctr_num:
+                  type: "integer"
+                periodo:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/lista_sr_csv_datos":
+    post:
+      operationId: "post_actividades_lista_sr_csv_datos"
+      summary: "Lista Sr Csv Datos"
+      description: |
+        Endpoint backend para `lista_sr_csv` (listado SR + exportacion).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/lista_sr_csv_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                c_activ:
+                  type: "array"
+                  items:
+                    type: string
+                dl_org:
+                  type: "string"
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_cdc:
+                  type: "array"
+                  items:
+                    type: string
+                periodo:
+                  type: "string"
+                status:
+                  type: "array"
+                  items:
+                    type: string
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/lista_sr_csv_que_datos":
+    post:
+      operationId: "post_actividades_lista_sr_csv_que_datos"
+      summary: "Lista Sr Csv Que Datos"
+      description: |
+        Endpoint backend para `lista_sr_csv_que`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/lista_sr_csv_que_datos.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/tipo_activ_eliminar":
+    post:
+      operationId: "post_actividades_tipo_activ_eliminar"
+      summary: "Tipo Activ Eliminar"
+      description: |
+        Elimina un tipo de actividad. Portado del case `eliminar` del dispatcher legacy.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_eliminar.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/tipo_activ_form_modificar":
+    post:
+      operationId: "post_actividades_tipo_activ_form_modificar"
+      summary: "Tipo Activ Form Modificar"
+      description: |
+        Devuelve el HTML del formulario para modificar/eliminar un tipo de actividad existente. Portado del case `form_modificar` del dispatcher legacy.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_form_modificar.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/tipo_activ_form_nuevo":
+    post:
+      operationId: "post_actividades_tipo_activ_form_nuevo"
+      summary: "Tipo Activ Form Nuevo"
+      description: |
+        Devuelve el HTML del formulario para crear un nuevo tipo de actividad. Portado del case `form_nuevo` del dispatcher legacy.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_form_nuevo.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/tipo_activ_lista":
+    post:
+      operationId: "post_actividades_tipo_activ_lista"
+      summary: "Tipo Activ Lista"
+      description: |
+        Devuelve la tabla HTML con los tipos de actividad existentes. Portado desde el case `lista` del dispatcher legacy frontend/actividades/controller/tipo_activ_ajax.php.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_lista.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/tipo_activ_metadata":
+    post:
+      operationId: "post_actividades_tipo_activ_metadata"
+      summary: "Tipo Activ Metadata"
+      description: |
+        Endpoint backend que devuelve, en una sola respuesta JSON, los datos que necesita {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_metadata.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_TipoActivMetadataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividades_TipoActivMetadataDataResponse"
+  "/src/actividades/tipo_activ_nuevo":
+    post:
+      operationId: "post_actividades_tipo_activ_nuevo"
+      summary: "Tipo Activ Nuevo"
+      description: |
+        Crea un nuevo tipo de actividad. Portado del case `nuevo` del dispatcher legacy. Devuelve cadena vacia si todo va bien o un texto de error/aviso.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_nuevo.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividades/tipo_activ_update":
+    post:
+      operationId: "post_actividades_tipo_activ_update"
+      summary: "Tipo Activ Update"
+      description: |
+        Actualiza el nombre de un tipo de actividad. Portado del case `update` del dispatcher legacy.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_update.md`
+      tags:
+        - "actividades"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    actividades_ActividadFaseCompletadaDatosData:
+      type: object
+      properties:
+        completada:
+          type: "boolean"
+    actividades_ActividadFaseCompletadaDatosDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_ActividadFaseCompletadaDatosData"
+    actividades_ActividadFasesCompletadasDatosData:
+      type: object
+      properties:
+        fases_completadas:
+          type: "string"
+    actividades_ActividadFasesCompletadasDatosDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_ActividadFasesCompletadasDatosData"
+    actividades_ActividadQueDatosData:
+      type: object
+      properties:
+        actividad_tipo_html:
+          type: "string"
+    actividades_ActividadQueDatosDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_ActividadQueDatosData"
+    actividades_ActividadSelectUbiDataData:
+      type: object
+      properties:
+        opcionesFreq:
+          type: array
+          items: {}
+        opcionesRegion:
+          type: array
+          items: {}
+    actividades_ActividadSelectUbiDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_ActividadSelectUbiDataData"
+    actividades_ActividadStatusLabelsDatosData:
+      type: object
+      properties:
+        id_to_label:
+          type: array
+          items: {}
+    actividades_ActividadStatusLabelsDatosDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_ActividadStatusLabelsDatosData"
+    actividades_ActividadTipoGetActividadData:
+      type: object
+      properties:
+        id:
+          type: "string"
+    actividades_ActividadTipoGetActividadDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_ActividadTipoGetActividadData"
+    actividades_ListaActivTablaData:
+      type: object
+      properties:
+        titulo:
+          type: "string"
+        ver_hora:
+          type: "integer"
+        ver_tarifa:
+          type: "integer"
+        ver_sacd:
+          type: "integer"
+        a_cabeceras:
+          type: array
+          items: {}
+        a_valores:
+          type: array
+          items: {}
+    actividades_ListaActivTablaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_ListaActivTablaData"
+    actividades_TipoActivMetadataData:
+      type: object
+      properties:
+        maps:
+          type: array
+          items: {}
+        sfsv:
+          type: array
+          items: {}
+        asistentes:
+          type: array
+          items: {}
+        actividad1digito:
+          type: array
+          items: {}
+        actividad2digitos:
+          type: array
+          items: {}
+        filas:
+          type: "string"
+    actividades_TipoActivMetadataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_TipoActivMetadataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

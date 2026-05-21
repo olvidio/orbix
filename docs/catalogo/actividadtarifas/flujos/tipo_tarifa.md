@@ -17,7 +17,9 @@ Propuesta generada automaticamente desde la capacidad `actividadtarifas.tipo_tar
 
 ## Objetivo De Usuario
 
-Pendiente de revisar. Redactar aqui el objetivo en lenguaje de usuario, no tecnico.
+Mantener el catálogo maestro de tipos de tarifa (letra, modo, observaciones).
+
+Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Tipo Tarifa).
 
 ## Punto De Entrada
 
@@ -98,6 +100,13 @@ Acciones JavaScript:
 - `/src/actividadtarifas/tipo_tarifa_form_data`
 - `/src/actividadtarifas/tipo_tarifa_lista_data`
 - `/src/actividadtarifas/tipo_tarifa_update`
+
+## Errores Conocidos
+
+- ``hay un error, no se ha borrado``
+- ``hay un error, no se ha guardado``
+- ``no se encuentra la tarifa``
+- ``no sé cuál he de borrar``
 
 ## Revision Manual
 

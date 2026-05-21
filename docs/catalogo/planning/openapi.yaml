@@ -1,0 +1,429 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - planning"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/planning/planning_casa_que_data":
+    post:
+      operationId: "post_planning_planning_casa_que_data"
+      summary: "Planning Casa Que Data"
+      description: |
+        Dataset para montar CasasQue en {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/planning/api/planning_casa_que_data.md`
+      tags:
+        - "planning"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningCasaQueFormDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningCasaQueFormDataDataResponse"
+  "/src/planning/planning_casa_ver_data":
+    post:
+      operationId: "post_planning_planning_casa_ver_data"
+      summary: "Planning Casa Ver Data"
+      description: |
+        Dataset para {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/planning/api/planning_casa_ver_data.md`
+      tags:
+        - "planning"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                cdc_sel:
+                  type: "integer"
+                f_fin_iso:
+                  type: "string"
+                f_ini_iso:
+                  type: "string"
+                sSeleccionados:
+                  type: "string"
+                sin_activ:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningCasaVerDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningCasaVerDataDataResponse"
+  "/src/planning/planning_ctr_select_data":
+    post:
+      operationId: "post_planning_planning_ctr_select_data"
+      summary: "Planning Ctr Select Data"
+      description: |
+        Personas + actividades agrupadas por centro para `planning_ctr_select`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/planning/api/planning_ctr_select_data.md`
+      tags:
+        - "planning"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ctr:
+                  type: "string"
+                sacd:
+                  type: "string"
+                todos_agd:
+                  type: "string"
+                todos_n:
+                  type: "string"
+                todos_s:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningCtrSelectDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningCtrSelectDataDataResponse"
+  "/src/planning/planning_persona_select_data":
+    post:
+      operationId: "post_planning_planning_persona_select_data"
+      summary: "Planning Persona Select Data"
+      description: |
+        Listado de personas para `planning_persona_select`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/planning/api/planning_persona_select_data.md`
+      tags:
+        - "planning"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                apellido1:
+                  type: "string"
+                apellido2:
+                  type: "string"
+                centro:
+                  type: "string"
+                na:
+                  type: "string"
+                nombre:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/planning/planning_persona_ver_data":
+    post:
+      operationId: "post_planning_planning_persona_ver_data"
+      summary: "Planning Persona Ver Data"
+      description: |
+        Actividades por persona (vista plana) para `planning_persona_ver`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/planning/api/planning_persona_ver_data.md`
+      tags:
+        - "planning"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                obj_pau:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningPersonaVerDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningPersonaVerDataDataResponse"
+  "/src/planning/planning_zones_que_data":
+    post:
+      operationId: "post_planning_planning_zones_que_data"
+      summary: "Planning Zones Que Data"
+      description: |
+        Opciones de zona + comprobación de permiso para `planning_zones_que`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/planning/api/planning_zones_que_data.md`
+      tags:
+        - "planning"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningZonesQueDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningZonesQueDataDataResponse"
+  "/src/planning/planning_zones_select_data":
+    post:
+      operationId: "post_planning_planning_zones_select_data"
+      summary: "Planning Zones Select Data"
+      description: |
+        Dataset para {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/planning/api/planning_zones_select_data.md`
+      tags:
+        - "planning"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                actividad:
+                  type: "string"
+                id_zona:
+                  type: "string"
+                propuesta:
+                  type: "string"
+                trimestre:
+                  type: "integer"
+                year:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningZonesSelectDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/planning_PlanningZonesSelectDataDataResponse"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    planning_PlanningCasaQueFormDataData:
+      type: object
+      properties:
+        filtro:
+          type: array
+          items: {}
+    planning_PlanningCasaQueFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/planning_PlanningCasaQueFormDataData"
+    planning_PlanningCasaVerDataData:
+      type: object
+      properties:
+        a_actividades:
+          type: array
+          items: {}
+    planning_PlanningCasaVerDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/planning_PlanningCasaVerDataData"
+    planning_PlanningCtrSelectDataData:
+      type: object
+      properties:
+        msg_txt:
+          type: "string"
+    planning_PlanningCtrSelectDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/planning_PlanningCtrSelectDataData"
+    planning_PlanningPersonaVerDataData:
+      type: object
+      properties:
+        a_actividades:
+          type: array
+          items: {}
+    planning_PlanningPersonaVerDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/planning_PlanningPersonaVerDataData"
+    planning_PlanningZonesQueDataData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    planning_PlanningZonesQueDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/planning_PlanningZonesQueDataData"
+    planning_PlanningZonesSelectDataData:
+      type: object
+      properties:
+        actividades_por_zona:
+          type: array
+          items: {}
+        cabeceras_por_zona:
+          type: array
+          items: {}
+        zonas:
+          type: "integer"
+        titulo:
+          type: "string"
+        planning_ini_iso:
+          type: "string"
+        planning_fin_iso:
+          type: "string"
+    planning_PlanningZonesSelectDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/planning_PlanningZonesSelectDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

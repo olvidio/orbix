@@ -4,9 +4,14 @@ tipo: "endpoint"
 modulo: "actividadtarifas"
 url: "/src/actividadtarifas/tarifa_ubi_lista_data"
 metodos: ["GET", "POST"]
+operacion: "lista_data"
 controller: "src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_lista_data.php"
 entrada: ["post.id_ubi:integer", "post.year:integer"]
+entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "actividadtarifas_TarifaUbiListaDataData"
+respuesta_data: ["a_cabeceras:array", "a_valores:array", "any_anterior:integer", "any_actual:integer", "puede_anadir:boolean", "id_ubi:integer", "year:integer", "token_copiar:string"]
+requiere_hashb: false
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa_ubi_lista.php"]
 casos_uso: ["src\\actividadtarifas\\application\\TarifaUbiListaData"]
 tags: ["actividadtarifas", "tarifa", "ubi", "lista", "data"]
@@ -17,24 +22,47 @@ estado_revision: "generado"
 
 Endpoint backend: listado de `TarifaUbi` por `id_ubi` + `year`.
 
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
 ## Endpoint
 
 - URL: `/src/actividadtarifas/tarifa_ubi_lista_data`
 - Metodos registrados: `GET, POST`
+- Operacion: `lista_data`
 - Controller: `src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_lista_data.php`
 
-## Entrada Inferida
+## Entrada
 
-- `post.id_ubi` (`integer`)
-- `post.year` (`integer`)
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_ubi` | `integer` | controller+application | No | controller+application |
+| `year` | `integer` | controller+application | No | controller+application |
 
-## Salida Inferida
+## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Evidencia: `'', $data`
+- Payload en `data` (schema `actividadtarifas_TarifaUbiListaDataData`):
+  - `a_cabeceras` (`array`)
+  - `a_valores` (`array`)
+  - `any_anterior` (`integer`)
+  - `any_actual` (`integer`)
+  - `puede_anadir` (`boolean`)
+  - `id_ubi` (`integer`)
+  - `year` (`integer`)
+  - `token_copiar` (`string`)
 
-## Casos De Uso Detectados
+## Efectos colaterales
+
+- Además del listado tabular, emite la **cápsula `HashB`** que autoriza la acción "copiar tarifas del año anterior" (`token_copiar`).
+
+## Permisos
+
+- Permiso oficina `adl`
+- Permiso oficina `pr`
+- Permiso oficina `calendario`
+
+## Casos De Uso
 
 - `src\actividadtarifas\application\TarifaUbiListaData`
 
@@ -44,8 +72,6 @@ Endpoint backend: listado de `TarifaUbi` por `id_ubi` + `year`.
 
 ## Revision Manual
 
-- Completar objetivo funcional.
-- Confirmar permisos/autorizacion.
-- Confirmar efectos sobre datos.
+- Confirmar permisos/autorizacion de oficina.
 - Anadir ejemplos reales de request/response.
-- Marcar procesos parecidos o duplicados si aplica.
+- Marcar `estado_revision: "revisado"` cuando este validado.

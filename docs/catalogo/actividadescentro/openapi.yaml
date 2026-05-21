@@ -1,0 +1,390 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - actividadescentro"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/actividadescentro/activ_ctr_shell_data":
+    post:
+      operationId: "post_actividadescentro_activ_ctr_shell_data"
+      summary: "Activ Ctr Shell Data"
+      description: |
+        Tipo resuelto y especificaciones de URL para la shell de `activ_ctr` (sin `HashFront` en `src/`). La firma `linkSinVal` se aplica en {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadescentro/api/activ_ctr_shell_data.md`
+      tags:
+        - "actividadescentro"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadescentro_ActivCtrShellDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadescentro_ActivCtrShellDataDataResponse"
+  "/src/actividadescentro/centro_encargado_asignar":
+    post:
+      operationId: "post_actividadescentro_centro_encargado_asignar"
+      summary: "Centro Encargado Asignar"
+      description: |
+        Endpoint backend: asigna un CentroEncargado a una actividad.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadescentro/api/centro_encargado_asignar.md`
+      tags:
+        - "actividadescentro"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "id_activ"
+                - "id_ubi"
+              properties:
+                id_activ:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadescentro/centro_encargado_eliminar":
+    post:
+      operationId: "post_actividadescentro_centro_encargado_eliminar"
+      summary: "Centro Encargado Eliminar"
+      description: |
+        Endpoint backend: elimina un CentroEncargado de una actividad.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadescentro/api/centro_encargado_eliminar.md`
+      tags:
+        - "actividadescentro"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "id_activ"
+                - "id_ubi"
+              properties:
+                id_activ:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadescentro/centro_encargado_reordenar":
+    post:
+      operationId: "post_actividadescentro_centro_encargado_reordenar"
+      summary: "Centro Encargado Reordenar"
+      description: |
+        Endpoint backend: reordena un CentroEncargado (mas / menos prioridad).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadescentro/api/centro_encargado_reordenar.md`
+      tags:
+        - "actividadescentro"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "id_activ"
+                - "id_ubi"
+              properties:
+                id_activ:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                num_orden:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadescentro/centros_disponibles_data":
+    post:
+      operationId: "post_actividadescentro_centros_disponibles_data"
+      summary: "Centros Disponibles Data"
+      description: |
+        Endpoint backend: devuelve los centros disponibles (candidatos) para asignar como encargado de una actividad, filtrados por `tipo` (sg / sr / nagd / sssc / sfsg / sfsr / sfnagd).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadescentro/api/centros_disponibles_data.md`
+      tags:
+        - "actividadescentro"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                f_ini_act:
+                  type: "string"
+                fin:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                inicio:
+                  type: "string"
+                tipo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadescentro_CentrosDisponiblesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadescentro_CentrosDisponiblesDataDataResponse"
+  "/src/actividadescentro/centros_encargados_data":
+    post:
+      operationId: "post_actividadescentro_centros_encargados_data"
+      summary: "Centros Encargados Data"
+      description: |
+        Endpoint backend: devuelve los centros encargados actuales de una actividad en un array serializable, junto con los flags de permiso.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadescentro/api/centros_encargados_data.md`
+      tags:
+        - "actividadescentro"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl_org:
+                  type: "string"
+                id_activ:
+                  type: "integer"
+                id_tipo_activ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/actividadescentro/lista_actividades_ctr_data":
+    post:
+      operationId: "post_actividadescentro_lista_actividades_ctr_data"
+      summary: "Lista Actividades Ctr Data"
+      description: |
+        Endpoint backend: devuelve el listado de actividades del tipo + periodo elegidos, junto con los centros encargados de cada una y los flags de permiso (ver / modificar / crear) para cada fila.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/actividadescentro/api/lista_actividades_ctr_data.md`
+      tags:
+        - "actividadescentro"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                periodo:
+                  type: "string"
+                tipo:
+                  type: "string"
+                year:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadescentro_ListaActividadesCtrDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/actividadescentro_ListaActividadesCtrDataDataResponse"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    actividadescentro_ActivCtrShellDataData:
+      type: object
+      properties:
+        tipo:
+          type: "string"
+        url_lista:
+          type: array
+          items: {}
+        url_encargados:
+          type: array
+          items: {}
+        url_disponibles:
+          type: array
+          items: {}
+        url_asignar:
+          type: array
+          items: {}
+        url_reordenar:
+          type: array
+          items: {}
+        url_eliminar:
+          type: array
+          items: {}
+    actividadescentro_ActivCtrShellDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadescentro_ActivCtrShellDataData"
+    actividadescentro_CentrosDisponiblesDataData:
+      type: object
+      properties:
+        "0":
+          type: array
+          items: {}
+    actividadescentro_CentrosDisponiblesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadescentro_CentrosDisponiblesDataData"
+    actividadescentro_ListaActividadesCtrDataData:
+      type: object
+      properties:
+        "0":
+          type: "string"
+    actividadescentro_ListaActividadesCtrDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadescentro_ListaActividadesCtrDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

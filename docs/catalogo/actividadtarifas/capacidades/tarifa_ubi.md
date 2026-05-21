@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `tari
 
 ## Objetivo Funcional
 
-Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad.
+Gestiona TarifaUbi. actualiza en lote las cantidades de varias TarifaUbi desde el estudio economico de casa. copiar tarifas del año anterior. crea o actualiza una TarifaUbi. datos del formulario modificar/nuevo de TarifaUbi. elimina una TarifaUbi. listado de TarifaUbi por id_ubi + year.
 
 ## Acciones Detectadas
 
@@ -63,6 +63,16 @@ Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad
 - Endpoint backend: datos del formulario modificar/nuevo de `TarifaUbi`.
 - Endpoint backend: elimina una `TarifaUbi`.
 - Endpoint backend: listado de `TarifaUbi` por `id_ubi` + `year`.
+
+## Errores Conocidos
+
+- `Operación no autorizada`
+- `función de copiar tarifas pendiente de reimplementar`
+- `hay un error, no se ha borrado`
+- `hay un error, no se ha guardado`
+- `no se encuentra la tarifa`
+- `no sé cuál he de borrar`
+- `no sé qué casa/año tengo que copiar`
 
 ## Revision Manual
 

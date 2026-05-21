@@ -1,0 +1,1698 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - inventario"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/inventario/cabecera_pie_txt":
+    post:
+      operationId: "post_inventario_cabecera_pie_txt"
+      summary: "Cabecera Pie Txt"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/cabecera_pie_txt.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_equipaje:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/cabecera_pie_txt_guardar":
+    post:
+      operationId: "post_inventario_cabecera_pie_txt_guardar"
+      summary: "Cabecera Pie Txt Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/cabecera_pie_txt_guardar.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                cabecera:
+                  type: "string"
+                cabeceraB:
+                  type: "string"
+                firma:
+                  type: "string"
+                pie:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/doc_asignar_ctr_guardar":
+    post:
+      operationId: "post_inventario_doc_asignar_ctr_guardar"
+      summary: "Doc Asignar Ctr Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/doc_asignar_ctr_guardar.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                f_asignado:
+                  type: "string"
+                f_recibido:
+                  type: "string"
+                id_tipo_doc:
+                  type: "string"
+                numerado:
+                  type: "string"
+                str_selected_id:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/doc_asignar_dlb_guardar":
+    post:
+      operationId: "post_inventario_doc_asignar_dlb_guardar"
+      summary: "Doc Asignar Dlb Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/doc_asignar_dlb_guardar.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                f_asignado:
+                  type: "string"
+                f_recibido:
+                  type: "string"
+                id_tipo_doc:
+                  type: "string"
+                numerado:
+                  type: "string"
+                str_selected_id:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/documentos_guardar":
+    post:
+      operationId: "post_inventario_documentos_guardar"
+      summary: "Documentos Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/documentos_guardar.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                chk_eliminado:
+                  type: "string"
+                chk_f_asignado:
+                  type: "string"
+                chk_f_eliminado:
+                  type: "string"
+                chk_f_recibido:
+                  type: "string"
+                chk_num_fin:
+                  type: "string"
+                chk_num_ini:
+                  type: "string"
+                documentos:
+                  type: "string"
+                eliminado:
+                  type: "integer"
+                f_asignado:
+                  type: "string"
+                f_eliminado:
+                  type: "string"
+                f_recibido:
+                  type: "string"
+                num_fin:
+                  type: "string"
+                num_ini:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_add_doc":
+    post:
+      operationId: "post_inventario_equipajes_add_doc"
+      summary: "Equipajes Add Doc"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_add_doc.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item_egm:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_del_doc":
+    post:
+      operationId: "post_inventario_equipajes_del_doc"
+      summary: "Equipajes Del Doc"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_del_doc.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item_egm:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_doc_casa":
+    post:
+      operationId: "post_inventario_equipajes_doc_casa"
+      summary: "Equipajes Doc Casa"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_doc_casa.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_equipaje:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_egm":
+    post:
+      operationId: "post_inventario_equipajes_egm"
+      summary: "Equipajes Egm"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_egm.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_equipaje:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_eliminar":
+    post:
+      operationId: "post_inventario_equipajes_eliminar"
+      summary: "Equipajes Eliminar"
+      description: |
+        Borrado de un equipaje (antes solo en `equipajes_eliminar.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_eliminar.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - "id_equipaje"
+              properties:
+                id_equipaje:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_eliminar_grupo":
+    post:
+      operationId: "post_inventario_equipajes_eliminar_grupo"
+      summary: "Equipajes Eliminar Grupo"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_eliminar_grupo.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_equipaje:
+                  type: "integer"
+                id_grupo:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_lista_activ_equipaje":
+    post:
+      operationId: "post_inventario_equipajes_lista_activ_equipaje"
+      summary: "Equipajes Lista Activ Equipaje"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_lista_activ_equipaje.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_equipaje:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_lista_activ_periodo":
+    post:
+      operationId: "post_inventario_equipajes_lista_activ_periodo"
+      summary: "Equipajes Lista Activ Periodo"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_lista_activ_periodo.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                fin:
+                  type: "string"
+                id_cdc:
+                  type: "integer"
+                inicio:
+                  type: "string"
+                periodo:
+                  type: "string"
+                year:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_lista_activ_sel":
+    post:
+      operationId: "post_inventario_equipajes_lista_activ_sel"
+      summary: "Equipajes Lista Activ Sel"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_lista_activ_sel.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_cdc:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_movimientos":
+    post:
+      operationId: "post_inventario_equipajes_movimientos"
+      summary: "Equipajes Movimientos"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_movimientos.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_nuevo_guardar":
+    post:
+      operationId: "post_inventario_equipajes_nuevo_guardar"
+      summary: "Equipajes Nuevo Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_nuevo_guardar.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                f_fin:
+                  type: "string"
+                f_ini:
+                  type: "string"
+                id_ubi_activ:
+                  type: "integer"
+                ids_activ:
+                  type: "string"
+                lugar:
+                  type: "string"
+                nom_equipaje:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_texto_listado_guardar":
+    post:
+      operationId: "post_inventario_equipajes_texto_listado_guardar"
+      summary: "Equipajes Texto Listado Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_texto_listado_guardar.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_equipaje:
+                  type: "integer"
+                loc:
+                  type: "string"
+                texto:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/equipajes_update_grupo":
+    post:
+      operationId: "post_inventario_equipajes_update_grupo"
+      summary: "Equipajes Update Grupo"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/equipajes_update_grupo.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_equipaje:
+                  type: "integer"
+                id_grupo:
+                  type: "integer"
+                id_lugar:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/inventario_css_inline_data":
+    post:
+      operationId: "post_inventario_inventario_css_inline_data"
+      summary: "Inventario Css Inline Data"
+      description: |
+        CSS embebido para impresión de inventario (`inventario.css.php` en disco).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/inventario_css_inline_data.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inventario_InventarioCssInlineDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inventario_InventarioCssInlineDataDataResponse"
+  "/src/inventario/inventario_ctr":
+    post:
+      operationId: "post_inventario_inventario_ctr"
+      summary: "Inventario Ctr"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/inventario_ctr.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/inventario_dlb":
+    post:
+      operationId: "post_inventario_inventario_dlb"
+      summary: "Inventario Dlb"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/inventario_dlb.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_casas_posibles_periodo":
+    post:
+      operationId: "post_inventario_lista_casas_posibles_periodo"
+      summary: "Lista Casas Posibles Periodo"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_casas_posibles_periodo.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                fin:
+                  type: "string"
+                inicio:
+                  type: "string"
+                periodo:
+                  type: "string"
+                year:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_colecciones":
+    post:
+      operationId: "post_inventario_lista_colecciones"
+      summary: "Lista Colecciones"
+      description: |
+        Opciones del desplegable de colecciones (`lista_colecciones.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_colecciones.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inventario_ColeccionesOpcionesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inventario_ColeccionesOpcionesDataDataResponse"
+  "/src/inventario/lista_de_ctr":
+    post:
+      operationId: "post_inventario_lista_de_ctr"
+      summary: "Lista De Ctr"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_de_ctr.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_de_ctr_con_docs":
+    post:
+      operationId: "post_inventario_lista_de_ctr_con_docs"
+      summary: "Lista De Ctr Con Docs"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_de_ctr_con_docs.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tipo_doc:
+                  type: "integer"
+                inventario:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_asignados_por_tipo":
+    post:
+      operationId: "post_inventario_lista_docs_asignados_por_tipo"
+      summary: "Lista Docs Asignados Por Tipo"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_asignados_por_tipo.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tipo_doc:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_asignar_ctr":
+    post:
+      operationId: "post_inventario_lista_docs_asignar_ctr"
+      summary: "Lista Docs Asignar Ctr"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_asignar_ctr.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tipo_doc:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_asignar_dlb":
+    post:
+      operationId: "post_inventario_lista_docs_asignar_dlb"
+      summary: "Lista Docs Asignar Dlb"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_asignar_dlb.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tipo_doc:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_con_observaciones":
+    post:
+      operationId: "post_inventario_lista_docs_con_observaciones"
+      summary: "Lista Docs Con Observaciones"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_con_observaciones.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_de_ctr":
+    post:
+      operationId: "post_inventario_lista_docs_de_ctr"
+      summary: "Lista Docs De Ctr"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_de_ctr.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_lugar:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_de_dlb":
+    post:
+      operationId: "post_inventario_lista_docs_de_dlb"
+      summary: "Lista Docs De Dlb"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_de_dlb.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tipo_doc:
+                  type: "integer"
+                inventario:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_de_egm":
+    post:
+      operationId: "post_inventario_lista_docs_de_egm"
+      summary: "Lista Docs De Egm"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_de_egm.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item_egm:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_de_lugar":
+    post:
+      operationId: "post_inventario_lista_docs_de_lugar"
+      summary: "Lista Docs De Lugar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_de_lugar.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_lugar:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_en_busqueda":
+    post:
+      operationId: "post_inventario_lista_docs_en_busqueda"
+      summary: "Lista Docs En Busqueda"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_en_busqueda.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_libres":
+    post:
+      operationId: "post_inventario_lista_docs_libres"
+      summary: "Lista Docs Libres"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_libres.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_equipaje:
+                  type: "integer"
+                id_tipo_doc:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_no_asignados_por_tipo":
+    post:
+      operationId: "post_inventario_lista_docs_no_asignados_por_tipo"
+      summary: "Lista Docs No Asignados Por Tipo"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_no_asignados_por_tipo.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_tipo_doc:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_docs_perdidos":
+    post:
+      operationId: "post_inventario_lista_docs_perdidos"
+      summary: "Lista Docs Perdidos"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_docs_perdidos.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_equipajes_desde_fecha":
+    post:
+      operationId: "post_inventario_lista_equipajes_desde_fecha"
+      summary: "Lista Equipajes Desde Fecha"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_equipajes_desde_fecha.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                f_ini_iso:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_equipajes_posibles_maletas":
+    post:
+      operationId: "post_inventario_lista_equipajes_posibles_maletas"
+      summary: "Lista Equipajes Posibles Maletas"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_equipajes_posibles_maletas.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_equipaje:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_lugares_de_ubi":
+    post:
+      operationId: "post_inventario_lista_lugares_de_ubi"
+      summary: "Lista Lugares De Ubi"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_lugares_de_ubi.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/lista_tipo_doc":
+    post:
+      operationId: "post_inventario_lista_tipo_doc"
+      summary: "Lista Tipo Doc"
+      description: |
+        Opciones del desplegable de tipos de documento (`lista_tipo_doc.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/lista_tipo_doc.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inventario_TipoDocOpcionesDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inventario_TipoDocOpcionesDataDataResponse"
+  "/src/inventario/texto_de_egm":
+    post:
+      operationId: "post_inventario_texto_de_egm"
+      summary: "Texto De Egm"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/texto_de_egm.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_equipaje:
+                  type: "integer"
+                id_grupo:
+                  type: "integer"
+                id_item_egm:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/inventario/traslado_doc_guardar":
+    post:
+      operationId: "post_inventario_traslado_doc_guardar"
+      summary: "Traslado Doc Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/inventario/api/traslado_doc_guardar.md`
+      tags:
+        - "inventario"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_lugar_new:
+                  type: "integer"
+                id_ubi_new:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    inventario_InventarioCssInlineDataData:
+      type: object
+      properties:
+        css:
+          type: "string"
+    inventario_InventarioCssInlineDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/inventario_InventarioCssInlineDataData"
+    inventario_ColeccionesOpcionesDataData:
+      type: object
+      properties:
+        a_opciones:
+          type: "string"
+    inventario_ColeccionesOpcionesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/inventario_ColeccionesOpcionesDataData"
+    inventario_TipoDocOpcionesDataData:
+      type: object
+      properties:
+        a_opciones:
+          type: "string"
+    inventario_TipoDocOpcionesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/inventario_TipoDocOpcionesDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

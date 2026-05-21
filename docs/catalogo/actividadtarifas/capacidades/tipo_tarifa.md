@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `tipo
 
 ## Objetivo Funcional
 
-Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad.
+Gestiona TipoTarifa. crea o actualiza un TipoTarifa. datos del formulario modificar/nuevo de TipoTarifa. elimina un TipoTarifa. listado del catalogo de tipos de tarifa.
 
 ## Acciones Detectadas
 
@@ -54,6 +54,13 @@ Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad
 - Endpoint backend: datos del formulario modificar/nuevo de `TipoTarifa`.
 - Endpoint backend: elimina un `TipoTarifa`.
 - Endpoint backend: listado del catalogo de tipos de tarifa.
+
+## Errores Conocidos
+
+- `hay un error, no se ha borrado`
+- `hay un error, no se ha guardado`
+- `no se encuentra la tarifa`
+- `no sé cuál he de borrar`
 
 ## Revision Manual
 

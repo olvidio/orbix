@@ -4,9 +4,14 @@ tipo: "endpoint"
 modulo: "actividadtarifas"
 url: "/src/actividadtarifas/relacion_tarifa_lista_data"
 metodos: ["GET", "POST"]
+operacion: "lista_data"
 controller: "src/actividadtarifas/infrastructure/ui/http/controllers/relacion_tarifa_lista_data.php"
 entrada: []
+entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "actividadtarifas_RelacionTarifaListaDataData"
+respuesta_data: ["a_cabeceras:array", "a_valores:array", "puede_anadir:boolean"]
+requiere_hashb: false
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php"]
 casos_uso: ["src\\actividadtarifas\\application\\RelacionTarifaListaData"]
 tags: ["actividadtarifas", "relacion", "tarifa", "lista", "data"]
@@ -17,23 +22,35 @@ estado_revision: "generado"
 
 Endpoint backend: listado de relaciones tarifa ↔ tipo actividad.
 
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
 ## Endpoint
 
 - URL: `/src/actividadtarifas/relacion_tarifa_lista_data`
 - Metodos registrados: `GET, POST`
+- Operacion: `lista_data`
 - Controller: `src/actividadtarifas/infrastructure/ui/http/controllers/relacion_tarifa_lista_data.php`
 
-## Entrada Inferida
+## Entrada
 
-No se han detectado parametros individuales mediante `filter_input`, `$_POST[...]` o `$_GET[...]`.
+Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
 
-## Salida Inferida
+## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Evidencia: `'', $data`
+- Payload en `data` (schema `actividadtarifas_RelacionTarifaListaDataData`):
+  - `a_cabeceras` (`array`)
+  - `a_valores` (`array`)
+  - `puede_anadir` (`boolean`)
 
-## Casos De Uso Detectados
+## Permisos
+
+- Permiso oficina `adl`
+- Permiso oficina `pr`
+- Permiso oficina `calendario`
+
+## Casos De Uso
 
 - `src\actividadtarifas\application\RelacionTarifaListaData`
 
@@ -43,8 +60,6 @@ No se han detectado parametros individuales mediante `filter_input`, `$_POST[...
 
 ## Revision Manual
 
-- Completar objetivo funcional.
-- Confirmar permisos/autorizacion.
-- Confirmar efectos sobre datos.
+- Confirmar permisos/autorizacion de oficina.
 - Anadir ejemplos reales de request/response.
-- Marcar procesos parecidos o duplicados si aplica.
+- Marcar `estado_revision: "revisado"` cuando este validado.

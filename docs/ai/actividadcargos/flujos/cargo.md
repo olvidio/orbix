@@ -51,8 +51,22 @@ Referencias tecnicas para verificar la respuesta:
 
 - Ninguna pantalla relacionada.
 
+## Objetivo
+
+Gestiona ActividadCargo. Crea un ActividadCargo. Elimina un ActividadCargo y, si procede, su Asistente.
+
+## Errores Documentados
+
+- `falta id_item`
+- `faltan parametros id_activ / id_nom / id_cargo`
+- `hay un error, no se ha eliminado`
+- `hay un error, no se ha eliminado el asistente`
+- `hay un error, no se ha guardado el asistente`
+- `no encuentro el cargo`
+- `ya existe este cargo para esta actividad`
+
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.
 - No inventar rutas de menu si aparecen como pendientes.
-- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.
+- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.

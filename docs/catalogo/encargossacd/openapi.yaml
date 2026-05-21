@@ -1,0 +1,1910 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - encargossacd"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/encargossacd/comprobaciones_ctr":
+    post:
+      operationId: "post_encargossacd_comprobaciones_ctr"
+      summary: "Comprobaciones Ctr"
+      description: |
+        Elimina encargos ligados a centros inactivos y sacd huérfanos (misma lógica que el antiguo `frontend/encargossacd/controller/comprobaciones.php`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/comprobaciones_ctr.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoComprobacionesCtrDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoComprobacionesCtrDataResponse"
+  "/src/encargossacd/ctr_ficha_data":
+    post:
+      operationId: "post_encargossacd_ctr_ficha_data"
+      summary: "Ctr Ficha Data"
+      description: |
+        Datos de la pantalla `ctr_ficha`: - calcula el `filtro_ctr` efectivo a partir del centro (cuando no viene del POST) - devuelve las `opciones_seccion` para el desplegable de grupo de ctrs. Reemplaza la lectura directa de repos y el acceso a `EncargoAplicacionService` que el frontend hacia en `ctr_ficha.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/ctr_ficha_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                filtro_ctr:
+                  type: "string"
+                id_ubi:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_CtrFichaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_CtrFichaDataDataResponse"
+  "/src/encargossacd/ctr_ficha_update":
+    post:
+      operationId: "post_encargossacd_ctr_ficha_update"
+      summary: "Ctr Ficha Update"
+      description: |
+        Mutacion de la ficha de atencion sacerdotal de un centro. Puerto de `frontend/encargossacd/controller/ctr_ficha_update.php`. Devuelve siempre `['error' => string]` (vacio = exito). El controlador HTTP convierte ese resultado en JSON `{success, mensaje}` (el proxy legacy en `frontend/` preserva el contrato "alert(rta_txt)" reemitiendo `mensaje`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/ctr_ficha_update.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                cl:
+                  type: "string"
+                dedic_ctr_m:
+                  type: "string"
+                dedic_ctr_t:
+                  type: "string"
+                dedic_ctr_v:
+                  type: "string"
+                dedic_m:
+                  type: "string"
+                dedic_t:
+                  type: "string"
+                dedic_v:
+                  type: "string"
+                e:
+                  type: "integer"
+                "id_enc_$e":
+                  type: "integer"
+                id_sacd:
+                  type: "string"
+                id_sacd_suplente:
+                  type: "integer"
+                id_sacd_titular:
+                  type: "integer"
+                "id_ubi_$e":
+                  type: "integer"
+                "mod_$e":
+                  type: "string"
+                n_sacd:
+                  type: "integer"
+                num_alum:
+                  type: "integer"
+                observ:
+                  type: "string"
+                sacd_num:
+                  type: "integer"
+                "tipo_centro_$e":
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_CtrFichaUpdateDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_CtrFichaUpdateDataResponse"
+  "/src/encargossacd/ctr_get_ficha_data":
+    post:
+      operationId: "post_encargossacd_ctr_get_ficha_data"
+      summary: "Ctr Get Ficha Data"
+      description: |
+        Lectura de la ficha de atencion sacerdotal de un centro. Puerto del antiguo `frontend/encargossacd/controller/ctr_get_ficha.php`. Devuelve arrays planos/estructurados para que el controlador frontend arme `frontend\shared\web\Desplegable` y la HTML sin instanciar nada de `src\`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/ctr_get_ficha_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ubi:
+                  type: "string"
+                seleccion_sacd:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_CtrGetFichaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_CtrGetFichaDataDataResponse"
+  "/src/encargossacd/ctr_get_select_data":
+    post:
+      operationId: "post_encargossacd_ctr_get_select_data"
+      summary: "Ctr Get Select Data"
+      description: |
+        Payload JSON para el desplegable de centros segun filtro (y zona opcional). Devuelve el contrato estandar definido en `refactor.md` (`id`, `name`, `opciones`, `selected`, `blanco`, `val_blanco`, `action`) para que el frontend monte el `<select>` con `fnjs_construir_desplegable` (o el modelo `frontend/encargossacd/model/DesplCentros`). Importante: esta clase vive en capa `application` y por tanto **no** puede instanciar `frontend\shared\web\Desplegable` (ver `refactor.md`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/ctr_get_select_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                filtro_ctr:
+                  type: "string"
+                id_ubi:
+                  type: "string"
+                id_zona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoCtrSelectDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoCtrSelectDataDataResponse"
+  "/src/encargossacd/encargo_horario_select_data":
+    post:
+      operationId: "post_encargossacd_encargo_horario_select_data"
+      summary: "Encargo Horario Select Data"
+      description: |
+        Datos para la lista de horarios de un encargo (`encargo_horario_select`). Se devuelven ya precalculados el texto descriptivo del horario y las fechas formateadas para que el frontend solo arme `frontend\shared\web\Lista`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/encargo_horario_select_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_enc:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoHorarioSelectDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoHorarioSelectDataDataResponse"
+  "/src/encargossacd/encargo_lst_tipo_enc_data":
+    post:
+      operationId: "post_encargossacd_encargo_lst_tipo_enc_data"
+      summary: "Encargo Lst Tipo Enc Data"
+      description: |
+        Payload de desplegable de tipos de encargo filtrados por prefijo de grupo (`id_tipo_enc ~ ^grupo`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/encargo_lst_tipo_enc_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grupo:
+                  type: "string"
+                id_tipo_enc:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoLstTipoEncDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoLstTipoEncDataDataResponse"
+  "/src/encargossacd/encargo_select_data":
+    post:
+      operationId: "post_encargossacd_encargo_select_data"
+      summary: "Encargo Select Data"
+      description: |
+        Datos para la lista de encargos (`encargo_select`). El frontend construye la `frontend\shared\web\Lista` y los enlaces; aqui devolvemos unicamente los datos planos de cada fila.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/encargo_select_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                desc_enc:
+                  type: "string"
+                id_tipo_enc:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoSelectDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoSelectDataDataResponse"
+  "/src/encargossacd/encargo_ver_data":
+    post:
+      operationId: "post_encargossacd_encargo_ver_data"
+      summary: "Encargo Ver Data"
+      description: |
+        Datos para la pantalla `encargo_ver` (nuevo / editar encargo). El frontend arma los `frontend\shared\web\Desplegable` a partir de los arrays devueltos.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/encargo_ver_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                desc_enc:
+                  type: "string"
+                desc_lugar:
+                  type: "string"
+                filtro_ctr:
+                  type: "string"
+                grupo:
+                  type: "string"
+                id_enc:
+                  type: "string"
+                id_tipo_enc:
+                  type: "string"
+                id_zona:
+                  type: "string"
+                que:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/encargossacd/encargo_ver_editar":
+    post:
+      operationId: "post_encargossacd_encargo_ver_editar"
+      summary: "Encargo Ver Editar"
+      description: |
+        Actualización de encargo desde `encargo_ver` (antes `encargo_ajax.php` que=editar).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/encargo_ver_editar.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                desc_enc:
+                  type: "string"
+                desc_lugar:
+                  type: "string"
+                filtro_ctr:
+                  type: "integer"
+                id_enc:
+                  type: "integer"
+                id_tipo_enc:
+                  type: "string"
+                id_zona:
+                  type: "integer"
+                idioma_enc:
+                  type: "string"
+                lst_ctrs:
+                  type: "integer"
+                observ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoVerEditarDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoVerEditarDataResponse"
+  "/src/encargossacd/encargo_ver_eliminar":
+    post:
+      operationId: "post_encargossacd_encargo_ver_eliminar"
+      summary: "Encargo Ver Eliminar"
+      description: |
+        Borrado desde lista `encargo_select` (antes `encargo_ajax.php` que=eliminar).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/encargo_ver_eliminar.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoVerEliminarDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoVerEliminarDataResponse"
+  "/src/encargossacd/encargo_ver_nuevo":
+    post:
+      operationId: "post_encargossacd_encargo_ver_nuevo"
+      summary: "Encargo Ver Nuevo"
+      description: |
+        Alta de encargo desde el formulario de `encargo_ver` (antes `encargo_ajax.php` que=nuevo).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/encargo_ver_nuevo.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                desc_enc:
+                  type: "string"
+                desc_lugar:
+                  type: "string"
+                filtro_ctr:
+                  type: "integer"
+                grupo:
+                  type: "string"
+                id_tipo_enc:
+                  type: "string"
+                id_zona:
+                  type: "integer"
+                idioma_enc:
+                  type: "string"
+                lst_ctrs:
+                  type: "integer"
+                nom_tipo:
+                  type: "string"
+                observ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoVerNuevoDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoVerNuevoDataResponse"
+  "/src/encargossacd/horario_sacd_update_data":
+    post:
+      operationId: "post_encargossacd_horario_sacd_update_data"
+      summary: "Horario Sacd Update Data"
+      description: |
+        Alta/edición/baja de horario de encargo sacd (`encargo_sacd_horario`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/horario_sacd_update_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoSacdHorarioUpdateDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoSacdHorarioUpdateDataResponse"
+  "/src/encargossacd/horario_sacd_ver_data":
+    post:
+      operationId: "post_encargossacd_horario_sacd_ver_data"
+      summary: "Horario Sacd Ver Data"
+      description: |
+        Datos del formulario horario sacd (ficha tareas).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/horario_sacd_ver_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                desc_enc:
+                  type: "string"
+                id_enc:
+                  type: "string"
+                id_item:
+                  type: "string"
+                id_nom:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/encargossacd/horario_update_data":
+    post:
+      operationId: "post_encargossacd_horario_update_data"
+      summary: "Horario Update Data"
+      description: |
+        Alta/edición/baja de horario de encargo (tabla encargo_horario).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/horario_update_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoHorarioUpdateDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoHorarioUpdateDataResponse"
+  "/src/encargossacd/horario_ver_data":
+    post:
+      operationId: "post_encargossacd_horario_ver_data"
+      summary: "Horario Ver Data"
+      description: |
+        Datos del formulario de horario de encargo (no sacd).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/horario_ver_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_enc:
+                  type: "string"
+                id_item_h:
+                  type: "string"
+                mod:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/encargossacd/listas_a_data":
+    post:
+      operationId: "post_encargossacd_listas_a_data"
+      summary: "Listas A Data"
+      description: |
+        Genera el listado de atencion SACD "a" (cr 9/05, Anexo2, 9.4 a). Sustituye la logica que habia en `frontend/encargossacd/controller/listas_a.php`. Devuelve el HTML completo junto con los textos de cabecera, listos para inyectarlos en la vista `listas.phtml`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_a_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sf:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasADataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasADataDataResponse"
+  "/src/encargossacd/listas_b_data":
+    post:
+      operationId: "post_encargossacd_listas_b_data"
+      summary: "Listas B Data"
+      description: |
+        Genera el listado de atencion SACD "b" (cr 9/05, Anexo2, 9.4 b). Sustituye la logica de `frontend/encargossacd/controller/listas_b.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_b_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sf:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasBDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasBDataDataResponse"
+  "/src/encargossacd/listas_c_data":
+    post:
+      operationId: "post_encargossacd_listas_c_data"
+      summary: "Listas C Data"
+      description: |
+        Genera el listado de atencion SACD "c" (cr 9/05, Anexo2, 9.4 c). Sustituye la logica de `frontend/encargossacd/controller/listas_c.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_c_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasCDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasCDataDataResponse"
+  "/src/encargossacd/listas_cl_data":
+    post:
+      operationId: "post_encargossacd_listas_cl_data"
+      summary: "Listas Cl Data"
+      description: |
+        Listado de cl para cr, restringido a los centros de la sss+. Sustituye la logica de `frontend/encargossacd/controller/listas_cl.php` (era una plantilla con SQL crudo). Devuelve el HTML completo listo para volcarlo al cliente; el frontend se limita a pasar `sf` y a echo del resultado.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_cl_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasClDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasClDataDataResponse"
+  "/src/encargossacd/listas_com_ctr_data":
+    post:
+      operationId: "post_encargossacd_listas_com_ctr_data"
+      summary: "Listas Com Ctr Data"
+      description: |
+        Datos para la comunicacion a los centros. Sustituye la logica de `frontend/encargossacd/controller/listas_com_ctr.php`. El modelo de salida replica el consumido por la vista `listas_com_ctr.phtml`: - `array_atn_sacd[nombre_ubi]` con titular, suplente, colaboradores y el texto de comunicacion traducido al idioma del idioma actual. - `origen_txt` cabecera de emisor y `lugar_fecha` pie.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_com_ctr_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sfsv:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasComCtrDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasComCtrDataDataResponse"
+  "/src/encargossacd/listas_com_sacd_data":
+    post:
+      operationId: "post_encargossacd_listas_com_sacd_data"
+      summary: "Listas Com Sacd Data"
+      description: |
+        Datos para la comunicacion a los SACD. Sustituye la logica de `frontend/encargossacd/controller/listas_com_sacd.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_com_sacd_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasComSacdDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasComSacdDataDataResponse"
+  "/src/encargossacd/listas_com_txt_data":
+    post:
+      operationId: "post_encargossacd_listas_com_txt_data"
+      summary: "Listas Com Txt Data"
+      description: |
+        Datos para la pantalla de textos de comunicacion (`frontend/encargossacd/controller/listas_com_txt.php`). Devuelve las opciones de idiomas configurados y el texto inicial correspondiente a la clave/idioma por defecto (`com_sacd` / `es`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_com_txt_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasComTxtDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasComTxtDataDataResponse"
+  "/src/encargossacd/listas_com_txt_get":
+    post:
+      operationId: "post_encargossacd_listas_com_txt_get"
+      summary: "Listas Com Txt Get"
+      description: |
+        Lectura del texto de comunicacion para un par (clave, idioma). Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_com_txt_get.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clave:
+                  type: "string"
+                idioma:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasComTxtGetDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasComTxtGetDataResponse"
+  "/src/encargossacd/listas_com_txt_update":
+    post:
+      operationId: "post_encargossacd_listas_com_txt_update"
+      summary: "Listas Com Txt Update"
+      description: |
+        Mutacion del texto de comunicacion para un par (clave, idioma). Si el texto llega vacio, se elimina la fila. Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_com_txt_update.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clave:
+                  type: "string"
+                comunicacion:
+                  type: "string"
+                idioma:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasComTxtUpdateDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasComTxtUpdateDataResponse"
+  "/src/encargossacd/listas_d_data":
+    post:
+      operationId: "post_encargossacd_listas_d_data"
+      summary: "Listas D Data"
+      description: |
+        Genera el listado "d" de atencion SACD (cr 9/20, 10). Sustituye la logica de `frontend/encargossacd/controller/listas_d.php`. La vista original devolvia dos tablas HTML sueltas (cabecera + listado); aqui se componen ambas en `Html` para que el frontend solo tenga que volcarlas al cliente.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_d_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sf:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasDDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasDDataDataResponse"
+  "/src/encargossacd/listas_exigencia_ctr_data":
+    post:
+      operationId: "post_encargossacd_listas_exigencia_ctr_data"
+      summary: "Listas Exigencia Ctr Data"
+      description: |
+        Listado de exigencias SACD por centro/iglesia. Sustituye la logica de `frontend/encargossacd/controller/listas_exigencia_ctr.php`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_exigencia_ctr_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ctr_igl:
+                  type: "string"
+                sf:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasExigenciaCtrDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_ListasExigenciaCtrDataDataResponse"
+  "/src/encargossacd/sacd_ausencias_get_data":
+    post:
+      operationId: "post_encargossacd_sacd_ausencias_get_data"
+      summary: "Sacd Ausencias Get Data"
+      description: |
+        Datos para la ficha de ausencias de un SACD (`frontend/encargossacd/controller/sacd_ausencias_get.php`). Devuelve la lista de tipos de ausencia disponibles (encargos con prefijo 7/4) y las filas asociadas al SACD. Con `historial=1` incluye todas las ausencias; sin historial solo muestra las que aun tienen vigencia.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/sacd_ausencias_get_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                historial:
+                  type: "string"
+                id_nom:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_SacdAusenciasGetDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_SacdAusenciasGetDataDataResponse"
+  "/src/encargossacd/sacd_ausencias_jefe_zona_data":
+    post:
+      operationId: "post_encargossacd_sacd_ausencias_jefe_zona_data"
+      summary: "Sacd Ausencias Jefe Zona Data"
+      description: |
+        Datos para el listado de SACDs susceptibles de gestionar ausencias desde la ficha de jefe de zona (`frontend/encargossacd/controller/sacd_ausencias_jefe_zona.php`). Recopila los SACDs de la(s) zona(s) del jefe y, cuando corresponde (Oficial_dl o jefe de calendario), la totalidad de SACDs activos. El array se devuelve ordenado por iniciales para alimentar el desplegable.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/sacd_ausencias_jefe_zona_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_SacdAusenciasJefeZonaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_SacdAusenciasJefeZonaDataDataResponse"
+  "/src/encargossacd/sacd_ausencias_update":
+    post:
+      operationId: "post_encargossacd_sacd_ausencias_update"
+      summary: "Sacd Ausencias Update"
+      description: |
+        Guarda/modifica las ausencias de un SACD (`frontend/encargossacd/controller/sacd_ausencias_update.php`). Devuelve ['error' => bool, 'mensajes' => string] donde `mensajes` acumula los errores de guardado/eliminacion para mostrar al usuario.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/sacd_ausencias_update.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_SacdAusenciasUpdateDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_SacdAusenciasUpdateDataResponse"
+  "/src/encargossacd/sacd_ficha_data":
+    post:
+      operationId: "post_encargossacd_sacd_ficha_data"
+      summary: "Sacd Ficha Data"
+      description: |
+        Datos para la ficha de encargos de un SACD (`sacd_ficha_ajax?que=ficha`). Porta la lectura del antiguo controlador frontend y devuelve un payload estructurado con los encargos y sus dedicaciones (horario del centro y del SACD ya calculadas como texto cuando `mod_horario=3`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/sacd_ficha_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/encargossacd/sacd_ficha_update":
+    post:
+      operationId: "post_encargossacd_sacd_ficha_update"
+      summary: "Sacd Ficha Update"
+      description: |
+        Mutacion de la ficha de encargos de un SACD (`sacd_ficha_ajax?que=update`). Porta la logica del antiguo controlador frontend, haciendo la misma actualizacion de dedicaciones por modulo y de observaciones.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/sacd_ficha_update.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dedic_m:
+                  type: "string"
+                dedic_t:
+                  type: "string"
+                dedic_v:
+                  type: "string"
+                enc_num:
+                  type: "integer"
+                id_enc:
+                  type: "string"
+                id_nom:
+                  type: "integer"
+                id_tipo_enc:
+                  type: "string"
+                observ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_SacdFichaUpdateDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_SacdFichaUpdateDataResponse"
+  "/src/encargossacd/sacd_select_data":
+    post:
+      operationId: "post_encargossacd_sacd_select_data"
+      summary: "Sacd Select Data"
+      description: |
+        Opciones para el desplegable de SACDs filtrados por tabla (`sacd_ficha_ajax?que=get_select`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/sacd_select_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                filtro_sacd:
+                  type: "string"
+                id_nom:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_SacdSelectDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_SacdSelectDataDataResponse"
+  "/src/encargossacd/zonas_get_select_data":
+    post:
+      operationId: "post_encargossacd_zonas_get_select_data"
+      summary: "Zonas Get Select Data"
+      description: |
+        Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en `refactor.md`, sin instanciar `frontend\shared\web\Desplegable` (responsabilidad exclusiva del frontend).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/encargossacd/api/zonas_get_select_data.md`
+      tags:
+        - "encargossacd"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_zona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoZonasSelectDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/encargossacd_EncargoZonasSelectDataDataResponse"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    encargossacd_EncargoComprobacionesCtrData:
+      type: object
+      properties:
+        texto:
+          type: "string"
+    encargossacd_EncargoComprobacionesCtrDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_EncargoComprobacionesCtrData"
+    encargossacd_CtrFichaDataData:
+      type: object
+      properties:
+        filtro_ctr:
+          type: "string"
+    encargossacd_CtrFichaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_CtrFichaDataData"
+    encargossacd_CtrFichaUpdateData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    encargossacd_CtrFichaUpdateDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_CtrFichaUpdateData"
+    encargossacd_CtrGetFichaDataData:
+      type: object
+      properties:
+        dedic_m:
+          type: "string"
+    encargossacd_CtrGetFichaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_CtrGetFichaDataData"
+    encargossacd_EncargoCtrSelectDataData:
+      type: object
+      properties:
+        id:
+          type: "string"
+    encargossacd_EncargoCtrSelectDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_EncargoCtrSelectDataData"
+    encargossacd_EncargoHorarioSelectDataData:
+      type: object
+      properties:
+        desc_enc:
+          type: "string"
+        filas:
+          type: "string"
+        id_enc:
+          type: "integer"
+        id_item_h:
+          type: "integer"
+        dia_num:
+          type: "string"
+        dia_ref:
+          type: "string"
+        mas_menos:
+          type: "string"
+        dia_inc:
+          type: "string"
+        h_ini:
+          type: "string"
+        h_fin:
+          type: "string"
+        n_sacd:
+          type: "string"
+        mes:
+          type: "string"
+        f_ini:
+          type: "string"
+        f_fin:
+          type: "string"
+        excep:
+          type: "string"
+        texto_horario:
+          type: "string"
+    encargossacd_EncargoHorarioSelectDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_EncargoHorarioSelectDataData"
+    encargossacd_EncargoLstTipoEncDataData:
+      type: object
+      properties:
+        id:
+          type: "string"
+    encargossacd_EncargoLstTipoEncDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_EncargoLstTipoEncDataData"
+    encargossacd_EncargoSelectDataData:
+      type: object
+      properties:
+        filas:
+          type: "string"
+        id_enc:
+          type: "integer"
+        sf_sv:
+          type: "integer"
+        idioma_enc:
+          type: "string"
+        id_ubi:
+          type: "integer"
+        desc_enc:
+          type: "string"
+        desc_lugar:
+          type: "string"
+        seccion:
+          type: "string"
+        nombre_ubi:
+          type: "string"
+        idioma:
+          type: "string"
+    encargossacd_EncargoSelectDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_EncargoSelectDataData"
+    encargossacd_EncargoVerEditarData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    encargossacd_EncargoVerEditarDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_EncargoVerEditarData"
+    encargossacd_EncargoVerEliminarData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    encargossacd_EncargoVerEliminarDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_EncargoVerEliminarData"
+    encargossacd_EncargoVerNuevoData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    encargossacd_EncargoVerNuevoDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_EncargoVerNuevoData"
+    encargossacd_EncargoSacdHorarioUpdateData:
+      type: object
+      properties:
+        ok:
+          type: "string"
+    encargossacd_EncargoSacdHorarioUpdateDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_EncargoSacdHorarioUpdateData"
+    encargossacd_EncargoHorarioUpdateData:
+      type: object
+      properties:
+        ok:
+          type: "string"
+    encargossacd_EncargoHorarioUpdateDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_EncargoHorarioUpdateData"
+    encargossacd_ListasADataData:
+      type: object
+      properties:
+        cabecera_left:
+          type: "string"
+        cabecera_right:
+          type: "string"
+        cabecera_right_2:
+          type: "string"
+        Html:
+          type: "string"
+    encargossacd_ListasADataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_ListasADataData"
+    encargossacd_ListasBDataData:
+      type: object
+      properties:
+        cabecera_left:
+          type: "string"
+        cabecera_right:
+          type: "string"
+        cabecera_right_2:
+          type: "string"
+        Html:
+          type: "string"
+    encargossacd_ListasBDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_ListasBDataData"
+    encargossacd_ListasCDataData:
+      type: object
+      properties:
+        cabecera_left:
+          type: "string"
+        cabecera_right:
+          type: "string"
+        cabecera_right_2:
+          type: "string"
+        Html:
+          type: "string"
+    encargossacd_ListasCDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_ListasCDataData"
+    encargossacd_ListasClDataData:
+      type: object
+      properties:
+        Html:
+          type: "string"
+    encargossacd_ListasClDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_ListasClDataData"
+    encargossacd_ListasComCtrDataData:
+      type: object
+      properties:
+        array_atn_sacd:
+          type: array
+          items: {}
+        origen_txt:
+          type: "string"
+        lugar_fecha:
+          type: "string"
+    encargossacd_ListasComCtrDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_ListasComCtrDataData"
+    encargossacd_ListasComSacdDataData:
+      type: object
+      properties:
+        array_modo:
+          type: array
+          items: {}
+        lugar_fecha:
+          type: "string"
+    encargossacd_ListasComSacdDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_ListasComSacdDataData"
+    encargossacd_ListasComTxtDataData:
+      type: object
+      properties:
+        a_locales:
+          type: array
+          items: {}
+    encargossacd_ListasComTxtDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_ListasComTxtDataData"
+    encargossacd_ListasComTxtGetData:
+      type: object
+      properties:
+        texto:
+          type: "string"
+    encargossacd_ListasComTxtGetDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_ListasComTxtGetData"
+    encargossacd_ListasComTxtUpdateData:
+      type: object
+      properties:
+        ok:
+          type: "string"
+    encargossacd_ListasComTxtUpdateDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_ListasComTxtUpdateData"
+    encargossacd_ListasDDataData:
+      type: object
+      properties:
+        cabecera_left:
+          type: "string"
+        cabecera_right:
+          type: "string"
+        cabecera_right_2:
+          type: "string"
+        Html:
+          type: "string"
+    encargossacd_ListasDDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_ListasDDataData"
+    encargossacd_ListasExigenciaCtrDataData:
+      type: object
+      properties:
+        cabecera_left:
+          type: "string"
+        cabecera_right:
+          type: "string"
+        cabecera_right_2:
+          type: "string"
+        Html:
+          type: "string"
+    encargossacd_ListasExigenciaCtrDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_ListasExigenciaCtrDataData"
+    encargossacd_SacdAusenciasGetDataData:
+      type: object
+      properties:
+        array_tipo_ausencias:
+          type: array
+          items: {}
+        filas:
+          type: "string"
+        id_enc:
+          type: "integer"
+        id_tipo_enc:
+          type: "integer"
+        desc_enc:
+          type: "string"
+        id_item:
+          type: "integer"
+        inicio:
+          type: "string"
+        fin:
+          type: "string"
+        dedic_m:
+          type: "string"
+        dedic_t:
+          type: "string"
+        dedic_v:
+          type: "string"
+    encargossacd_SacdAusenciasGetDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_SacdAusenciasGetDataData"
+    encargossacd_SacdAusenciasJefeZonaDataData:
+      type: object
+      properties:
+        a_sacd:
+          type: array
+          items: {}
+    encargossacd_SacdAusenciasJefeZonaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_SacdAusenciasJefeZonaDataData"
+    encargossacd_SacdAusenciasUpdateData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    encargossacd_SacdAusenciasUpdateDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_SacdAusenciasUpdateData"
+    encargossacd_SacdFichaUpdateData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    encargossacd_SacdFichaUpdateDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_SacdFichaUpdateData"
+    encargossacd_SacdSelectDataData:
+      type: object
+      properties:
+        opciones:
+          type: array
+          items: {}
+        selected:
+          type: "integer"
+        label_prefix:
+          type: "string"
+    encargossacd_SacdSelectDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_SacdSelectDataData"
+    encargossacd_EncargoZonasSelectDataData:
+      type: object
+      properties:
+        label_prefix:
+          type: "string"
+    encargossacd_EncargoZonasSelectDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/encargossacd_EncargoZonasSelectDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

@@ -1,0 +1,871 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - certificados"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/certificados/certificado_emitido_adjuntar_data":
+    post:
+      operationId: "post_certificados_certificado_emitido_adjuntar_data"
+      summary: "Certificado Emitido Adjuntar Data"
+      description: |
+        Datos para el formulario “adjuntar certificado emitido” (solo lectura inicial).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_adjuntar_data.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/certificados_CertificadoEmitidoAdjuntarFormDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/certificados_CertificadoEmitidoAdjuntarFormDataDataResponse"
+  "/src/certificados/certificado_emitido_delete":
+    post:
+      operationId: "post_certificados_certificado_emitido_delete"
+      summary: "Certificado Emitido Delete"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_delete.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_emitido_enviar":
+    post:
+      operationId: "post_certificados_certificado_emitido_enviar"
+      summary: "Certificado Emitido Enviar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_enviar.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_emitido_guardar":
+    post:
+      operationId: "post_certificados_certificado_emitido_guardar"
+      summary: "Certificado Emitido Guardar"
+      description: |
+        Mensajes legibles al guardar un certificado emitido (errores de BD, etc.).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_guardar.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                certificado:
+                  type: "string"
+                certificado_old:
+                  type: "string"
+                destino:
+                  type: "string"
+                f_certificado:
+                  type: "string"
+                f_enviado:
+                  type: "string"
+                firmado:
+                  type: "string"
+                id_item:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                idioma:
+                  type: "string"
+                nom:
+                  type: "string"
+                nuevo:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_emitido_guardar_pdf":
+    post:
+      operationId: "post_certificados_certificado_emitido_guardar_pdf"
+      summary: "Certificado Emitido Guardar Pdf"
+      description: |
+        Mensajes legibles al guardar un certificado emitido (errores de BD, etc.).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_guardar_pdf.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                certificado:
+                  type: "string"
+                id_item:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                pdf:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_emitido_imprimir_datos":
+    post:
+      operationId: "post_certificados_certificado_emitido_imprimir_datos"
+      summary: "Certificado Emitido Imprimir Datos"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_imprimir_datos.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_emitido_imprimir_mpdf_datos":
+    post:
+      operationId: "post_certificados_certificado_emitido_imprimir_mpdf_datos"
+      summary: "Certificado Emitido Imprimir Mpdf Datos"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_imprimir_mpdf_datos.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_emitido_lista_datos":
+    post:
+      operationId: "post_certificados_certificado_emitido_lista_datos"
+      summary: "Certificado Emitido Lista Datos"
+      description: |
+        Esta página muestra una tabla con los certificados.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_lista_datos.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                certificado:
+                  type: "string"
+                fincurs_ca_iso:
+                  type: "string"
+                inicurs_ca_iso:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_emitido_pdf_download":
+    get:
+      operationId: "get_certificados_certificado_emitido_pdf_download"
+      summary: "Certificado Emitido Pdf Download"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_pdf_download.md`
+      tags:
+        - "certificados"
+      parameters:
+        - name: "tk"
+          in: query
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_emitido_pdf_upload":
+    post:
+      operationId: "post_certificados_certificado_emitido_pdf_upload"
+      summary: "Certificado Emitido Pdf Upload"
+      description: |
+        Subida AJAX del PDF (bootstrap-fileinput / FormData multipart).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_pdf_upload.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                certificado:
+                  type: "string"
+                destino:
+                  type: "string"
+                f_certificado:
+                  type: "string"
+                f_enviado:
+                  type: "string"
+                firmado:
+                  type: "string"
+                id_item:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                idioma:
+                  type: "string"
+                solo_pdf:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_emitido_upload_firmado_data":
+    post:
+      operationId: "post_certificados_certificado_emitido_upload_firmado_data"
+      summary: "Certificado Emitido Upload Firmado Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_upload_firmado_data.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/certificados_CertificadoEmitidoUploadFirmadoFormDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/certificados_CertificadoEmitidoUploadFirmadoFormDataDataResponse"
+  "/src/certificados/certificado_emitido_ver_datos":
+    post:
+      operationId: "post_certificados_certificado_emitido_ver_datos"
+      summary: "Certificado Emitido Ver Datos"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_emitido_ver_datos.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_recibido_adjuntar_data":
+    post:
+      operationId: "post_certificados_certificado_recibido_adjuntar_data"
+      summary: "Certificado Recibido Adjuntar Data"
+      description: |
+        Datos para el formulario «adjuntar certificado recibido» (solo lectura inicial).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_recibido_adjuntar_data.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/certificados_CertificadoRecibidoAdjuntarFormDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/certificados_CertificadoRecibidoAdjuntarFormDataDataResponse"
+  "/src/certificados/certificado_recibido_delete":
+    post:
+      operationId: "post_certificados_certificado_recibido_delete"
+      summary: "Certificado Recibido Delete"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_recibido_delete.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_recibido_guardar":
+    post:
+      operationId: "post_certificados_certificado_recibido_guardar"
+      summary: "Certificado Recibido Guardar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_recibido_guardar.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                certificado:
+                  type: "string"
+                certificado_old:
+                  type: "string"
+                destino:
+                  type: "string"
+                f_certificado:
+                  type: "string"
+                f_enviado:
+                  type: "string"
+                f_recibido:
+                  type: "string"
+                firmado:
+                  type: "string"
+                id_item:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                idioma:
+                  type: "string"
+                nom:
+                  type: "string"
+                nuevo:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_recibido_modificar_data":
+    post:
+      operationId: "post_certificados_certificado_recibido_modificar_data"
+      summary: "Certificado Recibido Modificar Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_recibido_modificar_data.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_recibido_pdf_download":
+    get:
+      operationId: "get_certificados_certificado_recibido_pdf_download"
+      summary: "Certificado Recibido Pdf Download"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_recibido_pdf_download.md`
+      tags:
+        - "certificados"
+      parameters:
+        - name: "tk"
+          in: query
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificado_recibido_pdf_upload":
+    post:
+      operationId: "post_certificados_certificado_recibido_pdf_upload"
+      summary: "Certificado Recibido Pdf Upload"
+      description: |
+        Subida AJAX del PDF (certificado recibido, FormData multipart).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificado_recibido_pdf_upload.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                certificado:
+                  type: "string"
+                destino:
+                  type: "string"
+                f_certificado:
+                  type: "string"
+                f_recibido:
+                  type: "string"
+                firmado:
+                  type: "string"
+                id_item:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                idioma:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/certificados_locales_data":
+    post:
+      operationId: "post_certificados_certificados_locales_data"
+      summary: "Certificados Locales Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/certificados_locales_data.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/certificados/textos_certificados":
+    post:
+      operationId: "post_certificados_textos_certificados"
+      summary: "Textos Certificados"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/certificados/api/textos_certificados.md`
+      tags:
+        - "certificados"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    certificados_CertificadoEmitidoAdjuntarFormDataData:
+      type: object
+      properties:
+        nom:
+          type: "string"
+    certificados_CertificadoEmitidoAdjuntarFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/certificados_CertificadoEmitidoAdjuntarFormDataData"
+    certificados_CertificadoEmitidoUploadFirmadoFormDataData:
+      type: object
+      properties:
+        id_nom:
+          type: "string"
+    certificados_CertificadoEmitidoUploadFirmadoFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/certificados_CertificadoEmitidoUploadFirmadoFormDataData"
+    certificados_CertificadoRecibidoAdjuntarFormDataData:
+      type: object
+      properties:
+        nom:
+          type: "string"
+    certificados_CertificadoRecibidoAdjuntarFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/certificados_CertificadoRecibidoAdjuntarFormDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

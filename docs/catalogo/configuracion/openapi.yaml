@@ -1,0 +1,314 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - configuracion"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/configuracion/modulos_form_data":
+    post:
+      operationId: "post_configuracion_modulos_form_data"
+      summary: "Modulos Form Data"
+      description: |
+        JSON para {
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/configuracion/api/modulos_form_data.md`
+      tags:
+        - "configuracion"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_mod:
+                  type: "integer"
+                mod:
+                  type: "string"
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/configuracion/modulos_select_data":
+    post:
+      operationId: "post_configuracion_modulos_select_data"
+      summary: "Modulos Select Data"
+      description: |
+        JSON para {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/configuracion/api/modulos_select_data.md`
+      tags:
+        - "configuracion"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_sel:
+                  type: "string"
+                restored_id_sel:
+                  type: "string"
+                restored_scroll_id:
+                  type: "string"
+                scroll_id:
+                  type: "string"
+                stack:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/configuracion/modulos_update":
+    post:
+      operationId: "post_configuracion_modulos_update"
+      summary: "Modulos Update"
+      description: |
+        Alta / baja / modificación de módulos (respuesta texto plano para AJAX legacy).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/configuracion/api/modulos_update.md`
+      tags:
+        - "configuracion"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/configuracion/parametros_lista":
+    post:
+      operationId: "post_configuracion_parametros_lista"
+      summary: "Parametros Lista"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/configuracion/api/parametros_lista.md`
+      tags:
+        - "configuracion"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/configuracion/parametros_update":
+    post:
+      operationId: "post_configuracion_parametros_update"
+      summary: "Parametros Update"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/configuracion/api/parametros_update.md`
+      tags:
+        - "configuracion"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                fin_dia:
+                  type: "integer"
+                fin_mes:
+                  type: "integer"
+                ini_dia:
+                  type: "integer"
+                ini_mes:
+                  type: "integer"
+                parametro:
+                  type: "string"
+                valor:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/configuracion/periodo_calendario_escolar_data":
+    post:
+      operationId: "post_configuracion_periodo_calendario_escolar_data"
+      summary: "Periodo Calendario Escolar Data"
+      description: |
+        Fechas y metadatos del curso (STGR / CRT) que antes solo estaban en `$_SESSION['oConfig']`, para inyectar en `Periodo` del frontend.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/configuracion/api/periodo_calendario_escolar_data.md`
+      tags:
+        - "configuracion"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/configuracion_PeriodoCalendarioEscolarDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/configuracion_PeriodoCalendarioEscolarDataDataResponse"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    configuracion_PeriodoCalendarioEscolarDataData:
+      type: object
+      properties:
+        mes_fin_stgr:
+          type: "integer"
+        mes_fin_crt:
+          type: "integer"
+        dia_ini_stgr:
+          type: "integer"
+        mes_ini_stgr:
+          type: "integer"
+        dia_fin_stgr:
+          type: "integer"
+        dia_ini_crt:
+          type: "integer"
+        mes_ini_crt:
+          type: "integer"
+        dia_fin_crt:
+          type: "integer"
+        mes_fin_crt:
+          type: "integer"
+        any_final_est:
+          type: "integer"
+        any_final_crt:
+          type: "integer"
+    configuracion_PeriodoCalendarioEscolarDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/configuracion_PeriodoCalendarioEscolarDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

@@ -144,7 +144,14 @@ function markdownFilesForModule(string $module): array
  *   url: string,
  *   metodos: list<string>,
  *   entrada: list<string>,
+ *   entrada_obligatoria: list<string>,
  *   respuesta: string,
+ *   respuesta_data: list<string>,
+ *   respuesta_data_schema: string,
+ *   operacion: string,
+ *   requiere_hashb: bool,
+ *   hashb_campo: string,
+ *   hashb_action: string,
  *   tags: list<string>,
  *   title: string,
  *   description: string,
@@ -177,7 +184,14 @@ function readCatalogEndpoint(string $file): ?array
         'url' => (string)($frontMatter['url'] ?? ''),
         'metodos' => array_values(array_filter(asStringList($frontMatter['metodos'] ?? []))),
         'entrada' => array_values(array_filter(asStringList($frontMatter['entrada'] ?? []))),
+        'entrada_obligatoria' => array_values(array_filter(asStringList($frontMatter['entrada_obligatoria'] ?? []))),
         'respuesta' => (string)($frontMatter['respuesta'] ?? ''),
+        'respuesta_data' => array_values(array_filter(asStringList($frontMatter['respuesta_data'] ?? []))),
+        'respuesta_data_schema' => (string)($frontMatter['respuesta_data_schema'] ?? ''),
+        'operacion' => (string)($frontMatter['operacion'] ?? ''),
+        'requiere_hashb' => parseYamlBool($frontMatter['requiere_hashb'] ?? false),
+        'hashb_campo' => (string)($frontMatter['hashb_campo'] ?? ''),
+        'hashb_action' => (string)($frontMatter['hashb_action'] ?? ''),
         'tags' => array_values(array_filter(asStringList($frontMatter['tags'] ?? []))),
         'title' => $title,
         'description' => $description,
@@ -185,7 +199,7 @@ function readCatalogEndpoint(string $file): ?array
     ];
 }
 
-/** @return array<string, string|list<string>> */
+/** @return array<string, string|bool|list<string>> */
 function parseSimpleYaml(string $yaml): array
 {
     $data = [];
@@ -202,6 +216,14 @@ function parseSimpleYaml(string $yaml): array
 
         $key = $m['key'];
         $value = trim($m['value']);
+        if ($value === 'true') {
+            $data[$key] = true;
+            continue;
+        }
+        if ($value === 'false') {
+            $data[$key] = false;
+            continue;
+        }
         if (str_starts_with($value, '[') && str_ends_with($value, ']')) {
             $data[$key] = parseInlineList($value);
             continue;
@@ -211,6 +233,15 @@ function parseSimpleYaml(string $yaml): array
     }
 
     return $data;
+}
+
+function parseYamlBool(string|bool $value): bool
+{
+    if (is_bool($value)) {
+        return $value;
+    }
+
+    return strtolower($value) === 'true';
 }
 
 /** @return list<string> */
@@ -380,13 +411,75 @@ function openApiScalarType(string $type): string
     };
 }
 
-function schemaRefForResponse(string $respuesta): string
+function schemaRefForResponse(array $endpoint): string
 {
-    return match ($respuesta) {
+    if (($endpoint['respuesta_data_schema'] ?? '') !== '') {
+        return '#/components/schemas/' . $endpoint['respuesta_data_schema'] . 'Response';
+    }
+
+    return match ($endpoint['respuesta'] ?? '') {
         'standard_envelope_nested_data' => '#/components/schemas/OrbixStandardResponseNestedData',
         'custom_json' => '#/components/schemas/OrbixCustomJsonResponse',
         default => '#/components/schemas/OrbixStandardResponseStringData',
     };
+}
+
+/** @param list<array{name: string, type: string}> $fields */
+function renderPayloadSchemaLines(string $schemaName, array $fields): array
+{
+    $lines = [
+        '    ' . $schemaName . ':',
+        '      type: object',
+        '      properties:',
+    ];
+    foreach ($fields as $field) {
+        $lines[] = '        ' . yamlKey($field['name']) . ':';
+        $type = openApiScalarType($field['type']);
+        if ($type === 'array') {
+            $lines[] = '          type: array';
+            $lines[] = '          items: {}';
+            continue;
+        }
+        $lines[] = '          type: ' . yamlString($type);
+    }
+
+    return $lines;
+}
+
+/** @param list<string> $respuestaData */
+function parseRespuestaData(array $respuestaData): array
+{
+    $fields = [];
+    foreach ($respuestaData as $entry) {
+        if (!preg_match('/^(?P<name>[^:]+):(?P<type>.+)$/', $entry, $m)) {
+            continue;
+        }
+        $fields[] = [
+            'name' => $m['name'],
+            'type' => strtolower(trim($m['type'])),
+        ];
+    }
+
+    return $fields;
+}
+
+/** @param list<array<string, mixed>> $endpoints */
+function collectDataSchemas(array $endpoints): array
+{
+    $schemas = [];
+    foreach ($endpoints as $endpoint) {
+        $schemaName = (string)($endpoint['respuesta_data_schema'] ?? '');
+        if ($schemaName === '') {
+            continue;
+        }
+        $fields = parseRespuestaData($endpoint['respuesta_data'] ?? []);
+        if ($fields === []) {
+            continue;
+        }
+        $schemas[$schemaName] = $fields;
+    }
+
+    return $schemas;
 }
 
 /** @param list<array{source: string, name: string, type: string}> $inputs */
@@ -397,12 +490,21 @@ function renderPathMethod(array $endpoint, string $method, array $inputs): array
         $inputs,
         static fn (array $input): bool => $isGet ? $input['source'] === 'get' : $input['source'] === 'post'
     ));
+    $requiredInputs = array_values(array_filter(asStringList($endpoint['entrada_obligatoria'] ?? [])));
+
+    $description = $endpoint['description'];
+    if (!empty($endpoint['requiere_hashb'])) {
+        $description .= "\n\nRequiere cápsula HashB en `" . ($endpoint['hashb_campo'] ?? '') . '` (accion `' . ($endpoint['hashb_action'] ?? '') . '`).';
+    }
+    if (($endpoint['operacion'] ?? '') !== '') {
+        $description .= "\n\nOperacion: `" . $endpoint['operacion'] . '`.';
+    }
 
     $lines = [];
     $lines[] = "    {$method}:";
     $lines[] = '      operationId: ' . yamlString(operationId($endpoint['id'], $method));
     $lines[] = '      summary: ' . yamlString($endpoint['title']);
-    $lines[] = '      description: ' . yamlBlock($endpoint['description'] . "\n\nFuente catalogo: `" . $endpoint['source'] . '`', 8);
+    $lines[] = '      description: ' . yamlBlock($description . "\n\nFuente catalogo: `" . $endpoint['source'] . '`', 8);
     $lines[] = '      tags:';
     foreach (tagsForEndpoint($endpoint) as $tag) {
         $lines[] = '        - ' . yamlString($tag);
@@ -413,7 +515,7 @@ function renderPathMethod(array $endpoint, string $method, array $inputs): array
         foreach ($relevantInputs as $input) {
             $lines[] = '        - name: ' . yamlString($input['name']);
             $lines[] = '          in: query';
-            $lines[] = '          required: false';
+            $lines[] = '          required: ' . (in_array($input['name'], $requiredInputs, true) ? 'true' : 'false');
             $lines[] = '          schema:';
             $lines[] = '            type: ' . yamlString(openApiScalarType($input['type']));
         }
@@ -421,11 +523,17 @@ function renderPathMethod(array $endpoint, string $method, array $inputs): array
 
     if (!$isGet) {
         $lines[] = '      requestBody:';
-        $lines[] = '        required: false';
+        $lines[] = '        required: ' . ($relevantInputs !== [] ? 'true' : 'false');
         $lines[] = '        content:';
         $lines[] = '          application/x-www-form-urlencoded:';
         $lines[] = '            schema:';
         $lines[] = '              type: object';
+        if ($requiredInputs !== []) {
+            $lines[] = '              required:';
+            foreach ($requiredInputs as $required) {
+                $lines[] = '                - ' . yamlString($required);
+            }
+        }
         $lines[] = '              properties:';
         if ($relevantInputs === []) {
             $lines[] = '                _sin_parametros_detectados:';
@@ -443,19 +551,20 @@ function renderPathMethod(array $endpoint, string $method, array $inputs): array
         }
     }
 
+    $responseRef = schemaRefForResponse($endpoint);
     $lines[] = '      responses:';
     $lines[] = '        "200":';
     $lines[] = '          description: ' . yamlString('Respuesta generada por Orbix.');
     $lines[] = '          content:';
     $lines[] = '            application/json:';
     $lines[] = '              schema:';
-    $lines[] = '                $ref: ' . yamlString(schemaRefForResponse($endpoint['respuesta']));
+    $lines[] = '                $ref: ' . yamlString($responseRef);
     $lines[] = '        "400":';
     $lines[] = '          description: ' . yamlString('Peticion no valida o error de validacion.');
     $lines[] = '          content:';
     $lines[] = '            application/json:';
     $lines[] = '              schema:';
-    $lines[] = '                $ref: ' . yamlString(schemaRefForResponse($endpoint['respuesta']));
+    $lines[] = '                $ref: ' . yamlString($responseRef);
 
     return $lines;
 }
@@ -515,23 +624,24 @@ function renderOpenApi(string $module, array $endpoints): string
     foreach ($endpoints as $endpoint) {
         $inputs = parseEntrada($endpoint['entrada']);
         $methods = documentedMethods($endpoint['metodos'], $inputs);
-        $usedResponseRefs[] = schemaRefForResponse($endpoint['respuesta']);
+        $usedResponseRefs[] = schemaRefForResponse($endpoint);
         $lines[] = '  ' . yamlString($endpoint['url']) . ':';
         foreach ($methods as $method) {
             array_push($lines, ...renderPathMethod($endpoint, $method, $inputs));
         }
     }
 
-    array_push($lines, ...renderComponents(array_values(array_unique($usedResponseRefs))));
+    array_push($lines, ...renderComponents(array_values(array_unique($usedResponseRefs)), collectDataSchemas($endpoints)));
 
     return implode(PHP_EOL, $lines) . PHP_EOL;
 }
 
 /**
  * @param list<string> $usedResponseRefs
+ * @param array<string, list<array{name: string, type: string}>> $dataSchemas
  * @return list<string>
  */
-function renderComponents(array $usedResponseRefs): array
+function renderComponents(array $usedResponseRefs, array $dataSchemas): array
 {
     $lines = [
         'components:',
@@ -542,6 +652,38 @@ function renderComponents(array $usedResponseRefs): array
         '      name: PHPSESSID',
         '  schemas:',
     ];
+
+    if ($dataSchemas !== []) {
+        array_push($lines, ...[
+            '    OrbixStandardResponseEnvelope:',
+            '      type: object',
+            '      required:',
+            '        - success',
+            '        - data',
+            '      properties:',
+            '        success:',
+            '          type: boolean',
+            '        mensaje:',
+            '          type: string',
+            '        data:',
+            '          description: "Ver schema concreto de cada operacion."',
+        ]);
+    }
+
+    foreach ($dataSchemas as $schemaName => $fields) {
+        array_push($lines, ...renderPayloadSchemaLines($schemaName, $fields));
+        $responseName = $schemaName . 'Response';
+        $lines[] = '    ' . $responseName . ':';
+        $lines[] = '      allOf:';
+        $lines[] = '        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"';
+        $lines[] = '        - type: object';
+        $lines[] = '          properties:';
+        $lines[] = '            data:';
+        $lines[] = '              oneOf:';
+        $lines[] = '                - type: string';
+        $lines[] = '                  description: "JSON codificado como string (compatibilidad legacy)."';
+        $lines[] = '                - $ref: "#/components/schemas/' . $schemaName . '"';
+    }
 
     if (in_array('#/components/schemas/OrbixStandardResponseStringData', $usedResponseRefs, true)) {
         array_push($lines, ...[

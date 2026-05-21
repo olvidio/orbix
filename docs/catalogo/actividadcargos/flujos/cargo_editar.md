@@ -17,7 +17,9 @@ Propuesta generada automaticamente desde la capacidad `actividadcargos.cargo_edi
 
 ## Objetivo De Usuario
 
-Pendiente de revisar. Redactar aqui el objetivo en lenguaje de usuario, no tecnico.
+Guardar cambios en un cargo existente (tipo, AGD, observaciones y sincronización de asistente).
+
+Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Cargo Editar).
 
 ## Punto De Entrada
 
@@ -48,6 +50,15 @@ Acciones JavaScript:
 ## Endpoints Del Flujo
 
 - `/src/actividadcargos/cargo_editar`
+
+## Errores Conocidos
+
+- ``faltan parametros id_activ / id_nom / id_cargo``
+- ``hay un error, no se ha eliminado el asistente``
+- ``hay un error, no se ha guardado``
+- ``hay un error, no se ha guardado el asistente``
+- ``no encuentro el cargo``
+- ``ya existe este cargo para esta actividad``
 
 ## Revision Manual
 

@@ -17,7 +17,9 @@ Propuesta generada automaticamente desde la capacidad `actividadtarifas.tarifa_u
 
 ## Objetivo De Usuario
 
-Pendiente de revisar. Redactar aqui el objetivo en lenguaje de usuario, no tecnico.
+Consultar y mantener las tarifas económicas de una casa para un año: listado, alta, edición, eliminación, copia desde el año anterior y actualización en lote desde el estudio económico.
+
+Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Tarifa Ubi).
 
 ## Punto De Entrada
 
@@ -134,6 +136,16 @@ Acciones JavaScript:
 - `/src/actividadtarifas/tarifa_ubi_lista_data`
 - `/src/actividadtarifas/tarifa_ubi_update`
 - `/src/actividadtarifas/tarifa_ubi_update_inc`
+
+## Errores Conocidos
+
+- ``Operación no autorizada``
+- ``función de copiar tarifas pendiente de reimplementar``
+- ``hay un error, no se ha borrado``
+- ``hay un error, no se ha guardado``
+- ``no se encuentra la tarifa``
+- ``no sé cuál he de borrar``
+- ``no sé qué casa/año tengo que copiar``
 
 ## Revision Manual
 

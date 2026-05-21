@@ -1,10 +1,10 @@
 ---
 tipo: "relacion_pantallas_api"
 modulo: "actividadcargos"
-pantallas: 2
+pantallas: 4
 endpoints_api: 5
 capacidades: 4
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Relacion Pantallas API - actividadcargos
@@ -85,15 +85,21 @@ Pantallas via capacidad:
 
 ## Alertas De Revision
 
-Endpoints sin pantalla directa detectada:
-- `/src/actividadcargos/cargo_editar`
-- `/src/actividadcargos/cargo_eliminar`
-- `/src/actividadcargos/cargo_nuevo`
+Endpoints sin pantalla directa detectada (generador no indexa `.phtml`):
+- `/src/actividadcargos/cargo_editar` — formularios `form_cargos_*.phtml` (AJAX `fnjs_guardar_cargo_*`)
+- `/src/actividadcargos/cargo_eliminar` — widgets `select_cargos_*.phtml` (AJAX `fnjs_borrar_cargo`)
+- `/src/actividadcargos/cargo_nuevo` — formularios en modo `nuevo`
+
+Pantallas documentadas manualmente:
+- `actividadcargos.pantalla.select_cargos_de_actividad` (dossier 3102)
+- `actividadcargos.pantalla.select_cargos_personas_en_actividad` (dossier 1302)
 
 Endpoints sin pantalla directa ni capacidad relacionada:
-- `/src/actividadcargos/cargo_editar`
-- `/src/actividadcargos/cargo_eliminar`
-- `/src/actividadcargos/cargo_nuevo`
+- Ninguno — los endpoints listados arriba se consumen via AJAX, forms `.phtml`/`.twig` o login; ver `docs/REPASSO_FINAL.md` § B.
+
+## Revision Manual
+
+- Repaso 2026-05-21: huerfanos aceptados como patron normal Orbix (PostRequest / fetch desde vista).
 
 ## Revision Manual
 

@@ -1,0 +1,287 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - shared"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/shared/locales_posibles":
+    post:
+      operationId: "post_shared_locales_posibles"
+      summary: "Locales Posibles"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/shared/api/locales_posibles.md`
+      tags:
+        - "shared"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/shared/tablaDB_buscar_datos":
+    post:
+      operationId: "post_shared_tablaDB_buscar_datos"
+      summary: "TablaDB Buscar Datos"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/shared/api/tablaDB_buscar_datos.md`
+      tags:
+        - "shared"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                aSerieBuscar:
+                  type: "string"
+                clase_info:
+                  type: "string"
+                id_pau:
+                  type: "integer"
+                k_buscar:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                pau:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/shared/tablaDB_depende_datos":
+    post:
+      operationId: "post_shared_tablaDB_depende_datos"
+      summary: "TablaDB Depende Datos"
+      description: |
+        ************ datos *********************************
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/shared/api/tablaDB_depende_datos.md`
+      tags:
+        - "shared"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clase_info:
+                  type: "string"
+                opcion_sel:
+                  type: "string"
+                pKeyRepository:
+                  type: "string"
+                valor_depende:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/shared/tablaDB_formulario_datos":
+    post:
+      operationId: "post_shared_tablaDB_formulario_datos"
+      summary: "TablaDB Formulario Datos"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/shared/api/tablaDB_formulario_datos.md`
+      tags:
+        - "shared"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                a_pkey:
+                  type: "string"
+                clase_info:
+                  type: "string"
+                mod:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/shared/tablaDB_lista_datos":
+    post:
+      operationId: "post_shared_tablaDB_lista_datos"
+      summary: "TablaDB Lista Datos"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/shared/api/tablaDB_lista_datos.md`
+      tags:
+        - "shared"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clase_info:
+                  type: "string"
+                id_pau:
+                  type: "integer"
+                k_buscar:
+                  type: "string"
+                obj_pau:
+                  type: "integer"
+                pau:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/shared/tablaDB_update":
+    post:
+      operationId: "post_shared_tablaDB_update"
+      summary: "TablaDB Update"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/shared/api/tablaDB_update.md`
+      tags:
+        - "shared"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clase_info:
+                  type: "string"
+                go_to:
+                  type: "string"
+                id_pau:
+                  type: "string"
+                mod:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                s_pkey:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

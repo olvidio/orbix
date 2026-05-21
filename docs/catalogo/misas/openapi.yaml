@@ -1,0 +1,1511 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - misas"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/misas/anadir_ctr_tarea":
+    post:
+      operationId: "post_misas_anadir_ctr_tarea"
+      summary: "Anadir Ctr Tarea"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/anadir_ctr_tarea.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "integer"
+                id_tarea:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                que:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_AnadirCtrTareaDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_AnadirCtrTareaDataResponse"
+  "/src/misas/buscar_plan_ctr_data":
+    post:
+      operationId: "post_misas_buscar_plan_ctr_data"
+      summary: "Buscar Plan Ctr Data"
+      description: |
+        Formulario buscador del plan de misas por centro (zonas + centros + periodo).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/buscar_plan_ctr_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_zona:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_BuscarPlanCtrDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_BuscarPlanCtrDataDataResponse"
+  "/src/misas/buscar_plan_sacd_data":
+    post:
+      operationId: "post_misas_buscar_plan_sacd_data"
+      summary: "Buscar Plan Sacd Data"
+      description: |
+        Lista de sacerdotes disponibles en el buscador del plan SACD (según rol y zona).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/buscar_plan_sacd_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_BuscarPlanSacdDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_BuscarPlanSacdDataDataResponse"
+  "/src/misas/cambiar_status_data":
+    post:
+      operationId: "post_misas_cambiar_status_data"
+      summary: "Cambiar Status Data"
+      description: |
+        Formulario "Cambiar estado del plan de misas" (zona, estado, orden).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/cambiar_status_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_CambiarStatusPantallaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_CambiarStatusPantallaDataDataResponse"
+  "/src/misas/crear_nuevo_periodo_data":
+    post:
+      operationId: "post_misas_crear_nuevo_periodo_data"
+      summary: "Crear Nuevo Periodo Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/crear_nuevo_periodo_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_zona:
+                  type: "integer"
+                orden:
+                  type: "string"
+                periodo:
+                  type: "string"
+                seleccion:
+                  type: "integer"
+                tipo_plantilla:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/cuadricula_update":
+    post:
+      operationId: "post_misas_cuadricula_update"
+      summary: "Cuadricula Update"
+      description: |
+        Use case del endpoint `cuadricula_update` (migracion de `apps/misas/controller/cuadricula_update.php` al Slice 6a). Hace dos cosas en la misma transaccion logica: 1. Upsert / delete de un `EncargoDia` para un dia + encargo concretos, en funcion de `key` (si esta vacio, se borra; si trae `id_nom`, se guarda o actualiza). 2. Recalcula el bloque `meta` que la UI usa para pintar colores y textos (disponibilidad del sacd anterior y del nuevo, numero de misas del dia, conflictos con primera hora, etc.). El codigo es una traduccion casi literal del controlador original para minimizar riesgo de regresion: la logica de negocio en si no cambia en este slice; lo unico que cambia es donde vive.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/cuadricula_update.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dia:
+                  type: "string"
+                id_enc:
+                  type: "integer"
+                id_zona:
+                  type: "integer"
+                key:
+                  type: "string"
+                observ:
+                  type: "string"
+                tend:
+                  type: "string"
+                tipo_plantilla:
+                  type: "string"
+                tstart:
+                  type: "string"
+                uuid_item:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_CuadriculaUpdateDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_CuadriculaUpdateDataResponse"
+  "/src/misas/desplegable_encargos":
+    post:
+      operationId: "post_misas_desplegable_encargos"
+      summary: "Desplegable Encargos"
+      description: |
+        Payload JSON para el desplegable dinamico de encargos de una zona. Sigue el contrato de desplegables de `refactor.md`: - `id` : id del `<select>` que montara `fnjs_construir_desplegable`. - `opciones` : map id_enc => desc_enc de los encargos con `id_tipo_enc >= 8100` de la zona. - `selected` : id_enc preseleccionado (`''` si no aplica). - `blanco` : true si se quiere opcion en blanco. - `val_blanco`: valor de la opcion en blanco. - `action` : handler `onchange` opcional (vacio por defecto).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/desplegable_encargos.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_enc:
+                  type: "string"
+                id_zona:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/desplegable_sacd":
+    post:
+      operationId: "post_misas_desplegable_sacd"
+      summary: "Desplegable Sacd"
+      description: |
+        Opciones del desplegable dinámico de SACD en el modal de la cuadrícula de zona. El payload sigue el espíritu del contrato de `refactor.md` (id, selected, filas ordenadas). `rows` conserva el orden del HTML legacy: opción actual, opción en blanco si aplica, resto ordenado por clave.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/desplegable_sacd.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dia:
+                  type: "string"
+                id_sacd:
+                  type: "integer"
+                id_zona:
+                  type: "integer"
+                seleccion:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/eliminar_encargo_centro":
+    post:
+      operationId: "post_misas_eliminar_encargo_centro"
+      summary: "Eliminar Encargo Centro"
+      description: |
+        Elimina un `EncargoCtr` por su uuid. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/eliminar_encargo_centro.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/eliminar_encargo_zona":
+    post:
+      operationId: "post_misas_eliminar_encargo_zona"
+      summary: "Eliminar Encargo Zona"
+      description: |
+        Elimina un `Encargo` por id. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/eliminar_encargo_zona.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_enc:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/guardar_encargo_centro":
+    post:
+      operationId: "post_misas_guardar_encargo_centro"
+      summary: "Guardar Encargo Centro"
+      description: |
+        Inserta o actualiza un `EncargoCtr` (relacion encargo ↔ centro). - Si `id_item` esta vacio se crea un nuevo `EncargoCtr` con uuid v4. - Si `id_item` es un uuid valido se carga el existente y se modifica. Devuelve texto vacio si todo fue bien, o el mensaje de error del repositorio en caso contrario.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/guardar_encargo_centro.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_ctr:
+                  type: "integer"
+                id_enc:
+                  type: "integer"
+                id_item:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/guardar_encargo_zona":
+    post:
+      operationId: "post_misas_guardar_encargo_zona"
+      summary: "Guardar Encargo Zona"
+      description: |
+        Inserta o actualiza un `Encargo` del grupo `ZONAS_MISAS`. - Si `id_enc` es 0 se crea uno nuevo con `getNewId()`. - Si hay valor, se carga el existente y se modifica. Devuelve un array con: - `error`: texto vacio si todo fue bien, mensaje del repositorio si no. - `data` : payload para el frontend con `id_enc`, `lugar` y el nombre del centro si se resolvio.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/guardar_encargo_zona.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                descripcion_lugar:
+                  type: "string"
+                encargo:
+                  type: "string"
+                id_enc:
+                  type: "integer"
+                id_tipo_enc:
+                  type: "integer"
+                id_ubi:
+                  type: "integer"
+                id_zona:
+                  type: "integer"
+                idioma_enc:
+                  type: "string"
+                observ:
+                  type: "string"
+                orden:
+                  type: "integer"
+                prioridad:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/guardar_horario":
+    post:
+      operationId: "post_misas_guardar_horario"
+      summary: "Guardar Horario"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/guardar_horario.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item_h:
+                  type: "integer"
+                t_end:
+                  type: "string"
+                t_start:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_GuardarHorarioTareaDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_GuardarHorarioTareaDataResponse"
+  "/src/misas/horario_tarea_data":
+    post:
+      operationId: "post_misas_horario_tarea_data"
+      summary: "Horario Tarea Data"
+      description: |
+        Datos del horario de una tarea (modal `horario_tarea.phtml`). Simple lectura de `t_start`/`t_end` del `EncargoHorario` indicado por `id_item_h`. Se saca de la vista frontend para cumplir la regla de `refactor.md`: los controladores `frontend/` no pueden instanciar repositorios de `src\` ni tocar `$GLOBALS['container']`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/horario_tarea_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item_h:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_HorarioTareaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_HorarioTareaDataDataResponse"
+  "/src/misas/importar_plantilla_data":
+    post:
+      operationId: "post_misas_importar_plantilla_data"
+      summary: "Importar Plantilla Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/importar_plantilla_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_zona:
+                  type: "integer"
+                tipo_plantilla_destino:
+                  type: "string"
+                tipo_plantilla_origen:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/modificar_encargos_centros_data":
+    post:
+      operationId: "post_misas_modificar_encargos_centros_data"
+      summary: "Modificar Encargos Centros Data"
+      description: |
+        Devuelve el desplegable de zonas que el usuario actual puede ver, para pintar la pantalla `modificar_encargos_centros`. Replica la logica de permisos de `apps/misas/controller/modificar_encargos_centros.php`: si el rol es `p-sacd` y NO es jefe de calendario, se limitan las zonas a las del `id_pau` del propio usuario. Devuelve: - `error` : texto vacio si todo ok, mensaje si falta permiso. - `a_opciones_zona`: array id_zona => nombre_zona.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/modificar_encargos_centros_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/modificar_encargos_data":
+    post:
+      operationId: "post_misas_modificar_encargos_data"
+      summary: "Modificar Encargos Data"
+      description: |
+        Devuelve los datos para pintar la pantalla `modificar_encargos`: el desplegable de zonas (filtrado segun el rol del usuario) y la lista de criterios de orden aceptados por el grid. Replica la logica de `apps/misas/controller/modificar_encargos.php`: si el rol es `p-sacd` y NO es jefe de calendario, se limitan las zonas a las del `id_pau` del propio usuario. Devuelve: - `error` : texto vacio si todo ok, mensaje si el usuario no tiene permiso para ver la pantalla. - `a_opciones_zona`: array id_zona => nombre_zona. - `a_orden` : array criterio => label.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/modificar_encargos_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/modificar_iniciales_sacd_zona_data":
+    post:
+      operationId: "post_misas_modificar_iniciales_sacd_zona_data"
+      summary: "Modificar Iniciales Sacd Zona Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/modificar_iniciales_sacd_zona_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/modificar_plantilla_data":
+    post:
+      operationId: "post_misas_modificar_plantilla_data"
+      summary: "Modificar Plantilla Data"
+      description: |
+        Datos comunes para las pantallas preparar / modificar / ver plan de misas y para modificar plantilla (mismos desplegables de zona / tipo / orden).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/modificar_plantilla_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_PlanDeMisasPantallaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_PlanDeMisasPantallaDataDataResponse"
+  "/src/misas/nuevo_status":
+    post:
+      operationId: "post_misas_nuevo_status"
+      summary: "Nuevo Status"
+      description: |
+        Actualiza `status` de todos los `EncargoDia` de encargos 8100+ de la zona en el rango.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/nuevo_status.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                estado:
+                  type: "integer"
+                id_zona:
+                  type: "integer"
+                periodo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_NuevoStatusPeriodoDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_NuevoStatusPeriodoDataResponse"
+  "/src/misas/plan_de_misas_pantalla_data":
+    post:
+      operationId: "post_misas_plan_de_misas_pantalla_data"
+      summary: "Plan De Misas Pantalla Data"
+      description: |
+        Datos comunes para las pantallas preparar / modificar / ver plan de misas y para modificar plantilla (mismos desplegables de zona / tipo / orden).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/plan_de_misas_pantalla_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                pantalla:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_PlanDeMisasPantallaDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_PlanDeMisasPantallaDataDataResponse"
+  "/src/misas/quitar_horario":
+    post:
+      operationId: "post_misas_quitar_horario"
+      summary: "Quitar Horario"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/quitar_horario.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_item:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/update_iniciales":
+    post:
+      operationId: "post_misas_update_iniciales"
+      summary: "Update Iniciales"
+      description: |
+        Inserta o actualiza la fila de iniciales/color para un sacerdote. Devuelve texto vacio si todo fue bien; en otro caso, el mensaje de error del repositorio. El controlador HTTP es quien serializa la respuesta con `ContestarJson::enviar(...)`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/update_iniciales.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                color:
+                  type: "string"
+                id_sacd:
+                  type: "integer"
+                iniciales:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/ver_cuadricula_zona_data":
+    post:
+      operationId: "post_misas_ver_cuadricula_zona_data"
+      summary: "Ver Cuadricula Zona Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/ver_cuadricula_zona_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                columna:
+                  type: "integer"
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                fila:
+                  type: "integer"
+                id_zona:
+                  type: "integer"
+                orden:
+                  type: "string"
+                periodo:
+                  type: "string"
+                seleccion:
+                  type: "integer"
+                tipo_plantilla:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/ver_encargos_centros_data":
+    post:
+      operationId: "post_misas_ver_encargos_centros_data"
+      summary: "Ver Encargos Centros Data"
+      description: |
+        Devuelve los datos del SlickGrid de `EncargoCtr` (encargos visibles para cada centro de una zona) + los desplegables estaticos del modal de edicion (zonas posibles para filtrar encargos, centros de la zona). El desplegable dinamico de encargos (que cambia al seleccionar zona en el modal) no se incluye aqui: el frontend lo pide por separado a `DesplegableEncargosData` cuando el usuario lo necesita.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/ver_encargos_centros_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_zona:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/ver_encargos_zona_data":
+    post:
+      operationId: "post_misas_ver_encargos_zona_data"
+      summary: "Ver Encargos Zona Data"
+      description: |
+        Devuelve los datos necesarios para pintar el SlickGrid de encargos de una zona + los desplegables del modal de edicion. Replica la consulta de `apps/misas/controller/ver_encargos_zona.php`: encargos con `id_tipo_enc >= 8100` (grupo `8...`) de la zona indicada, ordenados por `$orden` (`orden`, `prioridad` o `desc_enc`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/ver_encargos_zona_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_zona:
+                  type: "integer"
+                orden:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/ver_iniciales_zona_data":
+    post:
+      operationId: "post_misas_ver_iniciales_zona_data"
+      summary: "Ver Iniciales Zona Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/ver_iniciales_zona_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_zona:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/ver_misas_zona_data":
+    post:
+      operationId: "post_misas_ver_misas_zona_data"
+      summary: "Ver Misas Zona Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/ver_misas_zona_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_zona:
+                  type: "integer"
+                seleccion:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/misas/ver_plan_ctr_data":
+    post:
+      operationId: "post_misas_ver_plan_ctr_data"
+      summary: "Ver Plan Ctr Data"
+      description: |
+        Datos para la vista `ver_plan_ctr.phtml`: cuadricula del plan de misas por centro (filas: encargos, columnas: días).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/ver_plan_ctr_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                periodo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_VerPlanCtrDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_VerPlanCtrDataDataResponse"
+  "/src/misas/ver_plan_sacd_data":
+    post:
+      operationId: "post_misas_ver_plan_sacd_data"
+      summary: "Ver Plan Sacd Data"
+      description: |
+        Datos para la vista `ver_plan_sacd.phtml`: plan de misas de un sacerdote en un rango de fechas.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/ver_plan_sacd_data.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                id_sacd:
+                  type: "string"
+                periodo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_VerPlanSacdDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_VerPlanSacdDataDataResponse"
+  "/src/misas/zona_sacd_datos_get":
+    post:
+      operationId: "post_misas_zona_sacd_datos_get"
+      summary: "Zona Sacd Datos Get"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/zona_sacd_datos_get.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_sacd:
+                  type: "integer"
+                id_zona:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_ZonaSacdDatosGetDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_ZonaSacdDatosGetDataResponse"
+  "/src/misas/zona_sacd_datos_put":
+    post:
+      operationId: "post_misas_zona_sacd_datos_put"
+      summary: "Zona Sacd Datos Put"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/misas/api/zona_sacd_datos_put.md`
+      tags:
+        - "misas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dw1:
+                  type: "string"
+                dw2:
+                  type: "string"
+                dw3:
+                  type: "string"
+                dw4:
+                  type: "string"
+                dw5:
+                  type: "string"
+                dw6:
+                  type: "string"
+                dw7:
+                  type: "string"
+                id_sacd:
+                  type: "integer"
+                id_zona:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_ZonaSacdDatosPutDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/misas_ZonaSacdDatosPutDataResponse"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    misas_AnadirCtrTareaData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    misas_AnadirCtrTareaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_AnadirCtrTareaData"
+    misas_BuscarPlanCtrDataData:
+      type: object
+      properties:
+        view:
+          type: "string"
+        zonas_opciones:
+          type: array
+          items: {}
+        zonas_selected:
+          type: "integer"
+        centros_opciones:
+          type: array
+          items: {}
+        centros_selected:
+          type: "string"
+        id_ubi_centro:
+          type: "string"
+    misas_BuscarPlanCtrDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_BuscarPlanCtrDataData"
+    misas_BuscarPlanSacdDataData:
+      type: object
+      properties:
+        sacd_opciones:
+          type: array
+          items: {}
+    misas_BuscarPlanSacdDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_BuscarPlanSacdDataData"
+    misas_CambiarStatusPantallaDataData:
+      type: object
+      properties:
+        zonas_opciones:
+          type: array
+          items: {}
+        orden_opciones:
+          type: array
+          items: {}
+        estados_opciones:
+          type: array
+          items: {}
+    misas_CambiarStatusPantallaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_CambiarStatusPantallaDataData"
+    misas_CuadriculaUpdateData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    misas_CuadriculaUpdateDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_CuadriculaUpdateData"
+    misas_GuardarHorarioTareaData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    misas_GuardarHorarioTareaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_GuardarHorarioTareaData"
+    misas_HorarioTareaDataData:
+      type: object
+      properties:
+        t_start:
+          type: "string"
+    misas_HorarioTareaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_HorarioTareaDataData"
+    misas_PlanDeMisasPantallaDataData:
+      type: object
+      properties:
+        pantalla:
+          type: "string"
+        zonas_opciones:
+          type: array
+          items: {}
+        orden_opciones:
+          type: array
+          items: {}
+    misas_PlanDeMisasPantallaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_PlanDeMisasPantallaDataData"
+    misas_NuevoStatusPeriodoData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    misas_NuevoStatusPeriodoDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_NuevoStatusPeriodoData"
+    misas_VerPlanCtrDataData:
+      type: object
+      properties:
+        columns:
+          type: array
+          items: {}
+        rows:
+          type: array
+          items: {}
+        legend:
+          type: array
+          items: {}
+    misas_VerPlanCtrDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_VerPlanCtrDataData"
+    misas_VerPlanSacdDataData:
+      type: object
+      properties:
+        rows:
+          type: array
+          items: {}
+    misas_VerPlanSacdDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_VerPlanSacdDataData"
+    misas_ZonaSacdDatosGetData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    misas_ZonaSacdDatosGetDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_ZonaSacdDatosGetData"
+    misas_ZonaSacdDatosPutData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    misas_ZonaSacdDatosPutDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/misas_ZonaSacdDatosPutData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

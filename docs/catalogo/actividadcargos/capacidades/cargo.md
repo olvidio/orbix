@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `carg
 
 ## Objetivo Funcional
 
-Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad.
+Gestiona ActividadCargo. Crea un ActividadCargo. Elimina un ActividadCargo y, si procede, su Asistente.
 
 ## Acciones Detectadas
 
@@ -43,6 +43,16 @@ No se han detectado pantallas relacionadas.
 
 - Crea un `ActividadCargo`.
 - Elimina un `ActividadCargo` y, si procede, su `Asistente`.
+
+## Errores Conocidos
+
+- `falta id_item`
+- `faltan parametros id_activ / id_nom / id_cargo`
+- `hay un error, no se ha eliminado`
+- `hay un error, no se ha eliminado el asistente`
+- `hay un error, no se ha guardado el asistente`
+- `no encuentro el cargo`
+- `ya existe este cargo para esta actividad`
 
 ## Revision Manual
 

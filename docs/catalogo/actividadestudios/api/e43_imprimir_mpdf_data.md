@@ -1,0 +1,70 @@
+---
+id: "actividadestudios.e43_imprimir_mpdf_data"
+tipo: "endpoint"
+modulo: "actividadestudios"
+url: "/src/actividadestudios/e43_imprimir_mpdf_data"
+metodos: ["GET", "POST"]
+operacion: "mutacion"
+controller: "src/actividadestudios/infrastructure/ui/http/controllers/e43_imprimir_mpdf_data.php"
+entrada: ["post.id_activ:mixed", "post.id_nom:mixed"]
+entrada_obligatoria: []
+respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "actividadestudios_E43CertificadoDataData"
+respuesta_data: ["msg_err:string", "nom:string", "txt_nacimiento:string", "dl_origen:string", "dl_destino:string", "txt_actividad:string", "matriculas:integer", "aAsignaturasMatriculadas:list<array{nom_asignatura: mixed, nota: string, f_acta: string, acta: string}>"]
+requiere_hashb: false
+frontend_referencias: ["frontend/actividadestudios/controller/e43_imprimir_mpdf.php"]
+casos_uso: ["src\\actividadestudios\\application\\E43CertificadoData"]
+tags: ["actividadestudios", "e43", "imprimir", "mpdf", "data"]
+estado_revision: "generado"
+---
+
+# E43 Imprimir Mpdf Data
+
+Datos certificado E43 (pantalla e imprimible).
+
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
+## Endpoint
+
+- URL: `/src/actividadestudios/e43_imprimir_mpdf_data`
+- Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
+- Controller: `src/actividadestudios/infrastructure/ui/http/controllers/e43_imprimir_mpdf_data.php`
+
+## Entrada
+
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_activ` | `mixed` | controller | No | controller |
+| `id_nom` | `mixed` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
+## Salida
+
+- Helper: `ContestarJson::enviar`
+- Forma: `standard_envelope_string_data`
+- Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `actividadestudios_E43CertificadoDataData`):
+  - `msg_err` (`string`)
+  - `nom` (`string`)
+  - `txt_nacimiento` (`string`)
+  - `dl_origen` (`string`)
+  - `dl_destino` (`string`)
+  - `txt_actividad` (`string`)
+  - `matriculas` (`integer`)
+  - `aAsignaturasMatriculadas` (`list<array{nom_asignatura: mixed, nota: string, f_acta: string, acta: string}>`)
+
+## Casos De Uso
+
+- `src\actividadestudios\application\E43CertificadoData`
+
+## Frontend Relacionado
+
+- `frontend/actividadestudios/controller/e43_imprimir_mpdf.php`
+
+## Revision Manual
+
+- Confirmar permisos/autorizacion de oficina.
+- Anadir ejemplos reales de request/response.
+- Marcar `estado_revision: "revisado"` cuando este validado.

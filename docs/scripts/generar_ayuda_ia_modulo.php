@@ -338,6 +338,35 @@ function questionFor(string $flowTitle, string $scenarioTitle): string
     return 'Como ' . $scenarioTitle . ' en ' . $flowTitle . '?';
 }
 
+function extractMarkdownSection(string $body, string $heading): string
+{
+    if (!preg_match('/^## ' . preg_quote($heading, '/') . '\R(?P<section>.*?)(?=^## |\z)/ms', $body, $m)) {
+        return '';
+    }
+
+    return trim($m['section']);
+}
+
+/** @return list<string> */
+function extractBulletItems(string $section): array
+{
+    if ($section === '') {
+        return [];
+    }
+
+    preg_match_all('/^- (.+)$/m', $section, $matches);
+    $items = [];
+    foreach ($matches[1] ?? [] as $item) {
+        $item = trim($item);
+        $item = preg_replace('/^`(.+)`$/', '$1', $item) ?? $item;
+        if ($item !== '') {
+            $items[] = $item;
+        }
+    }
+
+    return array_values(array_unique($items));
+}
+
 /** @param array<string, array<string, mixed>> $screens */
 function screenName(string $screenId, array $screens): string
 {
@@ -423,11 +452,31 @@ function renderFlowHelp(array $flow, array $screens): string
     $lines[] = '';
     array_push($lines, ...markdownList(array_merge($entryScreens, $fragments), '- Ninguna pantalla relacionada.'));
     $lines[] = '';
+    $objetivo = extractMarkdownSection((string)($flow['body'] ?? ''), 'Objetivo De Usuario');
+    if ($objetivo !== '' && !str_contains($objetivo, 'Pendiente de revisar')) {
+        $lines[] = '## Objetivo';
+        $lines[] = '';
+        $lines[] = preg_replace('/\s+/', ' ', $objetivo) ?? $objetivo;
+        $lines[] = '';
+    }
+    $errores = extractBulletItems(extractMarkdownSection((string)($flow['body'] ?? ''), 'Errores Conocidos'));
+    if ($errores !== []) {
+        $lines[] = '## Errores Documentados';
+        $lines[] = '';
+        foreach ($errores as $error) {
+            $lines[] = '- `' . str_replace('`', '', $error) . '`';
+        }
+        $lines[] = '';
+    }
     $lines[] = '## Limites De La Respuesta';
     $lines[] = '';
     $lines[] = '- No inventar permisos si no estan documentados.';
     $lines[] = '- No inventar rutas de menu si aparecen como pendientes.';
-    $lines[] = '- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.';
+    if ($errores === []) {
+        $lines[] = '- Si el usuario pregunta por errores concretos, responder que estan pendientes salvo que el catalogo los documente.';
+    } else {
+        $lines[] = '- Usar la seccion "Errores Documentados" cuando el usuario reporte un mensaje conocido.';
+    }
     $lines[] = '';
 
     return implode(PHP_EOL, $lines);

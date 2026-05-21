@@ -40,6 +40,10 @@ Referencias tecnicas para verificar la respuesta:
 
 - `actividadcargos.pantalla.form_cargos_de_actividad`
 
+## Objetivo
+
+Gestiona FormCargosDeActividad. Datos para form_cargos_de_actividad. Los desplegables se construyen en el front ({.
+
 ## Limites De La Respuesta
 
 - No inventar permisos si no estan documentados.

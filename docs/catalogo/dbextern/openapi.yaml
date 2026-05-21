@@ -1,0 +1,694 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - dbextern"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/dbextern/refrescar_bdu":
+    post:
+      operationId: "post_dbextern_refrescar_bdu"
+      summary: "Refrescar Bdu"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/refrescar_bdu.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dbextern/sincro_baja":
+    post:
+      operationId: "post_dbextern_sincro_baja"
+      summary: "Sincro Baja"
+      description: |
+        Da de baja a una persona (fallecido o traslado a otra región).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/sincro_baja.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+                id_nom_orbix:
+                  type: "string"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dbextern/sincro_crear":
+    post:
+      operationId: "post_dbextern_sincro_crear"
+      summary: "Sincro Crear"
+      description: |
+        Crea una persona en Orbix desde la BDU y la vincula.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/sincro_crear.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: "integer"
+                id_nom_listas:
+                  type: "integer"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dbextern/sincro_crear_todos":
+    post:
+      operationId: "post_dbextern_sincro_crear_todos"
+      summary: "Sincro Crear Todos"
+      description: |
+        Crea una persona en Orbix desde la BDU y la vincula.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/sincro_crear_todos.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+                region:
+                  type: "string"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dbextern_CrearPersonaDesdeListasUseCaseDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dbextern_CrearPersonaDesdeListasUseCaseDataResponse"
+  "/src/dbextern/sincro_desunir":
+    post:
+      operationId: "post_dbextern_sincro_desunir"
+      summary: "Sincro Desunir"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/sincro_desunir.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom_listas:
+                  type: "integer"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dbextern/sincro_index_datos":
+    post:
+      operationId: "post_dbextern_sincro_index_datos"
+      summary: "Sincro Index Datos"
+      description: |
+        Calcula los 10 contadores del dashboard de sincronización.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/sincro_index_datos.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                tipo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dbextern/sincro_syncro":
+    post:
+      operationId: "post_dbextern_sincro_syncro"
+      summary: "Sincro Syncro"
+      description: |
+        Sincroniza todas las personas unidas de una DL.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/sincro_syncro.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl_listas:
+                  type: "string"
+                region:
+                  type: "string"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dbextern_SincroPersonasDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dbextern_SincroPersonasDataResponse"
+  "/src/dbextern/sincro_trasladar":
+    post:
+      operationId: "post_dbextern_sincro_trasladar"
+      summary: "Sincro Trasladar"
+      description: |
+        Trasladar persona desde otra DL a la DL actual.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/sincro_trasladar.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+                id_nom_orbix:
+                  type: "string"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dbextern_TrasladarPersonaUseCaseDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dbextern_TrasladarPersonaUseCaseDataResponse"
+  "/src/dbextern/sincro_trasladar_a":
+    post:
+      operationId: "post_dbextern_sincro_trasladar_a"
+      summary: "Sincro Trasladar A"
+      description: |
+        Trasladar persona desde otra DL a la DL actual.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/sincro_trasladar_a.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+                id_nom_orbix:
+                  type: "string"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dbextern_TrasladarPersonaUseCaseDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dbextern_TrasladarPersonaUseCaseDataResponse"
+  "/src/dbextern/sincro_unir":
+    post:
+      operationId: "post_dbextern_sincro_unir"
+      summary: "Sincro Unir"
+      description: |
+        Vincula una persona de BDU con una persona de Orbix.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/sincro_unir.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: "integer"
+                id_nom_listas:
+                  type: "integer"
+                id_orbix:
+                  type: "integer"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dbextern/ver_desaparecidos_de_listas_datos":
+    post:
+      operationId: "post_dbextern_ver_desaparecidos_de_listas_datos"
+      summary: "Ver Desaparecidos De Listas Datos"
+      description: |
+        Obtiene datos de personas de Orbix desaparecidas de la BDU.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/ver_desaparecidos_de_listas_datos.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ids_desaparecidos_de_listas:
+                  type: "string"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dbextern/ver_desaparecidos_de_orbix_datos":
+    post:
+      operationId: "post_dbextern_ver_desaparecidos_de_orbix_datos"
+      summary: "Ver Desaparecidos De Orbix Datos"
+      description: |
+        Obtiene datos de personas BDU desaparecidas de Orbix.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/ver_desaparecidos_de_orbix_datos.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ids_desaparecidos_de_orbix:
+                  type: "string"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dbextern/ver_listas_datos":
+    post:
+      operationId: "post_dbextern_ver_listas_datos"
+      summary: "Ver Listas Datos"
+      description: |
+        Obtiene la lista de personas BDU sin unir y los posibles matches Orbix.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/ver_listas_datos.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+                first_load:
+                  type: "boolean"
+                id_nom_bdu:
+                  type: "integer"
+                region:
+                  type: "string"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dbextern/ver_orbix_datos":
+    post:
+      operationId: "post_dbextern_ver_orbix_datos"
+      summary: "Ver Orbix Datos"
+      description: |
+        Obtiene la lista de personas Orbix sin unir a la BDU.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/ver_orbix_datos.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+                id_nom_orbix:
+                  type: "integer"
+                region:
+                  type: "string"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dbextern/ver_orbix_otradl_datos":
+    post:
+      operationId: "post_dbextern_ver_orbix_otradl_datos"
+      summary: "Ver Orbix Otradl Datos"
+      description: |
+        Obtiene datos de personas BDU que están en otra DL en Orbix.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/ver_orbix_otradl_datos.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ids_traslados_A:
+                  type: "string"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/dbextern/ver_traslados_datos":
+    post:
+      operationId: "post_dbextern_ver_traslados_datos"
+      summary: "Ver Traslados Datos"
+      description: |
+        Obtiene datos de personas a trasladar desde otras DL.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/dbextern/api/ver_traslados_datos.md`
+      tags:
+        - "dbextern"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ids_traslados:
+                  type: "string"
+                tipo_persona:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    dbextern_CrearPersonaDesdeListasUseCaseData:
+      type: object
+      properties:
+        count:
+          type: "string"
+    dbextern_CrearPersonaDesdeListasUseCaseDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/dbextern_CrearPersonaDesdeListasUseCaseData"
+    dbextern_SincroPersonasData:
+      type: object
+      properties:
+        count:
+          type: "string"
+    dbextern_SincroPersonasDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/dbextern_SincroPersonasData"
+    dbextern_TrasladarPersonaUseCaseData:
+      type: object
+      properties:
+        success:
+          type: "string"
+    dbextern_TrasladarPersonaUseCaseDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/dbextern_TrasladarPersonaUseCaseData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

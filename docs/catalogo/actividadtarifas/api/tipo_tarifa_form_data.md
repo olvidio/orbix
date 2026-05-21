@@ -4,9 +4,14 @@ tipo: "endpoint"
 modulo: "actividadtarifas"
 url: "/src/actividadtarifas/tipo_tarifa_form_data"
 metodos: ["GET", "POST"]
+operacion: "form_data"
 controller: "src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_form_data.php"
 entrada: ["post.id_tarifa:string"]
+entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "actividadtarifas_TipoTarifaFormDataData"
+respuesta_data: ["id_tarifa:string", "es_nuevo:boolean", "letra:string", "modo:integer", "observ:string", "opciones_modo:array"]
+requiere_hashb: false
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa_form.php"]
 casos_uso: ["src\\actividadtarifas\\application\\TipoTarifaFormData"]
 tags: ["actividadtarifas", "tipo", "tarifa", "form", "data"]
@@ -17,23 +22,34 @@ estado_revision: "generado"
 
 Endpoint backend: datos del formulario modificar/nuevo de `TipoTarifa`.
 
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
 ## Endpoint
 
 - URL: `/src/actividadtarifas/tipo_tarifa_form_data`
 - Metodos registrados: `GET, POST`
+- Operacion: `form_data`
 - Controller: `src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_form_data.php`
 
-## Entrada Inferida
+## Entrada
 
-- `post.id_tarifa` (`string`)
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_tarifa` | `string` | controller+application | No | controller+application |
 
-## Salida Inferida
+## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Evidencia: `'', $data`
+- Payload en `data` (schema `actividadtarifas_TipoTarifaFormDataData`):
+  - `id_tarifa` (`string`)
+  - `es_nuevo` (`boolean`)
+  - `letra` (`string`)
+  - `modo` (`integer`)
+  - `observ` (`string`)
+  - `opciones_modo` (`array`)
 
-## Casos De Uso Detectados
+## Casos De Uso
 
 - `src\actividadtarifas\application\TipoTarifaFormData`
 
@@ -43,8 +59,6 @@ Endpoint backend: datos del formulario modificar/nuevo de `TipoTarifa`.
 
 ## Revision Manual
 
-- Completar objetivo funcional.
-- Confirmar permisos/autorizacion.
-- Confirmar efectos sobre datos.
+- Confirmar permisos/autorizacion de oficina.
 - Anadir ejemplos reales de request/response.
-- Marcar procesos parecidos o duplicados si aplica.
+- Marcar `estado_revision: "revisado"` cuando este validado.

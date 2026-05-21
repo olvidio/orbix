@@ -1,0 +1,424 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - ubiscamas"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/ubiscamas/actividad_habitaciones_lista":
+    post:
+      operationId: "post_ubiscamas_actividad_habitaciones_lista"
+      summary: "Actividad Habitaciones Lista"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubiscamas/api/actividad_habitaciones_lista.md`
+      tags:
+        - "ubiscamas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_activ:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubiscamas/cama_delete":
+    post:
+      operationId: "post_ubiscamas_cama_delete"
+      summary: "Cama Delete"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubiscamas/api/cama_delete.md`
+      tags:
+        - "ubiscamas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_cama:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubiscamas/cama_form_data":
+    post:
+      operationId: "post_ubiscamas_cama_form_data"
+      summary: "Cama Form Data"
+      description: |
+        Datos para `frontend/ubiscamas/controller/cama_form.php`. La composición de `HashFront` ocurre en {
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/ubiscamas/api/cama_form_data.md`
+      tags:
+        - "ubiscamas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_cama:
+                  type: "string"
+                id_habitacion:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                mod:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubiscamas/cama_update":
+    post:
+      operationId: "post_ubiscamas_cama_update"
+      summary: "Cama Update"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubiscamas/api/cama_update.md`
+      tags:
+        - "ubiscamas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                descripcion:
+                  type: "string"
+                id_cama:
+                  type: "string"
+                id_habitacion:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                larga:
+                  type: "string"
+                mod:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+                vip:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubiscamas/habitacion_delete":
+    post:
+      operationId: "post_ubiscamas_habitacion_delete"
+      summary: "Habitacion Delete"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubiscamas/api/habitacion_delete.md`
+      tags:
+        - "ubiscamas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_habitacion:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubiscamas/habitacion_form_data":
+    post:
+      operationId: "post_ubiscamas_habitacion_form_data"
+      summary: "Habitacion Form Data"
+      description: |
+        Datos para `frontend/ubiscamas/controller/habitacion_form.php`. La composición de `HashFront` ocurre en {
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/ubiscamas/api/habitacion_form_data.md`
+      tags:
+        - "ubiscamas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_habitacion:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                nuevo:
+                  type: "string"
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubiscamas/habitacion_update":
+    post:
+      operationId: "post_ubiscamas_habitacion_update"
+      summary: "Habitacion Update"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubiscamas/api/habitacion_update.md`
+      tags:
+        - "ubiscamas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                adaptada:
+                  type: "string"
+                despacho:
+                  type: "string"
+                id_habitacion:
+                  type: "string"
+                id_ubi:
+                  type: "integer"
+                new_camas_desc:
+                  type: "array"
+                  items:
+                    type: string
+                new_camas_larga:
+                  type: "array"
+                  items:
+                    type: string
+                new_camas_vip:
+                  type: "array"
+                  items:
+                    type: string
+                nombre:
+                  type: "string"
+                nuevo:
+                  type: "string"
+                numero_camas:
+                  type: "integer"
+                numero_camas_vip:
+                  type: "integer"
+                observaciones:
+                  type: "string"
+                orden:
+                  type: "integer"
+                planta:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+                sillon:
+                  type: "string"
+                tipoLavabo:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubiscamas/update_cama_asistente":
+    post:
+      operationId: "post_ubiscamas_update_cama_asistente"
+      summary: "Update Cama Asistente"
+      description: |
+        Servicio de aplicación para operaciones de asistentes que requieren coordinación entre múltiples repositorios
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubiscamas/api/update_cama_asistente.md`
+      tags:
+        - "ubiscamas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ctx:
+                  type: "string"
+                id_cama:
+                  type: "string"
+                id_nom:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/ubiscamas/update_solo_vip":
+    post:
+      operationId: "post_ubiscamas_update_solo_vip"
+      summary: "Update Solo Vip"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/ubiscamas/api/update_solo_vip.md`
+      tags:
+        - "ubiscamas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ctx:
+                  type: "string"
+                solo_vip:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

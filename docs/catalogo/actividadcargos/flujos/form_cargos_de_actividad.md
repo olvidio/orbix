@@ -17,7 +17,9 @@ Propuesta generada automaticamente desde la capacidad `actividadcargos.form_carg
 
 ## Objetivo De Usuario
 
-Pendiente de revisar. Redactar aqui el objetivo en lenguaje de usuario, no tecnico.
+Asignar o editar el cargo de una persona en una actividad (tipo de cargo, AGD, observaciones y, en altas, si asiste).
+
+Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Form Cargos De Actividad).
 
 ## Punto De Entrada
 
@@ -55,6 +57,10 @@ Acciones JavaScript:
 ## Endpoints Del Flujo
 
 - `/src/actividadcargos/form_cargos_de_actividad_data`
+
+## Errores Conocidos
+
+No se han documentado errores en la capacidad.
 
 ## Revision Manual
 

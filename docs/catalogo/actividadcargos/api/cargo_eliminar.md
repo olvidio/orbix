@@ -4,9 +4,13 @@ tipo: "endpoint"
 modulo: "actividadcargos"
 url: "/src/actividadcargos/cargo_eliminar"
 metodos: ["GET", "POST"]
+operacion: "mutacion"
 controller: "src/actividadcargos/infrastructure/ui/http/controllers/cargo_eliminar.php"
-entrada: []
+entrada: ["post.elim_asis:integer", "post.id_item:integer", "post.sel:array"]
+entrada_obligatoria: ["id_item"]
 respuesta: "standard_envelope_string_data"
+requiere_hashb: false
+errores: ["falta id_item", "no encuentro el cargo", "hay un error, no se ha eliminado", "hay un error, no se ha eliminado el asistente"]
 frontend_referencias: []
 casos_uso: ["src\\actividadcargos\\application\\ActividadCargoEliminar"]
 tags: ["actividadcargos", "cargo", "eliminar"]
@@ -17,24 +21,44 @@ estado_revision: "generado"
 
 Elimina un `ActividadCargo` y, si procede, su `Asistente`.
 
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
 ## Endpoint
 
 - URL: `/src/actividadcargos/cargo_eliminar`
 - Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
 - Controller: `src/actividadcargos/infrastructure/ui/http/controllers/cargo_eliminar.php`
 
-## Entrada Inferida
+## Entrada
 
-No se han detectado parametros individuales mediante `filter_input`, `$_POST[...]` o `$_GET[...]`.
-- Nota: el controller usa `$_POST` directamente; revisar si acepta mas campos que los listados.
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `elim_asis` | `integer` | application | No | application |
+| `id_item` | `integer` | application | Si | application |
+| `sel` | `array` | application | No | application |
 
-## Salida Inferida
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
+## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Evidencia: `$error_txt, 'ok'`
+- Exito: `success: true`, `data: "ok"`.
 
-## Casos De Uso Detectados
+## Efectos colaterales
+
+- Elimina un `ActividadCargo` y, si `elim_asis === 2` y el tipo de actividad es `s`/`sg`, elimina tambien el `Asistente` y cierra los dossiers 1301/3101.
+- Sustituye al case `eliminar` del antiguo `update_3102.php` dispatcher.
+
+## Errores conocidos
+
+- `falta id_item`
+- `no encuentro el cargo`
+- `hay un error, no se ha eliminado`
+- `hay un error, no se ha eliminado el asistente`
+
+## Casos De Uso
 
 - `src\actividadcargos\application\ActividadCargoEliminar`
 
@@ -44,8 +68,6 @@ No se han encontrado referencias exactas al endpoint en `frontend/`.
 
 ## Revision Manual
 
-- Completar objetivo funcional.
-- Confirmar permisos/autorizacion.
-- Confirmar efectos sobre datos.
+- Confirmar permisos/autorizacion de oficina.
 - Anadir ejemplos reales de request/response.
-- Marcar procesos parecidos o duplicados si aplica.
+- Marcar `estado_revision: "revisado"` cuando este validado.

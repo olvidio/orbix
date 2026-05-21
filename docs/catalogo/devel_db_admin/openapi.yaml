@@ -1,0 +1,744 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - devel_db_admin"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/devel_db_admin/absorber_esquema":
+    post:
+      operationId: "post_devel_db_admin_absorber_esquema"
+      summary: "Absorber Esquema"
+      description: |
+        JSON `{ "lines": string[] }` para la absorción de esquema (POST `esquema_matriz`, `esquema_del`).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/absorber_esquema.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                esquema_del:
+                  type: "string"
+                esquema_matriz:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/devel_db_admin/apptables_apps_data":
+    post:
+      operationId: "post_devel_db_admin_apptables_apps_data"
+      summary: "Apptables Apps Data"
+      description: |
+        JSON con el mapa `id_app` → nombre para {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/apptables_apps_data.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_ApptablesAppsDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_ApptablesAppsDataDataResponse"
+  "/src/devel_db_admin/copiar_esquema":
+    post:
+      operationId: "post_devel_db_admin_copiar_esquema"
+      summary: "Copiar Esquema"
+      description: |
+        Ejecuta {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/copiar_esquema.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comun:
+                  type: "integer"
+                dl:
+                  type: "string"
+                esquema:
+                  type: "string"
+                region:
+                  type: "string"
+                sf:
+                  type: "integer"
+                sv:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/devel_db_admin/corregir_renombrar_esquema":
+    post:
+      operationId: "post_devel_db_admin_corregir_renombrar_esquema"
+      summary: "Corregir Renombrar Esquema"
+      description: |
+        POST: esquema_origen opcional (vacío = solo defaults sobre destino); región y dl obligatorios; acepta POST esquema legado como origen.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/corregir_renombrar_esquema.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comun:
+                  type: "integer"
+                dl:
+                  type: "string"
+                esquema:
+                  type: "string"
+                esquema_origen:
+                  type: "string"
+                region:
+                  type: "string"
+                sf:
+                  type: "integer"
+                sv:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_CorregirEstadoRenombrarEsquemaDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_CorregirEstadoRenombrarEsquemaDataResponse"
+  "/src/devel_db_admin/crear_esquema":
+    post:
+      operationId: "post_devel_db_admin_crear_esquema"
+      summary: "Crear Esquema"
+      description: |
+        Ejecuta {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/crear_esquema.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comun:
+                  type: "integer"
+                dl:
+                  type: "string"
+                esquema:
+                  type: "string"
+                region:
+                  type: "string"
+                sf:
+                  type: "integer"
+                sv:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/devel_db_admin/crear_usuarios":
+    post:
+      operationId: "post_devel_db_admin_crear_usuarios"
+      summary: "Crear Usuarios"
+      description: |
+        Ejecuta {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/crear_usuarios.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                dl:
+                  type: "string"
+                region:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/devel_db_admin/db_lugar":
+    post:
+      operationId: "post_devel_db_admin_db_lugar"
+      summary: "Db Lugar"
+      description: |
+        Fragmento HTML: desplegable `dl` según `region` (POST), para AJAX en db_que / db_cambiar_nombre_que.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/db_lugar.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                region:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/devel_db_admin/db_propiedades_data":
+    post:
+      operationId: "post_devel_db_admin_db_propiedades_data"
+      summary: "Db Propiedades Data"
+      description: |
+        JSON para {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/db_propiedades_data.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                default_esquema:
+                  type: "string"
+                op:
+                  type: "string"
+                tabla:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_DbPropiedadesFormDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_DbPropiedadesFormDataDataResponse"
+  "/src/devel_db_admin/eliminar_esquema":
+    post:
+      operationId: "post_devel_db_admin_eliminar_esquema"
+      summary: "Eliminar Esquema"
+      description: |
+        Ejecuta {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/eliminar_esquema.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comun:
+                  type: "integer"
+                dl:
+                  type: "string"
+                region:
+                  type: "string"
+                sf:
+                  type: "integer"
+                sv:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/devel_db_admin/migraciones_ejecutar":
+    post:
+      operationId: "post_devel_db_admin_migraciones_ejecutar"
+      summary: "Migraciones Ejecutar"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/migraciones_ejecutar.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                modo:
+                  type: "string"
+                prefijo_hasta:
+                  type: "string"
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_MigracionesEjecutarDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_MigracionesEjecutarDataResponse"
+  "/src/devel_db_admin/migraciones_lista_data":
+    post:
+      operationId: "post_devel_db_admin_migraciones_lista_data"
+      summary: "Migraciones Lista Data"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `lista_data`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/migraciones_lista_data.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/devel_db_admin/migraciones_quitar_registro":
+    post:
+      operationId: "post_devel_db_admin_migraciones_quitar_registro"
+      summary: "Migraciones Quitar Registro"
+      description: |
+        Descripcion funcional pendiente de revisar.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/migraciones_quitar_registro.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_MigracionesQuitarRegistroDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_MigracionesQuitarRegistroDataResponse"
+  "/src/devel_db_admin/mover_tabla":
+    post:
+      operationId: "post_devel_db_admin_mover_tabla"
+      summary: "Mover Tabla"
+      description: |
+        Lista esquemas con la tabla y ejecuta {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/mover_tabla.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                tabla:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/devel_db_admin/renombrar_esquema":
+    post:
+      operationId: "post_devel_db_admin_renombrar_esquema"
+      summary: "Renombrar Esquema"
+      description: |
+        Ejecuta {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/renombrar_esquema.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comun:
+                  type: "integer"
+                dl:
+                  type: "string"
+                esquema:
+                  type: "string"
+                esquema_origen:
+                  type: "string"
+                region:
+                  type: "string"
+                sf:
+                  type: "integer"
+                sv:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_RenombrarEsquemaDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_RenombrarEsquemaDataResponse"
+  "/src/devel_db_admin/verificar_renombrar_esquema":
+    post:
+      operationId: "post_devel_db_admin_verificar_renombrar_esquema"
+      summary: "Verificar Renombrar Esquema"
+      description: |
+        Verificación de estado del renombre (POST: esquema_origen opcional para solo comprobar el destino; región y dl obligatorios; acepta POST esquema legado con sufijo v/f como origen).
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/verificar_renombrar_esquema.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comun:
+                  type: "integer"
+                dl:
+                  type: "string"
+                esquema:
+                  type: "string"
+                esquema_origen:
+                  type: "string"
+                region:
+                  type: "string"
+                sf:
+                  type: "integer"
+                sv:
+                  type: "integer"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_RenombrarEsquemaVerificacionContextoDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_RenombrarEsquemaVerificacionContextoDataResponse"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    devel_db_admin_ApptablesAppsDataData:
+      type: object
+      properties:
+        a_apps:
+          type: array
+          items: {}
+    devel_db_admin_ApptablesAppsDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/devel_db_admin_ApptablesAppsDataData"
+    devel_db_admin_CorregirEstadoRenombrarEsquemaData:
+      type: object
+      properties:
+        acciones:
+          type: "string"
+    devel_db_admin_CorregirEstadoRenombrarEsquemaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/devel_db_admin_CorregirEstadoRenombrarEsquemaData"
+    devel_db_admin_DbPropiedadesFormDataData:
+      type: object
+      properties:
+        oDesplEsquemas:
+          type: "string"
+    devel_db_admin_DbPropiedadesFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/devel_db_admin_DbPropiedadesFormDataData"
+    devel_db_admin_MigracionesEjecutarData:
+      type: object
+      properties:
+        lines:
+          type: "string"
+    devel_db_admin_MigracionesEjecutarDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/devel_db_admin_MigracionesEjecutarData"
+    devel_db_admin_MigracionesQuitarRegistroData:
+      type: object
+      properties:
+        lines:
+          type: "string"
+    devel_db_admin_MigracionesQuitarRegistroDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/devel_db_admin_MigracionesQuitarRegistroData"
+    devel_db_admin_RenombrarEsquemaData:
+      type: object
+      properties:
+        avisos:
+          type: "string"
+    devel_db_admin_RenombrarEsquemaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/devel_db_admin_RenombrarEsquemaData"
+    devel_db_admin_RenombrarEsquemaVerificacionContextoData:
+      type: object
+      properties:
+        listo:
+          type: "string"
+    devel_db_admin_RenombrarEsquemaVerificacionContextoDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/devel_db_admin_RenombrarEsquemaVerificacionContextoData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."

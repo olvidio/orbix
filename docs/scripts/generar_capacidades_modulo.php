@@ -173,8 +173,10 @@ function readCatalogEndpoint(string $file): ?array
         'frontend_referencias' => asStringList($frontMatter['frontend_referencias'] ?? []),
         'casos_uso' => asStringList($frontMatter['casos_uso'] ?? []),
         'tags' => asStringList($frontMatter['tags'] ?? []),
+        'errores' => asStringList($frontMatter['errores'] ?? []),
         'title' => extractTitle($m['body']),
         'description' => extractDescription($m['body']),
+        'permisos' => extractMarkdownSection($m['body'], 'Permisos'),
         'source' => relativePath($file),
     ];
 }
@@ -291,6 +293,60 @@ function extractDescription(string $body): string
     return '';
 }
 
+function extractMarkdownSection(string $body, string $heading): string
+{
+    if (!preg_match('/^## ' . preg_quote($heading, '/') . '\R(?P<section>.*?)(?=^## |\z)/ms', $body, $m)) {
+        return '';
+    }
+
+    return trim($m['section']);
+}
+
+/** @return list<string> */
+function extractBulletList(string $body, string $heading): array
+{
+    $section = extractMarkdownSection($body, $heading);
+    if ($section === '') {
+        return [];
+    }
+
+    preg_match_all('/^- (.+)$/m', $section, $matches);
+
+    return array_values(array_filter(array_map('trim', $matches[1] ?? [])));
+}
+
+function humanizeBackendDescription(string $text): string
+{
+    $text = preg_replace('/^Endpoint backend:\s*/', '', trim($text)) ?? trim($text);
+    $text = str_replace('`', '', $text);
+
+    return rtrim($text, '.');
+}
+
+/** @param array<string, mixed> $capability */
+function buildFunctionalObjective(array $capability): string
+{
+    $descriptions = $capability['descripciones'] ?? [];
+    if ($descriptions === []) {
+        return 'Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad.';
+    }
+
+    $entities = $capability['entidades'] ?? [];
+    $intro = $entities !== []
+        ? 'Gestiona ' . implode(', ', $entities) . '. '
+        : '';
+
+    $parts = array_map(
+        static fn (string $desc): string => humanizeBackendDescription($desc),
+        $descriptions
+    );
+
+    return $intro . implode(' ', array_map(
+        static fn (string $part): string => ucfirst(rtrim($part, '.')) . '.',
+        $parts
+    ));
+}
+
 /**
  * @return array{grupo: string, accion: string}
  */
@@ -378,6 +434,7 @@ function groupCapabilities(array $endpoints): array
                 'casos_uso' => [],
                 'tags' => [],
                 'descripciones' => [],
+                'errores' => [],
                 'sources' => [],
             ];
         }
@@ -388,13 +445,14 @@ function groupCapabilities(array $endpoints): array
         $groups[$group]['casos_uso'] = array_merge($groups[$group]['casos_uso'], $endpoint['casos_uso']);
         $groups[$group]['tags'] = array_merge($groups[$group]['tags'], $endpoint['tags']);
         $groups[$group]['sources'][] = $endpoint['source'];
+        $groups[$group]['errores'] = array_merge($groups[$group]['errores'], $endpoint['errores'] ?? []);
         if ($endpoint['description'] !== '') {
             $groups[$group]['descripciones'][] = $endpoint['description'];
         }
     }
 
     foreach ($groups as &$group) {
-        foreach (['acciones', 'endpoints', 'pantallas', 'casos_uso', 'tags', 'descripciones', 'sources'] as $key) {
+        foreach (['acciones', 'endpoints', 'pantallas', 'casos_uso', 'tags', 'descripciones', 'errores', 'sources'] as $key) {
             $group[$key] = array_values(array_unique($group[$key]));
             sort($group[$key]);
         }
@@ -452,7 +510,7 @@ function renderCapability(string $module, array $capability): string
         '',
         '## Objetivo Funcional',
         '',
-        'Pendiente de revisar. Describir aqui que proceso de negocio cubre esta capacidad.',
+        buildFunctionalObjective($capability),
         '',
         '## Acciones Detectadas',
         '',
@@ -496,6 +554,17 @@ function renderCapability(string $module, array $capability): string
     $lines[] = '';
     foreach ($capability['descripciones'] as $description) {
         $lines[] = '- ' . $description;
+    }
+
+    $lines[] = '';
+    $lines[] = '## Errores Conocidos';
+    $lines[] = '';
+    if (($capability['errores'] ?? []) === []) {
+        $lines[] = 'No se han agregado errores desde el catalogo API.';
+    } else {
+        foreach ($capability['errores'] as $error) {
+            $lines[] = '- `' . str_replace('`', '', $error) . '`';
+        }
     }
 
     $lines[] = '';

@@ -1,0 +1,499 @@
+openapi: "3.1.0"
+info:
+  title: "Orbix API - personas"
+  version: "0.1.0"
+  description: |
+    OpenAPI generado desde `docs/catalogo`. Revisar obligatoriedad de campos y ejemplos antes de publicarlo como contrato estable.
+  license:
+    name: "Proprietary"
+    identifier: "LicenseRef-Proprietary"
+servers:
+  - url: "/"
+security:
+  - OrbixSession: []
+paths:
+  "/src/personas/home_persona_data":
+    post:
+      operationId: "post_personas_home_persona_data"
+      summary: "Home Persona Data"
+      description: |
+        Endpoint JSON: datos para la pantalla `home_persona.phtml`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/personas/api/home_persona_data.md`
+      tags:
+        - "personas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                obj_pau:
+                  type: "string"
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/personas/persona_eliminar":
+    post:
+      operationId: "post_personas_persona_eliminar"
+      summary: "Persona Eliminar"
+      description: |
+        Endpoint JSON: elimina una persona.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/personas/api/persona_eliminar.md`
+      tags:
+        - "personas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "integer"
+                obj_pau:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/personas/persona_update":
+    post:
+      operationId: "post_personas_persona_update"
+      summary: "Persona Update"
+      description: |
+        Endpoint JSON: guarda los datos de una persona.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/personas/api/persona_update.md`
+      tags:
+        - "personas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                apel_fam:
+                  type: "string"
+                apellido1:
+                  type: "string"
+                apellido2:
+                  type: "string"
+                ce:
+                  type: "integer"
+                ce_fin:
+                  type: "integer"
+                ce_ini:
+                  type: "integer"
+                ce_lugar:
+                  type: "string"
+                dl:
+                  type: "string"
+                eap:
+                  type: "string"
+                edad:
+                  type: "string"
+                f_inc:
+                  type: "string"
+                f_nacimiento:
+                  type: "string"
+                f_situacion:
+                  type: "string"
+                id_ctr:
+                  type: "integer"
+                id_nom:
+                  type: "integer"
+                idioma_preferido:
+                  type: "string"
+                inc:
+                  type: "string"
+                lugar_nacimiento:
+                  type: "string"
+                nivel_stgr:
+                  type: "integer"
+                nom:
+                  type: "string"
+                nx1:
+                  type: "string"
+                nx2:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                observ:
+                  type: "string"
+                profesion:
+                  type: "string"
+                profesor_stgr:
+                  type: "string"
+                sacd:
+                  type: "string"
+                situacion:
+                  type: "string"
+                trato:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/personas/personas_editar_data":
+    post:
+      operationId: "post_personas_personas_editar_data"
+      summary: "Personas Editar Data"
+      description: |
+        Endpoint JSON: datos para la ficha `personas_editar.phtml`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/personas/api/personas_editar_data.md`
+      tags:
+        - "personas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                apellido1:
+                  type: "string"
+                id_nom:
+                  type: "integer"
+                nuevo:
+                  type: "integer"
+                obj_pau:
+                  type: "string"
+                sel:
+                  type: "string"
+                tabla:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/personas/personas_select_data":
+    post:
+      operationId: "post_personas_personas_select_data"
+      summary: "Personas Select Data"
+      description: |
+        Endpoint JSON: datos crudos para la tabla `personas_select`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/personas/api/personas_select_data.md`
+      tags:
+        - "personas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                apellido1:
+                  type: "string"
+                apellido2:
+                  type: "string"
+                centro:
+                  type: "string"
+                cmb:
+                  type: "string"
+                es_sacd:
+                  type: "integer"
+                exacto:
+                  type: "string"
+                na:
+                  type: "string"
+                nombre:
+                  type: "string"
+                tabla:
+                  type: "string"
+                tipo:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/personas_PersonasSelectDataDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/personas_PersonasSelectDataDataResponse"
+  "/src/personas/stgr_cambio_data":
+    post:
+      operationId: "post_personas_stgr_cambio_data"
+      summary: "Stgr Cambio Data"
+      description: |
+        Endpoint JSON: datos para el formulario `stgr_cambio.phtml`.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/personas/api/stgr_cambio_data.md`
+      tags:
+        - "personas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "integer"
+                id_tabla:
+                  type: "string"
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/personas/stgr_update":
+    post:
+      operationId: "post_personas_stgr_update"
+      summary: "Stgr Update"
+      description: |
+        Endpoint JSON: actualiza el `nivel_stgr` de una persona.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/personas/api/stgr_update.md`
+      tags:
+        - "personas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_nom:
+                  type: "integer"
+                id_tabla:
+                  type: "string"
+                nivel_stgr:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/personas/traslado_form_data":
+    post:
+      operationId: "post_personas_traslado_form_data"
+      summary: "Traslado Form Data"
+      description: |
+        Endpoint JSON: datos para el formulario `traslado_form.phtml`.
+        
+        Operacion: `form_data`.
+        
+        Fuente catalogo: `docs/catalogo/personas/api/traslado_form_data.md`
+      tags:
+        - "personas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id_pau:
+                  type: "integer"
+                sel:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+  "/src/personas/traslado_update":
+    post:
+      operationId: "post_personas_traslado_update"
+      summary: "Traslado Update"
+      description: |
+        Endpoint JSON: aplica un traslado de centro y/o delegacion.
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/personas/api/traslado_update.md`
+      tags:
+        - "personas"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ctr_o:
+                  type: "string"
+                dl:
+                  type: "string"
+                f_ctr:
+                  type: "string"
+                f_dl:
+                  type: "string"
+                id_ctr_o:
+                  type: "string"
+                id_pau:
+                  type: "integer"
+                new_ctr:
+                  type: "string"
+                new_dl:
+                  type: "string"
+                obj_pau:
+                  type: "string"
+                situacion:
+                  type: "string"
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+components:
+  securitySchemes:
+    OrbixSession:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    personas_PersonasSelectDataData:
+      type: object
+      properties:
+        id_nom:
+          type: "integer"
+        id_tabla:
+          type: "string"
+        nom:
+          type: "string"
+        nombre_ubi:
+          type: "string"
+        nivel_stgr:
+          type: "string"
+        situacion:
+          type: "string"
+        f_situacion:
+          type: "string"
+    personas_PersonasSelectDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/personas_PersonasSelectDataData"
+    OrbixStandardResponseStringData:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items: {}
+          description: "En ContestarJson::enviar, los arrays/objetos suelen llegar codificados como string JSON por compatibilidad."
