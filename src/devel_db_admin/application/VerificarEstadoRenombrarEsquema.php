@@ -809,7 +809,9 @@ SQL;
 
     private function normalizarExprDefault(string $s): string
     {
-        return trim(preg_replace('/\s+/', ' ', $s));
+        $s = trim(preg_replace('/\s+/', ' ', $s));
+        // pg_get_expr suele omitir el calificador public. en funciones del search_path.
+        return (string) preg_replace('/\bpublic\./i', '', $s);
     }
 
     /**
