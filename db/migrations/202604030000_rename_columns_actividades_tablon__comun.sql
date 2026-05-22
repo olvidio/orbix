@@ -10,5 +10,5 @@ ALTER TABLE public.x_locales RENAME COLUMN activo TO active;
 ALTER TABLE public.a_actividades_all ADD COLUMN idioma varchar(12) NULL;
 
 CREATE OR REPLACE VIEW public.av_actividades_pub AS
-  SELECT * FROM a_actividades_all a_actividades
+  SELECT * FROM public.a_actividades_all a_actividades
   WHERE a_actividades.publicado = true;
