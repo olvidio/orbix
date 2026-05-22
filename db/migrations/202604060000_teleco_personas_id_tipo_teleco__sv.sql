@@ -20,6 +20,10 @@ SET tipo_teleco = t.id
 FROM publicv.xd_tipo_teleco_tmp t
 WHERE d.tipo_teleco = t.tipo_teleco;
 
+--- cambiar la vista "H-Hv".d_teleco_peronas_dl**
+DROP MATERIALIZED VIEW "H-Hv".d_teleco_personas_dl ;
+DROP MATERIALIZED VIEW "M-Mv".d_teleco_personas_dl ;
+
 ALTER TABLE publicv.d_teleco_personas RENAME COLUMN tipo_teleco TO id_tipo_teleco;
 ALTER TABLE publicv.d_teleco_personas ALTER COLUMN id_tipo_teleco TYPE int USING id_tipo_teleco::integer;
 ALTER TABLE publicv.d_teleco_personas ALTER COLUMN id_tipo_teleco SET NOT NULL;
