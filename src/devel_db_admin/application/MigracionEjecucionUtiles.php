@@ -24,6 +24,15 @@ final class MigracionEjecucionUtiles
     }
 
     /**
+     * Esquemas raíz de región STGR en comun (H-H, M-M): no usan tablas *_dl propias
+     * y quedan fuera del comodín * en migraciones multi-esquema.
+     */
+    public static function esEsquemaRegionStgrComun(string $schema): bool
+    {
+        return $schema === 'H-H' || $schema === 'M-M';
+    }
+
+    /**
      * PostgreSQL: SQLSTATE 3F000 = invalid_schema_name ("schema X does not exist").
      * No confundir con 42P01 (relación inexistente cuando el esquema sí existe).
      */

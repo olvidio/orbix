@@ -311,6 +311,9 @@ final class MigracionesEjecutar
             if (MigracionEjecucionUtiles::esEsquemaResto($schema)) {
                 continue;
             }
+            if ($tipo === 'comun' && MigracionEjecucionUtiles::esEsquemaRegionStgrComun($schema)) {
+                continue;
+            }
             if ($tipo === 'comun') {
                 if ($dbSchema->getId() >= 3000 && $dbSchema->getId() < 4000 && !str_ends_with($schema, 'v') && !str_ends_with($schema, 'f')) {
                     $schemas[] = $schema;

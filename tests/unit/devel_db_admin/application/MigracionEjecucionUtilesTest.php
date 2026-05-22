@@ -20,6 +20,14 @@ final class MigracionEjecucionUtilesTest extends myTest
         $this->assertFalse(MigracionEjecucionUtiles::esEsquemaResto('H-dlbv'));
     }
 
+    public function test_es_esquema_region_stgr_comun(): void
+    {
+        $this->assertTrue(MigracionEjecucionUtiles::esEsquemaRegionStgrComun('H-H'));
+        $this->assertTrue(MigracionEjecucionUtiles::esEsquemaRegionStgrComun('M-M'));
+        $this->assertFalse(MigracionEjecucionUtiles::esEsquemaRegionStgrComun('H-dlbv'));
+        $this->assertFalse(MigracionEjecucionUtiles::esEsquemaRegionStgrComun('H-crH'));
+    }
+
     public function test_es_error_esquema_inexistente_3f000(): void
     {
         $e = new PDOException('schema "x" does not exist');

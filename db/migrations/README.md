@@ -53,7 +53,7 @@ ALTER TABLE *.du_camasa_dl ALTER COLUMN larga DEFAULT TRUE;
 
 El runner consulta `comun.public.db_idschema`:
 
-- Para `comun` / `comun_select`: esquemas comun activos (`id` entre 3000 y 3999, sin sufijo `v` ni `f`).
+- Para `comun` / `comun_select`: esquemas comun activos (`id` entre 3000 y 3999, sin sufijo `v` ni `f`), excepto `H-H` y `M-M` (esquemas raíz de región STGR).
 - Para `sv` / `sv-e` / `sv-e_select`: esquemas con sufijo `v`.
 
 Cada `*.` se sustituye por el esquema entre comillas dobles:
