@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace src\devel_db_admin\application\services;
 
 use PDO;
+use PDOException;
 use PDOStatement;
 use RuntimeException;
 use src\shared\config\ConfigGlobal;
@@ -106,9 +107,18 @@ final class MigracionCsvPuente
         $path = $this->resolveRelativePath((string) $plan['export_path']);
         $this->ensureWritableDirectory($path);
         $query = (string) $plan['export_query'];
-        $stmt = $pdo->query($query);
+        try {
+            $stmt = $pdo->query($query);
+        } catch (PDOException $e) {
+            throw new RuntimeException('Export CSV: ' . $e->getMessage(), 0, $e);
+        }
         if (!$stmt instanceof PDOStatement) {
-            throw new RuntimeException('No se pudo ejecutar la consulta de exportacion CSV');
+            $info = $pdo->errorInfo();
+            throw new RuntimeException(sprintf(
+                'Export CSV (%s): %s',
+                (string) ($info[0] ?? 'HY000'),
+                (string) ($info[2] ?? 'consulta fallida'),
+            ));
         }
 
         $handle = fopen($path, 'wb');

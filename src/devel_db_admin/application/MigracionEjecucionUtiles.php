@@ -32,6 +32,19 @@ final class MigracionEjecucionUtiles
         return $schema === 'H-H' || $schema === 'M-M';
     }
 
+    public static function esReplicaSelect(string $database): bool
+    {
+        return str_ends_with($database, '_select');
+    }
+
+    public static function tieneSqlEjecutable(string $sql): bool
+    {
+        $clean = (string) preg_replace('/--[^\r\n]*/', '', $sql);
+        $clean = (string) preg_replace('/\/\*.*?\*\//s', '', $clean);
+
+        return trim($clean) !== '';
+    }
+
     /**
      * PostgreSQL: SQLSTATE 3F000 = invalid_schema_name ("schema X does not exist").
      * No confundir con 42P01 (relación inexistente cuando el esquema sí existe).

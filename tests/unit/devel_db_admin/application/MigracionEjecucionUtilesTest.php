@@ -8,6 +8,7 @@ use PDO;
 use PDOException;
 use PDOStatement;
 use src\devel_db_admin\application\MigracionEjecucionUtiles;
+use src\devel_db_admin\domain\value_objects\MigracionDatabase;
 use Tests\myTest;
 
 final class MigracionEjecucionUtilesTest extends myTest
@@ -26,6 +27,18 @@ final class MigracionEjecucionUtilesTest extends myTest
         $this->assertTrue(MigracionEjecucionUtiles::esEsquemaRegionStgrComun('M-M'));
         $this->assertFalse(MigracionEjecucionUtiles::esEsquemaRegionStgrComun('H-dlbv'));
         $this->assertFalse(MigracionEjecucionUtiles::esEsquemaRegionStgrComun('H-crH'));
+    }
+
+    public function test_es_replica_select(): void
+    {
+        $this->assertTrue(MigracionEjecucionUtiles::esReplicaSelect(MigracionDatabase::COMUN_SELECT));
+        $this->assertFalse(MigracionEjecucionUtiles::esReplicaSelect(MigracionDatabase::COMUN));
+    }
+
+    public function test_tiene_sql_ejecutable(): void
+    {
+        $this->assertFalse(MigracionEjecucionUtiles::tieneSqlEjecutable("-- solo comentario\n"));
+        $this->assertTrue(MigracionEjecucionUtiles::tieneSqlEjecutable("SELECT 1;\n-- fin\n"));
     }
 
     public function test_es_error_esquema_inexistente_3f000(): void

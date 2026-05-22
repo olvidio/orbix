@@ -85,6 +85,7 @@ ORDER BY id_locale;
 ```
 
 La ruta es relativa al directorio Orbix (`ConfigGlobal::$directorio`), p. ej. `log/db/locales.csv`.
+El export/import CSV solo se ejecuta en la BD primaria (`comun`, `sv`, `sv-e`), no en replicas `*_select`.
 Ejecutar primero la migracion de export en comun y despues la de import en sv (mismo servidor web).
 
 ## Registro

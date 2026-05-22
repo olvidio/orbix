@@ -177,7 +177,7 @@ final class MigracionesEjecutar
             if ($usaComodin && $schemas === []) {
                 throw new RuntimeException(sprintf('No se han encontrado esquemas activos para %s', $database));
             }
-            $lines = array_merge($lines, $this->executeSql($pdo, $sql, $schemas, $analyzer, $puente));
+            $lines = array_merge($lines, $this->executeSql($pdo, $sql, $schemas, $analyzer, $puente, $database));
             $this->registrar($repo, $aplicacion, true, null);
             if (!$usaComodin) {
                 $lines[] = '    ok';
@@ -227,12 +227,18 @@ final class MigracionesEjecutar
         array $schemas,
         MigracionSqlAnalyzer $analyzer,
         MigracionCsvPuente $puente,
+        string $database,
     ): array {
         $plan = $puente->parse($sql);
         $log = [];
+        $esPrimaria = !MigracionEjecucionUtiles::esReplicaSelect($database);
 
         if ($puente->tieneExport($plan)) {
-            $log = array_merge($log, $puente->export($pdo, $plan));
+            if ($esPrimaria) {
+                $log = array_merge($log, $puente->export($pdo, $plan));
+            } else {
+                $log[] = '    export CSV omitido en replica de lectura (solo BD primaria)';
+            }
         }
 
         if ($schemas === []) {
@@ -242,7 +248,11 @@ final class MigracionesEjecutar
                     $this->execOrFail($pdo, $plan['sql_before_import']);
                 }
                 if ($puente->tieneImport($plan)) {
-                    $log = array_merge($log, $puente->import($pdo, $plan));
+                    if ($esPrimaria) {
+                        $log = array_merge($log, $puente->import($pdo, $plan));
+                    } else {
+                        $log[] = '    import CSV omitido en replica de lectura (solo BD primaria)';
+                    }
                 }
                 if ($plan['sql_after_import'] !== '') {
                     $this->execOrFail($pdo, $plan['sql_after_import']);
@@ -311,9 +321,18 @@ final class MigracionesEjecutar
 
     private function execOrFail(PDO $pdo, string $sql): void
     {
+        if (!MigracionEjecucionUtiles::tieneSqlEjecutable($sql)) {
+            return;
+        }
+
         $result = $pdo->exec($sql);
         if ($result === false) {
-            throw new RuntimeException('Error ejecutando SQL de migracion');
+            $info = $pdo->errorInfo();
+            throw new RuntimeException(sprintf(
+                'Error ejecutando SQL de migracion (%s): %s',
+                (string) ($info[0] ?? 'HY000'),
+                (string) ($info[2] ?? 'sin detalle'),
+            ));
         }
     }
 
