@@ -1,4 +1,4 @@
--- encargos.idioma_enc y valores de global.personas (comun, datos; solo BD primaria).
+-- encargos.idioma_enc e idioma_preferido en global.personas (comun, datos; solo BD primaria).
 UPDATE global.encargos SET idioma_enc = 'ca_ES.UTF-8' WHERE idioma_enc = 'ca_ES';
 UPDATE global.encargos SET idioma_enc = 'ca_ES.UTF-8' WHERE idioma_enc = 'ca';
 UPDATE global.encargos SET idioma_enc = 'es_ES.UTF-8' WHERE idioma_enc = 'et';
@@ -32,10 +32,3 @@ FROM (VALUES
     ('Pl', 'pl_PL.UTF-8')
 ) AS m(codigo_viejo, nuevo_valor)
 WHERE trim(lower(t.idioma_preferido)) = m.codigo_viejo;
-
-UPDATE global.personas SET nivel_stgr = 'c1' WHERE nivel_stgr = 'c';
-
-UPDATE global.personas p
-SET nivel_stgr = x.nivel_stgr::text
-FROM public.xa_nivel_stgr x
-WHERE p.nivel_stgr = x.desc_breve;
