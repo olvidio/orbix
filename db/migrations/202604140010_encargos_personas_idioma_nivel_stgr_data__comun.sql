@@ -33,7 +33,9 @@ FROM (VALUES
 ) AS m(codigo_viejo, nuevo_valor)
 WHERE trim(lower(t.idioma_preferido)) = m.codigo_viejo;
 
+UPDATE global.personas SET nivel_stgr = 'c1' WHERE nivel_stgr = 'c';
+
 UPDATE global.personas p
-SET nivel_stgr = x.nivel_stgr
+SET nivel_stgr = x.nivel_stgr::text
 FROM public.xa_nivel_stgr x
 WHERE p.nivel_stgr = x.desc_breve;
