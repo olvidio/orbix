@@ -1,8 +1,8 @@
--- Exporta catálogo x_locales para migración sv (idioma_preferido).
--- Si comun y sv están en servidores distintos, copiar /home/postgres/locales.csv al servidor sv
--- antes de ejecutar 202604130100_lengua_to_idioma_preferido__sv.sql.
-COPY (
-    SELECT id_locale, nom_locale, idioma, nom_idioma, active
-    FROM public.x_locales
-    ORDER BY id_locale
-) TO '/home/postgres/locales.csv';
+-- Exporta x_locales (comun) a CSV en el servidor web para la migración sv.
+-- El runner PHP hace SELECT remoto y escribe log/db/locales.csv (no COPY en disco del postgres).
+-- @orbix_export_csv: log/db/locales.csv
+-- @orbix_export_query_begin
+SELECT id_locale, nom_locale, idioma, nom_idioma, active AS activo
+FROM public.x_locales
+ORDER BY id_locale;
+-- @orbix_export_query_end

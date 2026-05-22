@@ -7,6 +7,7 @@ namespace src\devel_db_admin\application;
 use PDO;
 use RuntimeException;
 use Throwable;
+use src\devel_db_admin\application\services\MigracionCsvPuente;
 use src\devel_db_admin\application\services\MigracionSqlAnalyzer;
 use src\devel_db_admin\domain\contracts\MigracionAplicadaRepositoryInterface;
 use src\devel_db_admin\domain\entity\MigracionAplicada;
@@ -171,11 +172,12 @@ final class MigracionesEjecutar
 
         try {
             $pdo = $this->connect($database);
+            $puente = new MigracionCsvPuente();
             $schemas = $usaComodin ? $this->schemasParaDatabase($database) : [];
             if ($usaComodin && $schemas === []) {
                 throw new RuntimeException(sprintf('No se han encontrado esquemas activos para %s', $database));
             }
-            $lines = array_merge($lines, $this->executeSql($pdo, $sql, $schemas, $analyzer));
+            $lines = array_merge($lines, $this->executeSql($pdo, $sql, $schemas, $analyzer, $puente));
             $this->registrar($repo, $aplicacion, true, null);
             if (!$usaComodin) {
                 $lines[] = '    ok';
@@ -219,12 +221,32 @@ final class MigracionesEjecutar
      * @param list<string> $schemas
      * @return list<string>
      */
-    private function executeSql(PDO $pdo, string $sql, array $schemas, MigracionSqlAnalyzer $analyzer): array
-    {
+    private function executeSql(
+        PDO $pdo,
+        string $sql,
+        array $schemas,
+        MigracionSqlAnalyzer $analyzer,
+        MigracionCsvPuente $puente,
+    ): array {
+        $plan = $puente->parse($sql);
+        $log = [];
+
+        if ($puente->tieneExport($plan)) {
+            $log = array_merge($log, $puente->export($pdo, $plan));
+        }
+
         if ($schemas === []) {
             $pdo->beginTransaction();
             try {
-                $this->execOrFail($pdo, $sql);
+                if ($plan['sql_before_import'] !== '') {
+                    $this->execOrFail($pdo, $plan['sql_before_import']);
+                }
+                if ($puente->tieneImport($plan)) {
+                    $log = array_merge($log, $puente->import($pdo, $plan));
+                }
+                if ($plan['sql_after_import'] !== '') {
+                    $this->execOrFail($pdo, $plan['sql_after_import']);
+                }
                 $pdo->commit();
             } catch (Throwable $e) {
                 if ($pdo->inTransaction()) {
@@ -233,10 +255,14 @@ final class MigracionesEjecutar
                 throw $e;
             }
 
-            return [];
+            return $log;
         }
 
-        $log = [];
+        $sqlComodin = trim($plan['sql_before_import'] . "\n" . $plan['sql_after_import']);
+        if ($sqlComodin === '') {
+            return $log;
+        }
+
         $ok = 0;
         $omitidosEsquema = 0;
         foreach ($schemas as $schema) {
@@ -248,7 +274,7 @@ final class MigracionesEjecutar
                 );
                 continue;
             }
-            $expandido = $analyzer->expandirComodin($sql, $schema);
+            $expandido = $analyzer->expandirComodin($sqlComodin, $schema);
             $pdo->beginTransaction();
             try {
                 $this->execOrFail($pdo, $expandido);

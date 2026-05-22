@@ -1,4 +1,4 @@
--- lengua → idioma_preferido (varchar locale). Requiere locales.csv exportado desde comun (202604130000).
+-- lengua → idioma_preferido. Importa locales.csv del servidor web (exportado por 202604130000 en comun).
 CREATE TABLE publicv.x_locale_tmp (
     id_locale character varying(12),
     nom_locale text,
@@ -7,8 +7,9 @@ CREATE TABLE publicv.x_locale_tmp (
     activo boolean
 );
 
-COPY publicv.x_locale_tmp (id_locale, nom_locale, idioma, nom_idioma, activo)
-FROM '/home/postgres/locales.csv';
+-- @orbix_import_csv: log/db/locales.csv
+-- @orbix_import_into: publicv.x_locale_tmp(id_locale, nom_locale, idioma, nom_idioma, activo)
+-- @orbix_import_here
 
 -- global.personas
 ALTER TABLE global.personas RENAME COLUMN lengua TO idioma_preferido;

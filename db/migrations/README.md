@@ -64,6 +64,29 @@ ALTER TABLE "H-dlbv".du_camasa_dl ALTER COLUMN larga DEFAULT TRUE;
 
 Limitacion: el comodin debe aparecer como `*.`. No usar `*` dentro de literales de texto si puede confundirse con un nombre de esquema.
 
+## CSV entre bases de datos (servidor web)
+
+Si comun y sv estan en maquinas distintas, no usar `COPY` a fichero del postgres remoto.
+Marcar el `.sql` con directivas; el runner PHP hace `SELECT`/`INSERT` y lee/escribe en el servidor Apache:
+
+```sql
+-- @orbix_export_csv: log/db/locales.csv
+-- @orbix_export_query_begin
+SELECT id_locale, nom_locale, idioma, nom_idioma, active AS activo
+FROM public.x_locales
+ORDER BY id_locale;
+-- @orbix_export_query_end
+```
+
+```sql
+-- @orbix_import_csv: log/db/locales.csv
+-- @orbix_import_into: publicv.x_locale_tmp(id_locale, nom_locale, idioma, nom_idioma, activo)
+-- @orbix_import_here
+```
+
+La ruta es relativa al directorio Orbix (`ConfigGlobal::$directorio`), p. ej. `log/db/locales.csv`.
+Ejecutar primero la migracion de export en comun y despues la de import en sv (mismo servidor web).
+
 ## Registro
 
 Las ejecuciones se registran en `comun.public.migracion_aplicada`. Si un fichero ya aplicado cambia de contenido (`sha1` distinto), el runner avisa y no lo reaplica automaticamente.
