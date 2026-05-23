@@ -1,4 +1,4 @@
--- Reparación sv-e: tipo_teleco → id_tipo_teleco en todas las tablas (publicador + réplica).
+-- sv-e: migrar tablas restantes con tipo_teleco (excluye xd_tipo_teleco_tmp de mapeo).
 CREATE TABLE IF NOT EXISTS publicv.xd_tipo_teleco_tmp (
     tipo_teleco varchar(10),
     nombre_teleco varchar(20),
