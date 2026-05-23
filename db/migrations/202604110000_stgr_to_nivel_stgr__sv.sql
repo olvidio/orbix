@@ -1,4 +1,10 @@
 -- stgr → nivel_stgr: triggers update_p_de_paso_out, datos y función sin id_cr.
+SELECT migracion_detener_si(
+    migracion_columna_existe('global', 'personas', 'nivel_stgr')
+    AND NOT migracion_columna_existe('global', 'personas', 'stgr'),
+    '202604110000: stgr ya migrado a nivel_stgr (omitida)'
+);
+
 DO $$
 DECLARE
     trigger_record RECORD;
@@ -70,26 +76,66 @@ END;
 $function$;
 
 -- global.personas
-UPDATE global.personas SET stgr = 'c1' WHERE stgr = 'c';
+DO $$
+BEGIN
+    IF migracion_columna_existe('global', 'personas', 'stgr') THEN
+        UPDATE global.personas SET stgr = 'c1' WHERE stgr = 'c';
 
-UPDATE global.personas p
-SET stgr = x.nivel_stgr::text
-FROM publicv.xa_nivel_stgr_tmp x
-WHERE p.stgr = x.desc_breve;
+        UPDATE global.personas p
+        SET stgr = x.nivel_stgr::text
+        FROM publicv.xa_nivel_stgr_tmp x
+        WHERE p.stgr = x.desc_breve;
 
-ALTER TABLE global.personas RENAME COLUMN stgr TO nivel_stgr;
-ALTER TABLE global.personas ALTER COLUMN nivel_stgr TYPE integer USING nivel_stgr::integer;
+        PERFORM migracion_rename_columna('global', 'personas', 'stgr', 'nivel_stgr');
+    END IF;
+
+    IF migracion_columna_existe('global', 'personas', 'nivel_stgr')
+       AND NOT EXISTS (
+           SELECT 1
+           FROM information_schema.columns
+           WHERE table_schema = 'global'
+             AND table_name = 'personas'
+             AND column_name = 'nivel_stgr'
+             AND data_type = 'integer'
+       )
+    THEN
+        ALTER TABLE global.personas
+            ALTER COLUMN nivel_stgr TYPE integer USING nivel_stgr::integer;
+    ELSIF migracion_columna_existe('global', 'personas', 'nivel_stgr') THEN
+        PERFORM migracion_aviso('global.personas.nivel_stgr ya es integer (omitido)');
+    END IF;
+END $$;
 
 -- publicv.p_de_paso
-UPDATE publicv.p_de_paso SET stgr = 'c1' WHERE stgr = 'c';
+DO $$
+BEGIN
+    IF migracion_columna_existe('publicv', 'p_de_paso', 'stgr') THEN
+        UPDATE publicv.p_de_paso SET stgr = 'c1' WHERE stgr = 'c';
 
-UPDATE publicv.p_de_paso p
-SET stgr = x.nivel_stgr::text
-FROM publicv.xa_nivel_stgr_tmp x
-WHERE p.stgr = x.desc_breve;
+        UPDATE publicv.p_de_paso p
+        SET stgr = x.nivel_stgr::text
+        FROM publicv.xa_nivel_stgr_tmp x
+        WHERE p.stgr = x.desc_breve;
 
-ALTER TABLE publicv.p_de_paso RENAME COLUMN stgr TO nivel_stgr;
-ALTER TABLE publicv.p_de_paso ALTER COLUMN nivel_stgr TYPE integer USING nivel_stgr::integer;
+        PERFORM migracion_rename_columna('publicv', 'p_de_paso', 'stgr', 'nivel_stgr');
+    END IF;
+
+    IF migracion_columna_existe('publicv', 'p_de_paso', 'nivel_stgr')
+       AND NOT EXISTS (
+           SELECT 1
+           FROM information_schema.columns
+           WHERE table_schema = 'publicv'
+             AND table_name = 'p_de_paso'
+             AND column_name = 'nivel_stgr'
+             AND data_type = 'integer'
+       )
+    THEN
+        ALTER TABLE publicv.p_de_paso
+            ALTER COLUMN nivel_stgr TYPE integer USING nivel_stgr::integer;
+    ELSIF migracion_columna_existe('publicv', 'p_de_paso', 'nivel_stgr') THEN
+        PERFORM migracion_aviso('publicv.p_de_paso.nivel_stgr ya es integer (omitido)');
+    END IF;
+END $$;
 
 -- p_numerarios y p_de_paso_out por esquema (misma conversión)
 DO $$
@@ -117,16 +163,29 @@ BEGIN
             table_record.schema_name,
             table_record.table_name
         );
-        EXECUTE format(
-            'ALTER TABLE %I.%I RENAME COLUMN stgr TO nivel_stgr',
+        PERFORM migracion_rename_columna(
             table_record.schema_name,
-            table_record.table_name
+            table_record.table_name,
+            'stgr',
+            'nivel_stgr'
         );
-        EXECUTE format(
-            'ALTER TABLE %I.%I ALTER COLUMN nivel_stgr TYPE integer USING nivel_stgr::integer',
-            table_record.schema_name,
-            table_record.table_name
-        );
+        IF migracion_columna_existe(table_record.schema_name, table_record.table_name, 'nivel_stgr') THEN
+            BEGIN
+                EXECUTE format(
+                    'ALTER TABLE %I.%I ALTER COLUMN nivel_stgr TYPE integer USING nivel_stgr::integer',
+                    table_record.schema_name,
+                    table_record.table_name
+                );
+            EXCEPTION
+                WHEN others THEN
+                    PERFORM migracion_aviso(format(
+                        '%.%: nivel_stgr TYPE integer: %',
+                        table_record.schema_name,
+                        table_record.table_name,
+                        SQLERRM
+                    ));
+            END;
+        END IF;
     END LOOP;
 END $$;
 

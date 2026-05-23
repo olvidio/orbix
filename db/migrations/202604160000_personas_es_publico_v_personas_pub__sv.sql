@@ -1,14 +1,23 @@
--- global.personas.es_publico, datos desde p_de_paso y vista publicv.v_personas_pub (sv).
-ALTER TABLE global.personas ADD COLUMN es_publico bool DEFAULT FALSE;
+-- global.personas.es_publico, datos desde p_de_paso y vista publicv.v_personas_pub (sv, idempotente).
+SELECT migracion_add_columna_si_no_existe('global', 'personas', 'es_publico', 'bool DEFAULT FALSE');
 
-CREATE INDEX idx_personas_es_publico ON global.personas (id_nom) WHERE es_publico = true;
+CREATE INDEX IF NOT EXISTS idx_personas_es_publico ON global.personas (id_nom) WHERE es_publico = true;
 
-ALTER TABLE global.personas REPLICA IDENTITY FULL;
+DO $$
+BEGIN
+    BEGIN
+        ALTER TABLE global.personas REPLICA IDENTITY FULL;
+    EXCEPTION
+        WHEN others THEN
+            PERFORM migracion_aviso('global.personas REPLICA IDENTITY: ' || SQLERRM);
+    END;
+END $$;
 
 UPDATE global.personas g
 SET es_publico = TRUE
 FROM publicv.p_de_paso p
-WHERE g.id_nom = p.id_nom;
+WHERE g.id_nom = p.id_nom
+  AND g.es_publico IS DISTINCT FROM TRUE;
 
 CREATE OR REPLACE VIEW publicv.v_personas_pub AS
 SELECT
@@ -66,4 +75,12 @@ SELECT
     pp.profesor_stgr
 FROM publicv.p_de_paso pp;
 
-ALTER VIEW publicv.v_personas_pub OWNER TO orbixv;
+DO $$
+BEGIN
+    BEGIN
+        ALTER VIEW publicv.v_personas_pub OWNER TO orbixv;
+    EXCEPTION
+        WHEN others THEN
+            PERFORM migracion_aviso('publicv.v_personas_pub OWNER: ' || SQLERRM);
+    END;
+END $$;

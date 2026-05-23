@@ -90,4 +90,28 @@ Ejecutar primero la migracion de export en comun y despues la de import en sv (m
 
 ## Registro
 
-Las ejecuciones se registran en `comun.public.migracion_aplicada`. Si un fichero ya aplicado cambia de contenido (`sha1` distinto), el runner avisa y no lo reaplica automaticamente.
+Las ejecuciones se registran en `comun.public.migracion_aplicada`.
+
+## Idempotencia y reaplicacion
+
+Antes de cada migracion el runner instala funciones auxiliares desde
+`db/migrations/_bootstrap/migracion_idempotente.sql` (`migracion_rename_columna`,
+`migracion_migrar_tipo_teleco_*`, `migracion_detener_si`, etc.).
+
+Convenciones en los `.sql`:
+
+- Comprobar columnas/tablas antes de `RENAME`, `UPDATE` o `ALTER TYPE`.
+- Usar `IF NOT EXISTS` / `CREATE OR REPLACE` / `DROP IF EXISTS` cuando aplique.
+- Si la migracion entera ya esta aplicada, `SELECT migracion_detener_si(...)` aborta con aviso
+  `MIGRACION: ... (omitida)` y el runner registra **ok (ya estaba corregido)**.
+- Los `RAISE NOTICE 'MIGRACION: ...'` indican pasos omitidos al reaplicar.
+
+Si un fichero ya aplicado cambia de contenido (`sha1` distinto), el runner **reaplica**
+automaticamente (debe ser idempotente). Tambien reaplica al **seleccionar migraciones**
+explicitamente en el listado (modo seleccion), aunque el `sha1` no haya cambiado.
+reaplicar el bloque afectado en **publicador y replica** y refrescar suscripciones logicas:
+
+```sql
+ALTER SUBSCRIPTION subpruebascomun REFRESH PUBLICATION;
+ALTER SUBSCRIPTION subpruebassve REFRESH PUBLICATION;
+```

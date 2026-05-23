@@ -1,7 +1,14 @@
--- Esquema global (sv-e)
----ALTER TABLE global.m0_mods_installed DROP COLUMN IF EXISTS param;
----ALTER TABLE global.m0_mods_installed RENAME COLUMN status TO active;
----ALTER TABLE global.av_cambios_usuario_objeto_pref RENAME COLUMN id_pau TO csv_id_pau;
-
--- Todos los esquemas activos sv-e (*v)
-ALTER TABLE *.aux_usuarios RENAME COLUMN id_pau TO csv_id_pau;
+-- aux_usuarios: id_pau → csv_id_pau en todos los esquemas sv-e (idempotente).
+DO $$
+DECLARE
+    r RECORD;
+BEGIN
+    FOR r IN
+        SELECT c.table_schema
+        FROM information_schema.columns c
+        WHERE c.table_name = 'aux_usuarios'
+          AND c.column_name = 'id_pau'
+    LOOP
+        PERFORM migracion_rename_columna(r.table_schema, 'aux_usuarios', 'id_pau', 'csv_id_pau');
+    END LOOP;
+END $$;

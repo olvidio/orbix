@@ -1,5 +1,11 @@
 -- lengua → idioma_preferido. Importa locales.csv del servidor web (exportado por 202604130000 en comun).
-CREATE TABLE publicv.x_locale_tmp (
+SELECT migracion_detener_si(
+    migracion_columna_existe('global', 'personas', 'idioma_preferido')
+    AND NOT migracion_columna_existe('global', 'personas', 'lengua'),
+    '202604130100: lengua ya migrado a idioma_preferido (omitida)'
+);
+
+CREATE TABLE IF NOT EXISTS publicv.x_locale_tmp (
     id_locale character varying(12),
     nom_locale text,
     idioma character varying(3),
@@ -43,8 +49,19 @@ BEGIN
 END $$;
 
 -- global.personas
-ALTER TABLE global.personas RENAME COLUMN lengua TO idioma_preferido;
-ALTER TABLE global.personas ALTER COLUMN idioma_preferido TYPE varchar(12);
+SELECT migracion_rename_columna('global', 'personas', 'lengua', 'idioma_preferido');
+
+DO $$
+BEGIN
+    IF migracion_columna_existe('global', 'personas', 'idioma_preferido') THEN
+        BEGIN
+            ALTER TABLE global.personas ALTER COLUMN idioma_preferido TYPE varchar(12);
+        EXCEPTION
+            WHEN others THEN
+                PERFORM migracion_aviso('global.personas.idioma_preferido TYPE: ' || SQLERRM);
+        END;
+    END IF;
+END $$;
 
 UPDATE global.personas p
 SET idioma_preferido = x.id_locale
@@ -80,8 +97,19 @@ SET idioma_preferido = NULL
 WHERE idioma_preferido !~ '^[a-z]{2}_[A-Z]{2}\.UTF-8$';
 
 -- publicv.p_de_paso
-ALTER TABLE publicv.p_de_paso RENAME COLUMN lengua TO idioma_preferido;
-ALTER TABLE publicv.p_de_paso ALTER COLUMN idioma_preferido TYPE varchar(12);
+SELECT migracion_rename_columna('publicv', 'p_de_paso', 'lengua', 'idioma_preferido');
+
+DO $$
+BEGIN
+    IF migracion_columna_existe('publicv', 'p_de_paso', 'idioma_preferido') THEN
+        BEGIN
+            ALTER TABLE publicv.p_de_paso ALTER COLUMN idioma_preferido TYPE varchar(12);
+        EXCEPTION
+            WHEN others THEN
+                PERFORM migracion_aviso('publicv.p_de_paso.idioma_preferido TYPE: ' || SQLERRM);
+        END;
+    END IF;
+END $$;
 
 UPDATE publicv.p_de_paso p
 SET idioma_preferido = x.id_locale
@@ -132,16 +160,34 @@ BEGIN
           AND n.nspname NOT LIKE 'pg_%'
           AND n.nspname <> 'information_schema'
     LOOP
-        EXECUTE format(
-            'ALTER TABLE %I.%I RENAME COLUMN lengua TO idioma_preferido',
+        PERFORM migracion_rename_columna(
             table_record.schema_name,
-            table_record.table_name
+            table_record.table_name,
+            'lengua',
+            'idioma_preferido'
         );
-        EXECUTE format(
-            'ALTER TABLE %I.%I ALTER COLUMN idioma_preferido TYPE varchar(12)',
+
+        IF migracion_columna_existe(
             table_record.schema_name,
-            table_record.table_name
-        );
+            table_record.table_name,
+            'idioma_preferido'
+        ) THEN
+            BEGIN
+                EXECUTE format(
+                    'ALTER TABLE %I.%I ALTER COLUMN idioma_preferido TYPE varchar(12)',
+                    table_record.schema_name,
+                    table_record.table_name
+                );
+            EXCEPTION
+                WHEN others THEN
+                    PERFORM migracion_aviso(format(
+                        '%.%: idioma_preferido TYPE: %',
+                        table_record.schema_name,
+                        table_record.table_name,
+                        SQLERRM
+                    ));
+            END;
+        END IF;
     END LOOP;
 END $$;
 

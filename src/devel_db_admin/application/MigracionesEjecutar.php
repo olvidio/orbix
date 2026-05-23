@@ -24,6 +24,11 @@ final class MigracionesEjecutar
      */
     private array $schemaCache = [];
 
+    /**
+     * @var array<int, true>
+     */
+    private array $bootstrapPorPdo = [];
+
     public function __construct(
         private readonly object $container,
         private readonly ?string $migrationsDir = null,
@@ -56,7 +61,12 @@ final class MigracionesEjecutar
         foreach ($aEjecutar as $migracion) {
             $lines[] = sprintf('Migracion %s_%s', $migracion['prefijo'], $migracion['descripcion']);
             foreach ((array) $migracion['aplicaciones'] as $aplicacion) {
-                $result = $this->ejecutarAplicacion($repo, $analyzer, $aplicacion);
+                $result = $this->ejecutarAplicacion(
+                    $repo,
+                    $analyzer,
+                    $aplicacion,
+                    $modo === 'seleccion',
+                );
                 $lines = array_merge($lines, $result['lines']);
                 if ($result['error'] !== null) {
                     return [
@@ -132,6 +142,7 @@ final class MigracionesEjecutar
         MigracionAplicadaRepositoryInterface $repo,
         MigracionSqlAnalyzer $analyzer,
         array $aplicacion,
+        bool $reaplicarSeleccion = false,
     ): array {
         $prefijo = (string) $aplicacion['prefijo'];
         $descripcion = (string) $aplicacion['descripcion'];
@@ -142,7 +153,8 @@ final class MigracionesEjecutar
         $path = (string) $aplicacion['path'];
 
         $aplicada = $repo->findByKey($prefijo, $descripcion, $database);
-        if ($aplicada instanceof MigracionAplicada && $aplicada->isOk()) {
+        $lines = [];
+        if ($aplicada instanceof MigracionAplicada && $aplicada->isOk() && !$reaplicarSeleccion) {
             if ($aplicada->getSha1() === $sha1) {
                 return [
                     'lines' => [sprintf('  - %s en %s: ya aplicada.', $file, $database)],
@@ -150,10 +162,17 @@ final class MigracionesEjecutar
                 ];
             }
 
-            return [
-                'lines' => [sprintf('  - %s en %s: el fichero cambio desde que se aplico; no se reaplica.', $file, $database)],
-                'error' => null,
-            ];
+            $lines[] = sprintf(
+                '  - %s en %s: contenido cambiado; reaplicando (idempotente)...',
+                $file,
+                $database,
+            );
+        } elseif ($aplicada instanceof MigracionAplicada && $aplicada->isOk() && $reaplicarSeleccion) {
+            $lines[] = sprintf(
+                '  - %s en %s: reaplicando por seleccion explicita (idempotente)...',
+                $file,
+                $database,
+            );
         }
 
         $sql = file_get_contents($path);
@@ -168,10 +187,13 @@ final class MigracionesEjecutar
         }
 
         $usaComodin = $analyzer->usaComodin($sql);
-        $lines = [sprintf('  - Ejecutando %s en %s%s', $file, $database, $usaComodin ? ' (por esquemas)' : '')];
+        if ($lines === []) {
+            $lines = [sprintf('  - Ejecutando %s en %s%s', $file, $database, $usaComodin ? ' (por esquemas)' : '')];
+        }
 
         try {
             $pdo = $this->connect($database);
+            $this->ensureMigracionBootstrap($pdo);
             $puente = new MigracionCsvPuente();
             $schemas = $usaComodin ? $this->schemasParaDatabase($database) : [];
             if ($usaComodin && $schemas === []) {
@@ -188,6 +210,16 @@ final class MigracionesEjecutar
                 'error' => null,
             ];
         } catch (Throwable $e) {
+            if ($this->esMigracionYaAplicada($e)) {
+                $this->registrar($repo, $aplicacion, true, 'ya estaba corregido');
+                $lines[] = '    ok (ya estaba corregido)';
+
+                return [
+                    'lines' => $lines,
+                    'error' => null,
+                ];
+            }
+
             $error = $e->getMessage();
             $this->registrar($repo, $aplicacion, false, $error);
             $lines[] = '    ERROR: ' . $error;
@@ -197,6 +229,16 @@ final class MigracionesEjecutar
                 'error' => $error,
             ];
         }
+    }
+
+    private function esMigracionYaAplicada(Throwable $e): bool
+    {
+        if (!$e instanceof PDOException) {
+            return false;
+        }
+
+        return (string) ($e->errorInfo[0] ?? '') === 'P0002'
+            || str_contains($e->getMessage(), 'MIGRACION_YA_APLICADA');
     }
 
     private function connect(string $database): PDO
@@ -317,6 +359,25 @@ final class MigracionesEjecutar
         }
 
         return $log;
+    }
+
+    private function ensureMigracionBootstrap(PDO $pdo): void
+    {
+        $id = spl_object_id($pdo);
+        if (isset($this->bootstrapPorPdo[$id])) {
+            return;
+        }
+
+        $dir = $this->migrationsDir ?? dirname(__DIR__, 3) . '/db/migrations';
+        $path = $dir . '/_bootstrap/migracion_idempotente.sql';
+        if (is_file($path)) {
+            $bootstrap = file_get_contents($path);
+            if ($bootstrap !== false && MigracionEjecucionUtiles::tieneSqlEjecutable($bootstrap)) {
+                $this->execOrFail($pdo, $bootstrap);
+            }
+        }
+
+        $this->bootstrapPorPdo[$id] = true;
     }
 
     private function execOrFail(PDO $pdo, string $sql): void
