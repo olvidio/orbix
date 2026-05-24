@@ -233,12 +233,14 @@ final class MigracionesEjecutar
 
     private function esMigracionYaAplicada(Throwable $e): bool
     {
-        if (!$e instanceof PDOException) {
-            return false;
+        if ($e instanceof PDOException && (string) ($e->errorInfo[0] ?? '') === 'P0002') {
+            return true;
         }
 
-        return (string) ($e->errorInfo[0] ?? '') === 'P0002'
-            || str_contains($e->getMessage(), 'MIGRACION_YA_APLICADA');
+        $msg = $e->getMessage();
+
+        return str_contains($msg, 'MIGRACION_YA_APLICADA')
+            || str_contains($msg, 'SQLSTATE[P0002]');
     }
 
     private function connect(string $database): PDO
@@ -397,16 +399,36 @@ final class MigracionesEjecutar
                 continue;
             }
 
+            if (preg_match('/^SELECT\s+/i', ltrim($statement)) === 1) {
+                $stmt = $pdo->query($statement);
+                if ($stmt !== false) {
+                    $stmt->closeCursor();
+                }
+                continue;
+            }
+
             $result = $pdo->exec($statement);
             if ($result === false) {
-                $info = $pdo->errorInfo();
-                throw new RuntimeException(sprintf(
-                    'Error ejecutando SQL de migracion (%s): %s',
-                    (string) ($info[0] ?? 'HY000'),
-                    (string) ($info[2] ?? 'sin detalle'),
-                ));
+                $this->lanzarExcepcionSql($pdo);
             }
         }
+    }
+
+    private function lanzarExcepcionSql(PDO $pdo): void
+    {
+        $info = $pdo->errorInfo();
+        $sqlState = (string) ($info[0] ?? 'HY000');
+        $message = (string) ($info[2] ?? 'sin detalle');
+
+        if ($sqlState === 'P0002' || str_contains($message, 'MIGRACION_YA_APLICADA')) {
+            throw new RuntimeException(sprintf('SQLSTATE[%s]: %s', $sqlState, $message));
+        }
+
+        throw new RuntimeException(sprintf(
+            'Error ejecutando SQL de migracion (%s): %s',
+            $sqlState,
+            $message,
+        ));
     }
 
     /**
