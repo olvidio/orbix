@@ -373,7 +373,7 @@ final class MigracionesEjecutar
         if (is_file($path)) {
             $bootstrap = file_get_contents($path);
             if ($bootstrap !== false && MigracionEjecucionUtiles::tieneSqlEjecutable($bootstrap)) {
-                $this->execOrFail($pdo, $bootstrap);
+                $this->execSqlScript($pdo, $bootstrap);
             }
         }
 
@@ -382,18 +382,25 @@ final class MigracionesEjecutar
 
     private function execOrFail(PDO $pdo, string $sql): void
     {
-        if (!MigracionEjecucionUtiles::tieneSqlEjecutable($sql)) {
-            return;
-        }
+        $this->execSqlScript($pdo, $sql);
+    }
 
-        $result = $pdo->exec($sql);
-        if ($result === false) {
-            $info = $pdo->errorInfo();
-            throw new RuntimeException(sprintf(
-                'Error ejecutando SQL de migracion (%s): %s',
-                (string) ($info[0] ?? 'HY000'),
-                (string) ($info[2] ?? 'sin detalle'),
-            ));
+    private function execSqlScript(PDO $pdo, string $sql): void
+    {
+        foreach (MigracionEjecucionUtiles::splitSqlStatements($sql) as $statement) {
+            if (!MigracionEjecucionUtiles::tieneSqlEjecutable($statement)) {
+                continue;
+            }
+
+            $result = $pdo->exec($statement);
+            if ($result === false) {
+                $info = $pdo->errorInfo();
+                throw new RuntimeException(sprintf(
+                    'Error ejecutando SQL de migracion (%s): %s',
+                    (string) ($info[0] ?? 'HY000'),
+                    (string) ($info[2] ?? 'sin detalle'),
+                ));
+            }
         }
     }
 

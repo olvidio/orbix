@@ -41,6 +41,28 @@ final class MigracionEjecucionUtilesTest extends myTest
         $this->assertTrue(MigracionEjecucionUtiles::tieneSqlEjecutable("SELECT 1;\n-- fin\n"));
     }
 
+    public function test_split_sql_statements_respeta_dollar_quotes(): void
+    {
+        $sql = <<<'SQL'
+SELECT 1;
+
+DO $$
+BEGIN
+    PERFORM 1;
+END $$;
+
+SELECT migracion_aviso('hola');
+SQL;
+
+        $parts = MigracionEjecucionUtiles::splitSqlStatements($sql);
+
+        $this->assertCount(3, $parts);
+        $this->assertStringContainsString('SELECT 1', $parts[0]);
+        $this->assertStringContainsString('DO $$', $parts[1]);
+        $this->assertStringContainsString('END $$', $parts[1]);
+        $this->assertStringContainsString("migracion_aviso('hola')", $parts[2]);
+    }
+
     public function test_es_error_esquema_inexistente_3f000(): void
     {
         $e = new PDOException('schema "x" does not exist');

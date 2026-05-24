@@ -46,6 +46,100 @@ final class MigracionEjecucionUtiles
     }
 
     /**
+     * Divide un script SQL en sentencias respetando literales, comentarios y dollar-quotes.
+     *
+     * @return list<string>
+     */
+    public static function splitSqlStatements(string $sql): array
+    {
+        $statements = [];
+        $current = '';
+        $len = strlen($sql);
+        $i = 0;
+        $inSingleQuote = false;
+        $dollarTag = null;
+
+        while ($i < $len) {
+            $char = $sql[$i];
+
+            if ($inSingleQuote) {
+                $current .= $char;
+                if ($char === "'" && ($i + 1 >= $len || $sql[$i + 1] !== "'")) {
+                    $inSingleQuote = false;
+                } elseif ($char === "'" && $sql[$i + 1] === "'") {
+                    $current .= $sql[$i + 1];
+                    $i += 2;
+                    continue;
+                }
+                $i++;
+                continue;
+            }
+
+            if ($dollarTag !== null) {
+                if ($char === '$') {
+                    $close = '$' . $dollarTag . '$';
+                    if (substr($sql, $i, strlen($close)) === $close) {
+                        $current .= $close;
+                        $i += strlen($close);
+                        $dollarTag = null;
+                        continue;
+                    }
+                }
+                $current .= $char;
+                $i++;
+                continue;
+            }
+
+            if ($char === '-' && ($i + 1) < $len && $sql[$i + 1] === '-') {
+                while ($i < $len && $sql[$i] !== "\n") {
+                    $current .= $sql[$i];
+                    $i++;
+                }
+                continue;
+            }
+
+            if ($char === '$') {
+                $j = $i + 1;
+                while ($j < $len && $sql[$j] !== '$' && (ctype_alnum($sql[$j]) || $sql[$j] === '_')) {
+                    $j++;
+                }
+                if ($j < $len && $sql[$j] === '$') {
+                    $dollarTag = substr($sql, $i + 1, $j - $i - 1);
+                    $open = substr($sql, $i, $j - $i + 1);
+                    $current .= $open;
+                    $i = $j + 1;
+                    continue;
+                }
+            }
+
+            if ($char === "'") {
+                $inSingleQuote = true;
+                $current .= $char;
+                $i++;
+                continue;
+            }
+
+            if ($char === ';') {
+                if (self::tieneSqlEjecutable($current)) {
+                    $statements[] = $current;
+                }
+                $current = '';
+                $i++;
+                continue;
+            }
+
+            $current .= $char;
+            $i++;
+        }
+
+        if (self::tieneSqlEjecutable($current)) {
+            $statements[] = $current;
+        }
+
+        return $statements;
+    }
+
+    /**
      * PostgreSQL: SQLSTATE 3F000 = invalid_schema_name ("schema X does not exist").
      * No confundir con 42P01 (relación inexistente cuando el esquema sí existe).
      */
