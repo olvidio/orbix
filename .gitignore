@@ -31,10 +31,11 @@ apps/web/Hash.php
  
 # Logs and databases #
 ######################
+*.sqlite
 *.log
 *.sql
-*.sqlite
- 
+!db/**/*.sql
+
 # OS generated files #
 ######################
 .DS_Store
