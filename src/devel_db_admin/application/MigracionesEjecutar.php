@@ -256,7 +256,12 @@ final class MigracionesEjecutar
         $config = $oConfigDB->getEsquema($schema);
         $oConexion = new DBConnection($config);
 
-        return $oConexion->getPDO();
+        $pdo = $oConexion->getPDO();
+        // ConfigDB usa labels tipo publicv-e_select como search_path; ese namespace no existe
+        // en PostgreSQL. Las migraciones usan nombres cualificados (global.*, publicv.*, etc.).
+        $pdo->exec('SET search_path TO public');
+
+        return $pdo;
     }
 
     /**
