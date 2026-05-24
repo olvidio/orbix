@@ -64,22 +64,26 @@ final class MigracionesEjecutar
             $lines[] = sprintf('Migracion %s_%s', $migracion['prefijo'], $migracion['descripcion']);
             $lines = array_merge($lines, $this->suspenderSuscripcionesReplicacion($migracion));
             $errorMigracion = null;
-            try {
-                foreach ((array) $migracion['aplicaciones'] as $aplicacion) {
-                    $result = $this->ejecutarAplicacion(
-                        $repo,
-                        $analyzer,
-                        $aplicacion,
-                        $modo === 'seleccion',
-                    );
-                    $lines = array_merge($lines, $result['lines']);
-                    if ($result['error'] !== null) {
-                        $errorMigracion = $result['error'];
-                        break;
-                    }
+            foreach ((array) $migracion['aplicaciones'] as $aplicacion) {
+                $result = $this->ejecutarAplicacion(
+                    $repo,
+                    $analyzer,
+                    $aplicacion,
+                    $modo === 'seleccion',
+                );
+                $lines = array_merge($lines, $result['lines']);
+                if ($result['error'] !== null) {
+                    $errorMigracion = $result['error'];
+                    break;
                 }
-            } finally {
+            }
+            if ($errorMigracion === null) {
                 $lines = array_merge($lines, $this->reactivarSuscripcionesReplicacion($migracion));
+            } else {
+                $lines = array_merge(
+                    $lines,
+                    $this->avisosSuscripcionesSinReactivar($migracion),
+                );
             }
 
             if ($errorMigracion !== null) {
@@ -530,6 +534,27 @@ final class MigracionesEjecutar
     private function reactivarSuscripcionesReplicacion(array $migracion): array
     {
         return $this->alterSuscripcionesReplicacion($migracion, true);
+    }
+
+    /**
+     * @param array<string, mixed> $migracion
+     * @return list<string>
+     */
+    private function avisosSuscripcionesSinReactivar(array $migracion): array
+    {
+        if (!$this->migracionEstructuraReplicada($migracion)) {
+            return [];
+        }
+
+        $lines = ['    suscripciones NO reactivadas: corrija el error y ejecute REFRESH PUBLICATION + ENABLE manualmente.'];
+        foreach ($this->modulosReplicacionDeMigracion($migracion) as $modulo) {
+            $subNombre = $this->nombreSuscripcion($modulo);
+            if ($subNombre !== null) {
+                $lines[] = sprintf('      - %s (modulo %s)', $subNombre, $modulo);
+            }
+        }
+
+        return $lines;
     }
 
     /**
