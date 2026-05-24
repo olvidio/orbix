@@ -116,9 +116,12 @@ explicitamente en el listado (modo seleccion), aunque el `sha1` no haya cambiado
 
 Tras migraciones de esquema con replicacion logica:
 
-1. Comprobar que **publicador y suscriptor** tienen el mismo esquema (p. ej. ninguna tabla
+1. El runner **pausa automaticamente** las suscripciones (`DISABLE`) antes de cada migracion
+   de **estructura** en `comun` / `sv-e`, aplica publicador + `*_select`, y luego
+   `ENABLE` + `REFRESH PUBLICATION`.
+2. Comprobar que **publicador y suscriptor** tienen el mismo esquema (p. ej. ninguna tabla
    con columna `tipo_teleco` salvo `publicv.xd_tipo_teleco_tmp`).
-2. En la BD **suscriptora** (donde estan las suscripciones):
+3. Si la replicacion quedo parada manualmente, en la BD **suscriptora**:
 
 ```sql
 ALTER SUBSCRIPTION subpruebascomun REFRESH PUBLICATION;

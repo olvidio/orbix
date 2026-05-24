@@ -12,7 +12,9 @@ use src\devel_db_admin\application\services\MigracionSqlAnalyzer;
 use src\devel_db_admin\domain\contracts\MigracionAplicadaRepositoryInterface;
 use src\devel_db_admin\domain\entity\MigracionAplicada;
 use src\devel_db_admin\domain\value_objects\MigracionDatabase;
+use src\devel_db_admin\domain\value_objects\MigracionTipo;
 use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
@@ -60,20 +62,31 @@ final class MigracionesEjecutar
         $analyzer = $this->analyzer ?? new MigracionSqlAnalyzer();
         foreach ($aEjecutar as $migracion) {
             $lines[] = sprintf('Migracion %s_%s', $migracion['prefijo'], $migracion['descripcion']);
-            foreach ((array) $migracion['aplicaciones'] as $aplicacion) {
-                $result = $this->ejecutarAplicacion(
-                    $repo,
-                    $analyzer,
-                    $aplicacion,
-                    $modo === 'seleccion',
-                );
-                $lines = array_merge($lines, $result['lines']);
-                if ($result['error'] !== null) {
-                    return [
-                        'lines' => $lines,
-                        'error' => $result['error'],
-                    ];
+            $lines = array_merge($lines, $this->suspenderSuscripcionesReplicacion($migracion));
+            $errorMigracion = null;
+            try {
+                foreach ((array) $migracion['aplicaciones'] as $aplicacion) {
+                    $result = $this->ejecutarAplicacion(
+                        $repo,
+                        $analyzer,
+                        $aplicacion,
+                        $modo === 'seleccion',
+                    );
+                    $lines = array_merge($lines, $result['lines']);
+                    if ($result['error'] !== null) {
+                        $errorMigracion = $result['error'];
+                        break;
+                    }
                 }
+            } finally {
+                $lines = array_merge($lines, $this->reactivarSuscripcionesReplicacion($migracion));
+            }
+
+            if ($errorMigracion !== null) {
+                return [
+                    'lines' => $lines,
+                    'error' => $errorMigracion,
+                ];
             }
         }
 
@@ -499,5 +512,123 @@ final class MigracionesEjecutar
         } catch (Throwable) {
             return null;
         }
+    }
+
+    /**
+     * @param array<string, mixed> $migracion
+     * @return list<string>
+     */
+    private function suspenderSuscripcionesReplicacion(array $migracion): array
+    {
+        return $this->alterSuscripcionesReplicacion($migracion, false);
+    }
+
+    /**
+     * @param array<string, mixed> $migracion
+     * @return list<string>
+     */
+    private function reactivarSuscripcionesReplicacion(array $migracion): array
+    {
+        return $this->alterSuscripcionesReplicacion($migracion, true);
+    }
+
+    /**
+     * Pausa/reactiva suscripciones lógicas antes/después de migraciones de estructura en comun/sv-e.
+     * Evita «falta la columna replicada» mientras el publicador migra y la réplica aún no.
+     *
+     * @param array<string, mixed> $migracion
+     * @return list<string>
+     */
+    private function alterSuscripcionesReplicacion(array $migracion, bool $reactivar): array
+    {
+        if (!$this->migracionEstructuraReplicada($migracion)) {
+            return [];
+        }
+
+        $lines = [];
+        foreach ($this->modulosReplicacionDeMigracion($migracion) as $modulo) {
+            $lines = array_merge($lines, $this->alterSuscripcionModulo($modulo, $reactivar));
+        }
+
+        return $lines;
+    }
+
+    /**
+     * @param array<string, mixed> $migracion
+     */
+    private function migracionEstructuraReplicada(array $migracion): bool
+    {
+        foreach ((array) $migracion['aplicaciones'] as $aplicacion) {
+            if (($aplicacion['tipo'] ?? '') !== MigracionTipo::ESTRUCTURA) {
+                continue;
+            }
+            if (in_array((string) ($aplicacion['database_archivo'] ?? ''), ['comun', 'sv-e'], true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array<string, mixed> $migracion
+     * @return list<string>
+     */
+    private function modulosReplicacionDeMigracion(array $migracion): array
+    {
+        $modulos = [];
+        foreach ((array) $migracion['aplicaciones'] as $aplicacion) {
+            $archivo = (string) ($aplicacion['database_archivo'] ?? '');
+            if ($archivo === 'comun' || $archivo === 'sv-e') {
+                $modulos[$archivo] = true;
+            }
+        }
+
+        return array_keys($modulos);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function alterSuscripcionModulo(string $modulo, bool $reactivar): array
+    {
+        $subNombre = $this->nombreSuscripcion($modulo);
+        if ($subNombre === null) {
+            return [];
+        }
+
+        $databaseSelect = match ($modulo) {
+            'comun' => MigracionDatabase::COMUN_SELECT,
+            'sv-e' => MigracionDatabase::SV_E_SELECT,
+            default => null,
+        };
+        if ($databaseSelect === null) {
+            return [];
+        }
+
+        try {
+            $pdo = $this->connect($databaseSelect);
+            if ($reactivar) {
+                $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' ENABLE');
+                $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' REFRESH PUBLICATION');
+                return [sprintf('    suscripcion %s reactivada (ENABLE + REFRESH PUBLICATION)', $subNombre)];
+            }
+
+            $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' DISABLE');
+            return [sprintf('    suscripcion %s pausada (DISABLE) durante migracion de estructura', $subNombre)];
+        } catch (Throwable $e) {
+            return [sprintf('    aviso suscripcion %s: %s', $subNombre, $e->getMessage())];
+        }
+    }
+
+    private function nombreSuscripcion(string $modulo): ?string
+    {
+        $entornoPruebas = ServerConf::WEBDIR === 'pruebas';
+
+        return match ($modulo) {
+            'comun' => $entornoPruebas ? 'subpruebascomun' : 'subcomun',
+            'sv-e' => $entornoPruebas ? 'subpruebassve' : 'subsve',
+            default => null,
+        };
     }
 }
