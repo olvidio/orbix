@@ -181,7 +181,7 @@ BEGIN
             EXCEPTION
                 WHEN others THEN
                     PERFORM migracion_aviso(format(
-                        '%.%: idioma_preferido TYPE: %',
+                        '%s.%s: idioma_preferido TYPE: %s',
                         table_record.schema_name,
                         table_record.table_name,
                         SQLERRM

@@ -179,7 +179,7 @@ BEGIN
             EXCEPTION
                 WHEN others THEN
                     PERFORM migracion_aviso(format(
-                        '%.%: nivel_stgr TYPE integer: %',
+                        '%s.%s: nivel_stgr TYPE integer: %s',
                         table_record.schema_name,
                         table_record.table_name,
                         SQLERRM

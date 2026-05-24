@@ -57,11 +57,11 @@ BEGIN
     END IF;
 
     IF public.migracion_columna_existe(p_schema, p_table, p_new) THEN
-        PERFORM public.migracion_aviso(format('%.%: % ya renombrado a % (omitido)', p_schema, p_table, p_old, p_new));
+        PERFORM public.migracion_aviso(format('%s.%s: %s ya renombrado a %s (omitido)', p_schema, p_table, p_old, p_new));
         RETURN false;
     END IF;
 
-    PERFORM public.migracion_aviso(format('%.%: ni % ni % existen (omitido)', p_schema, p_table, p_old, p_new));
+    PERFORM public.migracion_aviso(format('%s.%s: ni %s ni %s existen (omitido)', p_schema, p_table, p_old, p_new));
     RETURN false;
 END;
 $$;
@@ -77,7 +77,7 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF public.migracion_columna_existe(p_schema, p_table, p_column) THEN
-        PERFORM public.migracion_aviso(format('%.%: columna % ya existe (omitido)', p_schema, p_table, p_column));
+        PERFORM public.migracion_aviso(format('%s.%s: columna %s ya existe (omitido)', p_schema, p_table, p_column));
         RETURN false;
     END IF;
 
@@ -103,7 +103,7 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF NOT public.migracion_columna_existe(p_schema, p_table, p_column) THEN
-        PERFORM public.migracion_aviso(format('%.%: columna % ya eliminada (omitido)', p_schema, p_table, p_column));
+        PERFORM public.migracion_aviso(format('%s.%s: columna %s ya eliminada (omitido)', p_schema, p_table, p_column));
         RETURN false;
     END IF;
 
@@ -137,7 +137,7 @@ AS $$
 BEGIN
     IF NOT public.migracion_columna_existe(p_schema, p_table, 'tipo_teleco') THEN
         IF public.migracion_columna_existe(p_schema, p_table, 'id_tipo_teleco') THEN
-            PERFORM public.migracion_aviso(format('%.%: tipo_teleco ya migrado a id_tipo_teleco (omitido)', p_schema, p_table));
+            PERFORM public.migracion_aviso(format('%s.%s: tipo_teleco ya migrado a id_tipo_teleco (omitido)', p_schema, p_table));
         END IF;
         RETURN false;
     END IF;
@@ -177,7 +177,7 @@ AS $$
 BEGIN
     IF NOT public.migracion_columna_existe(p_schema, p_table, 'tipo_teleco') THEN
         IF public.migracion_columna_existe(p_schema, p_table, 'id_tipo_teleco') THEN
-            PERFORM public.migracion_aviso(format('%.%: tipo_teleco ya migrado a id_tipo_teleco (omitido)', p_schema, p_table));
+            PERFORM public.migracion_aviso(format('%s.%s: tipo_teleco ya migrado a id_tipo_teleco (omitido)', p_schema, p_table));
         END IF;
         RETURN false;
     END IF;
@@ -217,7 +217,7 @@ AS $$
 BEGIN
     IF NOT public.migracion_columna_existe(p_schema, p_table, 'desc_teleco') THEN
         IF public.migracion_columna_existe(p_schema, p_table, 'id_desc_teleco') THEN
-            PERFORM public.migracion_aviso(format('%.%: desc_teleco ya migrado a id_desc_teleco (omitido)', p_schema, p_table));
+            PERFORM public.migracion_aviso(format('%s.%s: desc_teleco ya migrado a id_desc_teleco (omitido)', p_schema, p_table));
         END IF;
         RETURN false;
     END IF;
@@ -254,7 +254,7 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF to_regclass(format('%I.%I', p_schema, p_name)) IS NULL THEN
-        PERFORM public.migracion_aviso(format('%.%: materialized view no existe (omitido)', p_schema, p_name));
+        PERFORM public.migracion_aviso(format('%s.%s: materialized view no existe (omitido)', p_schema, p_name));
         RETURN false;
     END IF;
 
