@@ -78,6 +78,15 @@ BEGIN
     END IF;
 END $$;
 
+-- plaza=0 → NULL (por si 202604190000 se ejecutó antes de crear d_asistentes_all).
+DO $$
+BEGIN
+    IF migracion_tabla_existe('publicv', 'd_asistentes_all')
+       AND migracion_columna_existe('publicv', 'd_asistentes_all', 'plaza') THEN
+        UPDATE publicv.d_asistentes_all SET plaza = NULL WHERE plaza = 0;
+    END IF;
+END $$;
+
 DO $$
 BEGIN
     BEGIN
