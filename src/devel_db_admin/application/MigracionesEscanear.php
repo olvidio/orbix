@@ -128,11 +128,13 @@ final class MigracionesEscanear
 
     public static function ordenDatabase(string $database): int
     {
+        // Primario antes que réplica (_select): en replicación lógica el publicador debe
+        // tener el esquema migrado antes que el suscriptor (evita «falta columna replicada»).
         return match ($database) {
-            MigracionDatabase::COMUN_SELECT => 10,
-            MigracionDatabase::COMUN => 20,
-            MigracionDatabase::SV_E_SELECT => 30,
-            MigracionDatabase::SV_E => 40,
+            MigracionDatabase::COMUN => 10,
+            MigracionDatabase::COMUN_SELECT => 20,
+            MigracionDatabase::SV_E => 30,
+            MigracionDatabase::SV_E_SELECT => 40,
             MigracionDatabase::SV => 50,
             default => 99,
         };

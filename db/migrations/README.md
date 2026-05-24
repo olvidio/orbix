@@ -37,11 +37,15 @@ El runner clasifica automaticamente cada fichero:
 
 Regla de ejecucion:
 
-- `__comun.sql` de estructura: primero `comun_select`, despues `comun`.
+- `__comun.sql` de estructura: primero `comun` (publicador), despues `comun_select` (suscriptor).
 - `__comun.sql` de datos: solo `comun`.
-- `__sv-e.sql` de estructura: primero `sv-e_select`, despues `sv-e`.
+- `__sv-e.sql` de estructura: primero `sv-e` (publicador), despues `sv-e_select` (suscriptor).
 - `__sv-e.sql` de datos: solo `sv-e`.
 - `__sv.sql`: solo `sv`.
+
+En replicacion logica, el publicador debe migrar el esquema **antes** que la replica. Si la replica
+ya renombro una columna y el publicador aun emite `UPDATE` sobre el nombre viejo, aparece:
+`le falta la columna replicada: tipo_teleco`.
 
 ## Comodin de esquema
 
@@ -109,9 +113,25 @@ Convenciones en los `.sql`:
 Si un fichero ya aplicado cambia de contenido (`sha1` distinto), el runner **reaplica**
 automaticamente (debe ser idempotente). Tambien reaplica al **seleccionar migraciones**
 explicitamente en el listado (modo seleccion), aunque el `sha1` no haya cambiado.
-reaplicar el bloque afectado en **publicador y replica** y refrescar suscripciones logicas:
+
+Tras migraciones de esquema con replicacion logica:
+
+1. Comprobar que **publicador y suscriptor** tienen el mismo esquema (p. ej. ninguna tabla
+   con columna `tipo_teleco` salvo `publicv.xd_tipo_teleco_tmp`).
+2. En la BD **suscriptora** (donde estan las suscripciones):
 
 ```sql
 ALTER SUBSCRIPTION subpruebascomun REFRESH PUBLICATION;
 ALTER SUBSCRIPTION subpruebassve REFRESH PUBLICATION;
+```
+
+Consulta util en cada BD:
+
+```sql
+SELECT table_schema, table_name
+FROM information_schema.columns
+WHERE column_name = 'tipo_teleco'
+  AND table_schema NOT IN ('pg_catalog', 'information_schema')
+  AND NOT (table_schema = 'publicv' AND table_name = 'xd_tipo_teleco_tmp')
+ORDER BY 1, 2;
 ```
