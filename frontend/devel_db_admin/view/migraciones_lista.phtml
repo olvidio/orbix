@@ -118,5 +118,5 @@
 <pre id="migraciones_resultado"></pre>
 
 <p>
-    <?= _("Los ficheros se leen de db/migrations. Los SQL de estructura se ejecutan primero en replicas de lectura y despues en la base principal.") ?>
+    <?= _("Los ficheros se leen de db/migrations. Los SQL de estructura se ejecutan primero en la base principal (comun, sv-e) y despues en la replica de lectura (*_select); durante ese proceso se pausan las suscripciones logicas y se reactivan al terminar.") ?>
 </p>
