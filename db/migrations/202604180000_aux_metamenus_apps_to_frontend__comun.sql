@@ -47,5 +47,13 @@ UPDATE public.aux_metamenus SET url = 'frontend/casas/controller/casa.php' WHERE
 
 UPDATE public.aux_metamenus SET url = 'frontend/casas/controller/casa_ec.php' WHERE url = 'frontend/casas/controller/casa_ec_que.php';
 
-
-UPDATE global.aux_menus SET parametros = 'clase_info=src\configuracion\domain\InfoApps' WHERE parametros = 'clase_info=src\devel\domain\InfoApps';
+DO $$
+BEGIN
+    IF migracion_tabla_existe('global', 'aux_menus') THEN
+        UPDATE global.aux_menus
+        SET parametros = 'clase_info=src\configuracion\domain\InfoApps'
+        WHERE parametros = 'clase_info=src\devel\domain\InfoApps';
+    ELSE
+        PERFORM migracion_aviso('global.aux_menus no existe (omitido UPDATE parametros)');
+    END IF;
+END $$;
