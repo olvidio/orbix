@@ -39,10 +39,11 @@ BEGIN
     END LOOP;
 END $$;
 
--- sacd es NOT NULL en p_de_paso_out; normalizar filas legacy con sacd nulo.
+-- sacd es NOT NULL en p_de_paso_out; normalizar filas legacy con sacd nulo (boolean o texto según esquema).
 DO $$
 DECLARE
     table_record RECORD;
+    sacd_type text;
 BEGIN
     FOR table_record IN
         SELECT n.nspname AS schema_name, c.relname AS table_name
@@ -52,12 +53,30 @@ BEGIN
           AND n.nspname NOT LIKE 'pg_%'
           AND n.nspname <> 'information_schema'
     LOOP
-        EXECUTE format(
-            'UPDATE %I.%I SET sacd = COALESCE(NULLIF(trim(sacd), ''''), NULLIF(trim(dl), ''''), '''')
-             WHERE sacd IS NULL',
-            table_record.schema_name,
-            table_record.table_name
-        );
+        SELECT c.data_type INTO sacd_type
+        FROM information_schema.columns c
+        WHERE c.table_schema = table_record.schema_name
+          AND c.table_name = table_record.table_name
+          AND c.column_name = 'sacd';
+
+        IF sacd_type IS NULL THEN
+            CONTINUE;
+        END IF;
+
+        IF sacd_type = 'boolean' THEN
+            EXECUTE format(
+                'UPDATE %I.%I SET sacd = false WHERE sacd IS NULL',
+                table_record.schema_name,
+                table_record.table_name
+            );
+        ELSIF sacd_type IN ('character varying', 'character', 'text', 'name') THEN
+            EXECUTE format(
+                'UPDATE %I.%I SET sacd = COALESCE(NULLIF(trim(sacd::text), ''''), NULLIF(trim(dl::text), ''''), '''')
+                 WHERE sacd IS NULL',
+                table_record.schema_name,
+                table_record.table_name
+            );
+        END IF;
     END LOOP;
 END $$;
 
@@ -73,35 +92,75 @@ CREATE OR REPLACE FUNCTION public.update_p_de_paso_out()
 RETURNS trigger
 LANGUAGE plpgsql
 AS $function$
+DECLARE
+    sacd_type text;
+    sql_update text;
 BEGIN
-    EXECUTE format(
-        'UPDATE %I.p_de_paso_out p_out
-            SET id_tabla = $1.id_tabla,
-                dl = $1.dl,
-                sacd = COALESCE(NULLIF($1.sacd, ''''), NULLIF($1.dl, ''''), p_out.sacd),
-                trato = $1.trato,
-                nom = $1.nom,
-                nx1 = $1.nx1,
-                apellido1 = $1.apellido1,
-                nx2 = $1.nx2,
-                apellido2 = $1.apellido2,
-                f_nacimiento = $1.f_nacimiento,
-                idioma_preferido = $1.idioma_preferido,
-                situacion = $1.situacion,
-                f_situacion = $1.f_situacion,
-                apel_fam = $1.apel_fam,
-                inc = $1.inc,
-                f_inc = $1.f_inc,
-                nivel_stgr = $1.nivel_stgr,
-                profesion = $1.profesion,
-                eap = $1.eap,
-                observ = $1.observ,
-                id_schema = $1.id_schema,
-                lugar_nacimiento = $1.lugar_nacimiento
-            WHERE p_out.id_nom = $1.id_nom',
-        TG_TABLE_SCHEMA
-    )
-    USING NEW;
+    SELECT c.data_type INTO sacd_type
+    FROM information_schema.columns c
+    WHERE c.table_schema = TG_TABLE_SCHEMA
+      AND c.table_name = 'p_de_paso_out'
+      AND c.column_name = 'sacd';
+
+    IF sacd_type = 'boolean' THEN
+        sql_update := format(
+            'UPDATE %I.p_de_paso_out p_out
+                SET id_tabla = $1.id_tabla,
+                    dl = $1.dl,
+                    sacd = COALESCE($1.sacd, p_out.sacd),
+                    trato = $1.trato,
+                    nom = $1.nom,
+                    nx1 = $1.nx1,
+                    apellido1 = $1.apellido1,
+                    nx2 = $1.nx2,
+                    apellido2 = $1.apellido2,
+                    f_nacimiento = $1.f_nacimiento,
+                    idioma_preferido = $1.idioma_preferido,
+                    situacion = $1.situacion,
+                    f_situacion = $1.f_situacion,
+                    apel_fam = $1.apel_fam,
+                    inc = $1.inc,
+                    f_inc = $1.f_inc,
+                    nivel_stgr = $1.nivel_stgr,
+                    profesion = $1.profesion,
+                    eap = $1.eap,
+                    observ = $1.observ,
+                    id_schema = $1.id_schema,
+                    lugar_nacimiento = $1.lugar_nacimiento
+                WHERE p_out.id_nom = $1.id_nom',
+            TG_TABLE_SCHEMA
+        );
+    ELSE
+        sql_update := format(
+            'UPDATE %I.p_de_paso_out p_out
+                SET id_tabla = $1.id_tabla,
+                    dl = $1.dl,
+                    sacd = COALESCE(NULLIF($1.sacd::text, ''''), NULLIF($1.dl::text, ''''), p_out.sacd::text),
+                    trato = $1.trato,
+                    nom = $1.nom,
+                    nx1 = $1.nx1,
+                    apellido1 = $1.apellido1,
+                    nx2 = $1.nx2,
+                    apellido2 = $1.apellido2,
+                    f_nacimiento = $1.f_nacimiento,
+                    idioma_preferido = $1.idioma_preferido,
+                    situacion = $1.situacion,
+                    f_situacion = $1.f_situacion,
+                    apel_fam = $1.apel_fam,
+                    inc = $1.inc,
+                    f_inc = $1.f_inc,
+                    nivel_stgr = $1.nivel_stgr,
+                    profesion = $1.profesion,
+                    eap = $1.eap,
+                    observ = $1.observ,
+                    id_schema = $1.id_schema,
+                    lugar_nacimiento = $1.lugar_nacimiento
+                WHERE p_out.id_nom = $1.id_nom',
+            TG_TABLE_SCHEMA
+        );
+    END IF;
+
+    EXECUTE sql_update USING NEW;
     RETURN NEW;
 END;
 $function$;
