@@ -634,9 +634,9 @@ final class MigracionesEjecutar
         try {
             $pdo = $this->connect($databaseSelect);
             if ($reactivar) {
-                $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' ENABLE');
                 $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' REFRESH PUBLICATION');
-                return [sprintf('    suscripcion %s reactivada (ENABLE + REFRESH PUBLICATION)', $subNombre)];
+                $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' ENABLE');
+                return [sprintf('    suscripcion %s reactivada (REFRESH PUBLICATION + ENABLE)', $subNombre)];
             }
 
             $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' DISABLE');
