@@ -18,7 +18,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\web\Posicion;
 
 require_once("frontend/shared/global_header_front.inc");
-require_once 'apps/core/global_object.inc';
+//require_once 'apps/core/global_object.inc';
 
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);

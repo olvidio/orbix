@@ -158,8 +158,10 @@ final class ActividadVerDatos
         $nombre_ubi = '';
         if (!empty($id_ubi) && $id_ubi !== 1) {
             $oCasa = Ubi::newUbi($id_ubi);
-            $nombre_ubi = $oCasa->getNombre_ubi();
-            if (empty($nombre_ubi)) {
+            if ($oCasa !== null) {
+                $nombre_ubi = $oCasa->getNombre_ubi();
+            }
+            if ($nombre_ubi === '') {
                 $nombre_ubi = _("ya no existe: cambiarlo");
             }
         } else {
