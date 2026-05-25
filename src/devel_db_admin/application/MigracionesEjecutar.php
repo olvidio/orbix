@@ -546,7 +546,7 @@ final class MigracionesEjecutar
             return [];
         }
 
-        $lines = ['    suscripciones NO reactivadas: corrija el error y ejecute ENABLE + REFRESH PUBLICATION manualmente.'];
+        $lines = ['    suscripciones NO reactivadas: corrija el error, avance el slot en el publicador y ejecute ENABLE + REFRESH PUBLICATION manualmente.'];
         foreach ($this->modulosReplicacionDeMigracion($migracion) as $modulo) {
             $subNombre = $this->nombreSuscripcion($modulo);
             if ($subNombre !== null) {
@@ -632,17 +632,86 @@ final class MigracionesEjecutar
         }
 
         try {
-            $pdo = $this->connect($databaseSelect);
             if ($reactivar) {
+                $lines = $this->avanzarSlotSuscripcionEnPublicador($modulo, $subNombre);
+                $pdo = $this->connect($databaseSelect);
                 $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' ENABLE');
                 $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' REFRESH PUBLICATION');
-                return [sprintf('    suscripcion %s reactivada (ENABLE + REFRESH PUBLICATION)', $subNombre)];
+                $lines[] = sprintf('    suscripcion %s reactivada (ENABLE + REFRESH PUBLICATION)', $subNombre);
+
+                return $lines;
             }
 
+            $pdo = $this->connect($databaseSelect);
             $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' DISABLE');
+
             return [sprintf('    suscripcion %s pausada (DISABLE) durante migracion de estructura', $subNombre)];
         } catch (Throwable $e) {
             return [sprintf('    aviso suscripcion %s: %s', $subNombre, $e->getMessage())];
+        }
+    }
+
+    /**
+     * Descarta WAL pendiente incompatible (p. ej. renombres de columna) antes de reactivar la suscripcion.
+     * El slot vive en el publicador (comun / sv-e), no en *_select.
+     *
+     * @return list<string>
+     */
+    private function avanzarSlotSuscripcionEnPublicador(string $modulo, string $subNombre): array
+    {
+        if (!preg_match('/^[a-z_][a-z0-9_]*$/', $subNombre)) {
+            return [sprintf('    aviso slot %s: nombre no valido', $subNombre)];
+        }
+
+        $databasePublicador = match ($modulo) {
+            'comun' => MigracionDatabase::COMUN,
+            'sv-e' => MigracionDatabase::SV_E,
+            default => null,
+        };
+        if ($databasePublicador === null) {
+            return [];
+        }
+
+        try {
+            $pdo = $this->connect($databasePublicador);
+            $stmt = $pdo->query(
+                'SELECT 1 FROM pg_replication_slots WHERE slot_name = '
+                . $pdo->quote($subNombre)
+                . ' LIMIT 1',
+            );
+            if ($stmt === false || $stmt->fetchColumn() === false) {
+                return [
+                    sprintf(
+                        '    slot %s no existe en publicador (%s); omitido avance LSN',
+                        $subNombre,
+                        $databasePublicador,
+                    ),
+                ];
+            }
+
+            $this->execSqlScript(
+                $pdo,
+                'SELECT pg_replication_slot_advance('
+                . $pdo->quote($subNombre)
+                . ', pg_current_wal_lsn())',
+            );
+
+            return [
+                sprintf(
+                    '    slot %s avanzado al LSN actual en publicador (%s)',
+                    $subNombre,
+                    $databasePublicador,
+                ),
+            ];
+        } catch (Throwable $e) {
+            return [
+                sprintf(
+                    '    aviso slot %s en publicador (%s): %s',
+                    $subNombre,
+                    $databasePublicador,
+                    $e->getMessage(),
+                ),
+            ];
         }
     }
 

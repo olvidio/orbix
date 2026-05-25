@@ -117,17 +117,25 @@ explicitamente en el listado (modo seleccion), aunque el `sha1` no haya cambiado
 Tras migraciones de esquema con replicacion logica:
 
 1. El runner **pausa automaticamente** las suscripciones (`DISABLE`) antes de cada migracion
-   de **estructura** en `comun` / `sv-e`, aplica publicador + `*_select`, y luego
-   `ENABLE` + `REFRESH PUBLICATION` (PostgreSQL no permite `REFRESH` con la suscripcion desactivada).
+   de **estructura** en `comun` / `sv-e`, aplica publicador + `*_select`, **avanza el slot
+   de replicacion al LSN actual en el publicador** (descarta WAL pendiente con esquema viejo)
+   y luego `ENABLE` + `REFRESH PUBLICATION` en `*_select` (PostgreSQL no permite `REFRESH`
+   con la suscripcion desactivada).
 2. Comprobar que **publicador y suscriptor** tienen el mismo esquema (p. ej. ninguna tabla
    con columna `tipo_teleco` salvo `publicv.xd_tipo_teleco_tmp`).
 3. Si la replicacion quedo parada o sigue el error «falta la columna replicada» con el
-   esquema ya alineado, en la BD **suscriptora** (`*_select`):
+   esquema ya alineado, en el **publicador** (`pruebas-comun` / `pruebas-sv-e`) y despues
+   en la BD **suscriptora** (`*_select`):
 
 ```sql
+-- publicador (pruebas-comun o pruebas-sv-e)
+SELECT pg_replication_slot_advance('subpruebassve', pg_current_wal_lsn());
+
+-- suscriptor (pruebas-sv-e_select)
 ALTER SUBSCRIPTION subpruebassve ENABLE;
 ALTER SUBSCRIPTION subpruebassve REFRESH PUBLICATION;
 -- lo mismo para comun si aplica:
+-- SELECT pg_replication_slot_advance('subpruebascomun', pg_current_wal_lsn());
 -- ALTER SUBSCRIPTION subpruebascomun ENABLE;
 -- ALTER SUBSCRIPTION subpruebascomun REFRESH PUBLICATION;
 ```
