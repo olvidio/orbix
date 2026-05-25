@@ -118,20 +118,18 @@ Tras migraciones de esquema con replicacion logica:
 
 1. El runner **pausa automaticamente** las suscripciones (`DISABLE`) antes de cada migracion
    de **estructura** en `comun` / `sv-e`, aplica publicador + `*_select`, y luego
-   `REFRESH PUBLICATION` + `ENABLE`.
+   `ENABLE` + `REFRESH PUBLICATION` (PostgreSQL no permite `REFRESH` con la suscripcion desactivada).
 2. Comprobar que **publicador y suscriptor** tienen el mismo esquema (p. ej. ninguna tabla
    con columna `tipo_teleco` salvo `publicv.xd_tipo_teleco_tmp`).
 3. Si la replicacion quedo parada o sigue el error «falta la columna replicada» con el
    esquema ya alineado, en la BD **suscriptora** (`*_select`):
 
 ```sql
-ALTER SUBSCRIPTION subpruebassve DISABLE;
-ALTER SUBSCRIPTION subpruebassve REFRESH PUBLICATION;
 ALTER SUBSCRIPTION subpruebassve ENABLE;
+ALTER SUBSCRIPTION subpruebassve REFRESH PUBLICATION;
 -- lo mismo para comun si aplica:
--- ALTER SUBSCRIPTION subpruebascomun DISABLE;
--- ALTER SUBSCRIPTION subpruebascomun REFRESH PUBLICATION;
 -- ALTER SUBSCRIPTION subpruebascomun ENABLE;
+-- ALTER SUBSCRIPTION subpruebascomun REFRESH PUBLICATION;
 ```
 
 Consulta util en cada BD:

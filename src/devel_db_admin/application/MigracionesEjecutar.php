@@ -546,7 +546,7 @@ final class MigracionesEjecutar
             return [];
         }
 
-        $lines = ['    suscripciones NO reactivadas: corrija el error y ejecute REFRESH PUBLICATION + ENABLE manualmente.'];
+        $lines = ['    suscripciones NO reactivadas: corrija el error y ejecute ENABLE + REFRESH PUBLICATION manualmente.'];
         foreach ($this->modulosReplicacionDeMigracion($migracion) as $modulo) {
             $subNombre = $this->nombreSuscripcion($modulo);
             if ($subNombre !== null) {
@@ -634,9 +634,9 @@ final class MigracionesEjecutar
         try {
             $pdo = $this->connect($databaseSelect);
             if ($reactivar) {
-                $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' REFRESH PUBLICATION');
                 $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' ENABLE');
-                return [sprintf('    suscripcion %s reactivada (REFRESH PUBLICATION + ENABLE)', $subNombre)];
+                $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' REFRESH PUBLICATION');
+                return [sprintf('    suscripcion %s reactivada (ENABLE + REFRESH PUBLICATION)', $subNombre)];
             }
 
             $this->execSqlScript($pdo, 'ALTER SUBSCRIPTION ' . $subNombre . ' DISABLE');
