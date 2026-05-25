@@ -1,6 +1,7 @@
 <?php
 
 use frontend\shared\config\OrbixRuntime;
+use Mpdf\Mpdf;
 
 // Este controlador se abre via `window.open` (GET). El incluido
 // `acta_imprimir_mpdf.php` solo usa la variable `$acta` de scope y
@@ -25,7 +26,7 @@ $config = [
     'margin_top' => 10,
     'margin_bottom' => 10,
 ];
-$mpdf = new \Mpdf\Mpdf($config);
+$mpdf = new Mpdf($config);
 $mpdf->SetDisplayMode('fullpage');
 $mpdf->list_indent_first_level = 0;
 $mpdf->WriteHTML($content);

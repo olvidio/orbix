@@ -78,7 +78,7 @@ class Acta
     /**
      * @deprecated use getIdAsignaturaVo()
      */
-    public function getId_asignatura(): ?string
+    public function getId_asignatura(): ?int
     {
         return $this->id_asignatura?->value();
     }

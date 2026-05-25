@@ -17,8 +17,6 @@ use frontend\shared\PostRequest;
 require_once ("frontend/shared/global_header_front.inc");
 include_once(OrbixRuntime::dirEstilos() . '/actas_mpdf.css.php');
 
-require_once ("apps/core/global_object.inc");
-
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $nombre_prelatura = strtr('PRAELATURA SANCTAE CRUCIS ET OPERIS DEI', $replace);
