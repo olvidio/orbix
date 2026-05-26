@@ -82,12 +82,12 @@ final class ActaVerFormData
         $lugar = '';
         $observ = '';
         $id_activ = 0;
-        $id_asignatura_actual = '';
+        $id_asignatura_actual = null;
         $examinador_pral = '';
 
         if ($notas !== 'nuevo' && $Qmod !== 'nueva' && $acta_actual !== '') {
             if ($Qacta !== '' && $notas !== '') {
-                $id_asignatura_actual = (string)(int)($in['id_asignatura_actual'] ?? $in['id_asignatura'] ?? 0);
+                $id_asignatura_actual = (int)($in['id_asignatura_actual'] ?? $in['id_asignatura'] ?? 0) ?: null;
                 $id_activ = (int)($in['id_activ'] ?? 0);
                 $f_acta = (string)($in['f_acta'] ?? '');
                 $libro = (string)($in['libro'] ?? '');
@@ -106,7 +106,7 @@ final class ActaVerFormData
                 $linea = $oActa->getLinea();
                 $lugar = $oActa->getLugar();
                 $observ = $oActa->getObserv();
-                $id_asignatura_actual = (string)$id_asignatura;
+                $id_asignatura_actual = $id_asignatura;
                 $pdf = $oActa->getpdf();
             }
         } else {
@@ -118,9 +118,9 @@ final class ActaVerFormData
                 $Qid_activ = (int)($in['id_activ'] ?? 0);
                 $id_scope = (int)($in['id_activ_scope'] ?? 0);
                 $id_activ = $id_scope !== 0 ? $id_scope : $Qid_activ;
-                $Qid_asignatura = (string)($in['id_asignatura'] ?? '');
-                $id_asig_scope = (string)($in['id_asignatura_scope'] ?? '');
-                $id_asignatura_actual = $id_asig_scope !== '' ? $id_asig_scope : $Qid_asignatura;
+                $Qid_asignatura = (int)($in['id_asignatura'] ?? 0) ?: null;
+                $id_asig_scope = (int)($in['id_asignatura_scope'] ?? 0) ?: null;
+                $id_asignatura_actual = $id_asig_scope ?? $Qid_asignatura;
 
                 $ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
                 $oActividadAsignatura = $ActividadAsignaturaDlRepository->findById($id_activ, $id_asignatura_actual);
@@ -147,9 +147,9 @@ final class ActaVerFormData
                     $linea = $oActa->getLinea();
                     $lugar = $oActa->getLugar();
                     $observ = $oActa->getObserv();
-                    $id_asignatura_actual = (string)$id_asignatura;
+                    $id_asignatura_actual = $id_asignatura;
                 } else {
-                    $id_asignatura_actual = '';
+                    $id_asignatura_actual = null;
                 }
             }
         }
@@ -178,9 +178,9 @@ final class ActaVerFormData
         }
 
         $nombre_asignatura = '';
-        if ($id_asignatura_actual !== '' && $id_asignatura_actual !== '0') {
+        if ($id_asignatura_actual) {
             $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-            $cAsignatura = $AsignaturaRepository->getAsignaturas(['id_asignatura' => (int)$id_asignatura_actual]);
+            $cAsignatura = $AsignaturaRepository->getAsignaturas(['id_asignatura' => $id_asignatura_actual]);
             if ($cAsignatura !== []) {
                 $oAsignatura = $cAsignatura[0];
                 $nombre_asignatura = (string)$oAsignatura->getNombre_asignatura();
