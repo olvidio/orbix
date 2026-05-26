@@ -253,7 +253,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom";
+        $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom ORDER BY CASE WHEN situacion = 'A' THEN 0 ELSE 1 END LIMIT 1";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
