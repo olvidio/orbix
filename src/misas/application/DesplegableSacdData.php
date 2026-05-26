@@ -158,9 +158,15 @@ class DesplegableSacdData
             $rows[] = ['value' => $key, 'label' => $label];
         }
 
+        $opciones = [];
+        foreach ($rows as $row) {
+            $opciones[(string)$row['value']] = (string)$row['label'];
+        }
+
         return [
             'id' => 'id_sacd',
             'rows' => $rows,
+            'opciones' => $opciones,
             'selected' => $firstKey,
         ];
     }

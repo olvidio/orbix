@@ -17,9 +17,9 @@ paths:
       operationId: "post_menus_grupmenu_coleccion"
       summary: "Grupmenu Coleccion"
       description: |
-        Grupmenus visibles para el usuario actual, mismo criterio que el menú lateral en {
+        Lista los **grupmenus** visibles para el usuario de la sesión y, dentro de cada uno, las entradas de menú (mismo criterio que el menú lateral ☰ de la web).
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/menus/api/grupmenu_coleccion.md`
       tags:

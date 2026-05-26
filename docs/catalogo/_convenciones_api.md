@@ -8,6 +8,8 @@ estado_revision: "revisado"
 
 Documento transversal para endpoints bajo `/src/<modulo>/...`. Las fichas concretas viven en `docs/catalogo/<modulo>/api/`.
 
+**Clientes nativos (Android/iOS):** ver [`_clientes_nativos.md`](_clientes_nativos.md) e índice [`_endpoints_cliente_movil.md`](_endpoints_cliente_movil.md).
+
 ## Transporte y sesión
 
 | Aspecto | Convención |

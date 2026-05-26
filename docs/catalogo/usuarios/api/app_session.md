@@ -4,51 +4,82 @@ tipo: "endpoint"
 modulo: "usuarios"
 url: "/src/usuarios/app_session"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "consulta"
 controller: "src/usuarios/infrastructure/ui/http/controllers/app_session.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data: ["authenticated:bool", "id_usuario?:integer", "username?:string", "esquema?:string"]
 requiere_hashb: false
 frontend_referencias: []
 casos_uso: []
-tags: ["usuarios", "app", "session"]
-estado_revision: "generado"
+tags: ["usuarios", "app", "session", "cliente_movil"]
+estado_revision: "revisado"
 ---
 
 # App Session
 
-Comprueba si hay sesión autenticada (útil al arrancar la app).
+Comprueba si la cookie de sesión actual identifica un usuario autenticado. Útil al arrancar la app sin volver a pedir credenciales.
 
-Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+Convenciones: [`_convenciones_api.md`](../_convenciones_api.md) · Clientes nativos: [`_clientes_nativos.md`](../_clientes_nativos.md)
 
 ## Endpoint
 
 - URL: `/src/usuarios/app_session`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Métodos: `GET` (recomendado para comprobar cookie), `POST` registrado
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/app_session.php`
-
-## Entrada
-
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+- Sin parámetros de entrada
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+- `data` es string JSON escapado (segundo parse).
 
-## Casos De Uso
+### Sesión válida
 
-No se han detectado imports de `src\...\application\...`.
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `authenticated` | bool | `true` |
+| `id_usuario` | int | ID de sesión |
+| `username` | string | Usuario |
+| `esquema` | string | Esquema activo |
 
-## Frontend Relacionado
+### Sin sesión
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
+| Campo | Tipo |
+|-------|------|
+| `authenticated` | bool (`false`) |
 
-## Revision Manual
+No incluye `mensaje` en el caso normal; HTTP 200 y `success: true`.
 
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+## Ejemplo
+
+**Request:**
+
+```http
+GET /orbix/src/usuarios/app_session HTTP/1.1
+Accept: application/json
+Cookie: PHPSESSID=abc123...
+```
+
+**Response (autenticado):**
+
+```json
+{
+  "success": true,
+  "data": "{\"authenticated\":true,\"id_usuario\":42,\"username\":\"pSacd\",\"esquema\":\"H-dlbv\"}"
+}
+```
+
+**Response (sin sesión):**
+
+```json
+{
+  "success": true,
+  "data": "{\"authenticated\":false}"
+}
+```
+
+## Cliente de referencia
+
+- `orbix-android`: `fetchSessionAuthenticated()` — GET con cookie jar OkHttp.

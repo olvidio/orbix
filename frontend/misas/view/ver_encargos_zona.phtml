@@ -68,7 +68,7 @@
         <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
     </div>
 
-    <div class='item-details-form' style="display: none">
+    <div id="modal_encargos_zona" class='item-details-form' style="display: none">
 
         <label id="titulo_modal"></label>
         <hr/>
@@ -132,7 +132,12 @@
 
 <script>
 
-    var modal = $(".item-details-form");
+    var modal = $('#modal_encargos_zona');
+
+    function showEncargosModal() {
+        $('.item-details-form').not(modal).hide();
+        modal.show();
+    }
 
     modal.keydown(function (e) {
         if (e.which == Slick.keyCode.ENTER) {
@@ -238,7 +243,7 @@
         $('#que').val('nuevo');
         reset_campos_modal();
         $('#titulo_modal').html(<?= json_encode(_('nuevo encargo')) ?>);
-        modal.show();
+        showEncargosModal();
     }
 
     function reset_campos_modal() {
@@ -281,7 +286,7 @@
         $('#descripcion_lugar').val(descripcion_lugar);
         $('#idioma_enc').val(idioma);
 
-        modal.show();
+        showEncargosModal();
     }
 
     function requiredFieldValidator(value) {

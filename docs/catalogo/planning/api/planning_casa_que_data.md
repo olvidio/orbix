@@ -4,60 +4,48 @@ tipo: "endpoint"
 modulo: "planning"
 url: "/src/planning/planning_casa_que_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "consulta"
 controller: "src/planning/infrastructure/ui/http/controllers/planning_casa_que_data.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "planning_PlanningCasaQueFormDataData"
-respuesta_data: ["filtro:array"]
+respuesta_data: ["filtro:object", "modo_casas:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/planning/controller/planning_casa_que.php"]
 casos_uso: ["src\\planning\\application\\PlanningCasaQueFormData"]
-tags: ["planning", "casa", "que", "data"]
-estado_revision: "generado"
+tags: ["planning", "casa", "que", "data", "cliente_movil"]
+estado_revision: "revisado"
 ---
 
 # Planning Casa Que Data
 
-Dataset para montar CasasQue en {
+Filtro de casas y modo del selector **Planning por casas** / **Nuevo plan** (`propuesta_calendario=1` en menú).
 
-Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+Convenciones: [`_convenciones_api.md`](../_convenciones_api.md) · Siguiente: [`planning_casa_ver_data.md`](planning_casa_ver_data.md)
 
 ## Endpoint
 
 - URL: `/src/planning/planning_casa_que_data`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Métodos: `POST` (recomendado)
 - Controller: `src/planning/infrastructure/ui/http/controllers/planning_casa_que_data.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Sin parámetros POST. Usa sesión, rol y permisos de oficina.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `planning_PlanningCasaQueFormDataData`):
-  - `filtro` (`array`)
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `filtro` | object | Filtro para [`casas_opciones_data`](../../ubis/api/casas_opciones_data.md): `active`, `sv`, `sf`, `id_ubi_in[]` |
+| `modo_casas` | string | `all`, `sv`, `sf` o `casa` — define opciones de `cdc_sel` |
 
-## Permisos
+### Permisos (modo)
 
-- Permiso oficina `des`
-- Permiso oficina `vcsd`
+- Rol CDC (`PauType::PAU_CDC`): `modo_casas=casa`, filtro `id_ubi_in` con sus ubicaciones.
+- Permiso oficina `des` o `vcsd`: `all`.
+- Usuario `sv` / `sf`: modos restringidos.
 
-## Casos De Uso
+## Cliente de referencia
 
-- `src\planning\application\PlanningCasaQueFormData`
-
-## Frontend Relacionado
-
-- `frontend/planning/controller/planning_casa_que.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `orbix-android`: `fetchPlanningCasaQuePage()` — menú `planning_casa_que.php` (incl. **Nuevo planing** con `propuesta_calendario=1`).

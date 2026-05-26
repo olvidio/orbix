@@ -57,9 +57,9 @@ paths:
       operationId: "post_misas_buscar_plan_ctr_data"
       summary: "Buscar Plan Ctr Data"
       description: |
-        Formulario buscador del plan de misas por centro (zonas + centros + periodo).
+        Formulario **Ver el plan de misas y encargos de un centro**: zonas, centros y modo de vista según rol.
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/buscar_plan_ctr_data.md`
       tags:
@@ -79,21 +79,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/misas_BuscarPlanCtrDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/misas_BuscarPlanCtrDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/misas/buscar_plan_sacd_data":
     post:
       operationId: "post_misas_buscar_plan_sacd_data"
       summary: "Buscar Plan Sacd Data"
       description: |
-        Lista de sacerdotes disponibles en el buscador del plan SACD (según rol y zona).
+        Lista de sacerdotes disponibles en el buscador **Ver el plan de un sacerdote**, según rol y zonas del usuario.
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/buscar_plan_sacd_data.md`
       tags:
@@ -114,21 +114,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/misas_BuscarPlanSacdDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/misas_BuscarPlanSacdDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/misas/cambiar_status_data":
     post:
       operationId: "post_misas_cambiar_status_data"
       summary: "Cambiar Status Data"
       description: |
-        Formulario "Cambiar estado del plan de misas" (zona, estado, orden).
+        Desplegables para la pantalla **Modificar estado del plan de misas**: zonas, criterio de orden y estados del plan. Solo lectura; la mutación real es [`nuevo_status.md`](nuevo_status.md).
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/cambiar_status_data.md`
       tags:
@@ -149,13 +149,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/misas_CambiarStatusPantallaDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/misas_CambiarStatusPantallaDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/misas/crear_nuevo_periodo_data":
     post:
       operationId: "post_misas_crear_nuevo_periodo_data"
@@ -601,9 +601,9 @@ paths:
       operationId: "post_misas_modificar_encargos_centros_data"
       summary: "Modificar Encargos Centros Data"
       description: |
-        Devuelve el desplegable de zonas que el usuario actual puede ver, para pintar la pantalla `modificar_encargos_centros`. Replica la logica de permisos de `apps/misas/controller/modificar_encargos_centros.php`: si el rol es `p-sacd` y NO es jefe de calendario, se limitan las zonas a las del `id_pau` del propio usuario. Devuelve: - `error` : texto vacio si todo ok, mensaje si falta permiso. - `a_opciones_zona`: array id_zona => nombre_zona.
+        Desplegable de zonas para **Modificar los encargos visibles para un centro**.
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/modificar_encargos_centros_data.md`
       tags:
@@ -636,9 +636,9 @@ paths:
       operationId: "post_misas_modificar_encargos_data"
       summary: "Modificar Encargos Data"
       description: |
-        Devuelve los datos para pintar la pantalla `modificar_encargos`: el desplegable de zonas (filtrado segun el rol del usuario) y la lista de criterios de orden aceptados por el grid. Replica la logica de `apps/misas/controller/modificar_encargos.php`: si el rol es `p-sacd` y NO es jefe de calendario, se limitan las zonas a las del `id_pau` del propio usuario. Devuelve: - `error` : texto vacio si todo ok, mensaje si el usuario no tiene permiso para ver la pantalla. - `a_opciones_zona`: array id_zona => nombre_zona. - `a_orden` : array criterio => label.
+        Desplegables iniciales de **Crear y modificar los encargos**: zonas visibles y criterios de orden. La edición usa otros endpoints (`guardar_encargo_zona`, etc.).
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/modificar_encargos_data.md`
       tags:
@@ -671,9 +671,9 @@ paths:
       operationId: "post_misas_modificar_iniciales_sacd_zona_data"
       summary: "Modificar Iniciales Sacd Zona Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Desplegable de zonas para **Modificar la tabla de iniciales de los sacerdotes**. La mutación es [`update_iniciales.md`](update_iniciales.md).
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/modificar_iniciales_sacd_zona_data.md`
       tags:
@@ -783,9 +783,9 @@ paths:
       operationId: "post_misas_plan_de_misas_pantalla_data"
       summary: "Plan De Misas Pantalla Data"
       description: |
-        Datos comunes para las pantallas preparar / modificar / ver plan de misas y para modificar plantilla (mismos desplegables de zona / tipo / orden).
+        Datos comunes para las pantallas **preparar / modificar / ver** plan de misas y modificar plantilla: desplegables de zona y orden (y tipos de plantilla en preparar).
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/plan_de_misas_pantalla_data.md`
       tags:
@@ -889,9 +889,9 @@ paths:
       operationId: "post_misas_ver_cuadricula_zona_data"
       summary: "Ver Cuadricula Zona Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Cuadrícula encargo × días del plan de misas para una zona y un periodo. Usado en **ver**, **modificar** y **preparar** plan (mismo builder).
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_cuadricula_zona_data.md`
       tags:
@@ -902,6 +902,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
               properties:
                 columna:
                   type: "integer"
@@ -939,9 +941,9 @@ paths:
       operationId: "post_misas_ver_encargos_centros_data"
       summary: "Ver Encargos Centros Data"
       description: |
-        Devuelve los datos del SlickGrid de `EncargoCtr` (encargos visibles para cada centro de una zona) + los desplegables estaticos del modal de edicion (zonas posibles para filtrar encargos, centros de la zona). El desplegable dinamico de encargos (que cambia al seleccionar zona en el modal) no se incluye aqui: el frontend lo pide por separado a `DesplegableEncargosData` cuando el usuario lo necesita.
+        Relación encargo ↔ centro visible para cada fila de la zona. El desplegable dinámico de encargos del modal web usa [`desplegable_encargos.md`](desplegable_encargos.md), no este endpoint.
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_encargos_centros_data.md`
       tags:
@@ -952,6 +954,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
               properties:
                 id_zona:
                   type: "integer"
@@ -973,9 +977,9 @@ paths:
       operationId: "post_misas_ver_encargos_zona_data"
       summary: "Ver Encargos Zona Data"
       description: |
-        Devuelve los datos necesarios para pintar el SlickGrid de encargos de una zona + los desplegables del modal de edicion. Replica la consulta de `apps/misas/controller/ver_encargos_zona.php`: encargos con `id_tipo_enc >= 8100` (grupo `8...`) de la zona indicada, ordenados por `$orden` (`orden`, `prioridad` o `desc_enc`).
+        Grid de encargos de una zona (`id_tipo_enc >= 8100`) y metadatos para el modal de edición web.
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_encargos_zona_data.md`
       tags:
@@ -986,6 +990,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
               properties:
                 id_zona:
                   type: "integer"
@@ -1009,9 +1015,9 @@ paths:
       operationId: "post_misas_ver_iniciales_zona_data"
       summary: "Ver Iniciales Zona Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Tabla de sacerdotes con iniciales y color por zona.
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_iniciales_zona_data.md`
       tags:
@@ -1022,6 +1028,8 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_zona"
               properties:
                 id_zona:
                   type: "integer"
@@ -1083,9 +1091,9 @@ paths:
       operationId: "post_misas_ver_plan_ctr_data"
       summary: "Ver Plan Ctr Data"
       description: |
-        Datos para la vista `ver_plan_ctr.phtml`: cuadricula del plan de misas por centro (filas: encargos, columnas: días).
+        Cuadrícula encargo × días del plan de un centro (`id_ubi`).
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_plan_ctr_data.md`
       tags:
@@ -1096,14 +1104,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_ubi"
               properties:
-                empiezamax:
-                  type: "string"
-                empiezamin:
-                  type: "string"
                 id_ubi:
                   type: "integer"
                 periodo:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                empiezamax:
                   type: "string"
       responses:
         "200":
@@ -1111,21 +1121,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/misas_VerPlanCtrDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/misas_VerPlanCtrDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/misas/ver_plan_sacd_data":
     post:
       operationId: "post_misas_ver_plan_sacd_data"
       summary: "Ver Plan Sacd Data"
       description: |
-        Datos para la vista `ver_plan_sacd.phtml`: plan de misas de un sacerdote en un rango de fechas.
+        Filas del plan de misas de un sacerdote en un rango de fechas.
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/misas/api/ver_plan_sacd_data.md`
       tags:
@@ -1136,14 +1146,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "id_sacd"
               properties:
-                empiezamax:
-                  type: "string"
-                empiezamin:
-                  type: "string"
                 id_sacd:
                   type: "string"
                 periodo:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                empiezamax:
                   type: "string"
       responses:
         "200":
@@ -1151,13 +1163,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/misas_VerPlanSacdDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/misas_VerPlanSacdDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/misas/zona_sacd_datos_get":
     post:
       operationId: "post_misas_zona_sacd_datos_get"
@@ -1278,71 +1290,6 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/misas_AnadirCtrTareaData"
-    misas_BuscarPlanCtrDataData:
-      type: object
-      properties:
-        view:
-          type: "string"
-        zonas_opciones:
-          type: array
-          items: {}
-        zonas_selected:
-          type: "integer"
-        centros_opciones:
-          type: array
-          items: {}
-        centros_selected:
-          type: "string"
-        id_ubi_centro:
-          type: "string"
-    misas_BuscarPlanCtrDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/misas_BuscarPlanCtrDataData"
-    misas_BuscarPlanSacdDataData:
-      type: object
-      properties:
-        sacd_opciones:
-          type: array
-          items: {}
-    misas_BuscarPlanSacdDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/misas_BuscarPlanSacdDataData"
-    misas_CambiarStatusPantallaDataData:
-      type: object
-      properties:
-        zonas_opciones:
-          type: array
-          items: {}
-        orden_opciones:
-          type: array
-          items: {}
-        estados_opciones:
-          type: array
-          items: {}
-    misas_CambiarStatusPantallaDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/misas_CambiarStatusPantallaDataData"
     misas_CuadriculaUpdateData:
       type: object
       properties:
@@ -1394,11 +1341,13 @@ components:
         pantalla:
           type: "string"
         zonas_opciones:
-          type: array
-          items: {}
+          type: "string"
         orden_opciones:
-          type: array
-          items: {}
+          type: "string"
+        "tipos_plantilla?":
+          type: "string"
+        "plantilla_selected?":
+          type: "integer"
     misas_PlanDeMisasPantallaDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
@@ -1424,44 +1373,6 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/misas_NuevoStatusPeriodoData"
-    misas_VerPlanCtrDataData:
-      type: object
-      properties:
-        columns:
-          type: array
-          items: {}
-        rows:
-          type: array
-          items: {}
-        legend:
-          type: array
-          items: {}
-    misas_VerPlanCtrDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/misas_VerPlanCtrDataData"
-    misas_VerPlanSacdDataData:
-      type: object
-      properties:
-        rows:
-          type: array
-          items: {}
-    misas_VerPlanSacdDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/misas_VerPlanSacdDataData"
     misas_ZonaSacdDatosGetData:
       type: object
       properties:

@@ -4,55 +4,59 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/buscar_plan_sacd_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "consulta"
 controller: "src/misas/infrastructure/ui/http/controllers/buscar_plan_sacd_data.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "misas_BuscarPlanSacdDataData"
-respuesta_data: ["sacd_opciones:array"]
+respuesta_data: ["sacd_opciones:object", "sacd_selected:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/buscar_plan_sacd.php"]
 casos_uso: ["src\\misas\\application\\BuscarPlanSacdData"]
-tags: ["misas", "buscar", "plan", "sacd", "data"]
-estado_revision: "generado"
+tags: ["misas", "buscar", "plan", "sacd", "data", "cliente_movil"]
+estado_revision: "revisado"
 ---
 
 # Buscar Plan Sacd Data
 
-Lista de sacerdotes disponibles en el buscador del plan SACD (según rol y zona).
+Lista de sacerdotes disponibles en el buscador **Ver el plan de un sacerdote**, según rol y zonas del usuario.
 
-Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+Convenciones: [`_convenciones_api.md`](../_convenciones_api.md) · Siguiente paso: [`ver_plan_sacd_data.md`](ver_plan_sacd_data.md)
 
 ## Endpoint
 
 - URL: `/src/misas/buscar_plan_sacd_data`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Métodos: `POST` (recomendado)
 - Controller: `src/misas/infrastructure/ui/http/controllers/buscar_plan_sacd_data.php`
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+Sin parámetros POST.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `misas_BuscarPlanSacdDataData`):
-  - `sacd_opciones` (`array`)
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `sacd_opciones` | object | Mapa **`id_nom#iniciales` → nombre visible** |
+| `sacd_selected` | string | Primera clave del mapa o vacío |
 
-## Casos De Uso
+La clave compuesta (`123#AB`) es el valor que debe enviarse como `id_sacd` a [`ver_plan_sacd_data`](ver_plan_sacd_data.md).
 
-- `src\misas\application\BuscarPlanSacdData`
+## Ejemplo
 
-## Frontend Relacionado
+```http
+POST /orbix/src/misas/buscar_plan_sacd_data HTTP/1.1
+Accept: application/json
+Cookie: PHPSESSID=...
+```
 
-- `frontend/misas/controller/buscar_plan_sacd.php`
+```json
+{
+  "success": true,
+  "data": "{\"sacd_opciones\":{\"42#JP\":\"Juan Pérez\"},\"sacd_selected\":\"42#JP\"}"
+}
+```
 
-## Revision Manual
+## Cliente de referencia
 
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `orbix-android`: `fetchBuscarPlanSacdPage()` — `VerPlanSacdScreen`.

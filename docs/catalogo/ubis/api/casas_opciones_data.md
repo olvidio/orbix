@@ -4,63 +4,48 @@ tipo: "endpoint"
 modulo: "ubis"
 url: "/src/ubis/casas_opciones_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "consulta"
 controller: "src/ubis/infrastructure/ui/http/controllers/casas_opciones_data.php"
-entrada: ["post.active:mixed", "post.id_ubi_in:mixed", "post.sf:mixed", "post.sv:mixed"]
+entrada: ["post.active:string", "post.sv:string", "post.sf:string", "post.id_ubi_in:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "ubis_CasasOpcionesDataData"
-respuesta_data: ["opciones:array"]
+respuesta_data: ["opciones:object"]
 requiere_hashb: false
-frontend_referencias: ["frontend/casas/controller/calendario_ubi_resumen.php", "frontend/shared/web/CasasQue.php"]
+frontend_referencias: ["frontend/shared/web/CasasQue.php", "frontend/planning/controller/planning_casa_que.php"]
 casos_uso: ["src\\ubis\\application\\CasasOpcionesData"]
-tags: ["ubis", "casas", "opciones", "data"]
-estado_revision: "generado"
+tags: ["ubis", "casas", "opciones", "data", "cliente_movil"]
+estado_revision: "revisado"
 ---
 
 # Casas Opciones Data
 
-Devuelve el payload (solo datos) para poblar el <select> de casas en `frontend\shared\web\CasasQue`. La vista/componente frontend es quien construye el HTML del desplegable; aquí solo se exponen las opciones. Sustituye el acceso directo desde `CasasQue` al repositorio `CasaDlRepositoryInterface` (separación frontend ↔ backend, ver `refactor.md`).
+Listado `id_ubi → nombre` para el desplegable de casas (`CasasQue`, planning por casas cuando `cdc_sel=9`).
 
-Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+Convenciones: [`_convenciones_api.md`](../_convenciones_api.md)
 
 ## Endpoint
 
 - URL: `/src/ubis/casas_opciones_data`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Métodos: `POST` (recomendado)
 - Controller: `src/ubis/infrastructure/ui/http/controllers/casas_opciones_data.php`
 
 ## Entrada
 
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `active` | `mixed` | controller | No | controller |
-| `id_ubi_in` | `mixed` | controller | No | controller |
-| `sf` | `mixed` | controller | No | controller |
-| `sv` | `mixed` | controller | No | controller |
+| Campo | Tipo | Obligatorio | Notas |
+|-------|------|-------------|-------|
+| `active` | string | No | `1` (default) solo activas |
+| `sv` | string | No | `1` filtra sv |
+| `sf` | string | No | `1` filtra sf |
+| `id_ubi_in` | string | No | IDs separados por coma (rol CDC) |
 
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+El filtro proviene de [`planning_casa_que_data`](../../planning/api/planning_casa_que_data.md) → campo `filtro`.
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `ubis_CasasOpcionesDataData`):
-  - `opciones` (`array`)
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `opciones` | object | Mapa `id_ubi → nombre` |
 
-## Casos De Uso
+## Cliente de referencia
 
-- `src\ubis\application\CasasOpcionesData`
-
-## Frontend Relacionado
-
-- `frontend/casas/controller/calendario_ubi_resumen.php`
-- `frontend/shared/web/CasasQue.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `orbix-android`: `fetchCasasOpciones()` — cuando el usuario elige «Una casa o lugar».

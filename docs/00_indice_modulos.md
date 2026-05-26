@@ -30,6 +30,7 @@ Documentos transversales:
 - **Repaso final:** [REPASSO_FINAL.md](REPASSO_FINAL.md)
 - Excepciones: [excepciones_modulos.md](excepciones_modulos.md)
 - Convenciones API: [catalogo/_convenciones_api.md](catalogo/_convenciones_api.md)
+- **Clientes nativos (Android):** [catalogo/_clientes_nativos.md](catalogo/_clientes_nativos.md) · [Endpoints móvil revisados](catalogo/_endpoints_cliente_movil.md)
 - Legacy Obix: [legacy_mapping.md](legacy_mapping.md)
 
 Pipeline: `docs/scripts/generar_documentacion_modulo.sh <modulo> --force --skip-openapi-validation`

@@ -52,9 +52,9 @@ paths:
       operationId: "post_actividadessacd_comunicacion_activ_sacd_data"
       summary: "Comunicacion Activ Sacd Data"
       description: |
-        Endpoint backend: construye el listado de atencion de actividades a comunicar a los sacd (incluidas las de los "sacd de paso" cuando procede).
+        Listado de **atención de actividades** para comunicar a los SACD (principal + «sacd de paso» cuando aplica). Equivalente al botón «buscar» de la web.
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/actividadessacd/api/comunicacion_activ_sacd_data.md`
       tags:
@@ -65,6 +65,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "periodo"
+                - "year"
               properties:
                 empiezamax:
                   type: "string"
@@ -77,6 +80,8 @@ paths:
                 propuesta:
                   type: "string"
                 que:
+                  type: "string"
+                sacd:
                   type: "string"
                 sel:
                   type: "string"
@@ -581,6 +586,8 @@ components:
         lugar_fecha:
           type: "string"
         periodo_txt:
+          type: "string"
+        "mensaje_periodo?":
           type: "string"
         sacds:
           type: array

@@ -17,7 +17,7 @@ paths:
       operationId: "post_usuarios_app_login"
       summary: "App Login"
       description: |
-        Login JSON para app móvil (Camino B).
+        Login JSON para clientes móviles (Camino B). Establece `$_SESSION['session_auth']` y cookies (`PHPSESSID`, `esquema`, `idioma`) igual que el login web.
         
         Operacion: `mutacion`.
         
@@ -30,6 +30,9 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required:
+                - "username"
+                - "password"
               properties:
                 esquema:
                   type: "string"
@@ -57,9 +60,9 @@ paths:
       operationId: "post_usuarios_app_session"
       summary: "App Session"
       description: |
-        Comprueba si hay sesión autenticada (útil al arrancar la app).
+        Comprueba si la cookie de sesión actual identifica un usuario autenticado. Útil al arrancar la app sin volver a pedir credenciales.
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/app_session.md`
       tags:
@@ -1695,8 +1698,14 @@ components:
     usuarios_AppMobileLoginData:
       type: object
       properties:
-        ok:
+        id_usuario:
+          type: "integer"
+        username:
           type: "string"
+        esquema:
+          type: "string"
+        require_password_change:
+          type: "boolean"
     usuarios_AppMobileLoginDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"

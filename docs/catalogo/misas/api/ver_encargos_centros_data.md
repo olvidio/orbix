@@ -4,53 +4,46 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/ver_encargos_centros_data"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "consulta"
 controller: "src/misas/infrastructure/ui/http/controllers/ver_encargos_centros_data.php"
 entrada: ["post.id_zona:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["id_zona"]
 respuesta: "standard_envelope_string_data"
+respuesta_data: ["id_zona:integer", "columns:array", "rows:array", "a_opciones_zona:object", "a_centros_zona:object"]
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/ver_encargos_centros.php"]
 casos_uso: ["src\\misas\\application\\VerEncargosCentrosData"]
-tags: ["misas", "ver", "encargos", "centros", "data"]
-estado_revision: "generado"
+tags: ["misas", "ver", "encargos", "centros", "data", "cliente_movil"]
+estado_revision: "revisado"
 ---
 
 # Ver Encargos Centros Data
 
-Devuelve los datos del SlickGrid de `EncargoCtr` (encargos visibles para cada centro de una zona) + los desplegables estaticos del modal de edicion (zonas posibles para filtrar encargos, centros de la zona). El desplegable dinamico de encargos (que cambia al seleccionar zona en el modal) no se incluye aqui: el frontend lo pide por separado a `DesplegableEncargosData` cuando el usuario lo necesita.
+Relación encargo ↔ centro visible para cada fila de la zona. El desplegable dinámico de encargos del modal web usa [`desplegable_encargos.md`](desplegable_encargos.md), no este endpoint.
 
-Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+Convenciones: [`_convenciones_api.md`](../_convenciones_api.md) · Previo: [`modificar_encargos_centros_data.md`](modificar_encargos_centros_data.md)
 
 ## Endpoint
 
 - URL: `/src/misas/ver_encargos_centros_data`
-- Metodos registrados: `GET, POST`
-- Operacion: `mutacion`
+- Métodos: `POST` (recomendado)
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_encargos_centros_data.php`
 
 ## Entrada
 
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `id_zona` | `integer` | controller | No | controller |
+| Campo | Tipo | Obligatorio | Notas |
+|-------|------|-------------|-------|
+| `id_zona` | int | **Sí** | Zona seleccionada |
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `rows` | array | `{ id_item, id_encargo, encargo, id_centro, centro }` |
+| `a_opciones_zona` | object | Todas las zonas (filtro modal) |
+| `a_centros_zona` | object | Centros de la zona actual |
+| `columns` | array | SlickGrid (legacy) |
 
-## Casos De Uso
+## Cliente de referencia
 
-- `src\misas\application\VerEncargosCentrosData`
-
-## Frontend Relacionado
-
-- `frontend/misas/controller/ver_encargos_centros.php`
-
-## Revision Manual
-
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- `orbix-android`: `fetchVerEncargosCentros()` — tabla de filas.

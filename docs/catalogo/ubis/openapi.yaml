@@ -233,9 +233,9 @@ paths:
       operationId: "post_ubis_casas_opciones_data"
       summary: "Casas Opciones Data"
       description: |
-        Devuelve el payload (solo datos) para poblar el <select> de casas en `frontend\shared\web\CasasQue`. La vista/componente frontend es quien construye el HTML del desplegable; aquí solo se exponen las opciones. Sustituye el acceso directo desde `CasasQue` al repositorio `CasaDlRepositoryInterface` (separación frontend ↔ backend, ver `refactor.md`).
+        Listado `id_ubi → nombre` para el desplegable de casas (`CasasQue`, planning por casas cuando `cdc_sel=9`).
         
-        Operacion: `mutacion`.
+        Operacion: `consulta`.
         
         Fuente catalogo: `docs/catalogo/ubis/api/casas_opciones_data.md`
       tags:
@@ -249,11 +249,11 @@ paths:
               properties:
                 active:
                   type: "string"
-                id_ubi_in:
+                sv:
                   type: "string"
                 sf:
                   type: "string"
-                sv:
+                id_ubi_in:
                   type: "string"
       responses:
         "200":
@@ -261,13 +261,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ubis_CasasOpcionesDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ubis_CasasOpcionesDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/ubis/centros_form_labor":
     post:
       operationId: "post_ubis_centros_form_labor"
@@ -1571,22 +1571,6 @@ components:
           type: string
         data:
           description: "Ver schema concreto de cada operacion."
-    ubis_CasasOpcionesDataData:
-      type: object
-      properties:
-        opciones:
-          type: array
-          items: {}
-    ubis_CasasOpcionesDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/ubis_CasasOpcionesDataData"
     ubis_CentrosFormDataData:
       type: object
       properties:
