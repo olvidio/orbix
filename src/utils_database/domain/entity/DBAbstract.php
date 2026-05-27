@@ -101,11 +101,7 @@ abstract class DBAbstract
         switch ($db) {
             case 'sfsv-e_select':
                 $role_target = (empty($this->role_vf)) ? $role_target : str_replace('"', '', $this->role_vf);
-                // conectar con DB sv-e_select:
-                $oConfigDB = new ConfigDB('importar');
-                $config = $oConfigDB->getEsquema('publicv-e_select');
-                $oConexion = new DBConnection($config);
-                $this->oDbl = $oConexion->getPDO();
+                $this->conectarImportarReplica('publicv-e_select');
 
                 // Dar permisos al role H-dlbv de orbixv/f (para poder acceder a global)
                 if (ConfigGlobal::mi_sfsv() === 1) {
@@ -120,11 +116,7 @@ abstract class DBAbstract
                 $this->executeSql($a_sql);
                 break;
             case 'comun_select':
-                // conectar con DB comun_select:
-                $oConfigDB = new ConfigDB('importar'); //de la database comun
-                $config = $oConfigDB->getEsquema('public_select'); //de la database comun
-                $oConexion = new DBConnection($config);
-                $this->oDbl = $oConexion->getPDO();
+                $this->conectarImportarReplica('public_select');
 
                 // Dar permisos al role H-dlb de orbix (para poder acceder a global)
                 $this->user_orbix = 'orbix';
@@ -219,11 +211,7 @@ abstract class DBAbstract
         switch ($db) {
             case 'sfsv-e_select':
                 $role_target = (empty($this->role_vf)) ? $role_target : str_replace('"', '', $this->role_vf);
-                // conectar con DB sv-e_select:
-                $oConfigDB = new ConfigDB('importar');
-                $config = $oConfigDB->getEsquema('publicv-e_select');
-                $oConexion = new DBConnection($config);
-                $this->oDbl = $oConexion->getPDO();
+                $this->conectarImportarReplica('publicv-e_select');
 
                 // Dar permisos al role H-dlbv de orbixv/f (para poder acceder a global)
                 if (ConfigGlobal::mi_sfsv() === 1) {
@@ -242,11 +230,7 @@ abstract class DBAbstract
                 $this->executeSql($a_sql);
                 break;
             case 'comun_select':
-                // conectar con DB comun_select:
-                $oConfigDB = new ConfigDB('importar'); //de la database comun
-                $config = $oConfigDB->getEsquema('public_select'); //de la database comun
-                $oConexion = new DBConnection($config);
-                $this->oDbl = $oConexion->getPDO();
+                $this->conectarImportarReplica('public_select');
 
                 // Dar permisos al role H-dlb de orbix (para poder acceder a global)
                 $this->user_orbix = 'orbix';
@@ -492,6 +476,9 @@ abstract class DBAbstract
     protected function executeSql($a_sql)
     {
         $oDbl = $this->oDbl;
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('Sin conexión a base de datos para ejecutar SQL.'));
+        }
 
         $oDbl->beginTransaction();
         foreach ($a_sql as $sql) {
@@ -499,11 +486,22 @@ abstract class DBAbstract
                 $sClauError = 'Procesos.DBEsquema.query';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 $oDbl->rollback();
-                return FALSE;
+                throw new \RuntimeException(_('Error ejecutando SQL en base de datos.'));
             }
         }
         $oDbl->commit();
         return TRUE;
+    }
+
+    /**
+     * PDO importar hacia réplica (host/dbname de `.conn.inc`, como CrearEsquema).
+     */
+    private function conectarImportarReplica(string $claveImportar): void
+    {
+        $oConfigDB = new ConfigDB('importar');
+        $config = $oConfigDB->getConexionImportarReplica($claveImportar);
+        $oConexion = new DBConnection($config);
+        $this->oDbl = $oConexion->getPDO();
     }
 
     protected function eliminar($nom_tabla)

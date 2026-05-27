@@ -226,6 +226,21 @@ class ConfigDB
     }
 
     /**
+     * Conexión importar hacia réplica (comun_select / sv-e_select).
+     * Mismo criterio que {@see \src\devel_db_admin\application\CrearEsquema}.
+     *
+     * @param 'public_select'|'publicv-e_select' $claveImportar
+     * @return array<string, mixed>
+     */
+    public function getConexionImportarReplica(string $claveImportar): array
+    {
+        $config = $this->getConexionMantenimiento($claveImportar);
+        $config['schema'] = $claveImportar;
+
+        return $config;
+    }
+
+    /**
      * Bloque `public*` del fichero `.conn.inc` (sin roles DL); complemento desde datos mergeados si hace falta.
      *
      * @return array<string, mixed>

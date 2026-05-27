@@ -242,6 +242,43 @@ final class ConfigDBSplitFormatTest extends TestCase
         }
     }
 
+    public function test_getConexionImportarReplica_usa_host_de_conn_no_de_default(): void
+    {
+        $base = 'cfgdbtest';
+        $dir = $this->pwdDir();
+        $this->writeInc(
+            $dir . '/' . ConfigDB::ficheroConnNombre($base),
+            [
+                'default' => [
+                    'host' => 'exterior',
+                    'dbname' => 'comun',
+                    'user' => 'postgres',
+                    'password' => 'pgsecret',
+                ],
+                'public_select' => [
+                    'host' => 'interior',
+                    'dbname' => 'comun_select',
+                ],
+            ],
+        );
+        $this->writeInc(
+            $dir . '/' . $base . '.roles.inc',
+            [
+                'public_select' => ['user' => 'orbix', 'password' => 'orbixpwd'],
+            ],
+        );
+
+        $cfg = new ConfigDB($base);
+        $esquema = $cfg->getEsquema('public_select');
+        $replica = $cfg->getConexionImportarReplica('public_select');
+
+        $this->assertSame('exterior', $esquema['host']);
+        $this->assertSame('comun', $esquema['dbname']);
+        $this->assertSame('interior', $replica['host']);
+        $this->assertSame('comun_select', $replica['dbname']);
+        $this->assertSame('public_select', $replica['schema']);
+    }
+
     public function test_crearFicherosPartidos_desde_monolitos(): void
     {
         $base = 'cfgdbtest';

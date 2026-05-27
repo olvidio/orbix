@@ -21,10 +21,10 @@ class DBRefresh
         // OJO en "importar" no está la Base de Datos de pruebas, pero aquí sólo hace falta el host.
         $oConfigDB = new ConfigDB('importar');
         if ($db === 'comun') {
-            $config = $oConfigDB->getEsquema('public_select'); //de la database comun
+            $config = $oConfigDB->getConexionImportarReplica('public_select');
         }
         if ($db === 'sv-e') {
-            $config = $oConfigDB->getEsquema('publicv-e_select'); //de la database sv-e
+            $config = $oConfigDB->getConexionImportarReplica('publicv-e_select');
         }
         $host = $config['host'];
         $oConnection = new DBConnection($config);
