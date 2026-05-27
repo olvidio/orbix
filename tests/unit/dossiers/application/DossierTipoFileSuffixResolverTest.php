@@ -68,6 +68,21 @@ final class DossierTipoFileSuffixResolverTest extends TestCase
         $this->assertSame('Select_cargos', $resolver->selectBaseClassName('cargos'));
     }
 
+    public function test_resolveSelectClassFqcn_ubiscamas_habitaciones_cdc(): void
+    {
+        $resolver = DossierTipoFileSuffixResolver::fromDefaultProjectRoot();
+        $tipo = new TipoDossier();
+        $tipo->setId_tipo_dossier(2006);
+        $tipo->setApp('ubiscamas');
+        $tipo->setDbVo(5);
+        $tipo->setCodigoVo('habitaciones_cdc');
+
+        $this->assertSame(
+            'src\\ubiscamas\\domain\\Select_habitaciones_cdc',
+            $resolver->resolveSelectClassFqcn($tipo)
+        );
+    }
+
     private function rrmdir(string $dir): void
     {
         $items = scandir($dir);

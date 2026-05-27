@@ -8,19 +8,14 @@ use src\ubiscamas\domain\value_objects\TipoLavabo;
 use function src\shared\domain\helpers\is_true_txt;
 
 /**
- * Gestiona el dossier 3102: Cargos de una actividad
+ * Widget dossier 2006 (codigo habitaciones_cdc): habitaciones de un centro.
  *
- * En el caso de ser "des" o "vcsd" al quitar cargo, también elimino la asistencia.
- * abajo se añaden los botones para añadir una nueva persona-cargo.
+ * Render: {@see \frontend\ubiscamas\helpers\SelectHabitacionesCdcRender}.
  *
  * @package    orbix
- * @subpackage    actividadcargos
- * @author    Daniel Serrabou
- * @since        15/5/02.
- * @version 1.0  refactoring: separar vistas
- * @created Mayo 2018
+ * @subpackage ubiscamas
  */
-class SelectHabitacionesCdc
+class Select_habitaciones_cdc
 {
     // --------- Variables internas de la clase.
     /**
@@ -195,7 +190,6 @@ class SelectHabitacionesCdc
                 $aQuery = array('mod' => 'nuevo',
                     'pau' => $this->pau,
                     'obj_pau' => $obj_pau,
-                    'id_dossier' => $this->id_dossier, //Para que al volver a la pagina 'dossiers_ver' sepa cual mostrar.
                     'id_pau' => $this->id_pau);
                 // el hppt_build_query no pasa los valores null
                 if (is_array($aQuery)) {

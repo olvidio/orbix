@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\entity\Habitacion;
-use src\ubiscamas\domain\SelectHabitacionesCdc;
+use src\ubiscamas\domain\Select_habitaciones_cdc;
 final class SelectHabitacionesCdcTest extends TestCase
 {
     private mixed $previousContainer;
@@ -68,7 +68,7 @@ final class SelectHabitacionesCdcTest extends TestCase
             HabitacionDlRepositoryInterface::class => $repo,
         ]);
 
-        $sel = new SelectHabitacionesCdc();
+        $sel = new Select_habitaciones_cdc();
         $sel->setId_pau(12);
         $sel->setPau('cdc');
         $sel->setObj_pau('CasaDl');

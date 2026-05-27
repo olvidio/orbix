@@ -11,7 +11,7 @@ use frontend\shared\web\Lista;
 /**
  * Compone el bloque dossier 3102 (habitaciones CDC) en frontend: HashFront + URLs firmadas.
  *
- * @see \src\ubiscamas\domain\SelectHabitacionesCdc::getSegmentData()
+ * @see \src\ubiscamas\domain\Select_habitaciones_cdc::getSegmentData()
  */
 final class SelectHabitacionesCdcRender
 {

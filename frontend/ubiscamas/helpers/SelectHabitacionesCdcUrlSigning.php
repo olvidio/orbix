@@ -9,7 +9,7 @@ use frontend\shared\security\HashFront;
 
 /**
  * Firma URLs hacia habitacion_form para el widget CDC (specs desde
- * {@see \src\ubiscamas\domain\SelectHabitacionesCdc::getSegmentData()},
+ * {@see \src\ubiscamas\domain\Select_habitaciones_cdc::getSegmentData()},
  * invocación típica {@see \frontend\ubiscamas\helpers\SelectHabitacionesCdcRender}).
  */
 final class SelectHabitacionesCdcUrlSigning
