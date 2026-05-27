@@ -356,3 +356,23 @@ BEGIN
     END LOOP;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION public.migracion_migrar_tipo_teleco_todas_public_todos_esquemas()
+RETURNS void
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    r record;
+BEGIN
+    FOR r IN
+        SELECT c.table_schema, c.table_name
+        FROM information_schema.columns c
+        WHERE c.column_name = 'tipo_teleco'
+          AND c.table_schema NOT IN ('pg_catalog', 'information_schema')
+          AND c.table_schema NOT LIKE 'pg_toast%'
+          AND NOT (c.table_schema = 'public' AND c.table_name = 'xd_tipo_teleco')
+    LOOP
+        PERFORM public.migracion_migrar_tipo_teleco_public(r.table_schema::text, r.table_name::text);
+    END LOOP;
+END;
+$$;
