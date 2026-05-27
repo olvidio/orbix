@@ -130,11 +130,68 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION public.migracion_omitir_tabla_tipo_teleco(p_schema text, p_table text)
+RETURNS boolean
+LANGUAGE sql
+IMMUTABLE
+AS $$
+    SELECT CASE
+        WHEN p_schema = 'publicv' AND p_table = 'xd_tipo_teleco_tmp' THEN true
+        WHEN p_schema = 'public' AND p_table IN ('xd_tipo_teleco', 'xd_teleco_ubis') THEN true
+        ELSE false
+    END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.migracion_recuperar_catalogo_tipo_teleco(p_schema text, p_table text)
+RETURNS void
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_type text;
+BEGIN
+    IF NOT public.migracion_omitir_tabla_tipo_teleco(p_schema, p_table) THEN
+        RETURN;
+    END IF;
+
+    IF public.migracion_columna_existe(p_schema, p_table, 'tipo_teleco') THEN
+        RETURN;
+    END IF;
+
+    IF NOT public.migracion_columna_existe(p_schema, p_table, 'id_tipo_teleco') THEN
+        RETURN;
+    END IF;
+
+    SELECT data_type INTO v_type
+    FROM information_schema.columns
+    WHERE table_schema = p_schema
+      AND table_name = p_table
+      AND column_name = 'id_tipo_teleco';
+
+    IF v_type IS DISTINCT FROM 'integer' THEN
+        EXECUTE format(
+            'ALTER TABLE %I.%I RENAME COLUMN id_tipo_teleco TO tipo_teleco',
+            p_schema,
+            p_table
+        );
+        PERFORM public.migracion_aviso(format(
+            '%s.%s: migracion parcial revertida (id_tipo_teleco → tipo_teleco)',
+            p_schema,
+            p_table
+        ));
+    END IF;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION public.migracion_migrar_tipo_teleco_public(p_schema text, p_table text)
 RETURNS boolean
 LANGUAGE plpgsql
 AS $$
 BEGIN
+    IF public.migracion_omitir_tabla_tipo_teleco(p_schema, p_table) THEN
+        PERFORM public.migracion_aviso(format('%s.%s: tabla catalogo tipo_teleco (omitido)', p_schema, p_table));
+        RETURN false;
+    END IF;
+
     IF NOT public.migracion_columna_existe(p_schema, p_table, 'tipo_teleco') THEN
         IF public.migracion_columna_existe(p_schema, p_table, 'id_tipo_teleco') THEN
             PERFORM public.migracion_aviso(format('%s.%s: tipo_teleco ya migrado a id_tipo_teleco (omitido)', p_schema, p_table));
@@ -152,6 +209,13 @@ BEGIN
         p_table
     );
 
+    EXECUTE format(
+        'UPDATE %I.%I SET tipo_teleco = NULL
+         WHERE tipo_teleco IS NULL OR TRIM(tipo_teleco) = '''' OR tipo_teleco !~ ''^\d+$''',
+        p_schema,
+        p_table
+    );
+
     PERFORM public.migracion_rename_columna(p_schema, p_table, 'tipo_teleco', 'id_tipo_teleco');
 
     EXECUTE format(
@@ -160,11 +224,16 @@ BEGIN
         p_table
     );
 
-    EXECUTE format(
-        'ALTER TABLE %I.%I ALTER COLUMN id_tipo_teleco SET NOT NULL',
-        p_schema,
-        p_table
-    );
+    BEGIN
+        EXECUTE format(
+            'ALTER TABLE %I.%I ALTER COLUMN id_tipo_teleco SET NOT NULL',
+            p_schema,
+            p_table
+        );
+    EXCEPTION
+        WHEN others THEN
+            PERFORM public.migracion_aviso(format('%s.%s: id_tipo_teleco SET NOT NULL omitido: %s', p_schema, p_table, SQLERRM));
+    END;
 
     RETURN true;
 END;
@@ -175,6 +244,11 @@ RETURNS boolean
 LANGUAGE plpgsql
 AS $$
 BEGIN
+    IF public.migracion_omitir_tabla_tipo_teleco(p_schema, p_table) THEN
+        PERFORM public.migracion_aviso(format('%s.%s: tabla catalogo tipo_teleco (omitido)', p_schema, p_table));
+        RETURN false;
+    END IF;
+
     IF NOT public.migracion_columna_existe(p_schema, p_table, 'tipo_teleco') THEN
         IF public.migracion_columna_existe(p_schema, p_table, 'id_tipo_teleco') THEN
             PERFORM public.migracion_aviso(format('%s.%s: tipo_teleco ya migrado a id_tipo_teleco (omitido)', p_schema, p_table));
@@ -192,6 +266,13 @@ BEGIN
         p_table
     );
 
+    EXECUTE format(
+        'UPDATE %I.%I SET tipo_teleco = NULL
+         WHERE tipo_teleco IS NULL OR TRIM(tipo_teleco) = '''' OR tipo_teleco !~ ''^\d+$''',
+        p_schema,
+        p_table
+    );
+
     PERFORM public.migracion_rename_columna(p_schema, p_table, 'tipo_teleco', 'id_tipo_teleco');
 
     EXECUTE format(
@@ -200,11 +281,16 @@ BEGIN
         p_table
     );
 
-    EXECUTE format(
-        'ALTER TABLE %I.%I ALTER COLUMN id_tipo_teleco SET NOT NULL',
-        p_schema,
-        p_table
-    );
+    BEGIN
+        EXECUTE format(
+            'ALTER TABLE %I.%I ALTER COLUMN id_tipo_teleco SET NOT NULL',
+            p_schema,
+            p_table
+        );
+    EXCEPTION
+        WHEN others THEN
+            PERFORM public.migracion_aviso(format('%s.%s: id_tipo_teleco SET NOT NULL omitido: %s', p_schema, p_table, SQLERRM));
+    END;
 
     RETURN true;
 END;
@@ -300,7 +386,7 @@ AS $$
         WHERE c.column_name = 'tipo_teleco'
           AND c.table_schema NOT IN ('pg_catalog', 'information_schema')
           AND c.table_schema NOT LIKE 'pg_toast%'
-          AND NOT (c.table_schema = 'publicv' AND c.table_name = 'xd_tipo_teleco_tmp')
+          AND NOT public.migracion_omitir_tabla_tipo_teleco(c.table_schema, c.table_name)
     );
 $$;
 
@@ -312,6 +398,8 @@ DECLARE
     r record;
 BEGIN
     PERFORM public.migracion_ensure_xd_tipo_teleco_tmp();
+    PERFORM public.migracion_recuperar_catalogo_tipo_teleco('public', 'xd_tipo_teleco');
+    PERFORM public.migracion_recuperar_catalogo_tipo_teleco('public', 'xd_teleco_ubis');
 
     FOR r IN
         SELECT c.table_schema, c.table_name
@@ -319,7 +407,7 @@ BEGIN
         WHERE c.column_name = 'tipo_teleco'
           AND c.table_schema NOT IN ('pg_catalog', 'information_schema')
           AND c.table_schema NOT LIKE 'pg_toast%'
-          AND NOT (c.table_schema = 'publicv' AND c.table_name = 'xd_tipo_teleco_tmp')
+          AND NOT public.migracion_omitir_tabla_tipo_teleco(c.table_schema, c.table_name)
     LOOP
         PERFORM public.migracion_migrar_tipo_teleco_tmp(r.table_schema::text, r.table_name::text);
     END LOOP;
@@ -351,6 +439,7 @@ BEGIN
         FROM information_schema.columns c
         WHERE c.column_name = 'tipo_teleco'
           AND c.table_schema IN ('public', 'resto', 'restov')
+          AND NOT public.migracion_omitir_tabla_tipo_teleco(c.table_schema, c.table_name)
     LOOP
         PERFORM public.migracion_migrar_tipo_teleco_public(r.table_schema::text, r.table_name::text);
     END LOOP;
@@ -370,7 +459,7 @@ BEGIN
         WHERE c.column_name = 'tipo_teleco'
           AND c.table_schema NOT IN ('pg_catalog', 'information_schema')
           AND c.table_schema NOT LIKE 'pg_toast%'
-          AND NOT (c.table_schema = 'public' AND c.table_name = 'xd_tipo_teleco')
+          AND NOT public.migracion_omitir_tabla_tipo_teleco(c.table_schema, c.table_name)
     LOOP
         PERFORM public.migracion_migrar_tipo_teleco_public(r.table_schema::text, r.table_name::text);
     END LOOP;
