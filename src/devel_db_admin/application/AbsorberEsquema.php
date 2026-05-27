@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace src\devel_db_admin\application;
 
 use src\devel_db_admin\infrastructure\DBAlterSchema;
+use src\shared\config\ReplicaSelectPolicy;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBRol;
@@ -289,45 +290,51 @@ final class AbsorberEsquema
         $oDBRol = new DBRol();
         $esquema_zz = 'zz' . $esquemaDel;
         $esquemav_zz = 'zz' . $esquemaDelv;
+        $incluirSelect = ReplicaSelectPolicy::incluirSelect();
 
-        $configComunP = $oConfigDB->getEsquema('public');
-        $oConexion = new DBConnection($configComunP);
-        $oConComun = $oConexion->getPDO();
-        $oDBRol->setDbConexion($oConComun);
-        $oDBRol->setUser($esquema_zz);
-        try {
-            $oDBRol->renombrarSchema($esquemaDel);
-        } catch (\Throwable $e) {
-            $errores[] = 'renombrarSchema comun: ' . $e->getMessage();
+        $clavesComun = ['public'];
+        if ($incluirSelect) {
+            $clavesComun[] = 'public_select';
         }
-        $oAlterSchema->quitarHerencias($oConComun, $esquema_zz);
-        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
+        foreach ($clavesComun as $clave) {
+            $this->renombrarEsquemaDisuelto(
+                $oConfigDB,
+                $oDBRol,
+                $oAlterSchema,
+                $clave,
+                $esquemaDel,
+                $esquema_zz,
+                $errores,
+            );
+        }
 
-        $configSv = $oConfigDB->getEsquema('publicv');
-        $oConexion = new DBConnection($configSv);
-        $oConSv = $oConexion->getPDO();
-        $oDBRol->setDbConexion($oConSv);
-        $oDBRol->setUser($esquemav_zz);
-        try {
-            $oDBRol->renombrarSchema($esquemaDelv);
-        } catch (\Throwable $e) {
-            $errores[] = 'renombrarSchema sv: ' . $e->getMessage();
+        foreach (['publicv'] as $clave) {
+            $this->renombrarEsquemaDisuelto(
+                $oConfigDB,
+                $oDBRol,
+                $oAlterSchema,
+                $clave,
+                $esquemaDelv,
+                $esquemav_zz,
+                $errores,
+            );
         }
-        $oAlterSchema->quitarHerencias($oConSv, $esquemav_zz);
-        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
-        $configSve = $oConfigDB->getEsquema('publicv-e');
-        $oConexion = new DBConnection($configSve);
-        $oConSve = $oConexion->getPDO();
-        $oDBRol->setDbConexion($oConSve);
-        $oDBRol->setUser($esquemav_zz);
-        try {
-            $oDBRol->renombrarSchema($esquemaDelv);
-        } catch (\Throwable $e) {
-            $errores[] = 'renombrarSchema sv-e: ' . $e->getMessage();
+        $clavesSve = ['publicv-e'];
+        if ($incluirSelect) {
+            $clavesSve[] = 'publicv-e_select';
         }
-        $oAlterSchema->quitarHerencias($oConSve, $esquemav_zz);
-        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
+        foreach ($clavesSve as $clave) {
+            $this->renombrarEsquemaDisuelto(
+                $oConfigDB,
+                $oDBRol,
+                $oAlterSchema,
+                $clave,
+                $esquemaDelv,
+                $esquemav_zz,
+                $errores,
+            );
+        }
 
         $lines = [
             sprintf(_("se ha pasado la %s a %s"), $dl_old, $dl_new),
@@ -335,5 +342,58 @@ final class AbsorberEsquema
         ];
 
         return new AbsorberEsquemaResult($lines, $errores);
+    }
+
+    /**
+     * @param list<string> $errores
+     */
+    private function renombrarEsquemaDisuelto(
+        ConfigDB $oConfigDB,
+        DBRol $oDBRol,
+        DBAlterSchema $oAlterSchema,
+        string $claveImportar,
+        string $esquemaDel,
+        string $esquemaZz,
+        array &$errores,
+    ): void {
+        try {
+            $config = $oConfigDB->getEsquema($claveImportar);
+            $pdo = (new DBConnection($config))->getPDO();
+            $oDBRol->setDbConexion($pdo);
+            $oDBRol->setUser($esquemaZz);
+
+            if ($this->existeEsquema($pdo, $esquemaDel) && !$this->existeEsquema($pdo, $esquemaZz)) {
+                $oDBRol->renombrarSchema($esquemaDel);
+            }
+
+            if ($this->existeEsquema($pdo, $esquemaZz)) {
+                $oAlterSchema->quitarHerencias($pdo, $esquemaZz);
+                $errores = array_merge($errores, $oAlterSchema->consumirErrores());
+            }
+        } catch (\Throwable $e) {
+            $errores[] = sprintf(
+                'renombrarSchema %s (%s → %s): %s',
+                $claveImportar,
+                $esquemaDel,
+                $esquemaZz,
+                $e->getMessage(),
+            );
+        }
+    }
+
+    private function existeEsquema(\PDO $pdo, string $nombre): bool
+    {
+        if ($nombre === '') {
+            return false;
+        }
+
+        try {
+            $st = $pdo->prepare('SELECT 1 FROM pg_namespace WHERE nspname = :n LIMIT 1');
+            $st->execute(['n' => $nombre]);
+
+            return (bool) $st->fetchColumn();
+        } catch (\Throwable) {
+            return false;
+        }
     }
 }
