@@ -17,5 +17,3 @@ UPDATE *.aux_menus SET id_metamenu = 159, parametros = 'clase_info=src\encargoss
 UPDATE *.aux_menus SET id_metamenu = 159, parametros = 'clase_info=src\ubis\domain\InfoDelegaciones' WHERE parametros = 'clase_info=ubis\model\InfoDelegaciones' AND id_metamenu = 160;
 UPDATE *.aux_menus SET id_metamenu = 159, parametros = 'clase_info=src\procesos\domain\InfoFases' WHERE parametros = 'clase_info=procesos\model\InfoFases' AND id_metamenu = 160;
 
--- para corregir un error.
-UPDATE *.aux_menus SET id_metamenu = 159 WHERE id_metamenu = 160;
