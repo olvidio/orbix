@@ -15,7 +15,15 @@ $data = PostRequest::getDataFromUrl('/src/devel_db_admin/absorber_esquema', [
 ]);
 $data = is_array($data) ? $data : [];
 $lines = (array) ($data['lines'] ?? []);
+$errores = (array) ($data['errores'] ?? []);
 
 foreach ($lines as $line) {
-    echo '<br>' . $line . '<br>';
+    echo '<br>' . htmlspecialchars((string) $line) . '<br>';
+}
+
+if ($errores !== []) {
+    echo '<br><strong>' . htmlspecialchars(_('Errores durante la absorción')) . ':</strong><br>';
+    foreach ($errores as $error) {
+        echo '<br>' . htmlspecialchars((string) $error) . '<br>';
+    }
 }

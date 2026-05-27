@@ -33,6 +33,8 @@ final class AbsorberEsquema
 
     public function execute(string $esquemaMatriz, string $esquemaDel): AbsorberEsquemaResult
     {
+        $errores = [];
+
         $esquemaMatrizv = $esquemaMatriz . 'v';
         $esquemaDelv = $esquemaDel . 'v';
 
@@ -46,6 +48,7 @@ final class AbsorberEsquema
         $oDevelPC = $oConexion->getPDO();
 
         $oAlterSchema = new DBAlterSchema();
+        $oAlterSchema->setContinuarEnError(true);
         $oAlterSchema->setDbConexion($oDevelPC);
         $oAlterSchema->setSchema($esquemaMatriz);
         $oAlterSchema->setSchemaDel($esquemaDel);
@@ -88,6 +91,7 @@ final class AbsorberEsquema
         $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 
         $oAlterSchema->setInserts($aInserts);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $config = $oConfigDB->getEsquema('publicv');
 
@@ -95,6 +99,7 @@ final class AbsorberEsquema
         $oDevelPC = $oConexion->getPDO();
 
         $oAlterSchema = new DBAlterSchema();
+        $oAlterSchema->setContinuarEnError(true);
         $oAlterSchema->setDbConexion($oDevelPC);
         $oAlterSchema->setSchema($esquemaMatrizv);
         $oAlterSchema->setSchemaDel($esquemaDelv);
@@ -194,6 +199,7 @@ final class AbsorberEsquema
         $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 
         $oAlterSchema->setInserts($aInserts);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $region_old = strtok($esquemaDel, '-');
         $dl_old = strtok('-');
@@ -209,20 +215,24 @@ final class AbsorberEsquema
         ];
 
         $oAlterSchema->updateDatos($aDatos);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $aDatos = [
             ['tabla' => 'da_plazas_dl', 'campo' => 'dl_tabla', 'pattern' => "\m$dl_old\M", 'replacement' => "$dl_new"],
         ];
 
         $oAlterSchema->updateDatosRegexp($aDatos);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $aDatos = [
             ['tabla' => 'global.d_traslados', 'campo' => 'ctr_origen', 'pattern' => "\m$dl_old\M", 'replacement' => "$dl_new"],
             ['tabla' => 'global.d_traslados', 'campo' => 'ctr_destino', 'pattern' => "\m$dl_old\M", 'replacement' => "$dl_new"],
         ];
         $oAlterSchema->updateDatosRegexpTodos($aDatos);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $oAlterSchema->updateCedidasAll($dl_old, $dl_new);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $config = $oConfigDB->getEsquema('publicv-e');
 
@@ -230,14 +240,17 @@ final class AbsorberEsquema
         $oDevelPC = $oConexion->getPDO();
 
         $oAlterSchema = new DBAlterSchema();
+        $oAlterSchema->setContinuarEnError(true);
         $oAlterSchema->setDbConexion($oDevelPC);
 
         $oAlterSchema->setSchema($esquemaMatrizv);
         $oAlterSchema->setSchemaDel($esquemaDelv);
 
         $oAlterSchema->asistentesOut2Dl($dl_new);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $oAlterSchema->asistentesOut2DlPropia();
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $aInserts = [];
 
@@ -249,23 +262,28 @@ final class AbsorberEsquema
         $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 
         $oAlterSchema->setInserts($aInserts);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $oAlterSchema->updatePropietarioAll($dl_old, $dl_new);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
         $aDatos = [
             ['tabla' => 'global.d_asistentes_dl', 'campo' => 'dl_responsable', 'pattern' => "\m$dl_old\M", 'replacement' => "$dl_new"],
             ['tabla' => 'publicv.d_asistentes_de_paso', 'campo' => 'dl_responsable', 'pattern' => "\m$dl_old\M", 'replacement' => "$dl_new"],
         ];
         $oAlterSchema->updateDatosRegexpTodos($aDatos);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $oAlterSchema->comprobarImportadas();
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $oAlterSchema->insertarCargos();
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $DelegacionRepository = $this->container->get(DelegacionRepositoryInterface::class);
         $oDelegacion = $DelegacionRepository->findById($id_dl_old);
         $oDelegacion->setActive(false);
         if ($DelegacionRepository->Guardar($oDelegacion) === false) {
-            $error_txt = _("hay un error, no se ha guardado") . "\n" . $DelegacionRepository->getErrorTxt();
+            $errores[] = _('hay un error, no se ha guardado') . ': ' . $DelegacionRepository->getErrorTxt();
         }
 
         $oDBRol = new DBRol();
@@ -277,30 +295,45 @@ final class AbsorberEsquema
         $oConComun = $oConexion->getPDO();
         $oDBRol->setDbConexion($oConComun);
         $oDBRol->setUser($esquema_zz);
-        $oDBRol->renombrarSchema($esquemaDel);
+        try {
+            $oDBRol->renombrarSchema($esquemaDel);
+        } catch (\Throwable $e) {
+            $errores[] = 'renombrarSchema comun: ' . $e->getMessage();
+        }
         $oAlterSchema->quitarHerencias($oConComun, $esquema_zz);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $configSv = $oConfigDB->getEsquema('publicv');
         $oConexion = new DBConnection($configSv);
         $oConSv = $oConexion->getPDO();
         $oDBRol->setDbConexion($oConSv);
         $oDBRol->setUser($esquemav_zz);
-        $oDBRol->renombrarSchema($esquemaDelv);
+        try {
+            $oDBRol->renombrarSchema($esquemaDelv);
+        } catch (\Throwable $e) {
+            $errores[] = 'renombrarSchema sv: ' . $e->getMessage();
+        }
         $oAlterSchema->quitarHerencias($oConSv, $esquemav_zz);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $configSve = $oConfigDB->getEsquema('publicv-e');
         $oConexion = new DBConnection($configSve);
         $oConSve = $oConexion->getPDO();
         $oDBRol->setDbConexion($oConSve);
         $oDBRol->setUser($esquemav_zz);
-        $oDBRol->renombrarSchema($esquemaDelv);
+        try {
+            $oDBRol->renombrarSchema($esquemaDelv);
+        } catch (\Throwable $e) {
+            $errores[] = 'renombrarSchema sv-e: ' . $e->getMessage();
+        }
         $oAlterSchema->quitarHerencias($oConSve, $esquemav_zz);
+        $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
         $lines = [
             sprintf(_("se ha pasado la %s a %s"), $dl_old, $dl_new),
             'Hay que borrar el esquema viejo. Se le ha cambiado el nombre',
         ];
 
-        return new AbsorberEsquemaResult($lines);
+        return new AbsorberEsquemaResult($lines, $errores);
     }
 }

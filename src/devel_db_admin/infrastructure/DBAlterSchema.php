@@ -26,6 +26,11 @@ class DBAlterSchema
      */
     protected $schema_del;
 
+    /** @var list<string> */
+    private array $errores = [];
+
+    private bool $continuarEnError = false;
+
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
     /**
@@ -63,6 +68,222 @@ class DBAlterSchema
         $this->schema_del = $schema;
     }
 
+    public function setContinuarEnError(bool $continuar): void
+    {
+        $this->continuarEnError = $continuar;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function consumirErrores(): array
+    {
+        $errores = $this->errores;
+        $this->errores = [];
+
+        return $errores;
+    }
+
+    private function handleSqlError(string $contexto, \PDO|\PDOStatement $oDbl): bool
+    {
+        $err = $oDbl->errorInfo();
+        $mensaje = is_string($err[2] ?? null) ? $err[2] : 'Error SQL desconocido';
+
+        if ($this->continuarEnError) {
+            $this->errores[] = $contexto . ': ' . $mensaje;
+            if (isset($_SESSION['oGestorErrores'])) {
+                $_SESSION['oGestorErrores']->addErrorAppLastErrorNoThrowText(
+                    $mensaje,
+                    $contexto,
+                    (string) __LINE__,
+                    __FILE__,
+                );
+            }
+
+            return false;
+        }
+
+        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $contexto, (string) __LINE__, __FILE__);
+
+        return false;
+    }
+
+    private function handlePdoException(string $contexto, \PDOException $e): bool
+    {
+        if ($this->continuarEnError) {
+            $this->errores[] = $contexto . ': ' . $e->getMessage();
+            if (isset($_SESSION['oGestorErrores'])) {
+                $_SESSION['oGestorErrores']->addErrorAppLastErrorNoThrowText(
+                    $e->getMessage(),
+                    $contexto,
+                    (string) __LINE__,
+                    __FILE__,
+                );
+            }
+
+            return false;
+        }
+
+        throw $e;
+    }
+
+    private function prepareAndExecute(string $sql, string $contexto): bool
+    {
+        $oDbl = $this->getPdoDB();
+
+        try {
+            $oDblSt = $oDbl->prepare($sql);
+            if ($oDblSt === false) {
+                return $this->handleSqlError($contexto . '.prepare', $oDbl);
+            }
+            if ($oDblSt->execute() === false) {
+                return $this->handleSqlError($contexto . '.execute', $oDblSt);
+            }
+
+            return true;
+        } catch (\PDOException $e) {
+            return $this->handlePdoException($contexto, $e);
+        }
+    }
+
+    private function querySql(string $sql, string $contexto): \PDOStatement|false
+    {
+        $oDbl = $this->getPdoDB();
+
+        try {
+            $stmt = $oDbl->query($sql);
+            if ($stmt === false) {
+                $this->handleSqlError($contexto, $oDbl);
+
+                return false;
+            }
+
+            return $stmt;
+        } catch (\PDOException $e) {
+            $this->handlePdoException($contexto, $e);
+
+            return false;
+        }
+    }
+
+    /**
+     * @return list<array{type: string, conname: string, columns: list<string>}>
+     */
+    private function getUniqueConstraints(string $fullName): array
+    {
+        $oDbl = $this->getPdoDB();
+        $sql = "SELECT c.contype, c.conname, a.attname, u.ord
+                FROM pg_constraint c
+                JOIN LATERAL unnest(c.conkey) WITH ORDINALITY AS u(attnum, ord) ON true
+                JOIN pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = u.attnum
+                WHERE c.conrelid = '$fullName'::regclass
+                  AND c.contype IN ('p', 'u')
+                ORDER BY CASE WHEN c.contype = 'u' THEN 0 ELSE 1 END,
+                         array_length(c.conkey, 1) ASC,
+                         c.conname,
+                         u.ord";
+
+        $stmt = $oDbl->query($sql);
+        if ($stmt === false) {
+            return [];
+        }
+
+        $constraints = [];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $name = $row['conname'];
+            if (!isset($constraints[$name])) {
+                $constraints[$name] = [
+                    'type' => $row['contype'],
+                    'conname' => $name,
+                    'columns' => [],
+                ];
+            }
+            $constraints[$name]['columns'][(int) $row['ord']] = $row['attname'];
+        }
+
+        $result = [];
+        foreach ($constraints as $constraint) {
+            ksort($constraint['columns']);
+            $constraint['columns'] = array_values($constraint['columns']);
+            $result[] = $constraint;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Prefiere restricciones UNIQUE frente a PK (p. ej. e_notas_dl: id_nom + id_asignatura).
+     *
+     * @return array{type: string, conname: string, columns: list<string>}|null
+     */
+    private function pickConflictConstraint(string $fullName, string $campos): ?array
+    {
+        $camposSet = array_flip(array_map(trim(...), explode(',', $campos)));
+        foreach ($this->getUniqueConstraints($fullName) as $constraint) {
+            $allPresent = true;
+            foreach ($constraint['columns'] as $column) {
+                if (!isset($camposSet[$column])) {
+                    $allPresent = false;
+                    break;
+                }
+            }
+            if ($allPresent) {
+                return $constraint;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param list<string> $pkColumns
+     */
+    private function buildUpdateSetFromCampos(string $campos, array $pkColumns): string
+    {
+        $pkSet = array_flip($pkColumns);
+        $parts = [];
+        foreach (explode(',', $campos) as $campo) {
+            $campo = trim($campo);
+            if (isset($pkSet[$campo])) {
+                continue;
+            }
+            $parts[] = "$campo = EXCLUDED.$campo";
+        }
+
+        return implode(', ', $parts);
+    }
+
+    private function buildOnConflictClause(string $conflictTarget, string $update): string
+    {
+        if ($update === '') {
+            return "ON CONFLICT $conflictTarget DO NOTHING";
+        }
+
+        return "ON CONFLICT $conflictTarget DO UPDATE SET $update";
+    }
+
+    private function buildDefaultUpsertSql(string $fullName, string $campos, string $fullNameDel): string
+    {
+        $constraint = $this->pickConflictConstraint($fullName, $campos);
+        if ($constraint === null) {
+            return "INSERT INTO $fullName ($campos) SELECT $campos FROM $fullNameDel";
+        }
+
+        $update = $this->buildUpdateSetFromCampos($campos, $constraint['columns']);
+        $conflictTarget = '(' . implode(', ', $constraint['columns']) . ')';
+        $onConflict = $this->buildOnConflictClause($conflictTarget, $update);
+
+        return "INSERT INTO $fullName ($campos) SELECT $campos FROM $fullNameDel $onConflict";
+    }
+
+    private function buildUpsertSql(string $fullName, string $campos, string $fullNameDel, string $conflictTarget, array $pkColumns): string
+    {
+        $update = $this->buildUpdateSetFromCampos($campos, $pkColumns);
+        $onConflict = $this->buildOnConflictClause($conflictTarget, $update);
+
+        return "INSERT INTO $fullName ($campos) SELECT $campos FROM $fullNameDel $onConflict";
+    }
+
 
     /**
      *
@@ -86,20 +307,37 @@ class DBAlterSchema
 
     private function executeInsert($tabla, $campos)
     {
-        $oDbl = $this->getPdoDB();
         $full_name = "\"$this->schema\".$tabla";
         $full_name_del = "\"$this->schema_del\".$tabla";
 
-        $sql = "INSERT INTO $full_name ($campos) SELECT $campos FROM $full_name_del";
+        $sql = $this->buildDefaultUpsertSql($full_name, $campos, $full_name_del);
         switch ($tabla) {
             case "a_importadas":
-                $sql = "INSERT INTO $full_name ($campos) SELECT $campos FROM $full_name_del ON CONFLICT (id_activ) DO NOTHING";
+                $sql = $this->buildUpsertSql(
+                    $full_name,
+                    $campos,
+                    $full_name_del,
+                    '(id_activ)',
+                    ['id_activ'],
+                );
                 break;
             case "e_actas_dl":
-                $sql = "INSERT INTO $full_name ($campos) SELECT $campos FROM $full_name_del ON CONFLICT (acta) DO NOTHING";
+                $sql = $this->buildUpsertSql(
+                    $full_name,
+                    $campos,
+                    $full_name_del,
+                    '(acta)',
+                    ['acta'],
+                );
                 break;
             case "d_dossiers_abiertos":
-                $sql = "INSERT INTO $full_name ($campos) SELECT $campos FROM $full_name_del ON CONFLICT ON CONSTRAINT d_dossiers_abiertos_pkey DO NOTHING";
+                $sql = $this->buildUpsertSql(
+                    $full_name,
+                    $campos,
+                    $full_name_del,
+                    'ON CONSTRAINT d_dossiers_abiertos_pkey',
+                    ['tabla', 'id_pau', 'id_tipo_dossier'],
+                );
                 break;
             case "p_agregados":
             case "p_de_paso_out":
@@ -145,7 +383,13 @@ class DBAlterSchema
                         WHERE a.id_tabla = 'out' AND EXCLUDED.id_tabla = 'dl' ";
                 break;
             case "d_asistentes_out":
-                $sql = "INSERT INTO $full_name ($campos) SELECT $campos FROM $full_name_del ON CONFLICT ON CONSTRAINT d_asistentes_out_id_activ_id_nom_pk DO NOTHING";
+                $sql = $this->buildUpsertSql(
+                    $full_name,
+                    $campos,
+                    $full_name_del,
+                    'ON CONSTRAINT d_asistentes_out_id_activ_id_nom_pk',
+                    ['id_activ', 'id_nom'],
+                );
                 break;
             case "d_cargos_activ_dl":
                 $a_campos = explode(',', $campos);
@@ -156,21 +400,12 @@ class DBAlterSchema
                     $update .= "$campo = EXCLUDED.$campo";
                 }
                 $sql = "INSERT INTO $full_name AS a ($campos) SELECT $campos FROM $full_name_del 
-                        ON CONFLICT ON CONSTRAINT d_cargos_activ_dl_id_activ_id_cargo_pkey  DO NOTHING";
+                        ON CONFLICT ON CONSTRAINT d_cargos_activ_dl_id_activ_id_cargo_pkey DO UPDATE
+                        SET $update";
                 break;
         }
-        if (($oDblSt = $oDbl->prepare($sql)) === false) {
-            $sClauError = 'DBAlterSchema.crearSchema.prepare';
-            $sClauError .= ' ' . $sql;
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        } else {
-            if ($oDblSt->execute() === false) {
-                $sClauError = 'DBAlterSchema.crearSchema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return false;
-            }
-        }
+
+        return $this->prepareAndExecute($sql, 'DBAlterSchema.executeInsert.' . $tabla);
     }
 
     /**
@@ -221,13 +456,11 @@ class DBAlterSchema
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+            return $this->handleSqlError($sClauError, $oDbl);
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBAlterSchema.crearSchema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return false;
+                return $this->handleSqlError($sClauError, $oDblSt);
             }
         }
     }
@@ -251,14 +484,14 @@ class DBAlterSchema
                 if (($oDblSt = $oDbl->prepare($sql)) === false) {
                     $sClauError = 'DBAlterSchema.crearSchema.prepare';
                     $sClauError .= ' ' . $sql;
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                    return false;
-                } else {
-                    if ($oDblSt->execute() === false) {
-                        $sClauError = 'DBAlterSchema.crearSchema.execute';
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                        return false;
-                    }
+
+                    return $this->handleSqlError($sClauError, $oDbl);
+                }
+
+                if ($oDblSt->execute() === false) {
+                    $sClauError = 'DBAlterSchema.crearSchema.execute';
+
+                    return $this->handleSqlError($sClauError, $oDblSt);
                 }
             }
         }
@@ -293,13 +526,11 @@ class DBAlterSchema
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+            return $this->handleSqlError($sClauError, $oDbl);
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBAlterSchema.crearSchema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return false;
+                return $this->handleSqlError($sClauError, $oDblSt);
             }
         }
     }
@@ -332,13 +563,11 @@ class DBAlterSchema
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+            return $this->handleSqlError($sClauError, $oDbl);
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBAlterSchema.crearSchema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return false;
+                return $this->handleSqlError($sClauError, $oDblSt);
             }
         }
     }
@@ -351,13 +580,11 @@ class DBAlterSchema
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+            return $this->handleSqlError($sClauError, $oDbl);
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBAlterSchema.crearSchema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return false;
+                return $this->handleSqlError($sClauError, $oDblSt);
             }
         }
     }
@@ -375,28 +602,28 @@ class DBAlterSchema
         if (($oDblSt = $oDbSve->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbSve, $sClauError, __LINE__, __FILE__);
-            return false;
-        } else {
-            if ($oDblSt->execute() === false) {
-                $sClauError = 'DBAlterSchema.crearSchema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return false;
-            }
+
+            return $this->handleSqlError($sClauError, $oDbSve);
+        }
+
+        if ($oDblSt->execute() === false) {
+            $sClauError = 'DBAlterSchema.crearSchema.execute';
+
+            return $this->handleSqlError($sClauError, $oDblSt);
         }
         $sql = "UPDATE publicv.d_asistentes_de_paso set propietario = regexp_replace(propietario::text, '\m$old\M', '$new', 'g')::text where propietario is not null;";
 
         if (($oDblSt = $oDbSve->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbSve, $sClauError, __LINE__, __FILE__);
-            return false;
-        } else {
-            if ($oDblSt->execute() === false) {
-                $sClauError = 'DBAlterSchema.crearSchema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return false;
-            }
+
+            return $this->handleSqlError($sClauError, $oDbSve);
+        }
+
+        if ($oDblSt->execute() === false) {
+            $sClauError = 'DBAlterSchema.crearSchema.execute';
+
+            return $this->handleSqlError($sClauError, $oDblSt);
         }
     }
 
@@ -444,8 +671,7 @@ class DBAlterSchema
 
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'AlterSchemna.asistenteOut';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+            return $this->handleSqlError($sClauError, $oDbl);
         }
         $aId_activ = [];
         foreach ($oDbl->query($sQuery) as $aDades) {
@@ -463,22 +689,23 @@ class DBAlterSchema
             $txt_ids = implode(',', $aId_activ);
             $condicion = "id_activ IN ($txt_ids)";
             $campos = 'id_activ, id_nom, propio, est_ok, cfi, cfi_con, falta, encargo, dl_responsable, observ, id_tabla, plaza, propietario, observ_est';
+            $update = $this->buildUpdateSetFromCampos($campos, ['id_activ', 'id_nom']);
 
             $insert = "INSERT INTO $full_asistentes_dl ($campos) 
                         SELECT $campos FROM $full_asistentes_out WHERE $condicion
-                        ON CONFLICT ON CONSTRAINT d_asistentes_pkey DO NOTHING
+                        ON CONFLICT ON CONSTRAINT d_asistentes_pkey DO UPDATE SET $update
                     ";
             if (($oDblSt = $oDbl->query($insert)) === false) {
                 $sClauError = 'AlterSchemna.asistenteOut';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                return false;
+
+                return $this->handleSqlError($sClauError, $oDbl);
             }
             // las borro de d_asistencias_out
             $delete = "DELETE FROM $full_asistentes_out WHERE $condicion";
             if (($oDblSt = $oDbl->query($delete)) === false) {
                 $sClauError = 'AlterSchemna.asistenteOut';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                return false;
+
+                return $this->handleSqlError($sClauError, $oDbl);
             }
         }
     }
@@ -508,8 +735,7 @@ class DBAlterSchema
 
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'AlterSchemna.asistenteOut';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+            return $this->handleSqlError($sClauError, $oDbl);
         }
         $esquema_comun = substr($this->schema, 0, -1); // quito la v o la f.
         $full_actividades_dl = "\"$esquema_comun\".a_actividades_dl";
@@ -529,27 +755,29 @@ class DBAlterSchema
             $txt_ids = implode(',', $aId_activ);
             $condicion = "id_activ IN ($txt_ids)";
             $campos = 'id_activ, id_nom, propio, est_ok, cfi, cfi_con, falta, encargo, dl_responsable, observ, id_tabla, plaza, propietario, observ_est';
+            $update = $this->buildUpdateSetFromCampos($campos, ['id_activ', 'id_nom']);
 
-            $insert = "INSERT INTO $full_asistentes_dl ($campos) SELECT $campos FROM $full_asistentes_out WHERE $condicion";
+            $insert = "INSERT INTO $full_asistentes_dl ($campos) SELECT $campos FROM $full_asistentes_out WHERE $condicion
+                        ON CONFLICT ON CONSTRAINT d_asistentes_pkey DO UPDATE SET $update";
             if (($oDblSt = $oDbl->query($insert)) === false) {
                 $sClauError = 'AlterSchemna.asistenteOut';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                return false;
+
+                return $this->handleSqlError($sClauError, $oDbl);
             }
             // borrar de asistentes_out
             $delete = "DELETE FROM $full_asistentes_dl WHERE $condicion";
             if (($oDblSt = $oDbl->query($delete)) === false) {
                 $sClauError = 'AlterSchemna.asistenteOut';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                return false;
+
+                return $this->handleSqlError($sClauError, $oDbl);
             }
             // borrar de a_importadas
             $full_importadas = "\"$esquema_comun\".a_importadas";
             $delete = "DELETE FROM $full_importadas WHERE $condicion";
             if (($oDblSt = $oDbComun->query($delete)) === false) {
                 $sClauError = 'AlterSchemna.asistenteOut';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                return false;
+
+                return $this->handleSqlError($sClauError, $oDbComun);
             }
         }
     }
@@ -595,9 +823,9 @@ class DBAlterSchema
         $sql = "SELECT d.id_activ, d.id_cargo, m.id_nom as id_nom_matriz, d.id_nom as id_nom_del
                 FROM $full_name m JOIN $full_name_del d ON (m.id_activ=d.id_activ AND m.id_cargo=d.id_cargo)";
         if ($oDbl->query($sql) === false) {
-            $sClauError = 'DBAlterSchema.crearSchema.execute';
-            //$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-            return false;
+            $sClauError = 'DBAlterSchema.insertarCargos.select';
+
+            return $this->handleSqlError($sClauError, $oDbl);
         }
         // tipos de cargo:
         $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
@@ -623,8 +851,8 @@ class DBAlterSchema
             $id_cargo_max++;
             // compruebo que está en el rango del tipo cargo, sino lo desprecio.
             if (!empty($cargos_de_tipo[$id_cargo_max])) {
-                $update = "UPDATE $full_name_del SET id_cargo = $id_cargo_max WHERE id_activ= $id_activ AND id_cargo = $id_cargo";
-                $oDbl->query($sql);
+                $updateSql = "UPDATE $full_name_del SET id_cargo = $id_cargo_max WHERE id_activ= $id_activ AND id_cargo = $id_cargo";
+                $oDbl->query($updateSql);
             }
         }
 
@@ -637,18 +865,16 @@ class DBAlterSchema
             $update .= "$campo = EXCLUDED.$campo";
         }
         $sql = "INSERT INTO $full_name AS a ($campos) SELECT $campos FROM $full_name_del 
-                    ON CONFLICT ON CONSTRAINT d_cargos_activ_dl_id_activ_id_cargo_pkey DO NOTHING";
+                    ON CONFLICT ON CONSTRAINT d_cargos_activ_dl_id_activ_id_cargo_pkey DO UPDATE SET $update";
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+            return $this->handleSqlError($sClauError, $oDbl);
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBAlterSchema.crearSchema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return false;
+                return $this->handleSqlError($sClauError, $oDblSt);
             }
         }
     }
@@ -670,8 +896,8 @@ class DBAlterSchema
 
         if (($conexionDB->query($sql)) === false) {
             $sClauError = 'AlterSchemna.asistenteOut';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($conexionDB, $sClauError, __LINE__, __FILE__);
-            return false;
+
+            return $this->handleSqlError($sClauError, $conexionDB);
         }
         foreach ($conexionDB->query($sql) as $aDades) {
             $child = $aDades['child'];

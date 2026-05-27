@@ -16,4 +16,4 @@ $esquemaDel = (string) filter_input(INPUT_POST, 'esquema_del');
 
 $result = (new AbsorberEsquema($GLOBALS['container']))->execute($esquemaMatriz, $esquemaDel);
 
-ContestarJson::enviar('', ['lines' => $result->lines]);
+ContestarJson::enviar('', ['lines' => $result->lines, 'errores' => $result->errores]);
