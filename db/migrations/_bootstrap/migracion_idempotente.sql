@@ -182,6 +182,46 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION public.migracion_ensure_xd_tipo_teleco_comun()
+RETURNS void
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF NOT public.migracion_tabla_existe('public', 'xd_tipo_teleco') THEN
+        RETURN;
+    END IF;
+
+    IF public.migracion_columna_existe('public', 'xd_tipo_teleco', 'tipo_teleco') THEN
+        RETURN;
+    END IF;
+
+    IF public.migracion_columna_existe('public', 'xd_tipo_teleco', 'id_tipo_teleco') THEN
+        EXECUTE 'ALTER TABLE public.xd_tipo_teleco ADD COLUMN IF NOT EXISTS tipo_teleco varchar(10)';
+
+        EXECUTE $sql$
+            UPDATE public.xd_tipo_teleco t SET tipo_teleco = v.codigo
+            FROM (VALUES
+                (1, 'telf'),
+                (2, 'móvil'),
+                (3, 'e-mail'),
+                (4, 'fax'),
+                (5, 'web')
+            ) AS v(id, codigo)
+            WHERE t.id = v.id
+        $sql$;
+
+        EXECUTE $sql$
+            UPDATE public.xd_tipo_teleco
+            SET tipo_teleco = id::text
+            WHERE tipo_teleco IS NULL
+        $sql$;
+
+        EXECUTE 'ALTER TABLE public.xd_tipo_teleco DROP COLUMN id_tipo_teleco';
+        PERFORM public.migracion_aviso('public.xd_tipo_teleco: catalogo recuperado (id_tipo_teleco eliminado, tipo_teleco restaurado)');
+    END IF;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION public.migracion_migrar_tipo_teleco_public(p_schema text, p_table text)
 RETURNS boolean
 LANGUAGE plpgsql
@@ -197,6 +237,12 @@ BEGIN
             PERFORM public.migracion_aviso(format('%s.%s: tipo_teleco ya migrado a id_tipo_teleco (omitido)', p_schema, p_table));
         END IF;
         RETURN false;
+    END IF;
+
+    PERFORM public.migracion_ensure_xd_tipo_teleco_comun();
+
+    IF NOT public.migracion_columna_existe('public', 'xd_tipo_teleco', 'tipo_teleco') THEN
+        RAISE EXCEPTION 'public.xd_tipo_teleco.tipo_teleco no disponible para migrar %.%', p_schema, p_table;
     END IF;
 
     EXECUTE format('ALTER TABLE %I.%I REPLICA IDENTITY FULL', p_schema, p_table);
@@ -434,6 +480,10 @@ AS $$
 DECLARE
     r record;
 BEGIN
+    PERFORM public.migracion_ensure_xd_tipo_teleco_comun();
+    PERFORM public.migracion_recuperar_catalogo_tipo_teleco('public', 'xd_tipo_teleco');
+    PERFORM public.migracion_recuperar_catalogo_tipo_teleco('public', 'xd_teleco_ubis');
+
     FOR r IN
         SELECT c.table_schema, c.table_name
         FROM information_schema.columns c
@@ -453,6 +503,10 @@ AS $$
 DECLARE
     r record;
 BEGIN
+    PERFORM public.migracion_ensure_xd_tipo_teleco_comun();
+    PERFORM public.migracion_recuperar_catalogo_tipo_teleco('public', 'xd_tipo_teleco');
+    PERFORM public.migracion_recuperar_catalogo_tipo_teleco('public', 'xd_teleco_ubis');
+
     FOR r IN
         SELECT c.table_schema, c.table_name
         FROM information_schema.columns c
