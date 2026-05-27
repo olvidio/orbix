@@ -207,16 +207,8 @@ abstract class DBAbstract
         if (empty($this->role) && empty($this->role_vf)) {
             return;
         }
-        $pdoOrigen = $this->oDbl;
-        try {
-            $this->addPermisoGlobalConexion($db);
-        } finally {
-            // Si no había conexión previa, conservar la de importar usada para los GRANT
-            // (p. ej. apptables_update sin global_object.inc).
-            if ($pdoOrigen !== null) {
-                $this->oDbl = $pdoOrigen;
-            }
-        }
+        // Dejar oDbl en la BD del permiso (comun, comun_select, …) para executeSql().
+        $this->addPermisoGlobalConexion($db);
     }
 
     private function addPermisoGlobalConexion(string $db): void
