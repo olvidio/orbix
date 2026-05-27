@@ -65,11 +65,17 @@ final class ApptablesUpdate
             );
         }
 
+        $verificado = [];
+        if ($accion === 'crear_global') {
+            $verificado = (new ApptablesVerificarGlobal())->verificar((string) $nomApp);
+        }
+
         return [
             'ok' => true,
             'mensaje' => $this->mensajeExito($accion, (string) $nomApp, $esquema),
             'bases' => $this->basesAfectadas($accion, (string) $nomApp),
             'replica' => ReplicaSelectPolicy::incluirSelect(),
+            'verificado' => $verificado,
         ];
     }
 

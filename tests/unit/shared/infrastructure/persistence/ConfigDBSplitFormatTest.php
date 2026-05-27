@@ -242,6 +242,41 @@ final class ConfigDBSplitFormatTest extends TestCase
         }
     }
 
+    public function test_getConexionImportarReplica_fallback_comun_conn(): void
+    {
+        $dir = $this->pwdDir();
+        $this->writeInc(
+            $dir . '/' . ConfigDB::ficheroConnNombre('importar'),
+            [
+                'default' => [
+                    'host' => 'exterior',
+                    'dbname' => 'comun',
+                    'user' => 'postgres',
+                    'password' => 'pgsecret',
+                ],
+            ],
+        );
+        $this->writeInc(
+            $dir . '/' . ConfigDB::ficheroConnNombre('comun'),
+            [
+                'default' => ['host' => 'exterior', 'dbname' => 'comun'],
+                'public_select' => [
+                    'host' => 'interior',
+                    'dbname' => 'comun_select',
+                ],
+            ],
+        );
+        $this->writeInc($dir . '/importar.roles.inc', [
+            'public_select' => ['user' => 'postgres', 'password' => 'pgsecret'],
+        ]);
+
+        $cfg = new ConfigDB('importar');
+        $replica = $cfg->getConexionImportarReplica('public_select');
+
+        $this->assertSame('interior', $replica['host']);
+        $this->assertSame('comun_select', $replica['dbname']);
+    }
+
     public function test_getConexionImportarReplica_usa_host_de_conn_no_de_default(): void
     {
         $base = 'cfgdbtest';

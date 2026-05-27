@@ -14,7 +14,7 @@ class DBRefresh
     {
     }
 
-    public function refreshSubscriptionModulo(string $db)
+    public function refreshSubscriptionModulo(string $db): ?string
     {
         $fileLog = ConfigGlobal::$directorio . '/log/db/pg_error_modulos.sql';
         //cambiar la conexión
@@ -26,10 +26,14 @@ class DBRefresh
         if ($db === 'sv-e') {
             $config = $oConfigDB->getConexionImportarReplica('publicv-e_select');
         }
+        if (!isset($config)) {
+            return null;
+        }
         $host = $config['host'];
         $oConnection = new DBConnection($config);
         $dsn = $oConnection->getURI();
-        $this->refreshSubscription($host, $db, $dsn, $fileLog);
+
+        return $this->refreshSubscription($host, $db, $dsn, $fileLog);
     }
 
     /**

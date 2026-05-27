@@ -235,7 +235,129 @@ class ConfigDB
     public function getConexionImportarReplica(string $claveImportar): array
     {
         $config = $this->getConexionMantenimiento($claveImportar);
+        $config = $this->completarConnReplicaSiAmbigua($claveImportar, $config);
         $config['schema'] = $claveImportar;
+
+        return $config;
+    }
+
+    /**
+     * Si la plantilla réplica apunta al mismo host/dbname que default, buscar en getEsquema,
+     * comun.conn.inc o monolitos *\_select.inc (mismo criterio operativo que CrearEsquema).
+     *
+     * @param array<string, mixed> $config
+     * @return array<string, mixed>
+     */
+    private function completarConnReplicaSiAmbigua(string $claveImportar, array $config): array
+    {
+        $default = is_array($this->data['default'] ?? null) ? $this->data['default'] : [];
+        if (!$this->connReplicaAmbigua($config, $default)) {
+            return $config;
+        }
+
+        if ($this->tieneEsquema($claveImportar)) {
+            try {
+                $config = $this->fusionarConnPrefer($config, $this->getEsquema($claveImportar));
+            } catch (RuntimeException) {
+                // seguir con otros fallbacks
+            }
+        }
+
+        if ($this->connReplicaAmbigua($config, $default)) {
+            $config = $this->fusionarPlantillaConnOtraBase($claveImportar, $config);
+        }
+
+        if ($this->connReplicaAmbigua($config, $default)) {
+            $config = $this->fusionarMonolitoSelect($claveImportar, $config);
+        }
+
+        return $config;
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     * @param array<string, mixed> $default
+     */
+    private function connReplicaAmbigua(array $config, array $default): bool
+    {
+        $hostConfig = (string) ($config['host'] ?? '');
+        $hostDefault = (string) ($default['host'] ?? '');
+        $dbConfig = (string) ($config['dbname'] ?? '');
+        $dbDefault = (string) ($default['dbname'] ?? '');
+
+        return ($hostConfig === '' || $hostConfig === $hostDefault)
+            && ($dbConfig === '' || $dbConfig === $dbDefault);
+    }
+
+    /**
+     * @param array<string, mixed> $base
+     * @param array<string, mixed> $overlay
+     * @return array<string, mixed>
+     */
+    private function fusionarConnPrefer(array $base, array $overlay): array
+    {
+        foreach (['host', 'port', 'dbname', 'user', 'password', 'sslmode', 'sslcert', 'sslkey', 'sslrootcert', 'ssh_user'] as $clave) {
+            if (isset($overlay[$clave]) && $overlay[$clave] !== '') {
+                $base[$clave] = $overlay[$clave];
+            }
+        }
+
+        return $base;
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     * @return array<string, mixed>
+     */
+    private function fusionarPlantillaConnOtraBase(string $claveImportar, array $config): array
+    {
+        $baseConn = match ($claveImportar) {
+            'public_select' => 'comun',
+            'publicv-e_select' => 'sv',
+            default => null,
+        };
+        if ($baseConn === null) {
+            return $config;
+        }
+
+        $connPath = self::dirPwd() . '/' . self::ficheroConnNombre($baseConn);
+        if (!is_readable($connPath)) {
+            return $config;
+        }
+
+        $conn = self::cargarArrayInc($connPath);
+        if (!is_array($conn[$claveImportar] ?? null)) {
+            return $config;
+        }
+
+        return $this->fusionarConnPrefer($config, $conn[$claveImportar]);
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     * @return array<string, mixed>
+     */
+    private function fusionarMonolitoSelect(string $claveImportar, array $config): array
+    {
+        $fichero = match ($claveImportar) {
+            'public_select' => 'comun_select',
+            'publicv-e_select' => 'sv-e_select',
+            default => null,
+        };
+        if ($fichero === null) {
+            return $config;
+        }
+
+        foreach ([$fichero, 'pruebas-' . $fichero] as $nombre) {
+            $path = self::dirPwd() . '/' . $nombre . '.inc';
+            if (!is_readable($path)) {
+                continue;
+            }
+            $data = self::cargarArrayInc($path);
+            $block = is_array($data['default'] ?? null) ? $data['default'] : $data;
+
+            return $this->fusionarConnPrefer($config, $block);
+        }
 
         return $config;
     }

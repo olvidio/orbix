@@ -502,6 +502,8 @@ abstract class DBAbstract
         $config = $oConfigDB->getConexionImportarReplica($claveImportar);
         $oConexion = new DBConnection($config);
         $this->oDbl = $oConexion->getPDO();
+        // public_select no es un schema PG; usar public (como MigracionesEjecutar).
+        $this->oDbl->exec('SET search_path TO public');
     }
 
     protected function eliminar($nom_tabla)
@@ -619,7 +621,10 @@ abstract class DBAbstract
     {
         $DBRefresh = new DBRefresh();
         foreach ($this->modulosSuscripcionGlobal() as $modulo) {
-            $DBRefresh->refreshSubscriptionModulo($modulo);
+            $aviso = $DBRefresh->refreshSubscriptionModulo($modulo);
+            if ($aviso !== null) {
+                throw new \RuntimeException($aviso);
+            }
         }
     }
 
