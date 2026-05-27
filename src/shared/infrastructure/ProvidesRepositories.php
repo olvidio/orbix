@@ -8,6 +8,7 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
@@ -48,6 +49,7 @@ trait ProvidesRepositories
             'PersonaS' => PersonaSRepositoryInterface::class,
             'PersonaSSSC' => PersonaSSSCRepositoryInterface::class,
             'PersonaEx' => PersonaExRepositoryInterface::class,
+            'PersonaSacd' => PersonaSacdRepositoryInterface::class,
             'Centro' => CentroRepositoryInterface::class,
             'CentroDl' => CentroDlRepositoryInterface::class,
             'CentroEx' => CentroExRepositoryInterface::class,
@@ -81,6 +83,7 @@ trait ProvidesRepositories
             'PersonaS' => PersonaSRepositoryInterface::class,
             'PersonaSSSC' => PersonaSSSCRepositoryInterface::class,
             'PersonaEx' => PersonaExRepositoryInterface::class,
+            'PersonaSacd' => PersonaSacdRepositoryInterface::class,
             'ActividadAll' => ActividadAllRepositoryInterface::class,
             'Centro' => DireccionCentroRepositoryInterface::class,
             'CentroDl' => DireccionCentroDlRepositoryInterface::class,
