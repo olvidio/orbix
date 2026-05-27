@@ -33,12 +33,16 @@ class DB extends DBAbstract
 
     public function dropAll()
     {
-        $this->eliminar_aux_usuarios_ctr_perm();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_aux_usuarios_ctr_perm();
+        });
     }
 
     public function createAll()
     {
-        $this->create_aux_usuarios_ctr_perm();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_aux_usuarios_ctr_perm();
+        });
     }
 
     /**
@@ -47,7 +51,7 @@ class DB extends DBAbstract
     public function create_aux_usuarios_ctr_perm()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "aux_usuarios_ctr_perm";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -63,19 +67,25 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
     }
 
     public function eliminar_aux_usuarios_ctr_perm()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "aux_usuarios_ctr_perm";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+    }
+
+
+    protected function modulosSuscripcionGlobal(): array
+    {
+        return ['sv-e'];
     }
 
 }

@@ -26,14 +26,18 @@ class DB extends DBAbstract
 
     public function dropAll(): void
     {
-        $this->eliminar_e_certificados_emitidos();
-        $this->eliminar_e_certificados_recibidos();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_e_certificados_emitidos();
+            $this->eliminar_e_certificados_recibidos();
+        });
     }
 
     public function createAll(): void
     {
-        $this->create_e_certificados_emitidos();
-        $this->create_e_certificados_recibidos();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_e_certificados_emitidos();
+            $this->create_e_certificados_recibidos();
+        });
     }
 
     /**
@@ -42,7 +46,7 @@ class DB extends DBAbstract
      */
     public function create_e_certificados_emitidos(): void
     {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
 
         $tabla = "e_certificados_emitidos";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -67,18 +71,18 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
     public function eliminar_e_certificados_emitidos(): void
     {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
 
         $tabla = "e_certificados_emitidos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
     /**
@@ -87,7 +91,7 @@ class DB extends DBAbstract
      */
     public function create_e_certificados_recibidos(): void
     {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
 
         $tabla = "e_certificados_recibidos";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -112,18 +116,24 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
     public function eliminar_e_certificados_recibidos(): void
     {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
 
         $tabla = "e_certificados_recibidos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
+    }
+
+
+    protected function modulosSuscripcionGlobal(): array
+    {
+        return ['sv-e'];
     }
 
 }

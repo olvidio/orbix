@@ -25,13 +25,17 @@ class DB extends DBAbstract
 
     public function dropAll(): void
     {
-        $this->eliminar_atn_sacd_textos();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_atn_sacd_textos();
+        });
 
     }
 
     public function createAll(): void
     {
-        $this->create_atn_sacd_textos();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_atn_sacd_textos();
+        });
     }
 
     /**
@@ -39,7 +43,7 @@ class DB extends DBAbstract
      */
     public function create_atn_sacd_textos(): void
     {
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "a_sacd_textos";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -55,18 +59,24 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
     }
 
     public function eliminar_atn_sacd_textos(): void
     {
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "a_sacd_textos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+    }
+
+
+    protected function modulosSuscripcionGlobal(): array
+    {
+        return ['sv-e'];
     }
 
 }

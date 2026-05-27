@@ -26,17 +26,21 @@ class DB extends DBAbstract
 
     public function dropAll()
     {
-        $this->eliminar_cuadricula();
-        $this->eliminar_iniciales();
-        $this->eliminar_rel_encargo_ctr();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_cuadricula();
+            $this->eliminar_iniciales();
+            $this->eliminar_rel_encargo_ctr();
+        });
     }
 
     public function createAll()
     {
-        //$this->create_plantillas();
-        $this->create_cuadricula();
-        $this->create_iniciales();
-        $this->create_rel_encargo_ctr();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            //$this->create_plantillas();
+            $this->create_cuadricula();
+            $this->create_iniciales();
+            $this->create_rel_encargo_ctr();
+        });
     }
 
     /**
@@ -44,7 +48,7 @@ class DB extends DBAbstract
      */
     public function create_iniciales()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_iniciales";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -59,19 +63,19 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
 
     public function eliminar_iniciales()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_iniciales";
         $nom_tabla = $this->getNomTabla($tabla);
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     /**
@@ -79,7 +83,7 @@ class DB extends DBAbstract
      */
     public function create_cuadricula()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_cuadricula";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -98,19 +102,19 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
 
     public function eliminar_cuadricula()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_cuadricula";
         $nom_tabla = $this->getNomTabla($tabla);
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     /**
@@ -118,7 +122,7 @@ class DB extends DBAbstract
      */
     public function create_rel_encargo_ctr()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_rel_encargo_ctr";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -133,19 +137,19 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
 
     public function eliminar_rel_encargo_ctr()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_rel_encargo_ctr";
         $nom_tabla = $this->getNomTabla($tabla);
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
 

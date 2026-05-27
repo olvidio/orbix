@@ -4,7 +4,9 @@ namespace src\utils_database\domain\entity;
 
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
+use src\shared\config\ReplicaSelectPolicy;
 use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\DBRefresh;
 
 /**
  * Crear las tablas necesaria a nivel de aplicaci?n (global).
@@ -20,19 +22,12 @@ abstract class DBAbstract
     protected $oDbl;
     protected $user_orbix;
 
+    /** true mientras se repiten operaciones globales en comun_select / sv-e_select */
+    protected bool $operacionEnReplica = false;
+
     public static function hasServerSelect()
     {
-        // Si es el mismo servidor (port?til) me lo salto:
-        $oConfigDB = new ConfigDB('importar');
-        $config = $oConfigDB->getEsquema('public');
-        $host_sv = $config['host'];
-        $port_sv = $config['port'];
-        //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
-        $configE = $oConfigDB->getEsquema('public_select');
-        $host_sve = $configE['host'];
-        $port_sve = $configE['port'];
-
-        return ($host_sv != $host_sve || $port_sv != $port_sve);
+        return ReplicaSelectPolicy::incluirSelect();
     }
 
     /**
@@ -216,7 +211,11 @@ abstract class DBAbstract
         try {
             $this->addPermisoGlobalConexion($db);
         } finally {
-            $this->oDbl = $pdoOrigen;
+            // Si no había conexión previa, conservar la de importar usada para los GRANT
+            // (p. ej. apptables_update sin global_object.inc).
+            if ($pdoOrigen !== null) {
+                $this->oDbl = $pdoOrigen;
+            }
         }
     }
 
@@ -554,6 +553,94 @@ abstract class DBAbstract
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
+    }
+
+    /**
+     * Permiso efectivo al crear/eliminar tablas globales (principal o réplica).
+     */
+    protected function permisoGlobalEffective(string $permisoPrincipal): string
+    {
+        if (!$this->operacionEnReplica) {
+            return $permisoPrincipal;
+        }
+
+        return match ($permisoPrincipal) {
+            'comun' => 'comun_select',
+            'sfsv', 'sfsv-e', 'sfsv-d' => 'sfsv-e_select',
+            default => $permisoPrincipal,
+        };
+    }
+
+    /**
+     * Ejecuta createAll global en principal y, si aplica, en réplica (mismo criterio que CrearEsquema).
+     *
+     * @param callable(): void $crear
+     */
+    protected function ejecutarCreateAllGlobal(callable $crear): void
+    {
+        $crear();
+        if (!self::hasServerSelect()) {
+            return;
+        }
+
+        $esquemaOrg = $this->esquema;
+        $this->operacionEnReplica = true;
+        if ($esquemaOrg === 'public') {
+            $this->esquema = 'global';
+        }
+        try {
+            $crear();
+            $this->finalizarCreateAllGlobal();
+        } finally {
+            $this->operacionEnReplica = false;
+            $this->esquema = $esquemaOrg;
+        }
+    }
+
+    /**
+     * Ejecuta dropAll global en principal y réplica cuando corresponde.
+     *
+     * @param callable(): void $eliminar
+     */
+    protected function ejecutarDropAllGlobal(callable $eliminar): void
+    {
+        $eliminar();
+        if (!self::hasServerSelect()) {
+            return;
+        }
+
+        $esquemaOrg = $this->esquema;
+        $this->operacionEnReplica = true;
+        if ($esquemaOrg === 'public') {
+            $this->esquema = 'global';
+        }
+        try {
+            $eliminar();
+        } finally {
+            $this->operacionEnReplica = false;
+            $this->esquema = $esquemaOrg;
+        }
+    }
+
+    /**
+     * Refresca suscripciones lógicas tras crear tablas globales en réplica.
+     */
+    protected function finalizarCreateAllGlobal(): void
+    {
+        $DBRefresh = new DBRefresh();
+        foreach ($this->modulosSuscripcionGlobal() as $modulo) {
+            $DBRefresh->refreshSubscriptionModulo($modulo);
+        }
+    }
+
+    /**
+     * Módulos cuya suscripción refrescar tras createAll en réplica.
+     *
+     * @return list<string>
+     */
+    protected function modulosSuscripcionGlobal(): array
+    {
+        return ['comun'];
     }
 
 }

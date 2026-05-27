@@ -1,69 +1,10 @@
 <?php
 
-require_once("frontend/shared/global_header_front.inc");
+declare(strict_types=1);
 
-$Qid_app = (integer)filter_input(INPUT_POST, 'id_app');
-$Qesquema = (string)filter_input(INPUT_POST, 'esquema'); // esquema con la v o f.
-$Qaccion = (string)filter_input(INPUT_POST, 'accion');
+use frontend\shared\PostRequest;
 
-$a_todasApps = $_SESSION['config']['a_apps'];
-$nom_app = array_search($Qid_app, $a_todasApps);
+require_once 'frontend/shared/global_header_front.inc';
 
-$clase_global = "$nom_app\\db\\DB";
-$clase_esquema = "$nom_app\\db\\DBEsquema";
-
-$clase_global_src = 'src\\'."$nom_app\\db\\DB";
-$clase_esquema_src = 'src\\'."$nom_app\\db\\DBEsquema";
-
-switch ($Qaccion) {
-    case 'crear_global':
-        if (class_exists($clase_global)) {
-            $ClaseGlobal = new $clase_global();
-            $ClaseGlobal->createAll();
-        }
-        if (class_exists($clase_global_src)) {
-            $ClaseGlobal = new $clase_global_src();
-            $ClaseGlobal->createAll();
-        }
-        break;
-    case 'eliminar_global':
-        if (class_exists($clase_global)) {
-            $ClaseGlobal = new $clase_global();
-            $ClaseGlobal->dropAll();
-        }
-        if (class_exists($clase_global_src)) {
-            $ClaseGlobal = new $clase_global_src();
-            $ClaseGlobal->dropAll();
-        }
-        break;
-    case 'crear_esquema':
-        if (class_exists($clase_esquema)) {
-            $ClaseEsquema = new $clase_esquema($Qesquema);
-            $ClaseEsquema->createAll();
-        }
-        if (class_exists($clase_esquema_src)) {
-            $ClaseEsquema = new $clase_esquema_src($Qesquema);
-            $ClaseEsquema->createAll();
-        }
-        break;
-    case 'eliminar_esquema':
-        if (class_exists($clase_esquema)) {
-            $ClaseEsquema = new $clase_esquema($Qesquema);
-            $ClaseEsquema->dropAll();
-        }
-        if (class_exists($clase_esquema_src)) {
-            $ClaseEsquema = new $clase_esquema_src($Qesquema);
-            $ClaseEsquema->dropAll();
-        }
-        break;
-    case 'llenar_esquema':
-        if (class_exists($clase_esquema)) {
-            $ClaseEsquema = new $clase_esquema($Qesquema);
-            $ClaseEsquema->llenarAll();
-        }
-        if (class_exists($clase_esquema_src)) {
-            $ClaseEsquema = new $clase_esquema_src($Qesquema);
-            $ClaseEsquema->llenarAll();
-        }
-        break;
-}
+header('Content-Type: application/json; charset=UTF-8');
+echo PostRequest::sendRawPost('/src/devel_db_admin/apptables_update', PostRequest::requestPayloadForHash());

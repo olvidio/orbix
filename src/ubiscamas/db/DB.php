@@ -25,14 +25,18 @@ class DB extends DBAbstract
 
     public function dropAll()
     {
-        $this->eliminar_du_camas();
-        $this->eliminar_du_habitaciones();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_du_camas();
+            $this->eliminar_du_habitaciones();
+        });
     }
 
     public function createAll()
     {
-        $this->create_du_habitaciones();
-        $this->create_du_camas();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_du_habitaciones();
+            $this->create_du_camas();
+        });
     }
 
     /**
@@ -42,9 +46,11 @@ class DB extends DBAbstract
     public function create_du_habitaciones()
     {
         $esquema_org = $this->esquema;
-        $this->esquema = 'public';
+        if ($this->esquema !== 'global') {
+            $this->esquema = 'public';
+        }
 
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "du_habitaciones";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -79,7 +85,7 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
     }
@@ -87,15 +93,17 @@ class DB extends DBAbstract
     public function eliminar_du_habitaciones()
     {
         $esquema_org = $this->esquema;
-        $this->esquema = 'public';
+        if ($this->esquema !== 'global') {
+            $this->esquema = 'public';
+        }
 
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "du_habitaciones";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
     }
@@ -105,7 +113,7 @@ class DB extends DBAbstract
      */
     public function create_du_camas()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "du_camas";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -123,18 +131,18 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_du_camas()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "du_camas";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
 }

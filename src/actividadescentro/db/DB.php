@@ -24,12 +24,16 @@ class DB extends DBAbstract
 
     public function dropAll()
     {
-        $this->eliminar_da_ctr_encargados();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_da_ctr_encargados();
+        });
     }
 
     public function createAll()
     {
-        $this->create_da_ctr_encargados();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_da_ctr_encargados();
+        });
     }
 
     /**
@@ -37,7 +41,7 @@ class DB extends DBAbstract
      */
     public function create_da_ctr_encargados()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "da_ctr_encargados";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -54,18 +58,18 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_da_ctr_encargados()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "da_ctr_encargados";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
 }

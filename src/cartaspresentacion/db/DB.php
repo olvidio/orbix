@@ -27,13 +27,17 @@ class DB extends DBAbstract
 
     public function dropAll()
     {
-        $this->eliminar_presentacion();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_presentacion();
+        });
     }
 
     public function createAll()
     {
-        $this->create_presentacion();
-        $this->create_presentacion_resto();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_presentacion();
+            $this->create_presentacion_resto();
+        });
     }
 
     /**
@@ -44,7 +48,7 @@ class DB extends DBAbstract
 
     public function create_presentacion()
     {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "du_presentacion";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -63,7 +67,7 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
     public function create_presentacion_resto()
@@ -74,7 +78,7 @@ class DB extends DBAbstract
         $this->esquema = 'resto' . $this->vf;
         $this->role = 'orbix' . $this->vf;
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
 
         $tabla = "du_presentacion";
 
@@ -106,7 +110,7 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
@@ -114,13 +118,19 @@ class DB extends DBAbstract
 
     public function eliminar_presentacion()
     {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "du_presentacion";
         $nom_tabla = $this->getNomTabla($tabla);
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
+    }
+
+
+    protected function modulosSuscripcionGlobal(): array
+    {
+        return ['sv-e'];
     }
 
 }

@@ -25,16 +25,20 @@ class DB extends DBAbstract
 
     public function dropAll(): void
     {
-        $this->eliminar_da_ingresos();
-        $this->eliminar_du_gastos();
-        $this->eliminar_du_grupos();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_da_ingresos();
+            $this->eliminar_du_gastos();
+            $this->eliminar_du_grupos();
+        });
     }
 
     public function createAll(): void
     {
-        $this->create_da_ingresos();
-        $this->create_du_gastos();
-        $this->create_du_grupos();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_da_ingresos();
+            $this->create_du_gastos();
+            $this->create_du_grupos();
+        });
     }
 
     /**
@@ -43,7 +47,7 @@ class DB extends DBAbstract
      */
     public function create_da_ingresos(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
 
         $tabla = "da_ingresos";
@@ -63,23 +67,23 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_da_ingresos(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "da_ingresos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function create_du_gastos(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "du_gastos";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -97,23 +101,23 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_du_gastos(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "du_gastos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function create_du_grupos(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "du_grupos";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -130,17 +134,17 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_du_grupos(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "du_grupos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 }

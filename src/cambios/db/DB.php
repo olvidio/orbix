@@ -25,20 +25,24 @@ class DB extends DBAbstract
 
     public function dropAll()
     {
-        $this->eliminar_av_cambios_anotados();
-        $this->eliminar_av_cambios_usuario_propiedades_pref();
-        $this->eliminar_av_cambios_usuario_objeto_pref();
-        $this->eliminar_av_cambios_usuario();
-        $this->eliminar_av_cambios();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_av_cambios_anotados();
+            $this->eliminar_av_cambios_usuario_propiedades_pref();
+            $this->eliminar_av_cambios_usuario_objeto_pref();
+            $this->eliminar_av_cambios_usuario();
+            $this->eliminar_av_cambios();
+        });
     }
 
     public function createAll()
     {
-        $this->create_av_cambios();
-        $this->create_av_cambios_usuario();
-        $this->create_av_cambios_usuario_objeto_pref();
-        $this->create_av_cambios_usuario_propiedades_pref();
-        $this->create_av_cambios_anotados();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_av_cambios();
+            $this->create_av_cambios_usuario();
+            $this->create_av_cambios_usuario_objeto_pref();
+            $this->create_av_cambios_usuario_propiedades_pref();
+            $this->create_av_cambios_anotados();
+        });
     }
 
     /**
@@ -48,9 +52,11 @@ class DB extends DBAbstract
     public function create_av_cambios()
     {
         $esquema_org = $this->esquema;
-        $this->esquema = 'public';
+        if ($this->esquema !== 'global') {
+            $this->esquema = 'public';
+        }
 
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "av_cambios";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -102,7 +108,7 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
     }
@@ -110,15 +116,17 @@ class DB extends DBAbstract
     public function eliminar_av_cambios()
     {
         $esquema_org = $this->esquema;
-        $this->esquema = 'public';
+        if ($this->esquema !== 'global') {
+            $this->esquema = 'public';
+        }
 
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "av_cambios";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
     }
@@ -128,7 +136,7 @@ class DB extends DBAbstract
      */
     public function create_av_cambios_anotados()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "av_cambios_anotados";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -148,18 +156,18 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_av_cambios_anotados()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "av_cambios_anotados";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     /**
@@ -169,7 +177,7 @@ class DB extends DBAbstract
      */
     public function create_av_cambios_usuario()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "av_cambios_usuario";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -189,18 +197,18 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_av_cambios_usuario()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "av_cambios_usuario";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     /**
@@ -208,7 +216,7 @@ class DB extends DBAbstract
      */
     public function create_av_cambios_usuario_objeto_pref()
     {
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "av_cambios_usuario_objeto_pref";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -232,23 +240,23 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
     }
 
     public function eliminar_av_cambios_usuario_objeto_pref()
     {
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "av_cambios_usuario_objeto_pref";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
     }
 
     public function create_av_cambios_usuario_propiedades_pref()
     {
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "av_cambios_usuario_propiedades_pref";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -268,18 +276,23 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
     }
 
     public function eliminar_av_cambios_usuario_propiedades_pref()
     {
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "av_cambios_usuario_propiedades_pref";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
     }
+
+    protected function modulosSuscripcionGlobal(): array
+    {
+        return ['comun', 'sv-e'];
+    }
+
 }
-    

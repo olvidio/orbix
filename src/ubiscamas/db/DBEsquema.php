@@ -4,12 +4,11 @@ namespace src\ubiscamas\db;
 
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
-use src\cambios\db\DBEsquemaSelect;
 use src\utils_database\domain\entity\DBAbstract;
 
 /**
  * crear las tablas necesarias para el esquema.
- * Heredadas de public
+ * Heredadas de public (principal) o global (réplica).
  */
 class DBEsquema extends DBAbstract
 {
@@ -28,24 +27,18 @@ class DBEsquema extends DBAbstract
 
     public function dropAll()
     {
-        $this->eliminar_du_camas_dl();
-        $this->eliminar_du_habitaciones_dl();
-        // eliminar las tablas en la DBSelect para la sincronización.
-        if (DBAbstract::hasServerSelect()) {
-            $oDBEsquemaSelect = new DBEsquemaSelect();
-            $oDBEsquemaSelect->dropAllSelect();
-        }
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_du_camas_dl();
+            $this->eliminar_du_habitaciones_dl();
+        });
     }
 
     public function createAll()
     {
-        $this->create_du_habitaciones_dl();
-        $this->create_du_camas_dl();
-        // crear las tablas en la DBSelect para la sincronización.
-        if (DBAbstract::hasServerSelect()) {
-            $oDBEsquemaSelect = new DBEsquemaSelect();
-            $oDBEsquemaSelect->createAllSelect();
-        }
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_du_habitaciones_dl();
+            $this->create_du_camas_dl();
+        });
     }
 
     protected function infoTable($tabla)
@@ -73,9 +66,8 @@ class DBEsquema extends DBAbstract
      */
     public function create_du_habitaciones_dl()
     {
-        // OJO, está en public
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $permiso = $this->permisoGlobalEffective('comun');
+        $this->addPermisoGlobal($permiso);
 
         $tabla = "du_habitaciones_dl";
         $tabla_padre = "du_habitaciones";
@@ -87,20 +79,18 @@ class DBEsquema extends DBAbstract
         // Al ser de la DB comun, puede ser que al intentar crear como sf, las
         // tablas ya se hayan creado como sv (o al revés).
         if ($this->tableExists($tabla)) {
+            $this->delPermisoGlobal($permiso);
             return TRUE;
         }
 
         $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
+        $tabla_inherits = $this->tablaPadreInherits($tabla_padre);
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                         CONSTRAINT $nompkey PRIMARY KEY ($campo_uniq)
                 ) 
-            INHERITS (public.$tabla_padre);";
+            INHERITS ($tabla_inherits);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
 
@@ -110,22 +100,16 @@ class DBEsquema extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($permiso);
         return TRUE;
     }
 
     public function eliminar_du_habitaciones_dl()
     {
-        // OJO, está en public
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
-
         $datosTabla = $this->infoTable("du_habitaciones_dl");
         $nom_tabla = $datosTabla['nom_tabla'];
 
-        $this->eliminar($nom_tabla);
-
-        $this->delPermisoGlobal('comun');
+        $this->eliminarEnComun($nom_tabla);
     }
 
     /**
@@ -133,8 +117,8 @@ class DBEsquema extends DBAbstract
      */
     public function create_du_camas_dl()
     {
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $permiso = $this->permisoGlobalEffective('comun');
+        $this->addPermisoGlobal($permiso);
 
         $tabla = "du_camas_dl";
         $tabla_padre = "du_camas";
@@ -143,22 +127,21 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_uniq = $datosTabla['campo_seq'];
         $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
 
         // Al ser de la DB comun, puede ser que al intentar crear como sf, las
         // tablas ya se hayan creado como sv (o al revés).
         if ($this->tableExists($tabla)) {
+            $this->delPermisoGlobal($permiso);
             return TRUE;
         }
+
+        $tabla_inherits = $this->tablaPadreInherits($tabla_padre);
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                         CONSTRAINT $nompkey PRIMARY KEY ($campo_uniq)
                 ) 
-            INHERITS (public.$tabla_padre);";
+            INHERITS ($tabla_inherits);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
 
@@ -167,22 +150,34 @@ class DBEsquema extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($permiso);
         return true;
     }
 
-
     public function eliminar_du_camas_dl()
     {
-        // OJO, está en public
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
-
         $datosTabla = $this->infoTable("du_camas_dl");
         $nom_tabla = $datosTabla['nom_tabla'];
 
-        $this->eliminar($nom_tabla);
+        $this->eliminarEnComun($nom_tabla);
+    }
 
+    private function tablaPadreInherits(string $tabla_padre): string
+    {
+        $esquema_padre = $this->operacionEnReplica ? 'global' : 'public';
+
+        return "{$esquema_padre}.{$tabla_padre}";
+    }
+
+    private function eliminarEnComun(string $nom_tabla): void
+    {
+        if ($this->operacionEnReplica) {
+            $this->eliminarDeComunSelect($nom_tabla);
+            return;
+        }
+
+        $this->addPermisoGlobal('comun');
+        $this->eliminar($nom_tabla);
         $this->delPermisoGlobal('comun');
     }
 }

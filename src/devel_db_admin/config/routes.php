@@ -9,6 +9,9 @@ return static function ($r): void {
     $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/apptables_apps_data', function (): void {
         require __DIR__ . '/../infrastructure/ui/http/controllers/apptables_apps_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/apptables_update', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/apptables_update.php';
+    });
     $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/db_lugar', function (): void {
         require __DIR__ . '/../infrastructure/ui/http/controllers/db_lugar.php';
     });

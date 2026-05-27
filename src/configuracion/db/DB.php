@@ -25,18 +25,22 @@ class DB extends DBAbstract
 
     public function dropAll()
     {
-        $this->eliminar_x_config_schema();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_x_config_schema();
+        });
     }
 
     public function createAll()
     {
-        $this->create_x_config_schema();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_x_config_schema();
+        });
     }
 
     // Global
     public function create_x_config_schema()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "x_config_schema";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -51,18 +55,18 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_x_config_schema()
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "x_config_schema";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 }
     

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
-use src\shared\config\ServerConf;
+use src\shared\config\ReplicaSelectPolicy;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBEsquemaCreate;
@@ -35,7 +35,7 @@ final class EliminarEsquemaDl
         $DlNew = $dl;
 
         $oConfigDB = new ConfigDB('importar');
-        $incluirSelect = !$this->esEntornoDocker();
+        $incluirSelect = ReplicaSelectPolicy::incluirSelect();
 
         if ($comun !== 0) {
             $oTrasvase = new DBTrasvase();
@@ -139,11 +139,6 @@ final class EliminarEsquemaDl
         $this->quitarEntradasPasswordEnFicheros($comun, $sv, $sf, $esquema, $esquemav, $esquemaf);
 
         return $avisos;
-    }
-
-    private function esEntornoDocker(): bool
-    {
-        return (bool) preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR);
     }
 
     private function quitarEntradasPasswordEnFicheros(

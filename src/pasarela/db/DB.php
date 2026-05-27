@@ -25,12 +25,16 @@ class DB extends DBAbstract
 
     public function dropAll(): void
     {
-        $this->eliminar_pasarela();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_pasarela();
+        });
     }
 
     public function createAll(): void
     {
-        $this->create_pasarela();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_pasarela();
+        });
     }
 
     /**
@@ -38,7 +42,7 @@ class DB extends DBAbstract
      */
     public function create_pasarela(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "pasarela";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -53,17 +57,17 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_pasarela(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "pasarela";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 }

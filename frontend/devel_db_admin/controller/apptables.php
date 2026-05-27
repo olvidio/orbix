@@ -39,6 +39,7 @@ $a_campos = [
     'oHash' => $oHash,
     'oDesplApps' => $oDeslpApps,
     'alerta' => $alerta,
+    'oPosicion' => $oPosicion,
 ];
 
 $esquema = OrbixRuntime::miRegionDl();

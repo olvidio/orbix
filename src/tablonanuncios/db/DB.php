@@ -26,12 +26,16 @@ class DB extends DBAbstract
 
     public function dropAll()
     {
-        $this->eliminar_tablon_anuncios();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_tablon_anuncios();
+        });
     }
 
     public function createAll()
     {
-        $this->create_tablon_anuncios();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_tablon_anuncios();
+        });
     }
 
     /**
@@ -40,7 +44,7 @@ class DB extends DBAbstract
      */
     public function create_tablon_anuncios()
     {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
 
         $tabla = "tablon_anuncios";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -63,18 +67,24 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
     public function eliminar_tablon_anuncios()
     {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
 
         $tabla = "tablon_anuncios";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
+    }
+
+
+    protected function modulosSuscripcionGlobal(): array
+    {
+        return ['sv-e'];
     }
 
 }

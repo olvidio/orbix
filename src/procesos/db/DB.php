@@ -25,22 +25,26 @@ class DB extends DBAbstract
 
     public function dropAll(): void
     {
-        $this->eliminar_a_actividad_proceso();
-        $this->eliminar_a_tipos_proceso();
-        $this->eliminar_a_tareas_proceso();
-        $this->eliminar_a_fases();
-        $this->eliminar_a_tareas();
-        $this->eliminar_aux_usuarios_perm();
+        $this->ejecutarDropAllGlobal(function (): void {
+            $this->eliminar_a_actividad_proceso();
+            $this->eliminar_a_tipos_proceso();
+            $this->eliminar_a_tareas_proceso();
+            $this->eliminar_a_fases();
+            $this->eliminar_a_tareas();
+            $this->eliminar_aux_usuarios_perm();
+        });
     }
 
     public function createAll(): void
     {
-        $this->create_a_actividad_proceso();
-        $this->create_a_tipos_procesos();
-        $this->create_a_tareas();
-        $this->create_a_fases();
-        $this->create_a_tareas_proceso();
-        $this->create_aux_usuarios_perm();
+        $this->ejecutarCreateAllGlobal(function (): void {
+            $this->create_a_actividad_proceso();
+            $this->create_a_tipos_procesos();
+            $this->create_a_tareas();
+            $this->create_a_fases();
+            $this->create_a_tareas_proceso();
+            $this->create_aux_usuarios_perm();
+        });
     }
 
     /**
@@ -50,7 +54,7 @@ class DB extends DBAbstract
      */
     public function create_a_actividad_proceso(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "a_actividad_proceso";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -71,24 +75,24 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_a_actividad_proceso(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "a_actividad_proceso";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
 
     public function create_a_tipos_procesos(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "a_tipos_proceso";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -105,23 +109,23 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_a_tipos_proceso(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "a_tipos_proceso";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function create_a_tareas(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "a_tareas";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -138,23 +142,23 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_a_tareas(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "a_tareas";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function create_a_fases(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "a_fases";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -171,23 +175,23 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_a_fases(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "a_fases";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function create_a_tareas_proceso(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "a_tareas_proceso";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -207,18 +211,18 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     public function eliminar_a_tareas_proceso(): void
     {
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
         $tabla = "a_tareas_proceso";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
     /**
@@ -227,7 +231,7 @@ class DB extends DBAbstract
     public function create_aux_usuarios_perm(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "aux_usuarios_perm";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -247,19 +251,24 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
     }
 
     public function eliminar_aux_usuarios_perm(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "aux_usuarios_perm";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
+    }
+
+    protected function modulosSuscripcionGlobal(): array
+    {
+        return ['comun', 'sv-e'];
     }
 
 }
