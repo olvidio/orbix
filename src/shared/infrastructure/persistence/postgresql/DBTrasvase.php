@@ -502,7 +502,13 @@ class DBTrasvase extends DBAbstract
             $host = (string) ($config['host'] ?? '');
             $dsn = (new DBConnection($config))->getURI();
             $logFile = ConfigGlobal::$directorio . '/log/db/map_id.refresh_sub.sql';
-            $aviso = (new DBRefresh())->refreshSubscription($host, 'comun', $dsn, $logFile);
+            $aviso = (new DBRefresh())->refreshSubscription(
+                $host,
+                'comun',
+                $dsn,
+                $logFile,
+                (string) ($config['dbname'] ?? ''),
+            );
             if ($aviso !== null) {
                 $this->avisosConexion[] = $aviso;
             }

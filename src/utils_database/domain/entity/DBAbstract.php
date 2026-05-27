@@ -575,17 +575,12 @@ abstract class DBAbstract
             return;
         }
 
-        $esquemaOrg = $this->esquema;
         $this->operacionEnReplica = true;
-        if ($esquemaOrg === 'public') {
-            $this->esquema = 'global';
-        }
         try {
             $crear();
             $this->finalizarCreateAllGlobal();
         } finally {
             $this->operacionEnReplica = false;
-            $this->esquema = $esquemaOrg;
         }
     }
 
@@ -601,16 +596,11 @@ abstract class DBAbstract
             return;
         }
 
-        $esquemaOrg = $this->esquema;
         $this->operacionEnReplica = true;
-        if ($esquemaOrg === 'public') {
-            $this->esquema = 'global';
-        }
         try {
             $eliminar();
         } finally {
             $this->operacionEnReplica = false;
-            $this->esquema = $esquemaOrg;
         }
     }
 

@@ -32,8 +32,9 @@ class DBRefresh
         $host = $config['host'];
         $oConnection = new DBConnection($config);
         $dsn = $oConnection->getURI();
+        $nombreBd = (string) ($config['dbname'] ?? '');
 
-        return $this->refreshSubscription($host, $db, $dsn, $fileLog);
+        return $this->refreshSubscription($host, $db, $dsn, $fileLog, $nombreBd);
     }
 
     /**
@@ -48,7 +49,7 @@ class DBRefresh
      *
      * @return string|null Aviso si falla; null si OK o no aplica
      */
-    public function refreshSubscription($host, string $db, string $dsn, $fileLog): ?string
+    public function refreshSubscription($host, string $db, string $dsn, $fileLog, string $nombreBd = ''): ?string
     {
         $subNombre = $this->nombreSuscripcion($db);
         if ($subNombre === null) {
@@ -56,7 +57,9 @@ class DBRefresh
         }
 
         $psql = self::rutaPsql();
-        $nombreBd = ServerConf::WEBDIR === 'pruebas' ? 'pruebas-' . $db : $db;
+        if ($nombreBd === '') {
+            $nombreBd = ServerConf::WEBDIR === 'pruebas' ? 'pruebas-' . $db : $db;
+        }
         $sql = 'ALTER SUBSCRIPTION ' . $subNombre . ' REFRESH PUBLICATION;';
 
         $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')

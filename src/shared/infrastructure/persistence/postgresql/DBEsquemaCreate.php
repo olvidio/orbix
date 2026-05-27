@@ -681,7 +681,13 @@ class DBEsquemaCreate
 
         $refreshLog = $logFile . '.refresh_sub.sql';
 
-        return (new DBRefresh())->refreshSubscription($host, $db, $dsn, $refreshLog);
+        return (new DBRefresh())->refreshSubscription(
+            $host,
+            $db,
+            $dsn,
+            $refreshLog,
+            (string) ($this->config['dbname'] ?? ''),
+        );
     }
 
     /**

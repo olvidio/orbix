@@ -8,7 +8,7 @@ use src\utils_database\domain\entity\DBAbstract;
 
 /**
  * crear las tablas necesarias para el esquema.
- * Heredadas de public (principal) o global (réplica).
+ * Heredadas de public (principal y réplica).
  */
 class DBEsquema extends DBAbstract
 {
@@ -164,9 +164,7 @@ class DBEsquema extends DBAbstract
 
     private function tablaPadreInherits(string $tabla_padre): string
     {
-        $esquema_padre = $this->operacionEnReplica ? 'global' : 'public';
-
-        return "{$esquema_padre}.{$tabla_padre}";
+        return "public.{$tabla_padre}";
     }
 
     private function eliminarEnComun(string $nom_tabla): void

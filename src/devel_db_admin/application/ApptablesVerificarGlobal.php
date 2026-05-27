@@ -18,7 +18,7 @@ final class ApptablesVerificarGlobal
     private const TABLAS = [
         'ubiscamas' => [
             'principal' => ['public.du_habitaciones', 'public.du_camas'],
-            'replica' => ['global.du_habitaciones', 'global.du_camas'],
+            'replica' => ['public.du_habitaciones', 'public.du_camas'],
         ],
     ];
 
