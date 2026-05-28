@@ -36,19 +36,18 @@ final class PlazasDlEdicion
                 'id_dl' => $idDl,
             ]);
         }
-        if (!is_array($cCal) || $cCal === [] || $cCal === false) {
-            return null;
-        }
-
-        $src = self::elegirFilaCalendario($cCal, $dlTabla);
         $o = new ActividadPlazas();
         $o->setId_activ($idActiv);
         $o->setId_dl($idDl);
         $o->setDlTablaVo($dlTabla);
-        $o->setPlazasVo($src->getPlazasVo());
-        $cedidas = $src->getArrayCedidas();
-        if (is_array($cedidas)) {
-            $o->setCedidas($cedidas);
+
+        if (is_array($cCal) && $cCal !== [] && $cCal !== false) {
+            $src = self::elegirFilaCalendario($cCal, $dlTabla);
+            $o->setPlazasVo($src->getPlazasVo());
+            $cedidas = $src->getArrayCedidas();
+            if (is_array($cedidas)) {
+                $o->setCedidas($cedidas);
+            }
         }
         if ($dlRepo->Guardar($o) === false) {
             return null;

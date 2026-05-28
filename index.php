@@ -346,6 +346,7 @@ $portada_html = ob_get_clean();
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/sortablejs/Sortable.js' ?>'></script>
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.core.js' ?>'></script>
+    <script type='text/javascript'>if (typeof Slick !== 'undefined') { window.Slick = window.Slick || Slick; }</script>
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.interactions.js' ?>'></script>
     <script type='text/javascript'
@@ -357,7 +358,7 @@ $portada_html = ob_get_clean();
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.autotooltips.js' ?>'></script>
     <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.resizer.js' ?>'></script>
+            src='<?= ConfigGlobal::getWeb_scripts() . '/slickgrid-orbix/slick-grid-autosize.js' ?>'></script>
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.rowselectionmodel.js' ?>'></script>
     <script type='text/javascript'

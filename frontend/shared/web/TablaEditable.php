@@ -203,18 +203,21 @@ class TablaEditable
 			var columnsAll_$id_tabla = $sColumns;
 			var data_$id_tabla = $sData;
 
-            var resizer = new Slick.Plugins.Resizer({
-              container: '#grid_$id_tabla',
-              rightPadding: 5,
-              bottomPadding: 5,
-              minHeight: 80,
-              minWidth: 200,
-              calculateAvailableSizeBy:  'container',
-            });
+            var resizer = null;
+            if (window.Slick && Slick.Plugins && Slick.Plugins.Resizer) {
+              resizer = new Slick.Plugins.Resizer({
+                container: '#grid_$id_tabla',
+                rightPadding: 5,
+                bottomPadding: 5,
+                minHeight: 80,
+                minWidth: 200,
+                calculateAvailableSizeBy:  'container',
+              });
+            }
             
 			var options = {
 				editable: true
-                ,enableAutoResize: true
+                ,enableAutoResize: !!resizer
 				,enableCellNavigation: true
 				,enableAddRow: false
 				,enableColumnReorder: true
@@ -270,6 +273,9 @@ class TablaEditable
 			}
 					
             function resumeAutoResize() {
+              if (!resizer) {
+                return;
+              }
               resizer.pauseResizer(false);
               resizer.resizeGrid();
               resizer.resizeGrid(500);
@@ -405,7 +411,9 @@ class TablaEditable
 				grid_$id_tabla = new Slick.Grid(\"#grid_$id_tabla\", dataView_$id_tabla, columns_$id_tabla, options);
 				grid_$id_tabla.setSelectionModel(new Slick.RowSelectionModel());
 				grid_$id_tabla.registerPlugin(new Slick.AutoTooltips());
-				grid_$id_tabla.registerPlugin(resizer);
+				if (resizer) {
+				  grid_$id_tabla.registerPlugin(resizer);
+				}
 
 				var pager = new Slick.Controls.Pager(dataView_$id_tabla, grid_$id_tabla, $(\"#pager\"));
 				var columnpicker = new Slick.Controls.ColumnPicker(columnsAll_$id_tabla, grid_$id_tabla, options);

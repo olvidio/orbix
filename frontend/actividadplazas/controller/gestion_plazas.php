@@ -37,8 +37,7 @@ $campos = [
     'sactividad2' => (string)filter_input(INPUT_POST, 'sactividad2'),
 ];
 
-$data = PostRequest::getDataFromUrl('/src/actividadplazas/gestion_plazas_data', $campos);
-$payload = is_array($data) ? $data : [];
+$payload = PostRequest::getDataFromUrl('/src/actividadplazas/gestion_plazas_data', $campos);
 
 $a_cabeceras = $payload['a_cabeceras'] ?? [];
 $a_valores = $payload['a_valores'] ?? [];

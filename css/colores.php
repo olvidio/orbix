@@ -121,3 +121,12 @@ if (ServerConf::SERVIDOR === 'orbix.moneders.net') {
         $fondo_claro = "aquamarine";
     }
 }
+
+// Tonos rojo-alert paralelos a tono1..tono7 (misma intensidad, para celdas negativas)
+$alert_tono1 = "#faebeb";
+$alert_tono2 = "#f5d6d6";
+$alert_tono3 = "#f0c2c2";
+$alert_tono4 = "#ebadad";
+$alert_tono5 = "#e69999";
+$alert_tono6 = "#e08585";
+$alert_tono7 = "#db7070";

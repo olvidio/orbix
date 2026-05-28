@@ -52,3 +52,30 @@ function ensureMapForJs(jsPath) {
 }
 
 walk(browserRoot);
+
+/** Copia slick.resizer.js sin "resizer" en la URL (evita bloqueos de extensiones). */
+function ensureOrbixSlickAutosizePlugin() {
+  const src = path.join(
+    browserRoot,
+    'plugins',
+    'slick.resizer.js',
+  );
+  const destDir = path.join(__dirname, '..', 'scripts', 'slickgrid-orbix');
+  const dest = path.join(destDir, 'slick-grid-autosize.js');
+  if (!fs.existsSync(src)) {
+    return;
+  }
+  fs.mkdirSync(destDir, { recursive: true });
+  let copy = true;
+  if (fs.existsSync(dest)) {
+    copy = fs.statSync(src).mtimeMs > fs.statSync(dest).mtimeMs;
+  }
+  if (copy) {
+    fs.copyFileSync(src, dest);
+    process.stdout.write(
+      `ensure-slickgrid-sourcemaps: synced ${path.relative(process.cwd(), dest)}\n`,
+    );
+  }
+}
+
+ensureOrbixSlickAutosizePlugin();

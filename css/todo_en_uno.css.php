@@ -318,6 +318,27 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 	.tono7 {
 		background-color : <?= $tono7 ?> !important;
 	}
+	.tono1-alert {
+		background-color : <?= $alert_tono1 ?> !important;
+	}
+	.tono2-alert {
+		background-color : <?= $alert_tono2 ?> !important;
+	}
+	.tono3-alert {
+		background-color : <?= $alert_tono3 ?> !important;
+	}
+	.tono4-alert {
+		background-color : <?= $alert_tono4 ?> !important;
+	}
+	.tono5-alert {
+		background-color : <?= $alert_tono5 ?> !important;
+	}
+	.tono6-alert {
+		background-color : <?= $alert_tono6 ?> !important;
+	}
+	.tono7-alert {
+		background-color : <?= $alert_tono7 ?> !important;
+	}
 	/* plazas */
 	/* pedida */
 	.plaza1 {

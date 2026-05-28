@@ -58,6 +58,12 @@ use function frontend\shared\helpers\is_true;
             <td></td>
         </tr>
         <?php
+        $celda = static function ($valor, int $tono = 0): string {
+            if ($tono > 0 && is_numeric($valor) && (float) $valor < 0) {
+                return '<td class="tono' . $tono . '-alert">' . $valor . '</td>';
+            }
+            return '<td>' . $valor . '</td>';
+        };
         $d = 0;
         $libres = 0;
         foreach ($a_plazas as $dl => $pl) {
@@ -78,21 +84,24 @@ use function frontend\shared\helpers\is_true;
             $d++;
             $clase = "tono$d";
             echo "<tr class='$clase'>";
-            echo "<td>" . $dl . "</td><td>" . $pl['calendario'] . "</td>";
-            echo "<td>" . $pl['total_cedidas'] . "</td>";
-            echo "<td>" . $pl['total_conseguidas'] . "</td>";
-            echo "<td>" . $pl['total_disponibles'] . "</td>";
-            echo "<td>" . $pl['total_ocupadas'] . "</td>";
-            echo "<td>$libres</td>";
+            echo "<td>" . $dl . "</td>";
+            echo $celda($pl['calendario'], $d);
+            echo $celda($pl['total_cedidas'], $d);
+            echo $celda($pl['total_conseguidas'], $d);
+            echo $celda($pl['total_disponibles'], $d);
+            echo $celda($pl['total_ocupadas'], $d);
+            echo $celda($libres, $d);
             echo "</tr>";
             if (!empty($pl['cedidas'])) {
                 $aCedidas = $pl['cedidas'];
                 foreach ($aCedidas as $dl_otra => $num_plazas) {
                     echo "<tr class='$clase'><td></td><td></td><td>$num_plazas a $dl_otra</td>";
                     if (!array_key_exists($dl_otra, $a_plazas)) {
-                        echo "<td></td><td>$num_plazas</td>";
+                        echo "<td></td>";
+                        echo $celda($num_plazas, $d);
                         $ocupadas = empty($a_plazas[$dl][$dl_otra]['ocupadas']) ? 0 : $a_plazas[$dl][$dl_otra]['ocupadas'];
-                        echo "<td>$ocupadas</td><td></td></tr>";
+                        echo $celda($ocupadas, $d);
+                        echo "<td></td></tr>";
                     } else {
                         echo "<td></td><td></td>";
                         echo "<td></td><td></td></tr>";
@@ -111,13 +120,13 @@ use function frontend\shared\helpers\is_true;
             }
         }
         $tot_libres = $tot_disponibles - $tot_ocupadas;
-        echo "<tr>";
+        echo "<tr class='tono1'>";
         echo "<td>" . _("totales") . "</td><td>$tot_calendario ($plazas_totales)</td>";
-        echo "<td>" . $tot_cedidas . "</td>";
-        echo "<td>" . $tot_conseguidas . "</td>";
-        echo "<td>" . $tot_disponibles . "</td>";
-        echo "<td>" . $tot_ocupadas . "</td>";
-        echo "<td>$tot_libres</td>";
+        echo $celda($tot_cedidas, 1);
+        echo $celda($tot_conseguidas, 1);
+        echo $celda($tot_disponibles, 1);
+        echo $celda($tot_ocupadas, 1);
+        echo $celda($tot_libres, 1);
         echo "</tr>";
         ?>
     </table>
