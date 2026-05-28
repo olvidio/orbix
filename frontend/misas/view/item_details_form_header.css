@@ -1,0 +1,11 @@
+.item-details-form-header {
+    cursor: move;
+    user-select: none;
+    margin: -10px -10px 0 -10px;
+    padding: 10px 10px 0 10px;
+}
+
+.item-details-form-header #titulo_modal {
+    display: block;
+    font-weight: bold;
+}

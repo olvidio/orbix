@@ -16,6 +16,7 @@
           href='node_modules/slickgrid/dist/styles/css/example-demo.css'/>
     <link type='text/css' rel='stylesheet'
           href='node_modules/slickgrid/dist/styles/css/slick-alpine-theme.css'/>
+    <link type='text/css' rel='stylesheet' href='frontend/misas/view/item_details_form_header.css'/>
 
     <style>
         .cell-title {
@@ -108,8 +109,10 @@
 
     <div id="modal_cuadricula_sacd" class='item-details-form' style="display: none">
 
-        <label id="titulo_modal"></label>
-        <hr/>
+        <div class="item-details-form-header">
+            <label id="titulo_modal"></label>
+            <hr/>
+        </div>
         <input type="hidden" id="cell_selected" value=""/>
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="uuid_selected" value=""/>
@@ -170,11 +173,13 @@
 <script src="node_modules/slickgrid/dist/browser/slick.formatters.js"></script>
 <script src="node_modules/slickgrid/dist/browser/slick.editors.js"></script>
 <script src="node_modules/slickgrid/dist/browser/slick.compositeeditor.js"></script>
+<script src="frontend/misas/support/item_details_form_drag.js"></script>
 
 <script>
 
     var modal = $('#modal_cuadricula_sacd');
     var modalHost = $('#cuadriculas');
+    fnjs_initItemDetailsFormDrag(modal, 'cuadriculaSacdModal');
 
     function showItemDetailsModal() {
         $('.item-details-form').not(modal).hide();

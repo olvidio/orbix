@@ -9,6 +9,7 @@
           href='node_modules/slickgrid/dist/styles/css/example-demo.css'/>
     <link type='text/css' rel='stylesheet'
           href='node_modules/slickgrid/dist/styles/css/slick-alpine-theme.css'/>
+    <link type='text/css' rel='stylesheet' href='frontend/misas/view/item_details_form_header.css'/>
 
     <style>
         .cell-title {
@@ -64,6 +65,22 @@
             width: 100%;
             max-width: 380px;
         }
+
+        .item-details-field {
+            margin-left: 10px;
+            margin-top: 10px;
+        }
+
+        .item-details-field label {
+            display: inline;
+            vertical-align: middle;
+        }
+
+        .item-details-field select,
+        .item-details-field #desplegable_encargo {
+            display: inline-block;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <div style="position:relative">
@@ -76,8 +93,10 @@
 
     <div class='item-details-form' style="display: none">
 
-        <label id="titulo_modal"></label>
-        <hr/>
+        <div class="item-details-form-header">
+            <label id="titulo_modal"></label>
+            <hr/>
+        </div>
         <input type="hidden" id="cell_selected" value=""/>
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
@@ -85,19 +104,18 @@
         <input type="hidden" id="id_item" value=""/>
         <input type="hidden" id="que" value=""/>
 
-        <div style="margin-left: 10px; margin-top: 10px;">
+        <div class="item-details-field">
             <label for="id_zona_enc"><?= _('Zona del encargo: ') ?></label>
             <?= $oDesplZonasCtr->desplegable() ?>
         </div>
 
-        <div style="margin-left: 10px; margin-top: 10px;">
+        <div class="item-details-field">
             <label for="id_enc"><?= _('Encargo: ') ?></label>
-            <div id="desplegable_encargo">
-            </div>
+            <span id="desplegable_encargo"></span>
         </div>
 
-        <div style="margin-left: 10px; margin-top: 10px;">
-            <label for="id_ctr"><?= _('Centro: ') ?></label>
+        <div class="item-details-field">
+            <label for="id_ubi"><?= _('Centro: ') ?></label>
             <?= $oDesplCentros->desplegable() ?>
         </div>
 
@@ -119,10 +137,12 @@
 <script src="node_modules/slickgrid/dist/browser/slick.formatters.js"></script>
 <script src="node_modules/slickgrid/dist/browser/slick.editors.js"></script>
 <script src="node_modules/slickgrid/dist/browser/slick.compositeeditor.js"></script>
+<script src="frontend/misas/support/item_details_form_drag.js"></script>
 
 <script>
 
     var modal = $(".item-details-form");
+    fnjs_initItemDetailsFormDrag(modal, 'encargosCentrosModal');
 
     modal.keydown(function (e) {
         if (e.which == Slick.keyCode.ENTER) {
@@ -286,12 +306,20 @@
     }
 
     function openDetails(cell) {
+        if (!cell || cell.row == null || cell.cell == null) {
+            return;
+        }
+        var row = data[cell.row];
+        if (!row || !row.id_item) {
+            return;
+        }
+
         $('#cell_selected').val(cell.cell);
         $('#row_selected').val(cell.row);
 
-        var id_item = data[cell.row].id_item;
-        var id_encargo = data[cell.row].id_encargo;
-        var id_centro = data[cell.row].id_centro;
+        var id_item = row.id_item;
+        var id_encargo = row.id_encargo;
+        var id_centro = row.id_centro;
 
         $('#titulo_modal').html(<?= json_encode(_('modificar encargo visible para un centro')) ?>);
         $('#que').val('modificar');
@@ -320,7 +348,9 @@
 
         grid.onClick.subscribe(function (e) {
             var cell = grid.getCellFromEvent(e);
-            openDetails(cell);
+            if (cell) {
+                openDetails(cell);
+            }
             e.stopPropagation();
         });
 
