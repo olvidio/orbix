@@ -3,7 +3,9 @@
 namespace jblond\TwigTrans;
 
 use Twig\Error\SyntaxError;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
 use Twig\Token;
@@ -13,10 +15,12 @@ use Twig\TokenParser\AbstractTokenParser;
  * Class TransTag
  * @package jblond\TwigTrans
  */
-class TransTag extends AbstractTokenParser
+final class TransTag extends AbstractTokenParser
 {
     /**
-     * {@inheritdoc}
+     * @param Token $token
+     * @return Nodes
+     * @throws SyntaxError
      */
     public function parse(Token $token): Nodes
     {
@@ -27,14 +31,14 @@ class TransTag extends AbstractTokenParser
         $notes = null;
 
         if (!$stream->test(Token::BLOCK_END_TYPE)) {
-            $body = $this->parser->getExpressionParser()->parseExpression();
+            $body = $this->parser->parseExpression();
         } else {
             $stream->expect(Token::BLOCK_END_TYPE);
             $body = $this->parser->subparse([$this, 'decideForFork']);
             $next = $stream->next()->getValue();
 
             if ('plural' === $next) {
-                $count = $this->parser->getExpressionParser()->parseExpression();
+                $count = $this->parser->parseExpression();
                 $stream->expect(Token::BLOCK_END_TYPE);
                 $plural = $this->parser->subparse([$this, 'decideForFork']);
 
@@ -51,12 +55,13 @@ class TransTag extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
         $this->checkTransString($body, $lineNo);
 
-        return new TransNode($body, $plural, $count, $notes, $lineNo, $this->getTag());
+        return new TransNode($body, $plural, $count, $notes, $lineNo);
     }
 
     /**
      * @param Token $token
      * @return bool
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function decideForFork(Token $token): bool
     {
@@ -66,6 +71,7 @@ class TransTag extends AbstractTokenParser
     /**
      * @param Token $token
      * @return bool
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function decideForEnd(Token $token): bool
     {
@@ -73,7 +79,7 @@ class TransTag extends AbstractTokenParser
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getTag(): string
     {
@@ -81,13 +87,13 @@ class TransTag extends AbstractTokenParser
     }
 
     /**
-     * @param Nodes|\Twig\Node\TextNode $body
+     * @param AbstractExpression|Node|Nodes|TextNode $body
      * @param int $lineNo
      * @throws SyntaxError
      */
-    protected function checkTransString($body, int $lineNo): void
+    protected function checkTransString(AbstractExpression|Node|Nodes|TextNode $body, int $lineNo): void
     {
-        foreach ($body as $i => $node) {
+        foreach ($body as $node) {
             if (
                 $node instanceof TextNode ||
                 ($node instanceof PrintNode && $node->getNode('expr') instanceof NameExpression)

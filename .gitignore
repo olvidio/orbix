@@ -1,5 +1,5 @@
 # Dani #
-apps/web/Hash.php
+/apps/
 *.sh
 /data/inventario/*.ini
 
@@ -106,4 +106,3 @@ log/*
 /e2e/test-results/
 /e2e/playwright/.cache/
 /docs/.cache/
-/apps/web/zzHash.php

@@ -12,6 +12,10 @@ I didn't want to install Symfony, but Twig only. Symfony seemed to be too much o
 
 This extension enables Twig templates to use `|trans` and `{% trans %}` + `{% endtrans %}` again
 
+## Changes in 1.2.1
+
+Now at least PHP 8.1 is required like Twig itself.
+
 ## Install
 
 ```shell
@@ -52,7 +56,8 @@ $twigLoader = new FilesystemLoader('./tpl/');
 $twig = new Environment($twigLoader, $twigConfig);
 // if you need  {{ dump() }} in the twig templates add
 //$twig->addExtension(new DebugExtension());
-// and use Twig\Extension\DebugExtension;  // at the top of the file
+// and use Twig\Extension\DebugExtension;
+// at the top of the file
 
 // this is for the filter |trans
 $filter = new TwigFilter(
@@ -82,7 +87,7 @@ echo $tpl->render(['key1' => 'value1', 'key2' => 'value2']);
 
 ## Requirements
 
-* PHP 7.2 or greater
+* PHP 8.1 or greater
 * PHP Multibyte String 
 * 'gettext'
 * Twig >= 3.0
@@ -105,4 +110,8 @@ composer run-script phpunit
 
 ## Contribution, wishes and bug
 
-Raise an [issue](https://github.com/JBlond/twig-trans/issues)
+Raise an [issue](https://github.com/JBlond/twig-trans/issues), and or Fork this repo and create a Pull request.
+
+## Dev container
+
+see [Docker Readme](DOCKER.md) and [compose file](compose.yml)

@@ -9,28 +9,30 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\TempNameExpression;
+use Twig\Node\Node;
 use Twig\Node\PrintNode;
+use Twig\Node\TextNode;
 
 /**
  * Class TransNode
  * @package jblond\TwigTrans
  */
 #[YieldReady]
-class TransNode extends Nodes
+final class TransNode extends Nodes
 {
     /**
      * TransNode constructor.
-     * @param Nodes|\Twig\Node\TextNode|NameExpression $body
-     * @param Nodes|Twig\Node\TextNode|null $plural
+     * @param AbstractExpression|Node|Nodes|TextNode|NameExpression|ConstantExpression $body
+     * @param Nodes|TextNode|null $plural
      * @param AbstractExpression|null $count
-     * @param Nodes|\Twig\Node\TextNode|null $notes
+     * @param Nodes|TextNode|null $notes
      * @param int $lineNo
      */
     public function __construct(
         $body,
         $plural = null,
         ?AbstractExpression $count = null,
-        $notes = null,
+        Nodes|TextNode|null $notes = null,
         int $lineNo = 0
     ) {
         $nodes = ['body' => $body];
@@ -47,8 +49,10 @@ class TransNode extends Nodes
         parent::__construct($nodes, $lineNo);
     }
 
+
     /**
-     * {@inheritdoc}
+     * @param Compiler $compiler
+     * @return void
      */
     public function compile(Compiler $compiler): void
     {
@@ -68,7 +72,7 @@ class TransNode extends Nodes
         if ($this->hasNode('notes')) {
             $message = trim($this->getNode('notes')->getAttribute('data'));
 
-            // line breaks are not allowed cause we want a single line comment
+            // line breaks are not allowed because we want a single line comment
             $message = str_replace(["\n", "\r"], ' ', $message);
             $compiler->write("// notes: {$message}\n");
         }
@@ -131,11 +135,10 @@ class TransNode extends Nodes
     }
 
     /**
-     * @param Nodes|\Twig\Node\TextNode $body A Twig_Node instance
-     *
+     * @param Node|Nodes|TextNode $body A Twig_Node instance
      * @return array
      */
-    protected function compileString($body): array
+    protected function compileString(Node|Nodes|TextNode $body): array
     {
         if (
             $body instanceof NameExpression ||
@@ -156,12 +159,12 @@ class TransNode extends Nodes
                 }
 
                 if ($node instanceof PrintNode) {
-                    $n = $node->getNode('expr');
-                    while ($n instanceof FilterExpression) {
-                        $n = $n->getNode('node');
+                    $currentNode = $node->getNode('expr');
+                    while ($currentNode instanceof FilterExpression) {
+                        $currentNode = $currentNode->getNode('node');
                     }
-                    $msg .= sprintf('%%%s%%', $n->getAttribute('name'));
-                    $vars[] = new NameExpression($n->getAttribute('name'), $n->getTemplateLine());
+                    $msg .= sprintf('%%%s%%', $currentNode->getAttribute('name'));
+                    $vars[] = new NameExpression($currentNode->getAttribute('name'), $currentNode->getTemplateLine());
                 } else {
                     $msg .= $node->getAttribute('data');
                 }
@@ -174,7 +177,7 @@ class TransNode extends Nodes
     }
 
     /**
-     * @param bool $plural Return plural or singular function to use
+     * @param bool $plural Return a plural or singular function to use
      *
      * @return string
      */

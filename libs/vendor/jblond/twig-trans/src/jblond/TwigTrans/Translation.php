@@ -2,7 +2,9 @@
 
 namespace jblond\TwigTrans;
 
-use Twig\Compiler;
+use jblond\TwigTrans\Operators\AndOperator;
+use jblond\TwigTrans\Operators\NotOperator;
+use jblond\TwigTrans\Operators\OrOperator;
 use Twig\Extension\ExtensionInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -12,10 +14,10 @@ use Twig\TwigTest;
  * Class Translation
  * @package jblond\TwigTrans
  */
-class Translation implements ExtensionInterface
+final class Translation implements ExtensionInterface
 {
     /**
-     * local version of ExpressionParser::OPERATOR_LEFT
+     * Local version of ExpressionParser::OPERATOR_LEFT
      */
     protected const OPERATOR_LEFT = 1;
 
@@ -28,7 +30,7 @@ class Translation implements ExtensionInterface
     public static function transGetText(string $value, array $context): string
     {
         $getTextString = gettext($value);
-        //if empty return original value
+        // If empty, return original value
         if (empty($getTextString)) {
             return $value;
         }
@@ -42,15 +44,15 @@ class Translation implements ExtensionInterface
      */
     private static function replaceContext(string $string, array $context): string
     {
-        // Without the brackets there is no need to run the rest of this method.
-        if (mb_strpos($string, '{{') === false) {
+        // Without the brackets, there is no need to run the rest of this method
+        if (!str_contains($string, '{{')) {
             return $string;
         }
         foreach ($context as $key => $value) {
             if (is_array($value)) {
                 return self::replaceContext($string, $value);
             }
-            // Ignore objects, since only simple variables can be used
+            // Ignore objects since only simple variables can be used
             if (is_object($value)) {
                 continue;
             }
@@ -60,7 +62,7 @@ class Translation implements ExtensionInterface
     }
 
     /**
-     * @inheritDoc
+     * @return TwigFilter[]
      */
     public function getFilters(): array
     {
@@ -70,7 +72,7 @@ class Translation implements ExtensionInterface
     }
 
     /**
-     * @inheritDoc
+     * @return TwigFunction[]
      */
     public function getFunctions(): array
     {
@@ -79,8 +81,9 @@ class Translation implements ExtensionInterface
         ];
     }
 
+
     /**
-     * @inheritDoc
+     * @return TwigTest[]
      */
     public function getTests(): array
     {
@@ -90,7 +93,7 @@ class Translation implements ExtensionInterface
     }
 
     /**
-     * @inheritDoc
+     * @return TransTag[]
      */
     public function getTokenParsers(): array
     {
@@ -100,7 +103,7 @@ class Translation implements ExtensionInterface
     }
 
     /**
-     * @inheritDoc
+     * @return MacroAutoImportNodeVisitor[]
      */
     public function getNodeVisitors(): array
     {
@@ -108,7 +111,11 @@ class Translation implements ExtensionInterface
     }
 
     /**
-     * @inheritDoc
+     * @uses AndOperator
+     * @uses NotOperator
+     * @uses OrOperator
+     *
+     * @return array[]
      */
     public function getOperators(): array
     {
@@ -116,33 +123,18 @@ class Translation implements ExtensionInterface
             [
                 '!' => [
                     'precedence' => 50,
-                    'class' => new class {
-                        public function operator(Compiler $compiler): Compiler
-                        {
-                            return $compiler->raw('!');
-                        }
-                    }
+                    'class' => NotOperator::class, // Pass the class name as a string
                 ],
             ],
             [
                 '||' => [
                     'precedence' => 10,
-                    'class' => new class {
-                        public function operator(Compiler $compiler): Compiler
-                        {
-                            return $compiler->raw('||');
-                        }
-                    },
+                    'class' => OrOperator::class, // Pass the class name as a string
                     'associativity' => self::OPERATOR_LEFT
                 ],
                 '&&' => [
                     'precedence' => 15,
-                    'class' => new class {
-                        public function operator(Compiler $compiler): Compiler
-                        {
-                            return $compiler->raw('&&');
-                        }
-                    },
+                    'class' => AndOperator::class, // Pass the class name as a string
                     'associativity' => self::OPERATOR_LEFT
                 ],
             ],

@@ -19,14 +19,15 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.1.0",
         "ext-gettext": "*",
         "ext-mbstring": "*",
         "twig/twig": ">=3.0.0"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "*",
-        "phpunit/phpunit": "^7 || ^8 || ^9 || ^10"
+        "phpunit/phpunit": "^7 || ^8 || ^9 || ^10",
+        "vimeo/psalm": "5.26.1 || ^6.8"
     },
     "autoload": {
         "psr-4": {
@@ -39,11 +40,19 @@
         }
     },
     "config": {
-        "classmap-authoritative": true
+        "optimize-autoloader": true
     },
     "scripts": {
         "php_src": "phpcs --standard=phpcs.xml -s -p --colors ./src/",
         "php_test": "phpcs --standard=phpcs.xml -s -p --colors ./tests/",
-        "phpunit": "phpunit ./tests/"
+        "phpunit": "phpunit ./tests/",
+        "coverage": "phpunit --colors=always --coverage-html codeCoverage",
+        "psalm": "psalm",
+        "tests": [
+            "@php_src",
+            "@php_test",
+            "@phpunit",
+            "@coverage"
+        ]
     }
 }
