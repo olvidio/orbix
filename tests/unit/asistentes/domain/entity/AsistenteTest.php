@@ -2,6 +2,7 @@
 
 namespace Tests\unit\asistentes\domain\entity;
 
+use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\entity\Asistente;
 use src\asistentes\domain\value_objects\AsistenteEncargo;
@@ -104,6 +105,64 @@ class AsistenteTest extends myTest
         $this->Asistente->setPlazaVo($plazaVo);
         $this->assertInstanceOf(PlazaId::class, $this->Asistente->getPlazaVo());
         $this->assertEquals(1, $this->Asistente->getPlazaVo()->value());
+    }
+
+    public function test_setPlazaVoComprobando_sin_propietario_queda_pedida(): void
+    {
+        $resumenSvc = $this->createMock(ResumenPlazasService::class);
+        $resumenSvc->method('getLibres')->willReturn(0);
+
+        $previousContainer = $GLOBALS['container'] ?? null;
+        $GLOBALS['container'] = $this->containerFromService($resumenSvc);
+
+        try {
+            $this->Asistente->setId_activ(10);
+            $this->Asistente->setPlazaVo(PlazaId::PEDIDA);
+            $this->Asistente->setPlazaVoComprobando(PlazaId::ASIGNADA);
+
+            $this->assertSame(PlazaId::PEDIDA, $this->Asistente->getPlazaVo()->value());
+        } finally {
+            if ($previousContainer === null) {
+                unset($GLOBALS['container']);
+            } else {
+                $GLOBALS['container'] = $previousContainer;
+            }
+        }
+    }
+
+    public function test_setPlazaVoComprobando_con_propietario_mantiene_asignada(): void
+    {
+        $resumenSvc = $this->createMock(ResumenPlazasService::class);
+        $resumenSvc->method('getLibres')->willReturn(0);
+
+        $previousContainer = $GLOBALS['container'] ?? null;
+        $GLOBALS['container'] = $this->containerFromService($resumenSvc);
+
+        try {
+            $this->Asistente->setId_activ(10);
+            $this->Asistente->setPropietarioVo('dlA>dlB');
+            $this->Asistente->setPlazaVoComprobando(PlazaId::ASIGNADA);
+
+            $this->assertSame(PlazaId::ASIGNADA, $this->Asistente->getPlazaVo()->value());
+        } finally {
+            if ($previousContainer === null) {
+                unset($GLOBALS['container']);
+            } else {
+                $GLOBALS['container'] = $previousContainer;
+            }
+        }
+    }
+
+    private function containerFromService(object $service): object
+    {
+        return new class($service) {
+            public function __construct(private readonly object $service) {}
+
+            public function get(string $id): object
+            {
+                return $this->service;
+            }
+        };
     }
 
     public function test_set_and_get_propietario()

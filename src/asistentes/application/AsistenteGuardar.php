@@ -90,7 +90,6 @@ final class AsistenteGuardar
         $oAsistente->setEncargo((string) ($input['encargo'] ?? ''));
         $oAsistente->setObserv((string) ($input['observ'] ?? ''));
         $oAsistente->setObservEstVo((string) ($input['observ_est'] ?? ''));
-        $oAsistente->setPlazaVoComprobando((int) ($input['plaza'] ?? 0));
         $oAsistente->setPropio(is_true((string) ($input['propio'] ?? '')));
         $oAsistente->setEst_ok(is_true((string) ($input['est_ok'] ?? '')));
         $oAsistente->setCfi(is_true((string) ($input['cfi'] ?? '')));
@@ -106,9 +105,8 @@ final class AsistenteGuardar
         if ($Qpropietario === 'xxx') {
             $Qpropietario = '';
         }
-        if ($Qpropietario !== '') {
-            $oAsistente->setPropietarioVo($Qpropietario);
-        }
+        $oAsistente->setPropietarioVo($Qpropietario);
+        $oAsistente->setPlazaVoComprobando((int) ($input['plaza'] ?? 0));
 
         if ($asistenteAppService->guardar($oAsistente) === false) {
             return _("hay un error, no se ha guardado");

@@ -324,6 +324,48 @@ class Asistente extends Entity implements AggregateRoot
     }
 
     /**
+     * Sin propietario, una plaza asignada o confirmada no puede persistir: vuelve a pedida.
+     */
+    private function ajustarPlazaSegunPropietario(): void
+    {
+        $plaza = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
+        if ($plaza <= PlazaId::DENEGADA) {
+            return;
+        }
+        $propietario = $this->getPropietarioVo()?->value() ?? '';
+        if ($propietario === '') {
+            $this->plaza = PlazaId::fromNullableInt(PlazaId::PEDIDA);
+        }
+    }
+
+    private function intentarAsignarPropietarioPlazaLibre(int $plaza_actual, int $plaza_nueva): void
+    {
+        if ($plaza_actual >= PlazaId::DENEGADA || $plaza_nueva <= PlazaId::DENEGADA) {
+            return;
+        }
+
+        $gesActividadPlazasR = $GLOBALS['container']->get(ResumenPlazasService::class);
+        $gesActividadPlazasR->setId_activ($this->id_activ);
+        if ($gesActividadPlazasR->getLibres() <= 0) {
+            return;
+        }
+
+        //debe asignarse un propietario. Sólo si es asignada o confirmada
+        $rta = $gesActividadPlazasR->getPropiedadPlazaLibre();
+        if ($rta['success']) {
+            $propiedad = $rta['propiedad'];
+            if (!empty($propiedad)) {
+                $prop = key($propiedad);
+                $this->setPropietarioVo($prop);
+            }
+            return;
+        }
+
+        $err_txt = $rta['mensaje'];
+        exit ($err_txt);
+    }
+
+    /**
      * No puede estar en setPlaza, porque cuando se hidrata con la DB entra en un bucle infinito
      * @deprecated usar setPlazaVoComprobando()
      */
@@ -340,28 +382,11 @@ class Asistente extends Entity implements AggregateRoot
 
         //hacer comprobaciones de plazas disponibles...
         $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
+        $plaza = (int) $plaza;
         $this->plaza = PlazaId::fromNullableInt($plaza);
 
-        if ($plaza_actual < PlazaId::DENEGADA && $plaza > PlazaId::DENEGADA) {
-            $gesActividadPlazasR = $GLOBALS['container']->get(ResumenPlazasService::class);
-            $gesActividadPlazasR->setId_activ($this->id_activ);
-            if ($gesActividadPlazasR->getLibres() > 0) {
-                //debe asignarse un propietario. Sólo si es asignada o confirmada
-                $rta = $gesActividadPlazasR->getPropiedadPlazaLibre();
-                if ($rta['success']) {
-                    $propiedad = $rta['propiedad'];
-                    if (empty($propiedad)) {
-                        exit (_("no debería pasar. No puede haber una plaza libre sin propietario"));
-                    } else {
-                        $prop = key($propiedad);
-                        $this->setPropietarioVo($prop);
-                    }
-                } else {
-                    $err_txt = $rta['mensaje'];
-                    exit ($err_txt);
-                }
-            }
-        }
+        $this->intentarAsignarPropietarioPlazaLibre($plaza_actual, $plaza);
+        $this->ajustarPlazaSegunPropietario();
     }
 
     /**
@@ -376,28 +401,11 @@ class Asistente extends Entity implements AggregateRoot
 
         //hacer comprobaciones de plazas disponibles...
         $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
+        $iplaza = (int) $iplaza;
         $this->plaza = PlazaId::fromNullableInt($iplaza);
 
-        if ($plaza_actual < PlazaId::DENEGADA && $iplaza > PlazaId::DENEGADA) {
-            $gesActividadPlazasR = $GLOBALS['container']->get(ResumenPlazasService::class);
-            $gesActividadPlazasR->setId_activ($this->id_activ);
-            if ($gesActividadPlazasR->getLibres() > 0) {
-                //debe asignarse un propietario. Sólo si es asignada o confirmada
-                $rta = $gesActividadPlazasR->getPropiedadPlazaLibre();
-                if ($rta['success']) {
-                    $propiedad = $rta['propiedad'];
-                    if (empty($propiedad)) {
-                        exit (_("no debería pasar. No puede haber una plaza libre sin propietario"));
-                    } else {
-                        $prop = key($propiedad);
-                        $this->setPropietarioVo($prop);
-                    }
-                } else {
-                    $err_txt = $rta['mensaje'];
-                    exit ($err_txt);
-                }
-            }
-        }
+        $this->intentarAsignarPropietarioPlazaLibre($plaza_actual, $iplaza);
+        $this->ajustarPlazaSegunPropietario();
     }
 
     /**
