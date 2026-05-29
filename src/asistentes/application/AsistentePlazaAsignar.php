@@ -43,7 +43,11 @@ final class AsistentePlazaAsignar
                 continue;
             }
             if ($plaza !== null && $plaza !== '') {
-                $oAsistente->setPlazaComprobando((int) $plaza);
+                $err_plaza = $oAsistente->setPlazaComprobando((int) $plaza);
+                if ($err_plaza !== '') {
+                    $msg_err .= $err_plaza . "\n";
+                    continue;
+                }
             } else {
                 $oAsistente->setPlaza(null);
             }

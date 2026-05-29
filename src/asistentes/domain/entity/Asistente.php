@@ -11,6 +11,7 @@ use src\asistentes\domain\value_objects\AsistenteObserv;
 use src\asistentes\domain\value_objects\AsistenteObservEst;
 use src\asistentes\domain\value_objects\AsistentePk;
 use src\asistentes\domain\value_objects\AsistentePropietario;
+use src\personas\domain\entity\Persona;
 use src\personas\domain\value_objects\PersonaTablaCode;
 use src\shared\domain\contracts\AggregateRoot;
 use src\shared\domain\DatosCampo;
@@ -324,88 +325,83 @@ class Asistente extends Entity implements AggregateRoot
     }
 
     /**
-     * Sin propietario, una plaza asignada o confirmada no puede persistir: vuelve a pedida.
+     * Plaza asignada o confirmada exige propietario. Si falta, se elige la primera
+     * opcion libre del desplegable (p. ej. "1 de 2"); "2 de 2" no esta disponible.
+     *
+     * @return string vacio si ok, mensaje de error si no hay propiedad posible
      */
-    private function ajustarPlazaSegunPropietario(): void
+    private function asegurarPropietarioPlaza(int $plaza): string
     {
-        $plaza = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
+        if (!ConfigGlobal::is_app_installed('actividadplazas')) {
+            return '';
+        }
         if ($plaza <= PlazaId::DENEGADA) {
-            return;
+            return '';
         }
+
         $propietario = $this->getPropietarioVo()?->value() ?? '';
-        if ($propietario === '') {
-            $this->plaza = PlazaId::fromNullableInt(PlazaId::PEDIDA);
+        if ($propietario !== '' && $propietario !== 'xxx') {
+            return '';
         }
+
+        $gesActividadPlazas = $GLOBALS['container']->get(ResumenPlazasService::class);
+        $gesActividadPlazas->setId_activ($this->id_activ);
+        $prop = $gesActividadPlazas->getPrimeraPropiedadLibre($this->resolverDlDePaso());
+        if ($prop === null) {
+            return (string)_("Ya están todas las plazas ocupadas");
+        }
+
+        $this->setPropietarioVo($prop);
+
+        return '';
     }
 
-    private function intentarAsignarPropietarioPlazaLibre(int $plaza_actual, int $plaza_nueva): void
+    /**
+     * @return false|string dl de paso para PersonaEx, false en caso contrario
+     */
+    private function resolverDlDePaso(): false|string
     {
-        if ($plaza_actual >= PlazaId::DENEGADA || $plaza_nueva <= PlazaId::DENEGADA) {
-            return;
+        $oPersona = Persona::findPersonaEnGlobal($this->id_nom);
+        if (!is_object($oPersona)) {
+            return false;
         }
 
-        $gesActividadPlazasR = $GLOBALS['container']->get(ResumenPlazasService::class);
-        $gesActividadPlazasR->setId_activ($this->id_activ);
-        if ($gesActividadPlazasR->getLibres() <= 0) {
-            return;
+        $obj_pau = str_replace('personas\\model\\entity\\', '', get_class($oPersona));
+        if ($obj_pau === 'PersonaEx') {
+            return $oPersona->getDl();
         }
 
-        //debe asignarse un propietario. Sólo si es asignada o confirmada
-        $rta = $gesActividadPlazasR->getPropiedadPlazaLibre();
-        if ($rta['success']) {
-            $propiedad = $rta['propiedad'];
-            if (!empty($propiedad)) {
-                $prop = key($propiedad);
-                $this->setPropietarioVo($prop);
-            }
-            return;
-        }
-
-        $err_txt = $rta['mensaje'];
-        exit ($err_txt);
+        return false;
     }
 
     /**
      * No puede estar en setPlaza, porque cuando se hidrata con la DB entra en un bucle infinito
      * @deprecated usar setPlazaVoComprobando()
+     * @return string vacio si ok, mensaje de error si la plaza exige propietario y no hay libre
      */
-    public function setPlazaComprobando(?int $plaza = null): void
+    public function setPlazaComprobando(?int $plaza = null): string
     {
-        // tipos de actividad para los que no hay que comprobar la plaza
-        // 132500 => agd ca sem invierno
-        //$aId_tipo_activ_no = [132500,00000];
-        //$oActividad = new Actividad($this->iid_activ);
-        //$id_tipo_activ = $oActividad->getId_tipo_activ();
-        //if (in_array($id_tipo_activ, $aId_tipo_activ_no)) {
-        //	return $this->setPlazaSinComprobar($iplaza);
-        //}
-
-        //hacer comprobaciones de plazas disponibles...
-        $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
         $plaza = (int) $plaza;
         $this->plaza = PlazaId::fromNullableInt($plaza);
 
-        $this->intentarAsignarPropietarioPlazaLibre($plaza_actual, $plaza);
-        $this->ajustarPlazaSegunPropietario();
+        return $this->asegurarPropietarioPlaza($plaza);
     }
 
     /**
      * No puede estar en setPlaza, porque cuando se hidrata con la DB entra en un bucle infinito
+     *
      * @param PlazaId|null $oPlazaId
+     * @return string vacio si ok, mensaje de error si la plaza exige propietario y no hay libre
      */
-    public function setPlazaVoComprobando(PlazaId|int|null $oPlazaId = null): void
+    public function setPlazaVoComprobando(PlazaId|int|null $oPlazaId = null): string
     {
         $iplaza = $oPlazaId instanceof PlazaId
             ? $oPlazaId?->value()
             : $oPlazaId;
-
-        //hacer comprobaciones de plazas disponibles...
-        $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
         $iplaza = (int) $iplaza;
         $this->plaza = PlazaId::fromNullableInt($iplaza);
 
-        $this->intentarAsignarPropietarioPlazaLibre($plaza_actual, $iplaza);
-        $this->ajustarPlazaSegunPropietario();
+        return $this->asegurarPropietarioPlaza($iplaza);
     }
 
     /**

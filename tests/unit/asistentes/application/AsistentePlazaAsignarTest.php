@@ -62,7 +62,7 @@ final class AsistentePlazaAsignarTest extends TestCase
     {
         $o = $this->createMock(Asistente::class);
         $o->method('perm_modificar')->willReturn(true);
-        $o->expects($this->once())->method('setPlazaComprobando')->with(3);
+        $o->expects($this->once())->method('setPlazaComprobando')->with(3)->willReturn('');
 
         $app = $this->createMock(AsistenteApplicationService::class);
         $app->method('findById')->with(9, 5)->willReturn($o);

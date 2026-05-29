@@ -139,8 +139,12 @@ final class PeticionesIncorporar
             $oAsistenteNew->setId_activ($id_activ_new);
             $oAsistenteNew->setId_nom($id_nom);
             $oAsistenteNew->setPropio(true);
-            $oAsistenteNew->setPlazaComprobando(PlazaId::ASIGNADA);
             $oAsistenteNew->setPropietarioVo("$dl>$mi_dele");
+            $err_plaza = $oAsistenteNew->setPlazaComprobando(PlazaId::ASIGNADA);
+            if ($err_plaza !== '') {
+                $msg_err = $err_plaza;
+                continue;
+            }
             $oAsistenteNew->setDl_responsable($mi_dele);
             if ($AsistenteRepository->Guardar($oAsistenteNew) === false) {
                 $msg_err = (string)_("hay un error, no se ha guardado");

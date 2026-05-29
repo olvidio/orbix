@@ -692,6 +692,36 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 		background-color : <?= $fondo_oscuro ?>;
 		height : 15px;
 	}
+	.links-insert-bar {
+		margin-top: 0.75em;
+		margin-bottom: 0.5em;
+		padding: 0.55em 0.65em;
+		border: 1px solid <?= $lineas ?>;
+		background-color: <?= $fondo_dos ?>;
+	}
+	.links-insert-bar .etiqueta {
+		font-weight: bold;
+		margin-right: 0.5em;
+		color: <?= $fondo_oscuro ?>;
+	}
+	.links-insert-btn {
+		display: inline-block;
+		margin: 0.2em 0.3em;
+		padding: 0.35em 0.8em;
+		border: 2px solid <?= $fondo_oscuro ?>;
+		border-radius: 3px;
+		background-color: <?= $tono2 ?>;
+		color: <?= $fondo_oscuro ?>;
+		font-weight: bold;
+		cursor: pointer;
+		white-space: nowrap;
+		text-decoration: none;
+		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.18);
+	}
+	.links-insert-btn:hover {
+		background-color: <?= $fondo_oscuro ?>;
+		color: <?= $fondo_claro ?>;
+	}
 	td.inactivo  {
 		font-family : Arial, sans-serif;
 		font-size : 10pt;

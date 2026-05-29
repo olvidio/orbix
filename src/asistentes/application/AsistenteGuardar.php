@@ -106,7 +106,10 @@ final class AsistenteGuardar
             $Qpropietario = '';
         }
         $oAsistente->setPropietarioVo($Qpropietario);
-        $oAsistente->setPlazaVoComprobando((int) ($input['plaza'] ?? 0));
+        $err_plaza = $oAsistente->setPlazaVoComprobando((int) ($input['plaza'] ?? 0));
+        if ($err_plaza !== '') {
+            return $err_plaza;
+        }
 
         if ($asistenteAppService->guardar($oAsistente) === false) {
             return _("hay un error, no se ha guardado");

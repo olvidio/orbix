@@ -89,4 +89,23 @@ final class ResumenPlazasServiceTest extends TestCase
         $this->assertSame(0, $resumen[$dlOrg]['calendario']);
         $this->assertArrayHasKey('total', $resumen);
     }
+
+    public function test_esPropiedadOpcionDisponible(): void
+    {
+        $this->assertTrue(ResumenPlazasService::esPropiedadOpcionDisponible('dlv (1 de 2)'));
+        $this->assertFalse(ResumenPlazasService::esPropiedadOpcionDisponible('dlv (2 de 2)'));
+        $this->assertFalse(ResumenPlazasService::esPropiedadOpcionDisponible('no disponibles'));
+    }
+
+    public function test_getPrimeraPropiedadLibre_elige_la_primera_opcion_con_plazas(): void
+    {
+        $svc = $this->createPartialMock(ResumenPlazasService::class, ['getPosiblesPropietariosOpciones']);
+        $svc->method('getPosiblesPropietariosOpciones')->willReturn([
+            'dlA>dlB' => 'dlA (2 de 2)',
+            'dlC>dlB' => 'dlC (0 de 1)',
+            'dlv>dlv' => 'dlv (1 de 3)',
+        ]);
+
+        $this->assertSame('dlC>dlB', $svc->getPrimeraPropiedadLibre());
+    }
 }

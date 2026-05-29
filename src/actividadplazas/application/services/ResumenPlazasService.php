@@ -132,6 +132,39 @@ class ResumenPlazasService
     }
 
     /**
+     * Indica si una opcion del desplegable de propietarios tiene plazas libres.
+     * Las etiquetas siguen el formato "dl (ocupadas de total)"; "2 de 2" no esta disponible.
+     */
+    public static function esPropiedadOpcionDisponible(string $label): bool
+    {
+        if (preg_match('/\((\d+) de (\d+)\)\s*$/', $label, $matches)) {
+            return (int)$matches[1] < (int)$matches[2];
+        }
+
+        return false;
+    }
+
+    /**
+     * Devuelve la clave de la primera propiedad con plazas libres, en el mismo
+     * orden que el desplegable de posibles propietarios.
+     *
+     * @param false|string $dl_de_paso
+     */
+    public function getPrimeraPropiedadLibre($dl_de_paso = false): ?string
+    {
+        foreach ($this->getPosiblesPropietariosOpciones($dl_de_paso) as $key => $label) {
+            if ($key === 'xxx') {
+                continue;
+            }
+            if (self::esPropiedadOpcionDisponible($label)) {
+                return $key;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Wrapper legacy que devuelve un `frontend\shared\web\Desplegable` envolviendo las
      * opciones de {@see getPosiblesPropietariosOpciones()}. Se mantiene
      * para compatibilidad con callers que aun renderizan el `<select>`

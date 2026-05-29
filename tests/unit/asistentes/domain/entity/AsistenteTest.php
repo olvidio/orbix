@@ -5,6 +5,8 @@ namespace Tests\unit\asistentes\domain\entity;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\entity\Asistente;
+use src\personas\application\services\PersonaFinderService;
+use src\shared\config\ConfigGlobal;
 use src\asistentes\domain\value_objects\AsistenteEncargo;
 use src\asistentes\domain\value_objects\AsistenteObserv;
 use src\asistentes\domain\value_objects\AsistenteObservEst;
@@ -107,21 +109,58 @@ class AsistenteTest extends myTest
         $this->assertEquals(1, $this->Asistente->getPlazaVo()->value());
     }
 
-    public function test_setPlazaVoComprobando_sin_propietario_queda_pedida(): void
+    public function test_setPlazaVoComprobando_sin_propietario_asigna_primera_libre(): void
     {
+        $configBackup = $this->instalarAppActividadPlazas();
+
         $resumenSvc = $this->createMock(ResumenPlazasService::class);
-        $resumenSvc->method('getLibres')->willReturn(0);
+        $resumenSvc->expects($this->once())
+            ->method('getPrimeraPropiedadLibre')
+            ->with(false)
+            ->willReturn('dlv>dlv');
 
         $previousContainer = $GLOBALS['container'] ?? null;
-        $GLOBALS['container'] = $this->containerFromService($resumenSvc);
+        $GLOBALS['container'] = $this->containerFromServices([
+            ResumenPlazasService::class => $resumenSvc,
+        ]);
 
         try {
             $this->Asistente->setId_activ(10);
-            $this->Asistente->setPlazaVo(PlazaId::PEDIDA);
-            $this->Asistente->setPlazaVoComprobando(PlazaId::ASIGNADA);
+            $err = $this->Asistente->setPlazaVoComprobando(PlazaId::ASIGNADA);
 
-            $this->assertSame(PlazaId::PEDIDA, $this->Asistente->getPlazaVo()->value());
+            $this->assertSame('', $err);
+            $this->assertSame(PlazaId::ASIGNADA, $this->Asistente->getPlazaVo()->value());
+            $this->assertSame('dlv>dlv', $this->Asistente->getPropietarioVo()->value());
         } finally {
+            $this->restaurarConfigApps($configBackup);
+            if ($previousContainer === null) {
+                unset($GLOBALS['container']);
+            } else {
+                $GLOBALS['container'] = $previousContainer;
+            }
+        }
+    }
+
+    public function test_setPlazaVoComprobando_sin_propietario_ni_libres_devuelve_error(): void
+    {
+        $configBackup = $this->instalarAppActividadPlazas();
+
+        $resumenSvc = $this->createMock(ResumenPlazasService::class);
+        $resumenSvc->method('getPrimeraPropiedadLibre')->willReturn(null);
+
+        $previousContainer = $GLOBALS['container'] ?? null;
+        $GLOBALS['container'] = $this->containerFromServices([
+            ResumenPlazasService::class => $resumenSvc,
+        ]);
+
+        try {
+            $this->Asistente->setId_activ(10);
+            $err = $this->Asistente->setPlazaVoComprobando(PlazaId::ASIGNADA);
+
+            $this->assertNotSame('', $err);
+            $this->assertSame(PlazaId::ASIGNADA, $this->Asistente->getPlazaVo()->value());
+        } finally {
+            $this->restaurarConfigApps($configBackup);
             if ($previousContainer === null) {
                 unset($GLOBALS['container']);
             } else {
@@ -132,19 +171,26 @@ class AsistenteTest extends myTest
 
     public function test_setPlazaVoComprobando_con_propietario_mantiene_asignada(): void
     {
+        $configBackup = $this->instalarAppActividadPlazas();
+
         $resumenSvc = $this->createMock(ResumenPlazasService::class);
-        $resumenSvc->method('getLibres')->willReturn(0);
+        $resumenSvc->expects($this->never())->method('getPrimeraPropiedadLibre');
 
         $previousContainer = $GLOBALS['container'] ?? null;
-        $GLOBALS['container'] = $this->containerFromService($resumenSvc);
+        $GLOBALS['container'] = $this->containerFromServices([
+            ResumenPlazasService::class => $resumenSvc,
+        ]);
 
         try {
             $this->Asistente->setId_activ(10);
             $this->Asistente->setPropietarioVo('dlA>dlB');
-            $this->Asistente->setPlazaVoComprobando(PlazaId::ASIGNADA);
+            $err = $this->Asistente->setPlazaVoComprobando(PlazaId::ASIGNADA);
 
+            $this->assertSame('', $err);
             $this->assertSame(PlazaId::ASIGNADA, $this->Asistente->getPlazaVo()->value());
+            $this->assertSame('dlA>dlB', $this->Asistente->getPropietarioVo()->value());
         } finally {
+            $this->restaurarConfigApps($configBackup);
             if ($previousContainer === null) {
                 unset($GLOBALS['container']);
             } else {
@@ -153,14 +199,50 @@ class AsistenteTest extends myTest
         }
     }
 
-    private function containerFromService(object $service): object
+    /**
+     * @return array{a_apps: array, app_installed: array}
+     */
+    private function instalarAppActividadPlazas(): array
     {
-        return new class($service) {
-            public function __construct(private readonly object $service) {}
+        $backup = [
+            'a_apps' => $_SESSION['config']['a_apps'] ?? [],
+            'app_installed' => $_SESSION['config']['app_installed'] ?? [],
+        ];
+        $_SESSION['config']['a_apps']['actividadplazas'] = 99001;
+        $_SESSION['config']['app_installed'] = array_values(array_unique(array_merge(
+            $_SESSION['config']['app_installed'] ?? [],
+            [99001]
+        )));
+        $this->assertTrue(ConfigGlobal::is_app_installed('actividadplazas'));
+
+        return $backup;
+    }
+
+    /**
+     * @param array{a_apps: array, app_installed: array} $backup
+     */
+    private function restaurarConfigApps(array $backup): void
+    {
+        $_SESSION['config']['a_apps'] = $backup['a_apps'];
+        $_SESSION['config']['app_installed'] = $backup['app_installed'];
+    }
+
+    private function containerFromServices(array $services): object
+    {
+        $personaFinder = $this->createMock(PersonaFinderService::class);
+        $personaFinder->method('findPersonaEnGlobal')->willReturn(null);
+        $services[PersonaFinderService::class] = $personaFinder;
+
+        return new class($services) {
+            public function __construct(private readonly array $services) {}
 
             public function get(string $id): object
             {
-                return $this->service;
+                if (!array_key_exists($id, $this->services)) {
+                    throw new \RuntimeException('Unexpected DI key: ' . $id);
+                }
+
+                return $this->services[$id];
             }
         };
     }

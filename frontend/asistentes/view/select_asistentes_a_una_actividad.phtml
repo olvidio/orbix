@@ -217,16 +217,10 @@
     <input type='hidden' id='sel2' name='sel[]' value=''>
 </form>
 <?php
-if (!empty($aLinks_dl)) { ?>
-    <br>
-    <table cellspacing=3 class="botones">
-        <tr class="botones">
-            <th width=25 align=RIGHT><?= _("dl") ?>:</th>
-            <?php foreach ($aLinks_dl as $nom => $pagina) { ?>
-                <td class="botones"><span class=link_inv
-                                          onclick="fnjs_update_div('<?= $bloque ?>','<?= $pagina ?>');"><?= $nom ?></span>
-                </td>
-            <?php } ?>
-        </tr>
-    </table>
-<?php } ?>
+if (!empty($aLinks_dl)) {
+    $links_insert_bar_links = $aLinks_dl;
+    $links_insert_bar_bloque = $bloque;
+    $links_insert_bar_label = ucfirst(_("añadir asistente de la dl"));
+    $links_insert_bar_tooltip = _("añadir asistente: %s");
+    include dirname(__DIR__, 2) . '/shared/view/_links_insert_bar.phtml';
+}

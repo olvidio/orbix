@@ -69,12 +69,10 @@
     <input type='hidden' id='mod' name='mod' value=''>
     <?= $oTabla->mostrar_tabla(); ?>
 </form>
-<?php if (!empty($link_insert)) { ?>
-    <br>
-    <table cellspacing=3 class=botones>
-        <tr class=botones>
-            <td class=botones><span class=link_inv onclick="fnjs_update_div('<?= $bloque ?>','<?= $link_insert ?>');">
-                <?= sprintf(_("añadir asignatura")) ?></span></td>
-        </tr>
-    </table>
-<?php } ?>
+<?php if (!empty($link_insert)) {
+    $links_insert_bar_links = [sprintf(_("añadir asignatura")) => $link_insert];
+    $links_insert_bar_bloque = $bloque;
+    $links_insert_bar_label = '';
+    $links_insert_bar_prefix_plus = false;
+    include dirname(__DIR__, 2) . '/shared/view/_links_insert_bar.phtml';
+} ?>

@@ -327,6 +327,13 @@ class AsistenteActividadService
      */
     public function getRepoAsistente(int $id_nom, int $id_activ): string
     {
+        // Los asistentes "de paso" usan ids negativos y no estan en el directorio
+        // global (PersonaDl/PersonaPub), por lo que findPersonaEnGlobal no los
+        // encuentra. Se guardan en d_asistentes_ex.
+        if ($id_nom < 0 || $id_activ < 0) {
+            return AsistenteExRepositoryInterface::class;
+        }
+
         $msg_err = '';
         // Buscar la dl del asistente
         $oPersona = Persona::findPersonaEnGlobal($id_nom);
