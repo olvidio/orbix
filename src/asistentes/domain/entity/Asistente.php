@@ -327,10 +327,11 @@ class Asistente extends Entity implements AggregateRoot
     /**
      * Plaza asignada o confirmada exige propietario. Si falta, se elige la primera
      * opcion libre del desplegable (p. ej. "1 de 2"); "2 de 2" no esta disponible.
+     * Solo se comprueba al pasar a asignada/confirmada desde un estado inferior.
      *
      * @return string vacio si ok, mensaje de error si no hay propiedad posible
      */
-    private function asegurarPropietarioPlaza(int $plaza): string
+    private function asegurarPropietarioPlaza(int $plaza_actual, int $plaza): string
     {
         if (!ConfigGlobal::is_app_installed('actividadplazas')) {
             return '';
@@ -338,15 +339,24 @@ class Asistente extends Entity implements AggregateRoot
         if ($plaza <= PlazaId::DENEGADA) {
             return '';
         }
-
-        $propietario = $this->getPropietarioVo()?->value() ?? '';
-        if ($propietario !== '' && $propietario !== 'xxx') {
+        if ($plaza_actual >= PlazaId::ASIGNADA) {
             return '';
         }
 
         $gesActividadPlazas = $GLOBALS['container']->get(ResumenPlazasService::class);
         $gesActividadPlazas->setId_activ($this->id_activ);
-        $prop = $gesActividadPlazas->getPrimeraPropiedadLibre($this->resolverDlDePaso());
+        $dl_de_paso = $this->resolverDlDePaso();
+
+        $propietario = $this->getPropietarioVo()?->value() ?? '';
+        if ($propietario !== '' && $propietario !== 'xxx') {
+            if (!$gesActividadPlazas->esPropiedadClaveDisponible($propietario, $dl_de_paso)) {
+                return (string)_("Ya están todas las plazas ocupadas");
+            }
+
+            return '';
+        }
+
+        $prop = $gesActividadPlazas->getPrimeraPropiedadLibre($dl_de_paso);
         if ($prop === null) {
             return (string)_("Ya están todas las plazas ocupadas");
         }
@@ -381,10 +391,11 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function setPlazaComprobando(?int $plaza = null): string
     {
+        $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
         $plaza = (int) $plaza;
         $this->plaza = PlazaId::fromNullableInt($plaza);
 
-        return $this->asegurarPropietarioPlaza($plaza);
+        return $this->asegurarPropietarioPlaza($plaza_actual, $plaza);
     }
 
     /**
@@ -395,13 +406,14 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function setPlazaVoComprobando(PlazaId|int|null $oPlazaId = null): string
     {
+        $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
         $iplaza = $oPlazaId instanceof PlazaId
             ? $oPlazaId?->value()
             : $oPlazaId;
         $iplaza = (int) $iplaza;
         $this->plaza = PlazaId::fromNullableInt($iplaza);
 
-        return $this->asegurarPropietarioPlaza($iplaza);
+        return $this->asegurarPropietarioPlaza($plaza_actual, $iplaza);
     }
 
     /**

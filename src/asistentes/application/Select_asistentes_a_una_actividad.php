@@ -457,7 +457,7 @@ class Select_asistentes_a_una_actividad
             $explicacion5 = _("como la anterior pero con el plus de que se ha comunicado al interesado y no hay cambio");
 
             $leyenda_html = '<p class="contenido">';
-            $leyenda_html .= _("para seleccionar varios: 'Ctrl+Click' o bien 'Mays+Click'");
+            $leyenda_html .= _("para selección múltiple: 'Ctrl+Click' o bien 'Mays+Click'");
             $leyenda_html .= "<br><style>
 				.box {
 				display: inline;

@@ -145,6 +145,24 @@ class ResumenPlazasService
     }
 
     /**
+     * Indica si la clave de propietario (p. ej. "dlA>dlB") tiene plazas libres
+     * segun las opciones del desplegable.
+     *
+     * @param false|string $dl_de_paso
+     */
+    public function esPropiedadClaveDisponible(string $key, $dl_de_paso = false): bool
+    {
+        if ($key === '' || $key === 'xxx') {
+            return false;
+        }
+
+        $opciones = $this->getPosiblesPropietariosOpciones($dl_de_paso);
+
+        return isset($opciones[$key])
+            && self::esPropiedadOpcionDisponible($opciones[$key]);
+    }
+
+    /**
      * Devuelve la clave de la primera propiedad con plazas libres, en el mismo
      * orden que el desplegable de posibles propietarios.
      *

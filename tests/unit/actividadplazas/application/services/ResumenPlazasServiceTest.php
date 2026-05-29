@@ -108,4 +108,18 @@ final class ResumenPlazasServiceTest extends TestCase
 
         $this->assertSame('dlC>dlB', $svc->getPrimeraPropiedadLibre());
     }
+
+    public function test_esPropiedadClaveDisponible(): void
+    {
+        $svc = $this->createPartialMock(ResumenPlazasService::class, ['getPosiblesPropietariosOpciones']);
+        $svc->method('getPosiblesPropietariosOpciones')->willReturn([
+            'dlA>dlB' => 'dlA (2 de 2)',
+            'dlC>dlB' => 'dlC (0 de 1)',
+        ]);
+
+        $this->assertFalse($svc->esPropiedadClaveDisponible('dlA>dlB'));
+        $this->assertTrue($svc->esPropiedadClaveDisponible('dlC>dlB'));
+        $this->assertFalse($svc->esPropiedadClaveDisponible('inexistente'));
+        $this->assertFalse($svc->esPropiedadClaveDisponible('xxx'));
+    }
 }

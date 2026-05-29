@@ -174,6 +174,10 @@ class AsistenteTest extends myTest
         $configBackup = $this->instalarAppActividadPlazas();
 
         $resumenSvc = $this->createMock(ResumenPlazasService::class);
+        $resumenSvc->expects($this->once())
+            ->method('esPropiedadClaveDisponible')
+            ->with('dlA>dlB', false)
+            ->willReturn(true);
         $resumenSvc->expects($this->never())->method('getPrimeraPropiedadLibre');
 
         $previousContainer = $GLOBALS['container'] ?? null;
@@ -189,6 +193,70 @@ class AsistenteTest extends myTest
             $this->assertSame('', $err);
             $this->assertSame(PlazaId::ASIGNADA, $this->Asistente->getPlazaVo()->value());
             $this->assertSame('dlA>dlB', $this->Asistente->getPropietarioVo()->value());
+        } finally {
+            $this->restaurarConfigApps($configBackup);
+            if ($previousContainer === null) {
+                unset($GLOBALS['container']);
+            } else {
+                $GLOBALS['container'] = $previousContainer;
+            }
+        }
+    }
+
+    public function test_setPlazaVoComprobando_con_propietario_sin_plazas_devuelve_error(): void
+    {
+        $configBackup = $this->instalarAppActividadPlazas();
+
+        $resumenSvc = $this->createMock(ResumenPlazasService::class);
+        $resumenSvc->expects($this->once())
+            ->method('esPropiedadClaveDisponible')
+            ->with('dlA>dlB', false)
+            ->willReturn(false);
+        $resumenSvc->expects($this->never())->method('getPrimeraPropiedadLibre');
+
+        $previousContainer = $GLOBALS['container'] ?? null;
+        $GLOBALS['container'] = $this->containerFromServices([
+            ResumenPlazasService::class => $resumenSvc,
+        ]);
+
+        try {
+            $this->Asistente->setId_activ(10);
+            $this->Asistente->setPropietarioVo('dlA>dlB');
+            $err = $this->Asistente->setPlazaVoComprobando(PlazaId::ASIGNADA);
+
+            $this->assertNotSame('', $err);
+            $this->assertSame(PlazaId::ASIGNADA, $this->Asistente->getPlazaVo()->value());
+        } finally {
+            $this->restaurarConfigApps($configBackup);
+            if ($previousContainer === null) {
+                unset($GLOBALS['container']);
+            } else {
+                $GLOBALS['container'] = $previousContainer;
+            }
+        }
+    }
+
+    public function test_setPlazaVoComprobando_ya_asignada_no_revalida_plazas(): void
+    {
+        $configBackup = $this->instalarAppActividadPlazas();
+
+        $resumenSvc = $this->createMock(ResumenPlazasService::class);
+        $resumenSvc->expects($this->never())->method('esPropiedadClaveDisponible');
+        $resumenSvc->expects($this->never())->method('getPrimeraPropiedadLibre');
+
+        $previousContainer = $GLOBALS['container'] ?? null;
+        $GLOBALS['container'] = $this->containerFromServices([
+            ResumenPlazasService::class => $resumenSvc,
+        ]);
+
+        try {
+            $this->Asistente->setId_activ(10);
+            $this->Asistente->setPlazaVo(PlazaId::ASIGNADA);
+            $this->Asistente->setPropietarioVo('dlA>dlB');
+            $err = $this->Asistente->setPlazaVoComprobando(PlazaId::CONFIRMADA);
+
+            $this->assertSame('', $err);
+            $this->assertSame(PlazaId::CONFIRMADA, $this->Asistente->getPlazaVo()->value());
         } finally {
             $this->restaurarConfigApps($configBackup);
             if ($previousContainer === null) {
