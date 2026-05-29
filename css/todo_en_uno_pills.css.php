@@ -223,4 +223,38 @@ body.layout-pills .slick-cell {
     font-family: inherit;
     font-size: 0.8125rem;
 }
+
+body.layout-pills #top > table {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+body.layout-pills .links-insert-bar {
+    background: #e2e5eb;
+    border-color: <?= $lineas ?>;
+    border-radius: 10px;
+}
+
+body.layout-pills .links-insert-bar .etiqueta {
+    font-weight: 600;
+    color: <?= $oscuro ?>;
+}
+
+body.layout-pills .links-insert-btn {
+    margin: 0.2em 0.35em;
+    padding: 0.35em 0.85em;
+    border: 1px solid <?= $medio ?>;
+    border-radius: 8px;
+    background: linear-gradient(180deg, <?= $tono2 ?> 0%, <?= $tono3 ?> 100%);
+    color: <?= $oscuro ?>;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+body.layout-pills .links-insert-btn:hover {
+    filter: brightness(1.03);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+    background: linear-gradient(180deg, <?= $tono2 ?> 0%, <?= $tono3 ?> 100%);
+    color: <?= $oscuro ?>;
+}
 </style>

@@ -693,10 +693,14 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 		height : 15px;
 	}
 	.links-insert-bar {
+		display: block;
+		width: 100%;
+		box-sizing: border-box;
 		margin-top: 0.75em;
 		margin-bottom: 0.5em;
-		padding: 0.55em 0.65em;
+		padding: 0.55em 0.75em;
 		border: 1px solid <?= $lineas ?>;
+		border-radius: 10px;
 		background-color: <?= $fondo_dos ?>;
 	}
 	.links-insert-bar .etiqueta {
