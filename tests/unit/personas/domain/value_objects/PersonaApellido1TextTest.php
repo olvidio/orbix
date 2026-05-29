@@ -37,4 +37,21 @@ class PersonaApellido1TextTest extends myTest
         $this->assertNull($personaApellido1Text);
     }
 
+    public function test_acepta_letras_con_acento(): void
+    {
+        $personaApellido1Text = new PersonaApellido1Text('PRÀCTIQUES');
+        $this->assertSame('PRÀCTIQUES', $personaApellido1Text->value());
+
+        $nfd = normalizer_normalize('García', \Normalizer::FORM_D);
+        $this->assertNotFalse($nfd);
+        $desdeNfd = new PersonaApellido1Text($nfd);
+        $this->assertSame('García', $desdeNfd->value());
+    }
+
+    public function test_acepta_marcador_asterisco(): void
+    {
+        $personaApellido1Text = new PersonaApellido1Text('*SACD PRÀCTIQUES');
+        $this->assertSame('*SACD PRÀCTIQUES', $personaApellido1Text->value());
+    }
+
 }

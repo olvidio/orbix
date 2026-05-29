@@ -8,7 +8,7 @@ namespace src\personas\domain\value_objects;
 final class PersonaTextoChars
 {
     /** Nombre, apellidos y apellido familiar. */
-    public const CLASE_TEXTO_PERSONA = "[\p{L}0-9 .,'’´\-()?·\/]";
+    public const CLASE_TEXTO_PERSONA = "[\p{L}\p{M}0-9 .,'’´\-()?·\/\*]";
 
     public const CLASE_NX = '[A-Za-z0-9 ]';
 
@@ -20,7 +20,7 @@ final class PersonaTextoChars
 
     public static function normalizeTipografico(string $value): string
     {
-        return str_replace(
+        $value = str_replace(
             [
                 "\u{2013}", "\u{2014}", "\u{2212}",
                 "\u{2018}", "\u{2019}", "\u{201B}",
@@ -29,6 +29,15 @@ final class PersonaTextoChars
             ['-', '-', '-', "'", "'", "'", "'"],
             $value
         );
+
+        if (function_exists('normalizer_normalize')) {
+            $normalized = normalizer_normalize($value, \Normalizer::FORM_C);
+            if (is_string($normalized)) {
+                $value = $normalized;
+            }
+        }
+
+        return $value;
     }
 
     public static function fullPattern(string $charClass): string
