@@ -1,9 +1,10 @@
 <?php
+
 namespace src\dossiers\application;
 
-use src\shared\config\ConfigGlobal;
-use src\personas\domain\entity\Persona;
 use src\actividades\domain\entity\TiposActividades;
+use src\personas\domain\entity\Persona;
+use src\shared\config\ConfigGlobal;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -483,17 +484,20 @@ class PermDossier
         // Quito los tipos que no existen
         $ref_perm2 = [];
         foreach ($ref_perm as $key => $value) {
-            if (!isset($a_posibles_tipos[$key])) { continue; }
+            if (!isset($a_posibles_tipos[$key])) {
+                continue;
+            }
             $ref_perm2[$key] = $value;
         }
         return $ref_perm2;
     }
 
-    function perm_pers_activ($id_tipo_activ)
+    function perm_pers_activ($id_tipo_activ, bool $dl_propia = TRUE)
     {
         // Esta función devuelve un array con los permisos (si o no) para añadir las
         // personas (agd, n...) según el tipo de actividad de que se trate y
         // quién seamos nosotros.
+        // Al final añadimos que si no es dl_propia, no tiene permiso para añadir personas de paso
 
         //para inicializar la matriz:
         $ref_perm = array(
@@ -917,6 +921,13 @@ class PermDossier
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
                 break;
+        }
+
+        if ($dl_propia === false){
+            $ref_perm['pn'] = 0;
+            $ref_perm['pa'] = 0;
+            $ref_perm['px'] = 0;
+            $ref_perm['psssc'] = 0;
         }
         return $ref_perm;
     }

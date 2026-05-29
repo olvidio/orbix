@@ -97,8 +97,10 @@ class Select_cargos_de_actividad
 
         $oActividad = $ActividadAllRepository->findById($this->id_pau);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
+        $dl_org = $oActividad->getDl_org();
+        $dl_propia = (ConfigGlobal::mi_delef() === $dl_org);
         $oPermDossier = new PermDossier();
-        $this->a_ref_perm = $oPermDossier->perm_pers_activ($id_tipo_activ);
+        $this->a_ref_perm = $oPermDossier->perm_pers_activ($id_tipo_activ, $dl_propia);
 
         $this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");
         $elim_asis_default = 1;

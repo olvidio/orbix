@@ -156,8 +156,12 @@ class Select_asistentes_a_una_actividad
 
     public function getCargos(): void
     {
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadAllRepository->findById($this->id_pau);
+        $dl_org = $oActividad->getDl_org();
+        $dl_propia = (ConfigGlobal::mi_delef() === $dl_org);
         $oPermDossier = new PermDossier();
-        $this->a_ref_perm = $oPermDossier->perm_pers_activ($this->id_tipo_activ);
+        $this->a_ref_perm = $oPermDossier->perm_pers_activ($this->id_tipo_activ,$dl_propia);
 
         $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
         $c = 0;
