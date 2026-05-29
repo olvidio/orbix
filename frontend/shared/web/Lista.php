@@ -545,12 +545,14 @@ class Lista
             var resizer = null;
             if (window.Slick && Slick.Plugins && Slick.Plugins.Resizer) {
               resizer = new Slick.Plugins.Resizer({
-                container: '#grid_$id_tabla',
-                rightPadding: 5,
-                bottomPadding: 5,
+                container: '#GridContainer_$id_tabla',
+                rightPadding: 0,
+                bottomPadding: 0,
                 minHeight: 80,
                 minWidth: 200,
-                calculateAvailableSizeBy:  'container',
+                maxWidth: $grid_width,
+                maxHeight: $grid_height,
+                calculateAvailableSizeBy:  'window',
               });
             }
  
@@ -594,15 +596,6 @@ class Lista
 			function add_scroll_id(row) {
 				$(\"#scroll_id_$id_tabla\").val(row);
 			}
-            
-			function resumeAutoResize() {
-              if (!resizer) {
-                return;
-              }
-              resizer.pauseResizer(false);
-              resizer.resizeGrid();
-              resizer.resizeGrid(500);
-            }
     
 			function clickFormatter(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira']) {
@@ -933,7 +926,21 @@ class Lista
 			});
 			dataView_$id_tabla.setFilter(myFilter_$id_tabla);
 			dataView_$id_tabla.endUpdate();
-			$(\"#grid_$id_tabla\").resizable();
+			$(\"#grid_$id_tabla\").resizable({
+			  handles: 'se',
+			  resize: function (event, ui) {
+			    grid_$id_tabla.resizeCanvas();
+			  },
+			  stop: function (event, ui) {
+			    var w = Math.round(ui.size.width);
+			    var h = Math.round(ui.size.height);
+			    $('#GridContainer_$id_tabla').css('max-width', w + 'px');
+			    if (resizer) {
+			      resizer.setOptions({ maxWidth: w, maxHeight: h });
+			    }
+			    grid_$id_tabla.resizeCanvas();
+			  }
+			});
 		";
 
         if (isset($scroll_id)) {
@@ -971,17 +978,15 @@ class Lista
             $tt .= "toggleFilterRow_$id_tabla();";
         }
 
-        $tt .= "
-			var container = $(grid_$id_tabla.getContainerNode());
-			var h_header =  $('.grid-header').height();
-			var vph = $grid_height - h_header;
-			container.height(vph);
+		$tt .= "
+			$('#grid_$id_tabla').css({ width: '{$grid_width}px', height: '{$grid_height}px' });
+			$('#GridContainer_$id_tabla').css('max-width', '{$grid_width}px');
 			grid_$id_tabla.resizeCanvas();
 		  })
 		</script>
 		";
 
-        $ta = "<div id=\"GridContainer_" . $id_tabla . "\"  style=\"width:{$grid_width}px; height:auto;\" >
+        $ta = "<div id=\"GridContainer_" . $id_tabla . "\"  style=\"width:100%; max-width:{$grid_width}px; height:auto;\" >
 		<div class=\"grid-header\">
           <span style=\"width:90%; display: inline-block;\">$botones</span>
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\"" . _("guardar selección de columnas") . "\"
@@ -989,7 +994,7 @@ class Lista
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-search\" title=\"" . _("ver/ocultar panel de búsqueda") . "\"
 				onclick=\"toggleFilterRow_$id_tabla()\"></span>
 		</div>
-		<div id=\"grid_$id_tabla\"  style=\"width:{$grid_width}px; height:{$grid_height}px;\" onresize=\"resumeAutoResize()\" ></div>
+		<div id=\"grid_$id_tabla\"  style=\"width:{$grid_width}px; height:{$grid_height}px;\" ></div>
 		";
         $ta .= "</div>";
 
