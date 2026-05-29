@@ -9,46 +9,63 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 
 /**
- * Renderiza `ver_cuadricula_zona.phtml` a partir de los datos devueltos por
- * un endpoint backend (`/src/misas/ver_cuadricula_zona_data`,
- * `/src/misas/crear_nuevo_periodo_data`, `/src/misas/ver_misas_zona_data`, ...).
+ * Renderiza la cuadrícula de zona a partir de datos del backend.
  *
- * Encapsula la construcción de los `Hash` y la composición de `$a_campos`,
- * que antes estaban duplicados en `ver_cuadricula_zona.php`,
- * `modificar_cuadricula_zona.php`, `crear_nuevo_periodo.php` y
- * `ver_misas_zona.php`.
+ * - `ver_cuadricula_zona.phtml`: tabla HTML de solo lectura.
+ * - `modificar_cuadricula_zona.phtml`: SlickGrid editable (modal SACD).
  */
 class CuadriculaZonaRenderer
 {
     /**
-     * @param array<string, mixed> $data       respuesta del backend (JSON decodificado).
-     * @param array<string, mixed> $post       input normalizado del controlador frontend.
-     * @param string               $url_self   URL (relativa) del propio controlador para el hash "self".
-     * @param string               $camposSelf lista de campos del hash "self" separados por `!`.
-     * @param array<string, mixed> $overrides  valores fijos que deben sobreescribir `$data` y `$post`
-     *                                         (por ejemplo `['tipo_plantilla' => 'p']`).
+     * Cuadrícula de solo lectura (ver plan, ver misas zona, …).
+     *
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $post
+     * @param array<string, mixed> $overrides
      */
-    public static function render(
+    public static function renderVer(
         array $data,
         array $post,
         string $url_self,
         string $camposSelf,
         array $overrides = []
     ): void {
+        self::render($data, $post, $url_self, $camposSelf, 'ver_cuadricula_zona.phtml', false, $overrides);
+    }
+
+    /**
+     * Cuadrícula editable (modificar plan/plantilla, crear periodo, …).
+     *
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $post
+     * @param array<string, mixed> $overrides
+     */
+    public static function renderModificar(
+        array $data,
+        array $post,
+        string $url_self,
+        string $camposSelf,
+        array $overrides = []
+    ): void {
+        self::render($data, $post, $url_self, $camposSelf, 'modificar_cuadricula_zona.phtml', true, $overrides);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $post
+     * @param array<string, mixed> $overrides
+     */
+    private static function render(
+        array $data,
+        array $post,
+        string $url_self,
+        string $camposSelf,
+        string $plantilla,
+        bool $editable,
+        array $overrides = []
+    ): void {
         $columns_cuadricula = $data['columns_cuadricula'] ?? '[]';
         $json_data_cuadricula = $data['data_cuadricula'] ?? [];
-
-        $url_cuadricula_update = AppUrlConfig::getApiBaseUrl() . '/src/misas/cuadricula_update';
-        $oHashUpd = new HashFront();
-        $oHashUpd->setUrl($url_cuadricula_update);
-        $oHashUpd->setCamposForm('dia!id_enc!key!observ!tend!tstart!uuid_item!tipo_plantilla!id_zona');
-        $h_cuadricula_update = $oHashUpd->linkSinValParams();
-
-        $url_desplegable_sacd = AppUrlConfig::getApiBaseUrl() . '/src/misas/desplegable_sacd';
-        $oHashDs = new HashFront();
-        $oHashDs->setUrl($url_desplegable_sacd);
-        $oHashDs->setCamposForm('id_zona!id_sacd!seleccion!dia');
-        $h_desplegable_sacd = $oHashDs->linkSinValParams();
 
         $oHashSelf = new HashFront();
         $oHashSelf->setUrl($url_self);
@@ -71,8 +88,6 @@ class CuadriculaZonaRenderer
         $a_campos = [
             'columns_cuadricula' => $columns_cuadricula,
             'json_data_cuadricula' => $json_data_cuadricula,
-            'url_desplegable_sacd' => $url_desplegable_sacd,
-            'h_desplegable_sacd' => $h_desplegable_sacd,
             'url_ver_cuadricula_zona' => $url_self,
             'h_ver_cuadricula_zona' => $h_ver_cuadricula_zona,
             'id_zona' => $pick('id_zona', $post['id_zona'] ?? 0, 'int'),
@@ -84,11 +99,28 @@ class CuadriculaZonaRenderer
             'empieza_max' => (string)($data['empieza_max'] ?? $post['empiezamax'] ?? ''),
             'fila' => $pick('fila', $post['fila'] ?? 0, 'int'),
             'columna' => $pick('columna', $post['columna'] ?? 0, 'int'),
-            'h_cuadricula_update' => $h_cuadricula_update,
-            'url_cuadricula_update' => $url_cuadricula_update,
         ];
 
+        if ($editable) {
+            $url_cuadricula_update = AppUrlConfig::getApiBaseUrl() . '/src/misas/cuadricula_update';
+            $oHashUpd = new HashFront();
+            $oHashUpd->setUrl($url_cuadricula_update);
+            $oHashUpd->setCamposForm('dia!id_enc!key!observ!tend!tstart!uuid_item!tipo_plantilla!id_zona');
+            $h_cuadricula_update = $oHashUpd->linkSinValParams();
+
+            $url_desplegable_sacd = AppUrlConfig::getApiBaseUrl() . '/src/misas/desplegable_sacd';
+            $oHashDs = new HashFront();
+            $oHashDs->setUrl($url_desplegable_sacd);
+            $oHashDs->setCamposForm('id_zona!id_sacd!seleccion!dia');
+            $h_desplegable_sacd = $oHashDs->linkSinValParams();
+
+            $a_campos['h_cuadricula_update'] = $h_cuadricula_update;
+            $a_campos['url_cuadricula_update'] = $url_cuadricula_update;
+            $a_campos['url_desplegable_sacd'] = $url_desplegable_sacd;
+            $a_campos['h_desplegable_sacd'] = $h_desplegable_sacd;
+        }
+
         $oView = new ViewNewPhtml('frontend\\misas\\controller');
-        $oView->renderizar('ver_cuadricula_zona.phtml', $a_campos);
+        $oView->renderizar($plantilla, $a_campos);
     }
 }

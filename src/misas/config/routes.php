@@ -56,6 +56,10 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/desplegable_encargos.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/misas/desplegable_centros_zona', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/desplegable_centros_zona.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/misas/desplegable_sacd', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/desplegable_sacd.php';
     });

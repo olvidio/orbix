@@ -1,0 +1,663 @@
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/ico" href="favicon.ico"/>
+    <title>SlickGrid example: CompositeEditor</title>
+    <!--
+    <link rel="stylesheet" href="../dist/styles/css/slick-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="../dist/styles/css/example-demo.css" type="text/css"/>
+    <link rel="stylesheet" href="../dist/styles/css/slick-alpine-theme.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  -->
+
+
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-icons.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/example-demo.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-alpine-theme.css'/>
+    <link type='text/css' rel='stylesheet' href='frontend/misas/view/item_details_form_header.css'/>
+
+    <style>
+        .cell-title {
+            font-weight: bold;
+        }
+
+        .cell-effort-driven {
+            justify-content: center;
+        }
+
+        .item-details-form {
+            z-index: 100001;
+            display: inline-block;
+            border: 1px solid black;
+            margin: 8px;
+            padding: 10px;
+            background: #fbfbfb;
+            -moz-box-shadow: 0px 0px 15px black;
+            -webkit-box-shadow: 0px 0px 15px black;
+            box-shadow: 0px 0px 15px black;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #desplegable select {
+            min-width: 280px;
+            max-width: min(420px, 90vw);
+        }
+
+        .item-details-form-buttons {
+            float: right;
+        }
+
+        .item-details-label {
+            margin-left: 10px;
+            margin-top: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .item-details-editor-container {
+            width: 200px;
+            height: 20px;
+            border: 1px solid silver;
+            background: white;
+            display: block;
+            margin: 10px;
+            margin-top: 4px;
+            padding: 0;
+            padding-left: 4px;
+            padding-right: 0px;
+        }
+    .verdeclaro {
+      background-color: #d1e7dd;    }
+    .verde {
+      background-color: #00ff00;    }
+    .rojoclaro {
+      background-color: #f8d7da;    }
+    .rojo {
+      background-color: #ff0000;    }
+    .amarilloclaro {
+      background-color: #ffffaa;    }
+    .amarillo {
+      background-color: #ffff00;    }
+    .violetaclaro {
+      background-color: #e8a0e8;    }
+    .azulclaro2 {
+      background-color: #80e0e0;    }
+    .azulclaro {
+      background-color: #a0f0f0;    }
+    .titulo {
+      background-color: #f6f6f6;
+      font-weight: normal;
+      color: #454545;
+      font-size: 13px;    }
+    </style>
+</head>
+
+<div id="cuadriculas" style="position:relative">
+    <input type="hidden" id="empiezamin" value=""/>
+    <input type="hidden" id="empiezamax" value=""/>
+    <div style="width:100%;">
+        <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
+    </div>
+
+
+    <div id="modal_cuadricula_sacd" class='item-details-form' style="display: none">
+
+        <div class="item-details-form-header">
+            <label id="titulo_modal"></label>
+            <hr/>
+        </div>
+        <input type="hidden" id="cell_selected" value=""/>
+        <input type="hidden" id="row_selected" value=""/>
+        <input type="hidden" id="uuid_selected" value=""/>
+        <input type="hidden" id="dia" value=""/>
+        <input type="hidden" id="seleccionado" value=""/>
+        <input type="hidden" id="id_enc_selected" value=""/>
+        <input type="hidden" id="id_sacd_inicial" value=""/>
+        <input type="hidden" id="id_sacd_key_preselect" value=""/>
+        <p><?= _("Selección de sacd") ?>:
+		    <input id="sacd_libre" type="radio" name="grupos_sacd" value="1" OnChange="prepara_select_sacd();"><?= _("libre a 1a hora") ?>
+		    <input id="sacd_zona" type="radio" name="grupos_sacd" value="2" OnChange="prepara_select_sacd();"><?= _("zona") ?>
+		    <input id="sacd_dl" type="radio" name="grupos_sacd" value="4" OnChange="prepara_select_sacd();"><?= _("dl") ?>
+		    <input id="sacd_depaso" type="radio" name="grupos_sacd" value="8" OnChange="prepara_select_sacd();"><?= _("de paso") ?>
+	    </p>
+
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <label for="id_sacd"><?= _("Sacerdote: ") ?></label>
+            <div id="desplegable">
+            </div>
+        </div>
+
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <div class="input-group clockpicker" style="float: left;">
+                <label for="tstart"><?= _("Inicio") ?></label>
+                <input id="tstart" type="text" class="form-control" size="3" value="">
+                <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>&nbsp&nbsp&nbsp&nbsp
+            </span>
+            </div>
+            <div class="input-group clockpicker" style="float:left;">
+                <label for="tend"><?= _("Fin") ?></label>
+                <input id="tend" type="text" class="form-control" size="3" value="">
+                <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>
+            </span>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <label for="observ"> <?= _("Observaciones") ?>: </label>
+            <input id="observ" type="text" class="form-control" size="20" value="">
+        </div>
+
+        <hr/>
+        <div class='item-details-form-buttons'>
+            <button data-action='save' class='slick-btn slick-btn-primary'>Save</button>
+            <button data-action='cancel' class='slick-btn slick-btn-default'>Cancel</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="node_modules/slickgrid/dist/browser/slick.core.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.interactions.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.grid.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellrangeselector.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellselectionmodel.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.formatters.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.editors.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.compositeeditor.js"></script>
+<script src="frontend/misas/support/item_details_form_drag.js"></script>
+
+<script>
+
+    var modal = $('#modal_cuadricula_sacd');
+    var modalHost = $('#cuadriculas');
+    fnjs_initItemDetailsFormDrag(modal, 'cuadriculaSacdModal');
+
+    function showItemDetailsModal() {
+        $('.item-details-form').not(modal).hide();
+        if (!modal.parent().is('body')) {
+            modal.appendTo(document.body);
+        }
+        modal.show();
+    }
+
+    function hideItemDetailsModal() {
+        modal.hide();
+        if (modalHost.length && !modal.parent().is(modalHost)) {
+            modal.appendTo(modalHost);
+        }
+    }
+
+    fnjs_construir_desplegable = function (data) {
+        if (!data) {
+            return '';
+        }
+        var $sel = $('<select></select>').attr({id: data.id, name: data.id});
+        if (data.action) {
+            $sel.attr('onchange', data.action);
+        }
+        if (data.blanco) {
+            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+            $sel.append($('<option></option>').val(vb).text(''));
+        }
+        var opciones = data.opciones || {};
+        if ($.isEmptyObject(opciones) && Array.isArray(data.rows)) {
+            for (var r = 0; r < data.rows.length; r++) {
+                var row = data.rows[r];
+                opciones[String(row.value != null ? row.value : '')] = String(row.label != null ? row.label : '');
+            }
+        }
+        $.each(opciones, function (value, label) {
+            var $opt = $('<option></option>').val(value).text(label);
+            if (data.selected && String(data.selected) === String(value)) {
+                $opt.prop('selected', true);
+            }
+            $sel.append($opt);
+        });
+        return $sel.prop('outerHTML');
+    };
+
+    function sacdKeyToIdNom(key) {
+        var parts = String(key || '').split('#');
+        if (parts.length !== 2) {
+            return '';
+        }
+        if (/^\d+$/.test(parts[0])) {
+            return parts[0];
+        }
+        if (/^\d+$/.test(parts[1])) {
+            return parts[1];
+        }
+
+        return '';
+    }
+
+    function resolveSacdSelectedKey(pre, opciones) {
+        if (!pre || !opciones) {
+            return '';
+        }
+        if (Object.prototype.hasOwnProperty.call(opciones, pre)) {
+            return pre;
+        }
+        var parts = pre.split('#');
+        if (parts.length === 2) {
+            var rev = parts[1] + '#' + parts[0];
+            if (Object.prototype.hasOwnProperty.call(opciones, rev)) {
+                return rev;
+            }
+        }
+
+        return '';
+    }
+
+    modal.keydown(function (e) {
+        if (e.which == Slick.keyCode.ENTER) {
+            commitCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        } else if (e.which == Slick.keyCode.ESCAPE) {
+            cancelCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    });
+
+    modal.find("[data-action=save]").click(function () {
+        commitCurrentEdit();
+    });
+
+    modal.find("[data-action=cancel]").click(function () {
+        cancelCurrentEdit();
+    });
+
+    function cancelCurrentEdit() {
+        hideItemDetailsModal();
+    }
+
+    function commitCurrentEdit(cell) {
+        cell = $('#cell_selected').val();
+        row = $('#row_selected').val();
+//        alert('edit'+cell+'.'+row);
+        var id_campo = columns[cell].field;
+
+        let key = $('#id_sacd').val();
+        const myArray = key.split("#");
+        let iniciales = myArray[0];
+        let id_nom = myArray[1];
+
+        let tstart = $('#tstart').val();
+        let tend = $('#tend').val();
+        let dia = $('#dia').val();
+        let observ = $('#observ').val();
+        let uuid_item = $('#uuid_selected').val();
+        let id_enc = $('#id_enc_selected').val();
+
+        var texto = ' -- ';
+        if (iniciales !== undefined) {
+            texto = iniciales;
+            if (tstart !== "") {
+                texto += ' '+tstart;
+            }
+            if (observ !== "") {
+                texto += '*';
+            }
+        }
+
+        data[row].meta[id_campo].uuid_item = uuid_item;
+        data[row].meta[id_campo].key = key;
+        data[row].meta[id_campo].tstart = tstart;
+        data[row].meta[id_campo].tend = tend;
+        data[row].meta[id_campo].observ = observ;
+        data[row].meta[id_campo].id_enc = id_enc;
+//        data[row][id_campo]=iniciales;
+
+//        grid.invalidateAllRows();
+//        grid.render();
+
+        let meta = data[row].meta[id_campo];
+        let id_zona = '<?= (int)($id_zona ?? 0) ?>';
+        meta.dia = dia;
+        // añadir el hash (se puede cambiar todo menos el encargo)
+//        const arr_h = { {{ array_h|raw }} };
+//        const mergedJSON = { ...meta, ...arr_h };
+        let parametros_update = 'id_enc=' + encodeURIComponent(id_enc)
+            + '&uuid_item=' + encodeURIComponent(uuid_item)
+            + '&key=' + encodeURIComponent(key)
+            + '&observ=' + encodeURIComponent(observ)
+            + '&dia=' + encodeURIComponent(dia)
+            + '&tipo_plantilla=' + encodeURIComponent(tipo_plantilla)
+            + '&tend=' + encodeURIComponent(tend)
+            + '&tstart=' + encodeURIComponent(tstart)
+            + '&id_zona=' + encodeURIComponent(id_zona)
+            + '<?= $h_cuadricula_update ?>';
+
+        $.ajax({
+            url: '<?= htmlspecialchars($url_cuadricula_update, ENT_QUOTES, 'UTF-8') ?>',
+            type: 'post',
+            data: parametros_update,
+            dataType: 'json'
+        }).done(function (respuesta) {
+            if (respuesta.success !== true) {
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + (respuesta.mensaje || ''));
+                return;
+            }
+            var inner = (typeof respuesta.data === 'string') ? JSON.parse(respuesta.data) : respuesta.data;
+            var rmeta = inner.meta || {};
+            hideItemDetailsModal();
+            id_sacd_anterior = rmeta.id_sacd_anterior;
+            i = 0;
+            while ((i < data.length) && (data[i]['id_nom'] != id_sacd_anterior)) {
+                i++;
+            }
+            if (i < data.length) {
+                data[i].meta[id_campo].color = rmeta.color_fondo_anterior;
+                data[i].meta[id_campo].texto = rmeta.texto_anterior;
+            }
+            i = 0;
+            while ((i < data.length) && (data[i]['id_nom'] != id_nom)) {
+                i++;
+            }
+            if (i < data.length) {
+                data[i].meta[id_campo].color = rmeta.color_fondo;
+                data[i].meta[id_campo].texto = rmeta.texto;
+            }
+            data[row].meta[id_campo].color = rmeta.color_misa;
+            data[row].meta[id_campo].key = id_nom + '#' + iniciales;
+            if (iniciales != '') {
+                data[row][id_campo] = iniciales;
+            } else {
+                data[row][id_campo] = '--';
+            }
+            grid.invalidateAllRows();
+            grid.render();
+        });
+    }
+
+    function reset_campos_modal() {
+        $('#id_sacd').val('');
+        $('#id_sacd_key_preselect').val('');
+        $('#tstart').val('');
+        $('#tend').val('');
+        $('#observ').val('');
+        $('#id_enc').val('');
+    }
+
+    function prepara_select_sacd() {
+    	var sacd_libre=$('#sacd_libre').prop('checked');
+    	var sacd_zona=$('#sacd_zona').prop('checked');
+        var sacd_dl=$('#sacd_dl').prop('checked');
+	    var sacd_depaso=$('#sacd_depaso').prop('checked');
+        var dia=$('#dia').val();
+        seleccion = 0;
+       	if (sacd_libre) seleccion=1;
+       	if (sacd_zona) seleccion=2;
+	    if (sacd_dl) seleccion=4;
+    	if (sacd_depaso) seleccion=8;
+        if (seleccion === 0) {
+            seleccion = 2;
+            $('#sacd_zona').prop('checked', true);
+        }
+	    var ii2=$('#id_sacd_inicial').val();
+
+        let url_desplegable_sacd = '<?= htmlspecialchars($url_desplegable_sacd, ENT_QUOTES, 'UTF-8') ?>';
+	    let id_zona = '<?= (int)($id_zona ?? 0) ?>';
+	    var parametros = 'id_zona=' + encodeURIComponent(id_zona)
+            + '&id_sacd=' + encodeURIComponent(ii2)
+            + '&seleccion=' + encodeURIComponent(seleccion)
+            + '&dia=' + encodeURIComponent(dia)
+            + '<?= $h_desplegable_sacd ?>';
+        $('#desplegable').html('<span>' + <?= json_encode(_('Cargando...')) ?> + '</span>');
+          let request = $.ajax({
+		    url: url_desplegable_sacd,
+		    data: parametros,
+		    type: 'post',
+            dataType: 'json'
+        });
+
+        request.done(function (json) {
+            if (!json || json.success !== true) {
+                var msg = (json && json.mensaje) ? json.mensaje : <?= json_encode(_('No se pudo cargar el desplegable de sacerdotes')) ?>;
+                $('#desplegable').html($('<span></span>').text(msg).prop('outerHTML'));
+                return;
+            }
+            var payload;
+            try {
+                payload = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+            } catch (e) {
+                $('#desplegable').html($('<span></span>').text(<?= json_encode(_('Respuesta inválida del servidor')) ?>).prop('outerHTML'));
+                return;
+            }
+            var pre = ($('#id_sacd_key_preselect').val() || '').trim();
+            var chosen = resolveSacdSelectedKey(pre, payload.opciones || {});
+            if (chosen) {
+                payload.selected = chosen;
+            }
+            $('#desplegable').html(fnjs_construir_desplegable(payload));
+            chosen = String($('#id_sacd').val() != null && $('#id_sacd').val() !== undefined ? $('#id_sacd').val() : '');
+            $('#id_sacd_key_preselect').val(chosen);
+        });
+        request.fail(function () {
+            $('#desplegable').html($('<span></span>').text(<?= json_encode(_('Error de comunicación al cargar sacerdotes')) ?>).prop('outerHTML'));
+        });
+
+        showItemDetailsModal();
+    }
+
+    function openDetails(cell) {
+        if (cell == null || cell.row == null || cell.cell == null) {
+            return;
+        }
+        var row = data[cell.row];
+        var col = columns[cell.cell];
+        if (!row || !col) {
+            return;
+        }
+        var id_campo = col.field;
+        // La columna encargo no tiene meta por fecha; titulo/sacd no llevan key de asignación.
+        if (id_campo === 'encargo') {
+            return;
+        }
+        var rowMeta = row.meta;
+        if (!rowMeta || !rowMeta[id_campo]) {
+            return;
+        }
+        var meta = rowMeta[id_campo];
+        if (meta.tipo !== 'misas') {
+            return;
+        }
+
+        const url = URL.createObjectURL(new Blob());
+        $('#cell_selected').val(cell.cell);
+        $('#row_selected').val(cell.row);
+        // recuperar los datos del meta e introducirlos en los campos
+        let encargo = row.encargo;
+
+        let key = meta.key != null ? String(meta.key) : '';
+        let tstart = meta.tstart;
+        let tend = meta.tend;
+        let observ = meta.observ;
+        let id_enc = meta.id_enc;
+        let dia = meta.dia;
+        let uuid_item = meta.uuid_item;
+        if (uuid_item === "") {
+            uuid_item = url.substring(url.lastIndexOf('/') + 1)
+        }
+
+        $('#titulo_modal').html(encargo);
+        $('#id_sacd_key_preselect').val(key);
+        $('#id_sacd').val(key);
+        $('#tstart').val(tstart);
+        $('#tend').val(tend);
+        $('#dia').val(dia);
+        $('#observ').val(observ);
+        $('#uuid_selected').val(uuid_item);
+        $('#id_enc_selected').val(id_enc);
+
+        if (seleccion==0) {
+            seleccion=2;
+        }
+        if (seleccion==1) {
+            $('#sacd_libre').prop('checked', true);
+        }
+        if (seleccion==2) {
+            $('#sacd_zona').prop('checked', true);
+        }
+        if (seleccion==4) {
+            $('#sacd_dl').prop('checked', true);
+        }
+        if (seleccion==8) {
+            $('#sacd_depaso').prop('checked', true);
+        }
+        var id_sacd_inicial = sacdKeyToIdNom(key);
+        $('#id_sacd_inicial').val(id_sacd_inicial);
+        prepara_select_sacd();
+    }
+
+    function requiredFieldValidator(value) {
+        if (value == null || value == undefined || !value.length) {
+            return {valid: false, msg: "This is a required field"};
+        } else {
+            return {valid: true, msg: null};
+        }
+    }
+
+function formato_sacd(row, cell, value, columnDef, dataContext) {
+    var id_campo=columns[cell].field;
+    var color=data_sacd[row].meta[id_campo].color;
+    var texto=data_sacd[row].meta[id_campo].texto;
+//alert('sacd: '+sacd+' id_campo: '+id_campo+'value: '+value+' texto: '+texto+' color '+color);
+      var rtn = { text: value, removeClasses: 'red orange green' };
+      if (color !== null && color !== "") {
+          rtn.addClasses =  color;
+          rtn.toolTip = texto;
+        }
+      return rtn;
+  }
+
+function formato_misas(row, cell, value, columnDef, dataContext) {
+    var id_campo=columns[cell].field;
+    var color=data[row].meta[id_campo].color;
+      var rtn = { text: value, removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
+      if (color !== null && color !== "") {
+          rtn.addClasses = color;
+//          rtn.toolTip = value;
+        }
+      return rtn;
+  }
+
+function formato_encargos(row, cell, value, columnDef, dataContext) {
+    var id_campo=columns[cell].field;
+    var color=data[row].color_encargo;
+    var rtn = { text: value, removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
+
+    if (color !== null && color !== "") {
+          rtn.addClasses = color;
+    }
+    return rtn;
+  }
+function formato(row, cell, value, columnDef, dataContext) {
+    var color='';
+    var id_campo=columns[cell].field;
+    tipo=data[row].meta[id_campo].tipo;
+    var rtn = { text: value, removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
+    if (tipo=='sacd') {
+        color=data[row].meta[id_campo].color;
+ //       alert(tipo);
+        var texto=data[row].meta[id_campo].texto;
+ //       if (texto!='')
+ //       alert (texto);
+        rtn.toolTip = texto;
+    }
+    if (tipo=='misas') {
+        color=data[row].meta[id_campo].color;
+        var texto=data[row].meta[id_campo].texto;
+        rtn.toolTip = texto;
+    }
+    if (tipo=='titulo') {
+        color='titulo';
+    }
+
+    if (color !== null && color !== "") {
+          rtn.addClasses = color;
+    }
+    return rtn;
+  }
+
+var meta;
+    var grid;
+    var data = <?= json_encode($json_data_cuadricula ?? [], JSON_UNESCAPED_UNICODE) ?>;
+    var columns = <?= $columns_cuadricula ?>;
+    var options = {
+        editable: false,
+        frozenColumn: 0,
+        frozenRow: 0,
+        enableAddRow: true,
+        enableCellNavigation: true,
+        asyncEditorLoading: false,
+        autoEdit: false
+    };
+    $('#empiezamin').val(<?= json_encode((string)($empieza_min ?? ''), JSON_UNESCAPED_UNICODE) ?>);
+    $('#empiezamax').val(<?= json_encode((string)($empieza_max ?? ''), JSON_UNESCAPED_UNICODE) ?>);
+
+    var grid_sacd;
+    var seleccion =<?= (int)($seleccion ?? 0) ?>;
+    if (seleccion==1) {
+        $('#sacd_libre').prop('checked', true);
+    }
+    if (seleccion==2) {
+        $('#sacd_zona').prop('checked', true);
+    }
+    if (seleccion==4) {
+        $('#sacd_dl').prop('checked', true);
+    }
+    if (seleccion==8) {
+        $('#sacd_depaso').prop('checked', true);
+    }
+
+//    var columns_sacd = {{ columns_sacd|raw }};
+    var tipo_plantilla = '<?= htmlspecialchars((string)($tipo_plantilla ?? ''), ENT_QUOTES, 'UTF-8') ?>';
+
+      var options2 = {
+    editable: true,
+    enableAddRow: false,
+    enableCellNavigation: true,
+    createPreHeaderPanel: true
+  };
+
+    $(function () {
+        grid = new Slick.Grid("#myGrid", data, columns, options);
+
+        grid.onClick.subscribe(function (e) {
+            var cell = grid.getCellFromEvent(e);
+            openDetails(cell);
+            e.stopPropagation();
+        });
+
+        var fila =<?= (int)($fila ?? 0) ?>;
+        var columna =<?= (int)($columna ?? 0) ?>;
+
+        grid.setActiveCell(fila, columna);
+    })
+
+
+    $('.clockpicker').clockpicker({
+            placement: 'bottom',
+            align: 'right',
+            donetext: 'Correcto!'
+        }
+    );
+    document.getElementById('contenido_sin_menus').style.height=(window.innerHeight-document.getElementById('contenido_sin_menus').getBoundingClientRect().top-40)+'px';
+    document.getElementById('contenido_sin_menus').style.width=(window.innerWidth-20)+'px';
+    document.getElementById('main').style.height=(window.innerHeight-document.getElementById('contenido_sin_menus').getBoundingClientRect().top-80)+'px';
+    document.getElementById('main').style.width=(window.innerWidth-20)+'px';
+    document.getElementById('main').style.overflowX= 'hidden';
+    document.getElementsByTagName('body')[0].style.margin.bottom='0px';
+</script>

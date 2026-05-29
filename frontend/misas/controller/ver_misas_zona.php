@@ -14,7 +14,7 @@ $post = [
 
 $data = PostRequest::getDataFromUrl('/src/misas/ver_misas_zona_data', $post);
 
-CuadriculaZonaRenderer::render(
+CuadriculaZonaRenderer::renderVer(
     $data,
     $post,
     'frontend/misas/controller/ver_misas_zona.php',

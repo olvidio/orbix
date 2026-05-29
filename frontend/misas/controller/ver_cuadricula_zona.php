@@ -23,7 +23,7 @@ if ($post['orden'] === '') {
 
 $data = PostRequest::getDataFromUrl('/src/misas/ver_cuadricula_zona_data', $post);
 
-CuadriculaZonaRenderer::render(
+CuadriculaZonaRenderer::renderVer(
     $data,
     $post,
     'frontend/misas/controller/ver_cuadricula_zona.php',

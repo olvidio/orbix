@@ -17,27 +17,15 @@ $data = PostRequest::getDataFromUrl('/src/misas/ver_encargos_centros_data', [
 $columns = $data['columns'] ?? [];
 $rows = $data['rows'] ?? [];
 $a_opciones_zona = $data['a_opciones_zona'] ?? [];
-$a_centros_zona = $data['a_centros_zona'] ?? [];
 
 // Desplegable de zonas para el modal: cambiar la zona recarga el desplegable
 // de encargos via `fnjs_prepara_select_encargo()`.
 $oDesplZonasCtr = new Desplegable();
 $oDesplZonasCtr->setOpciones($a_opciones_zona);
-$oDesplZonasCtr->setBlanco(false);
+$oDesplZonasCtr->setBlanco(true);
 $oDesplZonasCtr->setNombre('id_zona_enc');
-$oDesplZonasCtr->setOpcion_sel($Qid_zona);
 $oDesplZonasCtr->setAction('fnjs_prepara_select_encargo()');
 
-// Desplegable estatico de centros de la zona (contenido fijo; no necesita
-// endpoint aparte).
-$oDesplCentros = new Desplegable();
-$oDesplCentros->setNombre('id_ubi');
-$oDesplCentros->setOpciones($a_centros_zona);
-
-// URLs absolutas para los endpoints backend: los hashes se calculan sobre la
-// URL absoluta, y el JS debe postear contra la misma ruta. Usamos
-// `linkSinValParams()` porque en el phtml el hash se concatena SIEMPRE tras
-// otros parametros en el body POST (p.e. 'id_zona=' + id_zona + $h).
 $url_guardar_encargo_centro = AppUrlConfig::getApiBaseUrl() . '/src/misas/guardar_encargo_centro';
 $oHashGuardar = new HashFront();
 $oHashGuardar->setUrl($url_guardar_encargo_centro);
@@ -56,6 +44,12 @@ $oHashDespl->setUrl($url_desplegable_encargos);
 $oHashDespl->setCamposForm('id_zona!id_enc');
 $h_desplegable_encargos = $oHashDespl->linkSinValParams();
 
+$url_desplegable_centros_zona = AppUrlConfig::getApiBaseUrl() . '/src/misas/desplegable_centros_zona';
+$oHashDesplCtr = new HashFront();
+$oHashDesplCtr->setUrl($url_desplegable_centros_zona);
+$oHashDesplCtr->setCamposForm('id_zona!id_ubi');
+$h_desplegable_centros_zona = $oHashDesplCtr->linkSinValParams();
+
 $url_ver_encargos_centros = 'frontend/misas/controller/ver_encargos_centros.php';
 $oHashVer = new HashFront();
 $oHashVer->setUrl($url_ver_encargos_centros);
@@ -66,7 +60,6 @@ $a_campos = [
     'json_columns_cuadricula' => json_encode($columns),
     'json_data_cuadricula' => json_encode($rows),
     'oDesplZonasCtr' => $oDesplZonasCtr,
-    'oDesplCentros' => $oDesplCentros,
     'id_zona' => $Qid_zona,
     'url_guardar_encargo_centro' => $url_guardar_encargo_centro,
     'h_guardar_encargo_centro' => $h_guardar_encargo_centro,
@@ -74,6 +67,8 @@ $a_campos = [
     'h_eliminar_encargo_centro' => $h_eliminar_encargo_centro,
     'url_desplegable_encargos' => $url_desplegable_encargos,
     'h_desplegable_encargos' => $h_desplegable_encargos,
+    'url_desplegable_centros_zona' => $url_desplegable_centros_zona,
+    'h_desplegable_centros_zona' => $h_desplegable_centros_zona,
     'url_ver_encargos_centros' => $url_ver_encargos_centros,
     'h_ver_encargos_centros' => $h_ver_encargos_centros,
 ];

@@ -65,7 +65,7 @@ class BuscarPlanCtrData
             ];
         }
 
-        if ($role_nom === 'p-sacd') {
+        //if ($role_nom === 'p-sacd') {
             $jefe = IdNomJefeResolver::resolve();
             if ($jefe['error'] !== '') {
                 return [
@@ -152,8 +152,9 @@ class BuscarPlanCtrData
                 'centros_selected' => $centros_selected,
                 'id_ubi_centro' => '',
             ];
-        }
+        //}
 
+        /*
         return [
             'view' => 'none',
             'zonas_opciones' => [],
@@ -162,5 +163,6 @@ class BuscarPlanCtrData
             'centros_selected' => '',
             'id_ubi_centro' => '',
         ];
+        */
     }
 }

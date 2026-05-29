@@ -28,7 +28,7 @@
 </div>
 
 <br>
-<div id="div_cuadricula">
+<div id="exportar">
 </div>
 
 <script>
@@ -50,7 +50,8 @@
                 dataType: 'html'
             })
                 .done(function (rta_txt) {
-                    $('#div_cuadricula').html(rta_txt);
+                    //$('#div_cuadricula').html(rta_txt);
+                    $('#exportar').html(rta_txt);
                 });
         }
     };

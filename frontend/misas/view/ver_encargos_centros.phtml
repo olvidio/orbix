@@ -77,7 +77,8 @@
         }
 
         .item-details-field select,
-        .item-details-field #desplegable_encargo {
+        .item-details-field #desplegable_encargo,
+        .item-details-field #desplegable_centro {
             display: inline-block;
             vertical-align: middle;
         }
@@ -116,7 +117,7 @@
 
         <div class="item-details-field">
             <label for="id_ubi"><?= _('Centro: ') ?></label>
-            <?= $oDesplCentros->desplegable() ?>
+            <span id="desplegable_centro"></span>
         </div>
 
         <hr/>
@@ -186,12 +187,38 @@
         }
         var opciones = data.opciones || {};
         $.each(opciones, function (value, label) {
-            var $opt = $('<option></option>').val(value).text(label);
-            if (data.selected && String(data.selected) === String(value)) {
-                $opt.prop('selected', true);
-            }
-            $sel.append($opt);
+            $sel.append($('<option></option>').val(value).text(label));
         });
+        if (data.selected !== undefined && data.selected !== null && String(data.selected) !== '') {
+            $sel.val(String(data.selected));
+        }
+        return $sel.prop('outerHTML');
+    }
+
+    fnjs_construir_desplegable_centros = function (data) {
+        if (!data) { return ''; }
+        var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
+        if (data.action) {
+            $sel.attr('onchange', data.action);
+        }
+        if (data.blanco) {
+            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+            $sel.append($('<option></option>').val(vb).text(''));
+        }
+        var opciones_sf = data.opciones_sf || {};
+        var opciones_sv = data.opciones_sv || {};
+        $.each(opciones_sf, function (value, label) {
+            $sel.append($('<option></option>').val(value).text(label));
+        });
+        if (Object.keys(opciones_sf).length > 0 && Object.keys(opciones_sv).length > 0) {
+            $sel.append($('<option></option>').prop('disabled', true).text('────────────────'));
+        }
+        $.each(opciones_sv, function (value, label) {
+            $sel.append($('<option></option>').val(value).text(label));
+        });
+        if (data.selected !== undefined && data.selected !== null && String(data.selected) !== '') {
+            $sel.val(String(data.selected));
+        }
         return $sel.prop('outerHTML');
     }
 
@@ -268,7 +295,10 @@
 
     function fnjs_prepara_select_encargo() {
         var enc_selected = $('#id_enc_selected').val();
+        var ctr_selected = $('#id_ctr_selected').val();
         var id_zona_modal = $('#id_zona_enc').val();
+        $('#desplegable_centro').html('');
+
         var url = '<?= $url_desplegable_encargos ?>';
         var parametros = 'id_zona=' + encodeURIComponent(id_zona_modal) +
                          '&id_enc=' + encodeURIComponent(enc_selected || '') +
@@ -283,11 +313,58 @@
             if (!json || json.success !== true) { return; }
             try {
                 var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                if (enc_selected && (!data.selected || String(data.selected) === '')) {
+                    data.selected = String(enc_selected);
+                }
                 $('#desplegable_encargo').html(fnjs_construir_desplegable(data));
+                if (enc_selected) {
+                    $('#id_enc').val(String(enc_selected));
+                    $('#id_enc_selected').val('');
+                }
+                if (id_zona_modal) {
+                    fnjs_prepara_select_centro(ctr_selected);
+                }
             } catch (e) {}
         });
 
         modal.show();
+    }
+
+    function fnjs_prepara_select_centro(ctr_selected) {
+        var id_zona_modal = $('#id_zona_enc').val();
+        if (ctr_selected === undefined || ctr_selected === null) {
+            ctr_selected = $('#id_ctr_selected').val();
+        }
+
+        if (!id_zona_modal) {
+            $('#desplegable_centro').html('');
+            return;
+        }
+
+        var url = '<?= $url_desplegable_centros_zona ?>';
+        var parametros = 'id_zona=' + encodeURIComponent(id_zona_modal) +
+                         '&id_ubi=' + encodeURIComponent(ctr_selected || '') +
+                         '<?= $h_desplegable_centros_zona ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        }).done(function (json) {
+            if (!json || json.success !== true) { return; }
+            try {
+                var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                if (ctr_selected && (!data.selected || String(data.selected) === '')) {
+                    data.selected = String(ctr_selected);
+                }
+                $('#desplegable_centro').html(fnjs_construir_desplegable_centros(data));
+                if (ctr_selected) {
+                    $('#id_ubi').val(String(ctr_selected));
+                    $('#id_ctr_selected').val('');
+                }
+            } catch (e) {}
+        });
     }
 
     function fnjs_nuevo() {
@@ -303,6 +380,10 @@
         $('#id_item').val('');
         $('#id_enc_selected').val('');
         $('#id_ctr_selected').val('');
+        $('#id_zona_enc').val('');
+        $('#id_ubi').val('');
+        $('#desplegable_encargo').html('');
+        $('#desplegable_centro').html('');
     }
 
     function openDetails(cell) {
@@ -326,10 +407,9 @@
         $('#id_item').val(id_item);
         $('#id_enc_selected').val(id_encargo);
         $('#id_ctr_selected').val(id_centro);
-        $('#id_ubi').val(id_centro);
+        $('#id_zona_enc').val(<?= (int)$id_zona ?>);
 
         fnjs_prepara_select_encargo();
-        modal.show();
     }
 
     var grid;

@@ -70,9 +70,9 @@ class DesplegableEncargosData
             'id' => 'id_enc',
             'opciones' => $opciones,
             'selected' => $id_enc_sel !== null ? (string)$id_enc_sel : '',
-            'blanco' => false,
+            'blanco' => true,
             'val_blanco' => '',
-            'action' => '',
+            'action' => 'fnjs_prepara_select_centro()',
         ];
     }
 }

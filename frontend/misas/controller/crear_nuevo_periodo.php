@@ -21,7 +21,7 @@ if ($post['orden'] === '') {
 
 $data = PostRequest::getDataFromUrl('/src/misas/crear_nuevo_periodo_data', $post);
 
-CuadriculaZonaRenderer::render(
+CuadriculaZonaRenderer::renderModificar(
     $data,
     $post,
     'frontend/misas/controller/ver_cuadricula_zona.php',
