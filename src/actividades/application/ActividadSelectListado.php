@@ -62,8 +62,8 @@ final class ActividadSelectListado
         $Qdl_org = (string)($input['dl_org'] ?? '');
         $Qempiezamin = (string)($input['empiezamin'] ?? '');
         $Qempiezamax = (string)($input['empiezamax'] ?? '');
-        $Qfases_on = (array)($input['fases_on'] ?? []);
-        $Qfases_off = (array)($input['fases_off'] ?? []);
+        $Qfases_on = array_filter((array)($input['fases_on'] ?? []));
+        $Qfases_off = array_filter((array)($input['fases_off'] ?? []));
         $Qpublicado = (int)($input['publicado'] ?? 0);
         $Qssfsv = (string)($input['ssfsv'] ?? '');
         $Qsasistentes = (string)($input['sasistentes'] ?? '');

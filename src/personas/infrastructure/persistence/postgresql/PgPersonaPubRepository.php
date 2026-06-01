@@ -13,6 +13,7 @@ use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalLists
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
+use src\ubis\domain\RegionStgrConfigException;
 
 
 /**
@@ -129,7 +130,12 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
 
             // Cada repositorio hijo crea su tipo específico
-            $Persona = $this->createEntityFromArray($aDatos);
+            try {
+                $Persona = $this->createEntityFromArray($aDatos);
+            } catch (RegionStgrConfigException $e) {
+                $nombre = trim(($aDatos['id_nom'] ?? '') . ': ' .($aDatos['apellido1'] ?? '') . ' ' . ($aDatos['apellido2'] ?? '') . ', ' . ($aDatos['nom'] ?? ''));
+                throw new \RuntimeException($nombre, 0, $e);
+            }
             $PersonaDlSet->add($Persona);
         }
         return $PersonaDlSet->getTot();
