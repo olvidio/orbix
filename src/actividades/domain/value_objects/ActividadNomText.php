@@ -28,9 +28,12 @@ final class ActividadNomText
         }
         if (preg_match('/[\x00-\x1F\x7F]/', $value, $matches)) {
             $charCode = ord($matches[0]);
-            throw new \InvalidArgumentException(
-                sprintf('ActividadNomText contiene un carácter de control no válido (código ASCII: %d)', $charCode)
-            );
+            // aceptar el tabulador
+            if ($charCode !== 9) {
+                throw new \InvalidArgumentException(
+                    sprintf('ActividadNomText contiene un carácter de control no válido (código ASCII: %d)', $charCode)
+                );
+            }
         }
     }
 
