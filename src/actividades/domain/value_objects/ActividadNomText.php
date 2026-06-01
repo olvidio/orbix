@@ -21,8 +21,16 @@ final class ActividadNomText
         if (mb_strlen($value) > 255) {
             throw new \InvalidArgumentException('ActividadNomText length must be <= 255');
         }
-        if (!preg_match("/^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Z}]*$/u", $value)) {
-            throw new \InvalidArgumentException('ActividadNomText contiene caracteres no válidos');
+        if (!mb_check_encoding($value, 'UTF-8')) {
+            throw new \InvalidArgumentException(
+                sprintf('ActividadNomText contiene encoding no válido (se esperaba UTF-8): %s', $value)
+            );
+        }
+        if (preg_match('/[\x00-\x1F\x7F]/', $value, $matches)) {
+            $charCode = ord($matches[0]);
+            throw new \InvalidArgumentException(
+                sprintf('ActividadNomText contiene un carácter de control no válido (código ASCII: %d)', $charCode)
+            );
         }
     }
 
