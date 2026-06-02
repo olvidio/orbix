@@ -33,6 +33,18 @@ use function DI\get;
  */
 class ListaPlazasConjuntoActividades
 {
+    public function __construct(
+        private ActividadRepositoryInterface $actividadRepository,
+        private ResumenPlazasService $resumenPlazasService,
+        private AsistenteRepositoryInterface $asistenteRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private CasaRepositoryInterface $casaRepository,
+        private AsistenteActividadService $asistenteActividadService,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private CargoRepositoryInterface $cargoRepository,
+    ) {
+    }
+
     public function getMi_dele()
     {
         return $this->smi_dele;
@@ -91,8 +103,7 @@ class ListaPlazasConjuntoActividades
         $sasistentes = $oTipoActiv->getAsistentesText();
         $sactividad = $oTipoActiv->getActividadText();
 
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $cActividades = $ActividadRepository->getActividades($this->aWhere, $this->aOperador);
+        $cActividades = $this->actividadRepository->getActividades($this->aWhere, $this->aOperador);
 
         if (is_array($cActividades) && count($cActividades) < 1) {
             // No hacer echo: esta clase participa en endpoints JSON (lista_asis_conjunto_activ_data).
@@ -119,11 +130,6 @@ class ListaPlazasConjuntoActividades
         $aGrupos = [];
         $a_activ = [];
         $msg_err = '';
-        $gesActividadPlazas = $GLOBALS['container']->get(ResumenPlazasService::class);
-        $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
-        $CasaDlRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
-        $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
         foreach ($cActividades as $oActividad) {
             $k++;  // recorro todas las actividades seleccionadas, utilizo el contador k
             $id_activ = $oActividad->getId_activ();
@@ -141,13 +147,13 @@ class ListaPlazasConjuntoActividades
             $plazas_pedidas = 0;
 
             // Plazas
-            $gesActividadPlazas->setId_activ($id_activ);
-            $a_plazas = $gesActividadPlazas->getResumen();
+            $this->resumenPlazasService->setId_activ($id_activ);
+            $a_plazas = $this->resumenPlazasService->getResumen();
             $plazas_max = '';
             $plazas_min = '';
             $plazas_casa = '';
             if (!empty($id_ubi_casa)) {
-                $oCasaDl = $CasaDlRepository->findById($id_ubi_casa);
+                $oCasaDl = $this->casaRepository->findById($id_ubi_casa);
                 // findById puede ser null si el id_ubi quedó huérfano tras borrados o datos inconsistentes.
                 $plazas_max = !empty($plazas) ? $plazas : ($oCasaDl?->getPlazas() ?? '');
                 $plazas_min = $oCasaDl?->getPlazas_min()?? '';
@@ -160,7 +166,7 @@ class ListaPlazasConjuntoActividades
             if (ConfigGlobal::is_app_installed('actividadcentros')) {
                 if ((($sasistentes === "s") || ($sasistentes === "sss+")) and ($sactividad === "cv")) {
                     // para las cv de s y de sss+ consulto los ctr que organizan
-                    $cCtrsEncargados = $CentroEncargadoRepository->getCentrosEncargados(['id_activ' => $id_activ, '_ordre' => 'num_orden']);
+                    $cCtrsEncargados = $this->centroEncargadoRepository->getCentrosEncargados(['id_activ' => $id_activ, '_ordre' => 'num_orden']);
 
                     $c = 0;
                     foreach ($cCtrsEncargados as $oCentroEncargado) {
@@ -182,17 +188,15 @@ class ListaPlazasConjuntoActividades
                 $aIdCargos = []; // id_nom de los cargos (si actividadcargos) para no duplicar como asistentes.
                 if (ConfigGlobal::is_app_installed('actividadcargos')) {
                     //selecciono el cl
-                    $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-                    $cActividadCargos = $ActividadCargoRepository->getActividadCargos(array('id_activ' => $id_pau));
+                    $cActividadCargos = $this->actividadCargoRepository->getActividadCargos(array('id_activ' => $id_pau));
                     $cl = 0;
                     $num = 0; //número total de asistentes
                     $plazas_pedidas = 0; // plazas pedidas o 'en espera'
-                    $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
                     foreach ($cActividadCargos as $oActividadCargo) {
                         $id_nom = $oActividadCargo->getId_nom();
                         $aIdCargos[] = $id_nom;
                         $id_cargo = $oActividadCargo->getId_cargo();
-                        $cargo_cl = $CargoRepository->findById($id_cargo)?->getCargoVo()->value() ?? '';
+                        $cargo_cl = $this->cargoRepository->findById($id_cargo)?->getCargoVo()->value() ?? '';
                         $oPersona = Persona::findPersonaEnGlobal($id_nom);
                         if ($oPersona === null) {
                             $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom para la actividad $nom_activ";
@@ -209,7 +213,7 @@ class ListaPlazasConjuntoActividades
                         $ctr_dl = $oPersona->getCentro_o_dl();
 
                         // ahora miro si también asiste:
-                        $cAsistentes = $AsistenteRepository->getAsistentes(array('id_activ' => $id_pau, 'id_nom' => $id_nom));
+                        $cAsistentes = $this->asistenteRepository->getAsistentes(array('id_activ' => $id_pau, 'id_nom' => $id_nom));
 
                         if (is_array($cAsistentes) && count($cAsistentes) > 0) {
                             $asis = "t";
@@ -224,7 +228,7 @@ class ListaPlazasConjuntoActividades
                     }
                 }
 
-                $cAsistentes = $AsistenteActividadService->getAsistentesDeActividad($id_pau);
+                $cAsistentes = $this->asistenteActividadService->getAsistentesDeActividad($id_pau);
                 foreach ($cAsistentes as $oAsistente) {
                     $id_nom = $oAsistente->getId_nom();
                     if (in_array($id_nom, $aIdCargos)) continue; // si ya está como cargo, no lo pongo.

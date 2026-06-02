@@ -21,11 +21,23 @@ use function src\shared\domain\helpers\is_true;
  */
 final class FormAsistentesAUnaActividadData
 {
+    public function __construct(
+        private AsistenteRepositoryInterface $asistenteRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private PersonaNRepositoryInterface $personaNRepository,
+        private PersonaNaxRepositoryInterface $personaNaxRepository,
+        private PersonaAgdRepositoryInterface $personaAgdRepository,
+        private PersonaSRepositoryInterface $personaSRepository,
+        private PersonaExRepositoryInterface $personaExRepository,
+        private ResumenPlazasService $resumenPlazasService,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function build(array $input): array
     {
         $a_sel = (array)($input['sel'] ?? []);
         if (!empty($a_sel)) {
@@ -41,11 +53,9 @@ final class FormAsistentesAUnaActividadData
             $Qid_activ = $Qid_pau;
         }
 
-        $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
         $obj = 'asistentes\\model\\entity\\Asistente';
 
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $ActividadAllRepository->findById($Qid_activ);
+        $this->actividadAllRepository->findById($Qid_activ);
 
         $personas_opciones = null;
         $personas_onchange = null;
@@ -95,7 +105,7 @@ final class FormAsistentesAUnaActividadData
             $ape_nom = $oPersona->getPrefApellidosNombre();
             $id_nom_real = (string)$Qid_nom;
 
-            $cAsistentes = $AsistenteRepository->getAsistentes(['id_activ' => $Qid_activ, 'id_nom' => $Qid_nom]);
+            $cAsistentes = $this->asistenteRepository->getAsistentes(['id_activ' => $Qid_activ, 'id_nom' => $Qid_nom]);
             if ($cAsistentes === []) {
                 return ['error' => _('No se encontró el asistente para esta actividad.')];
             }
@@ -128,20 +138,20 @@ final class FormAsistentesAUnaActividadData
 
             switch ($obj_pau) {
                 case 'PersonaN':
-                    $personas_opciones = $GLOBALS['container']->get(PersonaNRepositoryInterface::class)->getArrayPersonas();
+                    $personas_opciones = $this->personaNRepository->getArrayPersonas();
                     break;
                 case 'PersonaNax':
-                    $personas_opciones = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class)->getArrayPersonas();
+                    $personas_opciones = $this->personaNaxRepository->getArrayPersonas();
                     break;
                 case 'PersonaAgd':
-                    $personas_opciones = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class)->getArrayPersonas();
+                    $personas_opciones = $this->personaAgdRepository->getArrayPersonas();
                     break;
                 case 'PersonaS':
-                    $personas_opciones = $GLOBALS['container']->get(PersonaSRepositoryInterface::class)->getArrayPersonas();
+                    $personas_opciones = $this->personaSRepository->getArrayPersonas();
                     break;
                 case 'PersonaSSSC':
                 case 'PersonaEx':
-                    $personas_opciones = $GLOBALS['container']->get(PersonaExRepositoryInterface::class)->getArrayPersonas($na_val);
+                    $personas_opciones = $this->personaExRepository->getArrayPersonas($na_val);
                     $obj_pau = 'PersonaEx';
                     break;
                 default:
@@ -168,9 +178,8 @@ final class FormAsistentesAUnaActividadData
             if ($obj_pau === 'PersonaEx' && $Qid_nom !== 0 && $oPersona !== null) {
                 $dl_de_paso = $oPersona->getDl();
             }
-            $gesActividadPlazas = $GLOBALS['container']->get(ResumenPlazasService::class);
-            $gesActividadPlazas->setId_activ($Qid_activ);
-            $propietario_opciones = $gesActividadPlazas->getPosiblesPropietariosOpciones($dl_de_paso);
+            $this->resumenPlazasService->setId_activ($Qid_activ);
+            $propietario_opciones = $this->resumenPlazasService->getPosiblesPropietariosOpciones($dl_de_paso);
             $propietario_select_blanco = true;
         }
 

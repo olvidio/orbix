@@ -9,7 +9,7 @@ use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$data = TablaPeticionesData::build($_POST);
+$data = $GLOBALS['container']->get(TablaPeticionesData::class)->build($_POST);
 
 if (isset($data['error'])) {
     ContestarJson::enviar((string)$data['error'], 'none');

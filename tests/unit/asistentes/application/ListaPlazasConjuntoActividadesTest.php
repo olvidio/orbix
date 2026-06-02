@@ -7,6 +7,8 @@ namespace Tests\unit\asistentes\application;
 use PHPUnit\Framework\TestCase;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\asistentes\application\ListaPlazasConjuntoActividades;
@@ -21,24 +23,6 @@ use frontend\shared\web\Lista;
  */
 final class ListaPlazasConjuntoActividadesTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_getlista_no_fatal_cuando_find_casa_es_null(): void
     {
         // 163001: sv + sss+ + cv; evita el bloque cargos/asistentes (in_array con $aIdCargos no definido).
@@ -79,16 +63,19 @@ final class ListaPlazasConjuntoActividadesTest extends TestCase
 
         $asistenteActividadSvc = $this->createMock(AsistenteActividadService::class);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadRepositoryInterface::class => $actividadRepo,
-            ResumenPlazasService::class => $resumenSvc,
-            AsistenteRepositoryInterface::class => $asistenteRepo,
-            CentroEncargadoRepositoryInterface::class => $centroEncargadoRepo,
-            CasaRepositoryInterface::class => $casaRepo,
-            AsistenteActividadService::class => $asistenteActividadSvc,
-        ]);
+        $actividadCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
+        $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
 
-        $lista = new ListaPlazasConjuntoActividades();
+        $lista = new ListaPlazasConjuntoActividades(
+            $actividadRepo,
+            $resumenSvc,
+            $asistenteRepo,
+            $centroEncargadoRepo,
+            $casaRepo,
+            $asistenteActividadSvc,
+            $actividadCargoRepo,
+            $cargoRepo,
+        );
         $lista->setMi_dele($miDele);
         $lista->setWhere([]);
         $lista->setOperador([]);
@@ -99,23 +86,5 @@ final class ListaPlazasConjuntoActividadesTest extends TestCase
         $ref = new \ReflectionProperty(Lista::class, 'aGrupos');
         $grupos = $ref->getValue($oLista);
         $this->assertArrayHasKey(9001, $grupos);
-    }
-
-    /** @param array<class-string, object> $services */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services)
-            {
-            }
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

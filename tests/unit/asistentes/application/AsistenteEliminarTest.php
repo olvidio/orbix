@@ -12,13 +12,11 @@ use src\dossiers\domain\contracts\DossierRepositoryInterface;
 
 final class AsistenteEliminarTest extends TestCase
 {
-    private mixed $previousContainer;
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['session_auth'] = [
             'id_usuario' => 1,
@@ -29,24 +27,26 @@ final class AsistenteEliminarTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_SESSION = $this->previousSession;
         parent::tearDown();
     }
 
+    private function createSut(
+        ?AsistenteApplicationService $app = null,
+        ?MatriculaRepositoryInterface $matRepo = null,
+        ?DossierRepositoryInterface $dosRepo = null,
+    ): AsistenteEliminar {
+        $app ??= $this->createMock(AsistenteApplicationService::class);
+        $matRepo ??= $this->createMock(MatriculaRepositoryInterface::class);
+        $dosRepo ??= $this->createMock(DossierRepositoryInterface::class);
+        return new AsistenteEliminar($app, $matRepo, $dosRepo);
+    }
+
     public function test_faltan_ids(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([
-            AsistenteApplicationService::class => $this->createMock(AsistenteApplicationService::class),
-            MatriculaRepositoryInterface::class => $this->createMock(MatriculaRepositoryInterface::class),
-            DossierRepositoryInterface::class => $this->createMock(DossierRepositoryInterface::class),
-        ]);
+        $sut = $this->createSut();
 
-        $this->assertNotSame('', AsistenteEliminar::execute(['id_activ' => 0, 'id_nom' => 1]));
+        $this->assertNotSame('', $sut->execute(['id_activ' => 0, 'id_nom' => 1]));
     }
 
     public function test_no_encontrado(): void
@@ -54,13 +54,9 @@ final class AsistenteEliminarTest extends TestCase
         $app = $this->createMock(AsistenteApplicationService::class);
         $app->method('findById')->with(10, 20)->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            AsistenteApplicationService::class => $app,
-            MatriculaRepositoryInterface::class => $this->createMock(MatriculaRepositoryInterface::class),
-            DossierRepositoryInterface::class => $this->createMock(DossierRepositoryInterface::class),
-        ]);
+        $sut = $this->createSut($app);
 
-        $this->assertNotSame('', AsistenteEliminar::execute(['id_activ' => 10, 'id_nom' => 20]));
+        $this->assertNotSame('', $sut->execute(['id_activ' => 10, 'id_nom' => 20]));
     }
 
     public function test_sin_permiso_modificar(): void
@@ -72,13 +68,9 @@ final class AsistenteEliminarTest extends TestCase
         $app->method('findById')->willReturn($o);
         $app->expects($this->never())->method('eliminar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            AsistenteApplicationService::class => $app,
-            MatriculaRepositoryInterface::class => $this->createMock(MatriculaRepositoryInterface::class),
-            DossierRepositoryInterface::class => $this->createMock(DossierRepositoryInterface::class),
-        ]);
+        $sut = $this->createSut($app);
 
-        $this->assertNotSame('', AsistenteEliminar::execute(['id_activ' => 1, 'id_nom' => 2]));
+        $this->assertNotSame('', $sut->execute(['id_activ' => 1, 'id_nom' => 2]));
     }
 
     public function test_falla_eliminar(): void
@@ -90,13 +82,9 @@ final class AsistenteEliminarTest extends TestCase
         $app->method('findById')->willReturn($o);
         $app->method('eliminar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            AsistenteApplicationService::class => $app,
-            MatriculaRepositoryInterface::class => $this->createMock(MatriculaRepositoryInterface::class),
-            DossierRepositoryInterface::class => $this->createMock(DossierRepositoryInterface::class),
-        ]);
+        $sut = $this->createSut($app);
 
-        $this->assertNotSame('', AsistenteEliminar::execute(['id_activ' => 1, 'id_nom' => 2]));
+        $this->assertNotSame('', $sut->execute(['id_activ' => 1, 'id_nom' => 2]));
     }
 
     public function test_exito_sin_matriculas_y_parse_sel_p(): void
@@ -114,13 +102,9 @@ final class AsistenteEliminarTest extends TestCase
         $dosRepo = $this->createMock(DossierRepositoryInterface::class);
         $dosRepo->method('findByPk')->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            AsistenteApplicationService::class => $app,
-            MatriculaRepositoryInterface::class => $matRepo,
-            DossierRepositoryInterface::class => $dosRepo,
-        ]);
+        $sut = $this->createSut($app, $matRepo, $dosRepo);
 
-        $msg = AsistenteEliminar::execute([
+        $msg = $sut->execute([
             'pau' => 'p',
             'sel' => ['7#'],
             'id_pau' => 3,
@@ -143,30 +127,8 @@ final class AsistenteEliminarTest extends TestCase
         $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
         $matRepo->method('getMatriculas')->willReturn([$m]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            AsistenteApplicationService::class => $app,
-            MatriculaRepositoryInterface::class => $matRepo,
-            DossierRepositoryInterface::class => $this->createMock(DossierRepositoryInterface::class),
-        ]);
+        $sut = $this->createSut($app, $matRepo);
 
-        $this->assertNotSame('', AsistenteEliminar::execute(['id_activ' => 1, 'id_nom' => 2]));
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        $this->assertNotSame('', $sut->execute(['id_activ' => 1, 'id_nom' => 2]));
     }
 }

@@ -8,5 +8,5 @@ use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$data = AsistenteMoverData::build($_POST);
+$data = $GLOBALS['container']->get(AsistenteMoverData::class)->build($_POST);
 ContestarJson::enviar('', $data);

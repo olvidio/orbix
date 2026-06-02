@@ -5,5 +5,5 @@ use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$data = ActivPendientesSelectData::build($_POST);
+$data = $GLOBALS['container']->get(ActivPendientesSelectData::class)->build($_POST);
 ContestarJson::enviar('', $data);

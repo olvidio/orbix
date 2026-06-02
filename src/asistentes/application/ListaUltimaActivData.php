@@ -18,11 +18,21 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
  */
 final class ListaUltimaActivData
 {
+    public function __construct(
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private PersonaSRepositoryInterface $personaSRepository,
+        private AsistenteActividadService $asistenteActividadService,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array{alert_html: string, titulo: string, stats_html: string, tabla_html: string}
      */
-    public static function build(array $input): array
+    public function build(array $input): array
     {
         $Qque = (string)($input['que'] ?? '');
         $Qcurso = (string)($input['curso'] ?? '');
@@ -33,8 +43,7 @@ final class ListaUltimaActivData
         $aWhereP = [];
         $aOperadorP = [];
         if (!empty($Qid_ubi) && ($Qid_ubi != '999')) {
-            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-            $oCentroDl = $CentroDlRepository->findById((int)$Qid_ubi);
+            $oCentroDl = $this->centroDlRepository->findById((int)$Qid_ubi);
             $nombre_ubi = $oCentroDl->getNombre_ubi();
             $aWhereP['id_ctr'] = $Qid_ubi;
             $aWhereP['_ordre'] = 'apellido1, apellido2, nom';
@@ -135,8 +144,7 @@ final class ListaUltimaActivData
                     '_ordre' => 'f_ini DESC',
                 ];
                 $aOperadorUltima = ['f_ini' => '<'];
-                $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-                $cActividades = $ActividadDlRepository->getActividades($aWhereUltima, $aOperadorUltima);
+                $cActividades = $this->actividadDlRepository->getActividades($aWhereUltima, $aOperadorUltima);
                 if (is_array($cActividades) && !empty($cActividades)) {
                     $oActividadU = $cActividades[0];
                     $oFini = $oActividadU->getF_fin();
@@ -167,20 +175,15 @@ final class ListaUltimaActivData
         }
 
         $aWhereA['_ordre'] = 'f_ini DESC';
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $a_id_activ_f_ini = $ActividadRepository->getArrayIdsWithKeyFini($aWhereA, $aOperadorA);
+        $a_id_activ_f_ini = $this->actividadRepository->getArrayIdsWithKeyFini($aWhereA, $aOperadorA);
 
         $titulo = $titulo_actividad . ' ' . $titulo_fecha;
 
         $aWhereP['situacion'] = 'A';
-        $PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-        $cPersonas = $PersonaSRepository->getPersonas($aWhereP, $aOperadorP);
+        $cPersonas = $this->personaSRepository->getPersonas($aWhereP, $aOperadorP);
         $i = 0;
         $falta = 0;
         $a_valores = [];
-        $gesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         foreach ($cPersonas as $oPersona) {
             $i++;
             $id_nom = $oPersona->getId_nom();
@@ -189,18 +192,18 @@ final class ListaUltimaActivData
             if ($Qid_ubi == '999' || empty($Qid_ubi)) {
                 $nombre_ubi = '';
                 $id_ctr = $oPersona->getId_ctr();
-                $cCentros = $gesCentros->getCentros(['id_ubi' => $id_ctr]);
+                $cCentros = $this->centroDlRepository->getCentros(['id_ubi' => $id_ctr]);
                 if (is_array($cCentros) && !empty($cCentros)) {
                     $nombre_ubi = $cCentros[0]->getNombre_ubi();
                 }
             }
 
-            $cAsistentes = $AsistenteActividadService->getAsistenciasPersonaDeActividades($id_nom, $a_id_activ_f_ini, true);
+            $cAsistentes = $this->asistenteActividadService->getAsistenciasPersonaDeActividades($id_nom, $a_id_activ_f_ini, true);
             if (!empty($cAsistentes)) {
                 reset($cAsistentes);
                 $oAsistente = current($cAsistentes);
                 $id_activ = $oAsistente->getId_activ();
-                $oActividad = $ActividadAllRepository->findById($id_activ);
+                $oActividad = $this->actividadAllRepository->findById($id_activ);
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
                 $oFini = $oActividad->getF_ini();
                 $f_ini_iso = $oFini->getIso();

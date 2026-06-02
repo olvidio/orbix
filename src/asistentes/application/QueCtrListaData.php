@@ -13,11 +13,16 @@ use function src\shared\domain\helpers\strtoupper_dlb;
  */
 final class QueCtrListaData
 {
+    public function __construct(
+        private CentroDlRepositoryInterface $centroDlRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function build(array $input): array
     {
         require_once dirname(__DIR__, 2) . '/shared/domain/helpers/func_tablas.php';
 
@@ -106,7 +111,7 @@ final class QueCtrListaData
                 break;
         }
 
-        $oGesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+        $oGesCentros = $this->centroDlRepository;
         $aOpciones = $oGesCentros->getArrayCentros("WHERE active = 't' AND tipo_ctr ~ '^a|^n' ");
         $aOpcionesSerialized = $aOpciones;
 

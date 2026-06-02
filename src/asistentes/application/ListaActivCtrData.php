@@ -18,7 +18,16 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
  */
 final class ListaActivCtrData
 {
-    public static function build(array $input): array
+    public function __construct(
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private PersonaSSSCRepositoryInterface $personaSSSCRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private AsistenteActividadService $asistenteActividadService,
+    ) {
+    }
+
+    public function build(array $input): array
     {
         $Qssfsv = (string)($input['ssfsv'] ?? '');
 
@@ -134,20 +143,16 @@ final class ListaActivCtrData
         $aWhere['active'] = 't';
         $aWhere['_ordre'] = 'nombre_ubi';
 
-        $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
+        $cCentros = $this->centroDlRepository->getCentros($aWhere, $aOperador);
 
         $aCentros = [];
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $PersonaSSSCRepository = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         foreach ($cCentros as $oCentro) {
             $id_ubi = $oCentro->getId_ubi();
             $nombre_ubi = $oCentro->getNombre_ubi();
             if ($tabla === 'p_sssc') {
-                $cPersonas = $PersonaSSSCRepository->getPersonas(['id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1']);
+                $cPersonas = $this->personaSSSCRepository->getPersonas(['id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1']);
             } else {
-                $cPersonas = $PersonaDlRepository->getPersonas(['id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom']);
+                $cPersonas = $this->personaDlRepository->getPersonas(['id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom']);
             }
 
             $aCentros[$id_ubi]['nombre_ubi'] = $nombre_ubi;
@@ -155,7 +160,6 @@ final class ListaActivCtrData
             $i = 0;
             $aPersonasCtr = [];
             $aWhereNom = [];
-            $service = $GLOBALS['container']->get(AsistenteActividadService::class);
             $aPlazas = PlazaId::getArrayPosiblesPlazas();
             foreach ($cPersonas as $oPersona) {
                 $i++;
@@ -167,14 +171,14 @@ final class ListaActivCtrData
                 $aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
                 $aOperadorAct['f_ini'] = 'BETWEEN';
 
-                $cAsistencias = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
+                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
                 $aActividades = [];
                 if (is_array($cAsistencias) && count($cAsistencias) === 0) {
                     $aActividades = [];
                 } else {
                     foreach ($cAsistencias as $oAsistente) {
                         $id_activ = $oAsistente->getId_activ();
-                        $oActividad = $ActividadAllRepository->findById($id_activ);
+                        $oActividad = $this->actividadAllRepository->findById($id_activ);
                         $nom_activ = $oActividad->getNom_activ();
                         $plaza = $oAsistente->getPlazaVo()?->value() ?? '';
                         $nom_plaza = '';

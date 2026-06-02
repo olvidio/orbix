@@ -22,7 +22,14 @@ use function src\shared\domain\helpers\is_true;
  */
 final class AsistenteGuardar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private AsistenteApplicationService $asistenteApplicationService,
+        private DossierRepositoryInterface $dossierRepository,
+        private AsistenteEliminar $asistenteEliminar,
+    ) {
+    }
+
+    public function execute(array $input): string
     {
         $mod = (string) ($input['mod'] ?? '');
         if (!in_array($mod, ['nuevo', 'editar', 'mover'], true)) {
@@ -52,14 +59,14 @@ final class AsistenteGuardar
         }
 
         if ($mod === 'nuevo') {
-            self::abrirDossier1301($id_nom);
+            $this->abrirDossier1301($id_nom);
         }
 
         if ($mod === 'mover') {
             if ($id_activ_old === 0) {
                 return _("falta id_activ_old");
             }
-            $err = AsistenteEliminar::execute([
+            $err = $this->asistenteEliminar->execute([
                 'pau' => 'p',
                 'sel' => [],
                 'id_activ' => $id_activ_old,
@@ -70,12 +77,12 @@ final class AsistenteGuardar
             }
         }
 
-        return self::guardar($id_activ, $id_nom, $mod, $input);
+        return $this->guardar($id_activ, $id_nom, $mod, $input);
     }
 
-    private static function guardar(int $id_activ, int $id_nom, string $mod, array $input): string
+    private function guardar(int $id_activ, int $id_nom, string $mod, array $input): string
     {
-        $asistenteAppService = $GLOBALS['container']->get(AsistenteApplicationService::class);
+        $asistenteAppService = $this->asistenteApplicationService;
         $oAsistente = $asistenteAppService->findById($id_activ, $id_nom);
         if ($oAsistente === null) {
             $oAsistente = new Asistente();
@@ -117,9 +124,9 @@ final class AsistenteGuardar
         return '';
     }
 
-    private static function abrirDossier1301(int $id_nom): void
+    private function abrirDossier1301(int $id_nom): void
     {
-        $DossierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+        $DossierRepository = $this->dossierRepository;
         $pk = DossierPk::fromArray([
             'tabla' => 'p',
             'id_pau' => $id_nom,

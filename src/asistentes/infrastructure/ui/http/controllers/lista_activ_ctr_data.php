@@ -3,5 +3,5 @@
 use src\asistentes\application\ListaActivCtrData;
 use src\shared\web\ContestarJson;
 
-$data = ListaActivCtrData::build($_POST);
+$data = $GLOBALS['container']->get(ListaActivCtrData::class)->build($_POST);
 ContestarJson::enviar('', $data);

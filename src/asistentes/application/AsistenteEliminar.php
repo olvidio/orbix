@@ -14,7 +14,14 @@ use src\dossiers\domain\value_objects\DossierPk;
  */
 final class AsistenteEliminar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private AsistenteApplicationService $asistenteApplicationService,
+        private MatriculaRepositoryInterface $matriculaRepository,
+        private DossierRepositoryInterface $dossierRepository,
+    ) {
+    }
+
+    public function execute(array $input): string
     {
         $Qpau = (string) ($input['pau'] ?? '');
         $a_sel = (array) ($input['sel'] ?? []);
@@ -38,7 +45,7 @@ final class AsistenteEliminar
             return _("faltan parametros id_activ / id_nom");
         }
 
-        $asistenteAppService = $GLOBALS['container']->get(AsistenteApplicationService::class);
+        $asistenteAppService = $this->asistenteApplicationService;
         $oAsistente = $asistenteAppService->findById($id_activ, $id_nom);
         if ($oAsistente === null) {
             return sprintf(_("no se encuentra el asistente (id_nom: %s, id_activ: %s)"), $id_nom, $id_activ);
@@ -53,9 +60,9 @@ final class AsistenteEliminar
             return _("hay un error, no se ha eliminado");
         }
 
-        self::cerrarDossier1301($id_nom);
+        $this->cerrarDossier1301($id_nom);
 
-        $MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
+        $MatriculaRepository = $this->matriculaRepository;
         foreach ($MatriculaRepository->getMatriculas(['id_activ' => $id_activ, 'id_nom' => $id_nom]) as $oMatricula) {
             if ($oMatricula->DBEliminar() === false) {
                 $msg_err .= _("hay un error, no se ha eliminado");
@@ -64,9 +71,9 @@ final class AsistenteEliminar
         return $msg_err;
     }
 
-    private static function cerrarDossier1301(int $id_nom): void
+    private function cerrarDossier1301(int $id_nom): void
     {
-        $DossierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+        $DossierRepository = $this->dossierRepository;
         $oDossier = $DossierRepository->findByPk(DossierPk::fromArray([
             'tabla' => 'p',
             'id_pau' => $id_nom,

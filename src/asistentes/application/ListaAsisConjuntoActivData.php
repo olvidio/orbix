@@ -3,6 +3,7 @@
 namespace src\asistentes\application;
 
 use frontend\shared\web\Periodo;
+use Psr\Container\ContainerInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\ListaPlazasConjuntoActividades;
@@ -13,7 +14,12 @@ use src\shared\config\ConfigGlobal;
  */
 final class ListaAsisConjuntoActivData
 {
-    public static function build(array $input): array
+    public function __construct(
+        private ContainerInterface $container,
+    ) {
+    }
+
+    public function build(array $input): array
     {
         $Qque = (string)($input['que'] ?? '');
 
@@ -123,7 +129,7 @@ final class ListaAsisConjuntoActivData
             $aOperDl = $aOperador;
             $aWhereDl['dl_org'] = $mi_dele;
 
-            $oListaPlazasDl = new ListaPlazasConjuntoActividades();
+            $oListaPlazasDl = $this->container->get(ListaPlazasConjuntoActividades::class);
             $oListaPlazasDl->setMi_dele($mi_dele);
             $oListaPlazasDl->setWhere($aWhereDl);
             $oListaPlazasDl->setOperador($aOperDl);
@@ -144,7 +150,7 @@ final class ListaAsisConjuntoActivData
                 $aOperOt['dl_org'] = '!=';
             }
 
-            $oListaPlazasOtras = new ListaPlazasConjuntoActividades();
+            $oListaPlazasOtras = $this->container->get(ListaPlazasConjuntoActividades::class);
             $oListaPlazasOtras->setMi_dele($mi_dele);
             $oListaPlazasOtras->setWhere($aWhereOt);
             $oListaPlazasOtras->setOperador($aOperOt);

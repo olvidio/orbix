@@ -10,5 +10,5 @@ use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$data = QueCtrListaData::build($_POST);
+$data = $GLOBALS['container']->get(QueCtrListaData::class)->build($_POST);
 ContestarJson::enviar('', $data);

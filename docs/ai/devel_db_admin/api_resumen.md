@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "devel_db_admin"
-endpoints: 15
+endpoints: 16
 estado_revision: "generado"
 ---
 
@@ -22,6 +22,13 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `devel_db_admin.apptables_apps_data`
 - Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/apptables_apps_data.php`
 - Entrada: ninguna detectada.
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/devel_db_admin/apptables_update`
+
+- Id: `devel_db_admin.apptables_update`
+- Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/apptables_update.php`
+- Entrada: `post.accion:string`, `post.esquema:string`, `post.id_app:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/devel_db_admin/copiar_esquema`

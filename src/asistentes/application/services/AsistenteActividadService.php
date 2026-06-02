@@ -2,6 +2,7 @@
 
 namespace src\asistentes\application\services;
 
+use Psr\Container\ContainerInterface;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -34,7 +35,8 @@ class AsistenteActividadService
         ActividadRepositoryInterface $actividadRepository,
         ActividadAllRepositoryInterface $actividadAllRepository,
         AsistenteRepositoryInterface $asistenteRepository,
-        ConnectionRepositoryFactoryInterface $connectionRepositoryFactory
+        ConnectionRepositoryFactoryInterface $connectionRepositoryFactory,
+        private ContainerInterface $container,
     ) {
         $this->actividadRepository = $actividadRepository;
         $this->actividadAllRepository = $actividadAllRepository;
@@ -219,13 +221,13 @@ class AsistenteActividadService
                 $id_tabla = $oAsistente->getIdTablaVo()->value();
                 switch ($id_tabla) {
                     case 'dl':
-                        $repo = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
+                        $repo = $this->container->get(AsistenteDlRepositoryInterface::class);
                         break;
                     case 'ex':
-                        $repo = $GLOBALS['container']->get(AsistenteExRepositoryInterface::class);
+                        $repo = $this->container->get(AsistenteExRepositoryInterface::class);
                         break;
                     case 'out':
-                        $repo = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
+                        $repo = $this->container->get(AsistenteOutRepositoryInterface::class);
                         break;
                 }
                 $repo->Eliminar($oAsistente);
@@ -311,7 +313,7 @@ class AsistenteActividadService
 
     public function buscarAsistencia($id_nom, $id_activ)
     {
-        $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
+        $AsistenteRepository = $this->container->get(AsistenteRepositoryInterface::class);
         $cAsistentes = $AsistenteRepository->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
         if (is_array($cAsistentes) && !empty($cAsistentes)) {
             return $cAsistentes[0];
@@ -344,7 +346,7 @@ class AsistenteActividadService
         $dl_persona = $oPersona->getDlVo()->value();
         $clasePersona = $oPersona->getClassName();
         // hay que averiguar si la actividad es de la dl o de fuera.
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $ActividadAllRepository = $this->actividadAllRepository;
         $oActividad = $ActividadAllRepository->findById($id_activ);
         // si es de la sf quito la 'f'
         $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());

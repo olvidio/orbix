@@ -469,6 +469,7 @@ Para la comunicación asíncrona entre las vistas (`.phtml`) y los controladores
 - **Prohibido en `src/.../infrastructure/ui/http/controllers`**: `echo` de HTML, `die("msg")`, `print`, respuestas texto arbitrarias. Excepción ya acordada: formularios legacy que lean `.done(rta_txt)` sin JSON (p. ej. rutas tipo `centros_update`); documentar el motivo en el propio fichero.
 - **Ubicación**: controladores HTTP bajo `src/<modulo>/infrastructure/ui/http/controllers/` (y análogos).
 - No usar `echo json_encode()` ni `exit($msg)` manual para el caso JSON estándar; delegar en `ContestarJson::enviar`.
+- **Docs IA**: al añadir o registrar una nueva ruta en `src/<modulo>/config/routes.php`, actualizar también `docs/ai/<modulo>/api_resumen.md` (añadir el endpoint con sus parámetros de entrada y tipo de respuesta, e incrementar `endpoints:` en el frontmatter). Si cambia la firma de entrada de un endpoint existente, actualizar igualmente esa entrada.
 
 ### Frontend (JavaScript)
 - **Llamada**: `$.ajax` con `dataType: 'json'` cuando el endpoint devuelve `ContestarJson`.

@@ -17,11 +17,21 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
  */
 final class ActivPendientesSelectData
 {
+    public function __construct(
+        private ActividadRepositoryInterface $actividadRepository,
+        private AsistenteRepositoryInterface $asistenteRepository,
+        private PersonaNRepositoryInterface $personaNRepository,
+        private PersonaAgdRepositoryInterface $personaAgdRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function build(array $input): array
     {
         $Qany = (int)($input['any'] ?? 0);
         $Qtipo_personas = (string)($input['tipo_personas'] ?? '');
@@ -103,7 +113,6 @@ final class ActivPendientesSelectData
                 break;
         }
 
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
         if ($Qsactividad !== 'ca' && $Qsactividad !== 'crt') {
             $cActividades = [];
         } else {
@@ -113,13 +122,12 @@ final class ActivPendientesSelectData
             $aOperadorA['id_tipo_activ'] = '~';
             $aWhereA['f_ini'] = "'$inicurs','$fincurs'";
             $aOperadorA['f_ini'] = 'BETWEEN';
-            $cActividades = $ActividadRepository->getActividades($aWhereA, $aOperadorA);
+            $cActividades = $this->actividadRepository->getActividades($aWhereA, $aOperadorA);
         }
         $aAsistentes = [];
-        $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
         foreach ($cActividades as $oActividad) {
             $id_activ = $oActividad->getId_activ();
-            $cAsistentes = $AsistenteRepository->getAsistentes(['id_activ' => $id_activ, 'propio' => 't']);
+            $cAsistentes = $this->asistenteRepository->getAsistentes(['id_activ' => $id_activ, 'propio' => 't']);
             foreach ($cAsistentes as $oAsistente) {
                 $aAsistentes[] = $oAsistente->getId_nom();
             }
@@ -127,18 +135,15 @@ final class ActivPendientesSelectData
 
         switch ($Qtipo_personas) {
             case 'n':
-                $PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-                $cPersonas = $PersonaNRepository->getPersonas(['situacion' => 'A', 'dl' => $mi_dele]);
+                $cPersonas = $this->personaNRepository->getPersonas(['situacion' => 'A', 'dl' => $mi_dele]);
                 $obj_pau = 'PersonaN';
                 break;
             case 'agd':
-                $PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-                $cPersonas = $PersonaAgdRepository->getPersonas(['situacion' => 'A', 'dl' => $mi_dele]);
+                $cPersonas = $this->personaAgdRepository->getPersonas(['situacion' => 'A', 'dl' => $mi_dele]);
                 $obj_pau = 'PersonaAgd';
                 break;
             case 'sacd':
-                $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-                $cPersonas = $PersonaDlRepository->getPersonas(['sacd' => 't', 'situacion' => 'A', 'dl' => $mi_dele]);
+                $cPersonas = $this->personaDlRepository->getPersonas(['sacd' => 't', 'situacion' => 'A', 'dl' => $mi_dele]);
                 $obj_pau = 'PersonaDl';
                 break;
             default:
@@ -170,7 +175,6 @@ final class ActivPendientesSelectData
         ];
         $i = 0;
         $a_valores = [];
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $aNivelesStgr = NivelStgrId::getArrayNivelStgr();
         foreach ($aFaltan as $ap_nom => $aDatos) {
             $i++;
@@ -178,7 +182,7 @@ final class ActivPendientesSelectData
             $id_ubi = $aDatos['id_ubi'];
             $nivel_stgr = $aDatos['nivel_stgr'];
 
-            $oCentroDl = $CentroDlRepository->findById($id_ubi);
+            $oCentroDl = $this->centroDlRepository->findById($id_ubi);
             $nombre_ubi = '?';
             if ($oCentroDl !== null) {
                 $nombre_ubi = $oCentroDl->getNombre_ubi();
@@ -204,17 +208,14 @@ final class ActivPendientesSelectData
         $aOperador['dl'] = '!=';
         switch ($Qtipo_personas) {
             case 'n':
-                $PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-                $cPersonasOtras = $PersonaNRepository->getPersonas($aWhere, $aOperador);
+                $cPersonasOtras = $this->personaNRepository->getPersonas($aWhere, $aOperador);
                 break;
             case 'agd':
-                $PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-                $cPersonasOtras = $PersonaAgdRepository->getPersonas($aWhere, $aOperador);
+                $cPersonasOtras = $this->personaAgdRepository->getPersonas($aWhere, $aOperador);
                 break;
             case 'sacd':
                 $aWhere['sacd'] = 't';
-                $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-                $cPersonasOtras = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
+                $cPersonasOtras = $this->personaDlRepository->getPersonas($aWhere, $aOperador);
                 break;
             default:
                 $cPersonasOtras = [];
@@ -240,7 +241,7 @@ final class ActivPendientesSelectData
             $id_ubi = $aDatos['id_ubi'];
             $nivel_stgr = $aDatos['nivel_stgr'];
 
-            $oCentroDl = $CentroDlRepository->findById($id_ubi);
+            $oCentroDl = $this->centroDlRepository->findById($id_ubi);
             $nombre_ubi = $oCentroDl->getNombre_ubi();
 
             $aQuery = ['obj_pau' => $obj_pau, 'id_nom' => $id_nom];

@@ -16,11 +16,19 @@ use function src\shared\domain\helpers\is_true;
  */
 final class ListaAsistentesData
 {
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private AsistenteRepositoryInterface $asistenteRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private CargoRepositoryInterface $cargoRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array{nom_activ: string, queSel: string, aAsistentes: array<string|int, array{nombre: string, a_datos_cl: array<string, string>}>}
      */
-    public static function build(array $input): array
+    public function build(array $input): array
     {
         $a_sel = (array)($input['sel'] ?? []);
         if (!empty($a_sel)) {
@@ -28,13 +36,11 @@ final class ListaAsistentesData
             $nom_activ = (string)strtok('#');
         } else {
             $id_pau = (int)($input['id_pau'] ?? 0);
-            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-            $oActividad = $ActividadAllRepository->findById($id_pau);
+            $oActividad = $this->actividadAllRepository->findById($id_pau);
             $nom_activ = $oActividad->getNom_activ();
         }
 
         $queSel = (string)($input['queSel'] ?? '');
-        $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
 
         $c = 0;
         $num = 0;
@@ -43,17 +49,15 @@ final class ListaAsistentesData
         $msg_err = '';
 
         if (ConfigGlobal::is_app_installed('actividadcargos')) {
-            $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-            $cCargosEnActividad = $ActividadCargoRepository->getActividadCargos(['id_activ' => $id_pau]);
+            $cCargosEnActividad = $this->actividadCargoRepository->getActividadCargos(['id_activ' => $id_pau]);
             $mi_sfsv = ConfigGlobal::mi_sfsv();
-            $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
             foreach ($cCargosEnActividad as $oActividadCargo) {
                 $c++;
                 $num++;
                 $id_nom = $oActividadCargo->getId_nom();
                 $aListaCargos[] = $id_nom;
                 $id_cargo = $oActividadCargo->getId_cargo();
-                $oCargo = $CargoRepository->findById($id_cargo);
+                $oCargo = $this->cargoRepository->findById($id_cargo);
                 $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
                 $cargo = $oCargo->getCargoVo()->value();
                 if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
@@ -72,7 +76,7 @@ final class ListaAsistentesData
 
                 $aWhere = ['id_activ' => $id_pau, 'id_nom' => $id_nom];
                 $aOperador = [];
-                if (!empty($id_nom) && $cAsistente = $AsistenteRepository->getAsistentes($aWhere, $aOperador)) {
+                if (!empty($id_nom) && $cAsistente = $this->asistenteRepository->getAsistentes($aWhere, $aOperador)) {
                     if (is_array($cAsistente) && count($cAsistente) > 1) {
                         $tabla = '';
                         foreach ($cAsistente as $Asistente) {
@@ -114,7 +118,7 @@ final class ListaAsistentesData
 
         $asistentes = [];
         $msg_err = '';
-        foreach ($AsistenteRepository->getAsistentes(['id_activ' => $id_pau]) as $oAsistente) {
+        foreach ($this->asistenteRepository->getAsistentes(['id_activ' => $id_pau]) as $oAsistente) {
             $c++;
             $num++;
             $id_nom = $oAsistente->getId_nom();
@@ -177,7 +181,7 @@ final class ListaAsistentesData
             $oPersona = $val[7];
             $a_datos_cl = [];
             if ($queSel === 'listcl') {
-                $a_datos_cl = self::datosPersona($oPersona);
+                $a_datos_cl = $this->datosPersona($oPersona);
                 $a_datos_cl['observ'] = $a_valores[$k][6];
             }
 
@@ -197,7 +201,7 @@ final class ListaAsistentesData
     /**
      * @return array{estudios: string, profesion: string, edad: string, inc_f_inc: string, eap: string, observ: string}
      */
-    private static function datosPersona(object $oPersona): array
+    private function datosPersona(object $oPersona): array
     {
         $estudios = '';
         $profesion = '';

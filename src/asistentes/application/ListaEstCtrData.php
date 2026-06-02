@@ -20,11 +20,22 @@ use function src\shared\domain\helpers\is_true;
  */
 final class ListaEstCtrData
 {
+    public function __construct(
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private MatriculaRepositoryInterface $matriculaRepository,
+        private AsistenteActividadService $asistenteActividadService,
+        private AsistenteRepositoryInterface $asistenteRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array{lista_html: string}
      */
-    public static function build(array $input): array
+    public function build(array $input): array
     {
         $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
 
@@ -88,8 +99,7 @@ final class ListaEstCtrData
                 $tabla = 'p_n_agd';
         }
 
-        $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $cCentros = $GesCentrosDl->getCentros($aWhereCtr, $aOperadorCtr);
+        $cCentros = $this->centroDlRepository->getCentros($aWhereCtr, $aOperadorCtr);
         $a_valores = [];
         $aGrupos = [];
         foreach ($cCentros as $oCentroDl) {
@@ -108,11 +118,8 @@ final class ListaEstCtrData
                 $aOperador['nivel_stgr'] = '!=';
             }
 
-            $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-            $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
+            $cPersonas = $this->personaDlRepository->getPersonas($aWhere, $aOperador);
             $i = 0;
-            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-            $MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
             foreach ($cPersonas as $oPersonaDl) {
                 $i++;
                 $id_nom = $oPersonaDl->getId_nom();
@@ -123,14 +130,12 @@ final class ListaEstCtrData
 
                 $aWhereNom['id_nom'] = $id_nom;
                 $aOperadorNom = [];
-                $service = $GLOBALS['container']->get(AsistenteActividadService::class);
-                $cAsistentes = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
+                $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
                 $a = 0;
-                $AsistenteReposiroty = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
                 foreach ($cAsistentes as $oAsistente) {
                     $a++;
                     $id_activ = $oAsistente->getId_activ();
-                    $oActividad = $ActividadAllRepository->findById($id_activ);
+                    $oActividad = $this->actividadAllRepository->findById($id_activ);
                     $nom_activ = $oActividad->getNom_activ();
 
                     $oF_ini = $oActividad->getF_ini();
@@ -147,13 +152,12 @@ final class ListaEstCtrData
                                 break;
                             default:
                                 $asignaturas = '';
-                                $cMatriculas = $MatriculaRepository->getMatriculas(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
-                                $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+                                $cMatriculas = $this->matriculaRepository->getMatriculas(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
                                 foreach ($cMatriculas as $oMatricula) {
                                     $id_asignatura = $oMatricula->getId_asignatura();
                                     $preceptor = $oMatricula->isPreceptor();
                                     $id_preceptor = $oMatricula->getId_preceptor();
-                                    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
+                                    $oAsignatura = $this->asignaturaRepository->findById($id_asignatura);
                                     if ($oAsignatura === null) {
                                         throw new \Exception(sprintf(_('No se ha encontrado la asignatura con id: %s'), $id_asignatura));
                                     }
@@ -163,7 +167,7 @@ final class ListaEstCtrData
                                         if (!empty($id_preceptor)) {
                                             $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
                                             $aWherePreceptor = ['id_activ' => $id_activ, 'id_nom' => $id_nom];
-                                            $cAsistentesP = $AsistenteReposiroty->getAsistentes($aWherePreceptor);
+                                            $cAsistentesP = $this->asistenteRepository->getAsistentes($aWherePreceptor);
                                             $p = count($cAsistentesP) > 0 ? '*' : '';
                                             $preceptor = '(p: ' . $oPersona->getPrefApellidosNombre() . ')' . $p;
                                         } else {

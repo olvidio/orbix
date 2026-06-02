@@ -2,6 +2,7 @@
 
 namespace src\asistentes\application;
 
+use Psr\Container\ContainerInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
@@ -22,11 +23,23 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
  */
 final class AsistenteMoverData
 {
+    public function __construct(
+        private ContainerInterface $container,
+        private AsistenteActividadService $asistenteActividadService,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private ActividadPlazasRepositoryInterface $actividadPlazasRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private PlazaPeticionRepositoryInterface $plazaPeticionRepository,
+        private ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function build(array $input): array
     {
         $a_sel = (array)($input['sel'] ?? []);
         if (!empty($a_sel)) {
@@ -38,9 +51,8 @@ final class AsistenteMoverData
         $Qid_activ_old = (int)($input['id_activ'] ?? 0);
         $Qid_nom = (int)($input['id_pau'] ?? $Qid_nom);
 
-        $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
-        $AsistenteRepositoryInterface = $AsistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ_old);
-        $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
+        $AsistenteRepositoryInterface = $this->asistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ_old);
+        $AsistenteRepository = $this->container->get($AsistenteRepositoryInterface);
         $oAsistente = $AsistenteRepository->findById($Qid_activ_old, $Qid_nom);
 
         if ($oAsistente->perm_modificar() === false) {
@@ -53,11 +65,8 @@ final class AsistenteMoverData
             ];
         }
 
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
         $mi_dele = ConfigGlobal::mi_delef();
-        $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
+        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $mi_dele]);
         $oDelegacion = $cDelegaciones[0];
         $id_dl = $oDelegacion->getIdDlVo()->value();
 
@@ -72,7 +81,7 @@ final class AsistenteMoverData
         if (!empty($Qid_activ_old) && !empty($Qid_nom)) {
             $mod = 'mover';
 
-            $oActividad = $ActividadAllRepository->findById($Qid_activ_old);
+            $oActividad = $this->actividadAllRepository->findById($Qid_activ_old);
             $id_tipo = $oActividad->getId_tipo_activ();
 
             $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
@@ -108,16 +117,14 @@ final class AsistenteMoverData
             $aWhere['status'] = StatusId::ACTUAL;
             $aWhere['_ordre'] = 'f_ini';
 
-            $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-            $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
+            $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador);
 
             if (ConfigGlobal::is_app_installed('actividadplazas')) {
                 $cActividadesPreferidas = [];
-                $PlazaPeticionRepository = $GLOBALS['container']->get(PlazaPeticionRepositoryInterface::class);
-                $cPlazasPeticion = $PlazaPeticionRepository->getPlazasPeticion(['id_nom' => $Qid_nom, 'tipo' => $sactividad, '_ordre' => 'orden']);
+                $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion(['id_nom' => $Qid_nom, 'tipo' => $sactividad, '_ordre' => 'orden']);
                 foreach ($cPlazasPeticion as $oPlazaPeticion) {
                     $id_activ_pref = $oPlazaPeticion->getId_activ();
-                    $oActividadPref = $ActividadAllRepository->findById($id_activ_pref);
+                    $oActividadPref = $this->actividadAllRepository->findById($id_activ_pref);
                     if ($oActividadPref->getStatus() !== StatusId::ACTUAL) {
                         continue;
                     }
@@ -147,20 +154,19 @@ final class AsistenteMoverData
                 $dl_org = $oActividadItem->getDl_org();
                 if (ConfigGlobal::is_app_installed('actividadplazas')) {
                     $concedidas = 0;
-                    $cActividadPlazas = $ActividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dl, 'id_activ' => $id_activ]);
+                    $cActividadPlazas = $this->actividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dl, 'id_activ' => $id_activ]);
                     foreach ($cActividadPlazas as $oActividadPlazas) {
                         if ($dl_org === $oActividadPlazas->getDl_tabla()) {
                             $concedidas = $oActividadPlazas->getPlazas();
                         }
                     }
-                    $ocupadas = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
+                    $ocupadas = $this->asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
                     $libres = $ocupadas < 0 ? '-' : ($concedidas - $ocupadas);
                     if (!empty($concedidas)) {
                         $txt_plazas = sprintf(_('plazas libres/concedidas: %s/%s'), $libres, $concedidas);
                     }
                 }
-                $ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
-                $aAsignaturasCa = $ActividadAsignaturaDlRepository->getAsignaturasCa($id_activ);
+                $aAsignaturasCa = $this->actividadAsignaturaDlRepository->getAsignaturasCa($id_activ);
                 $result = $oPosiblesCa->contar_creditos($Qid_nom, $aAsignaturasCa);
                 $creditos = $result['suma'];
                 if (!empty($creditos)) {

@@ -9,13 +9,11 @@ use src\asistentes\domain\entity\Asistente;
 
 final class AsistentePlazaAsignarTest extends TestCase
 {
-    private mixed $previousContainer;
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['session_auth'] = [
             'id_usuario' => 1,
@@ -26,33 +24,28 @@ final class AsistentePlazaAsignarTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_SESSION = $this->previousSession;
         parent::tearDown();
     }
 
+    private function createSut(?AsistenteApplicationService $app = null): AsistentePlazaAsignar
+    {
+        $app ??= $this->createMock(AsistenteApplicationService::class);
+        return new AsistentePlazaAsignar($app);
+    }
+
     public function test_falta_id_activ(): void
     {
-        $GLOBALS['container'] = $this->containerOne(
-            AsistenteApplicationService::class,
-            $this->createMock(AsistenteApplicationService::class)
-        );
+        $sut = $this->createSut();
 
-        $this->assertNotSame('', AsistentePlazaAsignar::execute(['id_activ' => 0, 'lista_json' => '[]']));
+        $this->assertNotSame('', $sut->execute(['id_activ' => 0, 'lista_json' => '[]']));
     }
 
     public function test_lista_vacia_o_invalida(): void
     {
-        $GLOBALS['container'] = $this->containerOne(
-            AsistenteApplicationService::class,
-            $this->createMock(AsistenteApplicationService::class)
-        );
+        $sut = $this->createSut();
 
-        $this->assertNotSame('', AsistentePlazaAsignar::execute([
+        $this->assertNotSame('', $sut->execute([
             'id_activ' => 1,
             'lista_json' => '[]',
         ]));
@@ -68,10 +61,10 @@ final class AsistentePlazaAsignarTest extends TestCase
         $app->method('findById')->with(9, 5)->willReturn($o);
         $app->expects($this->once())->method('guardar')->with($o)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerOne(AsistenteApplicationService::class, $app);
+        $sut = $this->createSut($app);
 
         $json = json_encode([(object)['value' => '5#resto']]);
-        $this->assertSame('', AsistentePlazaAsignar::execute([
+        $this->assertSame('', $sut->execute([
             'id_activ' => 9,
             'plaza' => 3,
             'lista_json' => $json,
@@ -88,34 +81,13 @@ final class AsistentePlazaAsignarTest extends TestCase
         $app->method('findById')->willReturn($o);
         $app->method('guardar')->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerOne(AsistenteApplicationService::class, $app);
+        $sut = $this->createSut($app);
 
         $json = json_encode([(object)['value' => '8#']]);
-        $this->assertSame('', AsistentePlazaAsignar::execute([
+        $this->assertSame('', $sut->execute([
             'id_activ' => 1,
             'plaza' => '',
             'lista_json' => $json,
         ]));
-    }
-
-    /**
-     * @param class-string $iface
-     */
-    private function containerOne(string $iface, object $service): object
-    {
-        return new class($iface, $service) {
-            public function __construct(
-                private readonly string $iface,
-                private readonly object $service
-            ) {}
-
-            public function get(string $id): object
-            {
-                if ($id !== $this->iface) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->service;
-            }
-        };
     }
 }

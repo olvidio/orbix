@@ -2,6 +2,7 @@
 
 namespace src\asistentes\application;
 
+use Psr\Container\ContainerInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
@@ -18,11 +19,21 @@ use function src\shared\domain\helpers\is_true;
  */
 final class FormActividadesDeUnaPersonaData
 {
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private AsistenteActividadService $asistenteActividadService,
+        private ActividadRepositoryInterface $actividadRepository,
+        private PersonaExRepositoryInterface $personaExRepository,
+        private ResumenPlazasService $resumenPlazasService,
+        private ContainerInterface $container,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function build(array $input): array
     {
         $Qid_nom = (int)($input['id_pau'] ?? 0);
         $obj_pau = (string)($input['obj_pau'] ?? '');
@@ -37,13 +48,11 @@ final class FormActividadesDeUnaPersonaData
 
         if ($id_activ_edit !== 0) {
             $mod = 'editar';
-            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-            $oActividad = $ActividadAllRepository->findById($id_activ_edit);
+            $oActividad = $this->actividadAllRepository->findById($id_activ_edit);
             $nom_activ = $oActividad->getNom_activ();
 
-            $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
-            $AsistenteRepositoryInterface = $AsistenteActividadService->getRepoAsistente($Qid_nom, $id_activ_edit);
-            $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
+            $AsistenteRepositoryInterface = $this->asistenteActividadService->getRepoAsistente($Qid_nom, $id_activ_edit);
+            $AsistenteRepository = $this->container->get($AsistenteRepositoryInterface);
             $oAsistente = $AsistenteRepository->findById($id_activ_edit, $Qid_nom);
             $obj = get_class($oAsistente);
 
@@ -87,8 +96,7 @@ final class FormActividadesDeUnaPersonaData
                 $condicion .= " AND dl_org != '" . ConfigGlobal::mi_delef() . "'";
             }
 
-            $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-            $actividades_opciones = $ActividadRepository->getArrayActividadesDeTipo($id_tipo, $condicion);
+            $actividades_opciones = $this->actividadRepository->getArrayActividadesDeTipo($id_tipo, $condicion);
             $actividades_onchange = ConfigGlobal::is_app_installed('actividadplazas') ? 'fnjs_cmb_propietario()' : null;
 
             $propio = 't';
@@ -115,14 +123,12 @@ final class FormActividadesDeUnaPersonaData
 
             $dl_de_paso = false;
             if ($obj_pau === 'PersonaEx' && $Qid_nom !== 0) {
-                $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-                $oPersona = $PersonaExRepository->findById($Qid_nom);
+                $oPersona = $this->personaExRepository->findById($Qid_nom);
                 $dl_de_paso = $oPersona->getDl();
             }
-            $gesActividadPlazas = $GLOBALS['container']->get(ResumenPlazasService::class);
             if ($id_activ_edit !== 0) {
-                $gesActividadPlazas->setId_activ($id_activ_edit);
-                $propietario_opciones = $gesActividadPlazas->getPosiblesPropietariosOpciones($dl_de_paso);
+                $this->resumenPlazasService->setId_activ($id_activ_edit);
+                $propietario_opciones = $this->resumenPlazasService->getPosiblesPropietariosOpciones($dl_de_paso);
                 $propietario_select_blanco = true;
             } else {
                 $propietario_opciones = [];

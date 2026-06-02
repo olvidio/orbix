@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "misas"
-endpoints: 32
+endpoints: 33
 estado_revision: "generado"
 ---
 
@@ -50,6 +50,13 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `misas.cuadricula_update`
 - Controller: `src/misas/infrastructure/ui/http/controllers/cuadricula_update.php`
 - Entrada: `post.dia:string`, `post.id_enc:integer`, `post.id_zona:integer`, `post.key:string`, `post.observ:string`, `post.tend:string`, `post.tipo_plantilla:string`, `post.tstart:string`, `post.uuid_item:string`
+- Respuesta: `standard_envelope_string_data`
+
+## `/src/misas/desplegable_centros_zona`
+
+- Id: `misas.desplegable_centros_zona`
+- Controller: `src/misas/infrastructure/ui/http/controllers/desplegable_centros_zona.php`
+- Entrada: `post.id_zona:integer`, `post.id_ubi:integer|null`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/desplegable_encargos`

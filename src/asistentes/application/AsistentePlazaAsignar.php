@@ -12,7 +12,12 @@ use src\asistentes\application\services\AsistenteApplicationService;
  */
 final class AsistentePlazaAsignar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private AsistenteApplicationService $asistenteApplicationService,
+    ) {
+    }
+
+    public function execute(array $input): string
     {
         $id_activ = (int) ($input['id_activ'] ?? 0);
         if ($id_activ === 0) {
@@ -25,7 +30,7 @@ final class AsistentePlazaAsignar
             return _("falta lista de seleccion");
         }
 
-        $asistenteAppService = $GLOBALS['container']->get(AsistenteApplicationService::class);
+        $asistenteAppService = $this->asistenteApplicationService;
         $msg_err = '';
         foreach ($arr as $obj) {
             $raw = $obj->value ?? '';

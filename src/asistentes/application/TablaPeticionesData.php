@@ -18,6 +18,16 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
  */
 final class TablaPeticionesData
 {
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private AsistenteActividadService $asistenteActividadService,
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private PlazaPeticionRepositoryInterface $plazaPeticionRepository,
+        private ActividadPlazasRepositoryInterface $actividadPlazasRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+    ) {
+    }
+
     /**
      * Cada fila tiene `[2]` como string vacío, o
      * `['peticiones_parts' => list<array{t: 'p', s: string}|array{t: 'm', s: string, h: array}>]`.
@@ -25,7 +35,7 @@ final class TablaPeticionesData
      * @param array<string, mixed> $input
      * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function build(array $input): array
     {
         $a_sel = (array)($input['sel'] ?? []);
         if (!empty($a_sel)) {
@@ -33,8 +43,7 @@ final class TablaPeticionesData
             $nom_activ = (string)strtok('#');
         } else {
             $id_activ_old = (int)($input['id_activ_old'] ?? 0);
-            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-            $oActividad = $ActividadAllRepository->findById($id_activ_old);
+            $oActividad = $this->actividadAllRepository->findById($id_activ_old);
             $nom_activ = $oActividad->getNom_activ();
         }
 
@@ -58,53 +67,47 @@ final class TablaPeticionesData
 
         $a_botones = [];
 
-        $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
-        $cAsistentes = $AsistenteActividadService->getAsistentesDeActividad($id_activ_old);
+        $cAsistentes = $this->asistenteActividadService->getAsistentesDeActividad($id_activ_old);
 
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($id_activ_old);
+        $oActividad = $this->actividadAllRepository->findById($id_activ_old);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
 
         $oTipoActividad = new TiposActividades($id_tipo_activ);
         $sactividad = $oTipoActividad->getActividadText();
 
         $mi_dele = ConfigGlobal::mi_delef();
-        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
+        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $mi_dele]);
         $oDelegacion = $cDelegaciones[0];
         $id_dl = $oDelegacion->getIdDlVo()->value();
 
         $a_valores = [];
         $i = 0;
-        $PlazaPeticionRepository = $GLOBALS['container']->get(PlazaPeticionRepositoryInterface::class);
-        $ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         foreach ($cAsistentes as $oAsistente) {
             $i++;
             $id_nom = $oAsistente->getId_nom();
             $aWhere = ['id_nom' => $id_nom, 'tipo' => $sactividad, '_ordre' => 'orden'];
             $aOperador = ['tipo' => '~'];
-            $cPlazasPeticion = $PlazaPeticionRepository->getPlazasPeticion($aWhere, $aOperador);
+            $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion($aWhere, $aOperador);
             $parts = [];
             foreach ($cPlazasPeticion as $oPlazaPeticion) {
                 $id_activ = $oPlazaPeticion->getId_activ();
                 if (empty($id_activ)) {
                     continue;
                 }
-                $oActividadPosible = $ActividadAllRepository->findById($id_activ);
+                $oActividadPosible = $this->actividadAllRepository->findById($id_activ);
                 $nom_activ_i = $oActividadPosible->getNom_activ();
                 $dl_org = $oActividad->getDl_org();
 
                 if (ConfigGlobal::is_app_installed('actividadplazas')) {
                     $concedidas = 0;
-                    $cActividadPlazas = $ActividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dl, 'id_activ' => $id_activ]);
+                    $cActividadPlazas = $this->actividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dl, 'id_activ' => $id_activ]);
                     foreach ($cActividadPlazas as $oActividadPlazas) {
                         $dl_tabla = $oActividadPlazas->getDl_tabla();
                         if ($dl_org === $dl_tabla) {
                             $concedidas = $oActividadPlazas->getPlazas();
                         }
                     }
-                    $ocupadas = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
+                    $ocupadas = $this->asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
                     if ($ocupadas < 0) {
                         $libres = '-';
                     } else {
@@ -135,7 +138,7 @@ final class TablaPeticionesData
                 }
             }
 
-            $oPersona = $PersonaDlRepository->findById($id_nom);
+            $oPersona = $this->personaDlRepository->findById($id_nom);
             $nom_ap = $oPersona?->getApellidosNombre();
 
             $a_valores[$i][1] = $nom_ap;

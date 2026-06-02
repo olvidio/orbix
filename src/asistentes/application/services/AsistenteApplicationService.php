@@ -2,6 +2,7 @@
 
 namespace src\asistentes\application\services;
 
+use Psr\Container\ContainerInterface;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
@@ -24,7 +25,8 @@ class AsistenteApplicationService
 {
     public function __construct(
         private AsistenteRepositoryInterface $repository,
-        private UnitOfWorkInterface $unitOfWork
+        private UnitOfWorkInterface $unitOfWork,
+        private ContainerInterface $container,
     ) {
     }
 
@@ -88,10 +90,10 @@ class AsistenteApplicationService
      */
     private function resolverRepositorioDestino(Asistente $asistente): AsistenteRepositoryInterface
     {
-        $actividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
+        $actividadService = $this->container->get(AsistenteActividadService::class);
         $claseRepo = $actividadService->getRepoAsistente($asistente->getId_nom(), $asistente->getId_activ());
 
-        return $GLOBALS['container']->get($claseRepo);
+        return $this->container->get($claseRepo);
     }
 
     /**
@@ -144,7 +146,7 @@ class AsistenteApplicationService
 
         foreach ($candidatas as $clase) {
             /** @var AsistenteRepositoryInterface $repo */
-            $repo = $GLOBALS['container']->get($clase);
+            $repo = $this->container->get($clase);
             if ($repo->findById($id_activ, $id_nom) !== null) {
                 return $repo;
             }

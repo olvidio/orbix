@@ -11,20 +11,26 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
  */
 final class ListaUltimQueCtrData
 {
+    public function __construct(
+        private PersonaSRepositoryInterface $personaSRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array{opciones_centros: array<string|int, string>, hash_main: array{campos_form: string, campos_hidden: array<string, mixed>}, paths: array{form_action: string}}
      */
-    public static function build(array $input): array
+    public function build(array $input): array
     {
         $Qque = (string)($input['que'] ?? '');
         $Qcurso = (string)($input['curso'] ?? '');
 
-        $PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+        $PersonaSRepository = $this->personaSRepository;
         $aIdCentros = $PersonaSRepository->getArrayIdCentros();
 
         $aOpciones = [];
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+        $CentroDlRepository = $this->centroDlRepository;
         foreach ($aIdCentros as $id_ubi) {
             $oCentroDl = $CentroDlRepository->findById($id_ubi);
             $nombre_ubi = $oCentroDl->getNombre_ubi();
