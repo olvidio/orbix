@@ -39,9 +39,9 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo Certificado
+     * @return array Una colección de objetos de tipo Certificado
      */
-    public function getCertificados(array $aWhere = [], array $aOperators = []): array|bool
+    public function getCertificados(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

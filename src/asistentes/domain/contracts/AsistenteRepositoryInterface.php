@@ -26,9 +26,17 @@ interface AsistenteRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo Asistente
+     * @return array Una colección de objetos de tipo Asistente
      */
-    public function getAsistentes(array $aWhere = [], array $aOperators = []): array|bool;
+    public function getAsistentes(array $aWhere = [], array $aOperators = []): array;
+
+    /**
+     * Une colecciones de varios repositorios de asistentes (Dl, Out, Ex…).
+     *
+     * @param list<array{repo: class-string, get: string}> $a_Clases
+     * @return list<Asistente>
+     */
+    public function getConjunt(array $a_Clases, string $namespace, array $aWhere, array $aOperators): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

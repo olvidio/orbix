@@ -40,9 +40,9 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo Encargo
+     * @return array Una colección de objetos de tipo Encargo
      */
-    public function getEncargos(array $aWhere = [], array $aOperators = []): array|bool
+    public function getEncargos(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

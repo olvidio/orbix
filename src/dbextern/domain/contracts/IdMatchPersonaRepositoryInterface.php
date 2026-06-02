@@ -18,7 +18,7 @@ interface IdMatchPersonaRepositoryInterface
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-    public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array|bool;
+    public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

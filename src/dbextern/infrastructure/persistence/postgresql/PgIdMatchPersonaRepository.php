@@ -25,7 +25,7 @@ class PgIdMatchPersonaRepository extends ClaseRepository implements IdMatchPerso
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-    public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array|bool
+    public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

@@ -123,7 +123,7 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
      * devuelve una colección (array) de objetos de tipo Habitacion para un id_ubi específico
      *
      * @param int $id_ubi
-     * @return array|bool Una colección de objetos de tipo Habitacion
+     * @return array Una colección de objetos de tipo Habitacion
      */
     public function getHabitacionesByUbi(int $id_ubi): array
     {

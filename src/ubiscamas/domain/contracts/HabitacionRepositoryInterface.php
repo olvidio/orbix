@@ -25,17 +25,17 @@ interface HabitacionRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo Habitacion
+     * @return array Una colección de objetos de tipo Habitacion
      */
-    public function getHabitaciones(array $aWhere = [], array $aOperators = []): array|bool;
+    public function getHabitaciones(array $aWhere = [], array $aOperators = []): array;
 
     /**
      * devuelve una colección (array) de objetos de tipo Habitacion para un id_ubi específico
      *
      * @param int $id_ubi
-     * @return array|bool Una colección de objetos de tipo Habitacion
+     * @return array Una colección de objetos de tipo Habitacion
      */
-    public function getHabitacionesByUbi(int $id_ubi): array|bool;
+    public function getHabitacionesByUbi(int $id_ubi): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

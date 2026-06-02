@@ -24,9 +24,9 @@ interface ColaMailRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo ColaMail
+     * @return array Una colección de objetos de tipo ColaMail
      */
-    public function getColaMails(array $aWhere = [], array $aOperators = []): array|bool;
+    public function getColaMails(array $aWhere = [], array $aOperators = []): array;
 
     public function deleteColaMails(string $date_iso): void;
 

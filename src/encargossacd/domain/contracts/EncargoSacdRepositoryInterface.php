@@ -25,9 +25,9 @@ interface EncargoSacdRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo EncargoSacd
+     * @return array Una colección de objetos de tipo EncargoSacd
      */
-    public function getEncargosSacd(array $aWhere = [], array $aOperators = []): array|bool;
+    public function getEncargosSacd(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

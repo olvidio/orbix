@@ -30,7 +30,7 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
         $this->setNomTabla('i_whereis_dl');
     }
 
-    public function getArrayIdFromIdEgms(array $aEgms): array|bool
+    public function getArrayIdFromIdEgms(array $aEgms): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -54,9 +54,9 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo Whereis
+     * @return array Una colección de objetos de tipo Whereis
      */
-    public function getWhereare(array $aWhere = [], array $aOperators = []): array|bool
+    public function getWhereare(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

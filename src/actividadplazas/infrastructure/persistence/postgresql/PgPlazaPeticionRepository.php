@@ -39,9 +39,9 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo PlazaPeticion
+     * @return array Una colección de objetos de tipo PlazaPeticion
      */
-    public function getPlazasPeticion(array $aWhere = [], array $aOperators = []): array|bool
+    public function getPlazasPeticion(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

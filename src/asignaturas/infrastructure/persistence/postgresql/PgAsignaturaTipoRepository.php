@@ -54,9 +54,9 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo AsignaturaTipo
+     * @return array Una colección de objetos de tipo AsignaturaTipo
      */
-    public function getAsignaturaTipos(array $aWhere = [], array $aOperators = []): array|bool
+    public function getAsignaturaTipos(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

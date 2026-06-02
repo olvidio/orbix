@@ -38,9 +38,9 @@ class PgProfesorDocenciaStgrRepository extends ClaseRepository implements Profes
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo ProfesorDocenciaStgr
+     * @return array Una colección de objetos de tipo ProfesorDocenciaStgr
      */
-    public function getProfesorDocenciasStgr(array $aWhere = [], array $aOperators = []): array|bool
+    public function getProfesorDocenciasStgr(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

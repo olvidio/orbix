@@ -37,7 +37,7 @@ class PgPersonaBDURepository extends ClaseRepository implements PersonaBDUReposi
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-    public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array|bool
+    public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

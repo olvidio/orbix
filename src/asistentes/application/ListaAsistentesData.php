@@ -8,6 +8,8 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaPub;
 use src\shared\config\ConfigGlobal;
 use function src\shared\domain\helpers\is_true;
 
@@ -201,7 +203,7 @@ final class ListaAsistentesData
     /**
      * @return array{estudios: string, profesion: string, edad: string, inc_f_inc: string, eap: string, observ: string}
      */
-    private function datosPersona(object $oPersona): array
+    private function datosPersona(PersonaDl|PersonaPub $oPersona): array
     {
         $estudios = '';
         $profesion = '';
@@ -209,41 +211,30 @@ final class ListaAsistentesData
         $inc_f_inc = '';
         $eap = '';
         $observ = '';
-        $obj_persona = get_class($oPersona);
-        $obj_persona = str_replace('src\\personas\\domain\\entity\\', '', $obj_persona);
-        switch ($obj_persona) {
-            case 'PersonaN':
-            case 'PersonaNax':
-            case 'PersonaAgd':
-            case 'PersonaS':
-            case 'PersonaSSSC':
-            case 'PersonaDl':
-                $profesion = $oPersona->getProfesion();
-                $oF_nacimiento = $oPersona->getF_nacimiento();
-                $edad = $oF_nacimiento !== null ? $oF_nacimiento->diff(new DateTime())->y : '';
-                $inc = $oPersona->getInc();
-                if (empty($inc) || $inc === '?') {
-                    $f_inc = '?';
-                } else {
-                    $oF_inc = $oPersona->getF_inc();
-                    $f_inc = $oF_inc->getFromLocal();
-                }
-                if (!empty($inc)) {
-                    $inc_f_inc = $inc . ' : ' . $f_inc;
-                }
-                $eap = empty($oPersona->getEap()) ? '?' : $oPersona->getEap();
-                break;
-            case 'PersonaIn':
-            case 'PersonaEx':
-                $profesion = $oPersona->getProfesion();
-                $edad = $oPersona->getEdad();
-                $inc = $oPersona->getInc();
-                $f_inc = $oPersona->getF_inc()?->getFromLocal();
-                if (!empty($inc)) {
-                    $inc_f_inc = $inc . ' : ' . $f_inc;
-                }
-                $eap = $oPersona->getEap();
-                break;
+
+        if ($oPersona instanceof PersonaPub) {
+            $profesion = $oPersona->getProfesion() ?? '';
+            $edad = (string) ($oPersona->getEdad() ?? '');
+            $inc = $oPersona->getInc();
+            $f_inc = $oPersona->getF_inc()?->getFromLocal();
+            if (!empty($inc)) {
+                $inc_f_inc = $inc . ' : ' . $f_inc;
+            }
+            $eap = $oPersona->getEap() ?? '';
+        } else {
+            $profesion = $oPersona->getProfesion() ?? '';
+            $oF_nacimiento = $oPersona->getF_nacimiento();
+            $edad = $oF_nacimiento !== null ? (string) $oF_nacimiento->diff(new DateTime())->y : '';
+            $inc = $oPersona->getInc();
+            if (empty($inc) || $inc === '?') {
+                $f_inc = '?';
+            } else {
+                $f_inc = $oPersona->getF_inc()?->getFromLocal() ?? '?';
+            }
+            if (!empty($inc)) {
+                $inc_f_inc = $inc . ' : ' . $f_inc;
+            }
+            $eap = empty($oPersona->getEap()) ? '?' : ($oPersona->getEap() ?? '?');
         }
 
         return [

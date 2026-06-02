@@ -35,9 +35,9 @@ interface ActividadAllRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo ActividadAll
+     * @return array Una colección de objetos de tipo ActividadAll
      */
-    public function getActividades(array $aWhere = [], array $aOperators = []): array|bool;
+    public function getActividades(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

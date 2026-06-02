@@ -27,7 +27,7 @@ class Select_actividades_de_una_persona
 {
     private const ID_TIPO_DOSSIER = 1301;
 
-    private mixed $ref_perm = null;
+    private array $ref_perm = [];
     private mixed $msg_err = '';
     private mixed $a_valores = null;
     private mixed $txt_eliminar = null;

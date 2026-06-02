@@ -20,7 +20,7 @@ interface PersonaBDURepositoryInterface
 
     public function getPersonaBDUQuery(string $sQuery = ''): array;
 
-    public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array|bool;
+    public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

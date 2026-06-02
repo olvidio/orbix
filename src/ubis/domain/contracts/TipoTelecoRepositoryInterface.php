@@ -28,10 +28,10 @@ interface TipoTelecoRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|bool Una colección de objetos de tipo TipoTeleco
+	 * @return array Una colección de objetos de tipo TipoTeleco
 	
 	 */
-	public function getTiposTeleco(array $aWhere=[], array $aOperators=[]): array|bool;
+	public function getTiposTeleco(array $aWhere=[], array $aOperators=[]): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

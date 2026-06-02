@@ -27,9 +27,9 @@ interface DossierRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo Dossier
+     * @return array Una colección de objetos de tipo Dossier
      */
-    public function getDossieres(array $aWhere = [], array $aOperators = []): array|bool;
+    public function getDossieres(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
@@ -62,4 +62,9 @@ interface DossierRepositoryInterface
      * Busca la clase por clave primaria compuesta usando un Value Object
      */
     public function findByPk(DossierPkAlias $pk): ?Dossier;
+
+    /**
+     * Crea una entidad Dossier en memoria a partir de la clave primaria (sin persistir).
+     */
+    public function crearDossier(DossierPkAlias $pk): Dossier;
 }

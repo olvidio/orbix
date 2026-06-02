@@ -26,9 +26,9 @@ interface ZonaGrupoRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo ZonaGrupo
+     * @return array Una colección de objetos de tipo ZonaGrupo
      */
-    public function getZonasGrupo(array $aWhere = [], array $aOperators = []): array|bool;
+    public function getZonasGrupo(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

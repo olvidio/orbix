@@ -16,7 +16,7 @@ use src\inventario\domain\entity\Lugar;
 interface LugarRepositoryInterface
 {
 
-    public function getArrayLugares(int $id_ubi): array|bool;
+    public function getArrayLugares(int $id_ubi): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
@@ -25,9 +25,9 @@ interface LugarRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo Lugar
+     * @return array Una colección de objetos de tipo Lugar
      */
-    public function getLugares(array $aWhere = [], array $aOperators = []): array|bool;
+    public function getLugares(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

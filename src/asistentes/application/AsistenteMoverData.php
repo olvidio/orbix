@@ -5,6 +5,7 @@ namespace src\asistentes\application;
 use Psr\Container\ContainerInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
@@ -145,7 +146,7 @@ final class AsistenteMoverData
             $nom_activ = '--------------';
             $txt_plazas = '';
             $txt_creditos = '';
-            if (is_object($oActividadItem)) {
+            if ($oActividadItem instanceof ActividadAll) {
                 $id_activ = $oActividadItem->getId_activ();
                 if ($id_activ === $Qid_activ_old) {
                     continue;

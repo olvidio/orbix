@@ -25,10 +25,10 @@ interface CambioUsuarioRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|bool Una colección de objetos de tipo CambioUsuario
+	 * @return array Una colección de objetos de tipo CambioUsuario
 	
 	 */
-	public function getCambiosUsuario(array $aWhere=[], array $aOperators=[]): array|bool;
+	public function getCambiosUsuario(array $aWhere=[], array $aOperators=[]): array;
 
 	/**
 	 * Elimina filas anteriores a la fecha indicada (uso masivo).

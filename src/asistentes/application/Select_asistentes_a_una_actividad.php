@@ -13,6 +13,8 @@ use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\services\TelecoPersonaService;
+use src\ubis\domain\entity\Casa;
+use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\Ubi;
 use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\is_true;
@@ -128,10 +130,13 @@ class Select_asistentes_a_una_actividad
     private function getTituloPlazas(): void
     {
         if (empty($this->plazas_totales)) {
-            $oCasa = Ubi::NewUbi($this->id_ubi);
-            if (method_exists($oCasa, 'getPlazas')) {
-                $plazas_max = $oCasa->getPlazas();
-                $plazas_min = $oCasa->getPlazas_min();
+            $oUbi = Ubi::NewUbi($this->id_ubi);
+            if ($oUbi instanceof Casa) {
+                $plazas_max = $oUbi->getPlazas();
+                $plazas_min = $oUbi->getPlazas_min();
+            } elseif ($oUbi instanceof CentroDl) {
+                $plazas_max = $oUbi->getPlazas();
+                $plazas_min = '';
             } else {
                 $plazas_max = '';
                 $plazas_min = '';

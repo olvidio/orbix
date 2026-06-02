@@ -26,15 +26,15 @@ interface CamaRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo Cama
+     * @return array Una colección de objetos de tipo Cama
      */
-    public function getCamas(array $aWhere = [], array $aOperators = []): array|bool;
+    public function getCamas(array $aWhere = [], array $aOperators = []): array;
 
     /**
      * devuelve una colección (array) de objetos de tipo Cama para una habitación específica
      *
      */
-    public function getCamasByHabitacion(HabitacionId $id_habitacion): array|bool;
+    public function getCamasByHabitacion(HabitacionId $id_habitacion): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

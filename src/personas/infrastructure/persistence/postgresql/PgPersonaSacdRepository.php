@@ -121,9 +121,9 @@ class PgPersonaSacdRepository extends ClaseRepository implements PersonaSacdRepo
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|bool Una colección de objetos de tipo PersonaDl
+     * @return array Una colección de objetos de tipo PersonaDl
      */
-    public function getPersonas(array $aWhere = [], array $aOperators = []): array|bool
+    public function getPersonas(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

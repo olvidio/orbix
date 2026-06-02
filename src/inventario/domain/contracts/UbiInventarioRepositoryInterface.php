@@ -16,8 +16,8 @@ use src\inventario\domain\entity\UbiInventario;
 interface UbiInventarioRepositoryInterface
 {
 
-    public function getUbisInventarioLugar($bLugar): array|bool;
-    public function getArrayUbisInventario():array|bool;
+    public function getUbisInventarioLugar($bLugar): array;
+    public function getArrayUbisInventario(): array;
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
@@ -26,10 +26,10 @@ interface UbiInventarioRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|bool Una colección de objetos de tipo UbiInventario
+	 * @return array Una colección de objetos de tipo UbiInventario
 	
 	 */
-	public function getUbisInventario(array $aWhere=[], array $aOperators=[]): array|bool;
+	public function getUbisInventario(array $aWhere=[], array $aOperators=[]): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

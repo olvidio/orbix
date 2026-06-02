@@ -36,7 +36,7 @@ class OdbcDlListasRepository extends ClaseRepository
     }
 
 
-    public function getDlListas(array $aWhere = [], array $aOperators = []): array|bool
+    public function getDlListas(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
