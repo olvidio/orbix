@@ -6,8 +6,11 @@ use frontend\asistentes\helpers\AsistenteMoverRender;
 
 require_once 'frontend/shared/global_header_front.inc';
 
+/** @var \frontend\shared\web\Posicion $oPosicion */
+
 $campos = array_merge($_GET, $_POST);
 $data = PostRequest::getDataFromUrl('/src/asistentes/asistente_mover_data', $campos);
+/** @var array<string, mixed> $payload */
 $payload = is_array($data) ? $data : [];
 $payload = AsistenteMoverRender::enrich($payload);
 

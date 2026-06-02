@@ -129,6 +129,7 @@ final class ListaAsisConjuntoActivData
             $aOperDl = $aOperador;
             $aWhereDl['dl_org'] = $mi_dele;
 
+            /** @var ListaPlazasConjuntoActividades $oListaPlazasDl */
             $oListaPlazasDl = $this->container->get(ListaPlazasConjuntoActividades::class);
             $oListaPlazasDl->setMi_dele($mi_dele);
             $oListaPlazasDl->setWhere($aWhereDl);
@@ -150,6 +151,7 @@ final class ListaAsisConjuntoActivData
                 $aOperOt['dl_org'] = '!=';
             }
 
+            /** @var ListaPlazasConjuntoActividades $oListaPlazasOtras */
             $oListaPlazasOtras = $this->container->get(ListaPlazasConjuntoActividades::class);
             $oListaPlazasOtras->setMi_dele($mi_dele);
             $oListaPlazasOtras->setWhere($aWhereOt);

@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -41,14 +44,16 @@ final class FormAsistentesAUnaActividadData
     {
         $a_sel = (array)($input['sel'] ?? []);
         if (!empty($a_sel)) {
-            $Qid_nom = (int)strtok((string)$a_sel[0], '#');
+            $sel0 = $a_sel[0];
+            $selKey = is_string($sel0) ? $sel0 : (is_scalar($sel0) ? (string)$sel0 : '');
+            $Qid_nom = (int)strtok($selKey, '#');
         } else {
-            $Qid_nom = (int)($input['id_nom'] ?? 0);
+            $Qid_nom = input_int($input, 'id_nom', 0);
         }
 
-        $Qid_activ = (int)($input['id_activ'] ?? 0);
-        $Qid_pau = (int)($input['id_pau'] ?? 0);
-        $Qobj_pau = (string)($input['obj_pau'] ?? '');
+        $Qid_activ = input_int($input, 'id_activ', 0);
+        $Qid_pau = input_int($input, 'id_pau', 0);
+        $Qobj_pau = input_string($input, 'obj_pau');
         if ($Qid_activ === 0) {
             $Qid_activ = $Qid_pau;
         }
@@ -133,7 +138,7 @@ final class FormAsistentesAUnaActividadData
         } else {
             $mod = 'nuevo';
             $obj_pau = $Qobj_pau !== '' ? urldecode($Qobj_pau) : '';
-            $Qna = (string)($input['na'] ?? '');
+            $Qna = input_string($input, 'na');
             $na_val = 'p' . $Qna;
 
             switch ($obj_pau) {

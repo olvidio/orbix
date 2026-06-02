@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\asistentes\helpers;
 
+use function frontend\shared\helpers\payload_string;
+
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 
@@ -20,13 +22,13 @@ final class ListaUltimQueCtrRender
     {
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $formRel = (string)($paths['form_action'] ?? '');
+        $formRel = payload_string($paths, 'form_action');
         $payload['form_action'] = $formRel !== '' ? $base . '/' . ltrim($formRel, '/') : '';
 
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm((string)($hashMain['campos_form'] ?? 'id_ubi'));
-        $cn = (string)($hashMain['campos_no'] ?? '');
+        $oHash->setCamposForm(payload_string($hashMain, 'campos_form', 'id_ubi'));
+        $cn = payload_string($hashMain, 'campos_no');
         if ($cn !== '') {
             $oHash->setCamposNo($cn);
         }

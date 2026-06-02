@@ -236,3 +236,44 @@ function curso_est($que, $any, $tipo = 'est', ?array $calendario = null)
     }
 
 }
+
+/**
+ * @param array<string, mixed> $input
+ */
+function input_string(array $input, string $key, string $default = ''): string
+{
+    if (!array_key_exists($key, $input)) {
+        return $default;
+    }
+    $value = $input[$key];
+    if (is_string($value)) {
+        return $value;
+    }
+    if (is_int($value) || is_float($value) || is_bool($value)) {
+        return (string)$value;
+    }
+
+    return $default;
+}
+
+/**
+ * @param array<string, mixed> $input
+ */
+function input_int(array $input, string $key, int $default = 0): int
+{
+    if (!array_key_exists($key, $input)) {
+        return $default;
+    }
+    $value = $input[$key];
+    if (is_int($value)) {
+        return $value;
+    }
+    if (is_string($value) && is_numeric($value)) {
+        return (int)$value;
+    }
+    if (is_float($value)) {
+        return (int)$value;
+    }
+
+    return $default;
+}

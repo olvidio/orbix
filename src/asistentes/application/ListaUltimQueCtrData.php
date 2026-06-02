@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
@@ -23,8 +26,8 @@ final class ListaUltimQueCtrData
      */
     public function build(array $input): array
     {
-        $Qque = (string)($input['que'] ?? '');
-        $Qcurso = (string)($input['curso'] ?? '');
+        $Qque = input_string($input, 'que');
+        $Qcurso = input_string($input, 'curso');
 
         $PersonaSRepository = $this->personaSRepository;
         $aIdCentros = $PersonaSRepository->getArrayIdCentros();
@@ -33,6 +36,9 @@ final class ListaUltimQueCtrData
         $CentroDlRepository = $this->centroDlRepository;
         foreach ($aIdCentros as $id_ubi) {
             $oCentroDl = $CentroDlRepository->findById($id_ubi);
+            if ($oCentroDl === null) {
+                continue;
+            }
             $nombre_ubi = $oCentroDl->getNombre_ubi();
             $aOpciones[$id_ubi] = $nombre_ubi;
         }

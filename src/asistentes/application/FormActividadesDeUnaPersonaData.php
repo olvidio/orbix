@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use Psr\Container\ContainerInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -9,6 +12,7 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use function src\shared\domain\helpers\is_true;
@@ -35,25 +39,34 @@ final class FormActividadesDeUnaPersonaData
      */
     public function build(array $input): array
     {
-        $Qid_nom = (int)($input['id_pau'] ?? 0);
-        $obj_pau = (string)($input['obj_pau'] ?? '');
-        $id_tipo_post = (string)($input['id_tipo'] ?? '');
-        $que_dl = (string)($input['que_dl'] ?? '');
+        $Qid_nom = input_int($input, 'id_pau', 0);
+        $obj_pau = input_string($input, 'obj_pau');
+        $id_tipo_post = input_string($input, 'id_tipo');
+        $que_dl = input_string($input, 'que_dl');
 
         $a_sel = (array)($input['sel'] ?? []);
         $id_activ_edit = 0;
         if (!empty($a_sel)) {
-            $id_activ_edit = (int)strtok((string)$a_sel[0], '#');
+            $sel0 = $a_sel[0];
+            $selKey = is_string($sel0) ? $sel0 : (is_scalar($sel0) ? (string)$sel0 : '');
+            $id_activ_edit = (int)strtok($selKey, '#');
         }
 
         if ($id_activ_edit !== 0) {
             $mod = 'editar';
             $oActividad = $this->actividadAllRepository->findById($id_activ_edit);
+            if ($oActividad === null) {
+                return ['error' => sprintf(_('No se ha encontrado la actividad con id: %s'), $id_activ_edit)];
+            }
             $nom_activ = $oActividad->getNom_activ();
 
             $AsistenteRepositoryInterface = $this->asistenteActividadService->getRepoAsistente($Qid_nom, $id_activ_edit);
+            /** @var AsistenteRepositoryInterface $AsistenteRepository */
             $AsistenteRepository = $this->container->get($AsistenteRepositoryInterface);
             $oAsistente = $AsistenteRepository->findById($id_activ_edit, $Qid_nom);
+            if ($oAsistente === null) {
+                return ['error' => sprintf(_('No se ha encontrado el asistente (id_nom: %s, id_activ: %s)'), $Qid_nom, $id_activ_edit)];
+            }
             $obj = get_class($oAsistente);
 
             $id_activ_real = $id_activ_edit;
@@ -124,7 +137,7 @@ final class FormActividadesDeUnaPersonaData
             $dl_de_paso = false;
             if ($obj_pau === 'PersonaEx' && $Qid_nom !== 0) {
                 $oPersona = $this->personaExRepository->findById($Qid_nom);
-                $dl_de_paso = $oPersona->getDl();
+                $dl_de_paso = $oPersona !== null ? $oPersona->getDl() : false;
             }
             if ($id_activ_edit !== 0) {
                 $this->resumenPlazasService->setId_activ($id_activ_edit);

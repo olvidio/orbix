@@ -1,4 +1,6 @@
 <?php
+
+use Psr\Container\ContainerInterface;
 /**
  * JSON para {@see \src\asistentes\application\TablaPeticionesData}.
  * Tabla HTML, firmas y URL AJAX: {@see \frontend\asistentes\helpers\TablaPeticionesRender}.
@@ -9,10 +11,15 @@ use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$data = $GLOBALS['container']->get(TablaPeticionesData::class)->build($_POST);
+/** @var ContainerInterface $container */
+$container = $GLOBALS['container'];
+/** @var \src\asistentes\application\TablaPeticionesData $useCase */
+$useCase = $container->get(TablaPeticionesData::class);
+$data = $useCase->build($_POST);
 
 if (isset($data['error'])) {
-    ContestarJson::enviar((string)$data['error'], 'none');
+    $error = is_string($data['error']) ? $data['error'] : '';
+    ContestarJson::enviar($error, 'none');
     return;
 }
 

@@ -6,6 +6,7 @@ use frontend\asistentes\helpers\FormAsistentesAUnaActividadRender;
 
 require_once 'frontend/shared/global_header_front.inc';
 
+/** @var \frontend\shared\web\Posicion $oPosicion */
 $Qactualizar = (int)filter_input(INPUT_POST, 'actualizar');
 if (empty($Qactualizar)) {
     $oPosicion->recordar();
@@ -13,6 +14,7 @@ if (empty($Qactualizar)) {
 
 $campos = array_merge($_GET, $_POST);
 $data = PostRequest::getDataFromUrl('/src/asistentes/form_asistentes_a_una_actividad_data', $campos);
+/** @var array<string, mixed> $payload */
 $payload = is_array($data) ? $data : [];
 $payload = FormAsistentesAUnaActividadRender::enrich($payload);
 

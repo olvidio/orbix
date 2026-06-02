@@ -6,6 +6,7 @@ use frontend\asistentes\helpers\TablaPeticionesRender;
 
 require_once 'frontend/shared/global_header_front.inc';
 
+/** @var \frontend\shared\web\Posicion $oPosicion */
 $oPosicion->recordar();
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -30,6 +31,7 @@ if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
 }
 
 $data = PostRequest::getDataFromUrl('/src/asistentes/tabla_peticiones_data', $campos);
+/** @var array<string, mixed> $payload */
 $payload = is_array($data) ? $data : [];
 $payload = TablaPeticionesRender::enrich($payload);
 

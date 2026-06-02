@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use DateTime;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -37,12 +40,12 @@ final class ListaAsistentesData
             $id_pau = (int)strtok($a_sel[0], '#');
             $nom_activ = (string)strtok('#');
         } else {
-            $id_pau = (int)($input['id_pau'] ?? 0);
+            $id_pau = input_int($input, 'id_pau', 0);
             $oActividad = $this->actividadAllRepository->findById($id_pau);
-            $nom_activ = $oActividad->getNom_activ();
+            $nom_activ = $oActividad !== null ? $oActividad->getNom_activ() : '';
         }
 
-        $queSel = (string)($input['queSel'] ?? '');
+        $queSel = input_string($input, 'queSel');
 
         $c = 0;
         $num = 0;
@@ -60,6 +63,9 @@ final class ListaAsistentesData
                 $aListaCargos[] = $id_nom;
                 $id_cargo = $oActividadCargo->getId_cargo();
                 $oCargo = $this->cargoRepository->findById($id_cargo);
+                if ($oCargo === null) {
+                    continue;
+                }
                 $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
                 $cargo = $oCargo->getCargoVo()->value();
                 if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {

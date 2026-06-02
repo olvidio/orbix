@@ -43,7 +43,9 @@ class PgAsistentePubRepository extends PgAsistenteRepository implements Asistent
         //echo "qq: $sQuery<br>";
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorAsistentePub.lista.id_nom';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            /** @var \src\shared\infrastructure\logging\GestorErrores $oGestorErrores */
+            $oGestorErrores = $_SESSION['oGestorErrores'];
+            $oGestorErrores->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
         $aId_nom = [];

@@ -284,6 +284,16 @@ class Asistente extends Entity implements AggregateRoot
         return $this->id_tabla;
     }
 
+    public function getNomTabla(): string
+    {
+        return match ($this->getIdTablaVo()?->value()) {
+            'dl' => 'd_asistentes_dl',
+            'ex' => 'd_asistentes_ex',
+            'out' => 'd_asistentes_out',
+            default => 'd_asistentes_' . ($this->getIdTablaVo()?->value() ?? 'all'),
+        };
+    }
+
 
     public function setIdTablaVo(PersonaTablaCode|string|null $texto = null): void
     {
@@ -343,7 +353,10 @@ class Asistente extends Entity implements AggregateRoot
             return '';
         }
 
-        $gesActividadPlazas = $GLOBALS['container']->get(ResumenPlazasService::class);
+        /** @var \Psr\Container\ContainerInterface $container */
+        $container = $GLOBALS['container'];
+        /** @var ResumenPlazasService $gesActividadPlazas */
+        $gesActividadPlazas = $container->get(ResumenPlazasService::class);
         $gesActividadPlazas->setId_activ($this->id_activ);
         $dl_de_paso = $this->resolverDlDePaso();
 
@@ -441,7 +454,7 @@ class Asistente extends Entity implements AggregateRoot
     }
 
     /**
-     * @param AsistentePropietario|null $oAsistentePropietario
+     * @param AsistentePropietario|string|null $texto
      */
     public function setPropietarioVo(AsistentePropietario|string|null $texto = null): void
     {
@@ -475,7 +488,7 @@ class Asistente extends Entity implements AggregateRoot
     }
 
     /**
-     * @param AsistenteObservEst|null $oAsistenteObservEst
+     * @param AsistenteObservEst|string|null $texto
      */
     public function setObservEstVo(AsistenteObservEst|string|null $texto = null): void
     {

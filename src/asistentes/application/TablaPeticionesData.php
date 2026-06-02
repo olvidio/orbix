@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -39,12 +42,15 @@ final class TablaPeticionesData
     {
         $a_sel = (array)($input['sel'] ?? []);
         if (!empty($a_sel)) {
-            $id_activ_old = (int)strtok((string)$a_sel[0], '#');
-            $nom_activ = (string)strtok('#');
+            $sel0 = $a_sel[0];
+            $selKey = is_string($sel0) ? $sel0 : (is_scalar($sel0) ? (string)$sel0 : '');
+            $id_activ_old = (int)strtok($selKey, '#');
+            $nomPart = strtok('#');
+            $nom_activ = is_string($nomPart) ? $nomPart : '';
         } else {
-            $id_activ_old = (int)($input['id_activ_old'] ?? 0);
+            $id_activ_old = input_int($input, 'id_activ_old', 0);
             $oActividad = $this->actividadAllRepository->findById($id_activ_old);
-            $nom_activ = $oActividad->getNom_activ();
+            $nom_activ = $oActividad !== null ? $oActividad->getNom_activ() : '';
         }
 
         $Qid_sel = null;
@@ -70,6 +76,17 @@ final class TablaPeticionesData
         $cAsistentes = $this->asistenteActividadService->getAsistentesDeActividad($id_activ_old);
 
         $oActividad = $this->actividadAllRepository->findById($id_activ_old);
+        if ($oActividad === null) {
+            return [
+                'nom_activ' => $nom_activ,
+                'a_cabeceras' => $a_cabeceras,
+                'a_botones' => $a_botones,
+                'a_valores' => [],
+                'paths' => [
+                    'asistente_guardar' => 'src/asistentes/asistente_guardar',
+                ],
+            ];
+        }
         $id_tipo_activ = $oActividad->getId_tipo_activ();
 
         $oTipoActividad = new TiposActividades($id_tipo_activ);
@@ -95,6 +112,9 @@ final class TablaPeticionesData
                     continue;
                 }
                 $oActividadPosible = $this->actividadAllRepository->findById($id_activ);
+                if ($oActividadPosible === null) {
+                    continue;
+                }
                 $nom_activ_i = $oActividadPosible->getNom_activ();
                 $dl_org = $oActividad->getDl_org();
 

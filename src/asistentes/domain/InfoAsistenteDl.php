@@ -2,9 +2,11 @@
 
 namespace src\asistentes\domain;
 
+use Psr\Container\ContainerInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\domain\DatosInfoRepo;
 use function src\shared\domain\helpers\curso_est;
 
@@ -48,7 +50,9 @@ class InfoAsistenteDl extends DatosInfoRepo
             return [];
         }
         $mes = date('m');
-        $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+        /** @var ConfigSnapshot $oConfig */
+        $oConfig = $_SESSION['oConfig'];
+        $fin_m = $oConfig->getMesFinStgr();
         $any = ($mes > $fin_m) ? ((int)date('Y') + 1) : date('Y');
         $inicurs_ca = curso_est('inicio', $any)->format('Y-m-d');
         $fincurs_ca = curso_est('fin', $any)->format('Y-m-d');
@@ -59,7 +63,10 @@ class InfoAsistenteDl extends DatosInfoRepo
         $aWhereNom = ['id_nom' => $this->id_pau];
         $aOperadorNom = [];
 
-        $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+        /** @var ContainerInterface $container */
+        $container = $GLOBALS['container'];
+        /** @var AsistenteActividadService $service */
+        $service = $container->get(AsistenteActividadService::class);
         return $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereActividad, $aOperadorActividad, true);
     }
 
@@ -75,8 +82,10 @@ class InfoAsistenteDl extends DatosInfoRepo
         }
 
         $oFicha = null;
+        /** @var ContainerInterface $container */
+        $container = $GLOBALS['container'];
         /** @var \src\asistentes\domain\contracts\AsistenteDlRepositoryInterface $oRepository */
-        $oRepository = $GLOBALS['container']->get($RepositoryInterface);
+        $oRepository = $container->get($RepositoryInterface);
         switch ($this->mod) {
             case 'nuevo':
                 return parent::getFicha();

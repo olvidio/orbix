@@ -8,6 +8,8 @@ use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
@@ -32,8 +34,10 @@ final class ListaActivCtrData
         $Qssfsv = (string)($input['ssfsv'] ?? '');
 
         if (ConfigGlobal::mi_sfsv() === 1) {
+            /** @var XPermisos $oPerm */
+            $oPerm = $_SESSION['oPerm'];
             if ($Qssfsv === 'sf'
-                && (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des')))) {
+                && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'))) {
                 $ssfsv = 'sf';
             } else {
                 $ssfsv = 'sv';
@@ -179,6 +183,9 @@ final class ListaActivCtrData
                     foreach ($cAsistencias as $oAsistente) {
                         $id_activ = $oAsistente->getId_activ();
                         $oActividad = $this->actividadAllRepository->findById($id_activ);
+                        if ($oActividad === null) {
+                            continue;
+                        }
                         $nom_activ = $oActividad->getNom_activ();
                         $plaza = $oAsistente->getPlazaVo()?->value() ?? '';
                         $nom_plaza = '';

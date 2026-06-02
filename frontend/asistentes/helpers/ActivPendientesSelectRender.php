@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\asistentes\helpers;
 
+use function frontend\shared\helpers\payload_string;
+
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
@@ -25,13 +27,13 @@ final class ActivPendientesSelectRender
 
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $formRel = (string)($paths['form_action'] ?? '');
+        $formRel = payload_string($paths, 'form_action');
         $payload['form_action'] = $formRel !== '' ? $base . '/' . ltrim($formRel, '/') : '';
 
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         $oHashForm = new HashFront();
-        $oHashForm->setCamposForm((string)($hashMain['campos_form'] ?? 'tipo_personas!sactividad!any'));
-        $cn = (string)($hashMain['campos_no'] ?? '');
+        $oHashForm->setCamposForm(payload_string($hashMain, 'campos_form', 'tipo_personas!sactividad!any'));
+        $cn = payload_string($hashMain, 'campos_no');
         if ($cn !== '') {
             $oHashForm->setCamposNo($cn);
         }
@@ -52,7 +54,7 @@ final class ActivPendientesSelectRender
                         continue;
                     }
                     $spec = $cell['link_spec'];
-                    $path = (string)($spec['path'] ?? '');
+                    $path = payload_string($spec, 'path');
                     $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
                     if ($path === '') {
                         continue;

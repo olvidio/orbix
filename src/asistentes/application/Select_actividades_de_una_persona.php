@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use Psr\Container\ContainerInterface;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use src\dossiers\application\PermDossier;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -26,6 +29,14 @@ use function src\shared\domain\helpers\is_true;
 class Select_actividades_de_una_persona
 {
     private const ID_TIPO_DOSSIER = 1301;
+
+    private function getContainer(): ContainerInterface
+    {
+        /** @var ContainerInterface $container */
+        $container = $GLOBALS['container'];
+
+        return $container;
+    }
 
     private array $ref_perm = [];
     private mixed $msg_err = '';
@@ -65,7 +76,9 @@ class Select_actividades_de_una_persona
     private function cursoWhereFromModo(int $modo_curso): array
     {
         $mes = date('m');
-        $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+        /** @var ConfigSnapshot $oConfig */
+        $oConfig = $_SESSION['oConfig'];
+        $fin_m = $oConfig->getMesFinStgr();
         $any = ($mes > $fin_m) ? (int) date('Y') + 1 : date('Y');
         $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
         $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
@@ -123,6 +136,9 @@ class Select_actividades_de_una_persona
     {
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
+        /** @var XPermisos $oPerm */
+        $oPerm = $_SESSION['oPerm'];
+
         [$aWhere, $aOperator] = $this->cursoWhereFromModo((int) $this->modo_curso);
 
         $oPersona = Persona::findPersonaEnGlobal($this->id_pau);
@@ -141,13 +157,18 @@ class Select_actividades_de_una_persona
         $a_valores = [];
         $aWhereNom = ['id_nom' => $this->id_pau];
         $aOperadorNom = [];
-        $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+        /** @var AsistenteActividadService $service */
+        $service = $this->getContainer()->get(AsistenteActividadService::class);
         $cActividadesAsistente = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperator, true);
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        /** @var ActividadAllRepositoryInterface $ActividadAllRepository */
+        $ActividadAllRepository = $this->getContainer()->get(ActividadAllRepositoryInterface::class);
         foreach ($cActividadesAsistente as $oAsistente) {
             $i++;
             $id_activ = $oAsistente->getId_activ();
             $oActividad = $ActividadAllRepository->findById($id_activ);
+            if ($oActividad === null) {
+                continue;
+            }
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $f_ini = $oActividad->getF_ini()?->getFromLocal();
@@ -160,7 +181,7 @@ class Select_actividades_de_una_persona
 
             $oTipoActividad = new TiposActividades($id_tipo_activ);
             $isfsv = $oTipoActividad->getSfsvId();
-            if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm_oficina('des'))) {
+            if ($mi_sfsv != $isfsv && !$oPerm->have_perm_oficina('des')) {
                 $ssfsv = $oTipoActividad->getSfsvText();
                 $sactividad = $oTipoActividad->getActividadText();
                 $nom_activ = "$ssfsv $sactividad";
@@ -205,10 +226,10 @@ class Select_actividades_de_una_persona
         return [
             'segment_tipo' => 'select_actividades_de_una_persona',
             'modo_curso' => (int) $this->modo_curso,
-            'msg_err' => (string) ($this->msg_err ?? ''),
+            'msg_err' => is_string($this->msg_err) ? $this->msg_err : '',
             'wrapper' => [
-                'txt_eliminar' => (string) $this->txt_eliminar,
-                'bloque' => (string) ($this->bloque ?? ''),
+                'txt_eliminar' => is_string($this->txt_eliminar) ? $this->txt_eliminar : '',
+                'bloque' => is_string($this->bloque) ? $this->bloque : '',
                 'url_form_relative' => DossierTipoPublicUrls::relativeFormController(self::ID_TIPO_DOSSIER),
                 'url_eliminar_path' => 'src/asistentes/asistente_eliminar',
             ],

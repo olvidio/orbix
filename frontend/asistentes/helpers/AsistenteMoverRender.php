@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\asistentes\helpers;
 
+use function frontend\shared\helpers\payload_string;
+
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
@@ -21,17 +23,17 @@ final class AsistenteMoverRender
     {
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $guardarRel = (string)($paths['guardar'] ?? '');
+        $guardarRel = payload_string($paths, 'guardar');
         $payload['url_guardar'] = $guardarRel !== '' ? $base . '/' . ltrim($guardarRel, '/') : '';
 
         $hm = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         if ($hm !== []) {
             $oHash = new HashFront();
-            $cn = (string)($hm['campos_no'] ?? '');
+            $cn = payload_string($hm, 'campos_no');
             if ($cn !== '') {
                 $oHash->setCamposNo($cn);
             }
-            $oHash->setCamposForm((string)($hm['campos_form'] ?? ''));
+            $oHash->setCamposForm(payload_string($hm, 'campos_form'));
             $hidden = $hm['campos_hidden'] ?? [];
             $oHash->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
             $payload['hash_campos_html'] = $oHash->getCamposHtml();

@@ -90,9 +90,11 @@ class AsistenteApplicationService
      */
     private function resolverRepositorioDestino(Asistente $asistente): AsistenteRepositoryInterface
     {
+        /** @var AsistenteActividadService $actividadService */
         $actividadService = $this->container->get(AsistenteActividadService::class);
         $claseRepo = $actividadService->getRepoAsistente($asistente->getId_nom(), $asistente->getId_activ());
 
+        /** @var AsistenteRepositoryInterface $repository */
         return $this->container->get($claseRepo);
     }
 

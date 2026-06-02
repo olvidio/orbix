@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\value_objects\NivelStgrId;
@@ -39,12 +42,12 @@ final class ListaEstCtrData
     {
         $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
 
-        $Qn_agd = (string)($input['n_agd'] ?? '');
-        $Qid_ubi = (int)($input['id_ubi'] ?? 0);
-        $Qperiodo = (string)($input['periodo'] ?? '');
-        $Qyear = (string)($input['year'] ?? '');
-        $Qempiezamax = (string)($input['empiezamax'] ?? '');
-        $Qempiezamin = (string)($input['empiezamin'] ?? '');
+        $Qn_agd = input_string($input, 'n_agd');
+        $Qid_ubi = input_int($input, 'id_ubi', 0);
+        $Qperiodo = input_string($input, 'periodo');
+        $Qyear = input_string($input, 'year');
+        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qempiezamin = input_string($input, 'empiezamin');
 
         $oPeriodo = Periodo::conCalendarioDesdeBackend();
         $oPeriodo->setDefaultAny('next');
@@ -136,6 +139,9 @@ final class ListaEstCtrData
                     $a++;
                     $id_activ = $oAsistente->getId_activ();
                     $oActividad = $this->actividadAllRepository->findById($id_activ);
+                    if ($oActividad === null) {
+                        continue;
+                    }
                     $nom_activ = $oActividad->getNom_activ();
 
                     $oF_ini = $oActividad->getF_ini();
@@ -166,10 +172,14 @@ final class ListaEstCtrData
                                     if (is_true($preceptor)) {
                                         if (!empty($id_preceptor)) {
                                             $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
+                                            if ($oPersona === null) {
+                                                $preceptor = '(p)';
+                                            } else {
                                             $aWherePreceptor = ['id_activ' => $id_activ, 'id_nom' => $id_nom];
                                             $cAsistentesP = $this->asistenteRepository->getAsistentes($aWherePreceptor);
                                             $p = count($cAsistentesP) > 0 ? '*' : '';
                                             $preceptor = '(p: ' . $oPersona->getPrefApellidosNombre() . ')' . $p;
+                                            }
                                         } else {
                                             $preceptor = '(p)';
                                         }

@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use DateInterval;
 use frontend\shared\web\Lista;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -10,6 +13,7 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
@@ -34,9 +38,9 @@ final class ListaUltimaActivData
      */
     public function build(array $input): array
     {
-        $Qque = (string)($input['que'] ?? '');
-        $Qcurso = (string)($input['curso'] ?? '');
-        $Qid_ubi = (string)($input['id_ubi'] ?? '');
+        $Qque = input_string($input, 'que');
+        $Qcurso = input_string($input, 'curso');
+        $Qid_ubi = input_string($input, 'id_ubi');
 
         $any = (int)date('Y');
 
@@ -44,7 +48,7 @@ final class ListaUltimaActivData
         $aOperadorP = [];
         if (!empty($Qid_ubi) && ($Qid_ubi != '999')) {
             $oCentroDl = $this->centroDlRepository->findById((int)$Qid_ubi);
-            $nombre_ubi = $oCentroDl->getNombre_ubi();
+            $nombre_ubi = $oCentroDl !== null ? $oCentroDl->getNombre_ubi() : '';
             $aWhereP['id_ctr'] = $Qid_ubi;
             $aWhereP['_ordre'] = 'apellido1, apellido2, nom';
         } else {
@@ -54,18 +58,21 @@ final class ListaUltimaActivData
         $aWhereA = [];
         $aOperadorA = [];
 
+        /** @var ConfigSnapshot $oConfig */
+        $oConfig = $_SESSION['oConfig'];
+
         if (strstr($Qque, 'crt')) {
-            $mes_ini = $_SESSION['oConfig']->getMesIniCrt();
-            $dia_ini = $_SESSION['oConfig']->getDiaIniCrt();
-            $mes_fin = $_SESSION['oConfig']->getMesFinCrt();
-            $dia_fin = $_SESSION['oConfig']->getDiaFinCrt();
-            $any = $_SESSION['oConfig']->any_final_curs('crt');
+            $mes_ini = $oConfig->getMesIniCrt();
+            $dia_ini = $oConfig->getDiaIniCrt();
+            $mes_fin = $oConfig->getMesFinCrt();
+            $dia_fin = $oConfig->getDiaFinCrt();
+            $any = $oConfig->any_final_curs('crt');
         } else {
-            $mes_ini = $_SESSION['oConfig']->getMesIniStgr();
-            $dia_ini = $_SESSION['oConfig']->getDiaIniStgr();
-            $mes_fin = $_SESSION['oConfig']->getMesFinStgr();
-            $dia_fin = $_SESSION['oConfig']->getDiaFinStgr();
-            $any = $_SESSION['oConfig']->any_final_curs('est');
+            $mes_ini = $oConfig->getMesIniStgr();
+            $dia_ini = $oConfig->getDiaIniStgr();
+            $mes_fin = $oConfig->getMesFinStgr();
+            $dia_fin = $oConfig->getDiaFinStgr();
+            $any = $oConfig->any_final_curs('est');
         }
         switch ($Qcurso) {
             case 'anterior':
@@ -134,8 +141,8 @@ final class ListaUltimaActivData
                 $aWhereA['id_tipo_activ'] = '1431';
                 $titulo_actividad = sprintf(_('s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión del año- que todavía no han asistido a cv de ad'));
                 $anyCv = (int)date('Y');
-                $fin_d = $_SESSION['oConfig']->getDiaFinCrt();
-                $fin_m = $_SESSION['oConfig']->getMesFinCrt();
+                $fin_d = $oConfig->getDiaFinCrt();
+                $fin_m = $oConfig->getMesFinCrt();
                 $f_iso_final = "$anyCv-$fin_m-$fin_d";
 
                 $aWhereUltima = ['id_tipo_activ' => '1431',
@@ -146,8 +153,10 @@ final class ListaUltimaActivData
                 $aOperadorUltima = ['f_ini' => '<'];
                 $cActividades = $this->actividadDlRepository->getActividades($aWhereUltima, $aOperadorUltima);
                 if (is_array($cActividades) && !empty($cActividades)) {
+                    /** @var \src\actividades\domain\entity\ActividadAll $oActividadU */
                     $oActividadU = $cActividades[0];
-                    $oFini = $oActividadU->getF_fin();
+                    $oFiniAct = $oActividadU->getF_fin();
+                    $oFini = $oFiniAct instanceof DateTimeLocal ? $oFiniAct : new DateTimeLocal();
                     $nom_activ = $oActividadU->getNom_activ();
                 } else {
                     $oFini = new DateTimeLocal();
@@ -194,7 +203,9 @@ final class ListaUltimaActivData
                 $id_ctr = $oPersona->getId_ctr();
                 $cCentros = $this->centroDlRepository->getCentros(['id_ubi' => $id_ctr]);
                 if (is_array($cCentros) && !empty($cCentros)) {
-                    $nombre_ubi = $cCentros[0]->getNombre_ubi();
+                    /** @var \src\ubis\domain\entity\CentroDl $oCentro */
+                    $oCentro = $cCentros[0];
+                    $nombre_ubi = $oCentro->getNombre_ubi();
                 }
             }
 
@@ -204,8 +215,18 @@ final class ListaUltimaActivData
                 $oAsistente = current($cAsistentes);
                 $id_activ = $oAsistente->getId_activ();
                 $oActividad = $this->actividadAllRepository->findById($id_activ);
+                if ($oActividad === null) {
+                    $msg = _('No hay datos');
+                    $f_ini = _('No consta');
+                    $a_valores[$i]['clase'] = 'tono2';
+                } else {
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
                 $oFini = $oActividad->getF_ini();
+                if (!$oFini instanceof DateTimeLocal) {
+                    $msg = _('No hay datos');
+                    $f_ini = _('No consta');
+                    $a_valores[$i]['clase'] = 'tono2';
+                } else {
                 $f_ini_iso = $oFini->getIso();
 
                 if ($f_ini_iso >= $QempiezaminIso && $f_ini_iso <= $QfinIso) {
@@ -218,6 +239,8 @@ final class ListaUltimaActivData
                 $sasistentes = $oTipoActividad->getAsistentesText();
                 $snom_tipo = $oTipoActividad->getNom_tipoText();
                 $msg = "$sactividad  $sasistentes  $snom_tipo";
+                }
+                }
             } else {
                 $msg = _('No hay datos');
                 $f_ini = _('No consta');

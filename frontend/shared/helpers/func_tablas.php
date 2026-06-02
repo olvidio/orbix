@@ -166,3 +166,22 @@ function curso_est($que, $any, $tipo = 'est', ?array $calendario = null)
     }
 
 }
+
+/**
+ * @param array<string, mixed> $payload
+ */
+function payload_string(array $payload, string $key, string $default = ''): string
+{
+    if (!array_key_exists($key, $payload)) {
+        return $default;
+    }
+    $value = $payload[$key];
+    if (is_string($value)) {
+        return $value;
+    }
+    if (is_int($value) || is_float($value) || is_bool($value)) {
+        return (string)$value;
+    }
+
+    return $default;
+}

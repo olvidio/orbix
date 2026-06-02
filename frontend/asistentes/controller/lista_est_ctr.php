@@ -1,9 +1,11 @@
 <?php
 
 use frontend\shared\PostRequest;
+use function frontend\shared\helpers\payload_string;
 
 require_once 'frontend/shared/global_header_front.inc';
 
+/** @var \frontend\shared\web\Posicion $oPosicion */
 $oPosicion->recordar();
 
 $Qn_agd = (string)filter_input(INPUT_POST, 'n_agd');
@@ -27,4 +29,4 @@ $data = PostRequest::getDataFromUrl('/src/asistentes/lista_est_ctr_data', $campo
 $payload = is_array($data) ? $data : [];
 
 echo $oPosicion->mostrar_left_slide(1);
-echo (string)($payload['lista_html'] ?? '');
+echo payload_string($payload, 'lista_html');

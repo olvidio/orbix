@@ -174,6 +174,9 @@ class ListaPlazasConjuntoActividades
                         $num_orden = $oCentroEncargado->getNum_orden();
                         $id_ubi = $oCentroEncargado->getId_ubi();
                         $Centro = Ubi::NewUbi($id_ubi);
+                        if ($Centro === null) {
+                            continue;
+                        }
                         $ctr = $Centro->getNombre_ubi();
                         if ($c > 1) $txt_ctr .= '; ';
                         $txt_ctr .= $ctr;

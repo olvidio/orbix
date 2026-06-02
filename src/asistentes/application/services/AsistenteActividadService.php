@@ -57,7 +57,7 @@ class AsistenteActividadService
      * @param array $aWhereActividad asociativo con los valores de las variables para la actividad
      * @param array $aOperadorActividad asociativo con los operadores para cada variable de la actividad
      * @param bool $reverse TRUE para ordenar de nuevo a viejo
-     * @return array Una colección de objetos de tipo Asistente
+     * @return list<\src\asistentes\domain\entity\Asistente>
      */
     public function getActividadesDeAsistente(
         array $aWhereNom,
@@ -92,7 +92,7 @@ class AsistenteActividadService
      * @param int $id_nom ID de la persona
      * @param array $a_id_activ_f_ini Array de actividades con fecha de inicio
      * @param bool $reverse TRUE para ordenar de nuevo a viejo
-     * @return array Una colección de objetos de tipo Asistente
+     * @return list<\src\asistentes\domain\entity\Asistente>
      */
     public function getAsistenciasPersonaDeActividades(int $id_nom, array $a_id_activ_f_ini, bool $reverse = false): array
     {
@@ -164,8 +164,11 @@ class AsistenteActividadService
 
         /* Mirar si la actividad es mia o no */
         $oActividad = $this->actividadAllRepository->findById($iid_activ);
+        if ($oActividad === null) {
+            return 0;
+        }
         $dl_org = $oActividad->getDl_org();
-        $id_tabla = $oActividad->getIdTablaVo()->value();
+        $id_tabla = $oActividad->getIdTablaVo()?->value() ?? '';
 
         $aWhere['id_activ'] = $iid_activ;
         $aOperators = [];
@@ -218,23 +221,25 @@ class AsistenteActividadService
             if ($oPersona === null) {
                 $msg_err .= "<br>No encuentro a nadie con id_nom $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 $msg_err .= "<br>" . _("borro la asistencia");
-                $id_tabla = $oAsistente->getIdTablaVo()->value();
-                switch ($id_tabla) {
-                    case 'dl':
-                        $repo = $this->container->get(AsistenteDlRepositoryInterface::class);
-                        break;
-                    case 'ex':
-                        $repo = $this->container->get(AsistenteExRepositoryInterface::class);
-                        break;
-                    case 'out':
-                        $repo = $this->container->get(AsistenteOutRepositoryInterface::class);
-                        break;
+                $id_tabla = $oAsistente->getIdTablaVo()?->value() ?? '';
+                if ($id_tabla === 'dl') {
+                    /** @var AsistenteDlRepositoryInterface $repo */
+                    $repo = $this->container->get(AsistenteDlRepositoryInterface::class);
+                    $repo->Eliminar($oAsistente);
+                } elseif ($id_tabla === 'ex') {
+                    /** @var AsistenteExRepositoryInterface $repo */
+                    $repo = $this->container->get(AsistenteExRepositoryInterface::class);
+                    $repo->Eliminar($oAsistente);
+                } elseif ($id_tabla === 'out') {
+                    /** @var AsistenteOutRepositoryInterface $repo */
+                    $repo = $this->container->get(AsistenteOutRepositoryInterface::class);
+                    $repo->Eliminar($oAsistente);
                 }
-                $repo->Eliminar($oAsistente);
                 continue;
             }
 
-            $plaza = empty($oAsistente->getPlazaVo()->value()) ? PlazaId::PEDIDA : $oAsistente->getPlazaVo()->value();
+            $plazaVo = $oAsistente->getPlazaVo()?->value();
+            $plaza = empty($plazaVo) ? PlazaId::PEDIDA : $plazaVo;
             // Sólo cuento las asignadas
             if ($plaza < PlazaId::ASIGNADA) continue;
 
@@ -258,7 +263,10 @@ class AsistenteActividadService
     {
         /* Mirar si la actividad es mia o no */
         $oActividad = $this->actividadAllRepository->findById($iid_activ);
-        $id_tabla = $oActividad->getIdTablaVo()->value();
+        if ($oActividad === null) {
+            return [];
+        }
+        $id_tabla = $oActividad->getIdTablaVo()?->value() ?? '';
         // Si es de la sf quito la 'f'
         $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 
@@ -313,6 +321,7 @@ class AsistenteActividadService
 
     public function buscarAsistencia($id_nom, $id_activ)
     {
+        /** @var AsistenteRepositoryInterface $AsistenteRepository */
         $AsistenteRepository = $this->container->get(AsistenteRepositoryInterface::class);
         $cAsistentes = $AsistenteRepository->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
         if (is_array($cAsistentes) && !empty($cAsistentes)) {
@@ -343,11 +352,14 @@ class AsistenteActividadService
             $msg_err = "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             exit($msg_err);
         }
-        $dl_persona = $oPersona->getDlVo()->value();
+        $dl_persona = $oPersona->getDlVo()?->value() ?? '';
         $clasePersona = $oPersona->getClassName();
         // hay que averiguar si la actividad es de la dl o de fuera.
         $ActividadAllRepository = $this->actividadAllRepository;
         $oActividad = $ActividadAllRepository->findById($id_activ);
+        if ($oActividad === null) {
+            exit(sprintf(_('No se ha encontrado la actividad con id: %s'), $id_activ));
+        }
         // si es de la sf quito la 'f'
         $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
         $claseActividad = $oActividad->getClassName();

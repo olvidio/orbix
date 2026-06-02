@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use function src\shared\domain\helpers\strtoupper_dlb;
@@ -26,15 +29,15 @@ final class QueCtrListaData
     {
         require_once dirname(__DIR__, 2) . '/shared/domain/helpers/func_tablas.php';
 
-        $tipo = (string)($input['tipo'] ?? '');
-        $ssfsv = (string)($input['ssfsv'] ?? '');
-        $Qlista = (string)($input['lista'] ?? '');
-        $Qsasistentes = (string)($input['sasistentes'] ?? '');
-        $Qsactividad = (string)($input['sactividad'] ?? '');
-        $Qn_agd = (string)($input['n_agd'] ?? '');
-        $Qid_ubi = (int)($input['id_ubi'] ?? 0);
-        $Qyear = (int)($input['year'] ?? 0);
-        $Qperiodo = (string)($input['periodo'] ?? '');
+        $tipo = input_string($input, 'tipo');
+        $ssfsv = input_string($input, 'ssfsv');
+        $Qlista = input_string($input, 'lista');
+        $Qsasistentes = input_string($input, 'sasistentes');
+        $Qsactividad = input_string($input, 'sactividad');
+        $Qn_agd = input_string($input, 'n_agd');
+        $Qid_ubi = input_int($input, 'id_ubi', 0);
+        $Qyear = input_int($input, 'year', 0);
+        $Qperiodo = input_string($input, 'periodo');
 
         $tituloGros = '';
         $titulo = '';

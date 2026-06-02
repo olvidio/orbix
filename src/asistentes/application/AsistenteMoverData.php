@@ -14,6 +14,8 @@ use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
@@ -53,8 +55,18 @@ final class AsistenteMoverData
         $Qid_nom = (int)($input['id_pau'] ?? $Qid_nom);
 
         $AsistenteRepositoryInterface = $this->asistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ_old);
+        /** @var AsistenteRepositoryInterface $AsistenteRepository */
         $AsistenteRepository = $this->container->get($AsistenteRepositoryInterface);
         $oAsistente = $AsistenteRepository->findById($Qid_activ_old, $Qid_nom);
+        if ($oAsistente === null) {
+            return [
+                'aviso_txt' => sprintf(_('no se encuentra el asistente (id_nom: %s, id_activ: %s)'), $Qid_nom, $Qid_activ_old),
+                'observ' => '',
+                'paths' => [
+                    'guardar' => 'src/asistentes/asistente_guardar',
+                ],
+            ];
+        }
 
         if ($oAsistente->perm_modificar() === false) {
             return [
@@ -83,6 +95,7 @@ final class AsistenteMoverData
             $mod = 'mover';
 
             $oActividad = $this->actividadAllRepository->findById($Qid_activ_old);
+            if ($oActividad !== null) {
             $id_tipo = $oActividad->getId_tipo_activ();
 
             $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
@@ -91,17 +104,19 @@ final class AsistenteMoverData
             $oTipoActiv = new TiposActividades($id_tipo);
             $sactividad = $oTipoActiv->getActividadText();
 
+            /** @var ConfigSnapshot $oConfig */
+            $oConfig = $_SESSION['oConfig'];
             $oInicurs = null;
             $oFincurs = null;
             switch ($sactividad) {
                 case 'ca':
                 case 'cv':
-                    $any = $_SESSION['oConfig']->any_final_curs('est');
+                    $any = $oConfig->any_final_curs('est');
                     $oInicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'est');
                     $oFincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'est');
                     break;
                 case 'crt':
-                    $any = $_SESSION['oConfig']->any_final_curs('crt');
+                    $any = $oConfig->any_final_curs('crt');
                     $oInicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt');
                     $oFincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt');
                     break;
@@ -126,6 +141,9 @@ final class AsistenteMoverData
                 foreach ($cPlazasPeticion as $oPlazaPeticion) {
                     $id_activ_pref = $oPlazaPeticion->getId_activ();
                     $oActividadPref = $this->actividadAllRepository->findById($id_activ_pref);
+                    if ($oActividadPref === null) {
+                        continue;
+                    }
                     if ($oActividadPref->getStatus() !== StatusId::ACTUAL) {
                         continue;
                     }
@@ -137,6 +155,7 @@ final class AsistenteMoverData
                 if (!empty($cActividadesPreferidas)) {
                     $cActividades = array_merge($cActividadesPreferidas, ['--------'], $cActividades);
                 }
+            }
             }
         }
 

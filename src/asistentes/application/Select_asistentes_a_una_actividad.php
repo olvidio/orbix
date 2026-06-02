@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use Psr\Container\ContainerInterface;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use src\dossiers\application\PermDossier;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
@@ -32,6 +35,14 @@ use function src\shared\domain\helpers\is_true;
 class Select_asistentes_a_una_actividad
 {
     private const ID_TIPO_DOSSIER = 3101;
+
+    private function getContainer(): ContainerInterface
+    {
+        /** @var ContainerInterface $container */
+        $container = $GLOBALS['container'];
+
+        return $container;
+    }
 
     private $a_ref_perm;
     private $msg_err;
@@ -118,8 +129,14 @@ class Select_asistentes_a_una_actividad
 
     private function getDatosActividad(): void
     {
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        /** @var ActividadAllRepositoryInterface $ActividadAllRepository */
+        $ActividadAllRepository = $this->getContainer()->get(ActividadAllRepositoryInterface::class);
         $oActividad = $ActividadAllRepository->findById($this->id_pau);
+        if ($oActividad === null) {
+            $this->msg_err = sprintf(_('No se ha encontrado la actividad con id: %s'), $this->id_pau);
+
+            return;
+        }
         $this->id_tipo_activ = $oActividad->getId_tipo_activ();
         $this->dl_org = $oActividad->getDl_org();
         $this->plazas_totales = $oActividad->getPlazas();
@@ -153,7 +170,8 @@ class Select_asistentes_a_una_actividad
 
     private function contarPlazas(): void
     {
-        $gesActividadPlazasR = $GLOBALS['container']->get(ResumenPlazasService::class);
+        /** @var ResumenPlazasService $gesActividadPlazasR */
+        $gesActividadPlazasR = $this->getContainer()->get(ResumenPlazasService::class);
         $gesActividadPlazasR->setId_activ($this->id_pau);
         $this->a_plazas_conseguidas = [];
         $this->a_plazas_resumen = $gesActividadPlazasR->getResumen();
@@ -161,23 +179,35 @@ class Select_asistentes_a_una_actividad
 
     public function getCargos(): void
     {
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        /** @var ActividadAllRepositoryInterface $ActividadAllRepository */
+        $ActividadAllRepository = $this->getContainer()->get(ActividadAllRepositoryInterface::class);
         $oActividad = $ActividadAllRepository->findById($this->id_pau);
+        if ($oActividad === null) {
+            $this->msg_err = sprintf(_('No se ha encontrado la actividad con id: %s'), $this->id_pau);
+
+            return;
+        }
         $dl_org = $oActividad->getDl_org();
         $dl_propia = (ConfigGlobal::mi_delef() === $dl_org);
         $oPermDossier = new PermDossier();
         $this->a_ref_perm = $oPermDossier->perm_pers_activ($this->id_tipo_activ,$dl_propia);
 
-        $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
+        /** @var AsistenteRepositoryInterface $AsistenteRepository */
+        $AsistenteRepository = $this->getContainer()->get(AsistenteRepositoryInterface::class);
         $c = 0;
         $num = 0;
         $a_valores = [];
         $this->aListaCargos = [];
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+        /** @var ActividadCargoRepositoryInterface $ActividadCargoRepository */
+        $ActividadCargoRepository = $this->getContainer()->get(ActividadCargoRepositoryInterface::class);
         $cCargosEnActividad = $ActividadCargoRepository->getActividadCargos(['id_activ' => $this->id_pau]);
         $mi_sfsv = ConfigGlobal::mi_sfsv();
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $PersonaFinderService = $GLOBALS['container']->get(PersonaFinderService::class);
+        /** @var CargoRepositoryInterface $CargoRepository */
+        $CargoRepository = $this->getContainer()->get(CargoRepositoryInterface::class);
+        /** @var PersonaFinderService $PersonaFinderService */
+        $PersonaFinderService = $this->getContainer()->get(PersonaFinderService::class);
+        /** @var XPermisos $oPerm */
+        $oPerm = $_SESSION['oPerm'];
         foreach ($cCargosEnActividad as $oActividadCargo) {
             $c++;
             $num++;
@@ -187,6 +217,9 @@ class Select_asistentes_a_una_actividad
             $this->aListaCargos[] = $id_nom;
             $id_cargo = $oActividadCargo->getId_cargo();
             $oCargo = $CargoRepository->findById($id_cargo);
+            if ($oCargo === null) {
+                continue;
+            }
             $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
             $cargo = $oCargo->getCargoVo()->value();
             if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
@@ -212,7 +245,8 @@ class Select_asistentes_a_una_actividad
             $nombre = $oPersona->getNom();
             $apellidos = $oPersona->getApellidos();
             $sacd = ($oPersona->isSacd()) ? _("sí") : '';
-            $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
+            /** @var TelecoPersonaService $telecoService */
+            $telecoService = $this->getContainer()->get(TelecoPersonaService::class);
             $telfs = '';
             $telfs_fijo = $telecoService->getTelecosPorTipo($id_nom, "telf", " / ", "*", false);
             $telfs_movil = $telecoService->getTelecosPorTipo($id_nom, "móvil", " / ", "*", false);
@@ -294,7 +328,7 @@ class Select_asistentes_a_una_actividad
 
                 $oTipoActiv = new TiposActividades($this->id_tipo_activ);
                 $sasistentes = $oTipoActiv->getAsistentesText();
-                if ((($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd')))
+                if (($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
                     && ($sasistentes === 's' || $sasistentes === 'sg')) {
                     $eliminar = 2;
                 } else {
@@ -331,10 +365,12 @@ class Select_asistentes_a_una_actividad
 
     public function getAsistentes(): void
     {
-        $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
+        /** @var AsistenteRepositoryInterface $AsistenteRepository */
+        $AsistenteRepository = $this->getContainer()->get(AsistenteRepositoryInterface::class);
         $this->a_asistentes = [];
         $cAsistentes = $AsistenteRepository->getAsistentes(['id_activ' => $this->id_pau]);
-        $PersonaFinderService = $GLOBALS['container']->get(PersonaFinderService::class);
+        /** @var PersonaFinderService $PersonaFinderService */
+        $PersonaFinderService = $this->getContainer()->get(PersonaFinderService::class);
         foreach ($cAsistentes as $oAsistente) {
             $this->num++;
             $id_nom = $oAsistente->getId_nom();
@@ -364,7 +400,8 @@ class Select_asistentes_a_una_actividad
             $sacd = ($oPersona->isSacd()) ? _("sí") : '';
             $dl_asistente = $oPersona->getDl();
             $ctr_dl = $oPersona->getCentro_o_dl();
-            $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
+            /** @var TelecoPersonaService $telecoService */
+            $telecoService = $this->getContainer()->get(TelecoPersonaService::class);
             $telfs = '';
             $telfs_fijo = $telecoService->getTelecosPorTipo($id_nom, "telf", " / ", "*", false);
             $telfs_movil = $telecoService->getTelecosPorTipo($id_nom, "móvil", " / ", "*", false);

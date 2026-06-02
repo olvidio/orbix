@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
@@ -33,9 +36,9 @@ final class ActivPendientesSelectData
      */
     public function build(array $input): array
     {
-        $Qany = (int)($input['any'] ?? 0);
-        $Qtipo_personas = (string)($input['tipo_personas'] ?? '');
-        $Qsactividad = (string)($input['sactividad'] ?? '');
+        $Qany = input_int($input, 'any', 0);
+        $Qtipo_personas = input_string($input, 'tipo_personas');
+        $Qsactividad = input_string($input, 'sactividad');
 
         if (empty($Qany)) {
             $any = (int)date('Y');
@@ -242,7 +245,7 @@ final class ActivPendientesSelectData
             $nivel_stgr = $aDatos['nivel_stgr'];
 
             $oCentroDl = $this->centroDlRepository->findById($id_ubi);
-            $nombre_ubi = $oCentroDl->getNombre_ubi();
+            $nombre_ubi = $oCentroDl !== null ? $oCentroDl->getNombre_ubi() : '?';
 
             $aQuery = ['obj_pau' => $obj_pau, 'id_nom' => $id_nom];
             $a_valores_2[$i][1] = $i;

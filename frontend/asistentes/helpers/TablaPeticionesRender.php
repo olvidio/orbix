@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\asistentes\helpers;
 
+use function frontend\shared\helpers\payload_string;
+
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
@@ -20,7 +22,7 @@ final class TablaPeticionesRender
     public static function enrich(array $payload): array
     {
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $apiSaveUrl = rtrim(AppUrlConfig::getApiBaseUrl(), '/') . '/' . ltrim((string)($paths['asistente_guardar'] ?? ''), '/');
+        $apiSaveUrl = rtrim(AppUrlConfig::getApiBaseUrl(), '/') . '/' . ltrim(payload_string($paths, 'asistente_guardar'), '/');
 
         $resolveCell = static function ($col2) use ($apiSaveUrl): string {
             if (is_string($col2)) {
@@ -38,9 +40,9 @@ final class TablaPeticionesRender
                 if (!is_array($p)) {
                     continue;
                 }
-                $t = (string)($p['t'] ?? '');
+                $t = payload_string($p, 't');
                 if ($t === 'p') {
-                    $out .= (string)($p['s'] ?? '');
+                    $out .= payload_string($p, 's');
                 } elseif ($t === 'm') {
                     $h = $p['h'] ?? [];
                     if (!is_array($h)) {
@@ -50,7 +52,7 @@ final class TablaPeticionesRender
                     $oHash->setUrl($apiSaveUrl);
                     $oHash->setArrayCamposHidden($h);
                     $param = $oHash->getParamAjax();
-                    $s = (string)($p['s'] ?? '');
+                    $s = payload_string($p, 's');
                     $out .= '<span class="link" onClick="fnjs_cambiar_actividad(\'' . $param . '\')">'
                         . htmlspecialchars($s, ENT_QUOTES, 'UTF-8') . '</span>';
                 }

@@ -5,6 +5,7 @@ use frontend\shared\model\ViewNewPhtml;
 
 require_once 'frontend/shared/global_header_front.inc';
 
+/** @var \frontend\shared\web\Posicion $oPosicion */
 $oPosicion->recordar();
 
 $campos = array_merge($_GET, $_POST);
