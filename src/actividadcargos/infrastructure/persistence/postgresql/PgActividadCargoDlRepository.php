@@ -170,13 +170,13 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * @param array $aOperador para la asistencia (id_nom y plaza)
      * @param array $aWhereAct para la Actividad
      * @param array $aOperadorAct para la Actividad
-     * @return array|bool
+     * @return array
      */
-    public function getAsistenteCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array |bool
+    public function getAsistenteCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array
     {
 
         if (empty($aWhere['id_nom'])) {
-            return FALSE;
+            return [];
         }
         $id_nom = $aWhere['id_nom'];
 
@@ -236,13 +236,13 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * @param array $aOperador para la asistencia (id_nom y plaza)
      * @param array $aWhereAct para la Actividad
      * @param array $aOperadorAct para la Actividad
-     * @return array|bool
+     * @return array
      */
-    public function getCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array |bool
+    public function getCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array
     {
 
         if (empty($aWhere['id_nom'])) {
-            return FALSE;
+            return [];
         }
         $id_nom = $aWhere['id_nom'];
 
@@ -289,7 +289,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array Una colección de objetos de tipo ActividadCargo
      */
-    public function getActividadCargos(array $aWhere = [], array $aOperators = []): array |bool
+    public function getActividadCargos(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
