@@ -91,9 +91,9 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
                 continue;
             }
             $sacd = $PersonaSacd->getNombreApellidos();
-            $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
-            $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
-            $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
+            $nom = mb_substr($PersonaSacd->getNom() ?? '', 0, 1);
+            $ap1 = mb_substr($PersonaSacd->getApellido1() ?? '', 0, 1);
+            $ap2 = mb_substr($PersonaSacd->getApellido2() ?? '', 0, 1);
             $iniciales = strtoupper($nom . $ap1 . $ap2);
 
             $a_iniciales[$id_nom] = $iniciales;
@@ -115,9 +115,9 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
         foreach ($cPersonas as $oPersonaSacd) {
             $id_nom = $oPersonaSacd->getId_nom();
             $sacd = $oPersonaSacd->getNombreApellidos();
-            $nom = mb_substr($oPersonaSacd->getNom(), 0, 1);
-            $ap1 = mb_substr($oPersonaSacd->getApellido1(), 0, 1);
-            $ap2 = mb_substr($oPersonaSacd->getApellido2(), 0, 1);
+            $nom = mb_substr($oPersonaSacd->getNom() ?? '', 0, 1);
+            $ap1 = mb_substr($oPersonaSacd->getApellido1() ?? '', 0, 1);
+            $ap2 = mb_substr($oPersonaSacd->getApellido2() ?? '', 0, 1);
             $iniciales = strtoupper($nom . $ap1 . $ap2);
 
             $a_iniciales[$id_nom] = $iniciales;
@@ -138,9 +138,9 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
         foreach ($cPersonas as $oPersonaSacd) {
             $id_nom = $oPersonaSacd->getId_nom();
             $sacd = $oPersonaSacd->getNombreApellidos();
-            $nom = mb_substr($oPersonaSacd->getNom(), 0, 1);
-            $ap1 = mb_substr($oPersonaSacd->getApellido1(), 0, 1);
-            $ap2 = mb_substr($oPersonaSacd->getApellido2(), 0, 1);
+            $nom = mb_substr($oPersonaSacd->getNom() ?? '', 0, 1);
+            $ap1 = mb_substr($oPersonaSacd->getApellido1() ?? '', 0, 1);
+            $ap2 = mb_substr($oPersonaSacd->getApellido2() ?? '', 0, 1);
             $iniciales = strtoupper($nom . $ap1 . $ap2);
 
             $a_iniciales[$id_nom] = $iniciales;

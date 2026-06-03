@@ -29,13 +29,13 @@ final class TelecoTablaData
         $c = 0;
         foreach ($coleccion as $oFila) {
             $v = 0;
-            $pks1 = 'get' . ucfirst($oFila->getPrimary_key());
+            $pks1 = 'get' . ucfirst($oFila->getPrimary_key() ?? '');
             $val_pks = $oFila->$pks1();
             $pks = urlsafe_b64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
             $a_valores[$c]['sel'] = $pks;
             foreach ($oFila->getDatosCampos() as $oDatosCampo) {
                 if ($c === 0) {
-                    $a_cabeceras[] = ucfirst($oDatosCampo->getEtiqueta());
+                    $a_cabeceras[] = ucfirst($oDatosCampo->getEtiqueta() ?? '');
                 }
                 $v++;
                 $metodo = $oDatosCampo->getMetodoGet();

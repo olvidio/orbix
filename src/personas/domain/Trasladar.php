@@ -824,7 +824,7 @@ class Trasladar
                 continue; // no existe la actividad, no se puede copiar. Se pierde la asistencia, total no se sabe donde
             }
             // si es de la sf quito la 'f'
-            $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
+            $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');
             if ($dl_org === $this->sdl_dst) {
                 if ($AsistenteDlDstRepository->Guardar($oAsistenteOut, false) === false) {
                     $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(dl) a id_activ: %s"), $id_activ);

@@ -125,7 +125,7 @@ final class ConfigSnapshot
      */
     public function getCe(): array
     {
-        return explode(',', $this->getCe_lugar());
+        return explode(',', $this->getCe_lugar() ?? '');
     }
 
     public function getNomRegionLatin(): string

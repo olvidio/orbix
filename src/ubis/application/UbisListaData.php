@@ -83,7 +83,7 @@ class UbisListaData
             $i++;
             $id_ubi = $oUbi->getId_ubi();
             $nom_ubi = $oUbi->getNombre_ubi();
-            $tipo_ubi = substr($oUbi->getTipo_ubi(), 0, 3);
+            $tipo_ubi = substr($oUbi->getTipo_ubi() ?? '', 0, 3);
 
             $row = [
                 'sel' => $id_ubi,

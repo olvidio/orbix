@@ -37,13 +37,13 @@ final class ActividadVerDatos
             return NivelStgrId::N;
         }
         $oTipo = new TiposActividades($idTipoActiv, true);
-        if (str_contains($oTipo->getActividad2DigitosText(), 'est')) {
+        if (str_contains($oTipo->getActividad2DigitosText() ?? '', 'est')) {
             return NivelStgrId::C1;
         }
-        if (str_contains($oTipo->getActividad2DigitosText(), 'repaso')) {
+        if (str_contains($oTipo->getActividad2DigitosText() ?? '', 'repaso')) {
             return NivelStgrId::R;
         }
-        if (str_contains($oTipo->getActividad2DigitosText(), 'semestre')) {
+        if (str_contains($oTipo->getActividad2DigitosText() ?? '', 'semestre')) {
             return NivelStgrId::C1;
         }
 

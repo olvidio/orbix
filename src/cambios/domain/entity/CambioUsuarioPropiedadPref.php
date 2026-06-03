@@ -35,7 +35,7 @@ class CambioUsuarioPropiedadPref
         //$sText .= ' '.$this->getValor();
         switch ($this->getPropiedad()) {
             case 'id_ubi':
-                $aId_ubis = explode(',', $this->getValor());
+                $aId_ubis = explode(',', $this->getValor() ?? '');
                 $sValor = '';
                 $i = 0;
                 foreach ($aId_ubis as $id_ubi) {

@@ -45,7 +45,7 @@ final class UbiTelecoService
         $DescTelecoRepository = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
         $aTelefonos = [];
         foreach ($cTelecos as $oTelecoUbi) {
-            $num_teleco = trim($oTelecoUbi->getNumTelecoVo()->value());
+            $num_teleco = trim($oTelecoUbi->getNumTelecoVo()->value() ?? '');
             if ($num_teleco === '') {
                 continue;
             }

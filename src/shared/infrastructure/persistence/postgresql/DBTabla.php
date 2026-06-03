@@ -310,8 +310,8 @@ class DBTabla extends DBAbstract
 
     public function cambiar_nombre()
     {
-        $partesRef = explode('-', $this->getRef(), 2);
-        $partesNew = explode('-', $this->getNew(), 2);
+        $partesRef = explode('-', $this->getRef() ?? '', 2);
+        $partesNew = explode('-', $this->getNew() ?? '', 2);
         if (count($partesRef) < 2 || count($partesNew) < 2) {
             throw new \InvalidArgumentException(_('Esquema ref o destino con formato región-dl no válido.'));
         }

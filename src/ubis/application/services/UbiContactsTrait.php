@@ -181,7 +181,7 @@ trait UbiContactsTrait
             $DescTelecoRepository = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
             foreach ($cTelecos as $oTelecoUbi) {
                 $iDescTel = $oTelecoUbi->getId_desc_teleco();
-                $num_teleco = trim($oTelecoUbi->getNumTelecoVo()->value());
+                $num_teleco = trim($oTelecoUbi->getNumTelecoVo()->value() ?? '');
                 if ($desc_teleco === "*" && !empty($iDescTel)) {
                     $oDescTel = $DescTelecoRepository->findById((int)$iDescTel);
                     $desc = $oDescTel?->getDescTelecoVo()?->value() ?? '';

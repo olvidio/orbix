@@ -88,7 +88,7 @@ class DatosUpdateRepo
             $new_id = $oRepository->getNewId();
         }
 
-        $pks1 = 'set' . ucfirst($oFicha->getPrimary_key());
+        $pks1 = 'set' . ucfirst($oFicha->getPrimary_key() ?? '');
         $oFicha->$pks1($new_id);
 
         try {

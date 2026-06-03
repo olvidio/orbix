@@ -162,7 +162,7 @@ class Conversiones
                         }
                         break;
                     default:
-                        $a_tipos[$id_tipo_activ] = strtoupper($oTiposActividades->getAsistentesText());
+                        $a_tipos[$id_tipo_activ] = strtoupper($oTiposActividades->getAsistentesText() ?? '');
                 }
             }
             $this->a_tipos_asistentes = $a_tipos;

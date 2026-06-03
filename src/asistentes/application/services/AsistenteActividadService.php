@@ -268,7 +268,7 @@ class AsistenteActividadService
         }
         $id_tabla = $oActividad->getIdTablaVo()?->value() ?? '';
         // Si es de la sf quito la 'f'
-        $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
+        $dl = preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');
 
         $aWhere['id_activ'] = $iid_activ;
         $aOperators = [];
@@ -361,7 +361,7 @@ class AsistenteActividadService
             exit(sprintf(_('No se ha encontrado la actividad con id: %s'), $id_activ));
         }
         // si es de la sf quito la 'f'
-        $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
+        $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');
         $claseActividad = $oActividad->getClassName();
 
         $repo = null;

@@ -98,7 +98,7 @@ final class AsistenteMoverData
             if ($oActividad !== null) {
             $id_tipo = $oActividad->getId_tipo_activ();
 
-            $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
+            $dl = preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');
             $propietario = "$dl>$mi_dele";
 
             $oTipoActiv = new TiposActividades($id_tipo);

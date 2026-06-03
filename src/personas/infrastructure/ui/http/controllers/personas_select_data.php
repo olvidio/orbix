@@ -25,7 +25,7 @@ try {
             'aviso' => RegionStgrAviso::combinarAvisos(
                 RegionStgrAviso::formatear($problemas),
                 RegionStgrAviso::esMensajeSuave($e->getMessage()) && !RegionStgrAviso::esDlSinRegion($e)
-                    ? (str_contains($e->getMessage(), _('persona no válida')) ? RegionStgrAviso::mensajePersonaNoValida() : $e->getMessage())
+                    ? (str_contains($e->getMessage() ?? '', _('persona no válida')) ? RegionStgrAviso::mensajePersonaNoValida() : $e->getMessage())
                     : '',
             ),
         ];

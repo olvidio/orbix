@@ -33,14 +33,10 @@ class InicialesSacdService
                 return "no encuentro a nadie con id_nom: $id_nom";
             }
 
-            // iniciales
-            $nom = mb_substr($this->persona->getNom(), 0, 1);
-            $ap1 = mb_substr($this->persona->getApellido1(), 0, 1);
-            $a2 = $this->persona->getApellido2();
-            if ($a2 === null) {
-                $a2 = '';
-            }
-            $ap2 = mb_substr($a2, 0, 1);
+            // iniciales (campos pueden ser null en BD)
+            $nom = mb_substr($this->persona->getNom() ?? '', 0, 1);
+            $ap1 = mb_substr($this->persona->getApellido1() ?? '', 0, 1);
+            $ap2 = mb_substr($this->persona->getApellido2() ?? '', 0, 1);
             return strtoupper($nom . $ap1 . $ap2);
         }
 
