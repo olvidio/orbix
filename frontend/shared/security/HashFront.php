@@ -570,6 +570,9 @@ class HashFront
         $firstSep = str_contains((string)$url, '?') ? '&' : '?';
     }
     $query = $firstSep . 'hnov=1&h=' . $HashCamposForm;
+    if (!empty($this->sCamposNo)) {
+        $query .= '&hno=' . rawurlencode($this->sCamposNo);
+    }
     if (OrbixRuntime::isDebug()) {
         $query .= '&horig=' . rawurlencode($HashCamposFormOrig);
     }

@@ -7,7 +7,6 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\profesores\domain\ProfesorActividad;
 use src\profesores\domain\services\ProfesorAsignaturaService;
-use src\profesores\domain\services\ProfesorStgrService;
 
 /**
  * @return array{
@@ -60,11 +59,10 @@ final class FormAsignaturasDeUnaActividadData
             $profesorAsignaturaService = $GLOBALS['container']->get(ProfesorAsignaturaService::class);
             $aOpciones = $profesorAsignaturaService->getArrayTodosProfesoresAsignatura(new AsignaturaId($idAsignatura));
             $idProfesor = $oActividadAsignatura->getId_profesor();
-            $idProfesorSel = '';
-            if (!empty($idProfesor)) {
-                $profesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
-                $aOpciones = $profesorStgrService->getArrayProfesoresPub();
+            $idProfesorSel = -1;
+            if ($idProfesor !== null) {
                 $idProfesorSel = $idProfesor;
+                $aOpciones = ProfesoresDesplegableData::conProfesorAsignadoSiFalta($aOpciones, $idProfesor);
             }
 
             $aviso = $oActividadAsignatura->getAvis_profesor();

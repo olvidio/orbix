@@ -151,6 +151,27 @@ function strsinacentocmp($str1, $str2): int
 }
 
 /**
+ * Ordena filas de profesor por apellido1, apellido2 y nombre (sin acentos).
+ *
+ * @param list<array{ap1: string, ap2?: string, nom: string}> $filas
+ */
+function usort_profesores_por_apellidos(array &$filas): void
+{
+    usort($filas, static function (array $a, array $b): int {
+        $c = strsinacentocmp($a['ap1'], $b['ap1']);
+        if ($c !== 0) {
+            return $c;
+        }
+        $c = strsinacentocmp($a['ap2'] ?? '', $b['ap2'] ?? '');
+        if ($c !== 0) {
+            return $c;
+        }
+
+        return strsinacentocmp($a['nom'], $b['nom']);
+    });
+}
+
+/**
  * Función para corregir la del php strtoupper. No pone en mayúsculas las vocales acentuadas
  * 18-8-2022 corregido con la función mb_strtoupper. Ignoro porque no estaba así?¿
  *

@@ -16,13 +16,24 @@
                 var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
                 $sel.append($('<option></option>').val(vb).text(''));
             }
-            $.each(data.opciones || {}, function (value, label) {
+            var appendOption = function (value, label) {
                 var $opt = $('<option></option>').val(value).text(label);
                 if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
                     $opt.prop('selected', true);
                 }
                 $sel.append($opt);
-            });
+            };
+            var opciones = data.opciones || [];
+            if ($.isArray(opciones)) {
+                $.each(opciones, function (_, pair) {
+                    if (!pair || pair.length < 2) { return; }
+                    appendOption(pair[0], pair[1]);
+                });
+            } else {
+                $.each(opciones, function (value, label) {
+                    appendOption(value, label);
+                });
+            }
             return $sel.prop('outerHTML');
         } catch (e) {
             return '';
@@ -30,16 +41,20 @@
     }
     fnjs_mas_profes = function (filtro) {
         var url = '<?= $url_profesores ?>';
+        var sufijoProfesor = '';
+        <?php if ((int) ($id_profesor_sel ?? -1) !== -1) { ?>
+        sufijoProfesor = '&id_profesor=<?= (int) $id_profesor_sel ?>';
+        <?php } ?>
         switch (filtro) {
             case 'asignatura':
                 id_asignatura = $("#id_asignatura").val();
-                var parametros = 'salida=asignatura&id_asignatura=' + id_asignatura + '&id_activ=<?= $id_activ ?><?= $h2 ?>';
+                var parametros = 'salida=asignatura&id_asignatura=' + id_asignatura + '&id_activ=<?= (int) $id_activ ?><?= $h2 ?>' + sufijoProfesor;
                 break;
             case 'dl':
-                var parametros = 'salida=dl&id_activ=<?= $id_activ ?><?= $h1 ?>';
+                var parametros = 'salida=dl&id_activ=<?= (int) $id_activ ?><?= $h1 ?>' + sufijoProfesor;
                 break;
             case 'all':
-                var parametros = 'salida=todos<?= $h ?>';
+                var parametros = 'salida=todos<?= $h ?>' + sufijoProfesor;
                 break;
         }
         $.ajax({

@@ -34,6 +34,9 @@ if (!empty($a_sel)) {
 }
 
 $d = PostRequest::getDataFromUrl('/src/actividadestudios/form_asignaturas_de_una_actividad_data', $camposAsig);
+if (!empty($d['error'])) {
+    exit($d['error']);
+}
 
 $mod = $d['mod'] ?? 'nuevo';
 $Qid_activ = (int)($d['id_activ'] ?? 0);
@@ -68,6 +71,7 @@ $url_profesores = $web . '/src/actividadestudios/profesores_desplegable_data';
 
 $oHashTipo = new HashFront();
 $oHashTipo->setUrl($url_profesores);
+$oHashTipo->setCamposNo('id_profesor');
 $oHashTipo->setCamposForm('salida');
 $h = $oHashTipo->linkSinValParams();
 
@@ -99,6 +103,7 @@ $a_campos = [
     'chk_confirmado' => $chk_confirmado,
     'f_ini' => $f_ini,
     'f_fin' => $f_fin,
+    'id_profesor_sel' => $d['id_profesor_sel'] ?? -1,
     'locale_us' => OrbixRuntime::isLocaleUs(),
     'url_actividad_asignatura_nueva' => $url_actividad_asignatura_nueva,
     'url_actividad_asignatura_editar' => $url_actividad_asignatura_editar,

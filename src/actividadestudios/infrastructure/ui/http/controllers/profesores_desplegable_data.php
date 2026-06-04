@@ -8,4 +8,4 @@ use src\shared\web\ContestarJson;
  * Sucesor de `apps/actividadestudios/controller/lista_profesores_ajax.php`.
  */
 $data = ProfesoresDesplegableData::execute($_POST);
-ContestarJson::enviar('', 'ok', $data);
+ContestarJson::enviar('', $data);

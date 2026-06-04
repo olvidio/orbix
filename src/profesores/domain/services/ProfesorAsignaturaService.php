@@ -9,6 +9,8 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 
+use function src\shared\domain\helpers\usort_profesores_por_apellidos;
+
 class ProfesorAsignaturaService
 {
     public function __construct(
@@ -61,9 +63,6 @@ class ProfesorAsignaturaService
     {
         $gesProfesores = $this->profesorStgrRepository->getProfesoresStgr(array('id_departamento' => $id_departamento, 'f_cese' => ''), array('f_cese' => 'IS NULL'));
         $aProfesores = [];
-        $aAp1 = [];
-        $aAp2 = [];
-        $aNom = [];
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
             // Esto es un poco feo, PersonaDl es una entidad del modelo antiguo (fuera de src)
@@ -77,31 +76,21 @@ class ProfesorAsignaturaService
             if ($situacion !== 'A') {
                 continue;
             }
-            $ap_nom = $oPersonaDl->getPrefApellidosNombre();
-            $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom);
-            $aAp1[] = $oPersonaDl->getApellido1Vo()->value();
-            $aAp2[] = $oPersonaDl->getApellido2Vo()?->value();
-            $aNom[] = $oPersonaDl->getNomVo()->value();
+            $aProfesores[] = [
+                'id_nom' => $id_nom,
+                'ap_nom' => $oPersonaDl->getPrefApellidosNombre(),
+                'ap1' => $oPersonaDl->getApellido1Vo()->value(),
+                'ap2' => $oPersonaDl->getApellido2Vo()?->value() ?? '',
+                'nom' => $oPersonaDl->getNomVo()->value(),
+            ];
         }
-        $multisort_args = [];
-        $multisort_args[] = $aAp1;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aAp2;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aNom;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = &$aProfesores;   // finally add the source array, by reference
-        call_user_func_array("array_multisort", $multisort_args);
+        usort_profesores_por_apellidos($aProfesores);
 
         $aOpciones = [];
         foreach ($aProfesores as $aClave) {
-            $clave = $aClave['id_nom'];
-            $val = $aClave['ap_nom'];
-            $aOpciones[$clave] = $val;
+            $aOpciones[$aClave['id_nom']] = $aClave['ap_nom'];
         }
+
         return $aOpciones;
     }
 }

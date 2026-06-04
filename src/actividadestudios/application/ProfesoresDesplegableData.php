@@ -3,22 +3,15 @@
 namespace src\actividadestudios\application;
 
 use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\entity\Persona;
+use src\profesores\domain\ProfesorActividad;
 use src\profesores\domain\services\ProfesorAsignaturaService;
 use src\profesores\domain\services\ProfesorStgrService;
-use src\profesores\domain\ProfesorActividad;
 
 /**
  * Devuelve los datos (`id`, `opciones`, `selected`, `blanco`) para construir
  * un `<select>` de profesores en el form de `ActividadAsignatura`.
- *
- * Sustituye al legacy `apps/actividadestudios/controller/lista_profesores_ajax.php`
- * que devolvia HTML directamente. Ahora se devuelve JSON y el cliente
- * construye el desplegable con `fnjs_construir_desplegable`.
- *
- * `salida` controla el filtro:
- * - `asignatura` → profesores que imparten la asignatura (`id_asignatura`).
- * - `dl` → profesores y asistentes de la actividad (`id_activ`).
- * - `todos` → todos los profesores stgr (catalogo publico).
  */
 final class ProfesoresDesplegableData
 {
@@ -27,6 +20,7 @@ final class ProfesoresDesplegableData
         $salida = (string) ($input['salida'] ?? '');
         $id_asignatura = (int) ($input['id_asignatura'] ?? 0);
         $id_activ = (int) ($input['id_activ'] ?? 0);
+        $id_profesor = (int) ($input['id_profesor'] ?? 0);
 
         switch ($salida) {
             case 'asignatura':
@@ -45,12 +39,66 @@ final class ProfesoresDesplegableData
                 $aOpciones = [];
         }
 
+        if ($id_profesor !== 0) {
+            $aOpciones = self::conProfesorAsignadoSiFalta($aOpciones, $id_profesor);
+        }
+
         return [
             'id' => 'id_profesor',
-            'opciones' => $aOpciones,
+            // Lista [id, etiqueta]: en JSON un mapa se reordena por id en el navegador.
+            'opciones' => self::opcionesEnOrden($aOpciones),
             'blanco' => true,
             'val_blanco' => '',
-            'selected' => -1,
+            'selected' => $id_profesor !== 0 ? $id_profesor : -1,
         ];
+    }
+
+    /**
+     * @param array<int|string, string> $aOpciones
+     * @return list<array{0: int|string, 1: string}>
+     */
+    private static function opcionesEnOrden(array $aOpciones): array
+    {
+        $ordenadas = [];
+        foreach ($aOpciones as $id => $etiqueta) {
+            $ordenadas[] = [(string) $id, $etiqueta];
+        }
+
+        return $ordenadas;
+    }
+
+    /**
+     * @param array<int|string, string> $aOpciones
+     * @return array<int|string, string>
+     */
+    public static function conProfesorAsignadoSiFalta(array $aOpciones, int $idProfesor): array
+    {
+        if (array_key_exists($idProfesor, $aOpciones)) {
+            return $aOpciones;
+        }
+
+        $etiqueta = self::etiquetaProfesor($idProfesor);
+        if ($etiqueta === null) {
+            return $aOpciones;
+        }
+
+        if ($aOpciones === []) {
+            return [$idProfesor => $etiqueta];
+        }
+
+        return [$idProfesor => $etiqueta] + [0 => '----------'] + $aOpciones;
+    }
+
+    private static function etiquetaProfesor(int $idProfesor): ?string
+    {
+        $personaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $oPersonaDl = $personaDlRepository->findById($idProfesor);
+        if ($oPersonaDl !== null) {
+            return $oPersonaDl->getPrefApellidosNombre();
+        }
+
+        $oPersona = Persona::findPersonaEnGlobal($idProfesor);
+
+        return $oPersona?->getPrefApellidosNombre();
     }
 }

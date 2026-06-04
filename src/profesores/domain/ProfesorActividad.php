@@ -8,6 +8,7 @@ use src\personas\domain\entity\Persona;
 use src\profesores\domain\services\ProfesorStgrService;
 use frontend\shared\web\Desplegable;
 use function src\shared\domain\helpers\is_true;
+use function src\shared\domain\helpers\usort_profesores_por_apellidos;
 
 /**
  * GestorProfesor
@@ -46,9 +47,6 @@ class ProfesorActividad
         // asistentes de paso que son profesores
         $AsistentesPubRepository = $GLOBALS['container']->get(AsistentePubRepositoryInterface::class);
         $aProfesoresEx = [];
-        $aAp1 = [];
-        $aAp2 = [];
-        $aNom = [];
         $msg_err = '';
         foreach ($AsistentesPubRepository->getListaAsistentesDistintos($aId_activ) as $id_nom) {
             $oPersona = Persona::findPersonaEnGlobal($id_nom);
@@ -70,29 +68,19 @@ class ProfesorActividad
             $ap_nom = $oPersona->getPrefApellidosNombre();
             //$ctr_dl=$oPersona->getCentro_o_dl();
 
-            $aProfesoresEx[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom);
-            $aAp1[] = $oPersona->getApellido1Vo()->value();
-            $aAp2[] = $oPersona->getApellido2Vo()?->value();
-            $aNom[] = $oPersona->getNomVo()->value();
+            $aProfesoresEx[] = [
+                'id_nom' => $id_nom,
+                'ap_nom' => $ap_nom,
+                'ap1' => $oPersona->getApellido1Vo()->value(),
+                'ap2' => $oPersona->getApellido2Vo()?->value() ?? '',
+                'nom' => $oPersona->getNomVo()->value(),
+            ];
         }
-        $multisort_args = [];
-        $multisort_args[] = $aAp1;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aAp2;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aNom;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = &$aProfesoresEx;   // finally add the source array, by reference
-        call_user_func_array("array_multisort", $multisort_args);
+        usort_profesores_por_apellidos($aProfesoresEx);
 
         $aOpciones = [];
         foreach ($aProfesoresEx as $aClave) {
-            $clave = $aClave['id_nom'];
-            $val = $aClave['ap_nom'];
-            $aOpciones[$clave] = $val;
+            $aOpciones[$aClave['id_nom']] = $aClave['ap_nom'];
         }
 
         $AllOpciones = $aOpciones + array("----------") + $aProfesoresDl;
