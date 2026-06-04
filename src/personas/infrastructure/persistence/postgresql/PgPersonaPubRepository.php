@@ -54,7 +54,11 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             return $aDatos;
         }
         $dl = $aDatos['dl'] ?? '';
-        if ($dl === '' || $dl === null) {
+        if ($dl === '' || $dl === null || $dl === 'cg') {
+            return $aDatos;
+        }
+        $id_nom = $aDatos['id_nom'] ?? null;
+        if ($id_nom < 0 || $id_nom === null ) {
             return $aDatos;
         }
         $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
