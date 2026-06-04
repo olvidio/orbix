@@ -160,6 +160,20 @@ final class Tesera
             }
             $resultado[] = $oAsig;
         }
+
+        // también hay que añadir las dos opcionales que se ha quitado: 1232 y 2433
+        $cPlan97op = $repo->getAsignaturas([
+            'id_nivel' => '1232,2433',
+            '_ordre' => 'id_nivel',
+        ], ['id_nivel' => 'IN']);
+
+        $resultado = array_merge($resultado, $cPlan97op);
+
+        //Ordenar por id_nivel
+        usort($resultado, static function (Asignatura $a, Asignatura $b): int {
+            return $a->getId_nivel() <=> $b->getId_nivel();
+        });
+
         return $resultado;
     }
 
@@ -194,13 +208,20 @@ final class Tesera
 
             if ($idAsig > self::ID_ASIG_OPCIONAL_UMBRAL) {
                 $idNivelAsig = $idNivel;
+                // para las opcionales hay que ver si están activas por id_nivel, no id_asignatura:
+                $oAsignaturaOpcionalGenerica = $asignaturaRepo->findById($idNivel);
+                if (!$oAsignaturaOpcionalGenerica->isActive()) {
+                    continue;
+                }
             } else {
                 if ($plan === self::PLAN_VIEJO) {
                     if ($idNivel === self::ID_NIVEL_PLAN97_DESAPARECIDO) {
                         continue;
                     }
-                } elseif (!$oAsig->isActive()) {
-                    continue;
+                } else {
+                    if (!$oAsig->isActive()) {
+                        continue;
+                    }
                 }
                 $idNivelAsig = (int)$oAsig->getId_nivel();
             }

@@ -38,7 +38,10 @@ final class ActaNotasDefinitivasGrabar
         $nota_corte = $_SESSION['oConfig']->getNotaCorte();
         $nota_max_default = $_SESSION['oConfig']->getNotaMax();
 
-        $aNivelOpcionales = [1230, 1231, 1232, 2430, 2431, 2432, 2433, 2434];
+        // plan97
+        //$aNivelOpcionales = [1230, 1231, 1232, 2430, 2431, 2432, 2433, 2434];
+        // actual
+        $aNivelOpcionales = [1230, 1231, 2430, 2431, 2432];
         $error = '';
         $msg_err = '';
 
