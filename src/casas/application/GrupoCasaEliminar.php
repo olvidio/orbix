@@ -11,22 +11,29 @@ use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
  */
 final class GrupoCasaEliminar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private GrupoCasaRepositoryInterface $grupoCasaRepository,
+    ) {
+    }
+
+    /**
+     * @param array{id_item?: int|string} $input
+     */
+    public function execute(array $input): string
     {
         $id_item = (int)($input['id_item'] ?? 0);
         if ($id_item === 0) {
             return (string)_("debe indicar el grupo a eliminar");
         }
 
-        $repo = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
-        $oGrupo = $repo->findById($id_item);
+        $oGrupo = $this->grupoCasaRepository->findById($id_item);
         if ($oGrupo === null) {
             return (string)_("no se encuentra el grupo");
         }
 
-        if ($repo->Eliminar($oGrupo) === false) {
+        if ($this->grupoCasaRepository->Eliminar($oGrupo) === false) {
             return (string)_("Hay un error, no se ha eliminado.")
-                . "\n" . $repo->getErrorTxt();
+                . "\n" . $this->grupoCasaRepository->getErrorTxt();
         }
 
         return '';

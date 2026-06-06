@@ -55,7 +55,7 @@ Columnas:
 | **asignaturas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](asignaturas_migracion_baseline.md) |
 | cambios | ✓ | 0 | 16 | Migración estructural completa |
 | **cartaspresentacion** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](cartaspresentacion_migracion_baseline.md) |
-| casas | ✓ | 0 | 15 | Baseline de planificación; código ya en `frontend/` + `src/` |
+| casas | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](casas_migracion_baseline.md) |
 | certificados | — | 0 | 19 | Sin baseline |
 | configuracion | — | 0 | 11 | Sin baseline |
 | dbextern | — | 0 | 14 | Sin baseline |

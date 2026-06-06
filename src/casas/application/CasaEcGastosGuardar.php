@@ -18,19 +18,27 @@ use src\shared\domain\value_objects\DateTimeLocal;
  */
 final class CasaEcGastosGuardar
 {
-    public static function execute(array $input): array
+    public function __construct(
+        private UbiGastoRepositoryInterface $ubiGastoRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array{ok: bool, mensaje: string, data: string}
+     */
+    public function execute(array $input): array
     {
-        $id_ubi = (int)($input['id_ubi'] ?? 0);
-        $year = (int)($input['year'] ?? 0);
+        $id_ubi = isset($input['id_ubi']) && is_numeric($input['id_ubi']) ? (int) $input['id_ubi'] : 0;
+        $year = isset($input['year']) && is_numeric($input['year']) ? (int) $input['year'] : 0;
         if ($id_ubi === 0 || $year === 0) {
             return ['ok' => false, 'mensaje' => (string)_("Faltan id_ubi o year."), 'data' => ''];
         }
 
-        $UbiGastoRepository = $GLOBALS['container']->get(UbiGastoRepositoryInterface::class);
         for ($m = 1; $m < 13; $m++) {
-            $g = (float)str_replace(',', '.', (string)($input["g$m"] ?? 0));
-            $ap_sv = (float)str_replace(',', '.', (string)($input["ap_sv$m"] ?? 0));
-            $ap_sf = (float)str_replace(',', '.', (string)($input["ap_sf$m"] ?? 0));
+            $g = self::parseDecimal($input["g$m"] ?? 0);
+            $ap_sv = self::parseDecimal($input["ap_sv$m"] ?? 0);
+            $ap_sf = self::parseDecimal($input["ap_sf$m"] ?? 0);
             $oFecha = new DateTimeLocal("$year/$m/5");
 
             foreach ([
@@ -38,19 +46,31 @@ final class CasaEcGastosGuardar
                 UbiGastoTipo::APORTACION_SV => $ap_sv,
                 UbiGastoTipo::APORTACION_SF => $ap_sf,
             ] as $tipo => $cantidad) {
-                $newId = $UbiGastoRepository->getNewId();
+                $newId = $this->ubiGastoRepository->getNewId();
                 $oUbiGasto = new UbiGasto();
                 $oUbiGasto->setId_item($newId);
                 $oUbiGasto->setF_gasto($oFecha);
                 $oUbiGasto->setId_ubi($id_ubi);
                 $oUbiGasto->setTipoVo(new UbiGastoTipo($tipo));
                 $oUbiGasto->setCantidadVo(new UbiGastoCantidad($cantidad));
-                if ($UbiGastoRepository->Guardar($oUbiGasto) === false) {
+                if ($this->ubiGastoRepository->Guardar($oUbiGasto) === false) {
                     return ['ok' => false, 'mensaje' => (string)_("Hay un error, no se ha guardado."), 'data' => ''];
                 }
             }
         }
 
         return ['ok' => true, 'mensaje' => '', 'data' => ''];
+    }
+
+    private static function parseDecimal(mixed $raw): float
+    {
+        if (is_int($raw) || is_float($raw)) {
+            return (float) $raw;
+        }
+        if (is_string($raw)) {
+            return (float) str_replace(',', '.', $raw);
+        }
+
+        return 0.0;
     }
 }

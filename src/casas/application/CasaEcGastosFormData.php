@@ -13,20 +13,29 @@ use src\ubis\domain\contracts\CasaDlRepositoryInterface;
  */
 final class CasaEcGastosFormData
 {
-    public static function execute(array $input): array
+    public function __construct(
+        private CasaDlRepositoryInterface $casaDlRepository,
+        private UbiGastoRepositoryInterface $ubiGastoRepository,
+    ) {
+    }
+
+    /**
+     * @param array{year?: int|string, id_cdc?: list<int|string>} $input
+     * @return array<string, mixed>
+     */
+    public function execute(array $input): array
     {
         $year = (int)($input['year'] ?? (int)date('Y'));
-        /** @var array $ids_ubi */
+        /** @var list<int|string> $ids_ubi */
         $ids_ubi = (array)($input['id_cdc'] ?? []);
 
         $aGrupos = [];
-        $CasaDl = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
         foreach ($ids_ubi as $id_ubi) {
             $id_ubi = (int)$id_ubi;
             if ($id_ubi === 0) { continue; }
-            $oCasa = $CasaDl->findById($id_ubi);
+            $oCasa = $this->casaDlRepository->findById($id_ubi);
             if ($oCasa === null) { continue; }
-            $aGrupos[$id_ubi] = $oCasa->getNombreUbiVo()?->value() ?? '';
+            $aGrupos[$id_ubi] = $oCasa->getNombreUbiVo()->value();
         }
         if ($aGrupos === []) {
             return [
@@ -37,7 +46,6 @@ final class CasaEcGastosFormData
             ];
         }
 
-        $UbiGastoRepository = $GLOBALS['container']->get(UbiGastoRepositoryInterface::class);
         $casas = [];
         foreach ($aGrupos as $id_ubi => $titulo) {
             $id_ubi = (int)$id_ubi;
@@ -47,16 +55,18 @@ final class CasaEcGastosFormData
                 '_ordre' => 'f_gasto',
             ];
             $aOperador = ['f_gasto' => 'BETWEEN'];
-            $cGastos = $UbiGastoRepository->getUbisGastos($aWhere, $aOperador);
+            $cGastos = $this->ubiGastoRepository->getUbisGastos($aWhere, $aOperador);
+            /** @var array<int, array<int, float>> $aGastos */
             $aGastos = [];
-            if (is_array($cGastos)) {
-                foreach ($cGastos as $oUbiGasto) {
-                    $oFecha = $oUbiGasto->getF_gasto();
-                    $mes = (int)$oFecha->format('n');
-                    $tipo = $oUbiGasto->getTipoVo()?->value() ?? 0;
-                    $cantidad = $oUbiGasto->getCantidadVo()?->value() ?? 0.0;
-                    $aGastos[$mes][$tipo] = $cantidad;
+            foreach ($cGastos as $oUbiGasto) {
+                $oFecha = $oUbiGasto->getF_gasto();
+                if ($oFecha === null) {
+                    continue;
                 }
+                $mes = (int)$oFecha->format('n');
+                $tipo = $oUbiGasto->getTipoVo()?->value() ?? 0;
+                $cantidad = $oUbiGasto->getCantidadVo()?->value() ?? 0.0;
+                $aGastos[$mes][$tipo] = $cantidad;
             }
 
             $meses = [];

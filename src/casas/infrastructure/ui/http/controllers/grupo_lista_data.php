@@ -4,7 +4,9 @@
  */
 
 use src\casas\application\GrupoCasaListaData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$data = GrupoCasaListaData::execute();
-ContestarJson::enviar('', $data);
+/** @var GrupoCasaListaData $useCase */
+$useCase = DependencyResolver::get(GrupoCasaListaData::class);
+ContestarJson::enviar('', $useCase->execute());

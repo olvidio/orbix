@@ -3,6 +3,7 @@
 namespace src\casas\application;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
@@ -12,6 +13,7 @@ use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
+use src\permisos\domain\PermisosActividades;
 
 /**
  * Data builder: listado económico de actividades por casa (pantalla
@@ -23,14 +25,32 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class CasaIngresosListaData
 {
-    public static function execute(array $input): array
+    public function __construct(
+        private CasaDlRepositoryInterface $casaDlRepository,
+        private TipoTarifaRepositoryInterface $tipoTarifaRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private IngresoRepositoryInterface $ingresoRepository,
+        private TarifaUbiRepositoryInterface $tarifaUbiRepository,
+    ) {
+    }
+
+    /**
+     * @param array{
+     *   periodo?: string,
+     *   year?: string,
+     *   empiezamin?: string,
+     *   empiezamax?: string,
+     *   id_cdc?: list<int|string>
+     * } $input
+     * @return array<string, mixed>
+     */
+    public function execute(array $input): array
     {
-        $periodo = (string)($input['periodo'] ?? '');
-        $year = (string)($input['year'] ?? '');
-        $empiezamin = (string)($input['empiezamin'] ?? '');
-        $empiezamax = (string)($input['empiezamax'] ?? '');
-        /** @var array $ids_ubi */
-        $ids_ubi = (array)($input['id_cdc'] ?? []);
+        $periodo = $input['periodo'] ?? '';
+        $year = $input['year'] ?? '';
+        $empiezamin = $input['empiezamin'] ?? '';
+        $empiezamax = $input['empiezamax'] ?? '';
+        $ids_ubi = $input['id_cdc'] ?? [];
 
         $aCabeceras = [
             _("inicio"),
@@ -48,13 +68,12 @@ final class CasaIngresosListaData
         ];
 
         $aGrupos = [];
-        $CasaDl = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
         foreach ($ids_ubi as $id_ubi) {
             $id_ubi = (int)$id_ubi;
             if ($id_ubi === 0) { continue; }
-            $oCasa = $CasaDl->findById($id_ubi);
+            $oCasa = $this->casaDlRepository->findById($id_ubi);
             if ($oCasa === null) { continue; }
-            $aGrupos[$id_ubi] = $oCasa->getNombreUbiVo()?->value() ?? '';
+            $aGrupos[$id_ubi] = $oCasa->getNombreUbiVo()->value();
         }
         if ($aGrupos === []) {
             return [
@@ -87,12 +106,6 @@ final class CasaIngresosListaData
             $aOperador['f_ini'] = 'BETWEEN';
         }
 
-        $miRolePau = ConfigGlobal::mi_role_pau();
-        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
-        $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
-
         $a_valores = [];
         $txt_err = '';
         foreach ($aGrupos as $id_ubi => $titulo) {
@@ -101,7 +114,7 @@ final class CasaIngresosListaData
             $aWhere['status'] = StatusId::BORRABLE;
             $aOperador['status'] = '<';
             $aWhere['_ordre'] = 'f_ini';
-            $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
+            $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador);
 
             $a = 0;
             $i_previstos_acumulados = 0.0;
@@ -112,16 +125,17 @@ final class CasaIngresosListaData
             $tot_ing = [1 => 0.0, 2 => 0.0, 'tot' => 0.0];
             $tot_ing_acu = [1 => 0.0, 2 => 0.0];
 
-            if (is_array($cActividades)) {
-                foreach ($cActividades as $oActividad) {
+            foreach ($cActividades as $oActividad) {
                     $id_activ = (int)$oActividad->getId_activ();
                     $id_tipo_activ = (string)$oActividad->getId_tipo_activ();
                     $dl_org = $oActividad->getDl_org();
-                    $id_tarifa = (string)$oActividad->getTarifa();
+                    $id_tarifa = $oActividad->getTarifa();
                     $precio = $oActividad->getPrecio();
                     $oF_ini = $oActividad->getF_ini();
                     $oF_fin = $oActividad->getF_fin();
-                    if ($oF_ini === null || $oF_fin === null) { continue; }
+                    if (!($oF_ini instanceof DateTimeLocal) || !($oF_fin instanceof DateTimeLocal)) {
+                        continue;
+                    }
 
                     $num_dias_act = (float)$oActividad->getDuracionAumentada();
                     $num_dias = (float)$oActividad->getDuracionEnPeriodo($oF_ini, $oF_fin);
@@ -130,22 +144,29 @@ final class CasaIngresosListaData
                     $factor = $num_dias_real > 0 ? ($num_dias_act - $num_dias_real) / $num_dias_real : 0.0;
                     $num_dias_ajust = round($num_dias * (1 + $factor), 1);
 
-                    $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-                    $oPermEco = $_SESSION['oPermActividades']->getPermisoActual('economic');
+                    $oPermSesion = $_SESSION['oPermActividades'] ?? null;
+                    if (!($oPermSesion instanceof PermisosActividades)) {
+                        continue;
+                    }
+                    $oPermSesion->setActividad($id_activ, $id_tipo_activ, $dl_org);
+                    $oPermEco = $oPermSesion->getPermisoActual('economic');
                     if (!$oPermEco->have_perm_action('ver')) { continue; }
                     $permiso_modificar = $oPermEco->have_perm_action('modificar');
 
-                    $oTipoTarifa = $TipoTarifaRepository->findById($id_tarifa);
-                    $modo = $oTipoTarifa?->getModo() ?? 0;
-
-                    $cTarifasUbi = $TarifaUbiRepository->getTarifaUbis([
-                        'id_tarifa' => $id_tarifa,
-                        'id_ubi' => $id_ubi,
-                        'year' => $year,
-                    ]);
+                    $modo = 0;
                     $cantidad = 0.0;
-                    if (is_array($cTarifasUbi) && isset($cTarifasUbi[0])) {
-                        $cantidad = (float)$cTarifasUbi[0]->getCantidad();
+                    if ($id_tarifa !== null) {
+                        $oTipoTarifa = $this->tipoTarifaRepository->findById($id_tarifa);
+                        $modo = $oTipoTarifa?->getModo() ?? 0;
+
+                        $cTarifasUbi = $this->tarifaUbiRepository->getTarifaUbis([
+                            'id_tarifa' => $id_tarifa,
+                            'id_ubi' => $id_ubi,
+                            'year' => $year,
+                        ]);
+                        if (isset($cTarifasUbi[0])) {
+                            $cantidad = (float)$cTarifasUbi[0]->getCantidad();
+                        }
                     }
                     if (empty($precio)) {
                         $flag = ($factor_dias != 1) ? '*' : '';
@@ -169,7 +190,7 @@ final class CasaIngresosListaData
                         $cell_nom = $nom_activ;
                     }
 
-                    $oIngreso = $IngresoRepository->findById($id_activ);
+                    $oIngreso = $this->ingresoRepository->findById($id_activ);
                     $num_asistentes_previstos = $oIngreso?->getNumAsistentesPrevistosVo()?->value() ?? 0;
                     if (empty($num_asistentes_previstos)) {
                         $txt_err .= ($txt_err === '' ? '' : '<br>') . sprintf(_("No está definido el núm. de asistente previstos para: %s"), $nom_activ);
@@ -221,14 +242,13 @@ final class CasaIngresosListaData
                         'clase' => 'derecha',
                     ];
                     $a++;
-                }
             }
 
             $oF_ini_periodo = $oPeriodo->getF_ini();
             $oF_fin_periodo = $oPeriodo->getF_fin();
             $a_valores[$id_ubi][$a] = [
-                1 => $oF_ini_periodo?->getFromLocal() ?? '',
-                2 => $oF_fin_periodo?->getFromLocal() ?? '',
+                1 => $oF_ini_periodo->getFromLocal(),
+                2 => $oF_fin_periodo->getFromLocal(),
                 3 => _('totales sv'),
                 4 => '',
                 5 => $tot_asis_pr[1],
@@ -242,8 +262,8 @@ final class CasaIngresosListaData
                 'clase' => 'derecha',
             ];
             $a_valores[$id_ubi][$a + 1] = [
-                1 => $oF_ini_periodo?->getFromLocal() ?? '',
-                2 => $oF_fin_periodo?->getFromLocal() ?? '',
+                1 => $oF_ini_periodo->getFromLocal(),
+                2 => $oF_fin_periodo->getFromLocal(),
                 3 => _('totales sf'),
                 4 => '',
                 5 => $tot_asis_pr[2],
@@ -257,8 +277,8 @@ final class CasaIngresosListaData
                 'clase' => 'derecha',
             ];
             $a_valores[$id_ubi][$a + 2] = [
-                1 => $oF_ini_periodo?->getFromLocal() ?? '',
-                2 => $oF_fin_periodo?->getFromLocal() ?? '',
+                1 => $oF_ini_periodo->getFromLocal(),
+                2 => $oF_fin_periodo->getFromLocal(),
                 3 => _('totales'),
                 4 => '',
                 5 => $tot_asis_pr['tot'],

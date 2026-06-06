@@ -15,9 +15,9 @@ class DBEsquema extends DBAbstract
 
     private string $dir_base = ServerConf::DIR . "/src/casas/db";
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
-        if (empty($esquema_sfsv)) {
+        if ($esquema_sfsv === null || $esquema_sfsv === '') {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
         }
         $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
@@ -49,35 +49,31 @@ class DBEsquema extends DBAbstract
         }
     }
 
+    /**
+     * @return array{tabla: string, nom_tabla: string, campo_seq: string, id_seq: string, filename: string}
+     */
     protected function infoTable(string $tabla): array
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
+        $nom_tabla = $this->getNomTabla($tabla);
+        $campo_seq = '';
+        $id_seq = '';
         switch ($tabla) {
-            case "da_ingresos_dl":
-                $nom_tabla = $this->getNomTabla($tabla);
+            case 'da_ingresos_dl':
                 $campo_seq = '';
                 $id_seq = '';
                 break;
-            case "du_gastos_dl":
-                $nom_tabla = $this->getNomTabla($tabla);
+            case 'du_gastos_dl':
                 $campo_seq = 'id_item';
-                $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
+                $id_seq = $nom_tabla . '_' . $campo_seq . '_seq';
                 break;
-            case "du_grupos_dl":
-                $nom_tabla = $this->getNomTabla($tabla);
+            case 'du_grupos_dl':
                 $campo_seq = 'id_item';
-                $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
+                $id_seq = $nom_tabla . '_' . $campo_seq . '_seq';
                 break;
-            case "a_actividades_dl":
-                $nom_tabla = $this->getNomTabla($tabla);
-                $campo_seq = '';
-                $id_seq = '';
-                break;
-            case "u_cdc_dl":
-                $nom_tabla = $this->getNomTabla($tabla);
-                $campo_seq = '';
-                $id_seq = '';
+            case 'a_actividades_dl':
+            case 'u_cdc_dl':
                 break;
         }
         $datosTabla['nom_tabla'] = $nom_tabla;

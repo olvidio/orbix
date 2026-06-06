@@ -5,10 +5,15 @@
  */
 
 use src\casas\application\CasaIngresoFormData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
+use function src\shared\domain\helpers\input_int;
+
 $input = [
-    'id_activ' => (int)filter_input(INPUT_POST, 'id_activ'),
+    'id_activ' => input_int($_POST, 'id_activ'),
 ];
-$data = CasaIngresoFormData::execute($input);
-ContestarJson::enviar('', $data);
+
+/** @var CasaIngresoFormData $useCase */
+$useCase = DependencyResolver::get(CasaIngresoFormData::class);
+ContestarJson::enviar('', $useCase->execute($input));

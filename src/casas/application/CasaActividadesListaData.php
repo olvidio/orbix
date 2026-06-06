@@ -3,6 +3,9 @@
 namespace src\casas\application;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\value_objects\NullTimeLocal;
+use src\shared\domain\value_objects\TimeLocal;
+use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -13,6 +16,10 @@ use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
+use src\personas\domain\entity\PersonaEx;
+use src\personas\domain\entity\PersonaGlobal;
+use src\personas\domain\entity\PersonaPub;
+use src\personas\domain\entity\PersonaSacd;
 
 /**
  * Data builder: listado de actividades por casa y periodo (pantalla
@@ -23,14 +30,34 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class CasaActividadesListaData
 {
-    public static function execute(array $input): array
+    public function __construct(
+        private CasaDlRepositoryInterface $casaDlRepository,
+        private TipoTarifaRepositoryInterface $tipoTarifaRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+    ) {
+    }
+
+    /**
+     * @param array{
+     *   periodo?: string,
+     *   year?: string,
+     *   empiezamin?: string,
+     *   empiezamax?: string,
+     *   id_cdc?: list<int|string>
+     * } $input
+     * @return array<string, mixed>
+     */
+    public function execute(array $input): array
     {
-        $periodo = (string)($input['periodo'] ?? '');
-        $year = (string)($input['year'] ?? '');
-        $empiezamin = (string)($input['empiezamin'] ?? '');
-        $empiezamax = (string)($input['empiezamax'] ?? '');
-        /** @var array $ids_ubi */
-        $ids_ubi = (array)($input['id_cdc'] ?? []);
+        $periodo = $input['periodo'] ?? '';
+        $year = $input['year'] ?? '';
+        $empiezamin = $input['empiezamin'] ?? '';
+        $empiezamax = $input['empiezamax'] ?? '';
+        $ids_ubi = $input['id_cdc'] ?? [];
 
         $aCabeceras = [
             ucfirst((string)_("empieza")),
@@ -49,13 +76,12 @@ final class CasaActividadesListaData
         ];
 
         $aGrupos = [];
-        $CasaDl = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
         foreach ($ids_ubi as $id_ubi) {
             $id_ubi = (int)$id_ubi;
             if ($id_ubi === 0) { continue; }
-            $oCasa = $CasaDl->findById($id_ubi);
+            $oCasa = $this->casaDlRepository->findById($id_ubi);
             if ($oCasa === null) { continue; }
-            $aGrupos[$id_ubi] = $oCasa->getNombreUbiVo()?->value() ?? '';
+            $aGrupos[$id_ubi] = $oCasa->getNombreUbiVo()->value();
         }
 
         $oPeriodo = new Periodo();
@@ -67,12 +93,6 @@ final class CasaActividadesListaData
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
 
-        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
-        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
-        $CentroDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-
         $a_valores = [];
         foreach ($aGrupos as $id_ubi => $titulo) {
             $id_ubi = (int)$id_ubi;
@@ -83,8 +103,7 @@ final class CasaActividadesListaData
                 '_ordre' => 'f_ini',
             ];
             $aOperador = ['f_ini' => 'BETWEEN', 'status' => '<'];
-            $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
-            if ($cActividades === false) { continue; }
+            $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador);
 
             $a = 0;
             foreach ($cActividades as $oActividad) {
@@ -93,19 +112,27 @@ final class CasaActividadesListaData
                 $id_tipo_activ = (string)$oActividad->getId_tipo_activ();
                 $dl_org = $oActividad->getDl_org();
                 $f_ini = $oActividad->getF_ini()?->getFromLocal() ?? '';
-                $h_ini = (string)$oActividad->getH_ini();
+                $h_ini = self::fmtTime($oActividad->getH_ini());
                 $f_fin = $oActividad->getF_fin()?->getFromLocal() ?? '';
-                $h_fin = (string)$oActividad->getH_fin();
-                $id_tarifa = (string)$oActividad->getTarifa();
+                $h_fin = self::fmtTime($oActividad->getH_fin());
+                $id_tarifa = $oActividad->getTarifa();
                 $observ = (string)$oActividad->getObserv();
                 if ($h_ini !== '') { $h_ini = substr($h_ini, 0, strlen($h_ini) - 3); }
                 if ($h_fin !== '') { $h_fin = substr($h_fin, 0, strlen($h_fin) - 3); }
 
                 if (ConfigGlobal::is_app_installed('procesos')) {
-                    $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-                    $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-                    $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
-                    $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
+                    $oPermSesion = $_SESSION['oPermActividades'] ?? null;
+                    if ($oPermSesion instanceof PermisosActividades) {
+                        $oPermSesion->setActividad($id_activ, $id_tipo_activ, $dl_org);
+                        $oPermActiv = $oPermSesion->getPermisoActual('datos');
+                        $oPermCtr = $oPermSesion->getPermisoActual('ctr');
+                        $oPermSacd = $oPermSesion->getPermisoActual('sacd');
+                    } else {
+                        $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
+                        $oPermActiv = $oPermActividades->getPermisoActual('datos');
+                        $oPermCtr = $oPermActividades->getPermisoActual('ctr');
+                        $oPermSacd = $oPermActividades->getPermisoActual('sacd');
+                    }
                 } else {
                     $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
                     $oPermActiv = $oPermActividades->getPermisoActual('datos');
@@ -129,13 +156,13 @@ final class CasaActividadesListaData
                     $snom_tipo = $oTipoActiv->getNom_tipoText();
                 }
 
-                $nombre_ubi = $CasaDl->findById($id_ubi)?->getNombreUbiVo()?->value() ?? '';
+                $nombre_ubi = $this->casaDlRepository->findById($id_ubi)?->getNombreUbiVo()?->value() ?? '';
 
                 $txt_ctr = '';
                 if ($oPermCtr->have_perm_action('ver')) {
-                    foreach ($CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oCentroEncargado) {
+                    foreach ($this->centroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oCentroEncargado) {
                         $id_ctr = $oCentroEncargado->getId_ubi();
-                        $oCentroDl = $CentroDl->findById($id_ctr);
+                        $oCentroDl = $this->centroDlRepository->findById($id_ctr);
                         $nombre_ctr = $oCentroDl?->getNombre_ubi() ?? '';
                         $txt_ctr .= $txt_ctr === '' ? $nombre_ctr : "; $nombre_ctr";
                     }
@@ -145,20 +172,22 @@ final class CasaActividadesListaData
                 if (ConfigGlobal::is_app_installed('actividadessacd')) {
                     $aprobado = true;
                     if (ConfigGlobal::mi_sfsv() === 2) {
-                        $aprobado = (bool)$ActividadProcesoTareaRepository->getSacdAprobado($id_activ);
+                        $aprobado = (bool)$this->actividadProcesoTareaRepository->getSacdAprobado($id_activ);
                     }
                     if (!ConfigGlobal::is_app_installed('procesos')
                         || ($oPermSacd->have_perm_activ('ver') === true && $aprobado)) {
-                        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-                        foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
-                            $nom_sacd = $oPersona->getPrefApellidosNombre();
+                        foreach ($this->actividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
+                            $nom_sacd = self::personaPrefApellidosNombre($oPersona);
                             $txt_sacds .= $txt_sacds === '' ? $nom_sacd : "# $nom_sacd";
                         }
                     }
                 }
 
-                $oTipoTarifa = $TipoTarifaRepository->findById($id_tarifa);
-                $letra_tarifa = $oTipoTarifa?->getLetra() ?? '';
+                $letra_tarifa = '';
+                if ($id_tarifa !== null) {
+                    $oTipoTarifa = $this->tipoTarifaRepository->findById($id_tarifa);
+                    $letra_tarifa = $oTipoTarifa?->getLetra() ?? '';
+                }
 
                 $a_valores[$id_ubi][$a] = [
                     1 => $f_ini,
@@ -184,5 +213,32 @@ final class CasaActividadesListaData
             'a_valores' => $a_valores,
             'a_grupos' => $aGrupos,
         ];
+    }
+
+    private static function fmtTime(TimeLocal|NullTimeLocal|null $h): string
+    {
+        if ($h === null || $h instanceof NullTimeLocal) {
+            return '';
+        }
+
+        return $h->toDatabaseString();
+    }
+
+    private static function personaPrefApellidosNombre(object $oPersona): string
+    {
+        if ($oPersona instanceof PersonaGlobal) {
+            return $oPersona->getPrefApellidosNombre();
+        }
+        if ($oPersona instanceof PersonaSacd) {
+            return $oPersona->getPrefApellidosNombre();
+        }
+        if ($oPersona instanceof PersonaPub) {
+            return $oPersona->getPrefApellidosNombre();
+        }
+        if ($oPersona instanceof PersonaEx) {
+            return $oPersona->getPrefApellidosNombre();
+        }
+
+        return '';
     }
 }

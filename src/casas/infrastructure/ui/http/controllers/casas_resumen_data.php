@@ -1,16 +1,26 @@
 <?php
+/**
+ * Endpoint backend: resumen económico de casas (`casas_resumen_data`).
+ */
 
 use src\casas\application\CasasResumenData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
+
 $input = [
-    'que' => (string)filter_input(INPUT_POST, 'que'),
-    'cdc_sel' => (int)filter_input(INPUT_POST, 'cdc_sel'),
-    'id_cdc' => (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'year' => (string)filter_input(INPUT_POST, 'year'),
-    'periodo' => (string)filter_input(INPUT_POST, 'periodo'),
-    'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
+    'que' => input_string($_POST, 'que'),
+    'cdc_sel' => input_int($_POST, 'cdc_sel'),
+    'id_cdc' => input_string_list($_POST, 'id_cdc'),
+    'year' => input_string($_POST, 'year'),
+    'periodo' => input_string($_POST, 'periodo'),
+    'empiezamin' => input_string($_POST, 'empiezamin'),
+    'empiezamax' => input_string($_POST, 'empiezamax'),
 ];
-$data = CasasResumenData::execute($input);
-ContestarJson::enviar('', $data);
+
+/** @var CasasResumenData $useCase */
+$useCase = DependencyResolver::get(CasasResumenData::class);
+ContestarJson::enviar('', $useCase->execute($input));

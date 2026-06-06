@@ -6,6 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 
 /**
@@ -17,7 +18,20 @@ use src\ubis\domain\contracts\CasaDlRepositoryInterface;
  */
 final class PrevisionAsistentesData
 {
+    public function __construct(
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private CasaDlRepositoryInterface $casaDlRepository,
+        private IngresoRepositoryInterface $ingresoRepository,
+    ) {
+    }
+
     /**
+     * @param array{
+     *   mi_of?: string,
+     *   inicio_iso?: string,
+     *   fin_iso?: string,
+     *   periodo?: string
+     * } $input
      * @return array{
      *   a_cabeceras: array<int,array<string,string|int>>,
      *   a_valores: array<int,array<string,mixed>>,
@@ -30,12 +44,12 @@ final class PrevisionAsistentesData
      *   permitido: bool
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $mi_of_in = (string)($input['mi_of'] ?? '');
-        $inicio_iso = (string)($input['inicio_iso'] ?? '');
-        $fin_iso = (string)($input['fin_iso'] ?? '');
-        $periodo = (string)($input['periodo'] ?? '');
+        $mi_of_in = $input['mi_of'] ?? '';
+        $inicio_iso = $input['inicio_iso'] ?? '';
+        $fin_iso = $input['fin_iso'] ?? '';
+        $periodo = $input['periodo'] ?? '';
 
         $mi_of = $mi_of_in === '' ? ConfigGlobal::mi_oficina() : $mi_of_in;
         $mi_sfsv = ConfigGlobal::mi_sfsv();
@@ -91,7 +105,8 @@ final class PrevisionAsistentesData
                 $aWhere['id_tipo_activ'] = '^' . $mi_sfsv . '7';
                 break;
             default:
-                if ($_SESSION['oConfig']->getGestionCalendario() === 'central') {
+                $oConfig = $_SESSION['oConfig'] ?? null;
+                if ($oConfig instanceof ConfigSnapshot && $oConfig->getGestionCalendario() === 'central') {
                     $aWhere['id_tipo_activ'] = '^' . $mi_sfsv;
                 } else {
                     $permitido = false;
@@ -100,35 +115,35 @@ final class PrevisionAsistentesData
 
         $a_valores = [];
         if ($permitido) {
-            $actividadRepo = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-            $casaRepo = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
-            $ingresoRepo = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
-
-            $cActividades = $actividadRepo->getActividades($aWhere, $aOperador);
+            $cActividades = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
             $i = 0;
-            if (is_array($cActividades)) {
-                foreach ($cActividades as $oActividad) {
-                    $i++;
-                    $id_activ = $oActividad->getId_activ();
-                    $nom_activ = $oActividad->getNom_activ();
-                    $id_ubi = $oActividad->getId_ubi();
+            foreach ($cActividades as $oActividad) {
+                $i++;
+                $id_activ = $oActividad->getId_activ();
+                $nom_activ = $oActividad->getNom_activ();
+                $id_ubi = $oActividad->getId_ubi();
 
-                    $oIngreso = $ingresoRepo->findById($id_activ);
-                    $num_asistentes_previstos = $oIngreso !== null ? $oIngreso->getNum_asistentes_previstos() : 0;
+                $oIngreso = $this->ingresoRepository->findById($id_activ);
+                $num_asistentes_previstos = $oIngreso?->getNumAsistentesPrevistosVo()?->value() ?? 0;
 
-                    $oUbi = $casaRepo->findById($id_ubi);
-                    $plazas = $oUbi !== null ? $oUbi->getPlazas() : 0;
-                    $plazas_min = $oUbi !== null ? $oUbi->getPlazas_min() : 0;
-
-                    $a_valores[$i] = [
-                        'clase' => 'tono2',
-                        'id' => $id_activ,
-                        'actividad' => ['editable' => 'false', 'valor' => $nom_activ],
-                        'plazas' => ['editable' => 'false', 'valor' => $plazas],
-                        'plazas_min' => ['editable' => 'false', 'valor' => $plazas_min],
-                        'previstas' => ['editable' => 'true', 'valor' => $num_asistentes_previstos],
-                    ];
+                $plazas = 0;
+                $plazas_min = 0;
+                if ($id_ubi !== null) {
+                    $oUbi = $this->casaDlRepository->findById($id_ubi);
+                    if ($oUbi !== null) {
+                        $plazas = $oUbi->getPlazas();
+                        $plazas_min = $oUbi->getPlazas_min();
+                    }
                 }
+
+                $a_valores[$i] = [
+                    'clase' => 'tono2',
+                    'id' => $id_activ,
+                    'actividad' => ['editable' => 'false', 'valor' => $nom_activ],
+                    'plazas' => ['editable' => 'false', 'valor' => $plazas],
+                    'plazas_min' => ['editable' => 'false', 'valor' => $plazas_min],
+                    'previstas' => ['editable' => 'true', 'valor' => $num_asistentes_previstos],
+                ];
             }
         }
 

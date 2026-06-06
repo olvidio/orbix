@@ -2,25 +2,19 @@
 
 namespace src\casas\infrastructure\persistence\postgresql;
 
-use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\ConverterDate;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\casas\domain\entity\UbiGasto;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\GlobalPdo;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\ConverterDate;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
-
 
 /**
  * Clase que adapta la tabla du_gastos_dl a la interfaz del repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 22/12/2025
  */
 class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepositoryInterface
 {
@@ -28,21 +22,15 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
-        $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
-        $this->setoDbl_select($oDbl_Select);
+        $this->setoDbl(GlobalPdo::get('oDBC'));
+        $this->setoDbl_select(GlobalPdo::get('oDBC_Select'));
         $this->setNomTabla('du_gastos_dl');
     }
 
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
     /**
-     * devuelve una colección (array) de objetos de tipo UbiGasto
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo UbiGasto
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<UbiGasto>
      */
     public function getUbisGastos(array $aWhere = [], array $aOperators = []): array
     {
@@ -52,17 +40,13 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
+            if ($camp === '_ordre' || $camp === '_limit') {
                 continue;
             }
             $sOperador = $aOperators[$camp] ?? '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
                 $aCondicion[] = $a;
             }
-            // operadores que no requieren valores
             if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
                 unset($aWhere[$camp]);
             }
@@ -75,33 +59,39 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
         }
         $sCondicion = implode(' AND ', $aCondicion);
         if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
+            $sCondicion = ' WHERE ' . $sCondicion;
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string)$limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            // para las fechas del postgres (texto iso)
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $aDatos['f_gasto'] = (new ConverterDate('date', $aDatos['f_gasto']))->fromPg();
-            $UbiGasto =  UbiGasto::fromArray($aDatos);
-            $UbiGastoSet->add($UbiGasto);
+            $UbiGastoSet->add(UbiGasto::fromArray($aDatos));
         }
-        return $UbiGastoSet->getTot();
+        return array_values($UbiGastoSet->getTot());
     }
 
     public function getSumaGastos(int $id_ubi, int $tipo, DateTimeLocal $oInicio, DateTimeLocal $oFin): float
@@ -123,10 +113,13 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
             __FILE__,
             __LINE__
         );
-        return (float) $stmt->fetchColumn();
-    }
+        if ($stmt === false) {
+            return 0.0;
+        }
+        $sum = $stmt->fetchColumn();
 
-    /* -------------------- ENTIDAD --------------------------------------------- */
+        return is_numeric($sum) ? (float) $sum : 0.0;
+    }
 
     public function Eliminar(UbiGasto $UbiGasto): bool
     {
@@ -137,10 +130,6 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-
-    /**
-     * Si no existe el registro, hace un insert, si existe, se hace el update.
-     */
     public function Guardar(UbiGasto $UbiGasto): bool
     {
         $id_item = $UbiGasto->getId_item();
@@ -150,7 +139,6 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
 
         $aDatos = $UbiGasto->toArrayForDatabase();
         if ($bInsert === false) {
-            //UPDATE
             unset($aDatos['id_item']);
             $update = "
 					id_ubi                   = :id_ubi,
@@ -160,11 +148,13 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
-            $campos = "(id_item,id_ubi,f_gasto,tipo,cantidad)";
-            $valores = "(:id_item,:id_ubi,:f_gasto,:tipo,:cantidad)";
+            $campos = '(id_item,id_ubi,f_gasto,tipo,cantidad)';
+            $valores = '(:id_item,:id_ubi,:f_gasto,:tipo,:cantidad)';
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        if ($stmt === false) {
+            return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -175,42 +165,44 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_gasto'] = (new ConverterDate('date', $aDatos['f_gasto']))->fromPg();
+        if (!is_array($aDatos)) {
+            return false;
         }
-        return $aDatos;
+        $aDatos['f_gasto'] = (new ConverterDate('date', $aDatos['f_gasto']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
-
-    /**
-     * Busca la clase con id_item en la base de datos .
-     */
     public function findById(int $id_item): ?UbiGasto
     {
         $aDatos = $this->datosById($id_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return UbiGasto::fromArray($aDatos);
@@ -220,6 +212,12 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('du_gastos_dl_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

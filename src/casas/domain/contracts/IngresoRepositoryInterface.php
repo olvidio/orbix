@@ -4,31 +4,14 @@ namespace src\casas\domain\contracts;
 
 use src\casas\domain\entity\Ingreso;
 
-
-/**
- * Interfaz de la clase Ingreso y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 22/12/2025
- */
 interface IngresoRepositoryInterface
 {
-
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
     /**
-     * devuelve una colección (array) de objetos de tipo Ingreso
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Ingreso
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Ingreso>
      */
     public function getIngresos(array $aWhere = [], array $aOperators = []): array;
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(Ingreso $Ingreso): bool;
 
@@ -36,21 +19,12 @@ interface IngresoRepositoryInterface
 
     public function getErrorTxt(): string;
 
-
-
     public function getNomTabla(): string;
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_activ): array|bool;
+    public function datosById(int $id_activ): array|false;
 
-    /**
-     * Busca la clase con id_activ en el repositorio.
-     */
     public function findById(int $id_activ): ?Ingreso;
 }

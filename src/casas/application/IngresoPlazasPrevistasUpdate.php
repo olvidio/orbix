@@ -13,7 +13,15 @@ use src\casas\domain\contracts\IngresoRepositoryInterface;
  */
 final class IngresoPlazasPrevistasUpdate
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private IngresoRepositoryInterface $ingresoRepository,
+    ) {
+    }
+
+    /**
+     * @param array{data?: string, colName?: string} $input
+     */
+    public function execute(array $input): string
     {
         $dataRaw = (string)($input['data'] ?? '');
         $colNameRaw = (string)($input['colName'] ?? '');
@@ -31,16 +39,15 @@ final class IngresoPlazasPrevistasUpdate
             return (string)_('no se encuentra el ingreso');
         }
 
-        $repo = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
-        $oIngreso = $repo->findById($id_activ);
+        $oIngreso = $this->ingresoRepository->findById($id_activ);
         if ($oIngreso === null) {
             return (string)_('no se encuentra el ingreso');
         }
 
         $oIngreso->setNumAsistentesPrevistosVo($plazas);
-        if ($repo->Guardar($oIngreso) === false) {
+        if ($this->ingresoRepository->Guardar($oIngreso) === false) {
             return (string)_('Hay un error, no se ha guardado')
-                . "\n" . $repo->getErrorTxt();
+                . "\n" . $this->ingresoRepository->getErrorTxt();
         }
 
         return '';

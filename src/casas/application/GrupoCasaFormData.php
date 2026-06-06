@@ -14,7 +14,14 @@ use src\ubis\domain\contracts\CasaDlRepositoryInterface;
  */
 final class GrupoCasaFormData
 {
+    public function __construct(
+        private GrupoCasaRepositoryInterface $grupoCasaRepository,
+        private CasaDlRepositoryInterface $casaDlRepository,
+    ) {
+    }
+
     /**
+     * @param array{id_item?: string} $input
      * @return array{
      *   es_nuevo: bool,
      *   id_item: string,
@@ -23,7 +30,7 @@ final class GrupoCasaFormData
      *   opciones_casas: array<int|string,string>
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
         $id_item_raw = (string)($input['id_item'] ?? '');
         $es_nuevo = ($id_item_raw === '' || $id_item_raw === 'nuevo');
@@ -31,8 +38,7 @@ final class GrupoCasaFormData
         $id_ubi_padre = 0;
         $id_ubi_hijo = 0;
         if (!$es_nuevo) {
-            $repoGrupo = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
-            $oGrupoCasa = $repoGrupo->findById((int)$id_item_raw);
+            $oGrupoCasa = $this->grupoCasaRepository->findById((int)$id_item_raw);
             if ($oGrupoCasa !== null) {
                 $id_ubi_padre = $oGrupoCasa->getId_ubi_padre();
                 $id_ubi_hijo = $oGrupoCasa->getId_ubi_hijo();
@@ -41,15 +47,20 @@ final class GrupoCasaFormData
             }
         }
 
-        $repoCasa = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
-        $opciones_casas = $repoCasa->getArrayCasas("WHERE active = 't'");
+        $opciones_casas = [];
+        foreach ($this->casaDlRepository->getArrayCasas("WHERE active = 't'") as $id => $nombre) {
+            if (!is_string($nombre)) {
+                continue;
+            }
+            $opciones_casas[is_numeric($id) ? (int) $id : (string) $id] = $nombre;
+        }
 
         return [
             'es_nuevo' => $es_nuevo,
             'id_item' => $es_nuevo ? 'nuevo' : (string)$id_item_raw,
             'id_ubi_padre' => $id_ubi_padre,
             'id_ubi_hijo' => $id_ubi_hijo,
-            'opciones_casas' => is_array($opciones_casas) ? $opciones_casas : [],
+            'opciones_casas' => $opciones_casas,
         ];
     }
 }

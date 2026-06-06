@@ -4,14 +4,20 @@
  */
 
 use src\casas\application\CasaIngresoEliminar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
+use function src\shared\domain\helpers\input_int;
+
 $input = [
-    'id_activ' => (int)filter_input(INPUT_POST, 'id_activ'),
+    'id_activ' => input_int($_POST, 'id_activ'),
 ];
-$result = CasaIngresoEliminar::execute($input);
-if ($result['ok']) {
-    ContestarJson::enviar('', $result['data'] ?? '');
+
+/** @var CasaIngresoEliminar $useCase */
+$useCase = DependencyResolver::get(CasaIngresoEliminar::class);
+$result = $useCase->execute($input);
+        if ($result['ok']) {
+    ContestarJson::enviar('', $result['data']);
 } else {
-    ContestarJson::enviar($result['mensaje'] ?? 'error', '');
+    ContestarJson::enviar($result['mensaje'], '');
 }

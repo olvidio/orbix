@@ -23,52 +23,22 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class CalendarioUbiResumenData
 {
+    public function __construct(
+        private CasaDlRepositoryInterface $casaDlRepository,
+        private TipoTarifaRepositoryInterface $tipoTarifaRepository,
+        private TarifaUbiRepositoryInterface $tarifaUbiRepository,
+        private CasaPeriodoRepositoryInterface $casaPeriodoRepository,
+        private UbiGastoRepositoryInterface $ubiGastoRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private IngresoRepositoryInterface $ingresoRepository,
+    ) {
+    }
+
     /**
-     * @return array{
-     *   ok: bool,
-     *   error: string,
-     *   any_anterior: int,
-     *   any_actual: int,
-     *   any_prev: int,
-     *   id_ubi: int,
-     *   seccion: string,
-     *   nombre_ubi: string,
-     *   plazas_min: int,
-     *   G: int,
-     *   inc_t: int,
-     *   p_dv: int,
-     *   p_df: int,
-     *   a_tarifas_actual: array<int,array{letra:string,modo:int,cantidad:float}>,
-     *   a_tarifas_prev: array<int,array{letra:string,modo:int,cantidad:float,id_item:int}>,
-     *   r_it: float,
-     *   r_idl: float,
-     *   r_idef: float,
-     *   r_ip: float,
-     *   r_ta: int,
-     *   r_tia: float,
-     *   p_ip: float,
-     *   p_ip_txt: string,
-     *   p_ta_min: int,
-     *   p_ta_min_txt: string,
-     *   p_dseccion: int,
-     *   total_txt: string,
-     *   a_actividades: array<int,array{nom:string,dias:float,asistentes:int|string,asistencias:int|string,id_tarifa:string,ingresos:string|float}>,
-     *   p_tac: int,
-     *   p_tda: float,
-     *   p_tap: int,
-     *   p_ta: int|float,
-     *   p_tia: float,
-     *   p_tarifa: float,
-     *   p_ti_min: float,
-     *   dias_libres: int|float,
-     *   dif_asistencias: float,
-     *   dif_ingresos: float,
-     *   inc_p: int|string,
-     *   inc_d: int|float,
-     *   inc_pt: int|float
-     * }
+     * @param array{id_ubi?: int|string, seccion?: string, G?: int|string, inc_t?: int|string} $input
+     * @return array<string, mixed>
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
         $id_ubi = (int)($input['id_ubi'] ?? 0);
         $seccion = (string)($input['seccion'] ?? '');
@@ -86,36 +56,32 @@ final class CalendarioUbiResumenData
             $isfsv = 2;
         }
 
-        $casaRepo = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
-        $oCasa = $casaRepo->findById($id_ubi);
+        $oCasa = $this->casaDlRepository->findById($id_ubi);
         if ($oCasa === null) {
-            return self::empty($id_ubi, $seccion, $any_actual, $any_anterior, $any_prev, $G, $inc_t)
+            return $this->empty($id_ubi, $seccion, $any_actual, $any_anterior, $any_prev, $G, $inc_t)
                 + ['ok' => false, 'error' => (string)_("Casa no encontrada")];
         }
         $nombre_ubi = (string)$oCasa->getNombre_ubi();
         $plazas_min = (int)$oCasa->getPlazas_min();
 
         // Tarifas
-        $tipoTarifaRepo = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
-        $tarifaUbiRepo = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
-        $cTipoTarifas = $tipoTarifaRepo->getTipoTarifas(['sfsv' => $isfsv]);
+        $cTipoTarifas = $this->tipoTarifaRepository->getTipoTarifas(['sfsv' => $isfsv]);
         $a_tarifas_actual = [];
         $a_tarifas_prev = [];
         $ultimo_id_tarifa = 0;
-        if (is_array($cTipoTarifas)) {
-            foreach ($cTipoTarifas as $oTipoTarifa) {
+        foreach ($cTipoTarifas as $oTipoTarifa) {
                 $id_tarifa = (int)$oTipoTarifa->getId_tarifa();
                 $ultimo_id_tarifa = $id_tarifa;
                 $modo = (int)$oTipoTarifa->getModo();
                 $letra = (string)$oTipoTarifa->getLetra();
 
-                $cTarifasUbi = $tarifaUbiRepo->getTarifaUbis([
+                $cTarifasUbi = $this->tarifaUbiRepository->getTarifaUbis([
                     'id_tarifa' => $id_tarifa,
                     'id_ubi' => $id_ubi,
                     'year' => $any_actual,
                 ]);
                 $cantidad_actual = 0.0;
-                if (is_array($cTarifasUbi) && isset($cTarifasUbi[0])) {
+                if (isset($cTarifasUbi[0])) {
                     $cantidad_actual = (float)$cTarifasUbi[0]->getCantidad();
                 }
                 $a_tarifas_actual[$id_tarifa] = [
@@ -124,12 +90,12 @@ final class CalendarioUbiResumenData
                     'cantidad' => $cantidad_actual,
                 ];
 
-                $cTarifasUbiPrev = $tarifaUbiRepo->getTarifaUbis([
+                $cTarifasUbiPrev = $this->tarifaUbiRepository->getTarifaUbis([
                     'id_tarifa' => $id_tarifa,
                     'id_ubi' => $id_ubi,
                     'year' => $any_prev,
                 ]);
-                if (is_array($cTarifasUbiPrev) && isset($cTarifasUbiPrev[0])) {
+                if (isset($cTarifasUbiPrev[0])) {
                     $oTarifaPrev = $cTarifasUbiPrev[0];
                     $cantidad = (float)$oTarifaPrev->getCantidad();
                     if ($inc_t !== 0) {
@@ -152,26 +118,23 @@ final class CalendarioUbiResumenData
                         'cantidad' => $cantidad,
                     ];
                 }
-            }
         }
 
         // Días de ocupación (año previsto)
         $oIniPrev = new DateTimeLocal("$any_prev/1/1");
         $oFinPrev = new DateTimeLocal("$any_prev/12/31");
-        $casaPeriodoRepo = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
-        $p_dv = (int)$casaPeriodoRepo->getCasaPeriodosDias(1, $id_ubi, $oIniPrev, $oFinPrev);
-        $p_df = (int)$casaPeriodoRepo->getCasaPeriodosDias(2, $id_ubi, $oIniPrev, $oFinPrev);
+        $p_dv = (int)$this->casaPeriodoRepository->getCasaPeriodosDias(1, $id_ubi, $oIniPrev, $oFinPrev);
+        $p_df = (int)$this->casaPeriodoRepository->getCasaPeriodosDias(2, $id_ubi, $oIniPrev, $oFinPrev);
 
         // Gastos año anterior
         $oIniAnt = new DateTimeLocal("$any_anterior/1/1");
         $oFinAnt = new DateTimeLocal("$any_anterior/12/31");
-        $ubiGastoRepo = $GLOBALS['container']->get(UbiGastoRepositoryInterface::class);
-        $r_idl_sv = (float)$ubiGastoRepo->getSumaGastos($id_ubi, 1, $oIniAnt, $oFinAnt);
-        $r_idl_sf = (float)$ubiGastoRepo->getSumaGastos($id_ubi, 2, $oIniAnt, $oFinAnt);
-        $r_it = (float)$ubiGastoRepo->getSumaGastos($id_ubi, 3, $oIniAnt, $oFinAnt);
+        $r_idl_sv = (float)$this->ubiGastoRepository->getSumaGastos($id_ubi, 1, $oIniAnt, $oFinAnt);
+        $r_idl_sf = (float)$this->ubiGastoRepository->getSumaGastos($id_ubi, 2, $oIniAnt, $oFinAnt);
+        $r_it = (float)$this->ubiGastoRepository->getSumaGastos($id_ubi, 3, $oIniAnt, $oFinAnt);
 
         if ($r_it <= 0.0) {
-            return self::empty($id_ubi, $seccion, $any_actual, $any_anterior, $any_prev, $G, $inc_t)
+            return $this->empty($id_ubi, $seccion, $any_actual, $any_anterior, $any_prev, $G, $inc_t)
                 + [
                     'ok' => false,
                     'error' => 'sin_gastos_anterior',
@@ -227,10 +190,8 @@ final class CalendarioUbiResumenData
             'f_fin' => '>=',
             'id_tipo_activ' => '~',
         ];
-        $actividadRepo = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $cActividades = $actividadRepo->getActividades($aWhere, $aOperador);
+        $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador);
 
-        $ingresoRepo = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
         $a_actividades = [];
         $p_tda = 0.0;
         $p_tap = 0;
@@ -238,8 +199,7 @@ final class CalendarioUbiResumenData
         $p_tia = 0.0;
         $r_tia = 0.0;
         $i = 0;
-        if (is_array($cActividades)) {
-            foreach ($cActividades as $oActividad) {
+        foreach ($cActividades as $oActividad) {
                 $i++;
                 $id_activ = (int)$oActividad->getId_activ();
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -262,14 +222,14 @@ final class CalendarioUbiResumenData
                 // bucle anterior; replicamos ese comportamiento.
                 $id_tarifa = $ultimo_id_tarifa;
                 if ($id_tarifa > 0 && isset($a_tarifas_prev[$id_tarifa])) {
-                    $oIngreso = $ingresoRepo->findById($id_activ);
-                    $num_asistentes = $oIngreso?->getNum_asistentes() ?? 0;
+                    $oIngreso = $this->ingresoRepository->findById($id_activ);
+                    $num_asistentes = $oIngreso?->getNumAsistentesVo()?->value() ?? 0;
                     if (empty($num_asistentes)) {
                         $num_asistentes = $plazas_min;
                     }
                     $asistencias = $num_dias * $num_asistentes;
-                    $modoPrev = (int)($a_tarifas_prev[$id_tarifa]['modo'] ?? 0);
-                    $cantidadPrev = (float)($a_tarifas_prev[$id_tarifa]['cantidad'] ?? 0);
+                    $modoPrev = (int)$a_tarifas_prev[$id_tarifa]['modo'];
+                    $cantidadPrev = (float)$a_tarifas_prev[$id_tarifa]['cantidad'];
                     $cantidadActual = (float)($a_tarifas_actual[$id_tarifa]['cantidad'] ?? 0);
 
                     if ($modoPrev === 1) {
@@ -305,7 +265,6 @@ final class CalendarioUbiResumenData
                     $p_tia += $ingresos;
                 }
                 $r_tia += (float)$ingresos_actual;
-            }
         }
         $p_tac = $i < 1 ? 1 : $i;
 
@@ -378,7 +337,10 @@ final class CalendarioUbiResumenData
         ];
     }
 
-    private static function empty(
+    /**
+     * @return array<string, mixed>
+     */
+    private function empty(
         int $id_ubi,
         string $seccion,
         int $any_actual,

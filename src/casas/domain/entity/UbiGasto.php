@@ -19,7 +19,7 @@ class UbiGasto
 
     private int $id_ubi;
 
-    private DateTimeLocal $f_gasto;
+    private ?DateTimeLocal $f_gasto = null;
 
     private ?UbiGastoTipo $tipo = null;
 
@@ -32,7 +32,7 @@ class UbiGasto
         return $this->id_item;
     }
 
-    public function setId_item($id_item): void
+    public function setId_item(int $id_item): void
     {
         $this->id_item = $id_item;
     }

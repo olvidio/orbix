@@ -157,3 +157,105 @@ Al empezar, `src/casas/` ya tiene dominio (`entity`, `value_objects`,
 - Los `Hash` de URLs cambian cuando la pantalla se mueve; todos los formularios
   que posteen a los endpoints `/src/casas/*` necesitan **nuevo** `Hash` con
   los campos exactos.
+
+## Resultado del cierre DI (2026-06-06)
+
+| Criterio | Estado |
+|----------|--------|
+| `$GLOBALS['container']` en `src/casas/` | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | **15/15** |
+| `application/` con constructor DI | **15** clases |
+| Pg repos con `GlobalPdo::get()` | **3/3** |
+| Casos de uso en `config/dependencies.php` | **18** entradas `autowire()` |
+| Tests `tests/unit/casas/` | **68 OK** |
+
+### Application (constructor DI)
+
+| Clase | Repos / deps inyectados |
+|-------|-------------------------|
+| `CasaIngresoEliminar` | `IngresoRepositoryInterface` |
+| `CasaIngresoUpdate` | `ActividadAllRepositoryInterface`, `IngresoRepositoryInterface` |
+| `CasaIngresoFormData` | `TipoTarifaRepositoryInterface`, `ActividadAllRepositoryInterface`, `IngresoRepositoryInterface` |
+| `CasaIngresosListaData` | `CasaDlRepositoryInterface`, `TipoTarifaRepositoryInterface`, `ActividadRepositoryInterface`, `IngresoRepositoryInterface`, `TarifaUbiRepositoryInterface` |
+| `CasaActividadesListaData` | 7 repos (casas + actividades + actividadcargos + ubis + procesos) |
+| `CasaEcGastosFormData` | `CasaDlRepositoryInterface`, `UbiGastoRepositoryInterface` |
+| `CasaEcGastosGuardar` | `UbiGastoRepositoryInterface` |
+| `GrupoCasaFormData` | `GrupoCasaRepositoryInterface`, `CasaDlRepositoryInterface` |
+| `GrupoCasaListaData` | `GrupoCasaRepositoryInterface`, `CasaDlRepositoryInterface` |
+| `GrupoCasaUpdate` | `GrupoCasaRepositoryInterface` |
+| `GrupoCasaEliminar` | `GrupoCasaRepositoryInterface` |
+| `IngresoPlazasPrevistasUpdate` | `IngresoRepositoryInterface` |
+| `PrevisionAsistentesData` | `ActividadDlRepositoryInterface`, `CasaDlRepositoryInterface`, `IngresoRepositoryInterface` |
+| `CalendarioUbiResumenData` | 7 repos (casas + actividades + actividadtarifas + ubis) |
+| `CasasResumenData` | 7 repos (casas + actividades + ubis) |
+
+`CasasResumenOcupacion` (service estático puro) no requiere DI; comparte lógica
+de ocupación entre `CasasResumenData` y `CalendarioUbiResumenData`.
+
+### Repositorios
+
+| Clase | Cambio |
+|-------|--------|
+| `PgIngresoRepository` | `GlobalPdo::get('oDBC')` / `GlobalPdo::get('oDBC_Select')`; guards PDO |
+| `PgUbiGastoRepository` | `GlobalPdo::get('oDBC')` / `GlobalPdo::get('oDBC_Select')`; guards PDO |
+| `PgGrupoCasaRepository` | `GlobalPdo::get('oDBC')` / `GlobalPdo::get('oDBC_Select')`; guards PDO |
+
+### HTTP controllers
+
+Los 15 controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()` (sin `::execute()` estáticos).
+Entrada POST via `input_int` / `input_string` / `input_string_list`.
+
+### `src/casas/config/dependencies.php`
+
+Registra 3 repositorios + 15 casos de uso `*Data` / mutaciones.
+
+Repos cross-modulo (`CasaDl`, `Actividad*`, `TipoTarifa`, `TarifaUbi`,
+`Centro*`, `ActividadCargo`, `CasaPeriodo`, etc.) se resuelven por autowire
+desde los `dependencies.php` de sus módulos.
+
+## Deuda post-refactor
+
+### Completado
+
+- [x] 0 `$GLOBALS['container']` en todo `src/casas/`
+- [x] Todos los controllers HTTP via `DependencyResolver`
+- [x] Casos de uso con constructor DI
+- [x] `dependencies.php` con todos los use cases
+- [x] Pg repos con `GlobalPdo`
+- [x] Frontend sin `use src\...` en controladores
+- [x] PHPStan: `src/casas/` sin errores en `phpstan-nobaseline.neon` (0)
+- [x] Tests unitarios application (`tests/unit/casas/`: 68 tests)
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (inicio) | `composer phpstan:file -- src/casas/` | **233** |
+| 2026-06-06 (cierre DI) | `composer phpstan:file -- src/casas/` | **0** |
+
+Areas abordadas:
+
+- **Application:** constructor DI en 15 clases; `instanceof PermisosActividades` /
+  `XPermisos` para sesión; tipos en payloads y métodos privados.
+- **Repos `Pg*`:** `GlobalPdo`, guards `PDOStatement|false`, `array_values` en
+  colecciones, `datosById(): array|false`.
+- **Interfaces / entity / VOs:** PHPDoc retorno; `UbiGasto::$f_gasto` nullable.
+- **db/DBEsquema:** tipos de retorno `: void`, `infoTable(string): array`.
+- **HTTP controllers:** `DependencyResolver::get()` + `input_*`.
+- **Services:** `CasasResumenOcupacion` tipado (`ActividadAll`, periodos).
+
+### Pendiente
+
+- [ ] N+1 heredado del legacy en listados de actividades (fuera de alcance del
+  cierre DI).
+
+## Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests existentes pasan (`tests/unit/casas/`: 68 tests)
+- [x] PHPStan `src/casas/` en 0 (phpstan-nobaseline.neon)

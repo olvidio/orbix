@@ -1,16 +1,19 @@
 <?php
 /**
- * Endpoint backend: actualiza `num_asistentes_previstos` de un
- * `Ingreso` desde la `TablaEditable` de `prevision_asistentes`.
+ * Endpoint backend: actualiza plazas previstas de un ingreso (TablaEditable).
  */
 
 use src\casas\application\IngresoPlazasPrevistasUpdate;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
+use function src\shared\domain\helpers\input_string;
+
 $input = [
-    'data' => (string)filter_input(INPUT_POST, 'data'),
-    'colName' => (string)filter_input(INPUT_POST, 'colName'),
+    'data' => input_string($_POST, 'data'),
+    'colName' => input_string($_POST, 'colName'),
 ];
 
-$error = IngresoPlazasPrevistasUpdate::execute($input);
-ContestarJson::enviar($error, 'ok');
+/** @var IngresoPlazasPrevistasUpdate $useCase */
+$useCase = DependencyResolver::get(IngresoPlazasPrevistasUpdate::class);
+ContestarJson::enviar($useCase->execute($input), 'ok');

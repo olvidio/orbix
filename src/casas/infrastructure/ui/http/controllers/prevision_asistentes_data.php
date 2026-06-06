@@ -4,14 +4,18 @@
  */
 
 use src\casas\application\PrevisionAsistentesData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
+use function src\shared\domain\helpers\input_string;
+
 $input = [
-    'mi_of' => (string)filter_input(INPUT_POST, 'mi_of'),
-    'periodo' => (string)filter_input(INPUT_POST, 'periodo'),
-    'inicio_iso' => (string)filter_input(INPUT_POST, 'inicio_iso'),
-    'fin_iso' => (string)filter_input(INPUT_POST, 'fin_iso'),
+    'mi_of' => input_string($_POST, 'mi_of'),
+    'periodo' => input_string($_POST, 'periodo'),
+    'inicio_iso' => input_string($_POST, 'inicio_iso'),
+    'fin_iso' => input_string($_POST, 'fin_iso'),
 ];
 
-$data = PrevisionAsistentesData::execute($input);
-ContestarJson::enviar('', $data);
+/** @var PrevisionAsistentesData $useCase */
+$useCase = DependencyResolver::get(PrevisionAsistentesData::class);
+ContestarJson::enviar('', $useCase->execute($input));

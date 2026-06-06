@@ -11,6 +11,8 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
+use src\ubis\domain\entity\Casa;
+use src\ubis\domain\entity\CentroEllas;
 use frontend\shared\web\Periodo;
 
 /**
@@ -24,34 +26,56 @@ use frontend\shared\web\Periodo;
  */
 final class CasasResumenData
 {
-    public static function execute(array $input): array
-    {
-        $Qque = (string)($input['que'] ?? '');
-        $Qcdc_sel = (int)($input['cdc_sel'] ?? 0);
-        /** @var array $id_cdc */
-        $id_cdc = (array)($input['id_cdc'] ?? []);
+    public function __construct(
+        private CasaDlRepositoryInterface $casaDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private GrupoCasaRepositoryInterface $grupoCasaRepository,
+        private CasaPeriodoRepositoryInterface $casaPeriodoRepository,
+        private IngresoRepositoryInterface $ingresoRepository,
+        private UbiGastoRepositoryInterface $ubiGastoRepository,
+    ) {
+    }
 
-        $cCasasDl = self::selectCasas($Qcdc_sel, $id_cdc);
+    /**
+     * @param array{
+     *   que?: string,
+     *   cdc_sel?: int|string,
+     *   id_cdc?: list<int|string>,
+     *   year?: string,
+     *   empiezamin?: string,
+     *   empiezamax?: string,
+     *   periodo?: string
+     * } $input
+     * @return array<string, mixed>
+     */
+    public function execute(array $input): array
+    {
+        $Qque = $input['que'] ?? '';
+        $Qcdc_sel = isset($input['cdc_sel']) && is_numeric($input['cdc_sel']) ? (int) $input['cdc_sel'] : 0;
+        $id_cdc = $input['id_cdc'] ?? [];
+
+        $cCasasDl = $this->selectCasas($Qcdc_sel, $id_cdc);
 
         $avisos = [];
         if ($Qque === '') {
             $oPeriodo = new Periodo();
             $oPeriodo->setDefaultAny('next');
-            $oPeriodo->setAny((string)($input['year'] ?? ''));
-            $oPeriodo->setEmpiezaMin((string)($input['empiezamin'] ?? ''));
-            $oPeriodo->setEmpiezaMax((string)($input['empiezamax'] ?? ''));
-            $oPeriodo->setPeriodo((string)($input['periodo'] ?? ''));
-            $oInicio = $oPeriodo->getF_ini();
-            $oFin = $oPeriodo->getF_fin();
+            $oPeriodo->setAny($input['year'] ?? '');
+            $oPeriodo->setEmpiezaMin($input['empiezamin'] ?? '');
+            $oPeriodo->setEmpiezaMax($input['empiezamax'] ?? '');
+            $oPeriodo->setPeriodo($input['periodo'] ?? '');
+            $oInicio = new DateTimeLocal($oPeriodo->getF_ini()->getIso());
+            $oFin = new DateTimeLocal($oPeriodo->getF_fin()->getIso());
 
             $a_resumen = [];
             foreach ($cCasasDl as $oCasaDl) {
-                $rowCasa = self::computeCasaPeriodo($oCasaDl, $oInicio, $oFin);
-                $a_resumen[$oCasaDl->getId_ubi()] = $rowCasa['row'];
+                $rowCasa = $this->computeCasaPeriodo($oCasaDl, $oInicio, $oFin);
+                $a_resumen[(int) $oCasaDl->getId_ubi()] = $rowCasa['row'];
                 $avisos = array_merge($avisos, $rowCasa['avisos']);
             }
-            self::aplicarSuperavitPadreHijo($a_resumen);
-            $tot = self::calcularTotales($a_resumen);
+            $a_resumen = $this->aplicarSuperavitPadreHijo($a_resumen);
+            $tot = $this->calcularTotales($a_resumen);
 
             return [
                 'modo' => 'periodo',
@@ -71,16 +95,16 @@ final class CasasResumenData
         $a_resumen = [];
         $tot = [];
         foreach ($cCasasDl as $oCasaDl) {
-            $id_ubi = $oCasaDl->getId_ubi();
+            $id_ubi = (int) $oCasaDl->getId_ubi();
             $a_resumen[$id_ubi] = [];
             foreach ($a_anys as $any) {
                 $oInicio = new DateTimeLocal("$any/1/1");
                 $oFin = new DateTimeLocal("$any/12/31");
-                $rowCasa = self::computeCasaPeriodo($oCasaDl, $oInicio, $oFin);
+                $rowCasa = $this->computeCasaPeriodo($oCasaDl, $oInicio, $oFin);
                 $a_resumen[$id_ubi][$any] = $rowCasa['row'];
                 $avisos = array_merge($avisos, $rowCasa['avisos']);
             }
-            self::aplicarSuperavitPadreHijoAnual($a_resumen, $a_anys);
+            $a_resumen = $this->aplicarSuperavitPadreHijoAnual($a_resumen, $a_anys);
         }
         foreach ($a_anys as $any) {
             $snapshot = [];
@@ -89,7 +113,7 @@ final class CasasResumenData
                     $snapshot[$id_ubi] = $rowsAny[$any];
                 }
             }
-            $tot[$any] = self::calcularTotales($snapshot);
+            $tot[$any] = $this->calcularTotales($snapshot);
         }
 
         return [
@@ -101,8 +125,11 @@ final class CasasResumenData
         ];
     }
 
-    /** @return array Lista de objetos CasaDl/CentroEllas. */
-    private static function selectCasas(int $cdc_sel, array $id_cdc): array
+    /**
+     * @param list<int|string> $id_cdc
+     * @return list<Casa|CentroEllas>
+     */
+    private function selectCasas(int $cdc_sel, array $id_cdc): array
     {
         $aWhere = [];
         $aOperador = [];
@@ -120,8 +147,7 @@ final class CasasResumenData
             case 5: $aWhere['sf'] = 't'; break;
             case 6:
                 $aWhere['sf'] = 't';
-                $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-                $cCentrosSf = $GesCentrosSf->getCentros(['cdc' => 't', '_ordre' => 'nombre_ubi']) ?: [];
+                $cCentrosSf = $this->centroEllasRepository->getCentros(['cdc' => 't', '_ordre' => 'nombre_ubi']) ?: [];
                 break;
             case 9:
                 if (!empty($id_cdc)) {
@@ -131,13 +157,14 @@ final class CasasResumenData
                 break;
         }
         $aWhere['_ordre'] = 'nombre_ubi';
-        $GesCasaDl = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
-        $cCasasDl = $GesCasaDl->getCasas($aWhere, $aOperador) ?: [];
-        if ($cdc_sel === 6 && $cCentrosSf) {
+        /** @var list<Casa|CentroEllas> $cCasasDl */
+        $cCasasDl = $this->casaDlRepository->getCasas($aWhere, $aOperador) ?: [];
+        if ($cdc_sel === 6 && $cCentrosSf !== []) {
             foreach ($cCentrosSf as $oCentroSf) {
                 $cCasasDl[] = $oCentroSf;
             }
         }
+
         return $cCasasDl;
     }
 
@@ -145,22 +172,25 @@ final class CasasResumenData
      * Calcula la fila resumen (secciones 0/1/2) para una casa en un
      * periodo concreto, sin aplicar override padre-hijo.
      *
-     * @return array{row:array, avisos:string[]}
+     * @return array{
+     *   row: array{
+     *     0: array{nom: string, detalles: list<array<string, mixed>>, gasto: float|int},
+     *     1: array<string, float|int|string>,
+     *     2: array<string, float|int|string>,
+     *     _id_ubi_padre: int,
+     *     _id_ubi_hijo: int
+     *   },
+     *   avisos: list<string>
+     * }
      */
-    private static function computeCasaPeriodo($oCasaDl, $oInicio, $oFin): array
+    private function computeCasaPeriodo(Casa|CentroEllas $oCasaDl, DateTimeLocal $oInicio, DateTimeLocal $oFin): array
     {
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $GrupoCasaRepository = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
-        $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
-        $IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
-        $UbiGastoRepository = $GLOBALS['container']->get(UbiGastoRepositoryInterface::class);
-
         $id_ubi = $oCasaDl->getId_ubi();
         $nombre_ubi = $oCasaDl->getNombre_ubi();
         $avisos = [];
 
-        $cGrupoCasas1 = $GrupoCasaRepository->getGrupoCasas(['id_ubi_padre' => $id_ubi]) ?: [];
-        $cGrupoCasas2 = $GrupoCasaRepository->getGrupoCasas(['id_ubi_hijo' => $id_ubi]) ?: [];
+        $cGrupoCasas1 = $this->grupoCasaRepository->getGrupoCasas(['id_ubi_padre' => $id_ubi]) ?: [];
+        $cGrupoCasas2 = $this->grupoCasaRepository->getGrupoCasas(['id_ubi_hijo' => $id_ubi]) ?: [];
         $cGrupoCasas = array_merge($cGrupoCasas1, $cGrupoCasas2);
         $id_ubi_padre = 0;
         $id_ubi_hijo = 0;
@@ -169,12 +199,15 @@ final class CasasResumenData
             $id_ubi_hijo = $oGrupoCasa->getId_ubi_hijo();
         }
 
-        $aPeriodos = $CasaPeriodoRepository->getArrayCasaPeriodos($id_ubi, $oInicio, $oFin);
+        $aPeriodos = $this->casaPeriodoRepository->getArrayCasaPeriodos($id_ubi, $oInicio, $oFin);
+
+        /** @var list<array{iso_ini: string, iso_fin: string, sfsv: int|string}> $aPeriodosList */
+        $aPeriodosList = array_values($aPeriodos);
 
         $row = [
             0 => ['nom' => $nombre_ubi, 'detalles' => [], 'gasto' => 0],
-            1 => self::inicialSeccion(),
-            2 => self::inicialSeccion(),
+            1 => $this->inicialSeccion(),
+            2 => $this->inicialSeccion(),
             '_id_ubi_padre' => $id_ubi_padre,
             '_id_ubi_hijo' => $id_ubi_hijo,
         ];
@@ -189,13 +222,16 @@ final class CasasResumenData
             '_ordre' => 'f_ini',
         ];
         $aOperador = ['f_ini' => '<=', 'f_fin' => '>=', 'status' => '<'];
-        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador) ?: [];
+        $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador) ?: [];
 
         $a = 0;
         foreach ($cActividades as $oActividad) {
             $id_activ = $oActividad->getId_activ();
             $oF_ini_act = $oActividad->getF_ini();
             $oF_fin_act = $oActividad->getF_fin();
+            if (!($oF_ini_act instanceof DateTimeLocal) || !($oF_fin_act instanceof DateTimeLocal)) {
+                continue;
+            }
             $nom_activ = $oActividad->getNom_activ();
 
             $num_dias_act = $oActividad->getDuracionAumentada();
@@ -204,7 +240,7 @@ final class CasasResumenData
             if ($num_dias_real <= 0) { continue; }
             $factor_dias = ($num_dias / $num_dias_real);
 
-            $a_ocupacion = CasasResumenOcupacion::diasOcupacion($aPeriodos, $oActividad, $oF_ini_act, $oF_fin_act);
+            $a_ocupacion = CasasResumenOcupacion::diasOcupacion($aPeriodosList, $oActividad, $oF_ini_act, $oF_fin_act);
             if (!empty($a_ocupacion['avisos'])) {
                 $avisos = array_merge($avisos, $a_ocupacion['avisos']);
             }
@@ -215,7 +251,7 @@ final class CasasResumenData
             $row[1]['dias'] += $a_ocupacion[1];
             $row[2]['dias'] += $a_ocupacion[2];
 
-            $oIngreso = $IngresoRepository->findById($id_activ);
+            $oIngreso = $this->ingresoRepository->findById($id_activ);
             $num_asistentes_previstos = $oIngreso?->getNumAsistentesPrevistosVo()?->value() ?? 0;
             $num_asistentes = $oIngreso?->getNumAsistentesVo()?->value() ?? 0;
             $ingresos_previstos_raw = $oIngreso?->getIngresosPrevistosVo()?->value();
@@ -261,18 +297,18 @@ final class CasasResumenData
         }
 
         foreach ([1, 2] as $s) {
-            $row[$s]['dias%'] = self::pct($row[1]['dias'] + $row[2]['dias'], $row[$s]['dias']);
-            $row[$s]['asist_prev%'] = self::pct($row[1]['asist_prev'] + $row[2]['asist_prev'], $row[$s]['asist_prev']);
-            $row[$s]['asist%'] = self::pct($row[1]['asist'] + $row[2]['asist'], $row[$s]['asist']);
-            $row[$s]['in_prev_acu%'] = self::pct($row[1]['in_prev_acu'] + $row[2]['in_prev_acu'], $row[$s]['in_prev_acu']);
-            $row[$s]['in_acu%'] = self::pct($row[1]['in_acu'] + $row[2]['in_acu'], $row[$s]['in_acu']);
+            $row[$s]['dias%'] = $this->pct($row[1]['dias'] + $row[2]['dias'], $row[$s]['dias']);
+            $row[$s]['asist_prev%'] = $this->pct($row[1]['asist_prev'] + $row[2]['asist_prev'], $row[$s]['asist_prev']);
+            $row[$s]['asist%'] = $this->pct($row[1]['asist'] + $row[2]['asist'], $row[$s]['asist']);
+            $row[$s]['in_prev_acu%'] = $this->pct($row[1]['in_prev_acu'] + $row[2]['in_prev_acu'], $row[$s]['in_prev_acu']);
+            $row[$s]['in_acu%'] = $this->pct($row[1]['in_acu'] + $row[2]['in_acu'], $row[$s]['in_acu']);
         }
 
-        $row[1]['aportacion'] = (float)$UbiGastoRepository->getSumaGastos($id_ubi, 1, $oInicio, $oFin);
-        $row[2]['aportacion'] = (float)$UbiGastoRepository->getSumaGastos($id_ubi, 2, $oInicio, $oFin);
-        $row[0]['gasto'] = (float)$UbiGastoRepository->getSumaGastos($id_ubi, 3, $oInicio, $oFin);
+        $row[1]['aportacion'] = (float)$this->ubiGastoRepository->getSumaGastos($id_ubi, 1, $oInicio, $oFin);
+        $row[2]['aportacion'] = (float)$this->ubiGastoRepository->getSumaGastos($id_ubi, 2, $oInicio, $oFin);
+        $row[0]['gasto'] = (float)$this->ubiGastoRepository->getSumaGastos($id_ubi, 3, $oInicio, $oFin);
 
-        $a_repartoGastos = CasasResumenOcupacion::reparto($aPeriodos);
+        $a_repartoGastos = CasasResumenOcupacion::reparto($aPeriodosList);
         $sumReparto = (float)$a_repartoGastos[1] + (float)$a_repartoGastos[2];
         if ($sumReparto > 0) {
             $row[1]['gasto%'] = round(((float)$a_repartoGastos[1]) / $sumReparto * 100, 2);
@@ -291,7 +327,8 @@ final class CasasResumenData
         return ['row' => $row, 'avisos' => $avisos];
     }
 
-    private static function inicialSeccion(): array
+    /** @return array<string, int|float|string> */
+    private function inicialSeccion(): array
     {
         return [
             'dias' => 0, 'dias%' => '-',
@@ -305,32 +342,78 @@ final class CasasResumenData
         ];
     }
 
-    private static function pct(float $total, float $parte): string
+    private function pct(float $total, float $parte): string
     {
         if ($total <= 0) { return '-'; }
         return (string)round($parte / $total * 100, 2);
     }
 
-    private static function aplicarSuperavitPadreHijo(array &$a_resumen): void
+    /**
+     * @param array<int, array{
+     *   0: array{nom: string, detalles: list<array<string, mixed>>, gasto: float|int},
+     *   1: array<string, float|int|string>,
+     *   2: array<string, float|int|string>,
+     *   _id_ubi_padre: int,
+     *   _id_ubi_hijo: int
+     * }> $a_resumen
+     * @return array<int, array{
+     *   0: array{nom: string, detalles: list<array<string, mixed>>, gasto: float|int},
+     *   1: array<string, float|int|string>,
+     *   2: array<string, float|int|string>,
+     *   _id_ubi_padre: int,
+     *   _id_ubi_hijo: int
+     * }>
+     */
+    private function aplicarSuperavitPadreHijo(array $a_resumen): array
     {
+        $original = $a_resumen;
         foreach ($a_resumen as $id_ubi => $row) {
-            $id_ubi_padre = $row['_id_ubi_padre'] ?? 0;
-            $id_ubi_hijo = $row['_id_ubi_hijo'] ?? 0;
-            if ($id_ubi === $id_ubi_hijo && $id_ubi_padre && isset($a_resumen[$id_ubi_padre])) {
-                $padre = $a_resumen[$id_ubi_padre];
-                foreach ([1, 2] as $s) {
-                    if (is_numeric($padre[$s]['gasto%'])) {
-                        $in = ($padre[$s]['aportacion'] + $padre[$s]['in_acu'] + $row[$s]['in_acu']);
-                        $out = round($padre[$s]['gasto%'] * $padre[0]['gasto'] / 100, 2);
-                        $a_resumen[$id_ubi_padre][$s]['superavit'] = round($in - $out, 2);
-                    }
-                    $a_resumen[$id_ubi][$s]['superavit'] = '';
+            $id_ubi_padre = $row['_id_ubi_padre'];
+            $id_ubi_hijo = $row['_id_ubi_hijo'];
+            if ($id_ubi !== $id_ubi_hijo || $id_ubi_padre === 0 || !isset($original[$id_ubi_padre])) {
+                continue;
+            }
+            $padre = $original[$id_ubi_padre];
+            foreach ([1, 2] as $s) {
+                $gastoPctPadre = $padre[$s]['gasto%'];
+                if (is_numeric($gastoPctPadre)) {
+                    $aportacionPadre = is_numeric($padre[$s]['aportacion']) ? (float) $padre[$s]['aportacion'] : 0.0;
+                    $inAcuPadre = is_numeric($padre[$s]['in_acu']) ? (float) $padre[$s]['in_acu'] : 0.0;
+                    $inAcuHijo = is_numeric($row[$s]['in_acu']) ? (float) $row[$s]['in_acu'] : 0.0;
+                    $gastoTotalPadre = (float) $padre[0]['gasto'];
+                    $in = $aportacionPadre + $inAcuPadre + $inAcuHijo;
+                    $out = round((float) $gastoPctPadre * $gastoTotalPadre / 100, 2);
+                    $padreRow = $a_resumen[$id_ubi_padre];
+                    $padreRow[$s]['superavit'] = round($in - $out, 2);
+                    $a_resumen[$id_ubi_padre] = $padreRow;
                 }
+                $hijoRow = $a_resumen[$id_ubi];
+                $hijoRow[$s]['superavit'] = '';
+                $a_resumen[$id_ubi] = $hijoRow;
             }
         }
+
+        return $a_resumen;
     }
 
-    private static function aplicarSuperavitPadreHijoAnual(array &$a_resumen, array $a_anys): void
+    /**
+     * @param array<int, array<int, array{
+     *   0: array{nom: string, detalles: list<array<string, mixed>>, gasto: float|int},
+     *   1: array<string, float|int|string>,
+     *   2: array<string, float|int|string>,
+     *   _id_ubi_padre: int,
+     *   _id_ubi_hijo: int
+     * }>> $a_resumen
+     * @param list<int> $a_anys
+     * @return array<int, array<int, array{
+     *   0: array{nom: string, detalles: list<array<string, mixed>>, gasto: float|int},
+     *   1: array<string, float|int|string>,
+     *   2: array<string, float|int|string>,
+     *   _id_ubi_padre: int,
+     *   _id_ubi_hijo: int
+     * }>>
+     */
+    private function aplicarSuperavitPadreHijoAnual(array $a_resumen, array $a_anys): array
     {
         foreach ($a_anys as $any) {
             $snapshot = [];
@@ -339,37 +422,53 @@ final class CasasResumenData
                     $snapshot[$id_ubi] = $rowsAny[$any];
                 }
             }
-            self::aplicarSuperavitPadreHijo($snapshot);
+            $snapshot = $this->aplicarSuperavitPadreHijo($snapshot);
             foreach ($snapshot as $id_ubi => $row) {
                 $a_resumen[$id_ubi][$any] = $row;
             }
         }
+
+        return $a_resumen;
     }
 
-    private static function calcularTotales(array $a_resumen): array
+    /**
+     * @param array<int, array{
+     *   0: array{nom: string, detalles: list<array<string, mixed>>, gasto: float|int},
+     *   1: array<string, float|int|string>,
+     *   2: array<string, float|int|string>,
+     *   _id_ubi_padre: int,
+     *   _id_ubi_hijo: int
+     * }> $a_resumen
+     * @return array<int|string, mixed>
+     */
+    private function calcularTotales(array $a_resumen): array
     {
         $tot = [
-            0 => ['gasto' => 0],
-            1 => self::inicialSeccion(),
-            2 => self::inicialSeccion(),
+            0 => ['gasto' => 0.0],
+            1 => $this->inicialSeccion(),
+            2 => $this->inicialSeccion(),
         ];
         foreach ([1, 2] as $s) {
             foreach (['dias', 'asist_prev', 'asist', 'in_prev_acu', 'in_acu', 'gasto', 'aportacion', 'superavit'] as $k) {
-                $tot[$s][$k] = 0;
+                $sum = 0.0;
                 foreach ($a_resumen as $row) {
-                    $v = $row[$s][$k] ?? 0;
+                    $v = $row[$s][$k];
                     if (is_numeric($v)) {
-                        $tot[$s][$k] += (float)$v;
+                        $sum += (float) $v;
                     }
                 }
+                $tot[$s][$k] = $sum;
             }
         }
         foreach ($a_resumen as $row) {
-            $tot[0]['gasto'] += (float)($row[0]['gasto'] ?? 0);
+            $tot[0]['gasto'] += (float) $row[0]['gasto'];
         }
         foreach (['dias', 'asist_prev', 'asist', 'in_prev_acu', 'in_acu', 'gasto'] as $k) {
-            $tot[1][$k . '%'] = self::pct($tot[1][$k] + $tot[2][$k], $tot[1][$k]);
-            $tot[2][$k . '%'] = self::pct($tot[1][$k] + $tot[2][$k], $tot[2][$k]);
+            $parte1 = (float) $tot[1][$k];
+            $parte2 = (float) $tot[2][$k];
+            $total = $parte1 + $parte2;
+            $tot[1][$k . '%'] = $this->pct($total, $parte1);
+            $tot[2][$k . '%'] = $this->pct($total, $parte2);
         }
         return $tot;
     }

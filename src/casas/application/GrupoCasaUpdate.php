@@ -12,7 +12,19 @@ use src\casas\domain\entity\GrupoCasa;
  */
 final class GrupoCasaUpdate
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private GrupoCasaRepositoryInterface $grupoCasaRepository,
+    ) {
+    }
+
+    /**
+     * @param array{
+     *   id_item?: string,
+     *   id_ubi_padre?: int|string,
+     *   id_ubi_hijo?: int|string
+     * } $input
+     */
+    public function execute(array $input): string
     {
         $id_item_raw = (string)($input['id_item'] ?? '');
         $id_ubi_padre = (int)($input['id_ubi_padre'] ?? 0);
@@ -25,12 +37,11 @@ final class GrupoCasaUpdate
             return (string)_("No puede ser la misma casa");
         }
 
-        $repo = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
         if ($id_item_raw === '' || $id_item_raw === 'nuevo') {
             $oGrupo = new GrupoCasa();
-            $oGrupo->setId_item($repo->getNewId());
+            $oGrupo->setId_item($this->grupoCasaRepository->getNewId());
         } else {
-            $oGrupo = $repo->findById((int)$id_item_raw);
+            $oGrupo = $this->grupoCasaRepository->findById((int)$id_item_raw);
             if ($oGrupo === null) {
                 return (string)_("no se encuentra el grupo");
             }
@@ -39,9 +50,9 @@ final class GrupoCasaUpdate
         $oGrupo->setId_ubi_padre($id_ubi_padre);
         $oGrupo->setId_ubi_hijo($id_ubi_hijo);
 
-        if ($repo->Guardar($oGrupo) === false) {
+        if ($this->grupoCasaRepository->Guardar($oGrupo) === false) {
             return (string)_("Hay un error, no se ha guardado.")
-                . "\n" . $repo->getErrorTxt();
+                . "\n" . $this->grupoCasaRepository->getErrorTxt();
         }
 
         return '';

@@ -2,23 +2,17 @@
 
 namespace src\casas\infrastructure\persistence\postgresql;
 
-use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\casas\domain\entity\GrupoCasa;
+use src\shared\infrastructure\GlobalPdo;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
-
 
 /**
  * Clase que adapta la tabla du_grupos_dl a la interfaz del repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 22/12/2025
  */
 class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaRepositoryInterface
 {
@@ -26,21 +20,15 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
-        $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
-        $this->setoDbl_select($oDbl_Select);
+        $this->setoDbl(GlobalPdo::get('oDBC'));
+        $this->setoDbl_select(GlobalPdo::get('oDBC_Select'));
         $this->setNomTabla('du_grupos_dl');
     }
 
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
     /**
-     * devuelve una colección (array) de objetos de tipo GrupoCasa
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo GrupoCasa
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<GrupoCasa>
      */
     public function getGrupoCasas(array $aWhere = [], array $aOperators = []): array
     {
@@ -50,17 +38,13 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
+            if ($camp === '_ordre' || $camp === '_limit') {
                 continue;
             }
             $sOperador = $aOperators[$camp] ?? '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
                 $aCondicion[] = $a;
             }
-            // operadores que no requieren valores
             if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
                 unset($aWhere[$camp]);
             }
@@ -73,34 +57,39 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
         }
         $sCondicion = implode(' AND ', $aCondicion);
         if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
+            $sCondicion = ' WHERE ' . $sCondicion;
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string)$limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $GrupoCasa = GrupoCasa::fromArray($aDatos);
-            $GrupoCasaSet->add($GrupoCasa);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $GrupoCasaSet->add(GrupoCasa::fromArray($aDatos));
         }
-        return $GrupoCasaSet->getTot();
+        return array_values($GrupoCasaSet->getTot());
     }
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(GrupoCasa $GrupoCasa): bool
     {
@@ -111,10 +100,6 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-
-    /**
-     * Si no existe el registro, hace un insert, si existe, se hace el update.
-     */
     public function Guardar(GrupoCasa $GrupoCasa): bool
     {
         $id_item = $GrupoCasa->getId_item();
@@ -124,7 +109,6 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
 
         $aDatos = $GrupoCasa->toArrayForDatabase();
         if ($bInsert === false) {
-            //UPDATE
             unset($aDatos['id_item']);
             $update = "
 					id_ubi_padre             = :id_ubi_padre,
@@ -132,11 +116,13 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
-            $campos = "(id_item,id_ubi_padre,id_ubi_hijo)";
-            $valores = "(:id_item,:id_ubi_padre,:id_ubi_hijo)";
+            $campos = '(id_item,id_ubi_padre,id_ubi_hijo)';
+            $valores = '(:id_item,:id_ubi_padre,:id_ubi_hijo)';
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        if ($stmt === false) {
+            return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -147,35 +133,43 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
-
 
     public function findById(int $id_item): ?GrupoCasa
     {
         $aDatos = $this->datosById($id_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return GrupoCasa::fromArray($aDatos);
@@ -185,6 +179,12 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('du_grupos_dl_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }
