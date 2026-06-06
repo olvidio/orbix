@@ -5,13 +5,14 @@ namespace src\asignaturas\domain;
 /* No vale el underscore en el nombre */
 
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
+use src\asignaturas\domain\entity\Sector;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoSectores extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private SectorRepositoryInterface $sectorRepository,
+    ) {
         $this->setTxtTitulo(_("sectores"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este sector?"));
         $this->setTxtBuscar(_("buscar un sector"));
@@ -23,20 +24,19 @@ class InfoSectores extends DatosInfoRepo
         $this->setRepositoryInterface(SectorRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<Sector>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'sector');
+            $aWhere = ['_ordre' => 'sector'];
             $aOperador = [];
         } else {
-            $aWhere = array('sector' => $this->k_buscar);
-            $aOperador = array('sector' => 'sin_acentos');
+            $aWhere = ['sector' => $this->k_buscar];
+            $aOperador = ['sector' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getSectores($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->sectorRepository->getSectores($aWhere, $aOperador);
     }
 }

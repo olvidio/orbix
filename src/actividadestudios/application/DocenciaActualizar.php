@@ -2,6 +2,7 @@
 
 namespace src\actividadestudios\application;
 
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
@@ -11,6 +12,7 @@ use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use frontend\shared\web\Periodo;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Actualiza el dossier `d_docencia_stgr` con la informacion docente derivada
@@ -23,12 +25,23 @@ use frontend\shared\web\Periodo;
  */
 final class DocenciaActualizar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ProfesorDocenciaStgrRepositoryInterface $profesorDocenciaStgrRepository,
+        private ActaRepositoryInterface $actaRepository,
+        private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $Qyear = (string) ($input['year'] ?? '');
-        $Qperiodo = (string) ($input['periodo'] ?? '');
-        $Qempiezamin = (string) ($input['empiezamin'] ?? '');
-        $Qempiezamax = (string) ($input['empiezamax'] ?? '');
+        $Qyear = input_string($input, 'year');
+        $Qperiodo = input_string($input, 'periodo');
+        $Qempiezamin = input_string($input, 'empiezamin');
+        $Qempiezamax = input_string($input, 'empiezamax');
 
         if (empty($Qperiodo)) {
             $Qperiodo = 'curso_ca';
@@ -58,23 +71,23 @@ final class DocenciaActualizar
             'id_tipo_activ' => '~',
         ];
 
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $cActividades = $ActividadAllRepository->getActividades($aWhere, $aOperador);
-        $ini_m = $_SESSION['oConfig']->getMesIniStgr();
-
-        $ProfesorDocenciaStgrRepository = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
-        $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
-        $ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
+        $cActividades = $this->actividadAllRepository->getActividades($aWhere, $aOperador);
+        /** @var ConfigSnapshot $oConfig */
+        $oConfig = $_SESSION['oConfig'];
+        $ini_m = $oConfig->getMesIniStgr();
 
         foreach ($cActividades as $oActividad) {
             $id_activ = $oActividad->getId_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $oFini = $oActividad->getF_ini();
+            if ($oFini === null) {
+                continue;
+            }
             $mes = (int) $oFini->format('m');
             $any = (int) $oFini->format('Y');
             $ini_a = ($mes < $ini_m) ? $any - 1 : $any;
 
-            $cActivAsignaturas = $ActividadAsignaturaRepository->getActividadAsignaturas(
+            $cActivAsignaturas = $this->actividadAsignaturaRepository->getActividadAsignaturas(
                 ['id_activ' => $id_activ],
                 ['id_profesor' => 'IS NOT NULL']
             );
@@ -88,14 +101,14 @@ final class DocenciaActualizar
                 $tipo = $oActividadAsignatura->getTipo();
                 if (empty($tipo)) {
                     $tipo = TipoActividadAsignatura::TIPO_CA;
-                    if (preg_match("/$id_tipo_inv/", $id_tipo_activ)) {
+                    if (preg_match("/$id_tipo_inv/", (string) $id_tipo_activ)) {
                         $tipo = TipoActividadAsignatura::TIPO_INV;
                     }
                 }
 
-                $cActas = $ActaRepository->getActas(['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura]);
+                $cActas = $this->actaRepository->getActas(['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura]);
                 $acta = '';
-                if (is_array($cActas)) {
+                if (count($cActas) > 0) {
                     foreach ($cActas as $oActa) {
                         $acta .= (empty($acta) ? '' : ', ') . $oActa->getActa();
                     }
@@ -106,14 +119,14 @@ final class DocenciaActualizar
                     'id_activ' => $id_activ,
                     'id_asignatura' => $id_asignatura,
                 ];
-                $cProfesorDocencia = $ProfesorDocenciaStgrRepository->getProfesorDocenciasStgr($aWhereDocencia);
-                if (is_array($cProfesorDocencia) && count($cProfesorDocencia) > 0) {
+                $cProfesorDocencia = $this->profesorDocenciaStgrRepository->getProfesorDocenciasStgr($aWhereDocencia);
+                if (count($cProfesorDocencia) > 0) {
                     $oProfesorDocencia = $cProfesorDocencia[0];
                     $oProfesorDocencia->setCurso_inicio($ini_a);
                     $oProfesorDocencia->setTipo($tipo);
                     $oProfesorDocencia->setActa($acta);
                 } else {
-                    $newId = $ProfesorDocenciaStgrRepository->getNewId();
+                    $newId = $this->profesorDocenciaStgrRepository->getNewId();
                     $oProfesorDocencia = new ProfesorDocenciaStgr();
                     $oProfesorDocencia->setId_item($newId);
                     $oProfesorDocencia->setId_nom($id_profesor);
@@ -123,7 +136,7 @@ final class DocenciaActualizar
                     $oProfesorDocencia->setTipo($tipo);
                     $oProfesorDocencia->setActa($acta);
                 }
-                $ProfesorDocenciaStgrRepository->Guardar($oProfesorDocencia);
+                $this->profesorDocenciaStgrRepository->Guardar($oProfesorDocencia);
             }
         }
 

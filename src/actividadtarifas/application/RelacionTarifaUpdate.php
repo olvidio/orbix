@@ -5,37 +5,43 @@ namespace src\actividadtarifas\application;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\entity\RelacionTarifaTipoActividad;
 use src\actividadtarifas\domain\value_objects\SerieId;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Mutacion: crea o actualiza una `RelacionTarifaTipoActividad`.
- *
- * Sucesor de la rama `update` del dispatcher legacy
- * `apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php`.
  */
 final class RelacionTarifaUpdate
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private RelacionTarifaTipoActividadRepositoryInterface $relacionTarifaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $id_item = (string)($input['id_item'] ?? '');
-        $id_tarifa = (int)($input['id_tarifa'] ?? 0);
-        $id_tipo_activ = (int)($input['id_tipo_activ'] ?? 0);
+        $id_item = input_string($input, 'id_item');
+        $id_tarifa = input_int($input, 'id_tarifa');
+        $id_tipo_activ = input_int($input, 'id_tipo_activ');
 
         if ($id_tarifa === 0) {
-            return (string)_("debe indicar la tarifa");
+            return (string) _("debe indicar la tarifa");
         }
         if ($id_tipo_activ === 0) {
-            return (string)_("debe indicar el tipo de actividad");
+            return (string) _("debe indicar el tipo de actividad");
         }
 
-        $repo = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
         if ($id_item === 'nuevo' || $id_item === '') {
-            $newId = $repo->getNewId();
+            $newId = $this->relacionTarifaRepository->getNewId();
             $oRelacion = new RelacionTarifaTipoActividad();
             $oRelacion->setId_item($newId);
         } else {
-            $oRelacion = $repo->findById((int)$id_item);
+            $oRelacion = $this->relacionTarifaRepository->findById((int) $id_item);
             if ($oRelacion === null) {
-                return (string)_("no se encuentra la relación");
+                return (string) _("no se encuentra la relación");
             }
         }
 
@@ -43,9 +49,9 @@ final class RelacionTarifaUpdate
         $oRelacion->setId_serie(SerieId::GENERAL);
         $oRelacion->setId_tipo_activ($id_tipo_activ);
 
-        if ($repo->Guardar($oRelacion) === false) {
-            return (string)_("hay un error, no se ha guardado")
-                . "\n" . $repo->getErrorTxt();
+        if ($this->relacionTarifaRepository->Guardar($oRelacion) === false) {
+            return (string) _("hay un error, no se ha guardado")
+                . "\n" . $this->relacionTarifaRepository->getErrorTxt();
         }
 
         return '';

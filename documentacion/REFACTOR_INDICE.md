@@ -29,7 +29,7 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 - **`apps/<modulo>/` de negocio:** eliminados; solo persisten `apps/core/` y `apps/web/`.
 - **Frontend con `use src\...` en controladores:** **18** ficheros en **10** ámbulos (actividadescentro cerrado; inventario en [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md)).
 - **PHPStan:** nivel 9; ~18.500 ocurrencias en baseline (A=629, B=9368, C=8520).
-- **`$GLOBALS['container']` en `src/`:** ~530 ficheros repartidos por módulo (ver matriz).
+- **`$GLOBALS['container']` en `src/`:** ~523 ficheros repartidos por módulo (ver matriz).
 
 ---
 
@@ -49,10 +49,10 @@ Columnas:
 | **actividades** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividades_migracion_baseline.md) |
 | **actividadescentro** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadescentro_migracion_baseline.md) |
 | actividadessacd | ✓ | 2 | 16 | 2 controladores frontend pendientes |
-| actividadestudios | ✓ | 2 | 31 | Slices completos; 2 controladores frontend pendientes |
+| **actividadestudios** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadestudios_migracion_baseline.md) |
 | actividadplazas | ✓ | 2 | 0 | **Cierre DI + PHPStan** (2026-06-06); 2 controladores frontend pendientes; ver [baseline](actividadplazas_migracion_baseline.md) |
-| actividadtarifas | ✓ | 1 | 14 | 1 controlador frontend pendiente |
-| asignaturas | — | 0 | 7 | Sin baseline |
+| **actividadtarifas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadtarifas_migracion_baseline.md) |
+| **asignaturas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](asignaturas_migracion_baseline.md) |
 | cambios | ✓ | 0 | 16 | Migración estructural completa |
 | cartaspresentacion | ✓ | 0 | 7 | Migración estructural completa |
 | casas | ✓ | 0 | 15 | Baseline de planificación; código ya en `frontend/` + `src/` |
@@ -104,9 +104,9 @@ Orden sugerido por madurez y volumen de `$GLOBALS`:
 
 1. **asistentes** (piloto de referencia; 0 deuda frontend)
 2. dossiers, planning, permisos, cartaspresentacion (pocos `GLOBALS`)
-3. actividadcargos, zonassacd, actividadplazas, actividadescentro
+3. actividadcargos, zonassacd, actividadplazas, actividadescentro, **actividadestudios**
 4. profesores, certificados, asistentes-adyacentes (personas, cambios, casas)
-5. encargossacd, misas, procesos, actividadestudios, notas
+5. encargossacd, misas, procesos, notas
 6. inventario, ubis, usuarios (mayor `$GLOBALS`)
 
 ### Fase 3 — PHPStan incremental (no global de golpe)

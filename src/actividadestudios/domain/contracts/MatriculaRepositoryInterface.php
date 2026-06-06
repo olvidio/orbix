@@ -5,33 +5,19 @@ namespace src\actividadestudios\domain\contracts;
 use src\actividadestudios\domain\entity\Matricula;
 use src\actividadestudios\domain\value_objects\ActividadMatriculaPk;
 
-
-/**
- * Interfaz de la clase Matricula y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 29/12/2025
- */
 interface MatriculaRepositoryInterface
 {
-
+    /**
+     * @return list<Matricula>
+     */
     public function getMatriculasPendientes(?int $id_nom = null): array;
 
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
     /**
-     * devuelve una colección (array) de objetos de tipo Matricula
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Matricula
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Matricula>
      */
     public function getMatriculas(array $aWhere = [], array $aOperators = []): array;
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(Matricula $Matricula): bool;
 
@@ -39,13 +25,17 @@ interface MatriculaRepositoryInterface
 
     public function getErrorTxt(): string;
 
-
-
     public function getNomTabla(): string;
 
-    public function datosById(int $id_activ, int $id_asignatura, int $id_nom): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_activ, int $id_asignatura, int $id_nom): array|false;
 
-    public function datosByPk(ActividadMatriculaPk $pk): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosByPk(ActividadMatriculaPk $pk): array|false;
 
     public function findById(int $id_activ, int $id_asignatura, int $id_nom): ?Matricula;
 

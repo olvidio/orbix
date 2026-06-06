@@ -15,12 +15,14 @@ use src\notas\domain\value_objects\NotaSituacion;
  */
 class PosiblesCa
 {
+    public function __construct(
+        private PersonaNotaRepositoryInterface $personaNotaRepository,
+    ) {
+    }
 
     /**
-     *
-     * @param integer $id_nom
-     * @param array $aAsignaturas id_asignatura => array(nombre_asignatura, creditos)
-     * @return array    [ 'suma'=> suma creditos,  'lista' => array(id_asignatura => datosAsignatura) ]
+     * @param array<int, array{nombre_asignatura: mixed, creditos: mixed}|string> $aAsignaturas
+     * @return array{suma: int|float, lista: array<int, array{nombre_asignatura: mixed, creditos: mixed}>}
      */
     function contar_creditos(int $id_nom, array $aAsignaturas): array
     {
@@ -30,8 +32,7 @@ class PosiblesCa
         foreach ($aNotas as $id_situacion) {
             $aSuperadas[$id_situacion] = 't';
         }
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-        $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotas(array('id_nom' => $id_nom));
+        $cPersonaNotas = $this->personaNotaRepository->getPersonaNotas(array('id_nom' => $id_nom));
         $num_opcionales = 0;
         $todas_asig_p = [];
         foreach ($cPersonaNotas as $oPersonaNota) {
@@ -48,13 +49,16 @@ class PosiblesCa
         }
         $aLista = [];
         foreach ($aAsignaturas as $id_asignatura => $datosAsignatura) {
+            if (!is_array($datosAsignatura)) {
+                continue;
+            }
             $creditos = $datosAsignatura['creditos'];
             // Ojo con las opcionales
             if ($id_asignatura > 3000) {
                 if ($num_opcionales >= 7) continue;
             }
             if (!in_array($id_asignatura, $todas_asig_p)) {
-                $suma_creditos += $creditos;
+                $suma_creditos += is_numeric($creditos) ? (float) $creditos : 0;
                 $aLista [$id_asignatura] = $datosAsignatura;
             }
         }

@@ -7,6 +7,9 @@ final class SerieId
     public const GENERAL = 1;
     public const ESTUDIANTE = 2;
 
+    /**
+     * @return array<int, string>
+     */
     public static function getArraySerie(): array
     {
         return [

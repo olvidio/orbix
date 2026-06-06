@@ -4,12 +4,15 @@
  */
 
 use src\actividadtarifas\application\TarifaUbiListaData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
 
 $input = [
-    'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),
-    'year' => (int)filter_input(INPUT_POST, 'year'),
+    'id_ubi' => input_int($_POST, 'id_ubi'),
+    'year' => input_int($_POST, 'year'),
 ];
 
-$data = TarifaUbiListaData::execute($input);
-ContestarJson::enviar('', $data);
+/** @var TarifaUbiListaData $useCase */
+$useCase = DependencyResolver::get(TarifaUbiListaData::class);
+ContestarJson::enviar('', $useCase->execute($input));

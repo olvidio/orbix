@@ -62,9 +62,14 @@ class Asignatura
 
     public function setIdAsignaturaVo(AsignaturaId|int $id): void
     {
-        $this->id_asignatura = $id instanceof AsignaturaId
-            ? $id
-            : AsignaturaId::fromNullableInt($id);
+        if ($id instanceof AsignaturaId) {
+            $this->id_asignatura = $id;
+            return;
+        }
+        $vo = AsignaturaId::fromNullableInt($id);
+        if ($vo !== null) {
+            $this->id_asignatura = $vo;
+        }
     }
 
     public function getIdNivelVo(): NivelId
@@ -74,9 +79,14 @@ class Asignatura
 
     public function setIdNivelVo(NivelId|int|null $id): void
     {
-        $this->id_nivel = $id instanceof NivelId
-            ? $id
-            : NivelId::fromNullableInt($id);
+        if ($id instanceof NivelId) {
+            $this->id_nivel = $id;
+            return;
+        }
+        $vo = NivelId::fromNullableInt($id);
+        if ($vo !== null) {
+            $this->id_nivel = $vo;
+        }
     }
 
     public function getNombreAsignaturaVo(): AsignaturaName
@@ -86,9 +96,14 @@ class Asignatura
 
     public function setNombreAsignaturaVo(AsignaturaName|string $nombre): void
     {
-        $this->nombre_signatura = $nombre instanceof AsignaturaName
-            ? $nombre
-            : AsignaturaName::fromNullableString($nombre);
+        if ($nombre instanceof AsignaturaName) {
+            $this->nombre_signatura = $nombre;
+            return;
+        }
+        $vo = AsignaturaName::fromNullableString($nombre);
+        if ($vo !== null) {
+            $this->nombre_signatura = $vo;
+        }
     }
 
     public function getNombreCortoVo(): ?AsignaturaShortName
@@ -183,7 +198,7 @@ class Asignatura
 
     public function setId_nivel(int $id_nivel): void
     {
-        $this->id_nivel = NivelId::fromNullableInt($id_nivel);
+        $this->id_nivel = new NivelId($id_nivel);
     }
 
 
@@ -195,7 +210,7 @@ class Asignatura
 
     public function setNombre_asignatura(string $nombre_asignatura): void
     {
-        $this->nombre_signatura = AsignaturaName::fromNullableString($nombre_asignatura);
+        $this->nombre_signatura = new AsignaturaName($nombre_asignatura);
     }
 
 
@@ -263,7 +278,10 @@ class Asignatura
         return 'id_asignatura';
     }
 
-  public function getDatosCampos(): array
+    /**
+     * @return list<DatosCampo>
+     */
+    public function getDatosCampos(): array
     {
         $oAsignaturaSet = new Set();
 
@@ -276,7 +294,7 @@ class Asignatura
         $oAsignaturaSet->add($this->getDatosId_sector());
         $oAsignaturaSet->add($this->getDatosStatus());
         $oAsignaturaSet->add($this->getDatosId_tipo());
-        return $oAsignaturaSet->getTot();
+        return array_values($oAsignaturaSet->getTot());
     }
 
     /**
@@ -447,6 +465,10 @@ class Asignatura
     /**
      * La columna en BD es `nombre_asignatura`; la propiedad VO se llama `nombre_signatura`
      * y hay {@see self::getNombreAsignaturaVo()} (Hydratable esperaría getNombreSignaturaVo).
+     */
+    /**
+     * @param array<string, callable> $converters
+     * @return array<string, mixed>
      */
     public function toArrayForDatabase(array $converters = []): array
     {

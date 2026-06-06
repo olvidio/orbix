@@ -24,8 +24,19 @@ use src\personas\domain\entity\Persona;
  */
 class Select_matriculas_de_una_actividad
 {
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
+        private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private MatriculaDlRepositoryInterface $matriculaDlRepository,
+    ) {
+    }
+
     private string $nom_activ = '';
+    /** @var array<int|string, mixed> */
     private array $a_valores = [];
+    /** @var array<int|string, string> */
     private array $a_grupos = [];
     private string $sin_asignaturas_mensaje = '';
     private string $msg_err = '';
@@ -38,9 +49,12 @@ class Select_matriculas_de_una_actividad
     private int $id_pau = 0;
     private int $permiso = 1;
 
+    /** @var int|string|null */
     private $Qid_sel;
+    /** @var int|string|null */
     private $Qscroll_id;
 
+    /** @return array<int, array{txt: string, click: string}> */
     public function getBotones(): array
     {
         return [
@@ -48,6 +62,7 @@ class Select_matriculas_de_una_actividad
         ];
     }
 
+    /** @return array<int, string> */
     public function getCabeceras(): array
     {
         return [
@@ -56,6 +71,7 @@ class Select_matriculas_de_una_actividad
         ];
     }
 
+    /** @return array<int|string, mixed> */
     public function getValores(): array
     {
         if (empty($this->a_valores) && $this->sin_asignaturas_mensaje === '') {
@@ -64,6 +80,7 @@ class Select_matriculas_de_una_actividad
         return $this->a_valores;
     }
 
+    /** @return array<int|string, string> */
     public function getGrupos(): array
     {
         if (empty($this->a_grupos) && $this->sin_asignaturas_mensaje === '') {
@@ -77,24 +94,27 @@ class Select_matriculas_de_una_actividad
         $this->sin_asignaturas_mensaje = '';
         $this->msg_err = '';
         $mi_dele = ConfigGlobal::mi_delef();
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($this->id_pau);
+        $oActividad = $this->actividadAllRepository->findById($this->id_pau);
+        if ($oActividad === null) {
+            $this->sin_asignaturas_mensaje = _("no encuentro la actividad");
+            return;
+        }
         $this->nom_activ = $oActividad->getNom_activ();
         $dl_org = $oActividad->getDl_org();
 
         if ($mi_dele == $dl_org) {
             $this->permiso = 3;
-            $repoAsignaturas = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
+            $repoAsignaturas = $this->actividadAsignaturaDlRepository;
         } else {
             $this->permiso = 1;
-            $repoAsignaturas = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
+            $repoAsignaturas = $this->actividadAsignaturaRepository;
         }
         $cActividadAsignaturas = $repoAsignaturas->getActividadAsignaturas([
             'id_activ' => $this->id_pau,
             '_ordre' => 'id_asignatura',
         ]);
 
-        if (is_array($cActividadAsignaturas) && count($cActividadAsignaturas) === 0) {
+        if (count($cActividadAsignaturas) === 0) {
             $this->sin_asignaturas_mensaje = _("esta actividad no tiene ninguna asignatura");
             $this->a_valores = [];
             $this->a_grupos = [];
@@ -106,8 +126,6 @@ class Select_matriculas_de_una_actividad
         $msg_err = '';
         $aGrupos = [];
         $a_valores = [];
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
         foreach ($cActividadAsignaturas as $oActividadAsignatura) {
             $a++;
             $id_asignatura = $oActividadAsignatura->getId_asignatura();
@@ -120,14 +138,14 @@ class Select_matriculas_de_una_actividad
                 }
             }
 
-            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
+            $oAsignatura = $this->asignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
-            $nombre_corto = $oAsignatura->getNombre_corto();
+            $nombre_corto = $oAsignatura->getNombre_corto() ?? '';
             $aGrupos[$id_asignatura] = $nombre_corto;
 
-            $cMatriculas = $MatriculaDlRepository->getMatriculas([
+            $cMatriculas = $this->matriculaDlRepository->getMatriculas([
                 'id_activ' => $this->id_pau,
                 'id_asignatura' => $id_asignatura,
             ]);
@@ -202,19 +220,19 @@ class Select_matriculas_de_una_actividad
         ];
     }
 
-    public function getId_dossier() { return $this->id_dossier; }
+    public function getId_dossier(): int { return $this->id_dossier; }
     public function getPau(): string { return $this->pau; }
     public function getObj_pau(): string { return $this->obj_pau; }
     public function getId_pau(): int { return $this->id_pau; }
     public function getPermiso(): int { return $this->permiso; }
 
-    public function setId_dossier($id_dossier): void { $this->id_dossier = (int) $id_dossier; }
-    public function setPau($pau): void { $this->pau = (string) $pau; }
-    public function setObj_pau($obj_pau): void { $this->obj_pau = (string) $obj_pau; }
-    public function setId_pau($id_pau): void { $this->id_pau = (int) $id_pau; }
-    public function setPermiso($permiso): void { $this->permiso = (int) $permiso; }
-    public function setQid_sel($Qid_sel): void { $this->Qid_sel = $Qid_sel; }
-    public function setQscroll_id($Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
-    public function setBloque($bloque): void { $this->bloque = (string) $bloque; }
-    public function setQueSel($queSel): void { $this->queSel = (string) $queSel; }
+    public function setId_dossier(int|string $id_dossier): void { $this->id_dossier = (int) $id_dossier; }
+    public function setPau(string|int|float|bool|null $pau = null): void { $this->pau = $pau === null ? '' : (string) $pau; }
+    public function setObj_pau(string|int|float|bool|null $obj_pau = null): void { $this->obj_pau = $obj_pau === null ? '' : (string) $obj_pau; }
+    public function setId_pau(int|string $id_pau): void { $this->id_pau = (int) $id_pau; }
+    public function setPermiso(int|string $permiso): void { $this->permiso = (int) $permiso; }
+    public function setQid_sel(int|string|null $Qid_sel): void { $this->Qid_sel = $Qid_sel; }
+    public function setQscroll_id(int|string|null $Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
+    public function setBloque(string|int|float|bool|null $bloque = null): void { $this->bloque = $bloque === null ? '' : (string) $bloque; }
+    public function setQueSel(string|int|float|bool|null $queSel = null): void { $this->queSel = $queSel === null ? '' : (string) $queSel; }
 }

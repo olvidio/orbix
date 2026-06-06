@@ -13,13 +13,11 @@ use src\ubis\domain\entity\Delegacion;
 
 final class CaPosiblesQueDataTest extends TestCase
 {
-    private mixed $previousContainer;
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['session_auth'] = [
             'id_usuario' => 1,
@@ -30,11 +28,6 @@ final class CaPosiblesQueDataTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_SESSION = $this->previousSession;
         parent::tearDown();
     }
@@ -53,14 +46,9 @@ final class CaPosiblesQueDataTest extends TestCase
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
         $centroRepo->expects($this->never())->method('findById');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DelegacionRepositoryInterface::class => $delegRepo,
-            PersonaNRepositoryInterface::class => $personaN,
-            PersonaAgdRepositoryInterface::class => $personaAgd,
-            CentroDlRepositoryInterface::class => $centroRepo,
-        ]);
+        $useCase = new CaPosiblesQueData($delegRepo, $personaN, $personaAgd, $centroRepo);
 
-        $out = CaPosiblesQueData::execute();
+        $out = $useCase->execute();
         $this->assertNull($out['grupo_estudios']);
         $this->assertNotSame('', $out['mi_grupo']);
         $this->assertArrayHasKey(1, $out['aCentrosNExt']);
@@ -101,35 +89,12 @@ final class CaPosiblesQueDataTest extends TestCase
             [20, $c20],
         ]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DelegacionRepositoryInterface::class => $delegRepo,
-            PersonaNRepositoryInterface::class => $personaN,
-            PersonaAgdRepositoryInterface::class => $personaAgd,
-            CentroDlRepositoryInterface::class => $centroRepo,
-        ]);
+        $useCase = new CaPosiblesQueData($delegRepo, $personaN, $personaAgd, $centroRepo);
 
-        $out = CaPosiblesQueData::execute();
+        $out = $useCase->execute();
         $this->assertSame('G1', $out['grupo_estudios']);
         $this->assertSame('dl1,dl2', $out['mi_grupo']);
         $this->assertSame('Alpha', $out['aCentrosAgdExt'][20]);
         $this->assertContains('Beta', $out['aCentrosNExt']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

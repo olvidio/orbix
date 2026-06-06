@@ -5,12 +5,16 @@ namespace src\actividadestudios\application;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
+use src\actividadestudios\domain\entity\Matricula;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\domain\entity\Asistente;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\personas\domain\entity\PersonaN;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use function src\shared\domain\helpers\curso_est;
 use function src\shared\domain\helpers\is_true;
 
@@ -27,6 +31,16 @@ use function src\shared\domain\helpers\is_true;
  */
 class Select_matriculas_de_una_persona
 {
+    public function __construct(
+        private AsistenteActividadService $asistenteActividadService,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private MatriculaRepositoryInterface $matriculaRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private PersonaExRepositoryInterface $personaExRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+    ) {
+    }
+
     private string $bloque = '';
 
     private string $queSel = '';
@@ -36,16 +50,21 @@ class Select_matriculas_de_una_persona
     private int $id_pau = 0;
     private int $permiso = 1;
 
+    /** @var int|string|null */
     private $Qid_sel;
+    /** @var int|string|null */
     private $Qscroll_id;
 
     /** @var mixed */
     private $todos;
 
+    /** @var int|string|null */
     private $Qid_activ;
 
-    private $cAsistencias;
+    /** @var list<Asistente> */
+    private array $cAsistencias = [];
 
+    /** @var mixed */
     private $status;
     /** @var list<string> */
     private array $avisoLines = [];
@@ -55,7 +74,10 @@ class Select_matriculas_de_una_persona
     /** @var array{path: string, query: array<string, mixed>}|null */
     private ?array $linkAddSpec = null;
 
-    public function getBotones($ca_num = 1)
+    /**
+     * @return array<int, array{txt: string, click: string}>
+     */
+    public function getBotones(int|string $ca_num = 1): array
     {
         if ($this->permiso === 3) {
             return [
@@ -67,6 +89,7 @@ class Select_matriculas_de_una_persona
         return [];
     }
 
+    /** @return array<int, string> */
     public function getCabeceras(): array
     {
         return [
@@ -78,7 +101,7 @@ class Select_matriculas_de_una_persona
     /**
      * @return array<string, mixed>
      */
-    private function buildCaPayload($oAsistente, int $ca_num): array
+    private function buildCaPayload(Asistente $oAsistente, int $ca_num): array
     {
         $htmlPrefix = '';
         $this->id_activ = $oAsistente->getId_activ();
@@ -89,8 +112,10 @@ class Select_matriculas_de_una_persona
 
         $est_ok = $oAsistente->isEst_ok();
         $observ_est = $oAsistente->getObserv_est();
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($this->id_activ);
+        $oActividad = $this->actividadAllRepository->findById((int) $this->id_activ);
+        if ($oActividad === null) {
+            throw new \Exception(sprintf(_("No se ha encontrado actividad con id: %s"), (string) $this->id_activ));
+        }
         $nom_activ = $oActividad->getNom_activ();
 
         $oAlumno = Persona::findPersonaEnGlobal($this->id_pau);
@@ -106,8 +131,7 @@ class Select_matriculas_de_una_persona
             $this->permiso = 2;
         }
 
-        $MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
-        $cMatriculas = $MatriculaRepository->getMatriculas([
+        $cMatriculas = $this->matriculaRepository->getMatriculas([
             'id_nom' => $this->id_pau,
             'id_activ' => $this->id_activ,
             '_ordre' => 'id_nivel',
@@ -125,7 +149,6 @@ class Select_matriculas_de_una_persona
         $i = 0;
         $a_valores = [];
         $msg_err = '';
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         foreach ($cMatriculas as $oMatricula) {
             $i++;
             $id_asignatura = $oMatricula->getId_asignatura();
@@ -147,7 +170,7 @@ class Select_matriculas_de_una_persona
                 $preceptor = "";
             }
 
-            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
+            $oAsignatura = $this->asignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
@@ -156,6 +179,14 @@ class Select_matriculas_de_una_persona
             $a_valores[$i]['sel'] = "$this->id_activ#$id_asignatura";
             $a_valores[$i][1] = $preceptor;
             $a_valores[$i][2] = $nombre_corto;
+        }
+        if ($a_valores !== []) {
+            if ($this->Qid_sel !== null && $this->Qid_sel !== '') {
+                $a_valores['select'] = $this->Qid_sel;
+            }
+            if ($this->Qscroll_id !== null && $this->Qscroll_id !== '') {
+                $a_valores['scroll_id'] = $this->Qscroll_id;
+            }
         }
 
         $this->setLinksInsert();
@@ -208,13 +239,18 @@ class Select_matriculas_de_una_persona
         $this->linkAddSpec = DossierTipoPublicUrls::formControllerLinkSpec($this->id_dossier, $a_dataUrl);
     }
 
-    public function getAsistencias()
+    /**
+     * @return list<Asistente>
+     */
+    public function getAsistencias(): array
     {
         $this->avisoLines = [];
         $this->avisoTodosForm = null;
 
         $mes = date('m');
-        $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+        /** @var ConfigSnapshot $oConfig */
+        $oConfig = $_SESSION['oConfig'];
+        $fin_m = $oConfig->getMesFinStgr();
         if ($mes > $fin_m) {
             $any = (int) date('Y') + 1;
         } else {
@@ -224,11 +260,10 @@ class Select_matriculas_de_una_persona
         $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
 
         if ($this->id_pau < 0) {
-            $PersonaDlRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+            $oPersona = $this->personaExRepository->findById($this->id_pau);
         } else {
-            $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+            $oPersona = $this->personaDlRepository->findById($this->id_pau);
         }
-        $oPersona = $PersonaDlRepository->findById($this->id_pau);
         if ($oPersona === null) {
             throw new \Exception(sprintf(_("No se ha encontrado alumno con id_nom: %s"), $this->id_pau));
         }
@@ -239,11 +274,10 @@ class Select_matriculas_de_una_persona
 
         $aWhere = [];
         $aOperadores = [];
-        $service = $GLOBALS['container']->get(AsistenteActividadService::class);
         if (!empty($this->Qid_activ)) {
             $aWhere['id_activ'] = $this->Qid_activ;
             $aWhereNom = ['id_nom' => $this->id_pau, 'id_activ' => $this->Qid_activ];
-            $cAsistencias = $service->getActividadesDeAsistente($aWhereNom, [], $aWhere, $aOperadores, true);
+            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, [], $aWhere, $aOperadores, true);
         } else {
             if (empty($this->todos)) {
                 $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
@@ -253,11 +287,10 @@ class Select_matriculas_de_una_persona
             $aOperadores['id_tipo_activ'] = '~';
 
             $aWhereNom = ['id_nom' => $this->id_pau, 'propio' => 't'];
-            $cAsistencias = $service->getActividadesDeAsistente($aWhereNom, [], $aWhere, $aOperadores, true);
+            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, [], $aWhere, $aOperadores, true);
         }
-        if (is_array($cAsistencias)) {
-            $n = count($cAsistencias);
-            if ($n === 0 && empty($this->todos)) {
+        $n = count($cAsistencias);
+        if ($n === 0 && empty($this->todos)) {
                 $this->avisoTodosForm = [
                     'dossiers_form_action' => 'frontend/dossiers/controller/dossiers_ver.php',
                     'hash' => [
@@ -284,9 +317,11 @@ class Select_matriculas_de_una_persona
             if ($n > 1 && empty($this->todos)) {
                 $nn = 0;
                 $id_sem_inv = (int) ConfigGlobal::mi_sfsv() . '32500';
-                $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
                 foreach ($cAsistencias as $oAsistente) {
-                    $oActividad = $ActividadAllRepository->findById($oAsistente->getId_activ());
+                    $oActividad = $this->actividadAllRepository->findById($oAsistente->getId_activ());
+                    if ($oActividad === null) {
+                        continue;
+                    }
                     if ($oActividad->getId_tipo_activ() != $id_sem_inv) {
                         $nn++;
                     }
@@ -295,8 +330,7 @@ class Select_matriculas_de_una_persona
                     $this->avisoLines[] = _(sprintf(_("¡¡ojo!! tiene %s actividades de estudios asignadas como propias."), $n));
                 }
             }
-        }
-        $this->cAsistencias = is_array($cAsistencias ?? null) ? $cAsistencias : [];
+        $this->cAsistencias = $cAsistencias;
 
         return $this->cAsistencias;
     }
@@ -309,7 +343,8 @@ class Select_matriculas_de_una_persona
         $this->getAsistencias();
         $cas = [];
         $ca_num = 0;
-        foreach ($this->cAsistencias as $oAsistente) {
+        $cAsistencias = $this->cAsistencias;
+        foreach ($cAsistencias as $oAsistente) {
             $ca_num++;
             $cas[] = $this->buildCaPayload($oAsistente, $ca_num);
         }
@@ -328,7 +363,7 @@ class Select_matriculas_de_una_persona
             'aviso_lines' => $this->avisoLines,
             'aviso_todos_form' => $this->avisoTodosForm,
             'cas' => $cas,
-            'empty_cas_message' => count($this->cAsistencias) === 0
+            'empty_cas_message' => $this->cAsistencias === []
                 ? _("no tiene ninguna actividad asignada. O no es de mi dl")
                 : '',
         ];
@@ -339,22 +374,22 @@ class Select_matriculas_de_una_persona
         $this->todos = $todos;
     }
 
-    public function getId_dossier() { return $this->id_dossier; }
+    public function getId_dossier(): int { return $this->id_dossier; }
     public function getPau(): string { return $this->pau; }
     public function getObj_pau(): string { return $this->obj_pau; }
     public function getId_pau(): int { return $this->id_pau; }
     public function getPermiso(): int { return $this->permiso; }
-    public function getStatus() { return $this->status; }
+    public function getStatus(): mixed { return $this->status; }
 
-    public function setId_dossier($id_dossier): void { $this->id_dossier = (int) $id_dossier; }
-    public function setPau($pau): void { $this->pau = (string) $pau; }
-    public function setObj_pau($obj_pau): void { $this->obj_pau = (string) $obj_pau; }
-    public function setId_pau($id_pau): void { $this->id_pau = (int) $id_pau; }
-    public function setPermiso($permiso): void { $this->permiso = (int) $permiso; }
-    public function setStatus($status): void { $this->status = $status; }
-    public function setQid_sel($Qid_sel): void { $this->Qid_sel = $Qid_sel; }
-    public function setQscroll_id($Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
-    public function setBloque($bloque): void { $this->bloque = (string) $bloque; }
-    public function setQueSel($queSel): void { $this->queSel = (string) $queSel; }
-    public function setQId_activ($Qid_activ): void { $this->Qid_activ = $Qid_activ; }
+    public function setId_dossier(int|string $id_dossier): void { $this->id_dossier = (int) $id_dossier; }
+    public function setPau(string|int|float|bool|null $pau = null): void { $this->pau = $pau === null ? '' : (string) $pau; }
+    public function setObj_pau(string|int|float|bool|null $obj_pau = null): void { $this->obj_pau = $obj_pau === null ? '' : (string) $obj_pau; }
+    public function setId_pau(int|string $id_pau): void { $this->id_pau = (int) $id_pau; }
+    public function setPermiso(int|string $permiso): void { $this->permiso = (int) $permiso; }
+    public function setStatus(mixed $status): void { $this->status = $status; }
+    public function setQid_sel(int|string|null $Qid_sel): void { $this->Qid_sel = $Qid_sel; }
+    public function setQscroll_id(int|string|null $Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
+    public function setBloque(string|int|float|bool|null $bloque = null): void { $this->bloque = $bloque === null ? '' : (string) $bloque; }
+    public function setQueSel(string|int|float|bool|null $queSel = null): void { $this->queSel = $queSel === null ? '' : (string) $queSel; }
+    public function setQId_activ(int|string|null $Qid_activ): void { $this->Qid_activ = $Qid_activ; }
 }

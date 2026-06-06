@@ -13,8 +13,8 @@ monta UI (`Lista`, `Hash`, vistas).
 
 | Métrica | Valor |
 |---------|------:|
-| Controladores afectados | **18** |
-| Módulos `frontend/...` afectados | **10** |
+| Controladores afectados | **17** |
+| Módulos `frontend/...` afectados | **9** |
 | (Abr 2026) controladores afectados | 205 |
 
 ## Resumen por módulo
@@ -30,7 +30,6 @@ monta UI (`Lista`, `Hash`, vistas).
 | 2 | `actividadessacd` |
 | 1 | `ubis` |
 | 1 | `menus` |
-| 1 | `actividadtarifas` |
 
 ## Listado completo
 
@@ -45,7 +44,6 @@ monta UI (`Lista`, `Hash`, vistas).
 | `frontend/actividadestudios/controller/matriculas_lista.php` | Patron PostRequest parcial en otros del modulo |
 | `frontend/actividadplazas/controller/gestion_plazas.php` | |
 | `frontend/actividadplazas/controller/plazas_balance_que.php` | |
-| `frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php` | |
 | `frontend/devel_codegen/controller/factory_mvc.php` | Herramienta interna — excepcion tolerable |
 | `frontend/devel_codegen/controller/factory.php` | Herramienta interna — excepcion tolerable |
 | `frontend/menus/controller/menus_importar_de_ficheros_a_ref.php` | Tambien citado en `agents.md` (Hash en src) |

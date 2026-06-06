@@ -7,6 +7,8 @@ use src\actividadestudios\domain\entity\ActividadAsignatura;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
 use src\shared\domain\value_objects\DateTimeLocal;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Crea una `ActividadAsignatura` (asignatura impartida en un ca) y abre el
@@ -16,21 +18,29 @@ use src\shared\domain\value_objects\DateTimeLocal;
  */
 final class ActividadAsignaturaNueva
 {
-    public static function execute(array $input): string
-    {
-        $Qid_activ = (int) ($input['id_activ'] ?? 0);
-        $Qid_asignatura = (int) ($input['id_asignatura'] ?? 0);
-        $Qid_profesor = (int) ($input['id_profesor'] ?? 0);
-        $Qavis_profesor = (string) ($input['avis_profesor'] ?? '');
-        $Qtipo = (string) ($input['tipo'] ?? '');
-        $Qf_ini = (string) ($input['f_ini'] ?? '');
-        $Qf_fin = (string) ($input['f_fin'] ?? '');
+    public function __construct(
+        private ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
+        private DossierRepositoryInterface $dossierRepository,
+    ) {
+    }
 
-        if (empty($Qid_activ) || empty($Qid_asignatura)) {
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
+    {
+        $Qid_activ = input_int($input, 'id_activ');
+        $Qid_asignatura = input_int($input, 'id_asignatura');
+        $Qid_profesor = input_int($input, 'id_profesor');
+        $Qavis_profesor = input_string($input, 'avis_profesor');
+        $Qtipo = input_string($input, 'tipo');
+        $Qf_ini = input_string($input, 'f_ini');
+        $Qf_fin = input_string($input, 'f_fin');
+
+        if ($Qid_activ <= 0 || $Qid_asignatura <= 0) {
             return _("faltan claves de la asignatura de actividad");
         }
 
-        $ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
         $oActividadAsignatura = new ActividadAsignatura();
         $oActividadAsignatura->setId_activ($Qid_activ);
         $oActividadAsignatura->setId_asignatura($Qid_asignatura);
@@ -39,21 +49,20 @@ final class ActividadAsignaturaNueva
         $oActividadAsignatura->setTipo($Qtipo);
         $oActividadAsignatura->setF_ini(DateTimeLocal::createFromLocal($Qf_ini));
         $oActividadAsignatura->setF_fin(DateTimeLocal::createFromLocal($Qf_fin));
-        if ($ActividadAsignaturaDlRepository->Guardar($oActividadAsignatura) === false) {
+        if ($this->actividadAsignaturaDlRepository->Guardar($oActividadAsignatura) === false) {
             return _("hay un error, no se ha creado");
         }
 
-        $DossierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
-        $oDossier = $DossierRepository->findByPk(DossierPk::fromArray([
+        $oDossier = $this->dossierRepository->findByPk(DossierPk::fromArray([
             'tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3005,
         ]));
         if ($oDossier === null) {
-            $oDossier = $DossierRepository->crearDossier(DossierPk::fromArray([
+            $oDossier = $this->dossierRepository->crearDossier(DossierPk::fromArray([
                 'tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3005,
             ]));
         }
         $oDossier->abrir();
-        $DossierRepository->Guardar($oDossier);
+        $this->dossierRepository->Guardar($oDossier);
         return '';
     }
 }

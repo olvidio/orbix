@@ -4,33 +4,19 @@ namespace src\actividadtarifas\domain\contracts;
 
 use src\actividadtarifas\domain\entity\TipoTarifa;
 
-
-/**
- * Interfaz de la clase TipoTarifa y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 3/12/2025
- */
 interface TipoTarifaRepositoryInterface
 {
-
-    public function getArrayTipoTarifas($isfsv = ''): array;
-
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
+    /**
+     * @return array<int, string>
+     */
+    public function getArrayTipoTarifas(int|string $isfsv = ''): array;
 
     /**
-     * devuelve una colección (array) de objetos de tipo TipoTarifa
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo TipoTarifa
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<TipoTarifa>
      */
     public function getTipoTarifas(array $aWhere = [], array $aOperators = []): array;
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(TipoTarifa $TipoTarifa): bool;
 
@@ -38,23 +24,14 @@ interface TipoTarifaRepositoryInterface
 
     public function getErrorTxt(): string;
 
-
-
     public function getNomTabla(): string;
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_tarifa
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_tarifa): array|bool;
+    public function datosById(int $id_tarifa): array|false;
 
-    /**
-     * Busca la clase con id_tarifa en el repositorio.
-     */
     public function findById(int $id_tarifa): ?TipoTarifa;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

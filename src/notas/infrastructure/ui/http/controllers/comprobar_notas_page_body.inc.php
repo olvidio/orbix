@@ -5,6 +5,7 @@ declare(strict_types=1);
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 use src\asignaturas\application\AsignaturasMapData;
+use src\shared\infrastructure\DependencyResolver;
 use src\notas\application\ComprobarNotasConstantsData;
 
 /**
@@ -337,7 +338,9 @@ if (!empty($nf)) {
 
 /*4. Gente sin fecha en acta (no cuento las de la Ratio 89)*/
 
-$dAsigMap = AsignaturasMapData::execute();
+/** @var AsignaturasMapData $asignaturasMapData */
+$asignaturasMapData = DependencyResolver::get(AsignaturasMapData::class);
+$dAsigMap = $asignaturasMapData->execute();
 $a_asignaturas_map = $dAsigMap['a_asignaturas'] ?? [];
 
 $sqlF = "SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura

@@ -2,20 +2,18 @@
 /**
  * Endpoint backend: copiar tarifas del año anterior.
  *
- * Autorización: espera un campo POST `ctx_copiar` con una cápsula
- * `HashB` firmada para la acción `tarifa_ubi_copiar`. `id_ubi` y
- * `year` se toman del contexto firmado.
- *
- * Vease `TarifaUbiCopiar` — accion heredada rota, pendiente de
- * reimplementar.
+ * Autorización via cápsula `HashB` en `ctx_copiar`.
  */
 
 use src\actividadtarifas\application\TarifaUbiCopiar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
-$ctxRaw = (string)filter_input(INPUT_POST, 'ctx_copiar');
+$ctxRaw = input_string($_POST, 'ctx_copiar');
 try {
     $ctx = HashB::open($ctxRaw, 'tarifa_ubi_copiar');
 } catch (HashBInvalidException $e) {
@@ -24,9 +22,10 @@ try {
 }
 
 $input = [
-    'id_ubi' => (int)($ctx['id_ubi'] ?? 0),
-    'year' => (int)($ctx['year'] ?? 0),
+    'id_ubi' => input_int($ctx, 'id_ubi'),
+    'year' => input_int($ctx, 'year'),
 ];
 
-$error = TarifaUbiCopiar::execute($input);
-ContestarJson::enviar($error, 'ok');
+/** @var TarifaUbiCopiar $useCase */
+$useCase = DependencyResolver::get(TarifaUbiCopiar::class);
+ContestarJson::enviar($useCase->execute($input), 'ok');

@@ -12,29 +12,15 @@ use src\dossiers\domain\contracts\DossierRepositoryInterface;
 
 final class MatriculaEliminarTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_pau_vacio_devuelve_cadena_vacia(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap($this->minimalRepos());
+        $useCase = new MatriculaEliminar(
+            $this->createMock(ActividadAsignaturaDlRepositoryInterface::class),
+            $this->createMock(MatriculaDlRepositoryInterface::class),
+            $this->createMock(DossierRepositoryInterface::class),
+        );
 
-        $this->assertSame('', MatriculaEliminar::execute([]));
+        $this->assertSame('', $useCase->execute([]));
     }
 
     public function test_p_a_sin_matricula(): void
@@ -42,12 +28,13 @@ final class MatriculaEliminarTest extends TestCase
         $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
         $matRepo->method('findById')->with(1, 2, 3)->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ...$this->minimalRepos(),
-            MatriculaDlRepositoryInterface::class => $matRepo,
-        ]);
+        $useCase = new MatriculaEliminar(
+            $this->createMock(ActividadAsignaturaDlRepositoryInterface::class),
+            $matRepo,
+            $this->createMock(DossierRepositoryInterface::class),
+        );
 
-        $msg = MatriculaEliminar::execute([
+        $msg = $useCase->execute([
             'pau' => 'a',
             'id_activ' => 1,
             'id_asignatura' => 2,
@@ -68,13 +55,13 @@ final class MatriculaEliminarTest extends TestCase
         $dossierRepo->expects($this->once())->method('findByPk');
         $dossierRepo->expects($this->never())->method('Guardar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadAsignaturaDlRepositoryInterface::class => $this->createMock(ActividadAsignaturaDlRepositoryInterface::class),
-            MatriculaDlRepositoryInterface::class => $matRepo,
-            DossierRepositoryInterface::class => $dossierRepo,
-        ]);
+        $useCase = new MatriculaEliminar(
+            $this->createMock(ActividadAsignaturaDlRepositoryInterface::class),
+            $matRepo,
+            $dossierRepo,
+        );
 
-        $msg = MatriculaEliminar::execute([
+        $msg = $useCase->execute([
             'pau' => 'a',
             'id_activ' => 1,
             'id_asignatura' => 2,
@@ -90,13 +77,13 @@ final class MatriculaEliminarTest extends TestCase
         $matRepo->method('findById')->willReturn($oMat);
         $matRepo->method('Eliminar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadAsignaturaDlRepositoryInterface::class => $this->createMock(ActividadAsignaturaDlRepositoryInterface::class),
-            MatriculaDlRepositoryInterface::class => $matRepo,
-            DossierRepositoryInterface::class => $this->createMock(DossierRepositoryInterface::class),
-        ]);
+        $useCase = new MatriculaEliminar(
+            $this->createMock(ActividadAsignaturaDlRepositoryInterface::class),
+            $matRepo,
+            $this->createMock(DossierRepositoryInterface::class),
+        );
 
-        $msg = MatriculaEliminar::execute([
+        $msg = $useCase->execute([
             'pau' => 'a',
             'id_activ' => 1,
             'id_nom' => 3,
@@ -125,46 +112,12 @@ final class MatriculaEliminarTest extends TestCase
         ])->willReturn([$oAa]);
         $aaRepo->expects($this->once())->method('Eliminar')->with($oAa)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadAsignaturaDlRepositoryInterface::class => $aaRepo,
-            MatriculaDlRepositoryInterface::class => $matRepo,
-            DossierRepositoryInterface::class => $this->createMock(DossierRepositoryInterface::class),
-        ]);
+        $useCase = new MatriculaEliminar($aaRepo, $matRepo, $this->createMock(DossierRepositoryInterface::class));
 
-        $msg = MatriculaEliminar::execute([
+        $msg = $useCase->execute([
             'pau' => 'p',
             'sel' => ['10#20#30'],
         ]);
         $this->assertSame('', $msg);
-    }
-
-    /**
-     * @return array<class-string, object>
-     */
-    private function minimalRepos(): array
-    {
-        return [
-            ActividadAsignaturaDlRepositoryInterface::class => $this->createMock(ActividadAsignaturaDlRepositoryInterface::class),
-            MatriculaDlRepositoryInterface::class => $this->createMock(MatriculaDlRepositoryInterface::class),
-            DossierRepositoryInterface::class => $this->createMock(DossierRepositoryInterface::class),
-        ];
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

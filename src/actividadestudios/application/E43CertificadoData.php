@@ -9,25 +9,40 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\entity\Ubi;
+use function src\shared\domain\helpers\input_int;
 
 /**
  * Datos certificado E43 (pantalla e imprimible).
- *
- * @return array{
- *   msg_err: string,
- *   nom: string,
- *   txt_nacimiento: string,
- *   dl_origen: string,
- *   dl_destino: string,
- *   txt_actividad: string,
- *   matriculas: int,
- *   aAsignaturasMatriculadas: list<array{nom_asignatura: mixed, nota: string, f_acta: string, acta: string}>
- * }
  */
 final class E43CertificadoData
 {
-    public static function execute(int $idNom, int $idActiv, bool $appendBlankFooter = false): array
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private MatriculaRepositoryInterface $matriculaRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private PersonaNotaRepositoryInterface $personaNotaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array{
+     *   msg_err: string,
+     *   nom: string,
+     *   txt_nacimiento: string,
+     *   dl_origen: string,
+     *   dl_destino: string,
+     *   txt_actividad: string,
+     *   matriculas: int,
+     *   aAsignaturasMatriculadas: list<array{nom_asignatura: mixed, nota: string, f_acta: string, acta: string}>
+     * }
+     */
+    public function execute(array $input): array
     {
+        $idNom = input_int($input, 'id_nom');
+        $idActiv = input_int($input, 'id_activ');
+        $appendBlankFooter = !empty($input['append_blank_footer']);
+
         $msgErr = '';
         $oPersona = Persona::findPersonaEnGlobal($idNom);
         if ($oPersona === null) {
@@ -52,32 +67,40 @@ final class E43CertificadoData
         $dlOrigen = OrbixRuntime::miDelef();
         $dlDestino = $oPersona->getDl();
 
-        $actividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $actividadAllRepository->findById($idActiv);
+        $oActividad = $this->actividadAllRepository->findById($idActiv);
+        if ($oActividad === null) {
+            return [
+                'msg_err' => $msgErr . sprintf(_('No encuentro actividad con id: %d'), $idActiv),
+                'nom' => $nom,
+                'txt_nacimiento' => $txtNacimiento,
+                'dl_origen' => $dlOrigen,
+                'dl_destino' => $dlDestino ?? '',
+                'txt_actividad' => '',
+                'matriculas' => 0,
+                'aAsignaturasMatriculadas' => [],
+            ];
+        }
         $idUbi = $oActividad->getId_ubi();
-        $fIni = $oActividad->getF_ini()?->getFromLocal();
-        $fFin = $oActividad->getF_fin()?->getFromLocal();
+        $fIni = $oActividad->getF_ini()?->getFromLocal() ?? '';
+        $fFin = $oActividad->getF_fin()?->getFromLocal() ?? '';
         $oUbi = Ubi::NewUbi($idUbi);
-        $lugar = $oUbi->getNombre_ubi();
+        $lugar = $oUbi !== null ? $oUbi->getNombre_ubi() : '';
         $txtActividad = "$lugar, $fIni-$fFin";
 
-        $matriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
-        $cMatriculas = $matriculaRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]);
+        $cMatriculas = $this->matriculaRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]);
         $matriculas = count($cMatriculas);
         $aAsignaturasMatriculadas = [];
         if ($matriculas > 0) {
-            $asignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-            $personaNotaRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
             foreach ($cMatriculas as $oMatricula) {
                 $idAsignatura = $oMatricula->getId_asignatura();
-                $oAsignatura = $asignaturaRepository->findById($idAsignatura);
-                $nombreCorto = $oAsignatura->getNombre_corto();
-                $cNotas = $personaNotaRepository->getPersonaNotas(['id_nom' => $idNom, 'id_asignatura' => $idAsignatura]);
-                if ($cNotas !== false && count($cNotas) > 0) {
+                $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
+                $nombreCorto = $oAsignatura !== null ? ($oAsignatura->getNombre_corto() ?? '') : '';
+                $cNotas = $this->personaNotaRepository->getPersonaNotas(['id_nom' => $idNom, 'id_asignatura' => $idAsignatura]);
+                if (count($cNotas) > 0) {
                     $oNota = $cNotas[0];
-                    $nota = $oNota->getNota_txt();
-                    $acta = $oNota->getActa();
-                    $fActa = $oNota->getF_acta()?->getFromLocal();
+                    $nota = (string) $oNota->getNota_txt();
+                    $acta = (string) ($oNota->getActa() ?? '');
+                    $fActa = $oNota->getF_acta()?->getFromLocal() ?? '';
                 } else {
                     $nota = '';
                     $acta = '';
@@ -108,7 +131,7 @@ final class E43CertificadoData
             'nom' => $nom,
             'txt_nacimiento' => $txtNacimiento,
             'dl_origen' => $dlOrigen,
-            'dl_destino' => $dlDestino,
+            'dl_destino' => $dlDestino ?? '',
             'txt_actividad' => $txtActividad,
             'matriculas' => $matriculas,
             'aAsignaturasMatriculadas' => $aAsignaturasMatriculadas,

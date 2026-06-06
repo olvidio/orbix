@@ -19,8 +19,7 @@ final class YearText
         if (mb_strlen($value) !== 1) {
             throw new \InvalidArgumentException('Year must be exactly 1 characters');
         }
-        // Allow empty handled by factory; here ensure it is digits if not empty
-        if ($value !== '' && !ctype_digit($value)) {
+        if (!ctype_digit($value)) {
             throw new \InvalidArgumentException('Year must be digits');
         }
     }

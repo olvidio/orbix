@@ -11,6 +11,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\entity\Persona;
 use function frontend\shared\helpers\is_true;
+use function src\shared\domain\helpers\input_int;
 
 /**
  * @return array{
@@ -24,25 +25,55 @@ use function frontend\shared\helpers\is_true;
  */
 final class PlanEstudiosCaData
 {
-    public static function execute(int $idActiv): array
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private CargoRepositoryInterface $cargoRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private AsistenteActividadService $asistenteActividadService,
+        private MatriculaRepositoryInterface $matriculaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array{
+     *   msg_err: string,
+     *   nom_activ: string,
+     *   nom_director_est: string,
+     *   aPreceptores: array<int, array{nombre_corto: mixed, creditos: mixed, nom_profesor: string}>,
+     *   aProfesores: array<int, array{nombre_corto: mixed, creditos: mixed, nom_profesor: string}>,
+     *   aAlumnos: array<int, array{nom_persona: string, ctr: string, observ_est: mixed, aAsignaturas: mixed}>
+     * }
+     */
+    public function execute(array $input): array
     {
+        $idActiv = input_int($input, 'id_activ');
         $msgErr = '';
 
-        $actividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $actividadAllRepository->findById($idActiv);
+        $oActividad = $this->actividadAllRepository->findById($idActiv);
+        if ($oActividad === null) {
+            return [
+                'msg_err' => sprintf(_('No encuentro actividad con id: %d'), $idActiv),
+                'nom_activ' => '',
+                'nom_director_est' => '',
+                'aPreceptores' => [],
+                'aProfesores' => [],
+                'aAlumnos' => [],
+            ];
+        }
         $nomActiv = $oActividad->getNom_activ();
 
-        $cargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $cCargos = $cargoRepository->getCargos(['cargo' => 'd.est.']);
+        $cCargos = $this->cargoRepository->getCargos(['cargo' => 'd.est.']);
         $idCargo = $cCargos[0]->getId_cargo();
-        $actividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-        $cActividadCargos = $actividadCargoRepository->getActividadCargos(['id_activ' => $idActiv, 'id_cargo' => $idCargo]);
-        $idNomDtorEst = '';
-        if (is_array($cActividadCargos) && count($cActividadCargos) > 0) {
+        $cActividadCargos = $this->actividadCargoRepository->getActividadCargos(['id_activ' => $idActiv, 'id_cargo' => $idCargo]);
+        $idNomDtorEst = 0;
+        if (count($cActividadCargos) > 0) {
             $idNomDtorEst = $cActividadCargos[0]->getId_nom();
         }
 
-        if ($idNomDtorEst === '') {
+        if ($idNomDtorEst <= 0) {
             $nomDirectorEst = _('para nombrarlo, ir al dossier de cargos de la actividad');
         } else {
             $oPersona = Persona::findPersonaEnGlobal($idNomDtorEst);
@@ -57,16 +88,14 @@ final class PlanEstudiosCaData
         $aPreceptores = [];
         $aProfesores = [];
         $a = 0;
-        $actividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
-        $cActividadAsignaturas = $actividadAsignaturaDlRepository->getActividadAsignaturas(['id_activ' => $idActiv, '_ordre' => 'tipo']);
-        $asignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $cActividadAsignaturas = $this->actividadAsignaturaDlRepository->getActividadAsignaturas(['id_activ' => $idActiv, '_ordre' => 'tipo']);
         foreach ($cActividadAsignaturas as $oActividadAsignatura) {
             $a++;
             $idAsignatura = $oActividadAsignatura->getId_asignatura();
             $idProfesor = $oActividadAsignatura->getId_profesor();
             $tipo = $oActividadAsignatura->getTipo();
 
-            $oAsignatura = $asignaturaRepository->findById($idAsignatura);
+            $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
             if ($oAsignatura === null) {
                 throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura));
             }
@@ -99,11 +128,9 @@ final class PlanEstudiosCaData
             }
         }
 
-        $asistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
-        $cAsistentes = $asistenteActividadService->getAsistentesDeActividad($idActiv);
+        $cAsistentes = $this->asistenteActividadService->getAsistentesDeActividad($idActiv);
         $a = 0;
         $aAlumnos = [];
-        $matriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
         foreach ($cAsistentes as $oAsistente) {
             if (!$oAsistente->isPropio()) {
                 continue;
@@ -120,8 +147,8 @@ final class PlanEstudiosCaData
             $ctr = $oPersona->getCentro_o_dl();
             $stgr = $oPersona->getNivel_stgr();
 
-            $cMatriculas = $matriculaRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]);
-            if (is_array($cMatriculas) && count($cMatriculas) === 0) {
+            $cMatriculas = $this->matriculaRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]);
+            if (count($cMatriculas) === 0) {
                 switch ($stgr) {
                     case 'r':
                         $est = _('repaso');
@@ -146,7 +173,7 @@ final class PlanEstudiosCaData
                     $idAsignatura = $oMatricula->getId_asignatura();
                     $preceptor = $oMatricula->isPreceptor();
 
-                    $oAsignatura = $asignaturaRepository->findById($idAsignatura);
+                    $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
                     if ($oAsignatura === null) {
                         throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura));
                     }

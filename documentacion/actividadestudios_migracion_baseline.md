@@ -329,3 +329,71 @@ Estrategia mixta:
 - El campo `codigo` en `d_tipos_dossiers` para 1303/3103/3005 se asume
   ya poblado en BD (confirmacion explicita del usuario). No hay
   generacion de SQL en este slice.
+
+## Cierre DI + PHPStan (2026-06-06)
+
+Los **27** controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()`. Entrada POST via `input_string` / `input_int` /
+`input_string_list`; mutaciones con `HashB` via `input_string` sobre el contexto
+abierto. `MatriculasListaOtrasRData` resuelve
+`PersonaNotaOtraRegionStgrRepositoryInterface` con `DependencyResolver::make()`.
+
+### Resultado del cierre
+
+| Criterio | Estado |
+|----------|--------|
+| `$GLOBALS['container']` en `src/actividadestudios/` | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | **27/27** |
+| `application/` con constructor DI | **29** clases (3 Select widgets + 26 use cases) |
+| Pg repos con `GlobalPdo::get()` | **4/4** (`PgMatricula*`, `PgActividadAsignatura*`) |
+| Casos de uso en `config/dependencies.php` | **34** entradas `autowire()` (4 repos + `PosiblesCa` + 29 use cases) |
+| Tests `tests/unit/actividadestudios/` + integración | **68 + 18 OK** |
+| Frontend `frontend/actividadestudios/` con `use src\...` | **0** (PostRequest; ver deuda) |
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (inicio cierre) | `composer phpstan:file -- src/actividadestudios/` | **346** |
+| 2026-06-06 (cierre) | `composer phpstan:file -- src/actividadestudios/` | **0** |
+
+Áreas abordadas en el cierre (346 → 0):
+
+- Application: constructor DI, guards null tras `findById`, `input_*`,
+  `instanceof XPermisos` donde aplica, tipos de retorno en payloads JSON.
+- Repos `PgMatriculaRepository`, `PgActividadAsignaturaRepository` (+ DL):
+  guards PDO, PHPDoc `list<Entity>`, `GlobalPdo`.
+- Domain: entidades/VOs/contratos con PHPDoc; PKs `ActividadMatriculaPk` /
+  `ActividadAsignaturaPk`; setters `AsignaturaId` sin null en propiedades
+  no-nullables.
+- HTTP controllers: `DependencyResolver::get()` + helpers `input_*`.
+- Widgets `Select_*`: tipos en propiedades/setters al estilo `actividadcargos`.
+
+### Deuda post-refactor
+
+#### Completado
+
+- [x] 0 `$GLOBALS['container']` en todo `src/actividadestudios/`
+- [x] Todos los controllers HTTP via `DependencyResolver`
+- [x] Casos de uso con constructor DI
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests `tests/unit/actividadestudios/`: 68 tests
+- [x] PHPStan `src/actividadestudios/` en 0 (phpstan-nobaseline.neon)
+
+#### Pendiente
+
+- [ ] Frontend `frontend/actividadestudios/`: `matriculas_lista.php` y
+  `actualizar_docencia.php` siguen en
+  [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md)
+  por inventario histórico; ya usan PostRequest sin `use src\...` en
+  controladores (deuda menor: FQCN puntual en `ca_posibles_que.php`).
+
+### Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests existentes pasan (`tests/unit/actividadestudios/`: 68 tests)
+- [x] PHPStan `src/actividadestudios/` en 0 (phpstan-nobaseline.neon)

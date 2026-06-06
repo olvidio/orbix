@@ -8,9 +8,6 @@ final class AsignaturaId
 
     public function __construct(int $value)
     {
-         if ($value === null) {
-            return null;
-        }
         $this->validate($value);
         $this->value = $value;
     }

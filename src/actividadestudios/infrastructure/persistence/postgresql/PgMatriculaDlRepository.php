@@ -3,6 +3,7 @@
 namespace src\actividadestudios\infrastructure\persistence\postgresql;
 
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -22,7 +23,7 @@ class PgMatriculaDlRepository extends PgMatriculaRepository implements Matricula
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDB'];
+        $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
         $this->setNomTabla('d_matriculas_activ_dl');
     }

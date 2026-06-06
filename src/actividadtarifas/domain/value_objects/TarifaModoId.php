@@ -7,6 +7,9 @@ final class TarifaModoId
     public const POR_DIA = 0;
     public const TOTAL = 1;
 
+    /**
+     * @return array<int, string>
+     */
     public static function getArrayModo(): array
     {
         return [

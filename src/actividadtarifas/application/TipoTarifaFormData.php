@@ -4,16 +4,20 @@ namespace src\actividadtarifas\application;
 
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\actividadtarifas\domain\value_objects\TarifaModoId;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Data builder para el formulario modificar/nuevo de `TipoTarifa`.
- *
- * Sucesor de la rama `tar_form` del dispatcher legacy
- * `apps/actividadtarifas/controller/tarifa_ajax.php`.
  */
 final class TipoTarifaFormData
 {
+    public function __construct(
+        private TipoTarifaRepositoryInterface $tipoTarifaRepository,
+    ) {
+    }
+
     /**
+     * @param array<string, mixed> $input
      * @return array{
      *   id_tarifa: string,
      *   es_nuevo: bool,
@@ -23,9 +27,9 @@ final class TipoTarifaFormData
      *   opciones_modo: array<int,string>
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $id_tarifa = (string)($input['id_tarifa'] ?? '');
+        $id_tarifa = input_string($input, 'id_tarifa');
         $es_nuevo = $id_tarifa === '' || $id_tarifa === 'nuevo';
 
         $letra = '';
@@ -33,12 +37,11 @@ final class TipoTarifaFormData
         $observ = '';
 
         if (!$es_nuevo) {
-            $repo = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
-            $oTipoTarifa = $repo->findById((int)$id_tarifa);
+            $oTipoTarifa = $this->tipoTarifaRepository->findById((int) $id_tarifa);
             if ($oTipoTarifa !== null) {
-                $letra = (string)$oTipoTarifa->getLetra();
-                $modo = (int)$oTipoTarifa->getModo();
-                $observ = (string)$oTipoTarifa->getObserv();
+                $letra = (string) $oTipoTarifa->getLetra();
+                $modo = (int) $oTipoTarifa->getModo();
+                $observ = (string) $oTipoTarifa->getObserv();
             }
         }
 

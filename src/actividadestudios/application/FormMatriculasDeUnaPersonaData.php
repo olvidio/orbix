@@ -9,6 +9,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\profesores\domain\services\ProfesorStgrService;
+use function src\shared\domain\helpers\input_int;
 
 /**
  * @return array{
@@ -27,27 +28,53 @@ use src\profesores\domain\services\ProfesorStgrService;
  */
 final class FormMatriculasDeUnaPersonaData
 {
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private MatriculaRepositoryInterface $matriculaRepository,
+        private ProfesorStgrService $profesorStgrService,
+        private PersonaNotaRepositoryInterface $personaNotaRepository,
+        private MatriculaDlRepositoryInterface $matriculaDlRepository,
+    ) {
+    }
+
     /**
-     * @param array<int, string>|null $sel
+     * @param array<string, mixed> $input
+     * @return array{
+     *   nom_activ: string,
+     *   mod: string,
+     *   id_asignatura_real: int,
+     *   nombre_corto: string,
+     *   chk_preceptor: string,
+     *   id_preceptor: string|int,
+     *   oDesplProfesores_opciones: array<int|string, string>,
+     *   oDesplNiveles_opciones: array<int|string, string>,
+     *   condicion_js: string,
+     *   camposForm: string,
+     *   a_camposHidden: array<string, int|string>
+     * }
      */
-    public static function execute(
-        int $idNom,
-        int $idActiv,
-        int $idAsignaturaPost,
-        ?array $sel,
-    ): array {
+    public function execute(array $input): array
+    {
+        $idNom = input_int($input, 'id_nom');
+        $idActiv = input_int($input, 'id_activ');
+        $idAsignaturaPost = input_int($input, 'id_asignatura');
+        $sel = isset($input['sel']) && is_array($input['sel']) ? $input['sel'] : null;
+
         $idAsignaturaReal = 0;
         if (!empty($sel)) {
-            $parts = explode('#', $sel[0]);
-            $idActiv = (int)($parts[0] ?? 0);
-            $idAsignaturaReal = (int)($parts[1] ?? 0);
+            $sel0 = $sel[0] ?? '';
+            $parts = explode('#', is_scalar($sel0) ? (string) $sel0 : '');
+            $idActiv = (int) $parts[0];
+            $idAsignaturaReal = (int) ($parts[1] ?? 0);
         }
 
-        $actividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $actividadAllRepository->findById($idActiv);
+        $oActividad = $this->actividadAllRepository->findById($idActiv);
+        if ($oActividad === null) {
+            throw new \RuntimeException(sprintf(_('No se ha encontrado actividad con id: %s'), (string) $idActiv));
+        }
         $nomActiv = $oActividad->getNom_activ();
 
-        $asignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $chkPreceptor = '';
         $idPreceptor = '';
         $nombreCorto = '';
@@ -59,37 +86,37 @@ final class FormMatriculasDeUnaPersonaData
             'id_activ' => $idActiv,
         ];
 
-        $matriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
         if ($idAsignaturaReal > 0) {
             $mod = 'editar';
-            $oMatricula = $matriculaRepository->findById($idActiv, $idAsignaturaReal, $idNom);
+            $oMatricula = $this->matriculaRepository->findById($idActiv, $idAsignaturaReal, $idNom);
+            if ($oMatricula === null) {
+                throw new \RuntimeException(_('no encuentro la matricula'));
+            }
             $preceptor = $oMatricula->isPreceptor();
-            $idPreceptor = $oMatricula->getId_preceptor();
-            $oAsignatura = $asignaturaRepository->findById($idAsignaturaReal);
+            $idPreceptor = $oMatricula->getId_preceptor() ?? 0;
+            $oAsignatura = $this->asignaturaRepository->findById($idAsignaturaReal);
             if ($oAsignatura === null) {
                 throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignaturaReal));
             }
-            $nombreCorto = $oAsignatura->getNombre_corto();
+            $nombreCorto = $oAsignatura->getNombre_corto() ?? '';
             $idNivel = $idAsignaturaReal;
             $idAsignatura = $idAsignaturaReal;
             $chkPreceptor = ($preceptor === true) ? 'checked' : '';
             if (!empty($idPreceptor)) {
-                $profesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
-                $oDesplProfesoresOpciones = $profesorStgrService->getArrayProfesoresDl();
+                $oDesplProfesoresOpciones = $this->profesorStgrService->getArrayProfesoresDl();
             }
             $aCamposHidden['id_asignatura'] = $idAsignatura;
             $aCamposHidden['id_nivel'] = $idNivel;
             $aCamposHidden['mod'] = $mod;
         } else {
             $mod = 'nuevo';
-            $cAsignaturas = $asignaturaRepository->getAsignaturas(
+            $cAsignaturas = $this->asignaturaRepository->getAsignaturas(
                 ['active' => 't', 'id_nivel' => 3000, '_ordre' => 'id_nivel'],
                 ['id_nivel' => '<'],
             );
             $aSuperadasIds = NotaSituacion::getArraySuperadas();
             $cond = implode('|', $aSuperadasIds);
-            $personaNotaRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-            $cAsignaturasSuperadas = $personaNotaRepository->getPersonaNotas(
+            $cAsignaturasSuperadas = $this->personaNotaRepository->getPersonaNotas(
                 [
                     'id_situacion' => $cond,
                     'id_nom' => $idNom,
@@ -102,8 +129,7 @@ final class FormMatriculasDeUnaPersonaData
             foreach ($cAsignaturasSuperadas as $oAsignaturaRow) {
                 $aSuperadas[$oAsignaturaRow->getId_nivel()] = $oAsignaturaRow->getId_asignatura();
             }
-            $matriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
-            $cMatriculas = $matriculaDlRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]);
+            $cMatriculas = $this->matriculaDlRepository->getMatriculas(['id_nom' => $idNom, 'id_activ' => $idActiv]);
             $aMatriculadas = [];
             foreach ($cMatriculas as $oMatricula) {
                 $aMatriculadas[$oMatricula->getId_nivel()] = $oMatricula->getId_asignatura();
@@ -117,14 +143,14 @@ final class FormMatriculasDeUnaPersonaData
                 if (array_key_exists($idNivel, $aMatriculadas)) {
                     continue;
                 }
-                $aFaltan[$idNivel] = $oAsignatura->getNombre_corto();
+                $aFaltan[$idNivel] = $oAsignatura->getNombre_corto() ?? '';
             }
             $oDesplNivelesOpciones = $aFaltan;
             $aCamposHidden['mod'] = $mod;
             $camposForm = 'id_asignatura!id_nivel';
         }
 
-        $cOpcionalesGenericas = $asignaturaRepository->getAsignaturas(
+        $cOpcionalesGenericas = $this->asignaturaRepository->getAsignaturas(
             ['active' => 't', 'id_sector' => 1, 'id_nivel' => 3000, '_ordre' => 'nombre_corto'],
             ['id_nivel' => '<'],
         );

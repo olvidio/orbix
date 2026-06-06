@@ -6,57 +6,35 @@ use src\asignaturas\domain\entity\Departamento;
 
 /**
  * Interfaz de la clase Departamento y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 14/11/2025
  */
 interface DepartamentoRepositoryInterface
 {
-
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayDepartamentos(): array;
 
-/* --------------------  BASiC SEARCH ---------------------------------------- */
-
-	/**
-	 * devuelve una colección (array) de objetos de tipo Departamento
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo Departamento
-	
-	 */
-	public function getDepartamentos(array $aWhere=[], array $aOperators=[]): array;
-	
-/* -------------------- ENTIDAD --------------------------------------------- */
-
-	public function Eliminar(Departamento $Departamento): bool;
-
-	public function Guardar(Departamento $Departamento): bool;
-
-	public function getErrorTxt(): string;
-
-
-
-	public function getNomTabla(): string;
-	
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     * 
-     * @param int $id_departamento
-     * @return array|bool
-	
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Departamento>
      */
-    public function datosById(int $id_departamento): array|bool;
-	
+    public function getDepartamentos(array $aWhere = [], array $aOperators = []): array;
+
+    public function Eliminar(Departamento $Departamento): bool;
+
+    public function Guardar(Departamento $Departamento): bool;
+
+    public function getErrorTxt(): string;
+
+    public function getNomTabla(): string;
+
     /**
-     * Busca la clase con id_departamento en el repositorio.
-	
+     * @return array<string, mixed>|false
      */
+    public function datosById(int $id_departamento): array|false;
+
     public function findById(int $id_departamento): ?Departamento;
-	
-    public function getNewId();
+
+    public function getNewId(): int;
 }

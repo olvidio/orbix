@@ -7,11 +7,13 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\notas\domain\entity\Acta;
 use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use function frontend\shared\helpers\is_true;
+use function src\shared\domain\helpers\input_int;
 
 /**
  * @return array{
@@ -29,30 +31,67 @@ use function frontend\shared\helpers\is_true;
  */
 final class ActaNotasData
 {
-    public static function execute(int $idActiv, int $idAsignatura): array
+    public function __construct(
+        private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
+        private DbSchemaRepositoryInterface $dbSchemaRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private MatriculaRepositoryInterface $matriculaRepository,
+        private ActaRepositoryInterface $actaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array{
+     *   msg_err: string,
+     *   permiso: int,
+     *   nom_activ: string,
+     *   matriculados: int,
+     *   matriculas_rows: list<array{nom: string, id_nom: int, nota_num: mixed, nota_max: mixed, preceptor: bool, acta: mixed}>,
+     *   notas: string,
+     *   despl_actas_opciones: array<int|string, string>,
+     *   acta_principal: string,
+     *   acta_notas_a_actas: list<string>,
+     *   acta_txt_cursada: string,
+     * }
+     */
+    public function execute(array $input): array
     {
+        $idActiv = input_int($input, 'id_activ');
+        $idAsignatura = input_int($input, 'id_asignatura');
+
         $msgErr = '';
         $miDele = OrbixRuntime::miDelef();
 
-        $actividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
-        $cActivAsignaturas = $actividadAsignaturaRepository->getActividadAsignaturas([
+        $cActivAsignaturas = $this->actividadAsignaturaRepository->getActividadAsignaturas([
             'id_activ' => $idActiv,
             'id_asignatura' => $idAsignatura,
         ]);
+        if ($cActivAsignaturas === []) {
+            return [
+                'msg_err' => _('no encuentro la asignatura en la actividad'),
+                'permiso' => 1,
+                'nom_activ' => '',
+                'matriculados' => 0,
+                'matriculas_rows' => [],
+                'notas' => 'nuevo',
+                'despl_actas_opciones' => [],
+                'acta_principal' => '',
+                'acta_notas_a_actas' => [],
+                'acta_txt_cursada' => Nota::getStatusTxt(NotaSituacion::CURSADA),
+            ];
+        }
         $oActividadAsignatura = $cActivAsignaturas[0];
         $idSchema = $oActividadAsignatura->getId_schema();
-        $dbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
-        $cDbSchemas = $dbSchemaRepository->getDbSchemas(['id' => $idSchema]);
+        $cDbSchemas = $this->dbSchemaRepository->getDbSchemas(['id' => $idSchema]);
         $aReg = explode('-', $cDbSchemas[0]->getSchema());
         $dlMatricula = substr($aReg[1], 0, -1);
         $permiso = ($miDele === $dlMatricula) ? 3 : 1;
 
-        $actividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $actividadAllRepository->findById($idActiv);
-        $nomActiv = $oActividad->getNom_activ();
+        $oActividad = $this->actividadAllRepository->findById($idActiv);
+        $nomActiv = $oActividad !== null ? $oActividad->getNom_activ() : '';
 
-        $matriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
-        $cMatriculados = $matriculaRepository->getMatriculas([
+        $cMatriculados = $this->matriculaRepository->getMatriculas([
             'id_asignatura' => $idAsignatura,
             'id_activ' => $idActiv,
         ]);
@@ -72,8 +111,7 @@ final class ActaNotasData
             uksort($aPersonasMatriculadas, 'src\shared\domain\helpers\strsinacentocmp');
         }
 
-        $actaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
-        $cActas = $actaRepository->getActas([
+        $cActas = $this->actaRepository->getActas([
             'id_activ' => $idActiv,
             'id_asignatura' => $idAsignatura,
             '_ordre' => 'f_acta',
@@ -83,9 +121,12 @@ final class ActaNotasData
         $desplActasOpciones = [];
         $notas = 'nuevo';
         $aActasList = [];
-        if (is_array($cActas) && !empty($cActas)) {
+        if ($cActas !== []) {
             $desplActasOpciones = [0 => '', NotaSituacion::CURSADA => Nota::getStatusTxt(NotaSituacion::CURSADA)];
             foreach ($cActas as $oActa) {
+                if (!$oActa instanceof Acta) {
+                    continue;
+                }
                 $nomActa = $oActa->getActa();
                 $desplActasOpciones[$nomActa] = $oActa->getActa();
                 $aActasList[] = $nomActa;

@@ -4,33 +4,39 @@ namespace src\actividadtarifas\application;
 
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\ubis\domain\entity\TarifaUbi;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Mutacion: crea o actualiza una `TarifaUbi`.
- *
- * Sucesor de la rama `update` del dispatcher legacy
- * `apps/actividadtarifas/controller/tarifa_ajax.php`.
  */
 final class TarifaUbiUpdate
 {
-    public static function execute(array $input): string
-    {
-        $id_item = (int)($input['id_item'] ?? 0);
-        $id_ubi = (int)($input['id_ubi'] ?? 0);
-        $year = (int)($input['year'] ?? 0);
-        $id_tarifa = (int)($input['id_tarifa'] ?? 0);
-        $id_serie = (int)($input['id_serie'] ?? 0);
-        $cantidad = (string)($input['cantidad'] ?? '');
-        $observ = (string)($input['observ'] ?? '');
+    public function __construct(
+        private TarifaUbiRepositoryInterface $tarifaUbiRepository,
+    ) {
+    }
 
-        $repo = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
+    {
+        $id_item = input_int($input, 'id_item');
+        $id_ubi = input_int($input, 'id_ubi');
+        $year = input_int($input, 'year');
+        $id_tarifa = input_int($input, 'id_tarifa');
+        $id_serie = input_int($input, 'id_serie');
+        $cantidad = input_string($input, 'cantidad');
+        $observ = input_string($input, 'observ');
+
         if ($id_item !== 0) {
-            $oTarifaUbi = $repo->findById($id_item);
+            $oTarifaUbi = $this->tarifaUbiRepository->findById($id_item);
             if ($oTarifaUbi === null) {
-                return (string)_("no se encuentra la tarifa");
+                return (string) _("no se encuentra la tarifa");
             }
         } else {
-            $newId = $repo->getNewId();
+            $newId = $this->tarifaUbiRepository->getNewId();
             $oTarifaUbi = new TarifaUbi();
             $oTarifaUbi->setId_item($newId);
         }
@@ -48,15 +54,15 @@ final class TarifaUbiUpdate
             $oTarifaUbi->setId_serie($id_serie);
         }
         if ($cantidad !== '') {
-            $oTarifaUbi->setCantidad((float)$cantidad);
+            $oTarifaUbi->setCantidad((float) $cantidad);
         }
         if ($observ !== '') {
             $oTarifaUbi->setObserv($observ);
         }
 
-        if ($repo->Guardar($oTarifaUbi) === false) {
-            return (string)_("hay un error, no se ha guardado")
-                . "\n" . $repo->getErrorTxt();
+        if ($this->tarifaUbiRepository->Guardar($oTarifaUbi) === false) {
+            return (string) _("hay un error, no se ha guardado")
+                . "\n" . $this->tarifaUbiRepository->getErrorTxt();
         }
 
         return '';

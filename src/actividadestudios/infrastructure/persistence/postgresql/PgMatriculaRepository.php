@@ -2,6 +2,7 @@
 
 namespace src\actividadestudios\infrastructure\persistence\postgresql;
 
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
@@ -28,12 +29,15 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBP'];
+        $oDbl = GlobalPdo::get('oDBP');
         $this->setoDbl($oDbl);
         $this->setNomTabla('d_matriculas_activ');
     }
 
 
+    /**
+     * @return list<Matricula>
+     */
     public function getMatriculasPendientes(?int $id_nom = null): array
     {
         $oDbl = $this->getoDbl();
@@ -46,23 +50,27 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
             $sQry = "SELECT * FROM $nom_tabla Where id_situacion IS NULL";
         }
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         foreach ($stmt as $aDatos) {
-            $Matricula =  Matricula::fromArray($aDatos);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $Matricula = Matricula::fromArray($aDatos);
             $MatriculaSet->add($Matricula);
         }
-        return $MatriculaSet->getTot();
+        return array_values($MatriculaSet->getTot());
     }
 
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo Matricula
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Matricula
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Matricula>
      */
     public function getMatriculas(array $aWhere = [], array $aOperators = []): array
     {
@@ -99,27 +107,33 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        if (isset($aWhere['_ordre']) && is_scalar($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . (string) $aWhere['_ordre'];
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . (string) $aWhere['_limit'];
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Matricula =  Matricula::fromArray($aDatos);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $Matricula = Matricula::fromArray($aDatos);
             $MatriculaSet->add($Matricula);
         }
-        return $MatriculaSet->getTot();
+        return array_values($MatriculaSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -171,6 +185,9 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -180,31 +197,43 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_activ, int $id_asignatura, int $id_nom): array|bool
+    public function datosById(int $id_activ, int $id_asignatura, int $id_nom): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
-    public function datosByPk(ActividadMatriculaPk $pk): array|bool
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosByPk(ActividadMatriculaPk $pk): array|false
     {
         return $this->datosById($pk->idActiv(), $pk->idAsignatura(), $pk->idNom());
     }

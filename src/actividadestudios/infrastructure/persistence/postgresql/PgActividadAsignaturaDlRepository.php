@@ -3,6 +3,8 @@
 namespace src\actividadestudios\infrastructure\persistence\postgresql;
 
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -19,10 +21,11 @@ class PgActividadAsignaturaDlRepository extends PgActividadAsignaturaRepository 
 {
     use HandlesPdoErrors;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $oDbl = $GLOBALS['oDB'];
+    public function __construct(
+        AsignaturaRepositoryInterface $asignaturaRepository,
+    ) {
+        parent::__construct($asignaturaRepository);
+        $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
         $this->setNomTabla('d_asignaturas_activ_dl');
     }

@@ -6,58 +6,40 @@ use src\asignaturas\domain\entity\Sector;
 
 /**
  * Interfaz de la clase Sector y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 14/11/2025
  */
 interface SectorRepositoryInterface
 {
-
+    /**
+     * @return array<int|string, list<int|string>>
+     */
     public function getArraySectoresPorDepartamento(): array;
+
+    /**
+     * @return array<int|string, string>
+     */
     public function getArraySectores(): array;
 
-/* --------------------  BASiC SEARCH ---------------------------------------- */
-
-	/**
-	 * devuelve una colección (array) de objetos de tipo Sector
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo Sector
-	
-	 */
-	public function getSectores(array $aWhere=[], array $aOperators=[]): array;
-	
-/* -------------------- ENTIDAD --------------------------------------------- */
-
-	public function Eliminar(Sector $Sector): bool;
-
-	public function Guardar(Sector $Sector): bool;
-
-	public function getErrorTxt(): string;
-
-
-
-	public function getNomTabla(): string;
-	
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     * 
-     * @param int $id_sector
-     * @return array|bool
-	
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Sector>
      */
-    public function datosById(int $id_sector): array|bool;
-	
+    public function getSectores(array $aWhere = [], array $aOperators = []): array;
+
+    public function Eliminar(Sector $Sector): bool;
+
+    public function Guardar(Sector $Sector): bool;
+
+    public function getErrorTxt(): string;
+
+    public function getNomTabla(): string;
+
     /**
-     * Busca la clase con id_sector en el repositorio.
-	
+     * @return array<string, mixed>|false
      */
+    public function datosById(int $id_sector): array|false;
+
     public function findById(int $id_sector): ?Sector;
-	
-    public function getNewId();
+
+    public function getNewId(): int;
 }

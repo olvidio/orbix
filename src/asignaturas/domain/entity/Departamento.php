@@ -30,9 +30,14 @@ class Departamento
 
     public function setIdDepartamentoVo(DepartamentoId|int $id): void
     {
-        $this->id_departamento = $id instanceof DepartamentoId
-            ? $id
-            : DepartamentoId::fromNullableInt($id);
+        if ($id instanceof DepartamentoId) {
+            $this->id_departamento = $id;
+            return;
+        }
+        $vo = DepartamentoId::fromNullableInt($id);
+        if ($vo !== null) {
+            $this->id_departamento = $vo;
+        }
     }
 
 
@@ -44,7 +49,7 @@ class Departamento
 
     public function setId_departamento(int $id_departamento): void
     {
-        $this->id_departamento = DepartamentoId::fromNullableInt($id_departamento);
+        $this->id_departamento = new DepartamentoId($id_departamento);
     }
 
     // VO API
@@ -55,21 +60,26 @@ class Departamento
 
     public function setNombreDepartamentoVo(DepartamentoName|string $nombre): void
     {
-        $this->nombre_departamento = $nombre instanceof DepartamentoName
-            ? $nombre
-            : DepartamentoName::fromNullableString($nombre);
+        if ($nombre instanceof DepartamentoName) {
+            $this->nombre_departamento = $nombre;
+            return;
+        }
+        $vo = DepartamentoName::fromNullableString($nombre);
+        if ($vo !== null) {
+            $this->nombre_departamento = $vo;
+        }
     }
 
 
     public function getDepartamento(): string
     {
-        return $this->nombre_departamento->value() ?? '';
+        return $this->nombre_departamento->value();
     }
 
 
     public function setDepartamento(string $departamento): void
     {
-        $this->nombre_departamento = DepartamentoName::fromNullableString($departamento);
+        $this->nombre_departamento = new DepartamentoName($departamento);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -78,12 +88,15 @@ class Departamento
         return 'id_departamento';
     }
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
         $oDepartamentoSet = new Set();
 
         $oDepartamentoSet->add($this->getDatosDepartamento());
-        return $oDepartamentoSet->getTot();
+        return array_values($oDepartamentoSet->getTot());
     }
 
     /**
@@ -106,6 +119,10 @@ class Departamento
 
     /**
      * La columna en BD es `departamento`; la propiedad VO es `nombre_departamento`.
+     */
+    /**
+     * @param array<string, callable> $converters
+     * @return array<string, mixed>
      */
     public function toArrayForDatabase(array $converters = []): array
     {

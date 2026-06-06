@@ -4,66 +4,60 @@ namespace src\asignaturas\domain\contracts;
 
 use src\asignaturas\domain\entity\Asignatura;
 
-use function src\shared\domain\helpers\is_true;
 /**
  * Interfaz de la clase Asignatura y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 14/11/2025
  */
 interface AsignaturaRepositoryInterface
 {
+    /**
+     * @param array<string, mixed> $aWhere
+     */
+    public function getJsonAsignaturas(array $aWhere): string;
 
-    public function getJsonAsignaturas($aWhere): string;
+    /**
+     * @return array<int|string, array{nombre_asignatura: mixed, creditos: mixed}>
+     */
     public function getArrayAsignaturasCreditos(): array;
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayAsignaturasConSeparador(bool $op_genericas = true): array;
+
     public function getListaOpGenericas(string $formato = ''): string;
+
+    /**
+     * @return array<int|string, string|null>
+     */
     public function getArrayAsignaturas(): array;
 
-    public function getAsignaturasAsJson($aWhere = [], $aOperators = array()): string;
-/* --------------------  BASiC SEARCH ---------------------------------------- */
-
-	/**
-	 * devuelve una colección (array) de objetos de tipo Asignatura
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo Asignatura
-	
-	 */
-	public function getAsignaturas(array $aWhere=[], array $aOperators=[]): array;
-	
-/* -------------------- ENTIDAD --------------------------------------------- */
-
-	public function Eliminar(Asignatura $Asignatura): bool;
-
-	public function Guardar(Asignatura $Asignatura): bool;
-
-	public function getErrorTxt(): string;
-
-
-
-	public function getNomTabla(): string;
-	
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     * 
-     * @param int $id_asignatura
-     * @return array|bool
-	
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
      */
-    public function datosById(int $id_asignatura): array|bool;
-	
+    public function getAsignaturasAsJson(array $aWhere = [], array $aOperators = []): string;
+
     /**
-     * Busca la clase con id_asignatura en el repositorio.
-	
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Asignatura>
      */
+    public function getAsignaturas(array $aWhere = [], array $aOperators = []): array;
+
+    public function Eliminar(Asignatura $Asignatura): bool;
+
+    public function Guardar(Asignatura $Asignatura): bool;
+
+    public function getErrorTxt(): string;
+
+    public function getNomTabla(): string;
+
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_asignatura): array|false;
+
     public function findById(int $id_asignatura): ?Asignatura;
-	
-    public function getNewId();
+
+    public function getNewId(): int;
 }

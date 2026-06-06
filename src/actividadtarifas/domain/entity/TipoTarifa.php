@@ -44,7 +44,8 @@ class TipoTarifa
      */
     public function setId_tarifa(int $id_tarifa): void
     {
-        $this->id_tarifa = TarifaId::fromNullableInt($id_tarifa);
+        $this->id_tarifa = TarifaId::fromNullableInt($id_tarifa)
+            ?? throw new \InvalidArgumentException('id_tarifa cannot be null');
     }
 
     public function getIdTarifaVo(): TarifaId
@@ -56,7 +57,8 @@ class TipoTarifa
     {
         $this->id_tarifa = $id instanceof TarifaId
             ? $id
-            : TarifaId::fromNullableInt($id);
+            : (TarifaId::fromNullableInt($id)
+                ?? throw new \InvalidArgumentException('id_tarifa cannot be null'));
     }
 
 
@@ -74,7 +76,8 @@ class TipoTarifa
      */
     public function setModo(int $modo): void
     {
-        $this->modo = TarifaModoId::fromNullableInt($modo);
+        $this->modo = TarifaModoId::fromNullableInt($modo)
+            ?? throw new \InvalidArgumentException('modo cannot be null');
     }
 
     public function getModoVo(): TarifaModoId
@@ -86,14 +89,15 @@ class TipoTarifa
     {
         $this->modo = $id instanceof TarifaModoId
             ? $id
-            : TarifaModoId::fromNullableInt($id);
+            : (TarifaModoId::fromNullableInt($id)
+                ?? throw new \InvalidArgumentException('modo cannot be null'));
     }
 
-    public function getModoTxt():string
+    public function getModoTxt(): string
     {
         $a_modos = TarifaModoId::getArrayModo();
 
-        return $a_modos[$this->modo->value()];
+        return $a_modos[$this->modo->value()] ?? '';
     }
 
 

@@ -5,13 +5,14 @@ namespace src\asignaturas\domain;
 /* No vale el underscore en el nombre */
 
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
+use src\asignaturas\domain\entity\AsignaturaTipo;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoAsignaturaTipo extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private AsignaturaTipoRepositoryInterface $asignaturaTipoRepository,
+    ) {
         $this->setTxtTitulo(_("tipos de asignaturas"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este tipo de asignatura?"));
         $this->setTxtBuscar(_("buscar un tipo de asignatura"));
@@ -23,20 +24,19 @@ class InfoAsignaturaTipo extends DatosInfoRepo
         $this->setRepositoryInterface(AsignaturaTipoRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<AsignaturaTipo>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'tipo_asignatura');
+            $aWhere = ['_ordre' => 'tipo_asignatura'];
             $aOperador = [];
         } else {
-            $aWhere = array('tipo_asignatura' => $this->k_buscar);
-            $aOperador = array('tipo_asignatura' => 'sin_acentos');
+            $aWhere = ['tipo_asignatura' => $this->k_buscar];
+            $aOperador = ['tipo_asignatura' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getAsignaturaTipos($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->asignaturaTipoRepository->getAsignaturaTipos($aWhere, $aOperador);
     }
 }

@@ -8,13 +8,18 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 
 final class AsignaturasConSeparadorOpcionesData
 {
-    /**
-     * @return array{a_opciones: array}
-     */
-    public static function execute(bool $op_genericas = true): array
-    {
-        $repo = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+    public function __construct(
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+    ) {
+    }
 
-        return ['a_opciones' => $repo->getArrayAsignaturasConSeparador($op_genericas)];
+    /**
+     * @return array{a_opciones: array<int|string, string>}
+     */
+    public function execute(bool $op_genericas = true): array
+    {
+        return [
+            'a_opciones' => $this->asignaturaRepository->getArrayAsignaturasConSeparador($op_genericas),
+        ];
     }
 }

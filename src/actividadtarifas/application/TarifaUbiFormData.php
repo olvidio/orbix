@@ -2,28 +2,28 @@
 
 namespace src\actividadtarifas\application;
 
-use src\shared\config\ConfigGlobal;
-use src\shared\security\HashB;
 use src\actividadtarifas\application\services\TipoTarifaDropdown;
 use src\actividadtarifas\domain\value_objects\SerieId;
+use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Data builder para el formulario de `TarifaUbi` (alta o edicion de
  * una tarifa de una casa para un año).
- *
- * Junto con los datos del form, emite las **cápsulas `HashB`** que el
- * navegador transportará opacamente y que los endpoints de mutación
- * (`tarifa_ubi_update`, `tarifa_ubi_eliminar`) abrirán para recuperar
- * el contexto firmado (`id_item`, `id_ubi`, `year`). Ver
- * `documentacion/hash_arquitectura.md`.
- *
- * Sucesor de la rama `form_tarifa_ubi` del dispatcher legacy
- * `apps/actividadtarifas/controller/tarifa_ajax.php`.
  */
 final class TarifaUbiFormData
 {
+    public function __construct(
+        private TarifaUbiRepositoryInterface $tarifaUbiRepository,
+        private TipoTarifaDropdown $tipoTarifaDropdown,
+    ) {
+    }
+
     /**
+     * @param array<string, mixed> $input
      * @return array{
      *   es_nuevo: bool,
      *   id_item: string,
@@ -38,48 +38,41 @@ final class TarifaUbiFormData
      *   token_eliminar: string
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $id_item = (string)($input['id_item'] ?? '');
-        $id_ubi = (int)($input['id_ubi'] ?? 0);
-        $year = (int)($input['year'] ?? 0);
-        $letra = (string)($input['letra'] ?? '');
+        $id_item = input_string($input, 'id_item');
+        $id_ubi = input_int($input, 'id_ubi');
+        $year = input_int($input, 'year');
+        $letra = input_string($input, 'letra');
 
         $es_nuevo = $id_item === '';
         $cantidad = '';
 
         if (!$es_nuevo) {
-            $repo = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
-            $oTarifaUbi = $repo->findById((int)$id_item);
+            $oTarifaUbi = $this->tarifaUbiRepository->findById((int) $id_item);
             if ($oTarifaUbi !== null) {
-                $cantidad = (string)$oTarifaUbi->getCantidad();
+                $cantidad = (string) $oTarifaUbi->getCantidad();
             }
         }
 
         if ($letra === '') {
-            $letra = (string)_("nueva");
+            $letra = (string) _("nueva");
         }
 
         $opciones_tarifa = [];
         if ($es_nuevo) {
             $miSfsv = ConfigGlobal::mi_sfsv();
-            $opciones_tarifa = TipoTarifaDropdown::opciones($miSfsv);
+            $opciones_tarifa = $this->tipoTarifaDropdown->opciones($miSfsv);
         }
 
-        // Cápsula que autoriza la mutación posterior (`tarifa_ubi_update`).
-        // Firma la identidad del registro; los campos editables (id_tarifa,
-        // id_serie, cantidad, observ) viajan aparte en el POST y se validan
-        // ahí independientemente.
         $ctxUpdate = $es_nuevo
             ? ['id_ubi' => $id_ubi, 'year' => $year]
-            : ['id_item' => (int)$id_item, 'id_ubi' => $id_ubi, 'year' => $year];
+            : ['id_item' => (int) $id_item, 'id_ubi' => $id_ubi, 'year' => $year];
         $token_update = HashB::sign('tarifa_ubi_update', $ctxUpdate);
 
-        // Cápsula de eliminación: solo tiene sentido en edición (existe
-        // id_item). En alta, el botón "eliminar" ni siquiera se renderiza.
         $token_eliminar = '';
         if (!$es_nuevo) {
-            $token_eliminar = HashB::sign('tarifa_ubi_eliminar', ['id_item' => (int)$id_item]);
+            $token_eliminar = HashB::sign('tarifa_ubi_eliminar', ['id_item' => (int) $id_item]);
         }
 
         return [

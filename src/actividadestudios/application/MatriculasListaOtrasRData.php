@@ -6,11 +6,13 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaPub;
 use src\ubis\domain\RegionStgrAviso;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * @return array{
@@ -24,17 +26,38 @@ use src\ubis\domain\RegionStgrAviso;
  */
 final class MatriculasListaOtrasRData
 {
-    public static function execute(string $apellido1, string $esquemaRegionStgr): array
+    public function __construct(
+        private PersonaPubRepositoryInterface $personaPubRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ActaRepositoryInterface $actaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array{
+     *   titulo: string,
+     *   titulo_busqueda_por_apellidos: string,
+     *   msg_err: string,
+     *   aviso: string,
+     *   a_valores: array<int|string, array<string|int, mixed>>,
+     *   a_Nombre?: array<int, string>
+     * }
+     */
+    public function execute(array $input): array
     {
+        $apellido1 = input_string($input, 'apellido1');
+        $esquemaRegionStgr = input_string($input, 'esquema_region_stgr');
         $tituloBusqueda = _('búsqueda por apellidos');
         $titulo = '';
         $msgErr = '';
+        /** @var array<string, array<string, string>> $problemasRegionStgr */
         $problemasRegionStgr = [];
         $aValores = [];
         $aNombre = [];
 
         if ($apellido1 !== '') {
-            $personaPubRepository = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class);
             $aWhere = [
                 'apellido1' => '^' . $apellido1,
                 'situacion' => 'A',
@@ -42,7 +65,7 @@ final class MatriculasListaOtrasRData
             ];
             $aOperador = ['apellido1' => 'sin_acentos'];
             $sinRegionStgrPorIdNom = [];
-            $cPersonas = $personaPubRepository->getPersonasParaListado($aWhere, $aOperador, $problemasRegionStgr, $sinRegionStgrPorIdNom);
+            $cPersonas = $this->personaPubRepository->getPersonasParaListado($aWhere, $aOperador, $problemasRegionStgr, $sinRegionStgrPorIdNom);
             $i = 0;
             foreach ($cPersonas as $oPersona) {
                 $idNom = $oPersona->getId_nom();
@@ -60,14 +83,16 @@ final class MatriculasListaOtrasRData
         } else {
             $aWhere = ['json_certificados' => 'x', '_ordre' => 'id_nom'];
             $aOperador = ['json_certificados' => 'IS NULL'];
-            $personaNotaOtraRepo = $GLOBALS['container']->make(
+            $personaNotaOtraRepo = DependencyResolver::make(
                 PersonaNotaOtraRegionStgrRepositoryInterface::class,
                 ['esquema_region_stgr' => $esquemaRegionStgr],
             );
+            if (!$personaNotaOtraRepo instanceof PersonaNotaOtraRegionStgrRepositoryInterface) {
+                throw new \RuntimeException(_('No se pudo resolver el repositorio de notas de otras regiones'));
+            }
             $aNotasOtrasRegiones = $personaNotaOtraRepo->getPersonaNotas($aWhere, $aOperador);
 
-            $asignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-            $aAsignaturas = $asignaturaRepository->getArrayAsignaturas();
+            $aAsignaturas = $this->asignaturaRepository->getArrayAsignaturas();
 
             $titulo = _('Lista de alumnos de otras regiones pendientes de generar certificado');
             $i = 0;
@@ -75,8 +100,6 @@ final class MatriculasListaOtrasRData
             $strAsignaturas = '';
             $idNomAnterior = '';
             $alert = '';
-            $actividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-            $actaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
             $idNom = '';
             foreach ($aNotasOtrasRegiones as $oPersonaNotaOtraRegionDB) {
                 $i++;
@@ -84,7 +107,7 @@ final class MatriculasListaOtrasRData
 
                 if ($idNomAnterior !== '' && $idNom !== $idNomAnterior) {
                     $marcaRegionStgr = false;
-                    $oPersona = self::findPersonaEnGlobal($idNomAnterior, $problemasRegionStgr, $marcaRegionStgr);
+                    $oPersona = $this->findPersonaEnGlobal($idNomAnterior, $problemasRegionStgr, $marcaRegionStgr);
                     if ($oPersona === null) {
                         $msgErr .= "<br>No encuentro a nadio con id_nom $idNomAnterior en  " . __FILE__ . ': line ' . __LINE__;
                         $idNomAnterior = $idNom;
@@ -109,14 +132,14 @@ final class MatriculasListaOtrasRData
                 $idAsignatura = $oPersonaNotaOtraRegionDB->getId_asignatura();
                 $idActiv = $oPersonaNotaOtraRegionDB->getId_activ();
                 $acta = $oPersonaNotaOtraRegionDB->getActa();
-                $Acta = $actaRepository->findById($acta);
+                $Acta = $this->actaRepository->findById($acta);
                 if ($Acta !== null && ($Acta->getPdfVo() === null)) {
                     $alert .= '!';
                 }
                 $nomAsignatura = $aAsignaturas[$idAsignatura];
                 $nomActiv = '';
                 if ($idActiv !== null) {
-                    $oActividad = $actividadAllRepository->findById($idActiv);
+                    $oActividad = $this->actividadAllRepository->findById($idActiv);
                     if ($oActividad !== null) {
                         $nomActiv = $oActividad->getNom_activ();
                     }
@@ -130,7 +153,7 @@ final class MatriculasListaOtrasRData
             }
             if ($idNom !== '') {
                 $marcaRegionStgr = false;
-                $oPersona = self::findPersonaEnGlobal($idNom, $problemasRegionStgr, $marcaRegionStgr);
+                $oPersona = $this->findPersonaEnGlobal($idNom, $problemasRegionStgr, $marcaRegionStgr);
                 if ($oPersona === null) {
                     $msgErr .= "<br>No encuentro a nadie con id_nom: $idNom en  " . __FILE__ . ': line ' . __LINE__;
                 } else {
@@ -163,7 +186,10 @@ final class MatriculasListaOtrasRData
         ];
     }
 
-    private static function findPersonaEnGlobal(
+    /**
+     * @param array<string, array<string, string>> $problemasRegionStgr
+     */
+    private function findPersonaEnGlobal(
         int $idNom,
         array &$problemasRegionStgr,
         bool &$marcaRegionStgr = false,
@@ -181,9 +207,7 @@ final class MatriculasListaOtrasRData
             RegionStgrAviso::registrar($problemasRegionStgr, $e);
         }
 
-        $personaPubRepository = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class);
-
-        return $personaPubRepository->findByIdParaListado($idNom, $problemasRegionStgr, $marcaRegionStgr);
+        return $this->personaPubRepository->findByIdParaListado($idNom, $problemasRegionStgr, $marcaRegionStgr);
     }
 
     public static function esAvisoRegionStgr(\Throwable $e): bool

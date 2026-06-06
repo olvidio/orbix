@@ -27,7 +27,7 @@ class ActividadAsignatura
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getActividadAsignaturaPk()
+    public function getActividadAsignaturaPk(): ActividadAsignaturaPk
     {
         return ActividadAsignaturaPk::fromArray([
             'id_activ' => $this->id_activ,
@@ -76,13 +76,13 @@ class ActividadAsignatura
      */
     public function setId_asignatura(int $id_asignatura): void
     {
-        $this->id_asignatura = AsignaturaId::fromNullableInt($id_asignatura);
+        $this->id_asignatura = new AsignaturaId($id_asignatura);
     }
     public function setIdAsignaturaVo(AsignaturaId|int $id_asignatura): void
     {
         $this->id_asignatura = $id_asignatura instanceof AsignaturaId
             ? $id_asignatura
-            : AsignaturaId::fromNullableInt($id_asignatura);
+            : new AsignaturaId($id_asignatura);
     }
 
 

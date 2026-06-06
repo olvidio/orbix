@@ -2,40 +2,40 @@
 
 namespace src\actividadtarifas\application;
 
-use src\shared\config\ConfigGlobal;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\actividadtarifas\domain\entity\TipoTarifa;
+use src\shared\config\ConfigGlobal;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Mutacion: crea o actualiza un `TipoTarifa`.
- *
- * Sucesor de la rama `tar_update` del dispatcher legacy
- * `apps/actividadtarifas/controller/tarifa_ajax.php`.
  */
 final class TipoTarifaUpdate
 {
-    /**
-     * Devuelve texto de error vacio si ha ido bien. El controlador
-     * HTTP lo envuelve con `ContestarJson::enviar(...)`.
-     */
-    public static function execute(array $input): string
-    {
-        $id_tarifa = (string)($input['id_tarifa'] ?? '');
-        $letra = (string)($input['letra'] ?? '');
-        $modo = (string)($input['modo'] ?? '');
-        $observ = (string)($input['observ'] ?? '');
+    public function __construct(
+        private TipoTarifaRepositoryInterface $tipoTarifaRepository,
+    ) {
+    }
 
-        $repo = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
+    {
+        $id_tarifa = input_string($input, 'id_tarifa');
+        $letra = input_string($input, 'letra');
+        $modo = input_string($input, 'modo');
+        $observ = input_string($input, 'observ');
 
         if ($id_tarifa === 'nuevo' || $id_tarifa === '') {
-            $newId = $repo->getNewId();
+            $newId = $this->tipoTarifaRepository->getNewId();
             $oTipoTarifa = new TipoTarifa();
             $oTipoTarifa->setId_tarifa($newId);
             $oTipoTarifa->setSfsv(ConfigGlobal::mi_sfsv());
         } else {
-            $oTipoTarifa = $repo->findById((int)$id_tarifa);
+            $oTipoTarifa = $this->tipoTarifaRepository->findById((int) $id_tarifa);
             if ($oTipoTarifa === null) {
-                return (string)_("no se encuentra la tarifa");
+                return (string) _("no se encuentra la tarifa");
             }
         }
 
@@ -43,15 +43,15 @@ final class TipoTarifaUpdate
             $oTipoTarifa->setLetra($letra);
         }
         if ($modo !== '') {
-            $oTipoTarifa->setModo((int)$modo);
+            $oTipoTarifa->setModo((int) $modo);
         }
         if ($observ !== '') {
             $oTipoTarifa->setObserv($observ);
         }
 
-        if ($repo->Guardar($oTipoTarifa) === false) {
-            return (string)_("hay un error, no se ha guardado")
-                . "\n" . $repo->getErrorTxt();
+        if ($this->tipoTarifaRepository->Guardar($oTipoTarifa) === false) {
+            return (string) _("hay un error, no se ha guardado")
+                . "\n" . $this->tipoTarifaRepository->getErrorTxt();
         }
 
         return '';

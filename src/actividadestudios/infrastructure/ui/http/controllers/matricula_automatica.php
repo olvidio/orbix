@@ -1,14 +1,10 @@
 <?php
 
 use src\actividadestudios\application\MatriculaAutomatica;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-/**
- * Matricula masivamente a una o varias personas en las asignaturas del plan
- * de estudios de su actividad vigente. Responde JSON.
- *
- * Sucesor de `apps/actividadestudios/controller/matricular.php`.
- */
-$msg = MatriculaAutomatica::execute($_POST);
-
-ContestarJson::enviar('', ['msg' => $msg]);
+/** @var MatriculaAutomatica $useCase */
+$useCase = DependencyResolver::get(MatriculaAutomatica::class);
+$msg = $useCase->execute($_POST);
+ContestarJson::enviar($msg, 'ok');

@@ -15,16 +15,23 @@ use function frontend\shared\helpers\is_true;
  */
 final class MatriculasPendientesData
 {
-    public static function execute(): array
+    public function __construct(
+        private MatriculaDlRepositoryInterface $matriculaDlRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private PersonaFinderService $personaFinderService,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array{msg_err: string, a_valores: array<int|string, array<string|int, mixed>>}
+     */
+    public function execute(array $input = []): array
     {
-        $matriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
-        $cMatriculasPendientes = $matriculaDlRepository->getMatriculasPendientes();
+        $cMatriculasPendientes = $this->matriculaDlRepository->getMatriculasPendientes();
 
         $msgErr = '';
-        $asignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $actividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $personaFinderService = $GLOBALS['container']->get(PersonaFinderService::class);
-
         $i = 0;
         $aValores = [];
         foreach ($cMatriculasPendientes as $oMatricula) {
@@ -35,7 +42,7 @@ final class MatriculasPendientesData
             $preceptor = $oMatricula->isPreceptor();
             $preceptorTxt = is_true($preceptor) ? 'x' : '';
 
-            $oActividad = $actividadAllRepository->findById($idActiv);
+            $oActividad = $this->actividadAllRepository->findById($idActiv);
             if ($oActividad === null) {
                 $msgErr .= "<br>No encuentro ninguna actividad con id: $idActiv en  " . __FILE__ . ': line ' . __LINE__;
                 continue;
@@ -43,7 +50,7 @@ final class MatriculasPendientesData
             $nomActiv = $oActividad->getNom_activ();
 
             try {
-                $oPersona = $personaFinderService->findPersonaEnGlobal($idNom);
+                $oPersona = $this->personaFinderService->findPersonaEnGlobal($idNom);
             } catch (\InvalidArgumentException $e) {
                 throw new \InvalidArgumentException(sprintf(
                     _('Error al validar nombre o apellidos de persona en matrículas pendientes (fila de lista %1$d): id_nom=%2$d, id_activ=%3$d, id_asignatura=%4$d. %5$s'),
@@ -60,7 +67,7 @@ final class MatriculasPendientesData
             }
             $apellidosNombre = $oPersona->getPrefApellidosNombre();
 
-            $oAsignatura = $asignaturaRepository->findById($idAsignatura);
+            $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
             if ($oAsignatura === null) {
                 throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura));
             }

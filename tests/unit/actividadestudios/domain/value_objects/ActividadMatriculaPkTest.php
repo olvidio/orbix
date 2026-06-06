@@ -18,7 +18,7 @@ final class ActividadMatriculaPkTest extends myTest
         ]);
         $this->assertSame(5, $pk->idActiv());
         $this->assertSame(99, $pk->idNom());
-        $this->assertSame('7', $pk->idAsignatura());
+        $this->assertSame(7, $pk->idAsignatura());
     }
 
     public function test_to_string(): void

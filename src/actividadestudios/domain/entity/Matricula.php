@@ -30,7 +30,7 @@ class Matricula
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getActividadMatriculaPk()
+    public function getActividadMatriculaPk(): ActividadMatriculaPk
     {
         return ActividadMatriculaPk::fromArray([
             'id_activ' => $this->id_activ,
@@ -68,13 +68,13 @@ class Matricula
      */
     public function setId_asignatura(int $id_asignatura): void
     {
-        $this->id_asignatura = AsignaturaId::fromNullableInt($id_asignatura);
+        $this->id_asignatura = new AsignaturaId($id_asignatura);
     }
     public function setIdAsignaturaVo(AsignaturaId|int $id_asignatura): void
     {
         $this->id_asignatura = $id_asignatura instanceof AsignaturaId
             ? $id_asignatura
-            : AsignaturaId::fromNullableInt($id_asignatura);
+            : new AsignaturaId($id_asignatura);
     }
 
 
@@ -132,7 +132,7 @@ class Matricula
      */
     public function getId_nivel(): ?string
     {
-        return $this->id_nivel?->value();
+        return $this->id_nivel !== null ? (string) $this->id_nivel->value() : null;
     }
 
     public function getIdNivelVo(): ?NivelId
@@ -160,7 +160,7 @@ class Matricula
      */
     public function getNota_num(): ?string
     {
-        return $this->nota_num?->value();
+        return $this->nota_num !== null ? (string) $this->nota_num->value() : null;
     }
 
     /**
@@ -192,7 +192,7 @@ class Matricula
      */
     public function getNota_max(): ?string
     {
-        return $this->nota_max?->value();
+        return $this->nota_max !== null ? (string) $this->nota_max->value() : null;
     }
 
     /**

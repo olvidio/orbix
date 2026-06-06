@@ -15,27 +15,19 @@ final class ActividadMatriculaPk
         private int $idActiv,
         private int $idNom,
         private int $idAsignatura
-    )
-    {
-        if (!is_numeric($idActiv)) {
-            throw new \InvalidArgumentException('id_activ debe ser numérico');
-        }
-        // puede ser negativo para los ex
-        if (!is_numeric($idNom)) {
-            throw new \InvalidArgumentException('id_nom debe ser numérico');
-        }
-        if (!is_numeric($this->idAsignatura)) {
-            throw new \InvalidArgumentException('id_asignatura debe ser numérico');
-        }
+    ) {
     }
 
+    /**
+     * @param array<string, mixed> $pk
+     */
     public static function fromArray(array $pk): self
     {
         $id_asignatura = $pk['id_asignatura'] instanceof AsignaturaId
             ? $pk['id_asignatura']->value()
-            : $pk['id_asignatura'];
+            : self::toInt($pk['id_asignatura'] ?? 0);
 
-        return new self((int)$pk['id_activ'], (int)$pk['id_nom'], (int)$id_asignatura);
+        return new self(self::toInt($pk['id_activ'] ?? 0), self::toInt($pk['id_nom'] ?? 0), $id_asignatura);
     }
 
     public function idActiv(): int
@@ -48,13 +40,9 @@ final class ActividadMatriculaPk
         return $this->idNom;
     }
 
-    public function idAsignatura(): string
+    public function idAsignatura(): int
     {
-        $id_asignatura = $this->idAsignatura instanceof AsignaturaId
-            ? $this->idAsignatura->value()
-            : $this->idAsignatura;
-
-        return $id_asignatura;
+        return $this->idAsignatura;
     }
 
     public function equals(self $other): bool
@@ -68,5 +56,10 @@ final class ActividadMatriculaPk
     {
         // Representación compacta util para logs o claves cache
         return $this->idAsignatura . ':' . $this->idNom . ':' . $this->idActiv;
+    }
+
+    private static function toInt(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
     }
 }

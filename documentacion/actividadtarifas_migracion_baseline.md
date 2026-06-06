@@ -194,3 +194,77 @@ procesa `success` / `mensaje` del estandar `ContestarJson`.
 
 - Eliminar `apps/actividadtarifas/` completo.
 - `php -l` en todos los ficheros nuevos/tocados.
+
+## Cierre DI (2026-06-06)
+
+Los 14 controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()` (sin `::execute()` estático).
+Entrada POST via `input_string` / `input_int`; mutaciones con `HashB`
+via `input_string` sobre el contexto abierto.
+
+### Resultado del cierre DI
+
+| Criterio | Estado |
+|----------|--------|
+| `$GLOBALS['container']` en `src/actividadtarifas/` | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | **14/14** |
+| `application/` con constructor DI | **15** clases (14 use cases + `TipoTarifaDropdown`) |
+| Pg repos con `GlobalPdo::get()` | **2/2** |
+| Casos de uso en `config/dependencies.php` | **17** entradas `autowire()` (2 repos + service + 14 use cases) |
+| Tests `tests/unit/actividadtarifas/` | **59 OK** |
+
+### `src/actividadtarifas/config/dependencies.php`
+
+Registra repositorios del módulo, `TipoTarifaDropdown` y todos los use
+cases: `RelacionTarifaEliminar`, `RelacionTarifaFormData`,
+`RelacionTarifaListaData`, `RelacionTarifaUpdate`, `TarifaUbiCopiar`,
+`TarifaUbiEliminar`, `TarifaUbiFormData`, `TarifaUbiListaData`,
+`TarifaUbiUpdate`, `TarifaUbiUpdateInc`, `TipoTarifaEliminar`,
+`TipoTarifaFormData`, `TipoTarifaListaData`, `TipoTarifaUpdate`.
+
+`TarifaUbi` y su repositorio permanecen en `src/ubis/` (inyectados por
+autowire en los use cases que los necesitan).
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (inicio) | `composer phpstan:file -- src/actividadtarifas/` | **123** |
+| 2026-06-06 (cierre) | `composer phpstan:file -- src/actividadtarifas/` | **0** |
+
+Áreas abordadas en el cierre (123 → 0):
+
+- Application: constructor DI, `input_*`, `instanceof XPermisos` para
+  permisos de oficina, tipos de retorno en payloads JSON.
+- Repos `PgTipoTarifaRepository`, `PgRelacionTarifaTipoActividadRepository`:
+  guards PDO, tipos de retorno, `GlobalPdo`.
+- Domain: entidades/VOs/contratos con PHPDoc `array<string,mixed>`,
+  setters VO sin null en propiedades no-nullables.
+- HTTP controllers: `DependencyResolver::get()` + helpers `input_*`.
+
+### Deuda post-refactor
+
+#### Completado
+
+- [x] 0 `$GLOBALS['container']` en todo `src/actividadtarifas/`
+- [x] Todos los controllers HTTP via `DependencyResolver`
+- [x] Casos de uso con constructor DI
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests `tests/unit/actividadtarifas/`: 59 tests
+- [x] PHPStan `src/actividadtarifas/` en 0 (phpstan-nobaseline.neon)
+- [x] Frontend `frontend/actividadtarifas/`: 0 `use src\...`
+
+#### Pendiente
+
+- [ ] Reimplementar `TarifaUbiCopiar` (acción legacy rota; endpoint devuelve
+  mensaje tipado de deuda).
+
+### Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests existentes pasan (`tests/unit/actividadtarifas/`: 59 tests)
+- [x] PHPStan `src/actividadtarifas/` en 0 (phpstan-nobaseline.neon)

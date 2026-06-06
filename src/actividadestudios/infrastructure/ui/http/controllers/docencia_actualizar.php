@@ -1,12 +1,10 @@
 <?php
-/**
- * Ejecuta {@see DocenciaActualizar} (actualizar dossier docencia STGR).
- * Consumo desde `frontend/actividadestudios/controller/actualizar_docencia.php` via PostRequest.
- */
 
-use src\shared\web\ContestarJson;
 use src\actividadestudios\application\DocenciaActualizar;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 
-$txt_rta = DocenciaActualizar::execute($_POST);
-
-ContestarJson::enviar('', ['txt_rta' => $txt_rta]);
+/** @var DocenciaActualizar $useCase */
+$useCase = DependencyResolver::get(DocenciaActualizar::class);
+$txt_rta = $useCase->execute($_POST);
+ContestarJson::enviar('', $txt_rta);

@@ -9,6 +9,9 @@ final class TipoActividadAsignatura
     const TIPO_INV = 'i'; // Semestre de invierno.
     const TIPO_PRECEPTOR = 'p'; // Preceptor.
 
+    /**
+     * @return array<string, string>
+     */
     public static function getTiposActividad(): array
     {
         return [

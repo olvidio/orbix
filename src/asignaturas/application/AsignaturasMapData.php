@@ -8,18 +8,19 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 
 /**
  * Mapa id_asignatura => nombre_corto para pantallas que no deben usar el contenedor en frontend.
- *
- * @return array<int|string, string|null>
  */
 final class AsignaturasMapData
 {
+    public function __construct(
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+    ) {
+    }
+
     /**
      * @return array{a_asignaturas: array<int|string, string|null>}
      */
-    public static function execute(): array
+    public function execute(): array
     {
-        $repo = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-
-        return ['a_asignaturas' => $repo->getArrayAsignaturas()];
+        return ['a_asignaturas' => $this->asignaturaRepository->getArrayAsignaturas()];
     }
 }

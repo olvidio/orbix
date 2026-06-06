@@ -12,29 +12,21 @@ use src\profesores\domain\services\ProfesorStgrService;
 
 final class ProfesoresDesplegableDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
+    private function useCase(
+        ?ProfesorAsignaturaService $asigSvc = null,
+        ?ProfesorStgrService $stgrSvc = null,
+        ?PersonaDlRepositoryInterface $personaRepo = null,
+    ): ProfesoresDesplegableData {
+        return new ProfesoresDesplegableData(
+            $asigSvc ?? $this->createMock(ProfesorAsignaturaService::class),
+            $stgrSvc ?? $this->createMock(ProfesorStgrService::class),
+            $personaRepo ?? $this->createMock(PersonaDlRepositoryInterface::class),
+        );
     }
 
     public function test_salida_desconocida_devuelve_opciones_vacias(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([]);
-
-        $out = ProfesoresDesplegableData::execute(['salida' => 'otro']);
+        $out = $this->useCase()->execute(['salida' => 'otro']);
         $this->assertSame([
             'id' => 'id_profesor',
             'opciones' => [],
@@ -53,11 +45,7 @@ final class ProfesoresDesplegableDataTest extends TestCase
             ->with($this->callback(fn (AsignaturaId $id) => $id->value() === 1000))
             ->willReturn($opciones);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ProfesorAsignaturaService::class => $svc,
-        ]);
-
-        $out = ProfesoresDesplegableData::execute([
+        $out = $this->useCase($svc)->execute([
             'salida' => 'asignatura',
             'id_asignatura' => 1000,
         ]);
@@ -70,11 +58,7 @@ final class ProfesoresDesplegableDataTest extends TestCase
         $svc = $this->createMock(ProfesorStgrService::class);
         $svc->method('getArrayProfesoresPub')->willReturn($opciones);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ProfesorStgrService::class => $svc,
-        ]);
-
-        $out = ProfesoresDesplegableData::execute(['salida' => 'todos']);
+        $out = $this->useCase(stgrSvc: $svc)->execute(['salida' => 'todos']);
         $this->assertSame([['456', 'Alvarez'], ['12', 'Zapata']], $out['opciones']);
     }
 
@@ -89,12 +73,7 @@ final class ProfesoresDesplegableDataTest extends TestCase
         $personaRepo = $this->createMock(PersonaDlRepositoryInterface::class);
         $personaRepo->method('findById')->with(99)->willReturn($oPersona);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ProfesorAsignaturaService::class => $asigSvc,
-            PersonaDlRepositoryInterface::class => $personaRepo,
-        ]);
-
-        $out = ProfesoresDesplegableData::execute([
+        $out = $this->useCase($asigSvc, personaRepo: $personaRepo)->execute([
             'salida' => 'asignatura',
             'id_asignatura' => 1000,
             'id_profesor' => 99,
@@ -119,12 +98,7 @@ final class ProfesoresDesplegableDataTest extends TestCase
         $personaRepo = $this->createMock(PersonaDlRepositoryInterface::class);
         $personaRepo->method('findById')->with(-42)->willReturn($oPersona);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ProfesorAsignaturaService::class => $asigSvc,
-            PersonaDlRepositoryInterface::class => $personaRepo,
-        ]);
-
-        $out = ProfesoresDesplegableData::execute([
+        $out = $this->useCase($asigSvc, personaRepo: $personaRepo)->execute([
             'salida' => 'asignatura',
             'id_asignatura' => 1000,
             'id_profesor' => -42,
@@ -140,7 +114,8 @@ final class ProfesoresDesplegableDataTest extends TestCase
 
     public function test_con_profesor_asignado_no_duplica_si_ya_esta_en_lista(): void
     {
-        $merged = ProfesoresDesplegableData::conProfesorAsignadoSiFalta([5 => 'Prof. X'], 5);
+        $useCase = $this->useCase();
+        $merged = $useCase->conProfesorAsignadoSiFalta([5 => 'Prof. X'], 5);
         $this->assertSame([5 => 'Prof. X'], $merged);
     }
 
@@ -150,29 +125,7 @@ final class ProfesoresDesplegableDataTest extends TestCase
         $svc = $this->createMock(ProfesorStgrService::class);
         $svc->expects($this->once())->method('getArrayProfesoresPub')->willReturn($opciones);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ProfesorStgrService::class => $svc,
-        ]);
-
-        $out = ProfesoresDesplegableData::execute(['salida' => 'todos']);
+        $out = $this->useCase(stgrSvc: $svc)->execute(['salida' => 'todos']);
         $this->assertSame([['1', 'Pub 1']], $out['opciones']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

@@ -2,12 +2,10 @@
 /**
  * Endpoint backend: actualiza en lote las cantidades de varias
  * `TarifaUbi` desde el estudio economico de casa.
- *
- * Consumido por `frontend/casas/controller/calendario_ubi_resumen.php`
- * y el form `frm_tarifas` dentro de `ubi_resumen.html.twig`.
  */
 
 use src\actividadtarifas\application\TarifaUbiUpdateInc;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $inc_cantidad = filter_input(INPUT_POST, 'inc_cantidad', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -16,5 +14,6 @@ $input = [
     'inc_cantidad' => is_array($inc_cantidad) ? $inc_cantidad : [],
 ];
 
-$error = TarifaUbiUpdateInc::execute($input);
-ContestarJson::enviar($error, 'ok');
+/** @var TarifaUbiUpdateInc $useCase */
+$useCase = DependencyResolver::get(TarifaUbiUpdateInc::class);
+ContestarJson::enviar($useCase->execute($input), 'ok');

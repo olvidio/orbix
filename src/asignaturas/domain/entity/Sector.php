@@ -34,9 +34,14 @@ class Sector
 
     public function setIdSectorVo(SectorId|int $id): void
     {
-        $this->id_sector = $id instanceof SectorId
-            ? $id
-            : SectorId::fromNullableInt($id);
+        if ($id instanceof SectorId) {
+            $this->id_sector = $id;
+            return;
+        }
+        $vo = SectorId::fromNullableInt($id);
+        if ($vo !== null) {
+            $this->id_sector = $vo;
+        }
     }
 
 
@@ -48,7 +53,7 @@ class Sector
 
     public function setId_sector(int $id_sector): void
     {
-        $this->id_sector = SectorId::fromNullableInt($id_sector);
+        $this->id_sector = new SectorId($id_sector);
     }
 
     // VO API
@@ -92,7 +97,7 @@ class Sector
 
     public function getSector(): string
     {
-        return $this->nombre_sector->value();
+        return $this->nombre_sector?->value() ?? '';
     }
 
 
@@ -107,13 +112,16 @@ class Sector
         return 'id_sector';
     }
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
         $oSectorSet = new Set();
 
         $oSectorSet->add($this->getDatosId_departamento());
         $oSectorSet->add($this->getDatosSector());
-        return $oSectorSet->getTot();
+        return array_values($oSectorSet->getTot());
     }
 
     /**
@@ -156,6 +164,10 @@ class Sector
 
     /**
      * La columna en BD es `sector`; la propiedad VO es `nombre_sector`.
+     */
+    /**
+     * @param array<string, callable> $converters
+     * @return array<string, mixed>
      */
     public function toArrayForDatabase(array $converters = []): array
     {

@@ -35,6 +35,7 @@ final class AsistenteMoverData
         private ActividadRepositoryInterface $actividadRepository,
         private PlazaPeticionRepositoryInterface $plazaPeticionRepository,
         private ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
+        private PosiblesCa $posiblesCa,
     ) {
     }
 
@@ -83,7 +84,7 @@ final class AsistenteMoverData
         $oDelegacion = $cDelegaciones[0];
         $id_dl = $oDelegacion->getIdDlVo()->value();
 
-        $oPosiblesCa = new PosiblesCa();
+        $oPosiblesCa = $this->posiblesCa;
         $propietario = '';
         $mod = '';
         $propio = 't';

@@ -9,6 +9,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\services\TelecoPersonaService;
 use src\shared\domain\value_objects\DateTimeLocal;
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -17,22 +18,33 @@ use function src\shared\domain\helpers\is_true;
  */
 final class MatriculasListaData
 {
+    public function __construct(
+        private ActividadRepositoryInterface $actividadRepository,
+        private MatriculaDlRepositoryInterface $matriculaDlRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private TelecoPersonaService $telecoPersonaService,
+    ) {
+    }
+
     /**
+     * @param array<string, mixed> $input
      * @return array{
      *   titulo: string,
      *   msg_err: string,
      *   a_valores: array<int|string, array<string|int, mixed>>
      * }
      */
-    public static function execute(string $inicioIso, string $finIso): array
+    public function execute(array $input): array
     {
+        $inicioIso = input_string($input, 'inicio_iso');
+        $finIso = input_string($input, 'fin_iso');
         $aWhereActividad = [
             'f_ini' => "'$inicioIso','$finIso'",
         ];
         $aOperadorActividad = ['f_ini' => 'BETWEEN'];
 
-        $actividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $aIdActividades = $actividadRepository->getArrayIdsWithKeyFini(
+        $aIdActividades = $this->actividadRepository->getArrayIdsWithKeyFini(
             $aWhereActividad,
             $aOperadorActividad,
         );
@@ -41,8 +53,7 @@ final class MatriculasListaData
         $aWhere = ['id_activ' => $strActividades];
         $aOperador = ['id_activ' => 'ANY'];
 
-        $matriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
-        $cMatriculas = $matriculaDlRepository->getMatriculas($aWhere, $aOperador);
+        $cMatriculas = $this->matriculaDlRepository->getMatriculas($aWhere, $aOperador);
 
         $oFini = new DateTimeLocal($inicioIso);
         $QinicioLocal = $oFini->getFromLocal();
@@ -53,9 +64,6 @@ final class MatriculasListaData
             $QinicioLocal,
             $QfinLocal,
         ));
-
-        $asignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $actividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 
         $i = 0;
         $aValores = [];
@@ -89,9 +97,8 @@ final class MatriculasListaData
                         $msgErr .= "<br>preceptor: No encuentro a nadie con id_nom: $idPreceptor en  "
                             . __FILE__ . ': line ' . __LINE__;
                     } else {
-                        $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
                         $preceptor = $oPersona->getPrefApellidosNombre();
-                        $mailsPreceptor = $telecoService->getTelecosPorTipo(
+                        $mailsPreceptor = $this->telecoPersonaService->getTelecosPorTipo(
                             $idPreceptor,
                             'e-mail',
                             ' / ',
@@ -105,7 +112,11 @@ final class MatriculasListaData
                 $preceptor = '';
             }
 
-            $oActividad = $actividadAllRepository->findById($idActiv);
+            $oActividad = $this->actividadAllRepository->findById($idActiv);
+            if ($oActividad === null) {
+                $msgErr .= "<br>" . sprintf(_('No encuentro actividad con id: %d'), $idActiv);
+                continue;
+            }
             $nomActiv = $oActividad->getNom_activ();
 
             if ($idNom !== $idNomAnterior) {
@@ -115,17 +126,16 @@ final class MatriculasListaData
                         . __FILE__ . ': line ' . __LINE__;
                     continue;
                 }
-                $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
                 $apellidosNombre = $oPersona->getPrefApellidosNombre();
                 $ctr = $oPersona->getCentro_o_dl();
                 $dl = $oPersona->getDl();
-                $mailsAlumno = $telecoService->getTelecosPorTipo($idNom, 'e-mail', ' / ');
+                $mailsAlumno = $this->telecoPersonaService->getTelecosPorTipo($idNom, 'e-mail', ' / ');
                 if (!empty($mailsAlumno)) {
                     $apellidosNombre .= ' [' . $mailsAlumno . ']';
                 }
             }
 
-            $oAsignatura = $asignaturaRepository->findById($idAsignatura);
+            $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
             if ($oAsignatura === null) {
                 throw new \RuntimeException(
                     sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura),

@@ -9,13 +9,11 @@ use src\actividadtarifas\domain\entity\TipoTarifa;
 
 final class TipoTarifaUpdateTest extends TestCase
 {
-    private mixed $previousContainer;
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['session_auth'] = [
             'id_usuario' => 1,
@@ -26,11 +24,6 @@ final class TipoTarifaUpdateTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_SESSION = $this->previousSession;
         parent::tearDown();
     }
@@ -43,9 +36,7 @@ final class TipoTarifaUpdateTest extends TestCase
             return $t->getId_tarifa() === 77;
         });
 
-        $GLOBALS['container'] = $this->containerOne(TipoTarifaRepositoryInterface::class, $repo);
-
-        $msg = TipoTarifaUpdate::execute([
+        $msg = (new TipoTarifaUpdate($repo))->execute([
             'id_tarifa' => 'nuevo',
             'letra' => 'A',
             'modo' => '1',
@@ -60,9 +51,7 @@ final class TipoTarifaUpdateTest extends TestCase
         $repo->method('findById')->with(5)->willReturn(null);
         $repo->expects($this->never())->method('Guardar');
 
-        $GLOBALS['container'] = $this->containerOne(TipoTarifaRepositoryInterface::class, $repo);
-
-        $this->assertNotSame('', TipoTarifaUpdate::execute(['id_tarifa' => '5']));
+        $this->assertNotSame('', (new TipoTarifaUpdate($repo))->execute(['id_tarifa' => '5']));
     }
 
     public function test_actualizar_exito(): void
@@ -76,9 +65,7 @@ final class TipoTarifaUpdateTest extends TestCase
         $repo->method('findById')->with(5)->willReturn($o);
         $repo->expects($this->once())->method('Guardar')->with($o)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerOne(TipoTarifaRepositoryInterface::class, $repo);
-
-        $this->assertSame('', TipoTarifaUpdate::execute([
+        $this->assertSame('', (new TipoTarifaUpdate($repo))->execute([
             'id_tarifa' => '5',
             'observ' => 'nota',
         ]));
@@ -95,30 +82,7 @@ final class TipoTarifaUpdateTest extends TestCase
         $repo->method('Guardar')->willReturn(false);
         $repo->method('getErrorTxt')->willReturn('err');
 
-        $GLOBALS['container'] = $this->containerOne(TipoTarifaRepositoryInterface::class, $repo);
-
-        $msg = TipoTarifaUpdate::execute(['id_tarifa' => '5', 'modo' => '0']);
+        $msg = (new TipoTarifaUpdate($repo))->execute(['id_tarifa' => '5', 'modo' => '0']);
         $this->assertStringContainsString('err', $msg);
-    }
-
-    /**
-     * @param class-string $iface
-     */
-    private function containerOne(string $iface, object $service): object
-    {
-        return new class($iface, $service) {
-            public function __construct(
-                private readonly string $iface,
-                private readonly object $service
-            ) {}
-
-            public function get(string $id): object
-            {
-                if ($id !== $this->iface) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->service;
-            }
-        };
     }
 }

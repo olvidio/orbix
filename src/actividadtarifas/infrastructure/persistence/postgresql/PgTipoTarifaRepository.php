@@ -2,63 +2,57 @@
 
 namespace src\actividadtarifas\infrastructure\persistence\postgresql;
 
-use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\actividadtarifas\domain\entity\TipoTarifa;
+use src\shared\infrastructure\GlobalPdo;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 
-
-/**
- * Clase que adapta la tabla xa_tipo_tarifa a la interfaz del repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 3/12/2025
- */
 class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaRepositoryInterface
 {
     use HandlesPdoErrors;
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
-        $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
-        $this->setoDbl_select($oDbl_Select);
+        $this->setoDbl(GlobalPdo::get('oDBC'));
+        $this->setoDbl_select(GlobalPdo::get('oDBC_Select'));
         $this->setNomTabla('xa_tipo_tarifa');
     }
 
-    public function getArrayTipoTarifas($isfsv = ''): array
+    /**
+     * @return array<int, string>
+     */
+    public function getArrayTipoTarifas(int|string $isfsv = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $sWhere = empty($isfsv) ? '' : "WHERE sfsv=$isfsv";
+        $sWhere = $isfsv === '' ? '' : "WHERE sfsv=$isfsv";
         $sQuery = "SELECT id_tarifa,letra FROM $nom_tabla $sWhere ORDER BY letra";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         foreach ($stmt as $aClave) {
+            if (!is_array($aClave) || !isset($aClave[0], $aClave[1])) {
+                continue;
+            }
             $clave = $aClave[0];
-            $val = $aClave[1];
+            $val = (string) $aClave[1];
             $aOpciones[$clave] = $val;
         }
         return $aOpciones;
     }
 
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
     /**
-     * devuelve una colección (array) de objetos de tipo TipoTarifa
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo TipoTarifa
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<TipoTarifa>
      */
     public function getTipoTarifas(array $aWhere = [], array $aOperators = []): array
     {
@@ -68,17 +62,13 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
+            if ($camp === '_ordre' || $camp === '_limit') {
                 continue;
             }
             $sOperador = $aOperators[$camp] ?? '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
                 $aCondicion[] = $a;
             }
-            // operadores que no requieren valores
             if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
                 unset($aWhere[$camp]);
             }
@@ -91,34 +81,39 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
         }
         $sCondicion = implode(' AND ', $aCondicion);
         if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
+            $sCondicion = ' WHERE ' . $sCondicion;
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if (is_string($limitVal) && $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TipoTarifa =  TipoTarifa::fromArray($aDatos);
-            $TipoTarifaSet->add($TipoTarifa);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $TipoTarifaSet->add(TipoTarifa::fromArray($aDatos));
         }
-        return $TipoTarifaSet->getTot();
+        return array_values($TipoTarifaSet->getTot());
     }
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(TipoTarifa $TipoTarifa): bool
     {
@@ -129,10 +124,6 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-
-    /**
-     * Si no existe el registro, hace un insert, si existe, se hace el update.
-     */
     public function Guardar(TipoTarifa $TipoTarifa): bool
     {
         $id_tarifa = $TipoTarifa->getIdTarifaVo()->value();
@@ -142,7 +133,6 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
 
         $aDatos = $TipoTarifa->toArrayForDatabase();
         if ($bInsert === false) {
-            //UPDATE
             unset($aDatos['id_tarifa']);
             $update = "
 					modo                     = :modo,
@@ -152,11 +142,13 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
             $sql = "UPDATE $nom_tabla SET $update WHERE id_tarifa = $id_tarifa";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
-            $campos = "(id_tarifa,modo,letra,sfsv,observ)";
-            $valores = "(:id_tarifa,:modo,:letra,:sfsv,:observ)";
+            $campos = '(id_tarifa,modo,letra,sfsv,observ)';
+            $valores = '(:id_tarifa,:modo,:letra,:sfsv,:observ)';
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        if ($stmt === false) {
+            return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -167,47 +159,58 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tarifa = $id_tarifa";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_tarifa
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_tarifa): array|bool
+    public function datosById(int $id_tarifa): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tarifa = $id_tarifa";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
-
-    /**
-     * Busca la clase con id_tarifa en la base de datos .
-     */
     public function findById(int $id_tarifa): ?TipoTarifa
     {
         $aDatos = $this->datosById($id_tarifa);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return TipoTarifa::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('xa_tipo_tarifa_id_tarifa_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

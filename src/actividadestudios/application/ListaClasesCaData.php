@@ -10,6 +10,7 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterfac
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use function src\shared\domain\helpers\input_int;
 
 /**
  * @return array{
@@ -21,26 +22,51 @@ use src\personas\domain\entity\Persona;
  */
 final class ListaClasesCaData
 {
-    public static function execute(int $idActiv): array
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private CargoRepositoryInterface $cargoRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private MatriculaRepositoryInterface $matriculaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array{
+     *   msg_err: string,
+     *   nom_activ: string,
+     *   nom_director_est: string,
+     *   datos_asignatura: array<int, array{nom_profesor: string, tipo_profesor: string, nombre_corto: mixed, alumnos: array<string, string>}>
+     * }
+     */
+    public function execute(array $input): array
     {
+        $idActiv = input_int($input, 'id_activ');
         $msgErr = '';
 
-        $actividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $actividadAllRepository->findById($idActiv);
+        $oActividad = $this->actividadAllRepository->findById($idActiv);
+        if ($oActividad === null) {
+            return [
+                'msg_err' => sprintf(_('No encuentro actividad con id: %d'), $idActiv),
+                'nom_activ' => '',
+                'nom_director_est' => '',
+                'datos_asignatura' => [],
+            ];
+        }
         $nomActiv = $oActividad->getNom_activ();
         $dlOrg = $oActividad->getDl_org();
 
-        $cargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $cCargos = $cargoRepository->getCargos(['cargo' => 'd.est.']);
+        $cCargos = $this->cargoRepository->getCargos(['cargo' => 'd.est.']);
         $idCargo = $cCargos[0]->getId_cargo();
-        $actividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-        $cActividadCargos = $actividadCargoRepository->getActividadCargos(['id_activ' => $idActiv, 'id_cargo' => $idCargo]);
-        $idNomDtorEst = '';
-        if (is_array($cActividadCargos) && !empty($cActividadCargos)) {
+        $cActividadCargos = $this->actividadCargoRepository->getActividadCargos(['id_activ' => $idActiv, 'id_cargo' => $idCargo]);
+        $idNomDtorEst = 0;
+        if (count($cActividadCargos) > 0) {
             $idNomDtorEst = $cActividadCargos[0]->getId_nom();
         }
 
-        if ($idNomDtorEst === '') {
+        if ($idNomDtorEst <= 0) {
             $nomDirectorEst = '<span class=no_print>' . _('para nombrarlo, ir al dossier de cargos de la actividad') . '</span>';
         } else {
             $oPersona = Persona::findPersonaEnGlobal($idNomDtorEst);
@@ -53,18 +79,15 @@ final class ListaClasesCaData
         }
 
         $a = 0;
-        $actividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
-        $cActividadAsignaturas = $actividadAsignaturaRepository->getActividadAsignaturas(['id_activ' => $idActiv]);
+        $cActividadAsignaturas = $this->actividadAsignaturaRepository->getActividadAsignaturas(['id_activ' => $idActiv]);
         $datosAsignatura = [];
-        $asignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $matriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
         foreach ($cActividadAsignaturas as $oActividadAsignatura) {
             $a++;
             $idAsignatura = $oActividadAsignatura->getId_asignatura();
             $tipo = $oActividadAsignatura->getTipo();
             $idProfesor = $oActividadAsignatura->getId_profesor();
 
-            $oAsignatura = $asignaturaRepository->findById($idAsignatura);
+            $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
             if ($oAsignatura === null) {
                 throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura));
             }
@@ -86,7 +109,7 @@ final class ListaClasesCaData
                 $tipoProfesor = ucfirst(_('profesor'));
             }
 
-            $cMatriculas = $matriculaRepository->getMatriculas(['id_activ' => $idActiv, 'id_asignatura' => $idAsignatura]);
+            $cMatriculas = $this->matriculaRepository->getMatriculas(['id_activ' => $idActiv, 'id_asignatura' => $idAsignatura]);
             $aMatriculados = [];
             foreach ($cMatriculas as $oMatricula) {
                 $idNom = $oMatricula->getId_nom();

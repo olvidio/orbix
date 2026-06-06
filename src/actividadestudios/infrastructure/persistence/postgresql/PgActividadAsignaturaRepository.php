@@ -3,6 +3,7 @@
 namespace src\actividadestudios\infrastructure\persistence\postgresql;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -28,29 +29,25 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
 {
     use HandlesPdoErrors;
 
-    public function __construct()
-    {
-        $oDbl = $GLOBALS['oDBP'];
+    public function __construct(
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+    ) {
+        $oDbl = GlobalPdo::get('oDBP');
         $this->setoDbl($oDbl);
         $this->setNomTabla('d_asignaturas_activ_all');
     }
 
     /**
-     * retorna l'array amb les asignatures, credits i nivell stgr del ca
-     *
-     * @param int biginteger id_activ
-     * @param string tipo  tipo='p' para preceptor
-     * @return array asignaturas es un array (id_asignatura=>Creditos);
+     * @return array<int, array{nombre_asignatura: mixed, creditos: mixed}>
      */
-    public function getAsignaturasCa(int $id_activ, string $tipo = ''):array
+    public function getAsignaturasCa(int $id_activ, string $tipo = ''): array
     {
         /**
          * Array con  id_asignatura => array(nombre_asignatura, creditos)
          * para no tener que consultar cada vez a la base de datos.
          *
          */
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $aAsigDatos = $AsignaturaRepository->getArrayAsignaturasCreditos();
+        $aAsigDatos = $this->asignaturaRepository->getArrayAsignaturasCreditos();
 
         // por cada ca creo un array con las asignaturas y los créditos.
         $aWhere['id_activ'] = $id_activ;
@@ -77,11 +74,9 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ActividadAsignatura
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActividadAsignatura
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<ActividadAsignatura>
      */
     public function getActividadAsignaturas(array $aWhere = [], array $aOperators = []): array
     {
@@ -118,30 +113,36 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        if (isset($aWhere['_ordre']) && is_scalar($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . (string) $aWhere['_ordre'];
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . (string) $aWhere['_limit'];
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para las fechas del postgres (texto iso)
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
             $ActividadAsignatura = ActividadAsignatura::fromArray($aDatos);
             $ActividadAsignaturaSet->add($ActividadAsignatura);
         }
-        return $ActividadAsignaturaSet->getTot();
+        return array_values($ActividadAsignaturaSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -213,6 +214,9 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
             $aDatos['id_schema'] = $idSchema;
         }
 
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -222,36 +226,46 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_activ, int $id_asignatura): array|bool
+    public function datosById(int $id_activ, int $id_asignatura): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
-            $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
+        if (!is_array($aDatos)) {
+            return false;
         }
-        return $aDatos;
+        // para las fechas del postgres (texto iso)
+        $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
+        $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
-    public function datosByPk(ActividadAsignaturaPk $pk): array|bool
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosByPk(ActividadAsignaturaPk $pk): array|false
     {
         return $this->datosById($pk->IdActiv(), $pk->IdAsignatura());
     }

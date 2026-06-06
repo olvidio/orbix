@@ -3,6 +3,8 @@
 namespace src\actividadestudios\application;
 
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -13,25 +15,32 @@ use function src\shared\domain\helpers\is_true;
  */
 final class MatriculaEditar
 {
-    public static function execute(array $input): string
-    {
-        $Qid_activ = (int) ($input['id_activ'] ?? 0);
-        $Qid_nom = (int) ($input['id_pau'] ?? 0);
-        if (empty($Qid_nom)) {
-            $Qid_nom = (int) ($input['id_nom'] ?? 0);
-        }
-        $Qid_asignatura = (int) ($input['id_asignatura'] ?? 0);
-        $Qid_nivel = (int) ($input['id_nivel'] ?? 0);
-        $Qid_situacion = (int) ($input['id_situacion'] ?? 0);
-        $Qpreceptor = (string) ($input['preceptor'] ?? '');
-        $Qid_preceptor = (int) ($input['id_preceptor'] ?? 0);
+    public function __construct(
+        private MatriculaDlRepositoryInterface $matriculaDlRepository,
+    ) {
+    }
 
-        if (empty($Qid_activ) || empty($Qid_nom) || empty($Qid_asignatura)) {
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
+    {
+        $Qid_activ = input_int($input, 'id_activ');
+        $Qid_nom = input_int($input, 'id_pau');
+        if ($Qid_nom <= 0) {
+            $Qid_nom = input_int($input, 'id_nom');
+        }
+        $Qid_asignatura = input_int($input, 'id_asignatura');
+        $Qid_nivel = input_int($input, 'id_nivel');
+        $Qid_situacion = input_int($input, 'id_situacion');
+        $Qpreceptor = input_string($input, 'preceptor');
+        $Qid_preceptor = input_int($input, 'id_preceptor');
+
+        if ($Qid_activ <= 0 || $Qid_nom <= 0 || $Qid_asignatura <= 0) {
             return _("faltan claves de la matricula");
         }
 
-        $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
-        $oMatricula = $MatriculaDlRepository->findById($Qid_activ, $Qid_asignatura, $Qid_nom);
+        $oMatricula = $this->matriculaDlRepository->findById($Qid_activ, $Qid_asignatura, $Qid_nom);
         if ($oMatricula === null) {
             return _("no encuentro la matricula");
         }
@@ -42,7 +51,7 @@ final class MatriculaEditar
         $oMatricula->setPreceptor(is_true($Qpreceptor));
         $oMatricula->setId_preceptor($Qid_preceptor);
 
-        if ($MatriculaDlRepository->Guardar($oMatricula) === false) {
+        if ($this->matriculaDlRepository->Guardar($oMatricula) === false) {
             return _("hay un error, no se ha guardado");
         }
         return '';

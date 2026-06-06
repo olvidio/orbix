@@ -4,7 +4,9 @@
  */
 
 use src\actividadtarifas\application\RelacionTarifaListaData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$data = RelacionTarifaListaData::execute();
-ContestarJson::enviar('', $data);
+/** @var RelacionTarifaListaData $useCase */
+$useCase = DependencyResolver::get(RelacionTarifaListaData::class);
+ContestarJson::enviar('', $useCase->execute());

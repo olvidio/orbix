@@ -2,17 +2,18 @@
 /**
  * Endpoint backend: elimina una `TarifaUbi`.
  *
- * Autorización: espera un campo POST `ctx_eliminar` con una cápsula
- * `HashB` firmada para la acción `tarifa_ubi_eliminar`. El `id_item`
- * a eliminar se toma del contexto firmado, no del body.
+ * Autorización via cápsula `HashB` en `ctx_eliminar`.
  */
 
 use src\actividadtarifas\application\TarifaUbiEliminar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
-$ctxRaw = (string)filter_input(INPUT_POST, 'ctx_eliminar');
+$ctxRaw = input_string($_POST, 'ctx_eliminar');
 try {
     $ctx = HashB::open($ctxRaw, 'tarifa_ubi_eliminar');
 } catch (HashBInvalidException $e) {
@@ -21,8 +22,9 @@ try {
 }
 
 $input = [
-    'id_item' => (int)($ctx['id_item'] ?? 0),
+    'id_item' => input_int($ctx, 'id_item'),
 ];
 
-$error = TarifaUbiEliminar::execute($input);
-ContestarJson::enviar($error, 'ok');
+/** @var TarifaUbiEliminar $useCase */
+$useCase = DependencyResolver::get(TarifaUbiEliminar::class);
+ContestarJson::enviar($useCase->execute($input), 'ok');

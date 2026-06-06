@@ -3,6 +3,8 @@
 namespace src\actividadestudios\application;
 
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Elimina una `ActividadAsignatura` (asignatura impartida en un ca).
@@ -11,31 +13,39 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterf
  */
 final class ActividadAsignaturaEliminar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $Qpau = (string) ($input['pau'] ?? '');
+        $Qpau = input_string($input, 'pau');
         $a_sel = (array) ($input['sel'] ?? []);
-        $Qid_activ = (int) ($input['id_activ'] ?? 0);
-        $Qid_asignatura = (int) ($input['id_asignatura'] ?? 0);
+        $Qid_activ = input_int($input, 'id_activ');
+        $Qid_asignatura = input_int($input, 'id_asignatura');
 
         if (!empty($a_sel) && $Qpau === 'a') {
-            $Qid_activ = (int) strtok($a_sel[0], '#');
+            $sel = $a_sel[0];
+            $Qid_activ = (int) strtok(is_scalar($sel) ? (string) $sel : '', '#');
             $Qid_asignatura = (int) strtok('#');
         }
 
         if ($Qpau !== 'a') {
             return _("sólo se puede eliminar una asignatura desde el dossier de la actividad");
         }
-        if (empty($Qid_activ) || empty($Qid_asignatura)) {
+        if ($Qid_activ <= 0 || $Qid_asignatura <= 0) {
             return _("faltan claves de la asignatura de actividad");
         }
 
-        $ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
-        $oActividadAsignatura = $ActividadAsignaturaDlRepository->findById($Qid_activ, $Qid_asignatura);
+        $oActividadAsignatura = $this->actividadAsignaturaDlRepository->findById($Qid_activ, $Qid_asignatura);
         if ($oActividadAsignatura === null) {
             return _("no encuentro la asignatura");
         }
-        if ($ActividadAsignaturaDlRepository->Eliminar($oActividadAsignatura) === false) {
+        if ($this->actividadAsignaturaDlRepository->Eliminar($oActividadAsignatura) === false) {
             return _("hay un error, no se ha borrado");
         }
         return '';

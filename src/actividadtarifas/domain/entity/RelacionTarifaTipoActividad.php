@@ -49,7 +49,8 @@ class RelacionTarifaTipoActividad
      */
     public function setId_tarifa(int $id_tarifa): void
     {
-        $this->id_tarifa = TarifaId::fromNullableInt($id_tarifa);
+        $this->id_tarifa = TarifaId::fromNullableInt($id_tarifa)
+            ?? throw new \InvalidArgumentException('id_tarifa cannot be null');
     }
 
     public function getIdTarifaVo(): TarifaId
@@ -61,7 +62,8 @@ class RelacionTarifaTipoActividad
     {
         $this->id_tarifa = $id instanceof TarifaId
             ? $id
-            : TarifaId::fromNullableInt($id);
+            : (TarifaId::fromNullableInt($id)
+                ?? throw new \InvalidArgumentException('id_tarifa cannot be null'));
     }
 
     /**
@@ -77,7 +79,8 @@ class RelacionTarifaTipoActividad
      */
     public function setId_tipo_activ(int $id_tipo_activ): void
     {
-        $this->id_tipo_activ = ActividadTipoId::fromNullableInt($id_tipo_activ);
+        $this->id_tipo_activ = ActividadTipoId::fromNullableInt($id_tipo_activ)
+            ?? throw new \InvalidArgumentException('id_tipo_activ cannot be null');
     }
 
     public function getIdTipoActivVo(): ActividadTipoId
@@ -89,7 +92,8 @@ class RelacionTarifaTipoActividad
     {
         $this->id_tipo_activ = $id instanceof ActividadTipoId
             ? $id
-            : ActividadTipoId::fromNullableInt($id);
+            : (ActividadTipoId::fromNullableInt($id)
+                ?? throw new \InvalidArgumentException('id_tipo_activ cannot be null'));
     }
 
     /**
@@ -105,7 +109,8 @@ class RelacionTarifaTipoActividad
      */
     public function setId_serie(int $id_serie): void
     {
-        $this->id_serie = SerieId::fromNullableInt($id_serie);
+        $this->id_serie = SerieId::fromNullableInt($id_serie)
+            ?? throw new \InvalidArgumentException('id_serie cannot be null');
     }
 
     public function getIdSerieVo(): SerieId
@@ -117,6 +122,7 @@ class RelacionTarifaTipoActividad
     {
         $this->id_serie = $id instanceof SerieId
             ? $id
-            : SerieId::fromNullableInt($id);
+            : (SerieId::fromNullableInt($id)
+                ?? throw new \InvalidArgumentException('id_serie cannot be null'));
     }
 }

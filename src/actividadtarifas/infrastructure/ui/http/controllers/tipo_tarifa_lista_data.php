@@ -4,7 +4,9 @@
  */
 
 use src\actividadtarifas\application\TipoTarifaListaData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$data = TipoTarifaListaData::execute();
-ContestarJson::enviar('', $data);
+/** @var TipoTarifaListaData $useCase */
+$useCase = DependencyResolver::get(TipoTarifaListaData::class);
+ContestarJson::enviar('', $useCase->execute());

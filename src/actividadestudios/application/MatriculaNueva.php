@@ -9,6 +9,8 @@ use src\actividadestudios\domain\entity\Matricula;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -20,37 +22,43 @@ use function src\shared\domain\helpers\is_true;
  */
 final class MatriculaNueva
 {
-    public static function execute(array $input): string
-    {
-        $Qid_activ = (int) ($input['id_activ'] ?? 0);
-        $Qid_nom = (int) ($input['id_pau'] ?? 0);
-        if (empty($Qid_nom)) {
-            $Qid_nom = (int) ($input['id_nom'] ?? 0);
-        }
-        $Qid_asignatura = (int) ($input['id_asignatura'] ?? 0);
-        $Qid_nivel = (int) ($input['id_nivel'] ?? 0);
-        $Qid_situacion = (int) ($input['id_situacion'] ?? 0);
-        $Qpreceptor = (string) ($input['preceptor'] ?? '');
-        $Qid_preceptor = (int) ($input['id_preceptor'] ?? 0);
+    public function __construct(
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
+        private MatriculaDlRepositoryInterface $matriculaDlRepository,
+        private DossierRepositoryInterface $dossierRepository,
+    ) {
+    }
 
-        if (empty($Qid_activ) || empty($Qid_nom)) {
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
+    {
+        $Qid_activ = input_int($input, 'id_activ');
+        $Qid_nom = input_int($input, 'id_pau');
+        if ($Qid_nom <= 0) {
+            $Qid_nom = input_int($input, 'id_nom');
+        }
+        $Qid_asignatura = input_int($input, 'id_asignatura');
+        $Qid_nivel = input_int($input, 'id_nivel');
+        $Qid_situacion = input_int($input, 'id_situacion');
+        $Qpreceptor = input_string($input, 'preceptor');
+        $Qid_preceptor = input_int($input, 'id_preceptor');
+
+        if ($Qid_activ <= 0 || $Qid_nom <= 0) {
             return _("falta id_activ o id_nom");
         }
 
-        // Si no es opcional, calcula el id_asignatura a partir del id_nivel.
         if ($Qid_asignatura === 1) {
-            $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-            $cAsignaturas = $AsignaturaRepository->getAsignaturas(['id_nivel' => $Qid_nivel]);
+            $cAsignaturas = $this->asignaturaRepository->getAsignaturas(['id_nivel' => $Qid_nivel]);
             if (empty($cAsignaturas)) {
                 return _("no encuentro asignatura para ese nivel");
             }
             $Qid_asignatura = $cAsignaturas[0]->getId_asignatura();
         }
 
-        $ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
-        $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
-
-        $oMatricula = $MatriculaDlRepository->findById($Qid_activ, $Qid_asignatura, $Qid_nom);
+        $oMatricula = $this->matriculaDlRepository->findById($Qid_activ, $Qid_asignatura, $Qid_nom);
         if ($oMatricula === null) {
             $oMatricula = new Matricula();
             $oMatricula->setId_activ($Qid_activ);
@@ -59,38 +67,32 @@ final class MatriculaNueva
         }
         $oMatricula->setId_nivel($Qid_nivel);
         $oMatricula->setId_situacion($Qid_situacion);
-        $oMatricula->setPreceptor(empty($Qpreceptor) ? 'f' : 't');
+        $oMatricula->setPreceptor($Qpreceptor !== '' && $Qpreceptor !== 'f' ? true : null);
         $oMatricula->setId_preceptor($Qid_preceptor);
-        if ($MatriculaDlRepository->Guardar($oMatricula) === false) {
+        if ($this->matriculaDlRepository->Guardar($oMatricula) === false) {
             return _("hay un error, no se ha guardado");
         }
 
-        $DossierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
-        // Abrir dossier 1303 de la persona.
-        $oDossier = $DossierRepository->findByPk(DossierPk::fromArray([
+        $oDossier = $this->dossierRepository->findByPk(DossierPk::fromArray([
             'tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1303,
         ]));
         if ($oDossier === null) {
-            $oDossier = $DossierRepository->crearDossier(DossierPk::fromArray([
+            $oDossier = $this->dossierRepository->crearDossier(DossierPk::fromArray([
                 'tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1303,
             ]));
         }
         $oDossier->abrir();
-        $DossierRepository->Guardar($oDossier);
+        $this->dossierRepository->Guardar($oDossier);
 
-        // Cerrar el dossier 3103 de la actividad si estaba abierto (al menos
-        // hay ya una matricula, el legacy hacia cerrar — se mantiene por
-        // compatibilidad con la semantica previa).
-        $oDossierActiv = $DossierRepository->findByPk(DossierPk::fromArray([
+        $oDossierActiv = $this->dossierRepository->findByPk(DossierPk::fromArray([
             'tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3103,
         ]));
         if ($oDossierActiv !== null) {
             $oDossierActiv->cerrar();
-            $DossierRepository->Guardar($oDossierActiv);
+            $this->dossierRepository->Guardar($oDossierActiv);
         }
 
-        // Añadir esta asignatura a las impartidas en el ca si no existe.
-        $cActividadAsignaturas = $ActividadAsignaturaDlRepository->getActividadAsignaturas(
+        $cActividadAsignaturas = $this->actividadAsignaturaDlRepository->getActividadAsignaturas(
             ['id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura]
         );
         if (count($cActividadAsignaturas) === 0) {
@@ -104,7 +106,7 @@ final class MatriculaNueva
                 $tipo = '';
             }
             $oActividadAsignatura->setTipo($tipo);
-            $ActividadAsignaturaDlRepository->Guardar($oActividadAsignatura);
+            $this->actividadAsignaturaDlRepository->Guardar($oActividadAsignatura);
         }
 
         return '';

@@ -20,17 +20,33 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
  */
 final class CaPosiblesQueData
 {
-    public static function execute(): array
+    public function __construct(
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private PersonaNRepositoryInterface $personaNRepository,
+        private PersonaAgdRepositoryInterface $personaAgdRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array{
+     *   grupo_estudios: ?string,
+     *   mi_grupo: string,
+     *   aCentrosNExt: array<int|string, string>,
+     *   aCentrosAgdExt: array<int|string, string>
+     * }
+     */
+    public function execute(array $input = []): array
     {
         $miDele = OrbixRuntime::miDelef();
-        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $cMiDl = $repoDelegacion->getDelegaciones(['dl' => $miDele]);
+        $cMiDl = $this->delegacionRepository->getDelegaciones(['dl' => $miDele]);
         $grupoEstudios = null;
         $miGrupo = '';
-        if (is_array($cMiDl) && !empty($cMiDl)) {
+        if (count($cMiDl) > 0) {
             $grupoEstudios = $cMiDl[0]->getGrupoEstudiosVo()?->value();
             if ($grupoEstudios !== null) {
-                $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $grupoEstudios]);
+                $cDelegaciones = $this->delegacionRepository->getDelegaciones(['grupo_estudios' => $grupoEstudios]);
                 foreach ($cDelegaciones as $oDelegacion) {
                     $miGrupo .= $miGrupo === '' ? '' : ',';
                     $miGrupo .= $oDelegacion->getDlVo()->value();
@@ -40,15 +56,13 @@ final class CaPosiblesQueData
             $miGrupo = _('no encuentro el grupo de estudios al que pertenece la dl');
         }
 
-        $personaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-        $aListaCtr = $personaNRepository->getArrayIdCentros();
+        $aListaCtr = $this->personaNRepository->getArrayIdCentros();
         $aCentrosOrden = [];
-        $centroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         foreach ($aListaCtr as $idUbi) {
             if ($idUbi === null) {
                 continue;
             }
-            $oCentroDl = $centroDlRepository->findById($idUbi);
+            $oCentroDl = $this->centroDlRepository->findById($idUbi);
             if ($oCentroDl === null) {
                 continue;
             }
@@ -65,14 +79,13 @@ final class CaPosiblesQueData
             $aCentrosNExt[$key] = $value;
         }
 
-        $personaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-        $aListaCtr = $personaAgdRepository->getArrayIdCentros();
+        $aListaCtr = $this->personaAgdRepository->getArrayIdCentros();
         $aCentrosOrden = [];
         foreach ($aListaCtr as $idUbi) {
             if ($idUbi === null) {
                 continue;
             }
-            $oCentroDl = $centroDlRepository->findById($idUbi);
+            $oCentroDl = $this->centroDlRepository->findById($idUbi);
             if ($oCentroDl === null) {
                 continue;
             }

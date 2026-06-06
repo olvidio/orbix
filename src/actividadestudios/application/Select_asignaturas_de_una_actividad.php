@@ -24,7 +24,16 @@ use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
  */
 class Select_asignaturas_de_una_actividad
 {
+    public function __construct(
+        private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
+        private DbSchemaRepositoryInterface $dbSchemaRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+    ) {
+    }
+
     private string $msg_err = '';
+    /** @var array<int|string, mixed> */
     private array $a_valores = [];
     private string $txt_eliminar = '';
     private string $txt_no_permiso = '';
@@ -38,11 +47,14 @@ class Select_asignaturas_de_una_actividad
     private int $permiso = 1;
     private string $dl_org = '';
 
+    /** @var int|string|null */
     private $Qid_sel;
+    /** @var int|string|null */
     private $Qscroll_id;
     /** @var array{path: string, query: array<string, mixed>}|null */
     private ?array $linkInsertSpec = null;
 
+    /** @return array<int, array{txt: string, click: string}> */
     public function getBotones(): array
     {
         $a = [];
@@ -54,6 +66,7 @@ class Select_asignaturas_de_una_actividad
         return $a;
     }
 
+    /** @return array<int, string> */
     public function getCabeceras(): array
     {
         return [
@@ -67,6 +80,7 @@ class Select_asignaturas_de_una_actividad
         ];
     }
 
+    /** @return array<int|string, mixed> */
     public function getValores(): array
     {
         if (empty($this->a_valores)) {
@@ -80,28 +94,25 @@ class Select_asignaturas_de_una_actividad
         $this->txt_eliminar = _("¿Está seguro que desea quitar esta asignatura?");
         $this->txt_no_permiso = _("No puede modificar una asignatura que depende de otra dl");
 
-        $ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
-        $cActivAsignaturas = $ActividadAsignaturaRepository->getActividadAsignaturas([
+        $cActivAsignaturas = $this->actividadAsignaturaRepository->getActividadAsignaturas([
             'id_activ' => $this->id_pau, '_ordre' => 'id_asignatura',
         ]);
 
         $mi_dele = ConfigGlobal::mi_delef();
-        $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $c = 0;
         $a_valores = [];
         foreach ($cActivAsignaturas as $oActividadAsignatura) {
             $c++;
             $id_activ = $oActividadAsignatura->getId_activ();
             $id_asignatura = $oActividadAsignatura->getId_asignatura();
-            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
+            $oAsignatura = $this->asignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
             $nombre_corto = $oAsignatura->getNombre_corto();
             $creditos = $oAsignatura->getCreditos();
             $id_schema = $oActividadAsignatura->getId_schema();
-            $cDbSchemas = $DbSchemaRepository->getDbSchemas(['id' => $id_schema]);
+            $cDbSchemas = $this->dbSchemaRepository->getDbSchemas(['id' => $id_schema]);
             $a_reg = explode('-', $cDbSchemas[0]->getSchema());
             $dl_matricula = substr($a_reg[1], 0, -1);
             if ($dl_matricula !== $this->dl_org) {
@@ -158,10 +169,14 @@ class Select_asignaturas_de_una_actividad
      */
     public function getSegmentData(): array
     {
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($this->id_pau);
-        $this->dl_org = $oActividad->getDl_org();
-        $this->permiso = 3;
+        $oActividad = $this->actividadAllRepository->findById($this->id_pau);
+        if ($oActividad === null) {
+            $this->dl_org = '';
+            $this->permiso = 1;
+        } else {
+            $this->dl_org = $oActividad->getDl_org() ?? '';
+            $this->permiso = 3;
+        }
 
         $this->setLinksInsert();
 
@@ -207,19 +222,19 @@ class Select_asignaturas_de_una_actividad
         }
     }
 
-    public function getId_dossier() { return $this->id_dossier; }
+    public function getId_dossier(): int { return $this->id_dossier; }
     public function getPau(): string { return $this->pau; }
     public function getObj_pau(): string { return $this->obj_pau; }
     public function getId_pau(): int { return $this->id_pau; }
     public function getPermiso(): int { return $this->permiso; }
 
-    public function setId_dossier($id_dossier): void { $this->id_dossier = (int) $id_dossier; }
-    public function setPau($pau): void { $this->pau = (string) $pau; }
-    public function setObj_pau($obj_pau): void { $this->obj_pau = (string) $obj_pau; }
-    public function setId_pau($id_pau): void { $this->id_pau = (int) $id_pau; }
-    public function setPermiso($permiso): void { $this->permiso = (int) $permiso; }
-    public function setQid_sel($Qid_sel): void { $this->Qid_sel = $Qid_sel; }
-    public function setQscroll_id($Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
-    public function setBloque($bloque): void { $this->bloque = (string) $bloque; }
-    public function setQueSel($queSel): void { $this->queSel = (string) $queSel; }
+    public function setId_dossier(int|string $id_dossier): void { $this->id_dossier = (int) $id_dossier; }
+    public function setPau(string|int|float|bool|null $pau = null): void { $this->pau = $pau === null ? '' : (string) $pau; }
+    public function setObj_pau(string|int|float|bool|null $obj_pau = null): void { $this->obj_pau = $obj_pau === null ? '' : (string) $obj_pau; }
+    public function setId_pau(int|string $id_pau): void { $this->id_pau = (int) $id_pau; }
+    public function setPermiso(int|string $permiso): void { $this->permiso = (int) $permiso; }
+    public function setQid_sel(int|string|null $Qid_sel): void { $this->Qid_sel = $Qid_sel; }
+    public function setQscroll_id(int|string|null $Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
+    public function setBloque(string|int|float|bool|null $bloque = null): void { $this->bloque = $bloque === null ? '' : (string) $bloque; }
+    public function setQueSel(string|int|float|bool|null $queSel = null): void { $this->queSel = $queSel === null ? '' : (string) $queSel; }
 }

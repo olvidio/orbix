@@ -15,7 +15,10 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use frontend\shared\web\Periodo;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use function frontend\shared\helpers\is_true;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Misma lógica que `frontend/.../ca_posibles.php`; respuesta serializable.
@@ -27,18 +30,34 @@ use function frontend\shared\helpers\is_true;
  */
 final class CaPosiblesData
 {
-    public static function execute(array $post): array
-    {
-        $oPosiblesCa = new PosiblesCa();
+    public function __construct(
+        private PosiblesCa $posiblesCa,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private PersonaNRepositoryInterface $personaNRepository,
+        private PersonaAgdRepositoryInterface $personaAgdRepository,
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private ActividadPubRepositoryInterface $actividadPubRepository,
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+    ) {
+    }
 
-        $objPau = (string)($post['obj_pau'] ?? '');
-        $QgrupoEstudios = (string)($post['grupo_estudios'] ?? '');
-        $Qtexto = (string)($post['texto'] ?? '');
-        $Qref = (string)($post['ref'] ?? '');
-        $Qidca = (string)($post['idca'] ?? '');
-        $QcaEstudios = (string)($post['ca_estudios'] ?? '');
-        $QcaRepaso = (string)($post['ca_repaso'] ?? '');
-        $QcaTodos = (string)($post['ca_todos'] ?? '');
+    /**
+     * @param array<string, mixed> $post
+     * @return array<string, mixed>
+     */
+    public function execute(array $post): array
+    {
+
+        $objPau = input_string($post, 'obj_pau');
+        $QgrupoEstudios = input_string($post, 'grupo_estudios');
+        $Qtexto = input_string($post, 'texto');
+        $Qref = input_string($post, 'ref');
+        $Qidca = input_string($post, 'idca');
+        $QcaEstudios = input_string($post, 'ca_estudios');
+        $QcaRepaso = input_string($post, 'ca_repaso');
+        $QcaTodos = input_string($post, 'ca_todos');
 
         $aSel = isset($post['sel']) && is_array($post['sel']) ? $post['sel'] : [];
 
@@ -49,29 +68,34 @@ final class CaPosiblesData
         $finIso = '';
 
         if (!empty($aSel)) {
-            $partsNa = explode('#', $aSel[0]);
-            $Qna = (string)($partsNa[1] ?? '');
+            $sel0 = $aSel[0] ?? '';
+            $partsNa = explode('#', is_scalar($sel0) ? (string) $sel0 : '');
+            $Qna = $partsNa[1] ?? '';
             $QgrupoEstudios = 'todos';
             $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
             $inicioIso = $oHoy->format('Y-m-d');
-            $iniM = $_SESSION['oConfig']->getMesIniStgr();
-            $year = date('Y');
-            if (date('m') < $iniM) {
-                $finIso = date('Y-m-t', strtotime("$year-$iniM-01"));
+            /** @var ConfigSnapshot $oConfig */
+            $oConfig = $_SESSION['oConfig'];
+            $iniM = (int) $oConfig->getMesIniStgr();
+            $year = (int) date('Y');
+            if ((int) date('m') < $iniM) {
+                $finTs = strtotime("$year-$iniM-01");
+                $finIso = $finTs !== false ? date('Y-m-t', $finTs) : '';
             } else {
-                $nextYear = (int)$year + 1;
-                $finIso = date('Y-m-t', strtotime("$nextYear-$iniM-01"));
+                $nextYear = $year + 1;
+                $finTs = strtotime("$nextYear-$iniM-01");
+                $finIso = $finTs !== false ? date('Y-m-t', $finTs) : '';
             }
             $QidCtrAgd = 0;
             $QidCtrN = 0;
         } else {
-            $QidCtrAgd = (int)($post['id_ctr_agd'] ?? 0);
-            $QidCtrN = (int)($post['id_ctr_n'] ?? 0);
-            $Qna = (string)($post['na'] ?? '');
-            $Qyear = (int)($post['year'] ?? 0);
-            $Qperiodo = (string)($post['periodo'] ?? '');
-            $Qempiezamin = (string)($post['empiezamin'] ?? '');
-            $Qempiezamax = (string)($post['empiezamax'] ?? '');
+            $QidCtrAgd = input_int($post, 'id_ctr_agd');
+            $QidCtrN = input_int($post, 'id_ctr_n');
+            $Qna = input_string($post, 'na');
+            $Qyear = input_int($post, 'year');
+            $Qperiodo = input_string($post, 'periodo');
+            $Qempiezamin = input_string($post, 'empiezamin');
+            $Qempiezamax = input_string($post, 'empiezamax');
 
             if (empty($QidCtrAgd) && empty($QidCtrN)) {
                 throw new \InvalidArgumentException(_('debe seleccionar un centro o grupo de centros'));
@@ -141,8 +165,8 @@ final class CaPosiblesData
         if (!empty($aSel)) {
             $idNomLst = '';
             foreach ($aSel as $selBox) {
-                $partsSel = explode('#', $selBox);
-                $idNom = (int)($partsSel[0] ?? 0);
+                $partsSel = explode('#', is_scalar($selBox) ? (string) $selBox : '');
+                $idNom = (int) $partsSel[0];
                 if ($alum > 0) {
                     $idNomLst .= '|';
                 }
@@ -155,16 +179,16 @@ final class CaPosiblesData
             $aOperador['id_nom'] = '~';
             $aWhere['_ordre'] = 'apellido1,apellido2,nom';
             $Qtexto = 'image';
-            $personaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+            $personaRepository = $this->personaDlRepository;
         } else {
             switch ($idTablaPersona) {
                 case 'n':
                     $aWhere['nivel_stgr'] = array_keys(NivelStgrId::getArrayNivelStgrOn());
                     $aOperador['nivel_stgr'] = 'IN';
-                    $personaRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+                    $personaRepository = $this->personaNRepository;
                     break;
                 case 'a':
-                    $personaRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+                    $personaRepository = $this->personaAgdRepository;
                     break;
                 default:
                     throw new \RuntimeException('id_tabla_persona');
@@ -184,9 +208,9 @@ final class CaPosiblesData
         $aOperadorActividad['f_ini'] = 'BETWEEN';
 
         if ($QgrupoEstudios !== 'todos') {
-            $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+            $repoDelegacion = $this->delegacionRepository;
             $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $QgrupoEstudios]);
-            if (is_array($cDelegaciones) && count($cDelegaciones) > 1) {
+            if (count($cDelegaciones) > 1) {
                 $aOperadorActividad['dl_org'] = 'OR';
             }
             $miGrupo = '';
@@ -200,11 +224,9 @@ final class CaPosiblesData
         $aWhereActividad['status'] = StatusId::ACTUAL;
         $aWhereActividad['_ordre'] = 'nivel_stgr,f_ini';
 
-        $actividadPubRepository = $GLOBALS['container']->get(ActividadPubRepositoryInterface::class);
-        $cActividades1 = $actividadPubRepository->getActividades($aWhereActividad, $aOperadorActividad);
-        $actividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $cActividades1 = $this->actividadPubRepository->getActividades($aWhereActividad, $aOperadorActividad);
         $aWhereActividad['publicado'] = 'f';
-        $cActividades2 = $actividadDlRepository->getActividades($aWhereActividad, $aOperadorActividad);
+        $cActividades2 = $this->actividadDlRepository->getActividades($aWhereActividad, $aOperadorActividad);
         $cActividades = $cActividades1 + $cActividades2;
 
         $msgTxt = '';
@@ -241,8 +263,7 @@ final class CaPosiblesData
                 if ($nivelStgr === 4 || $nivelStgr === 9 || $nivelStgr === 8 || $nivelStgr === 7) {
                     $aAsignaturasCa = ['dd'];
                 } else {
-                    $actividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
-                    $aAsignaturasCa = $actividadAsignaturaRepository->getAsignaturasCa($idActiv);
+                    $aAsignaturasCa = $this->actividadAsignaturaRepository->getAsignaturasCa($idActiv);
                     if (count($aAsignaturasCa) === 0 && $nivelStgr) {
                         $msgTxt .= sprintf(_('el ca: %s no tiene puesta ninguna asignatura.') . '<br>', $nomActiv);
                         continue;
@@ -284,19 +305,17 @@ final class CaPosiblesData
         $avisosCentro = [];
         if (!empty($aSel)) {
             $cOrdPersonas = [];
-            $centroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             foreach ($cPersonas as $oPersonaDl) {
                 $idUbi = $oPersonaDl->getId_ctr();
-                $Ctr = self::resolveNombreCentro($centroDlRepository, $idUbi, $centrosNombre, $avisosCentro, $msgTxt);
+                $Ctr = self::resolveNombreCentro($this->centroDlRepository, $idUbi, $centrosNombre, $avisosCentro, $msgTxt);
                 $ctr = strtolower((string)$Ctr);
                 $cOrdPersonas[$ctr][] = ['Ctr' => $Ctr, 'oPersonaDl' => $oPersonaDl];
             }
         } else {
             $cOrdPersonas = [];
-            $centroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             foreach ($cPersonas as $oPersonaDl) {
                 $idUbi = $oPersonaDl->getId_ctr();
-                $Ctr = self::resolveNombreCentro($centroDlRepository, $idUbi, $centrosNombre, $avisosCentro, $msgTxt);
+                $Ctr = self::resolveNombreCentro($this->centroDlRepository, $idUbi, $centrosNombre, $avisosCentro, $msgTxt);
                 $ctr = strtolower((string)$Ctr);
                 $cOrdPersonas[$ctr][] = ['Ctr' => $Ctr, 'oPersonaDl' => $oPersonaDl];
             }
@@ -312,7 +331,11 @@ final class CaPosiblesData
                 $idTablaPersonaRow = $oPersonaDl->getId_tabla();
                 $nomPersona = $oPersonaDl->getPrefApellidosNombre();
                 $stgr = (int)$oPersonaDl->getNivel_stgr();
-                $ce = method_exists($oPersonaDl, 'getCe') ? $oPersonaDl->getCe() : '';
+                $ce = '';
+                if (is_object($oPersonaDl) && method_exists($oPersonaDl, 'getCe')) {
+                    $ceVal = $oPersonaDl->getCe();
+                    $ce = is_string($ceVal) ? $ceVal : (string) ($ceVal ?? '');
+                }
 
                 $aActividades = [];
                 foreach ($aDatosCa as $idActiv => $datosCa) {
@@ -335,7 +358,7 @@ final class CaPosiblesData
                             break;
                         case NivelStgrId::B:
                             if ($nivelStgr == 1) {
-                                $result = $oPosiblesCa->contar_creditos($idNom, $aAsignaturas);
+                                $result = $this->posiblesCa->contar_creditos($idNom, $aAsignaturas);
                                 $creditos = $result['suma'];
                                 $aLista = $result['lista'];
                             } else {
@@ -344,11 +367,11 @@ final class CaPosiblesData
                             break;
                         case NivelStgrId::C1:
                             if ($nivelStgr == 2) {
-                                $result = $oPosiblesCa->contar_creditos($idNom, $aAsignaturas);
+                                $result = $this->posiblesCa->contar_creditos($idNom, $aAsignaturas);
                                 $creditos = $result['suma'];
                                 $aLista = $result['lista'];
                             } elseif ($nivelStgr == 3) {
-                                $result = $oPosiblesCa->contar_creditos($idNom, $aAsignaturas);
+                                $result = $this->posiblesCa->contar_creditos($idNom, $aAsignaturas);
                                 $creditos = $result['suma'];
                                 $aLista = $result['lista'];
                             } else {
@@ -357,7 +380,7 @@ final class CaPosiblesData
                             break;
                         case NivelStgrId::C2:
                             if ($nivelStgr == 3) {
-                                $result = $oPosiblesCa->contar_creditos($idNom, $aAsignaturas);
+                                $result = $this->posiblesCa->contar_creditos($idNom, $aAsignaturas);
                                 $creditos = $result['suma'];
                                 $aLista = $result['lista'];
                             } else {
@@ -381,7 +404,7 @@ final class CaPosiblesData
                             break;
                         case NivelStgrId::CE:
                             if ($nivelStgr == 5) {
-                                $result = $oPosiblesCa->contar_creditos($idNom, $aAsignaturas);
+                                $result = $this->posiblesCa->contar_creditos($idNom, $aAsignaturas);
                                 $creditos = $result['suma'];
                                 $aLista = $result['lista'];
                             } else {
@@ -408,7 +431,8 @@ final class CaPosiblesData
         }
 
         if (!empty($aSel) && $alum == 1) {
-            $idNomPagina = (int)explode('#', $aSel[0])[0];
+            $sel0 = $aSel[0] ?? '';
+            $idNomPagina = (int) explode('#', is_scalar($sel0) ? (string) $sel0 : '')[0];
             $paginaLinkSpec = [
                 'path' => 'frontend/dossiers/controller/dossiers_ver.php',
                 'query' => [
@@ -475,8 +499,8 @@ final class CaPosiblesData
     }
 
     /**
-     * @param array<string, string> $centrosNombre
-     * @param array<string, bool> $avisosCentro
+     * @param array<int|string, string> $centrosNombre
+     * @param array<int|string, bool> $avisosCentro
      */
     private static function resolveNombreCentro(
         CentroDlRepositoryInterface $centroDlRepository,

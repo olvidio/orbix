@@ -2,6 +2,7 @@
 
 namespace src\actividadestudios\application;
 
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
@@ -15,6 +16,7 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use function src\shared\domain\helpers\input_int;
 
 /**
  * Matricula automaticamente a una o varias personas en las asignaturas
@@ -34,21 +36,38 @@ use src\personas\domain\entity\Persona;
  */
 final class MatriculaAutomatica
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private PersonaExRepositoryInterface $personaExRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private AsistenteActividadService $asistenteActividadService,
+        private AsistenteDlRepositoryInterface $asistenteDlRepository,
+        private MatriculaDlRepositoryInterface $matriculaDlRepository,
+        private PersonaNotaRepositoryInterface $personaNotaRepository,
+        private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
         $msg = '';
 
         $a_sel = (array) ($input['sel'] ?? []);
         $Qid_activ = 0;
         if (!empty($a_sel)) {
-            $Qid_nom = (int) strtok((string) $a_sel[0], '#');
+            $sel = $a_sel[0];
+            $Qid_nom = (int) strtok(is_scalar($sel) ? (string) $sel : '', '#');
         } else {
-            $Qid_nom = (int) ($input['id_pau'] ?? 0);
-            $Qid_activ = (int) ($input['id_activ'] ?? 0);
+            $Qid_nom = input_int($input, 'id_pau');
+            $Qid_activ = input_int($input, 'id_activ');
         }
 
         $mes = (int) date('m');
-        $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+        /** @var ConfigSnapshot $oConfig */
+        $oConfig = $_SESSION['oConfig'];
+        $fin_m = $oConfig->getMesFinStgr();
         $any = ($mes > $fin_m) ? (int) date('Y') + 1 : (int) date('Y');
         $inicurs_ca = \src\shared\domain\helpers\curso_est('inicio', $any)->format('Y-m-d');
         $fincurs_ca = \src\shared\domain\helpers\curso_est('fin', $any)->format('Y-m-d');
@@ -67,11 +86,9 @@ final class MatriculaAutomatica
             $classname = str_replace('personas\\model\\entity\\', '', get_class($oPersona));
 
             if ($classname === 'PersonaEx') {
-                $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-                $cAlumnos = $PersonaExRepository->getPersonas($aWhere, $aOperador);
+                $cAlumnos = $this->personaExRepository->getPersonas($aWhere, $aOperador);
             } else {
-                $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-                $cAlumnos = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
+                $cAlumnos = $this->personaDlRepository->getPersonas($aWhere, $aOperador);
             }
             if (empty($cAlumnos)) {
                 $msg = _('está de repaso');
@@ -80,8 +97,7 @@ final class MatriculaAutomatica
             $aWhere['situacion'] = 'A';
             $aWhere['nivel_stgr'] = NivelStgrId::R;
             $aOperador['nivel_stgr'] = '!=';
-            $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-            $cAlumnos = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
+            $cAlumnos = $this->personaDlRepository->getPersonas($aWhere, $aOperador);
         }
 
         $aWhereAct = [
@@ -98,11 +114,9 @@ final class MatriculaAutomatica
             $id_nom = $oPersonaDl->getId_nom();
             $cAsistencias = [];
             if (empty($Qid_activ)) {
-                $service = $GLOBALS['container']->get(AsistenteActividadService::class);
-                $cAsistencias = $service->getActividadesDeAsistente(['id_nom' => $id_nom, 'propio' => 't'], [], $aWhereAct, $aOperadoresAct);
+                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente(['id_nom' => $id_nom, 'propio' => 't'], [], $aWhereAct, $aOperadoresAct);
             } else {
-                $AsistenteDlRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
-                $oAsistenteDl = $AsistenteDlRepository->findById($Qid_activ, $id_nom);
+                $oAsistenteDl = $this->asistenteDlRepository->findById($Qid_activ, $id_nom);
                 $cAsistencias[0] = $oAsistenteDl;
             }
 
@@ -112,6 +126,10 @@ final class MatriculaAutomatica
                     break;
                 case 1:
                     $oAsistenteDl = current($cAsistencias);
+                    if ($oAsistenteDl === null) {
+                        $msg .= sprintf(_('no se ha hecho nada con %s no tiene asignado ca'), $oPersonaDl->getPrefApellidosNombre()) . "\n";
+                        break;
+                    }
                     $id_activ_1 = $oAsistenteDl->getId_activ();
                     $est_ok = $oAsistenteDl->isEst_ok();
                     if ($est_ok) {
@@ -119,16 +137,14 @@ final class MatriculaAutomatica
                         break;
                     }
 
-                    $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
-                    $cMatriculas = $MatriculaDlRepository->getMatriculas(['id_nom' => $id_nom, 'id_activ' => $id_activ_1]);
+                    $cMatriculas = $this->matriculaDlRepository->getMatriculas(['id_nom' => $id_nom, 'id_activ' => $id_activ_1]);
                     foreach ($cMatriculas as $oMatricula) {
-                        if ($MatriculaDlRepository->Eliminar($oMatricula) === false) {
-                            $msg .= _('hay un error, no se ha eliminado') . "\n" . $oMatricula->getErrorTxt() . "\n";
+                        if ($this->matriculaDlRepository->Eliminar($oMatricula) === false) {
+                            $msg .= _('hay un error, no se ha eliminado') . "\n" . $this->matriculaDlRepository->getErrorTxt() . "\n";
                         }
                     }
 
-                    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-                    $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $id_nom]);
+                    $cPersonaNotas = $this->personaNotaRepository->getPersonaNotas(['id_nom' => $id_nom]);
                     $a_aprobadas = [];
                     foreach ($cPersonaNotas as $oPersonaNota) {
                         if ($oPersonaNota->isAprobada()) {
@@ -136,8 +152,7 @@ final class MatriculaAutomatica
                         }
                     }
 
-                    $ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
-                    $cAsignaturasCa = $ActividadAsignaturaRepository->getActividadAsignaturas(
+                    $cAsignaturasCa = $this->actividadAsignaturaRepository->getActividadAsignaturas(
                         ['id_activ' => $id_activ_1, 'tipo' => 'x'],
                         ['tipo' => 'IS NULL']
                     );
@@ -150,9 +165,7 @@ final class MatriculaAutomatica
                             continue;
                         }
                         if ($id_asignatura > 3000) {
-                            $guardado = self::matricularOpcionalSiCabe(
-                                $PersonaNotaDBRepository,
-                                $MatriculaDlRepository,
+                            $guardado = $this->matricularOpcionalSiCabe(
                                 $id_nom,
                                 $id_asignatura,
                                 $id_activ_1,
@@ -166,10 +179,10 @@ final class MatriculaAutomatica
                         } else {
                             $oMatricula = new Matricula();
                             $oMatricula->setId_activ($id_activ_1);
-                            $oMatricula->setIdAsignaturaVo(AsignaturaId::fromNullableInt($id_asignatura));
+                            $oMatricula->setIdAsignaturaVo(new AsignaturaId($id_asignatura));
                             $oMatricula->setId_nom($id_nom);
                             $oMatricula->setPreceptor($preceptor);
-                            if ($MatriculaDlRepository->Guardar($oMatricula) === false) {
+                            if ($this->matriculaDlRepository->Guardar($oMatricula) === false) {
                                 $msg .= _('error al guardar la matrícula') . "\n";
                             }
                             $m++;
@@ -188,9 +201,7 @@ final class MatriculaAutomatica
         return $msg;
     }
 
-    private static function matricularOpcionalSiCabe(
-        $PersonaNotaDBRepository,
-        $MatriculaDlRepository,
+    private function matricularOpcionalSiCabe(
         int $id_nom,
         int $id_asignatura,
         int $id_activ,
@@ -211,13 +222,19 @@ final class MatriculaAutomatica
             'id_nivel' => $aFiltro[$bloque]['id_nivel'],
         ];
         $aOperadorNota = ['id_nivel' => '~'];
-        $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhereNota, $aOperadorNota);
-        if (!is_array($cPersonaNotas) || count($cPersonaNotas) >= $aFiltro[$bloque]['max']) {
+        $cPersonaNotas = $this->personaNotaRepository->getPersonaNotas($aWhereNota, $aOperadorNota);
+        if (count($cPersonaNotas) >= $aFiltro[$bloque]['max']) {
             return 'skip';
         }
-        $oMatricula = $MatriculaDlRepository->findById($id_activ, $id_asignatura, $id_nom);
+        $oMatricula = $this->matriculaDlRepository->findById($id_activ, $id_asignatura, $id_nom);
+        if ($oMatricula === null) {
+            $oMatricula = new Matricula();
+            $oMatricula->setId_activ($id_activ);
+            $oMatricula->setIdAsignaturaVo(new AsignaturaId($id_asignatura));
+            $oMatricula->setId_nom($id_nom);
+        }
         $oMatricula->setPreceptor($preceptor);
-        if ($MatriculaDlRepository->Guardar($oMatricula) === false) {
+        if ($this->matriculaDlRepository->Guardar($oMatricula) === false) {
             return 'error';
         }
         return 'ok';

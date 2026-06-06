@@ -38,9 +38,14 @@ class AsignaturaTipo
 
     public function setIdTipoVo(AsignaturaTipoId|int $id): void
     {
-        $this->id_tipo = $id instanceof AsignaturaTipoId
-            ? $id
-            : AsignaturaTipoId::fromNullableInt($id);
+        if ($id instanceof AsignaturaTipoId) {
+            $this->id_tipo = $id;
+            return;
+        }
+        $vo = AsignaturaTipoId::fromNullableInt($id);
+        if ($vo !== null) {
+            $this->id_tipo = $vo;
+        }
     }
 
     public function getTipoAsignaturaVo(): AsignaturaTipoName
@@ -50,9 +55,14 @@ class AsignaturaTipo
 
     public function setTipoAsignaturaVo(AsignaturaTipoName|string $nombre): void
     {
-        $this->tipo_asignatura = $nombre instanceof AsignaturaTipoName
-            ? $nombre
-            : AsignaturaTipoName::fromNullableString($nombre);
+        if ($nombre instanceof AsignaturaTipoName) {
+            $this->tipo_asignatura = $nombre;
+            return;
+        }
+        $vo = AsignaturaTipoName::fromNullableString($nombre);
+        if ($vo !== null) {
+            $this->tipo_asignatura = $vo;
+        }
     }
 
     public function getTipoBreveVo(): AsignaturaTipoShortName
@@ -62,9 +72,14 @@ class AsignaturaTipo
 
     public function setTipoBreveVo(AsignaturaTipoShortName|string $nombre): void
     {
-        $this->tipo_breve = $nombre instanceof AsignaturaTipoShortName
-            ? $nombre
-            : AsignaturaTipoShortName::fromNullableString($nombre);
+        if ($nombre instanceof AsignaturaTipoShortName) {
+            $this->tipo_breve = $nombre;
+            return;
+        }
+        $vo = AsignaturaTipoShortName::fromNullableString($nombre);
+        if ($vo !== null) {
+            $this->tipo_breve = $vo;
+        }
     }
 
     public function getYearVo(): ?AsignaturaTipoYear
@@ -101,7 +116,7 @@ class AsignaturaTipo
 
     public function setId_tipo(int $id_tipo): void
     {
-        $this->id_tipo = AsignaturaTipoId::fromNullableInt($id_tipo);
+        $this->id_tipo = new AsignaturaTipoId($id_tipo);
     }
 
 
@@ -113,7 +128,7 @@ class AsignaturaTipo
 
     public function setTipo_asignatura(string $tipo_asignatura): void
     {
-        $this->tipo_asignatura = AsignaturaTipoName::fromNullableString($tipo_asignatura);
+        $this->tipo_asignatura = new AsignaturaTipoName($tipo_asignatura);
     }
 
 
@@ -125,7 +140,7 @@ class AsignaturaTipo
 
     public function setTipo_breve(string $tipo_breve): void
     {
-        $this->tipo_breve = AsignaturaTipoShortName::fromNullableString($tipo_breve);
+        $this->tipo_breve = new AsignaturaTipoShortName($tipo_breve);
     }
 
 
@@ -158,6 +173,9 @@ class AsignaturaTipo
         return 'id_tipo';
     }
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
         $oAsignaturaTipoSet = new Set();
@@ -166,7 +184,7 @@ class AsignaturaTipo
         $oAsignaturaTipoSet->add($this->getDatosTipo_breve());
         $oAsignaturaTipoSet->add($this->getDatosYear());
         $oAsignaturaTipoSet->add($this->getDatosTipo_latin());
-        return $oAsignaturaTipoSet->getTot();
+        return array_values($oAsignaturaTipoSet->getTot());
     }
 
     /**
