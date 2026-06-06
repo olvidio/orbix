@@ -16,7 +16,7 @@ use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
 final class CambioUsuarioPropiedadPrefPreview
 {
     /**
-     * @param array $input
+     * @param array<string, mixed> $input
      * @return array{
      *   error: string,
      *   id_item: int,
@@ -26,19 +26,22 @@ final class CambioUsuarioPropiedadPrefPreview
      *   cambio_prop: string,
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $id_item = (int)($input['id_item'] ?? 0);
-        $objeto = (string)($input['objeto'] ?? '');
-        $propiedad = (string)($input['propiedad'] ?? '');
-        $operador = (string)($input['operador'] ?? '');
-        $valor = (string)($input['valor'] ?? '');
-        $valor_old = (string)($input['valor_old'] ?? '');
-        $valor_new = (string)($input['valor_new'] ?? '');
+        $id_item = isset($input['id_item']) && is_numeric($input['id_item']) ? (int) $input['id_item'] : 0;
+        $objeto = isset($input['objeto']) && is_string($input['objeto']) ? $input['objeto'] : '';
+        $propiedad = isset($input['propiedad']) && is_string($input['propiedad']) ? $input['propiedad'] : '';
+        $operador = isset($input['operador']) && is_string($input['operador']) ? $input['operador'] : '';
+        $valor = isset($input['valor']) && is_string($input['valor']) ? $input['valor'] : '';
+        $valor_old = isset($input['valor_old']) && is_string($input['valor_old']) ? $input['valor_old'] : '';
+        $valor_new = isset($input['valor_new']) && is_string($input['valor_new']) ? $input['valor_new'] : '';
         $a_id_ubi = $input['id_ubi'] ?? [];
 
-        if ($propiedad === 'id_ubi' && is_array($a_id_ubi) && !empty($a_id_ubi)) {
-            $valor = implode(',', array_map('strval', $a_id_ubi));
+        if ($propiedad === 'id_ubi' && is_array($a_id_ubi) && $a_id_ubi !== []) {
+            $valor = implode(',', array_map(
+                static fn ($v) => is_scalar($v) ? (string) $v : '',
+                $a_id_ubi
+            ));
         }
 
         $oProp = new CambioUsuarioPropiedadPref();
@@ -54,7 +57,7 @@ final class CambioUsuarioPropiedadPrefPreview
         $oProp->setValor_old($valor_old !== '');
         $oProp->setValor_new($valor_new !== '');
 
-        $condicion = (string)$oProp->getTextCambio();
+        $condicion = (string) $oProp->getTextCambio();
 
         $cambio_prop = json_encode([
             'iid_item' => $id_item,
@@ -71,7 +74,7 @@ final class CambioUsuarioPropiedadPrefPreview
             'objeto' => $objeto,
             'propiedad' => $propiedad,
             'condicion' => $condicion,
-            'cambio_prop' => (string)$cambio_prop,
+            'cambio_prop' => is_string($cambio_prop) ? $cambio_prop : '',
         ];
     }
 }

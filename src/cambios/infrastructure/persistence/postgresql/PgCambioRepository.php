@@ -13,6 +13,7 @@ use JsonException;
 use PDO;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -31,29 +32,31 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
-        $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
-        $this->setoDbl_select($oDbl_Select);
+        $this->setoDbl(GlobalPdo::get('oDBPC'));
+        $this->setoDbl_select(GlobalPdo::get('oDBPC_Select'));
         $this->setNomTabla('av_cambios');
     }
 
-    public function getNomActivEliminada($iId): string
+    public function getNomActivEliminada(int $iId): string
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ=$iId AND id_tipo_cambio=3")) === false) {
+        $qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ=$iId AND id_tipo_cambio=3");
+        if ($qRs === false) {
             $sClauError = 'ActividadCambio.NomActivEliminada';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+            /** @var \src\shared\infrastructure\logging\GestorErrores $oGestorErrores */
+            $oGestorErrores = $_SESSION['oGestorErrores'];
+            $oGestorErrores->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+            return _('Actividad Eliminada');
         }
-        $aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
-        if ($aDades === FALSE) {
-            $nomActiv = _('Actividad Eliminada');
-        } else {
-            $nomActiv = $aDades['valor_old'] . "(" . _('Eliminado') . ")";
+        $aDades = $qRs->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDades)) {
+            return _('Actividad Eliminada');
         }
-        return $nomActiv;
+        $valorOld = $aDades['valor_old'] ?? '';
+        $valorOldStr = is_string($valorOld) || is_numeric($valorOld) ? (string) $valorOld : '';
+
+        return $valorOldStr . "(" . _('Eliminado') . ")";
     }
 
     /**
@@ -80,11 +83,10 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
 
     /**
      * Elimina de la tabla usuario, los registros de cambios que ya se han eliminado
-     * @return boolean
      */
-    private function borrarCambiosUsuario()
+    private function borrarCambiosUsuario(): bool
     {
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
         $this->setNomTabla('av_cambios');
 
@@ -100,11 +102,10 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
 
     /**
      * Elimina de la tabla anotados, los registros de cambios que ya se han eliminado
-     * @return boolean
      */
-    private function borrarCambiosAnotados()
+    private function borrarCambiosAnotados(): bool
     {
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
         $this->setNomTabla('av_cambios');
 
@@ -126,12 +127,10 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
 
     /**
      * Elimina els apunts amb un timestamp anterior en un interval
-     *
-     * @return
      */
-    private function borrarCambiosP($str_interval = 'P1Y')
+    private function borrarCambiosP(string $str_interval = 'P1Y'): bool
     {
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = GlobalPdo::get('oDBC');
         $nom_tabla = $this->getNomTabla();
 
         $interval = new DateInterval($str_interval);
@@ -149,11 +148,11 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
      * retorna l'array d'objectes de tipus Cambio
      * Que no s'hagin apuntat a la dl.
      *
-     * @return array|bool
+     * @return list<Cambio>
      */
     public function getCambiosNuevos(): array
     {
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = GlobalPdo::get('oDBC');
 
         if (getenv('UBICACION') === 'sv') {
             $nom_tabla_anotados = 'av_cambios_anotados_dl';
@@ -178,9 +177,14 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
                 ORDER BY dl_org,id_tipo_activ,timestamp_cambio
                 ";
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
-        foreach ($stmt as $aDatos) {
-            $oCambio = Cambio::fromArray($aDatos);
-            $oCambioSet->add($oCambio);
+        if ($stmt !== false) {
+            foreach ($stmt as $aDatos) {
+                if (!is_array($aDatos)) {
+                    continue;
+                }
+                $oCambio = Cambio::fromArray($aDatos);
+                $oCambioSet->add($oCambio);
+            }
         }
 
         // Cambios NO dl (sólo public.av_cambios)
@@ -193,23 +197,26 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
                 ORDER BY dl_org,id_tipo_activ,timestamp_cambio
                 ";
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
-        foreach ($stmt as $aDatos) {
-            $oCambio = Cambio::fromArray($aDatos);
-            $oCambioSet->add($oCambio);
+        if ($stmt !== false) {
+            foreach ($stmt as $aDatos) {
+                if (!is_array($aDatos)) {
+                    continue;
+                }
+                $oCambio = Cambio::fromArray($aDatos);
+                $oCambioSet->add($oCambio);
+            }
         }
 
-        return $oCambioSet->getTot();
+        return array_values($oCambioSet->getTot());
     }
 
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo CambioDl
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo CambioDl
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Cambio>
      * @throws JsonException
      */
     public function getCambios(array $aWhere = [], array $aOperators = []): array
@@ -247,32 +254,40 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para las fechas del postgres (texto iso)
             $aDatos['timestamp_cambio'] = (new ConverterDate('timestamp', $aDatos['timestamp_cambio']))->fromPg();
             // para los json
-            $aDatos['json_fases_sv'] = (new ConverterJson($aDatos['json_fases_sv'],true))->fromPg();
+            $aDatos['json_fases_sv'] = (new ConverterJson($aDatos['json_fases_sv'], true))->fromPg();
             $aDatos['json_fases_sf'] = (new ConverterJson($aDatos['json_fases_sf'], true))->fromPg();
             $CambioDl = Cambio::fromArray($aDatos);
             $CambioDlSet->add($CambioDl);
         }
-        return $CambioDlSet->getTot();
+        return array_values($CambioDlSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -358,6 +373,9 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -367,58 +385,67 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item_cambio = $id_item_cambio";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_item_cambio
-     * @return array|bool
+     * @return array<string, mixed>|false
      * @throws JsonException
      */
-    public function datosById(int $id_item_cambio): array|bool
+    public function datosById(int $id_item_cambio): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item_cambio = $id_item_cambio";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['timestamp_cambio'] = (new ConverterDate('timestamp', $aDatos['timestamp_cambio']))->fromPg();
-        }
+        $result['timestamp_cambio'] = (new ConverterDate('timestamp', $result['timestamp_cambio']))->fromPg();
         // para los json
-        if ($aDatos !== false) {
-            $aDatos['json_fases_sv'] = (new ConverterJson($aDatos['json_fases_sv'],true))->fromPg();
-            $aDatos['json_fases_sf'] = (new ConverterJson($aDatos['json_fases_sf'], true))->fromPg();
-        }
-        return $aDatos;
+        $result['json_fases_sv'] = (new ConverterJson($result['json_fases_sv'], true))->fromPg();
+        $result['json_fases_sf'] = (new ConverterJson($result['json_fases_sf'], true))->fromPg();
+        return $result;
     }
 
-
     /**
-     * Busca la clase con id_item_cambio en la base de datos .
      * @throws JsonException
      */
     public function findById(int $id_item_cambio): ?Cambio
     {
         $aDatos = $this->datosById($id_item_cambio);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Cambio::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('av_cambios_id_item_cambio_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

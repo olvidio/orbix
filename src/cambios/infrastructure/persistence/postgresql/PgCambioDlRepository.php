@@ -11,6 +11,7 @@ use JsonException;
 use PDO;
 use src\cambios\domain\contracts\CambioDlRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -30,10 +31,8 @@ class PgCambioDlRepository extends PgCambioRepository implements CambioDlReposit
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDBC'];
-        $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
-        $this->setoDbl_select($oDbl_Select);
+        $this->setoDbl(GlobalPdo::get('oDBC'));
+        $this->setoDbl_select(GlobalPdo::get('oDBC_Select'));
         $this->setNomTabla('av_cambios_dl');
     }
 
@@ -115,6 +114,9 @@ class PgCambioDlRepository extends PgCambioRepository implements CambioDlReposit
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -124,58 +126,67 @@ class PgCambioDlRepository extends PgCambioRepository implements CambioDlReposit
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item_cambio = $id_item_cambio";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_item_cambio
-     * @return array|bool
+     * @return array<string, mixed>|false
      * @throws JsonException
      */
-    public function datosById(int $id_item_cambio): array|bool
+    public function datosById(int $id_item_cambio): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item_cambio = $id_item_cambio";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['timestamp_cambio'] = (new ConverterDate('timestamp', $aDatos['timestamp_cambio']))->fromPg();
-        }
+        $result['timestamp_cambio'] = (new ConverterDate('timestamp', $result['timestamp_cambio']))->fromPg();
         // para los json
-        if ($aDatos !== false) {
-            $aDatos['json_fases_sv'] = (new ConverterJson($aDatos['json_fases_sv'],true))->fromPg();
-            $aDatos['json_fases_sf'] = (new ConverterJson($aDatos['json_fases_sf'], true))->fromPg();
-        }
-        return $aDatos;
+        $result['json_fases_sv'] = (new ConverterJson($result['json_fases_sv'], true))->fromPg();
+        $result['json_fases_sf'] = (new ConverterJson($result['json_fases_sf'], true))->fromPg();
+        return $result;
     }
 
-
     /**
-     * Busca la clase con id_item_cambio en la base de datos .
      * @throws JsonException
      */
     public function findById(int $id_item_cambio): ?Cambio
     {
         $aDatos = $this->datosById($id_item_cambio);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Cambio::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('av_cambios_dl_id_item_cambio_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

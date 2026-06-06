@@ -5,10 +5,18 @@
  */
 
 use src\cambios\application\CambioUsuarioEliminar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$result = CambioUsuarioEliminar::execute(['sel' => $sel]);
+use function src\shared\domain\helpers\input_string_list;
+
+$input = [
+    'sel' => input_string_list($_POST, 'sel'),
+];
+
+/** @var CambioUsuarioEliminar $useCase */
+$useCase = DependencyResolver::get(CambioUsuarioEliminar::class);
+$result = $useCase->execute($input);
 if ($result['ok']) {
     ContestarJson::enviar('', '');
 } else {

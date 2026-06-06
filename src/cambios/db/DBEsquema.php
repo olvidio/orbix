@@ -13,9 +13,9 @@ use src\utils_database\domain\entity\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ServerConf::DIR . "/src/cambios/db";
+    private string $dir_base = ServerConf::DIR . "/src/cambios/db";
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
         if (empty($esquema_sfsv)) {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
@@ -25,7 +25,7 @@ class DBEsquema extends DBAbstract
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->eliminar_av_cambios_usuario_propiedades_pref();
         $this->eliminar_av_cambios_usuario_objeto_pref();
@@ -41,7 +41,7 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->create_av_cambios_dl();
         $this->create_av_cambios_anotados();
@@ -57,41 +57,42 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function llenarAll()
+    public function llenarAll(): void
     {
         $this->llenar_av_cambios_usuario_objeto_pref();
         $this->llenar_av_cambios_usuario_propiedades_pref();
         $this->borrar_usuarios_inexistentes();
     }
 
-    protected function infoTable($tabla)
+    /**
+     * @return array{tabla: string, nom_tabla: string, campo_seq: string, id_seq: string, filename: string}
+     */
+    protected function infoTable(string $tabla): array
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
+        $nom_tabla = $this->getNomTabla($tabla);
+        $campo_seq = '';
+        $id_seq = '';
         switch ($tabla) {
             case "av_cambios_dl":
-                $nom_tabla = $this->getNomTabla($tabla);
                 $campo_seq = 'id_item_cambio';
                 $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
                 break;
             case "av_cambios_anotados_dl_sf":
             case "av_cambios_anotados_dl":
-                $nom_tabla = $this->getNomTabla($tabla);
                 $campo_seq = 'id_item';
                 $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
                 break;
             case "av_cambios_usuario":
-                $nom_tabla = $this->getNomTabla($tabla);
                 $campo_seq = 'id_item';
                 $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
                 break;
             case "av_cambios_usuario_objeto_pref":
-                $nom_tabla = $this->getNomTabla($tabla);
                 $campo_seq = 'id_item_usuario_objeto';
                 $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
                 break;
             case "av_cambios_usuario_propiedades_pref":
-                $nom_tabla = $this->getNomTabla($tabla);
                 $campo_seq = 'id_item';
                 $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
                 break;
@@ -106,7 +107,7 @@ class DBEsquema extends DBAbstract
     /**
      * En la BD Comun (esquema).
      */
-    public function create_av_cambios_dl()
+    public function create_av_cambios_dl(): void
     {
         // OJO, está en public
         // (debe estar después de fijar el role)
@@ -123,7 +124,7 @@ class DBEsquema extends DBAbstract
         // Al ser de la DB comun, puede ser que al intentar crear como sf, las
         // tablas ya se hayan creado como sv (o al revés).
         if ($this->tableExists($tabla)) {
-            return TRUE;
+            return;
         }
 
         /*
@@ -165,10 +166,9 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun');
-        return TRUE;
     }
 
-    public function eliminar_av_cambios_dl()
+    public function eliminar_av_cambios_dl(): void
     {
         // OJO, está en public
         // (debe estar después de fijar el role)
@@ -191,7 +191,7 @@ class DBEsquema extends DBAbstract
     /**
      * En la BD Comun (esquema).
      */
-    public function create_av_cambios_anotados()
+    public function create_av_cambios_anotados(): void
     {
 
         // (debe estar después de fijar el role)
@@ -214,7 +214,7 @@ class DBEsquema extends DBAbstract
         // Al ser de la DB comun, puede ser que al intentar crear como sf, las
         // tablas ya se hayan creado como sv (o al revés).
         if ($this->tableExists($tabla)) {
-            return TRUE;
+            return;
         }
 
         $a_sql = [];
@@ -255,10 +255,9 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun');
-        return true;
     }
 
-    public function eliminar_av_cambios_anotados()
+    public function eliminar_av_cambios_anotados(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -275,13 +274,12 @@ class DBEsquema extends DBAbstract
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal('comun');
-        return true;
     }
 
     /**
      * En la BD Comun (esquema).
      */
-    public function create_av_cambios_anotados_sf()
+    public function create_av_cambios_anotados_sf(): void
     {
 
         // (debe estar después de fijar el role)
@@ -303,7 +301,7 @@ class DBEsquema extends DBAbstract
         // Al ser de la DB comun, puede ser que al intentar crear como sf, las
         // tablas ya se hayan creado como sv (o al revés).
         if ($this->tableExists($tabla)) {
-            return TRUE;
+            return;
         }
 
         $a_sql = [];
@@ -344,10 +342,9 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun');
-        return true;
     }
 
-    public function eliminar_av_cambios_anotados_sf()
+    public function eliminar_av_cambios_anotados_sf(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -371,7 +368,7 @@ class DBEsquema extends DBAbstract
      * Correspondería a sfsv, pero para poder borrar con 'LEFT JOIN'
      * cuando se eliminan los av_cambios, la pongo en comun.
      */
-    public function create_av_cambios_usuario()
+    public function create_av_cambios_usuario(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -391,7 +388,7 @@ class DBEsquema extends DBAbstract
         // Al ser de la DB comun, puede ser que al intentar crear como sf, las
         // tablas ya se hayan creado como sv (o al revés).
         if ($this->tableExists($tabla)) {
-            return TRUE;
+            return;
         }
 
         $a_sql = [];
@@ -429,10 +426,9 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun');
-        return true;
     }
 
-    public function eliminar_av_cambios_usuario()
+    public function eliminar_av_cambios_usuario(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -454,7 +450,7 @@ class DBEsquema extends DBAbstract
     /**
      * En la BD sv/sf (esquema).
      */
-    public function create_av_cambios_usuario_objeto_pref()
+    public function create_av_cambios_usuario_objeto_pref(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -511,7 +507,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function eliminar_av_cambios_usuario_objeto_pref()
+    public function eliminar_av_cambios_usuario_objeto_pref(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -538,7 +534,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function create_av_cambios_usuario_propiedades_pref()
+    public function create_av_cambios_usuario_propiedades_pref(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -600,7 +596,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function eliminar_av_cambios_usuario_propiedades_pref()
+    public function eliminar_av_cambios_usuario_propiedades_pref(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -626,7 +622,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function llenar_av_cambios_usuario_objeto_pref()
+    public function llenar_av_cambios_usuario_objeto_pref(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -674,7 +670,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function llenar_av_cambios_usuario_propiedades_pref()
+    public function llenar_av_cambios_usuario_propiedades_pref(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -723,7 +719,7 @@ class DBEsquema extends DBAbstract
 
     }
 
-    public function borrar_usuarios_inexistentes()
+    public function borrar_usuarios_inexistentes(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;

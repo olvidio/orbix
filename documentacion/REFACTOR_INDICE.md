@@ -53,7 +53,7 @@ Columnas:
 | actividadplazas | ✓ | 2 | 0 | **Cierre DI + PHPStan** (2026-06-06); 2 controladores frontend pendientes; ver [baseline](actividadplazas_migracion_baseline.md) |
 | **actividadtarifas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadtarifas_migracion_baseline.md) |
 | **asignaturas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](asignaturas_migracion_baseline.md) |
-| cambios | ✓ | 0 | 16 | Migración estructural completa |
+| **cambios** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](cambios_migracion_baseline.md) |
 | **cartaspresentacion** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](cartaspresentacion_migracion_baseline.md) |
 | casas | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](casas_migracion_baseline.md) |
 | certificados | — | 0 | 19 | Sin baseline |

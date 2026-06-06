@@ -54,6 +54,8 @@ interface ActividadProcesoTareaRepositoryInterface
 
     public function getNomTabla(): string;
 
+    public function setNomTabla(string $sNomTabla): void;
+
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos

@@ -99,9 +99,14 @@ class CambioUsuario
 
     public function setAvisoTipoVo(AvisoTipoId|int $valor): void
     {
-        $this->aviso_tipo = $valor instanceof AvisoTipoId
-            ? $valor
-            : AvisoTipoId::fromNullableInt($valor);
+        if ($valor instanceof AvisoTipoId) {
+            $this->aviso_tipo = $valor;
+            return;
+        }
+        $vo = AvisoTipoId::fromNullableInt($valor);
+        if ($vo !== null) {
+            $this->aviso_tipo = $vo;
+        }
     }
 
     /**
@@ -117,7 +122,10 @@ class CambioUsuario
      */
     public function setAviso_tipo(int $aviso_tipo): void
     {
-        $this->aviso_tipo = AvisoTipoId::fromNullableInt($aviso_tipo);
+        $vo = AvisoTipoId::fromNullableInt($aviso_tipo);
+        if ($vo !== null) {
+            $this->aviso_tipo = $vo;
+        }
     }
 
 

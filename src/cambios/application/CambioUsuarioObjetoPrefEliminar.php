@@ -11,23 +11,27 @@ use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
  */
 final class CambioUsuarioObjetoPrefEliminar
 {
+    public function __construct(
+        private CambioUsuarioObjetoPrefRepositoryInterface $cambioUsuarioObjetoPrefRepository,
+    ) {
+    }
+
     /**
-     * @param array $input
+     * @param array{id_item_usuario_objeto?: int|string} $input
      * @return array{error: string}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
         $id_item_usuario_objeto = (int)($input['id_item_usuario_objeto'] ?? 0);
         if ($id_item_usuario_objeto <= 0) {
             return ['error' => (string)_("falta id_item_usuario_objeto")];
         }
 
-        $Repo = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
-        $oPref = $Repo->findById($id_item_usuario_objeto);
+        $oPref = $this->cambioUsuarioObjetoPrefRepository->findById($id_item_usuario_objeto);
         if ($oPref === null) {
             return ['error' => (string)_("preferencia no encontrada")];
         }
-        if ($Repo->Eliminar($oPref) === false) {
+        if ($this->cambioUsuarioObjetoPrefRepository->Eliminar($oPref) === false) {
             return ['error' => (string)_("Hay un error, no se ha eliminado")];
         }
         return ['error' => ''];

@@ -5,13 +5,20 @@
  */
 
 use src\cambios\application\UsuarioFormAvisosData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 $input = [
-    'id_usuario' => (int)filter_input(INPUT_POST, 'id_usuario'),
-    'quien' => (string)filter_input(INPUT_POST, 'quien'),
+    'id_usuario' => input_int($_POST, 'id_usuario'),
+    'quien' => input_string($_POST, 'quien'),
 ];
-$result = UsuarioFormAvisosData::execute($input);
+
+/** @var UsuarioFormAvisosData $useCase */
+$useCase = DependencyResolver::get(UsuarioFormAvisosData::class);
+$result = $useCase->execute($input);
 
 $error = $result['error'];
 $data = [

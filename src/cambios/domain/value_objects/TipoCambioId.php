@@ -10,6 +10,9 @@ final class TipoCambioId
     public const FASE = 4;
 
 
+    /**
+     * @return array<int, string>
+     */
     public static function getArrayTipoCambio(): array
     {
         return [

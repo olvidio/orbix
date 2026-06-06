@@ -69,7 +69,7 @@ class CambioUsuarioObjetoPref
      */
     public function getDl_org(): string
     {
-        return $this->dl_org->value();
+        return $this->dl_org->value() ?? '';
     }
 
     /**
@@ -77,7 +77,10 @@ class CambioUsuarioObjetoPref
      */
     public function setDl_org(string $dl_org): void
     {
-        $this->dl_org = DelegacionCode::fromNullableString($dl_org);
+        $vo = DelegacionCode::fromNullableString($dl_org);
+        if ($vo !== null) {
+            $this->dl_org = $vo;
+        }
     }
 
     public function getDlOrgVo(): DelegacionCode
@@ -87,9 +90,14 @@ class CambioUsuarioObjetoPref
 
     public function setDlOrgVo(DelegacionCode|string $texto): void
     {
-        $this->dl_org = $texto instanceof DelegacionCode
-            ? $texto
-            : DelegacionCode::fromNullableString($texto);
+        if ($texto instanceof DelegacionCode) {
+            $this->dl_org = $texto;
+            return;
+        }
+        $vo = DelegacionCode::fromNullableString($texto);
+        if ($vo !== null) {
+            $this->dl_org = $vo;
+        }
     }
 
 
@@ -167,7 +175,10 @@ class CambioUsuarioObjetoPref
      */
     public function setObjeto(string $objeto): void
     {
-        $this->objeto = ObjetoNombre::fromNullableString($objeto);
+        $vo = ObjetoNombre::fromNullableString($objeto);
+        if ($vo !== null) {
+            $this->objeto = $vo;
+        }
     }
 
     public function getObjetoVo(): ObjetoNombre
@@ -177,9 +188,14 @@ class CambioUsuarioObjetoPref
 
     public function setObjetoVo(ObjetoNombre|string $texto): void
     {
-        $this->objeto = $texto instanceof ObjetoNombre
-            ? $texto
-            : ObjetoNombre::fromNullableString($texto);
+        if ($texto instanceof ObjetoNombre) {
+            $this->objeto = $texto;
+            return;
+        }
+        $vo = ObjetoNombre::fromNullableString($texto);
+        if ($vo !== null) {
+            $this->objeto = $vo;
+        }
     }
 
     /**
@@ -190,14 +206,16 @@ class CambioUsuarioObjetoPref
         return $this->aviso_tipo;
     }
 
-    /**
-     * @param AvisoTipoId $avisoTipoId
-     */
     public function setAvisoTipoVo(AvisoTipoId|int $valor): void
     {
-        $this->aviso_tipo = $valor instanceof AvisoTipoId
-            ? $valor
-            : AvisoTipoId::fromNullableInt($valor);
+        if ($valor instanceof AvisoTipoId) {
+            $this->aviso_tipo = $valor;
+            return;
+        }
+        $vo = AvisoTipoId::fromNullableInt($valor);
+        if ($vo !== null) {
+            $this->aviso_tipo = $vo;
+        }
     }
 
     /**
@@ -213,7 +231,10 @@ class CambioUsuarioObjetoPref
      */
     public function setAviso_tipo(int $aviso_tipo): void
     {
-        $this->aviso_tipo = AvisoTipoId::fromNullableInt($aviso_tipo);
+        $vo = AvisoTipoId::fromNullableInt($aviso_tipo);
+        if ($vo !== null) {
+            $this->aviso_tipo = $vo;
+        }
     }
 
     /**

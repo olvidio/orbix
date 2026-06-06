@@ -13,25 +13,29 @@ use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
  */
 final class CambioUsuarioEliminar
 {
+    public function __construct(
+        private CambioUsuarioRepositoryInterface $cambioUsuarioRepository,
+    ) {
+    }
+
     /**
-     * @param array{sel?: array} $input
+     * @param array{sel?: list<string>} $input
      * @return array{ok: bool, mensaje: string}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
         $sel = (array)($input['sel'] ?? []);
-        if (empty($sel)) {
+        if ($sel === []) {
             return ['ok' => true, 'mensaje' => ''];
         }
 
-        $CambioUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
         $errores = [];
         foreach ($sel as $id) {
             $id_item_cmb = strtok((string)$id, '#');
             $id_usuario = strtok('#');
             $sfsv = strtok('#');
             $aviso_tipo = strtok('#');
-            if ($id_item_cmb === false) {
+            if ($id_item_cmb === false || $id_usuario === false || $sfsv === false || $aviso_tipo === false) {
                 continue;
             }
             $aWhere = [
@@ -40,17 +44,14 @@ final class CambioUsuarioEliminar
                 'sfsv' => (int)$sfsv,
                 'aviso_tipo' => (int)$aviso_tipo,
             ];
-            $cCambiosUsuario = $CambioUsuarioRepository->getCambiosUsuario($aWhere);
-            if (!is_array($cCambiosUsuario)) {
-                continue;
-            }
+            $cCambiosUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
             foreach ($cCambiosUsuario as $oCambioUsuario) {
-                if ($oCambioUsuario->DBEliminar() === false) {
-                    $errores[] = $oCambioUsuario->getErrorTxt();
+                if ($this->cambioUsuarioRepository->Eliminar($oCambioUsuario) === false) {
+                    $errores[] = $this->cambioUsuarioRepository->getErrorTxt();
                 }
             }
         }
-        if (!empty($errores)) {
+        if ($errores !== []) {
             return [
                 'ok' => false,
                 'mensaje' => (string)_("Hay un error, no se ha eliminado") . "\n" . implode("\n", $errores),

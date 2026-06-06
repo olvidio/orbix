@@ -1,33 +1,35 @@
 <?php
 /**
  * Endpoint JSON: crea o actualiza un `CambioUsuarioObjetoPref`.
- *
- * Sucesor de la rama `guardar_objeto` de `apps/cambios/controller/usuario_avisos_pref_ajax.php`.
  */
 
 use src\cambios\application\CambioUsuarioObjetoPrefGuardar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$a_casas = (array)filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$a_casas = array_filter($a_casas, static fn($v) => $v !== null && $v !== '');
-
 $input = [
-    'id_item_usuario_objeto' => (int)filter_input(INPUT_POST, 'id_item_usuario_objeto'),
-    'id_usuario' => (int)filter_input(INPUT_POST, 'id_usuario'),
-    'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),
-    'dl_propia' => (string)filter_input(INPUT_POST, 'dl_propia'),
-    'objeto' => (string)filter_input(INPUT_POST, 'objeto'),
-    'aviso_tipo' => (int)filter_input(INPUT_POST, 'aviso_tipo'),
-    'id_fase_ref' => (int)filter_input(INPUT_POST, 'id_fase_ref'),
-    'aviso_off' => (string)filter_input(INPUT_POST, 'aviso_off'),
-    'aviso_on' => (string)filter_input(INPUT_POST, 'aviso_on'),
-    'aviso_outdate' => (string)filter_input(INPUT_POST, 'aviso_outdate'),
-    'casas' => $a_casas,
+    'id_item_usuario_objeto' => input_int($_POST, 'id_item_usuario_objeto'),
+    'id_usuario' => input_int($_POST, 'id_usuario'),
+    'id_tipo_activ' => input_string($_POST, 'id_tipo_activ'),
+    'dl_propia' => input_string($_POST, 'dl_propia'),
+    'objeto' => input_string($_POST, 'objeto'),
+    'aviso_tipo' => input_int($_POST, 'aviso_tipo'),
+    'id_fase_ref' => input_int($_POST, 'id_fase_ref'),
+    'aviso_off' => input_string($_POST, 'aviso_off'),
+    'aviso_on' => input_string($_POST, 'aviso_on'),
+    'aviso_outdate' => input_string($_POST, 'aviso_outdate'),
+    'casas' => input_string_list($_POST, 'casas'),
 ];
 
-$result = CambioUsuarioObjetoPrefGuardar::execute($input);
+/** @var CambioUsuarioObjetoPrefGuardar $useCase */
+$useCase = DependencyResolver::get(CambioUsuarioObjetoPrefGuardar::class);
+$result = $useCase->execute($input);
 $error = (string)$result['error'];
 unset($result['error']);
 

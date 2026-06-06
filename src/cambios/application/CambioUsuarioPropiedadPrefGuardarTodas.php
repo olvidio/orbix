@@ -17,20 +17,27 @@ use function src\shared\domain\helpers\is_true;
  */
 final class CambioUsuarioPropiedadPrefGuardarTodas
 {
+    public function __construct(
+        private CambioUsuarioPropiedadPrefRepositoryInterface $cambioUsuarioPropiedadPrefRepository,
+    ) {
+    }
+
     /**
-     * @param array $input POST completo (se accede a `id_item_usuario_objeto_prop`, `objeto_prop`, $objeto[] y $id_cond).
+     * @param array<string, mixed> $input POST completo (se accede a `id_item_usuario_objeto_prop`, `objeto_prop`, $objeto[] y $id_cond).
      * @return array{error: string}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $id_item_usuario_objeto = (int)($input['id_item_usuario_objeto_prop'] ?? 0);
-        $objeto = (string)($input['objeto_prop'] ?? '');
+        $id_item_usuario_objeto = isset($input['id_item_usuario_objeto_prop']) && is_numeric($input['id_item_usuario_objeto_prop'])
+            ? (int) $input['id_item_usuario_objeto_prop']
+            : 0;
+        $objeto = isset($input['objeto_prop']) && is_string($input['objeto_prop'])
+            ? $input['objeto_prop']
+            : '';
 
         if ($id_item_usuario_objeto <= 0 || $objeto === '') {
             return ['error' => (string)_("faltan parametros")];
         }
-
-        $Repo = $GLOBALS['container']->get(CambioUsuarioPropiedadPrefRepositoryInterface::class);
 
         $a_propiedades_sel = [];
 
@@ -39,30 +46,43 @@ final class CambioUsuarioPropiedadPrefGuardarTodas
             $a_conds = [];
         }
         foreach ($a_conds as $id_cond) {
-            $id_cond = (string)$id_cond;
-            $nom_prop_cond = substr(strstr($id_cond, '_'), 1);
+            if (!is_scalar($id_cond)) {
+                continue;
+            }
+            $id_cond = (string) $id_cond;
+            $nom_prop_cond = substr(strstr($id_cond, '_') ?: '', 1);
             $nom_prop = strstr($nom_prop_cond, '_cond', true);
             if ($nom_prop === false || $nom_prop === '') {
                 continue;
             }
             $a_propiedades_sel[] = $nom_prop;
 
-            $payload_raw = (string)($input[$id_cond] ?? '');
+            $payload_raw = isset($input[$id_cond]) && is_string($input[$id_cond]) ? $input[$id_cond] : '';
             if ($payload_raw !== '') {
-                $aCambio = json_decode($payload_raw, true) ?: [];
+                $decoded = json_decode($payload_raw, true);
+                $aCambio = is_array($decoded) ? $decoded : [];
                 $oProp = new CambioUsuarioPropiedadPref();
-                $id_item = (int)($aCambio['iid_item'] ?? 0);
+                $id_item = isset($aCambio['iid_item']) && is_numeric($aCambio['iid_item'])
+                    ? (int) $aCambio['iid_item']
+                    : 0;
                 if ($id_item <= 0) {
-                    $id_item = $Repo->getNewId();
+                    $id_item = $this->cambioUsuarioPropiedadPrefRepository->getNewId();
                 }
                 $oProp->setId_item($id_item);
                 $oProp->setId_item_usuario_objeto($id_item_usuario_objeto);
-                $oProp->setPropiedad((string)($aCambio['spropiedad'] ?? $nom_prop));
-                $operador = (string)($aCambio['soperador'] ?? '');
+                $propiedad = isset($aCambio['spropiedad']) && is_string($aCambio['spropiedad'])
+                    ? $aCambio['spropiedad']
+                    : $nom_prop;
+                $oProp->setPropiedad($propiedad);
+                $operador = isset($aCambio['soperador']) && is_string($aCambio['soperador'])
+                    ? $aCambio['soperador']
+                    : '';
                 if ($operador !== '') {
                     $oProp->setOperador($operador);
                 }
-                $valor = (string)($aCambio['svalor'] ?? '');
+                $valor = isset($aCambio['svalor']) && is_string($aCambio['svalor'])
+                    ? $aCambio['svalor']
+                    : '';
                 if ($valor !== '') {
                     $oProp->setValor($valor);
                 }
@@ -70,47 +90,48 @@ final class CambioUsuarioPropiedadPrefGuardarTodas
                 $oProp->setValor_new(is_true($aCambio['bvalor_new'] ?? ''));
             } else {
                 $nom_item = str_replace('_cond', '_item', $id_cond);
-                $existing_id = (int)($input[$nom_item] ?? 0);
+                $existing_id = isset($input[$nom_item]) && is_numeric($input[$nom_item])
+                    ? (int) $input[$nom_item]
+                    : 0;
                 if ($existing_id > 0) {
-                    $oProp = $Repo->findById($existing_id);
+                    $oProp = $this->cambioUsuarioPropiedadPrefRepository->findById($existing_id);
                     if ($oProp === null) {
                         $oProp = new CambioUsuarioPropiedadPref();
                         $oProp->setId_item($existing_id);
                     }
                 } else {
                     $oProp = new CambioUsuarioPropiedadPref();
-                    $oProp->setId_item($Repo->getNewId());
+                    $oProp->setId_item($this->cambioUsuarioPropiedadPrefRepository->getNewId());
                 }
                 $oProp->setId_item_usuario_objeto($id_item_usuario_objeto);
                 $oProp->setPropiedad($nom_prop);
             }
 
-            if ($Repo->Guardar($oProp) === false) {
+            if ($this->cambioUsuarioPropiedadPrefRepository->Guardar($oProp) === false) {
                 return ['error' => (string)_("Hay un error, no se ha guardado")];
             }
         }
 
-        // Borrado de las propiedades que estaban y ya no estan.
-        $cLista = $Repo->getCambioUsuarioPropiedadPrefs(['id_item_usuario_objeto' => $id_item_usuario_objeto]);
-        if (is_array($cLista)) {
-            $a_item_tot = [];
-            $a_propiedades_tot = [];
-            $c = 0;
-            foreach ($cLista as $oProp) {
-                $c++;
-                $a_item_tot[$c] = $oProp->getId_item();
-                $a_propiedades_tot[$c] = $oProp->getPropiedad();
+        $cLista = $this->cambioUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadPrefs(
+            ['id_item_usuario_objeto' => $id_item_usuario_objeto]
+        );
+        $a_item_tot = [];
+        $a_propiedades_tot = [];
+        $c = 0;
+        foreach ($cLista as $oProp) {
+            $c++;
+            $a_item_tot[$c] = $oProp->getId_item();
+            $a_propiedades_tot[$c] = $oProp->getPropiedad();
+        }
+        $a_propiedades_borrar = array_diff($a_propiedades_tot, $a_propiedades_sel);
+        foreach ($a_propiedades_borrar as $propiedad_borrar) {
+            $key = array_search($propiedad_borrar, $a_propiedades_tot, true);
+            if ($key === false) {
+                continue;
             }
-            $a_propiedades_borrar = array_diff($a_propiedades_tot, $a_propiedades_sel);
-            foreach ($a_propiedades_borrar as $propiedad_borrar) {
-                $key = array_search($propiedad_borrar, $a_propiedades_tot);
-                if ($key === false) {
-                    continue;
-                }
-                $oPropBorrar = $Repo->findById($a_item_tot[$key]);
-                if ($oPropBorrar !== null && $Repo->Eliminar($oPropBorrar) === false) {
-                    return ['error' => (string)_("Hay un error, no se ha eliminado")];
-                }
+            $oPropBorrar = $this->cambioUsuarioPropiedadPrefRepository->findById($a_item_tot[$key]);
+            if ($oPropBorrar !== null && $this->cambioUsuarioPropiedadPrefRepository->Eliminar($oPropBorrar) === false) {
+                return ['error' => (string)_("Hay un error, no se ha eliminado")];
             }
         }
 

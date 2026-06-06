@@ -10,6 +10,9 @@ final class OperadorPref
     public const REGEXP = 'regexp';
 
 
+    /**
+     * @return array<string, string>
+     */
     public static function getArrayOperador(): array
     {
         return [

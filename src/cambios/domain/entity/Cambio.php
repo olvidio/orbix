@@ -2,26 +2,17 @@
 
 namespace src\cambios\domain\entity;
 
-use src\shared\config\ConfigGlobal;
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividades\domain\value_objects\ActividadTipoId;
-use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
-use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
-use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\value_objects\ObjetoNombre;
 use src\cambios\domain\value_objects\PropiedadNombre;
 use src\cambios\domain\value_objects\TipoCambioId;
-use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
-use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\shared\config\ConfigGlobal;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
-use src\ubis\domain\entity\Ubi;
 use src\ubis\domain\value_objects\DelegacionCode;
 use stdClass;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que implementa la entidad av_cambios_dl
@@ -44,9 +35,6 @@ class Cambio
 
     /**
      * Posa en marxa un procés per generar la taula d'avisos per cada usuari.
-     *
-     * @return true.
-     *
      */
     public function generarTabla(): void
     {
@@ -65,8 +53,8 @@ class Cambio
          $private = 'sf'; para el caso del servidor exterior en dlb. puerto distinto.
          $DB_SERVER = 1 o 2; para indicar el servidor dede el que se ejecuta. (ver comentario en clase: CambioAnotado)
          */
-        $dirweb = $_SERVER['DIRWEB'];
-        $doc_root = $_SERVER['DOCUMENT_ROOT'];
+        $dirweb = isset($_SERVER['DIRWEB']) && is_string($_SERVER['DIRWEB']) ? $_SERVER['DIRWEB'] : '';
+        $doc_root = isset($_SERVER['DOCUMENT_ROOT']) && is_string($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : '';
         $ubicacion = getenv('UBICACION');
         $esquema_web = getenv('ESQUEMA');
         $private = getenv('PRIVATE');
@@ -82,262 +70,6 @@ class Cambio
         exec($command);
     }
 
-    public function getAvisoTxt(): string
-    {
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-
-        $bEliminada = false;
-        $sPropiedad = '';
-        $sValor_old = '';
-        $sValor_new = '';
-        $iTipo_cambio = $this->getId_tipo_cambio();
-        $sObjeto = $this->getObjeto();
-        $iId = $this->getId_activ();
-        $sPropiedad = $this->getPropiedad();
-        $sValor_old = $this->getValor_old();
-        $sValor_new = $this->getValor_new();
-
-        $oActividad = $ActividadAllRepository->findById($iId);
-        $DatosCampoStatus = $oActividad->getDatosStatus();
-        $aStatus = $DatosCampoStatus->getLista();
-
-        $sNomActiv = $oActividad->getNom_activ();
-        if (empty($sNomActiv)) { // se ha eliminado. Busco el nombre en el apunte eliminado
-            $bEliminada = true;
-            $CambioRepository = $GLOBALS['container']->get(CambioRepositoryInterface::class);
-            $sNomActiv = $CambioRepository->getNomActivEliminada($iId);
-        }
-
-        $sPropiedad = empty($sPropiedad) ? '-' : $sPropiedad;
-
-        /*
-         * De momento, desde el servidor exterior (conexión a mail) solo
-         * están accesibles los sacd.
-         *
-         * Para el resto de id_nom devuelvo false para que no lo ponga en la lista.
-         *
-         */
-        if ($sPropiedad === 'id_nom') {
-            $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
-            if (!empty($sValor_old)) {
-                //$oPersona = Persona::findPersonaEnGlobal($sValor_old);
-                $oPersona = $PersonaSacdRepository->findById($sValor_old);
-                $sValor_old = $oPersona->getPrefApellidosNombre();
-            }
-            if (!empty($sValor_new)) {
-                //$oPersona = Persona::findPersonaEnGlobal($sValor_new);
-                $oPersona = $PersonaSacdRepository->findById($sValor_new);
-                $sValor_new = $oPersona->getPrefApellidosNombre();
-            }
-        }
-        if ($sPropiedad === 'id_ubi') {
-            if (!empty($sValor_old)) {
-                $oUbi = Ubi::NewUbi($sValor_old);
-                if ($oUbi) {
-                    $sValor_old = $oUbi->getNombre_ubi();
-                }
-            }
-            if (!empty($sValor_new)) {
-                $oUbi = Ubi::NewUbi($sValor_new);
-                if ($oUbi) {
-                    $sValor_new = $oUbi->getNombre_ubi();
-                }
-            }
-        }
-        /* Para poner nombres que se entiendan a los campos de la actividad */
-        if ($sObjeto === 'Actividad' ||
-            $sObjeto === 'ActividadDl' ||
-            $sObjeto === 'ActividadEx') {
-
-            if ($sPropiedad === 'status') {
-                $sValor_old = $aStatus[$sValor_old];
-                $sValor_new = $aStatus[$sValor_new];
-            }
-            // Caso especial si el campo es fecha.
-            if ($sPropiedad === 'f_ini' || $sPropiedad === 'f_fin') {
-                $oFOld = new DateTimeLocal($sValor_old);
-                $sValor_old = $oFOld->getFromLocal();
-                $oFNew = new DateTimeLocal($sValor_new);
-                $sValor_new = $oFNew->getFromLocal();
-            }
-            if ($sPropiedad === 'id_tarifa') {
-                $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
-                $aTarifas = $TipoTarifaRepository->getArrayTipoTarifas();
-                $sValor_old = empty($sValor_old) ? $sValor_old : $aTarifas[$sValor_old];
-                $sValor_new = empty($sValor_new) ? $sValor_new : $aTarifas[$sValor_new];
-            }
-            if ($sPropiedad === 'id_repeticion') {
-                $RepeticionRepository = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
-                $aRepeticion = $RepeticionRepository->getArrayRepeticion();
-                $sValor_old = empty($sValor_old) ? $sValor_old : $aRepeticion[$sValor_old];
-                $sValor_new = empty($sValor_new) ? $sValor_new : $aRepeticion[$sValor_new];
-            }
-            if ($sPropiedad === 'nivel_stgr') {
-                $aNivelStgr = NivelStgrId::getArrayNivelStgr();
-                $sValor_old = empty($sValor_old) ? $sValor_old : $aNivelStgr[$sValor_old];
-                $sValor_new = empty($sValor_new) ? $sValor_new : $aNivelStgr[$sValor_new];
-            }
-        }
-
-        $etiqueta = $sPropiedad;
-
-        /*
-        $ObjetoFullPath = AvisoObjetoCatalog::getFullPathObj($sObjeto);
-        $oObject = new $ObjetoFullPath();
-        $cDatosCampos = $oObject->getDatosCampos();
-        // para ajustar el nombre del campo y el valor a algo más legible:
-        foreach ($cDatosCampos as $oDatosCampo) {
-            if ($oDatosCampo->getNom_camp() == $sPropiedad) {
-                $etiqueta = $oDatosCampo->getEtiqueta();
-                // si es boolean, traduzco a true-false:
-                $tipo = $oDatosCampo->datos_campo(null, 'tipo');
-                if ($tipo === 'bool') {
-                    // OJO. Excepción en el caso de completar una fase, el campo es completado (bool), pero en el
-                    // valor_old lo que pongo es el id_fase.
-                    if ($sObjeto !== 'ActividadProcesoTarea' && $sPropiedad !== 'completado') {
-                        $sValor_old = is_true($sValor_old) ? 'true' : 'false';
-                    }
-                    $sValor_new = is_true($sValor_new) ? 'true' : 'false';
-                }
-            }
-        }
-        */
-
-        // para los asistentes que no son sacd. No tengo su nombre.
-        if ($sObjeto === 'Asistente' ||
-            $sObjeto === 'AsistenteDl' ||
-            $sObjeto === 'AsistenteOut' ||
-            $sObjeto === 'AsistenteEx'
-        ) {
-            if (empty($sValor_new) && empty($sValor_old)) return FALSE;
-        }
-        $sValor_old = empty($sValor_old) ? '-' : $sValor_old;
-        $sValor_new = empty($sValor_new) ? '-' : $sValor_new;
-
-        $sformat = '';
-        switch ($iTipo_cambio) {
-            case Cambio::TIPO_CMB_INSERT: // (1) insert.
-                switch ($sObjeto) {
-                    case 'Actividad':
-                    case 'ActividadDl':
-                    case 'ActividadEx':
-                        $sformat = _("Actividad: se ha creado la actividad \"%1\$s\"");
-                        break;
-                    case 'ActividadCargo':
-                        $sformat = _("Cl: se ha asignado un cargo a \"%4\$s\" a la actividad \"%1\$s\"");
-                        break;
-                    case 'ActividadCargoSacd':
-                        $sformat = _("Sacd: se ha asignado el sacd \"%4\$s\" a la actividad \"%1\$s\"");
-                        break;
-                    case 'Asistente':
-                    case 'AsistenteDl':
-                    case 'AsistenteOut':
-                    case 'AsistenteEx':
-                        $sformat = _("Asistencia: \"%4\$s\" se ha incorporado a la actividad \"%1\$s\"");
-                        break;
-                    case 'CentroEncargado':
-                        $sformat = _("Ctr: se ha asignado el ctr \"%4\$s\" a la actividad \"%1\$s\"");
-                        break;
-                }
-                break;
-            case Cambio::TIPO_CMB_UPDATE: // (2) update.
-                switch ($sObjeto) {
-                    case 'Actividad':
-                    case 'ActividadDl':
-                    case 'ActividadEx':
-                        $sformat = _("Actividad: la actividad \"%1\$s\" ha cambiado el campo \"%2\$s\" de \"%3\$s\" a \"%4\$s\"");
-                        break;
-                    case 'ActividadCargo':
-                        $sformat = _("Cl: ha cambiado el cargo en la actividad \"%1\$s\" el campo \"%2\$s\" de \"%3\$s\" a \"%4\$s\"");
-                        break;
-                    case 'ActividadCargoSacd':
-                        $sformat = _("Sacd: ha cambiado el cargo en la actividad \"%1\$s\" el campo \"%2\$s\" de \"%3\$s\" a \"%4\$s\"");
-                        break;
-                    case 'Asistente':
-                    case 'AsistenteDl':
-                    case 'AsistenteOut':
-                    case 'AsistenteEx':
-                        $sformat = _("Asistente: ha cambiado la asistencia en la actividad \"%1\$s\" el campo \"%2\$s\" de \"%3\$s\" a \"%4\$s\"");
-                        break;
-                    case 'CentroEncargado':
-                        $sformat = _("Ctr: ctr \"%2\$s\" Ha cambiado a la actividad \"%1\$s\"");
-                        break;
-                }
-                break;
-            case Cambio::TIPO_CMB_DELETE: // (3) delete.
-                switch ($sObjeto) {
-                    case 'Actividad':
-                    case 'ActividadDl':
-                    case 'ActividadEx':
-                        $sformat = _("Actividad: se ha eliminado la actividad \"%3\$s\"");
-                        break;
-                    case 'ActividadCargo':
-                        $sformat = _("Cl: se ha quitado el cargo a \"%3\$s\" de la actividad \"%1\$s\"");
-                        break;
-                    case 'ActividadCargoSacd':
-                        $sformat = _("Sacd: se ha quitado al sacd \"%3\$s\" de la actividad \"%1\$s\"");
-                        break;
-                    case 'Asistente':
-                    case 'AsistenteDl':
-                    case 'AsistenteOut':
-                    case 'AsistenteEx':
-                        $sformat = _("Asistencia: \"%3\$s\" se ha borrado de la actividad \"%1\$s\"");
-                        break;
-                    case 'CentroEncargado':
-                        $sformat = _("Ctr: se ha quitado al ctr \"%3\$s\" de la actividad \"%1\$s\"");
-                        break;
-                }
-                break;
-            case Cambio::TIPO_CMB_FASE: // (4) cambio de fase o status.
-                // en el caso especial de completado fase, uso el valor_old para poner el id_fase, y el new el estado de completado.
-                $id_fase = $sValor_old;
-                $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-
-                if (ConfigGlobal::mi_sfsv() === 1) {
-                    $aFases = $this->getJson_fases_sv();
-                } else {
-                    $aFases = $this->getJson_fases_sf();
-                }
-                $idStatus = $this->getId_status();
-
-                if (!$bEliminada) {
-                    if (!empty($sPropiedad)) {
-                        $cFases = $ActividadFaseRepository->getActividadFases(array('id_fase' => $id_fase));
-                        $sFase = $cFases[0]->getDesc_fase();
-
-                        if (is_true($sValor_new)) {
-                            $sformat = _("Fase \"%2\$s\" marcada en la actividad \"%1\$s\"");
-                        } else {
-                            $sformat = _("Fase \"%2\$s\" desmarcada en la actividad \"%1\$s\"");
-                        }
-                    } else if (!empty($idStatus)) {
-                        $sFase = $aStatus[$idStatus];
-
-                        $sformat = _("Fase cambiada en la actividad \"%1\$s\". Status \"%3\$s\"");
-                        if ($sValor_old === '-' && $sValor_new == 1) {
-                            $sformat = _("Status \"%2\$s\" completado en la actividad \"%1\$s\". Status actual \"%3\$s\"");
-                        }
-                        if ($sValor_old == 1 && $sValor_new === '-') {
-                            $sformat = _("Status \"%2\$s\" eliminada en la actividad \"%1\$s\". Status actual \"%3\$s\"");
-                        }
-                    }
-                } else {
-                    $sFase = '';
-                    $sformat = _("Fase cambiada en la actividad \"%1\$s\"");
-                }
-                return sprintf($sformat, $sNomActiv, $sFase);
-                break;
-        }
-
-        if (empty($sformat)) {
-            $sTxt = "$sNomActiv; $etiqueta; $sValor_old; $sValor_new";
-        } else {
-            $sTxt = sprintf($sformat, $sNomActiv, $etiqueta, $sValor_old, $sValor_new);
-        }
-        return $sTxt;
-    }
-
-
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     private int $id_schema;
@@ -350,8 +82,10 @@ class Cambio
 
     private ActividadTipoId $id_tipo_activ;
 
+    /** @var array<string, mixed>|stdClass|null */
     private array|stdClass|null $json_fases_sv = null;
 
+    /** @var array<string, mixed>|stdClass|null */
     private array|stdClass|null $json_fases_sf = null;
 
     private ?StatusId $id_status = null;
@@ -407,9 +141,14 @@ class Cambio
 
     public function setTipoCambioVo(TipoCambioId|int $valor): void
     {
-        $this->id_tipo_cambio = $valor instanceof TipoCambioId
-            ? $valor
-            : TipoCambioId::fromNullableInt($valor);
+        if ($valor instanceof TipoCambioId) {
+            $this->id_tipo_cambio = $valor;
+            return;
+        }
+        $vo = TipoCambioId::fromNullableInt($valor);
+        if ($vo !== null) {
+            $this->id_tipo_cambio = $vo;
+        }
     }
 
     /**
@@ -425,7 +164,10 @@ class Cambio
      */
     public function setId_tipo_cambio(int $id_tipo_cambio): void
     {
-        $this->id_tipo_cambio = TipoCambioId::fromNullableInt($id_tipo_cambio);
+        $vo = TipoCambioId::fromNullableInt($id_tipo_cambio);
+        if ($vo !== null) {
+            $this->id_tipo_cambio = $vo;
+        }
     }
 
 
@@ -458,34 +200,54 @@ class Cambio
      */
     public function setId_tipo_activ(int $id_tipo_activ): void
     {
-        $this->id_tipo_activ = ActividadTipoId::fromNullableInt($id_tipo_activ);
+        $vo = ActividadTipoId::fromNullableInt($id_tipo_activ);
+        if ($vo !== null) {
+            $this->id_tipo_activ = $vo;
+        }
     }
 
     public function setIdTipoActivVo(ActividadTipoId|int|null $value): void
     {
-        $this->id_tipo_activ = $value instanceof ActividadTipoId
-            ? $value
-            : ActividadTipoId::fromNullableInt($value);
+        if ($value instanceof ActividadTipoId) {
+            $this->id_tipo_activ = $value;
+            return;
+        }
+        $vo = ActividadTipoId::fromNullableInt($value);
+        if ($vo !== null) {
+            $this->id_tipo_activ = $vo;
+        }
     }
 
+    /**
+     * @return array<string, mixed>|stdClass|null
+     */
     public function getJson_fases_sv(): array|stdClass|null
     {
         return $this->json_fases_sv;
     }
 
 
+    /**
+     * @param array<string, mixed>|stdClass|null $json_fases_sv
+     */
     public function setJson_fases_sv(stdClass|array|null $json_fases_sv = null): void
     {
         $this->json_fases_sv = $json_fases_sv;
     }
 
 
+    /**
+     * @return array<string, mixed>|stdClass|null
+     */
     public function getJson_fases_sf(): array|stdClass|null
     {
         return $this->json_fases_sf;
     }
 
 
+    /**
+     * @param array<string, mixed>|stdClass|null $json_fases_sf
+     */
     public function setJson_fases_sf(stdClass|array|null $json_fases_sf = null): void
     {
         $this->json_fases_sf = $json_fases_sf;

@@ -39,70 +39,91 @@ use function src\shared\domain\helpers\is_true;
  */
 class Avisos
 {
-    private $id_schema_cmb;
-    private $id_item_cmb;
-    private $id_usuario;
-    private $sObjeto;
-    private $aFases_cmb;
+    private int $id_schema_cmb = 0;
+    private int $id_item_cmb = 0;
+    private int $id_usuario = 0;
+    private string $sObjeto = '';
+    /** @var list<int|string> */
+    private array $aFases_cmb = [];
 
-    public function crear_pid($username, $esquema)
+    public function __construct(
+        private CambioUsuarioRepositoryInterface $cambioUsuarioRepository,
+        private CambioAnotadoRepositoryInterface $cambioAnotadoRepository,
+        private UsuarioRepositoryInterface $usuarioRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ZonaRepositoryInterface $zonaRepository,
+        private ZonaSacdRepositoryInterface $zonaSacdRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+    ) {
+    }
+
+    public function crear_pid(string $username, string $esquema): void
     {
-        if (!empty($username)) {
-            // Si he lanzado el proceso automaticamente, escribo el id del proceso.
-            // Si ya existe un proceso en marcha, salgo del proceso.
-            $filename = ConfigGlobal::$directorio . "/log/avisos.$esquema.pid";
+        if ($username === '') {
+            return;
+        }
 
-            if (file_exists($filename)) {
-                $fileContent = file_get_contents($filename);
-                if (!empty($fileContent)) {
-                    // Comprobar que no sea por que el anterior ha dado un error y
-                    // no se ha borrado. Miramos que sea de hace mas de 15 min.
-                    $delta = 15;
-                    $matches = [];
-                    preg_match('@(\d+/\d+/\d+ \d+:\d+:\d+) -- .*@', $fileContent, $matches);
-                    $f_iso = $matches[1];
+        // Si he lanzado el proceso automaticamente, escribo el id del proceso.
+        // Si ya existe un proceso en marcha, salgo del proceso.
+        $filename = ConfigGlobal::$directorio . "/log/avisos.$esquema.pid";
 
-                    $oDiaFichero = new DateTimeLocal($f_iso);
-                    $oAhora = new DateTimeLocal('now');
+        if (file_exists($filename)) {
+            $fileContent = file_get_contents($filename);
+            if ($fileContent !== false && $fileContent !== '') {
+                // Comprobar que no sea por que el anterior ha dado un error y
+                // no se ha borrado. Miramos que sea de hace mas de 15 min.
+                $delta = 15;
+                $matches = [];
+                preg_match('@(\d+/\d+/\d+ \d+:\d+:\d+) -- .*@', $fileContent, $matches);
+                if (!isset($matches[1])) {
+                    exit;
+                }
+                $f_iso = $matches[1];
 
-                    $interval = $oDiaFichero->diff($oAhora);
-                    $a = $interval->format('%i');
+                $oDiaFichero = new DateTimeLocal($f_iso);
+                $oAhora = new DateTimeLocal('now');
 
-                    if ($a > $delta) {
-                        $ahora = date("Y/m/d H:i:s");
-                        echo "$ahora ";
-                        echo sprintf(_("El fichero %s no està vacio."), $filename);
-                        echo " ";
-                        echo _("Posiblemente la anterior operación finalizó con error");
-                    } else {
-                        exit;
-                    }
+                $interval = $oDiaFichero->diff($oAhora);
+                $a = $interval->format('%i');
+
+                if ((int) $a > $delta) {
+                    $ahora = date("Y/m/d H:i:s");
+                    echo "$ahora ";
+                    echo sprintf(_("El fichero %s no està vacio."), $filename);
+                    echo " ";
+                    echo _("Posiblemente la anterior operación finalizó con error");
+                } else {
+                    exit;
                 }
             }
-            $ahora = date("Y/m/d H:i:s");
-            $mensaje = "$ahora -- $username \n";
-            file_put_contents($filename, $mensaje, LOCK_EX);
         }
+        $ahora = date("Y/m/d H:i:s");
+        $mensaje = "$ahora -- $username \n";
+        file_put_contents($filename, $mensaje, LOCK_EX);
     }
 
-    public function borrar_pid($username, $esquema)
+    public function borrar_pid(string $username, string $esquema): void
     {
         // al finalizar borro el pid
-        if (!empty($username)) {
-            // Si he lanzado el proceso automaticamente.
-            // Borro el pid, para que empieze el siguiente proceso.
-            // Hay que asegurarse que se han acabado de escribir todos los anotados, para que no los vuelva a escribir.
-            // Por esto espero 7 segundos (con 3 no basta...)
-            $filename = ConfigGlobal::$directorio . "/log/avisos.$esquema.pid";
+        if ($username === '') {
+            return;
+        }
 
-            if (file_exists($filename)) {
-                $mensaje = "";
-                file_put_contents($filename, $mensaje, LOCK_EX);
-            }
+        // Si he lanzado el proceso automaticamente.
+        // Borro el pid, para que empieze el siguiente proceso.
+        // Hay que asegurarse que se han acabado de escribir todos los anotados, para que no los vuelva a escribir.
+        // Por esto espero 7 segundos (con 3 no basta...)
+        $filename = ConfigGlobal::$directorio . "/log/avisos.$esquema.pid";
+
+        if (file_exists($filename)) {
+            file_put_contents($filename, '', LOCK_EX);
         }
     }
 
-    public function fn_apuntar($aviso_tipo)
+    /**
+     * @param int|string $aviso_tipo
+     */
+    public function fn_apuntar(int|string $aviso_tipo): string
     {
         $archivo_log = ConfigGlobal::$directorio . "/log/errores.log";
 
@@ -110,7 +131,7 @@ class Avisos
 
         // Log de entrada
         $msg = "fn_apuntar: schema={$this->id_schema_cmb}, item={$this->id_item_cmb}, usuario={$this->id_usuario}, tipo={$aviso_tipo}, sfsv={$sfsv}";
-        (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
+        error_log($msg . "\n", 3, $archivo_log);
 
         // Asegurar que no existe:
         $aWhere = [
@@ -121,17 +142,16 @@ class Avisos
             'aviso_tipo' => $aviso_tipo,
         ];
 
-        $CambioUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
-        $cCambioUsuario = $CambioUsuarioRepository->getCambiosUsuario($aWhere);
+        $cCambioUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
 
         // Log del resultado de busqueda
         $msg = "fn_apuntar: Encontrados " . count($cCambioUsuario) . " registros existentes";
-        (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
+        error_log($msg . "\n", 3, $archivo_log);
 
         $err_fila = '';
         if (count($cCambioUsuario) > 0) {
             $msg = "fn_apuntar: DUPLICADO DETECTADO - No se insertara";
-            (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
+            error_log($msg . "\n", 3, $archivo_log);
             $err_fila .= "<tr>";
             $err_fila .= "<td>" . $this->id_schema_cmb . "</td>";
             $err_fila .= "<td>" . $this->id_item_cmb . "</td>";
@@ -140,19 +160,19 @@ class Avisos
             $err_fila .= "</tr>";
         } else {
             $msg = "fn_apuntar: Insertando nuevo registro";
-            (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
-            $newIdItem = $CambioUsuarioRepository->getNewIdItem();
+            error_log($msg . "\n", 3, $archivo_log);
+            $newIdItem = $this->cambioUsuarioRepository->getNewId();
             $oCambioUsuario = new CambioUsuario();
-            $oCambioUsuario->setId_item_cambio($newIdItem);
+            $oCambioUsuario->setId_item($newIdItem);
             $oCambioUsuario->setId_schema_cambio($this->id_schema_cmb);
             $oCambioUsuario->setId_item_cambio($this->id_item_cmb);
             $oCambioUsuario->setSfsv($sfsv);
             $oCambioUsuario->setId_usuario($this->id_usuario);
-            $oCambioUsuario->setAviso_tipo($aviso_tipo);
+            $oCambioUsuario->setAviso_tipo((int) $aviso_tipo);
 
-            $resultado = $CambioUsuarioRepository->Guardar($oCambioUsuario);
+            $resultado = $this->cambioUsuarioRepository->Guardar($oCambioUsuario);
             $msg = "fn_apuntar: Resultado Guardar: " . ($resultado ? 'SUCCESS' : 'FAILED');
-            (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
+            error_log($msg . "\n", 3, $archivo_log);
 
             if ($resultado === false) {
                 echo ConfigGlobal::$web_server . '-->' . date('c') . " " . _("Hay un error, no se ha guardado");
@@ -163,10 +183,11 @@ class Avisos
         return $err_fila;
     }
 
-    public function anotado()
+    public function anotado(): void
     {
         $ubicacion = getenv('UBICACION');
-        $server = getenv('DB_SERVER');
+        $serverRaw = getenv('DB_SERVER');
+        $server = is_numeric($serverRaw) ? (int) $serverRaw : 0;
 
         // marcar como apuntado
         $aWhere = [
@@ -174,34 +195,33 @@ class Avisos
             'id_item_cambio' => $this->id_item_cmb,
             'server' => $server,
         ];
-        $CambioAnotadoRepository = $GLOBALS['container']->get(CambioAnotadoRepositoryInterface::class);
-        $CambioAnotadoRepository->setTabla($ubicacion);
-        $cCambiosAnotados = $CambioAnotadoRepository->getCambiosAnotados($aWhere);
+        $this->cambioAnotadoRepository->setTabla((string) $ubicacion);
+        $cCambiosAnotados = $this->cambioAnotadoRepository->getCambiosAnotados($aWhere);
         // deberia ser unico
         if (count($cCambiosAnotados) > 0) {
             $oCambioAnotado = $cCambiosAnotados[0];
         } else {
-            $newIdItem = $CambioAnotadoRepository->getNewIdItem();
+            $newIdItem = $this->cambioAnotadoRepository->getNewId();
             $oCambioAnotado = new CambioAnotado();
-            $oCambioAnotado->setId_item_cambio($newIdItem);
+            $oCambioAnotado->setId_item($newIdItem);
             $oCambioAnotado->setId_item_cambio($this->id_item_cmb);
             $oCambioAnotado->setId_schema_cambio($this->id_schema_cmb);
             $oCambioAnotado->setServer($server);
         }
 
-        $oCambioAnotado->setAnotado('t');
-        if ($CambioAnotadoRepository->Guardar($oCambioAnotado) === false) {
+        $oCambioAnotado->setAnotado(true);
+        if ($this->cambioAnotadoRepository->Guardar($oCambioAnotado) === false) {
             echo _("Hay un error, no se ha guardado");
             echo _("anotado");
             echo "<br>";
         }
     }
 
-    public function comparar($valor_cmb, $operador, $valor)
+    public function comparar(mixed $valor_cmb, string $operador, mixed $valor): bool
     {
         switch ($operador) {
             case '=':
-                if (strpos($valor, ',')) { // es una lista de valores
+                if (is_string($valor) && strpos($valor, ',') !== false) { // es una lista de valores
                     $a_val = explode(',', $valor);
                     $rta = false;
                     foreach ($a_val as $val) {
@@ -210,11 +230,8 @@ class Avisos
                     return $rta;
                 }
                 // ojo con los boolean.
-                if ((is_true($valor_cmb)) || (is_true($valor))) {
-                    return ((bool)$valor_cmb === (bool)$valor);
-                }
-                if ((!is_true($valor_cmb)) || (!is_true($valor))) {
-                    return ((bool)$valor_cmb === (bool)$valor);
+                if (is_true($valor_cmb) || is_true($valor)) {
+                    return ((bool) $valor_cmb === (bool) $valor);
                 }
                 return ($valor_cmb == $valor);
             case '>':
@@ -229,30 +246,40 @@ class Avisos
         return false;
     }
 
-    public function me_afecta($propiedad, $id_activ, $valor_old_cmb, $valor_new_cmb, $id_pau, $sObjeto)
-    {
+    public function me_afecta(
+        string $propiedad,
+        int $id_activ,
+        mixed $valor_old_cmb,
+        mixed $valor_new_cmb,
+        ?string $id_pau,
+        string $sObjeto
+    ): bool {
         // Si el usuario es una casa o un sacd, solo ve los cambios que le afectan:
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById($this->id_usuario);
+        $oMiUsuario = $this->usuarioRepository->findById($this->id_usuario);
+        if ($oMiUsuario === null) {
+            return true;
+        }
         $oRole = new Role();
-        $oRole->setId_role($oMiUsuario->getId_role());
+        $oRole->setId_role($oMiUsuario->getId_role() ?? 0);
 
         //casa
         if ($oRole->isRolePau(PauType::PAU_CDC)) {
-            $mis_id_ubis = $oMiUsuario->getCsvIdPauAsString(); // puede ser una lista separada por comas.
-            if (!empty($mis_id_ubis)) { //casa o un listado de ubis en la preferencia del aviso.
+            $mis_id_ubis = $oMiUsuario->getCsvIdPauAsString() ?? '';
+            if ($mis_id_ubis !== '') {
                 $a_mis_id_ubis = explode(',', $mis_id_ubis);
 
-                $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-                $oActividad = $ActividadAllRepository->findById($id_activ);
+                $oActividad = $this->actividadAllRepository->findById($id_activ);
+                if ($oActividad === null) {
+                    return false;
+                }
                 $id_ubi = $oActividad->getId_ubi(); // id ubi actual.
 
                 // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
                 if ($propiedad === 'id_ubi') {
-                    return (in_array($valor_old_cmb, $a_mis_id_ubis) || in_array($id_ubi, $a_mis_id_ubis));
+                    return (in_array($valor_old_cmb, $a_mis_id_ubis, true) || in_array((string) $id_ubi, $a_mis_id_ubis, true));
                 }
                 // si cambia cualquier otra cosa en mi id_ubi.
-                if (in_array($id_ubi, $a_mis_id_ubis)) {
+                if (in_array((string) $id_ubi, $a_mis_id_ubis, true)) {
                     switch ($this->sObjeto) {
                         case 'ActividadCargoNoSacd':
                         case 'ActividadCargoSacd':
@@ -268,20 +295,18 @@ class Avisos
         }
         // si soy un sacd.
         if ($oRole->isRolePau(PauType::PAU_SACD)) {
-            $id_nom_usuario = $oMiUsuario->getCsvIdPauAsString();
+            $id_nom_usuario = $oMiUsuario->getCsvIdPauAsString() ?? '';
             // soy jefe zona?
             // si soy jefe de zona me afectan todos los sacd de la zona.
             $rta = false;
-            $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-            $cZonas = $ZonaRepository->getZonas(['id_nom' => $id_nom_usuario]);
-            if (is_array($cZonas) && count($cZonas) > 0) {
+            $cZonas = $this->zonaRepository->getZonas(['id_nom' => $id_nom_usuario]);
+            if (count($cZonas) > 0) {
                 // sacd de mi zona
-                $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
                 foreach ($cZonas as $oZona) {
                     $id_zona = $oZona->getId_zona();
-                    $a_id_nom = $ZonaSacdRepository->getIdSacdsDeZona($id_zona);
+                    $a_id_nom = $this->zonaSacdRepository->getIdSacdsDeZona($id_zona);
                     foreach ($a_id_nom as $id_nom_sacd) {
-                        $rta = $this->tengoPermiso($propiedad, $id_activ, $id_nom_sacd, $valor_old_cmb, $valor_new_cmb);
+                        $rta = $this->tengoPermiso($propiedad, $id_activ, (string) $id_nom_sacd, $valor_old_cmb, $valor_new_cmb);
                         if ($rta === true) {
                             // no hace falta seguir mirando todos, con uno basta para avisar.
                             return true;
@@ -295,18 +320,20 @@ class Avisos
         }
         // En el caso de no ser casa ni sacd
         // comparar si el aviso corresponde a la casa (id_pau)
-        if (!empty($id_pau)) { //casa o un listado de ubis en la preferencia del aviso.
+        if ($id_pau !== null && $id_pau !== '') { //casa o un listado de ubis en la preferencia del aviso.
             $a_id_pau = explode(',', $id_pau);
 
-            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-            $oActividad = $ActividadAllRepository->findById($id_activ);
+            $oActividad = $this->actividadAllRepository->findById($id_activ);
+            if ($oActividad === null) {
+                return false;
+            }
             $id_ubi = $oActividad->getId_ubi(); // id ubi actual.
             // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
             if ($propiedad === 'id_ubi') {
-                return (in_array($valor_old_cmb, $a_id_pau) || in_array($id_ubi, $a_id_pau));
+                return (in_array($valor_old_cmb, $a_id_pau, true) || in_array((string) $id_ubi, $a_id_pau, true));
             }
             // si cambia cualquier otra cosa en mi id_ubi.
-            if (in_array($id_ubi, $a_id_pau)) {
+            if (in_array((string) $id_ubi, $a_id_pau, true)) {
                 switch ($this->sObjeto) {
                     case 'ActividadCargoNoSacd':
                     case 'ActividadCargoSacd':
@@ -327,8 +354,13 @@ class Avisos
      * Mira si el cambio afecta a uno de los sacd de la zona y si tengo permiso para ver.
      * El id_nom puede ser cualquiera de la zona, no el que origina el cambio.
      */
-    private function tengoPermiso(string $propiedad, int $id_activ, int $id_nom, mixed $valor_old_cmb, mixed $valor_new_cmb): bool
-    {
+    private function tengoPermiso(
+        string $propiedad,
+        int $id_activ,
+        ?string $id_nom,
+        mixed $valor_old_cmb,
+        mixed $valor_new_cmb
+    ): bool {
         switch ($this->sObjeto) {
             case 'Actividad':
                 // busco los datos de las actividades
@@ -338,17 +370,16 @@ class Avisos
                 $aOperador = [];
 
                 $permiso_ver = false;
-                $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-                $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
-                if (is_array($cAsistentes) && !empty($cAsistentes)) {
+                $cAsistentes = $this->actividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+                if ($cAsistentes !== [] && isset($cAsistentes[$id_activ])) {
                     $aAsistente = $cAsistentes[$id_activ];
-                    $propio = $aAsistente['propio'];
-                    $id_cargo = empty($aAsistente['id_cargo']) ? '' : $aAsistente['id_cargo'];
+                    $propio = is_true($aAsistente['propio'] ?? false);
+                    $id_cargoRaw = $aAsistente['id_cargo'] ?? null;
 
-                    if (!empty($id_cargo)) {
+                    if ($id_cargoRaw !== null && $id_cargoRaw !== '' && is_numeric($id_cargoRaw)) {
                         $oPermActividades = new PermisosActividades($this->id_usuario);
                         $oPermActividades->setActividad($id_activ);
-                        $permiso_ver = $oPermActividades->havePermisoSacd($id_cargo, $propio);
+                        $permiso_ver = $oPermActividades->havePermisoSacd((int) $id_cargoRaw, $propio);
                     }
                 }
                 return $permiso_ver;
@@ -368,7 +399,7 @@ class Avisos
         return false;
     }
 
-    private function permCargo($id_activ)
+    private function permCargo(int $id_activ): bool
     {
         $oPermActividades = new PermisosActividades($this->id_usuario);
         $oPermActividades->setActividad($id_activ);
@@ -377,7 +408,7 @@ class Avisos
         return $oPermSacd->have_perm_activ('ver');
     }
 
-    private function permCargoSacd($id_activ)
+    private function permCargoSacd(int $id_activ): bool
     {
         $oPermActividades = new PermisosActividades($this->id_usuario);
         $oPermActividades->setActividad($id_activ);
@@ -386,7 +417,7 @@ class Avisos
         return $oPermSacd->have_perm_activ('ver');
     }
 
-    private function permAsiste($id_activ)
+    private function permAsiste(int $id_activ): bool
     {
         $oPermActividades = new PermisosActividades($this->id_usuario);
         $oPermActividades->setActividad($id_activ);
@@ -395,27 +426,30 @@ class Avisos
         return $oPermAsisSacd->have_perm_activ('ver');
     }
 
-    public function setId_schema_cmb($id_schema_cmb): void
+    public function setId_schema_cmb(int $id_schema_cmb): void
     {
         $this->id_schema_cmb = $id_schema_cmb;
     }
 
-    public function setId_item_cmb($id_item_cmb): void
+    public function setId_item_cmb(int $id_item_cmb): void
     {
         $this->id_item_cmb = $id_item_cmb;
     }
 
-    public function setId_usuario($id_usuario): void
+    public function setId_usuario(int $id_usuario): void
     {
         $this->id_usuario = $id_usuario;
     }
 
-    public function setObjeto($sObjeto): void
+    public function setObjeto(string $sObjeto): void
     {
         $this->sObjeto = $sObjeto;
     }
 
-    public function setFasesCmb($aFases_cmb): void
+    /**
+     * @param list<int|string> $aFases_cmb
+     */
+    public function setFasesCmb(array $aFases_cmb): void
     {
         $this->aFases_cmb = $aFases_cmb;
     }

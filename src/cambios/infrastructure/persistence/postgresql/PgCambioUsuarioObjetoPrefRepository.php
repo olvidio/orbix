@@ -8,6 +8,7 @@ use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioObjetoPref;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use function src\shared\domain\helpers\is_true;
 
@@ -27,21 +28,17 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBE'];
-        $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
-        $this->setoDbl_select($oDbl_Select);
+        $this->setoDbl(GlobalPdo::get('oDBE'));
+        $this->setoDbl_select(GlobalPdo::get('oDBE_Select'));
         $this->setNomTabla('av_cambios_usuario_objeto_pref');
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo CambioUsuarioObjetoPref
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo CambioUsuarioObjetoPref
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<CambioUsuarioObjetoPref>
      */
     public function getCambioUsuarioObjetoPrefs(array $aWhere = [], array $aOperators = []): array
     {
@@ -78,27 +75,35 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $CambioUsuarioObjetoPref =  CambioUsuarioObjetoPref::fromArray($aDatos);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $CambioUsuarioObjetoPref = CambioUsuarioObjetoPref::fromArray($aDatos);
             $CambioUsuarioObjetoPrefSet->add($CambioUsuarioObjetoPref);
         }
-        return $CambioUsuarioObjetoPrefSet->getTot();
+        return array_values($CambioUsuarioObjetoPrefSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -147,6 +152,9 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -156,47 +164,58 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item_usuario_objeto = $id_item_usuario_objeto";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_item_usuario_objeto
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item_usuario_objeto): array|bool
+    public function datosById(int $id_item_usuario_objeto): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item_usuario_objeto = $id_item_usuario_objeto";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
-
-    /**
-     * Busca la clase con id_item_usuario_objeto en la base de datos .
-     */
     public function findById(int $id_item_usuario_objeto): ?CambioUsuarioObjetoPref
     {
         $aDatos = $this->datosById($id_item_usuario_objeto);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return CambioUsuarioObjetoPref::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('av_cambios_usuario_objeto_pref_id_item_usuario_objeto_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

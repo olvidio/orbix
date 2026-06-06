@@ -7,17 +7,23 @@
  */
 
 use src\cambios\application\AvisosGenerarListaData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+
+use function src\shared\domain\helpers\input_int;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 $input = [
-    'id_usuario' => (int)filter_input(INPUT_POST, 'id_usuario'),
-    'aviso_tipo' => (int)filter_input(INPUT_POST, 'aviso_tipo'),
-    'is_admin' => (int)filter_input(INPUT_POST, 'is_admin') === 1,
+    'id_usuario' => input_int($_POST, 'id_usuario'),
+    'aviso_tipo' => input_int($_POST, 'aviso_tipo'),
+    'is_admin' => input_int($_POST, 'is_admin') === 1,
 ];
-$result = AvisosGenerarListaData::execute($input);
 
-$error = $result['error'];
+/** @var AvisosGenerarListaData $useCase */
+$useCase = DependencyResolver::get(AvisosGenerarListaData::class);
+$result = $useCase->execute($input);
+
+$error = isset($result['error']) && is_string($result['error']) ? $result['error'] : '';
 unset($result['error']);
 ContestarJson::enviar($error, $result);

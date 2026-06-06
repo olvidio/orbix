@@ -2,10 +2,10 @@
 
 namespace src\cambios\application;
 
-use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\shared\config\ConfigGlobal;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -18,15 +18,21 @@ use function src\shared\domain\helpers\is_true;
  */
 final class CambioUsuarioObjetoPrefFasesData
 {
+    public function __construct(
+        private TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        private ActividadFaseRepositoryInterface $actividadFaseRepository,
+    ) {
+    }
+
     /**
      * @param array{
      *   objeto?: string,
      *   id_tipo_activ?: string,
      *   dl_propia?: bool|string,
      * } $input
-     * @return array
+     * @return array<string, mixed>
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
         $objeto = (string)($input['objeto'] ?? '');
         $id_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
@@ -45,10 +51,8 @@ final class CambioUsuarioObjetoPrefFasesData
         }
 
         if ($result['fases_usa_procesos']) {
-            $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-            $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
-            $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-            $result['aFases'] = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
+            $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
+            $result['aFases'] = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
         } else {
             $a_status = StatusId::getArrayStatus();
             unset($a_status[StatusId::ALL]);

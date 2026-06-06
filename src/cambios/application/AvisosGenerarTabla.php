@@ -13,6 +13,7 @@ use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use stdClass;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -34,6 +35,19 @@ use function src\shared\domain\helpers\is_true;
  */
 class AvisosGenerarTabla
 {
+    public function __construct(
+        private Avisos $avisos,
+        private CambioRepositoryInterface $cambioRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ImportadaRepositoryInterface $importadaRepository,
+        private TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        private PersonaSacdRepositoryInterface $personaSacdRepository,
+        private TareaProcesoRepositoryInterface $tareaProcesoRepository,
+        private CambioUsuarioObjetoPrefRepositoryInterface $cambioUsuarioObjetoPrefRepository,
+        private CambioUsuarioPropiedadPrefRepositoryInterface $cambioUsuarioPropiedadPrefRepository,
+    ) {
+    }
+
     /**
      * @param string $username usuario que dispara el proceso (para `pid`).
      * @param string $esquema  esquema/region de la delegacion (para `pid`).
@@ -45,10 +59,10 @@ class AvisosGenerarTabla
             return ['err_fila' => '', 'bucle_infinito' => false];
         }
 
-        $oAvisos = new Avisos();
+        $oAvisos = $this->avisos;
         $oAvisos->crear_pid($username, $esquema);
 
-        $CambioRepository = $GLOBALS['container']->get(CambioRepositoryInterface::class);
+        $CambioRepository = $this->cambioRepository;
         $CambioRepository->borrarCambios('P1Y');
 
         $aObjPerm = [
@@ -65,13 +79,13 @@ class AvisosGenerarTabla
         $err_fila = '';
         $bucle_infinito = false;
 
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
-        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
-        $CambioUsuarioObjetoPrefRepository = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
-        $CambiosUsuarioPropiedadPrefRepository = $GLOBALS['container']->get(CambioUsuarioPropiedadPrefRepositoryInterface::class);
+        $ActividadAllRepository = $this->actividadAllRepository;
+        $ImportadaRepository = $this->importadaRepository;
+        $TipoDeActividadRepository = $this->tipoDeActividadRepository;
+        $PersonaSacdRepository = $this->personaSacdRepository;
+        $TareaProcesoRepository = $this->tareaProcesoRepository;
+        $CambioUsuarioObjetoPrefRepository = $this->cambioUsuarioObjetoPrefRepository;
+        $CambiosUsuarioPropiedadPrefRepository = $this->cambioUsuarioPropiedadPrefRepository;
 
         while ($num_cambios) {
             $num_cambios_inicial = $num_cambios;
@@ -82,8 +96,8 @@ class AvisosGenerarTabla
                 $sObjeto = $oCambio->getObjeto();
                 $dl_org = $oCambio->getDl_org();
                 $id_tipo_activ = $oCambio->getId_tipo_activ();
-                $aFases_cmb_sv = $oCambio->getJson_fases_sv(TRUE);
-                $aFases_cmb_sf = $oCambio->getJson_fases_sf(TRUE);
+                $aFases_cmb_sv = self::jsonFasesToList($oCambio->getJson_fases_sv());
+                $aFases_cmb_sf = self::jsonFasesToList($oCambio->getJson_fases_sf());
                 $id_status_cmb = $oCambio->getId_status();
                 $propiedad_cmb = $oCambio->getPropiedad();
                 $valor_old_cmb = $oCambio->getValor_old();
@@ -99,19 +113,21 @@ class AvisosGenerarTabla
                 }
                 // Para los asistentes, en el cambio se anota: 'Asistente' 'AsistenteDl' 'AsistenteEx' 'AsistenteOut'
                 // pero en las preferencias, solo 'Asistente'.
-                if (strpos($sObjeto, 'Asistente') !== false) {
+                if ($sObjeto !== null && strpos($sObjeto, 'Asistente') !== false) {
                     $sObjeto = 'Asistente';
                     // Para el caso de los sacd, el permiso es 'asistentessacd'
                     if ($propiedad_cmb === 'id_nom') {
                         $id_nom = empty($valor_new_cmb) ? $valor_old_cmb : $valor_new_cmb;
-                        $oPersonaSacd = $PersonaSacdRepository->findById($id_nom);
-                        if ($oPersonaSacd->isSacd()) {
-                            $afecta = 'asistentesSacd';
+                        if (is_numeric($id_nom)) {
+                            $oPersonaSacd = $PersonaSacdRepository->findById((int) $id_nom);
+                            if ($oPersonaSacd !== null && $oPersonaSacd->isSacd()) {
+                                $afecta = 'asistentesSacd';
+                            }
                         }
                     }
                 }
 
-                $afecta = empty($afecta) ? $aObjPerm[$sObjeto] : $afecta;
+                $afecta = empty($afecta) ? ($aObjPerm[$sObjeto] ?? '') : $afecta;
 
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $aFases_cmb = $aFases_cmb_sv;
@@ -121,11 +137,11 @@ class AvisosGenerarTabla
 
                 $oAvisos->setId_schema_cmb($id_schema_cmb);
                 $oAvisos->setId_item_cmb($id_item_cmb);
-                $oAvisos->setObjeto($sObjeto);
+                $oAvisos->setObjeto((string) $sObjeto);
                 $oAvisos->setFasesCmb($aFases_cmb);
 
                 // para dl y dlf:
-                $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
+                $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', (string) ($dl_org ?? ''));
                 $dl_propia = (ConfigGlobal::mi_dele() === $dl_org_no_f);
                 // Si es de otra dl, compruebo que sea una actividad importada, sino no tiene sentido avisar.
                 if (!is_true($dl_propia)) {
@@ -143,38 +159,40 @@ class AvisosGenerarTabla
                 $aWhere['id_tipo_activ_txt'] = $id_tipo_activ;
                 $aOperador['id_tipo_activ_txt'] = '~INV';
                 $aWhere['_ordre'] = 'aviso_tipo,id_usuario,id_tipo_activ_txt DESC';
-                $cCambiosUsuarioObjeto = $CambioUsuarioObjetoPrefRepository->getCambioUsuarioObjetosPrefs($aWhere, $aOperador);
-                if (($cCambiosUsuarioObjeto === false) || empty($cCambiosUsuarioObjeto)) {
+                $cCambiosUsuarioObjeto = $CambioUsuarioObjetoPrefRepository->getCambioUsuarioObjetoPrefs($aWhere, $aOperador);
+                if ($cCambiosUsuarioObjeto === []) {
                     $oAvisos->anotado();
                     continue;
                 }
-                $id_usuario_anterior = '';
-                $aviso_tipo_anterior = '';
+                $id_usuario_anterior = 0;
+                $aviso_tipo_anterior = 0;
                 $apuntar = false;
+                $yaApuntado = false;
                 foreach ($cCambiosUsuarioObjeto as $oCambioUsuarioObjetoPref) {
                     $id_item_usuario_objeto = $oCambioUsuarioObjetoPref->getId_item_usuario_objeto();
                     $id_usuario = $oCambioUsuarioObjetoPref->getId_usuario();
                     $aviso_tipo = $oCambioUsuarioObjetoPref->getAviso_tipo();
                     $oAvisos->setId_usuario($id_usuario);
-                    if ($apuntar && ($aviso_tipo === $aviso_tipo_anterior) && ($id_usuario === $id_usuario_anterior)) {
-                        $apuntar = false;
+                    if ($yaApuntado && ($aviso_tipo === $aviso_tipo_anterior) && ($id_usuario === $id_usuario_anterior)) {
                         continue;
-                    } else {
-                        $aviso_tipo_anterior = $aviso_tipo;
-                        $id_usuario_anterior = $id_usuario;
                     }
+                    $aviso_tipo_anterior = $aviso_tipo;
+                    $id_usuario_anterior = $id_usuario;
                     $id_pau = $oCambioUsuarioObjetoPref->getCsv_id_pau();
                     $id_fase_ref = $oCambioUsuarioObjetoPref->getId_fase_ref();
-                    $aviso_off = $oCambioUsuarioObjetoPref->getAviso_off();
-                    $aviso_on = $oCambioUsuarioObjetoPref->getAviso_on();
-                    $aviso_outdate = $oCambioUsuarioObjetoPref->getAviso_outdate();
+                    $aviso_off = $oCambioUsuarioObjetoPref->isAviso_off();
+                    $aviso_on = $oCambioUsuarioObjetoPref->isAviso_on();
+                    $aviso_outdate = $oCambioUsuarioObjetoPref->isAviso_outdate();
 
                     $fase_correcta = 0;
                     /////////////////// COMPARAR DATE //////////////////////////////////////////
                     if (!is_true($aviso_outdate)) {
                         $oActividad = $ActividadAllRepository->findById($id_activ);
+                        if ($oActividad === null || $oF_cmb === null) {
+                            continue;
+                        }
                         $oF_fin = $oActividad->getF_fin();
-                        if ($oF_cmb > $oF_fin) {
+                        if ($oF_fin !== null && $oF_cmb > $oF_fin) {
                             continue;
                         }
                     }
@@ -198,10 +216,8 @@ class AvisosGenerarTabla
                                 $fase_correcta = 1;
                             }
                         } else {
-                            foreach ($aFases_cmb as $id_fase) {
-                                if ($id_status_cmb === $id_fase) {
-                                    $fase_correcta = 1;
-                                }
+                            if ($id_status_cmb === $id_fase_ref && is_true($aviso_on)) {
+                                $fase_correcta = 1;
                             }
                         }
                     } else {
@@ -221,10 +237,12 @@ class AvisosGenerarTabla
                                     $fase_correcta = 1;
                                 } else {
                                     $oActividad = $ActividadAllRepository->findById($id_activ);
-                                    $status = $oActividad->getStatus();
-                                    foreach ($aFases_cmb as $id_fase) {
-                                        if ($status === $id_fase) {
-                                            $fase_correcta = 1;
+                                    if ($oActividad !== null) {
+                                        $status = $oActividad->getStatus();
+                                        foreach ($aFases_cmb as $id_fase) {
+                                            if ($status === $id_fase) {
+                                                $fase_correcta = 1;
+                                            }
                                         }
                                     }
                                 }
@@ -246,24 +264,24 @@ class AvisosGenerarTabla
                     }
 
                     if ($fase_correcta === 1) {
-                        $cListaPropiedades = $CambiosUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadesPrefs(['id_item_usuario_objeto' => $id_item_usuario_objeto]);
+                        $cListaPropiedades = $CambiosUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadPrefs(['id_item_usuario_objeto' => $id_item_usuario_objeto]);
                         foreach ($cListaPropiedades as $oCambioUsuarioPropiedadPref) {
                             $propiedad = $oCambioUsuarioPropiedadPref->getPropiedad();
                             $operador = $oCambioUsuarioPropiedadPref->getOperador();
                             $valor = $oCambioUsuarioPropiedadPref->getValor();
-                            $valor_old = $oCambioUsuarioPropiedadPref->getValor_old();
-                            $valor_new = $oCambioUsuarioPropiedadPref->getValor_new();
+                            $valor_old = $oCambioUsuarioPropiedadPref->isValor_old();
+                            $valor_new = $oCambioUsuarioPropiedadPref->isValor_new();
 
                             if ($propiedad_cmb === $propiedad) {
-                                if (!$oAvisos->me_afecta($propiedad, $id_activ, $valor_old_cmb, $valor_new_cmb, $id_pau, $sObjeto)) {
+                                if (!$oAvisos->me_afecta($propiedad, $id_activ, $valor_old_cmb, $valor_new_cmb, $id_pau, (string) $sObjeto)) {
                                     $apuntar = false;
                                     continue;
                                 } elseif (!empty($valor)) {
                                     $operador = empty($operador) ? '=' : $operador;
-                                    if (is_true($valor_old)) {
+                                    if (is_true($valor_old ?? false)) {
                                         $apuntar = $oAvisos->comparar($valor_old_cmb, $operador, $valor);
                                     }
-                                    if ($apuntar === false && is_true($valor_new)) {
+                                    if ($apuntar === false && is_true($valor_new ?? false)) {
                                         $apuntar = $oAvisos->comparar($valor_new_cmb, $operador, $valor);
                                     }
                                 } else {
@@ -274,6 +292,7 @@ class AvisosGenerarTabla
                     }
                     if ($apuntar) {
                         $err_fila .= $oAvisos->fn_apuntar($aviso_tipo);
+                        $yaApuntado = true;
                     }
                     $apuntar = false;
                 }
@@ -296,5 +315,27 @@ class AvisosGenerarTabla
             'err_fila' => $err_fila,
             'bucle_infinito' => $bucle_infinito,
         ];
+    }
+
+    /**
+     * @param array<string, mixed>|stdClass|null $json
+     * @return list<int|string>
+     */
+    private static function jsonFasesToList(array|stdClass|null $json): array
+    {
+        if ($json === null) {
+            return [];
+        }
+        if ($json instanceof stdClass) {
+            $json = (array) $json;
+        }
+        $result = [];
+        foreach ($json as $fase) {
+            if (is_int($fase) || is_string($fase)) {
+                $result[] = $fase;
+            }
+        }
+
+        return $result;
     }
 }

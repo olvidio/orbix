@@ -4,10 +4,16 @@
  */
 
 use src\cambios\application\CambioUsuarioEliminarHastaFecha;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$input = ['f_fin' => (string)filter_input(INPUT_POST, 'f_fin')];
-$result = CambioUsuarioEliminarHastaFecha::execute($input);
+use function src\shared\domain\helpers\input_string;
+
+$input = ['f_fin' => input_string($_POST, 'f_fin')];
+
+/** @var CambioUsuarioEliminarHastaFecha $useCase */
+$useCase = DependencyResolver::get(CambioUsuarioEliminarHastaFecha::class);
+$result = $useCase->execute($input);
 if ($result['ok']) {
     ContestarJson::enviar('', '');
 } else {

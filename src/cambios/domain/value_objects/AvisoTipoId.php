@@ -7,6 +7,9 @@ final class AvisoTipoId
     public const TIPO_LISTA = 1; // Anotar en lista.
     public const TIPO_MAIL = 2; // por mail.
 
+    /**
+     * @return array<int, string>
+     */
     public static function getArrayAvisoTipo(): array
     {
         return [

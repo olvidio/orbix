@@ -2,8 +2,9 @@
 
 namespace src\cambios\application;
 
-use src\shared\config\ConfigGlobal;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
+use src\permisos\domain\XPermisos;
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
@@ -16,15 +17,21 @@ use src\usuarios\domain\value_objects\PauType;
  */
 final class CambioUsuarioPropiedadPrefItemData
 {
+    public function __construct(
+        private CambioUsuarioPropiedadPrefRepositoryInterface $cambioUsuarioPropiedadPrefRepository,
+        private CasaDlRepositoryInterface $casaDlRepository,
+    ) {
+    }
+
     /**
      * @param array{
      *   id_item?: int|string,
      *   objeto?: string,
      *   propiedad?: string,
      * } $input
-     * @return array
+     * @return array<string, mixed>
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
         $id_item = (int)($input['id_item'] ?? 0);
         $objeto = (string)($input['objeto'] ?? '');
@@ -36,8 +43,7 @@ final class CambioUsuarioPropiedadPrefItemData
         $chk_new = 'checked';
 
         if ($id_item > 0) {
-            $CambioUsuarioPropiedadPrefRepository = $GLOBALS['container']->get(CambioUsuarioPropiedadPrefRepositoryInterface::class);
-            $oProp = $CambioUsuarioPropiedadPrefRepository->findById($id_item);
+            $oProp = $this->cambioUsuarioPropiedadPrefRepository->findById($id_item);
             if ($oProp !== null) {
                 $valor = (string)($oProp->getValor() ?? '');
                 $operador = (string)($oProp->getOperador() ?? '');
@@ -59,18 +65,22 @@ final class CambioUsuarioPropiedadPrefItemData
                 $id_pau = $oMiUsuario->getCsv_id_pau();
                 $sDonde = str_replace(',', ' OR id_ubi=', (string)$id_pau);
                 $donde = "WHERE active='t' AND (id_ubi=$sDonde)";
-            } elseif ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
-                $donde = "WHERE active='t'";
             } else {
-                if ($miSfsv === 1) {
-                    $donde = "WHERE active='t' AND sv='t'";
-                }
-                if ($miSfsv === 2) {
-                    $donde = "WHERE active='t' AND sf='t'";
+                $oPerm = $_SESSION['oPerm'] ?? null;
+                if ($oPerm instanceof XPermisos
+                    && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+                ) {
+                    $donde = "WHERE active='t'";
+                } else {
+                    if ($miSfsv === 1) {
+                        $donde = "WHERE active='t' AND sv='t'";
+                    }
+                    if ($miSfsv === 2) {
+                        $donde = "WHERE active='t' AND sf='t'";
+                    }
                 }
             }
-            $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
-            $aOpcionesCasas = $CasaDlRepository->getArrayCasas($donde);
+            $aOpcionesCasas = $this->casaDlRepository->getArrayCasas($donde);
         }
 
         return [

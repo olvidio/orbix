@@ -2,13 +2,15 @@
 
 namespace src\cambios\application;
 
-use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\cambios\domain\AvisoObjetoCatalog;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\permisos\domain\XPermisos;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -18,24 +20,29 @@ use src\usuarios\domain\value_objects\PauType;
 /**
  * Data builder: todas las opciones y preseleccion necesarias para pintar la
  * pantalla `usuario_avisos_pref` (configurar un aviso para un usuario o grupo).
- *
- * Rutas relativas y parametros de hash sin resolver; la capa front compone
- * URLs absolutas, firmas y {@see ActividadTipo::getHtml()} en
- * {@see \frontend\cambios\helpers\UsuarioAvisosPrefFormRender}.
- *
- * Sucesor del backend de `apps/cambios/controller/usuario_avisos_pref.php`.
  */
 final class UsuarioAvisosPrefFormData
 {
+    public function __construct(
+        private UsuarioRepositoryInterface $usuarioRepository,
+        private GrupoRepositoryInterface $grupoRepository,
+        private TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        private CambioUsuarioObjetoPrefRepositoryInterface $cambioUsuarioObjetoPrefRepository,
+        private ActividadFaseRepositoryInterface $actividadFaseRepository,
+        private CasaDlRepositoryInterface $casaDlRepository,
+    ) {
+    }
+
     /**
      * @param array{
      *   id_usuario?: int|string,
      *   id_item_usuario_objeto?: int|string,
      *   salida?: string,
+     *   quien?: string,
      * } $input
-     * @return array
+     * @return array<string, mixed>
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
         $id_usuario = (int)($input['id_usuario'] ?? 0);
         $id_item_usuario_objeto = (int)($input['id_item_usuario_objeto'] ?? 0);
@@ -78,14 +85,11 @@ final class UsuarioAvisosPrefFormData
 
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-        // Si empieza por 4 es usuario, por 5 es grupo.
         if (str_starts_with((string)$id_usuario, '4')) {
-            $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-            $oUsuario = $UsuarioRepository->findById($id_usuario);
+            $oUsuario = $this->usuarioRepository->findById($id_usuario);
             $grupo = false;
         } else {
-            $GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
-            $oUsuario = $GrupoRepository->findById($id_usuario);
+            $oUsuario = $this->grupoRepository->findById($id_usuario);
             $grupo = true;
         }
         if ($oUsuario === null) {
@@ -103,7 +107,6 @@ final class UsuarioAvisosPrefFormData
         $result['aObjetos'] = AvisoObjetoCatalog::getArrayObjetosPosibles();
         $result['aTiposAviso'] = AvisoTipoId::getArrayAvisoTipo();
 
-        // Campos preseleccionados segun modo (`nuevo` vs `modificar`).
         $id_tipo_activ = '';
         $dl_propia = true;
         $id_pau = '';
@@ -116,11 +119,8 @@ final class UsuarioAvisosPrefFormData
         $dl_org = '';
         $aTiposDeProcesos = [];
 
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-
         if ($salida === 'modificar' && $id_item_usuario_objeto > 0) {
-            $CambioUsuarioObjetoPrefRepository = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
-            $oCUOP = $CambioUsuarioObjetoPrefRepository->findById($id_item_usuario_objeto);
+            $oCUOP = $this->cambioUsuarioObjetoPrefRepository->findById($id_item_usuario_objeto);
             if ($oCUOP === null) {
                 $result['error'] = (string)_("preferencia no encontrada");
                 return $result;
@@ -138,26 +138,23 @@ final class UsuarioAvisosPrefFormData
             $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', (string)$dl_org);
             $dl_propia = (ConfigGlobal::mi_dele() === $dl_org_no_f);
 
-            $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
+            $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
         } elseif ($salida === 'nuevo') {
             $id_tipo_activ = $mi_sfsv . '.....';
-            $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
+            $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
         }
 
-        // Fases segun modulo `procesos`.
         $result['fases_usa_procesos'] = ConfigGlobal::is_app_installed('procesos');
         if ($result['fases_usa_procesos']) {
-            $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-            $result['aFases'] = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
+            $result['aFases'] = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
         } else {
             $a_status = StatusId::getArrayStatus();
             unset($a_status[StatusId::ALL]);
             $result['aFases'] = array_flip($a_status);
         }
 
-        // Rol -> restriccion de casas.
         $oRole = new Role();
-        $oRole->setId_role($id_role);
+        $oRole->setId_role($id_role ?? 0);
         $cond = '';
         switch ($mi_sfsv) {
             case 1:
@@ -168,7 +165,7 @@ final class UsuarioAvisosPrefFormData
                 break;
         }
         if ($grupo === false && $oRole->isRolePau(PauType::PAU_CDC)) {
-            $id_pau = $oUsuario->getCsv_id_pau();
+            $id_pau = $oUsuario->getCsvIdPauAsString() ?? '';
             $idsUbis = array_values(array_filter(
                 array_map(static fn ($s) => (int)trim((string)$s), explode(',', (string)$id_pau)),
                 static fn (int $x) => $x > 0
@@ -179,11 +176,9 @@ final class UsuarioAvisosPrefFormData
                 $cond = "WHERE active='t' AND FALSE";
             }
         }
-        $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
-        $result['aOpcionesCasas'] = $CasaDlRepository->getArrayCasas($cond);
+        $result['aOpcionesCasas'] = $this->casaDlRepository->getArrayCasas($cond);
         $result['id_pau'] = $id_pau;
 
-        // Descomposicion del id_tipo_activ actual en sus 4 piezas.
         $result['dl_org'] = $dl_org;
         $result['dl_propia'] = $dl_propia;
         $result['id_tipo_activ'] = $id_tipo_activ;
@@ -205,18 +200,18 @@ final class UsuarioAvisosPrefFormData
             $ssfsv = '';
         }
         $result['sfsv_text'] = $ssfsv;
-        $result['asistentes_text'] = '';
-        $result['actividad_text'] = '';
-        $result['nom_tipo_text'] = '';
 
-        // Perm_jefe: misma logica que el controlador legacy.
+        $oConfig = $_SESSION['oConfig'] ?? null;
+        $oPerm = $_SESSION['oPerm'] ?? null;
         $perm_jefe = false;
         if (
-            $_SESSION['oConfig']->is_jefeCalendario()
-            || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv === 1)
+            ($oConfig instanceof ConfigSnapshot && $oConfig->is_jefeCalendario())
+            || ($oPerm instanceof XPermisos
+                && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+                && $mi_sfsv === 1)
             || ($grupo === false && $oRole->isRolePau(PauType::PAU_CDC))
             || ($grupo === false && $oRole->isRolePau(PauType::PAU_SACD))
-            || $_SESSION['oPerm']->have_perm_oficina('calendario')
+            || ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('calendario'))
         ) {
             $perm_jefe = true;
         }

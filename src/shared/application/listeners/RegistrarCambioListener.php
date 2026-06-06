@@ -13,9 +13,9 @@ class RegistrarCambioListener
 {
     private RegistrarCambio $registrarCambio;
 
-    public function __construct()
+    public function __construct(RegistrarCambio $registrarCambio)
     {
-        $this->registrarCambio = new RegistrarCambio();
+        $this->registrarCambio = $registrarCambio;
     }
 
     public function __invoke(EntidadModificada $event): void

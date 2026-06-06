@@ -23,7 +23,7 @@ class DB extends DBAbstract
         $this->esquema = 'global';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
             $this->eliminar_av_cambios_anotados();
@@ -34,7 +34,7 @@ class DB extends DBAbstract
         });
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->ejecutarCreateAllGlobal(function (): void {
             $this->create_av_cambios();
@@ -49,7 +49,7 @@ class DB extends DBAbstract
      * En la BD Comun (public).
      * OJO Corresponde al esquema public, no al global.
      */
-    public function create_av_cambios()
+    public function create_av_cambios(): void
     {
         $esquema_org = $this->esquema;
         if ($this->esquema !== 'global') {
@@ -113,7 +113,7 @@ class DB extends DBAbstract
         $this->esquema = $esquema_org;
     }
 
-    public function eliminar_av_cambios()
+    public function eliminar_av_cambios(): void
     {
         $esquema_org = $this->esquema;
         if ($this->esquema !== 'global') {
@@ -134,7 +134,7 @@ class DB extends DBAbstract
     /**
      * En la BD comun (global).
      */
-    public function create_av_cambios_anotados()
+    public function create_av_cambios_anotados(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
@@ -159,7 +159,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
-    public function eliminar_av_cambios_anotados()
+    public function eliminar_av_cambios_anotados(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
@@ -175,7 +175,7 @@ class DB extends DBAbstract
      * Correspondería a sfsv, pero para poder borrar con 'LEFT JOIN'
      * cuando se eliminan los av_cambios, la pongo en comun.
      */
-    public function create_av_cambios_usuario()
+    public function create_av_cambios_usuario(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
@@ -200,7 +200,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
-    public function eliminar_av_cambios_usuario()
+    public function eliminar_av_cambios_usuario(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
@@ -214,7 +214,7 @@ class DB extends DBAbstract
     /**
      * En la BD sv/sf (global).
      */
-    public function create_av_cambios_usuario_objeto_pref()
+    public function create_av_cambios_usuario_objeto_pref(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
@@ -243,7 +243,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
     }
 
-    public function eliminar_av_cambios_usuario_objeto_pref()
+    public function eliminar_av_cambios_usuario_objeto_pref(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
@@ -254,7 +254,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
     }
 
-    public function create_av_cambios_usuario_propiedades_pref()
+    public function create_av_cambios_usuario_propiedades_pref(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
@@ -279,7 +279,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
     }
 
-    public function eliminar_av_cambios_usuario_propiedades_pref()
+    public function eliminar_av_cambios_usuario_propiedades_pref(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 

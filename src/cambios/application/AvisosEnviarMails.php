@@ -10,6 +10,7 @@ use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use frontend\shared\web\Lista;
@@ -37,6 +38,16 @@ use frontend\shared\web\Lista;
  */
 class AvisosEnviarMails
 {
+    public function __construct(
+        private CambioUsuarioRepositoryInterface $cambioUsuarioRepository,
+        private UsuarioRepositoryInterface $usuarioRepository,
+        private PreferenciaRepositoryInterface $preferenciaRepository,
+        private CambioRepositoryInterface $cambioRepository,
+        private CambioDlRepositoryInterface $cambioDlRepository,
+        private CambioAvisoTxtBuilder $cambioAvisoTxtBuilder,
+    ) {
+    }
+
     /**
      * @return array{enviados: int, usuarios_sin_email: int, total_avisos: int}
      */
@@ -51,6 +62,7 @@ class AvisosEnviarMails
 
         $dele = ConfigGlobal::mi_dele();
         $delef = $dele . 'f';
+        /** @var array<int, string> $aSecciones */
         $aSecciones = [1 => $dele, 2 => $delef];
 
         $aviso_tipo = AvisoTipoId::TIPO_MAIL;
@@ -62,26 +74,24 @@ class AvisosEnviarMails
             'avisado' => 'false',
             'sfsv' => $mi_sfsv,
         ];
-        $CambioUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
-        $cCambiosUsuario = $CambioUsuarioRepository->getCambiosUsuario($aWhere);
+        $cCambiosUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
 
         $enviados = 0;
         $sinEmail = 0;
         $i = 0;
-        $id_usuario_anterior = '';
+        $id_usuario_anterior = 0;
         $email = '';
+        /** @var array<int, array{1: string, 2: string, 3: string}> $a_datos */
         $a_datos = [];
+        /** @var array<int, string> $a_id */
         $a_id = [];
         $DateTimeZone = new DateTimeZone('UTC');
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
-
         foreach ($cCambiosUsuario as $oCambioUsuario) {
             $id_usuario = $oCambioUsuario->getId_usuario();
 
             if ($id_usuario !== $id_usuario_anterior) {
                 // Flush del usuario anterior (excepto en la primera iteracion).
-                if (!empty($id_usuario_anterior)) {
+                if ($id_usuario_anterior !== 0) {
                     if ($this->enviarMail($email, $a_datos, $a_id)) {
                         $enviados++;
                     } else {
@@ -90,40 +100,44 @@ class AvisosEnviarMails
                     $a_datos = [];
                     $a_id = [];
                 }
-                $oMiUsuario = $UsuarioRepository->findById($id_usuario);
-                $email = $oMiUsuario->getEmailAsString();
+                $oMiUsuario = $this->usuarioRepository->findById($id_usuario);
+                $email = $oMiUsuario?->getEmailAsString() ?? '';
                 $id_usuario_anterior = $id_usuario;
 
-                $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'zona_horaria');
-                $zona_horaria = ($oPreferencia !== null) ? $oPreferencia->getPreferencia() : '';
-                if (!empty($zona_horaria)) {
+                $oPreferencia = $this->preferenciaRepository->findById($id_usuario, 'zona_horaria');
+                $zona_horaria = ($oPreferencia !== null) ? (string) $oPreferencia->getPreferencia() : '';
+                if ($zona_horaria !== '') {
                     try {
                         $DateTimeZone = new DateTimeZone($zona_horaria);
-                    } catch (DateInvalidTimeZoneException $e) {
+                    } catch (DateInvalidTimeZoneException) {
                         $DateTimeZone = new DateTimeZone('UTC');
                     }
                 } else {
                     $DateTimeZone = new DateTimeZone('UTC');
                 }
             }
-            if (empty($email)) {
+            if ($email === '') {
                 continue;
             }
 
             $id_item_cmb = $oCambioUsuario->getId_item_cambio();
             $id_schema_cmb = $oCambioUsuario->getId_schema_cambio();
-            if ($id_schema_cmb === 3000) {
-                $repoCambio = $GLOBALS['container']->get(CambioRepositoryInterface::class);
-            } else {
-                $repoCambio = $GLOBALS['container']->get(CambioDlRepositoryInterface::class);
+            $repoCambio = $id_schema_cmb === 3000
+                ? $this->cambioRepository
+                : $this->cambioDlRepository;
+            $oCambioRow = $repoCambio->findById($id_item_cmb);
+            if ($oCambioRow === null) {
+                continue;
             }
-            $oCambio = $repoCambio->findById($id_item_cmb);
-            $quien_cambia = $oCambio->getQuien_cambia();
-            $sfsv_quien_cambia = $oCambio->getSfsv_quien_cambia();
-            $oTimestamp_cambio_GMT = $oCambio->getTimestamp_cambio();
-            $timestamp_cambio = $oTimestamp_cambio_GMT->setTimezone($DateTimeZone)->getFromLocalHora();
+            $quien_cambia = $oCambioRow->getQuien_cambia();
+            $sfsv_quien_cambia = $oCambioRow->getSfsv_quien_cambia();
+            $oTimestamp_cambio_GMT = $oCambioRow->getTimestamp_cambio();
+            if (!$oTimestamp_cambio_GMT instanceof DateTimeLocal) {
+                continue;
+            }
+            $timestamp_cambio = (clone $oTimestamp_cambio_GMT)->setTimezone($DateTimeZone)->getFromLocalHora();
 
-            $aviso_txt = $oCambio->getAvisoTxt();
+            $aviso_txt = $this->cambioAvisoTxtBuilder->build($oCambioRow);
             if ($aviso_txt === false) {
                 continue;
             }
@@ -131,23 +145,23 @@ class AvisosEnviarMails
 
             // Quien cambia
             if ($id_schema_cmb === 3000) {
-                $quien = $oCambio->getDl_org();
+                $quien = $oCambioRow->getDl_org() ?? '';
+            } elseif ($sfsv_quien_cambia === $mi_sfsv && $quien_cambia !== null) {
+                $oUsuarioCmb = $this->usuarioRepository->findById($quien_cambia);
+                $quien = $oUsuarioCmb?->getUsuarioAsString() ?? '';
             } else {
-                if ($sfsv_quien_cambia === $mi_sfsv) {
-                    $oUsuarioCmb = $UsuarioRepository->findById($quien_cambia);
-                    $quien = $oUsuarioCmb->getUsuario();
-                } else {
-                    $quien = $aSecciones[$sfsv_quien_cambia];
-                }
+                $quien = $aSecciones[$sfsv_quien_cambia ?? 0] ?? '';
             }
 
-            $a_datos[$i][1] = $timestamp_cambio;
-            $a_datos[$i][2] = $quien;
-            $a_datos[$i][3] = $aviso_txt;
+            $a_datos[$i] = [
+                1 => $timestamp_cambio,
+                2 => $quien,
+                3 => $aviso_txt,
+            ];
             $a_id[$i] = "$id_item_cmb,$id_usuario,$mi_sfsv,$aviso_tipo";
         }
         // El ultimo de la lista.
-        if (!empty($email)) {
+        if ($email !== '') {
             if ($this->enviarMail($email, $a_datos, $a_id)) {
                 $enviados++;
             } else {
@@ -163,14 +177,12 @@ class AvisosEnviarMails
     }
 
     /**
-     * @param string $email destinatario.
-     * @param array  $a_datos filas para la tabla del mail.
-     * @param array  $a_id identificadores para borrar tras envio.
-     * @return bool true si se ha enviado; false si no habia email/datos.
+     * @param array<int, array{1: string, 2: string, 3: string}> $a_datos filas para la tabla del mail.
+     * @param array<int, string> $a_id identificadores para borrar tras envio.
      */
     private function enviarMail(string $email, array $a_datos, array $a_id): bool
     {
-        if (empty($a_datos) || empty($email)) {
+        if ($a_datos === [] || $email === '') {
             $this->eliminarEnviado($a_id);
             return false;
         }
@@ -201,28 +213,30 @@ class AvisosEnviarMails
     }
 
     /**
-     * @param array $a_id identificadores serializados
+     * @param array<int, string> $a_id identificadores serializados
      *   ("id_item_cambio,id_usuario,sfsv,aviso_tipo").
-     * @return string[] mensajes de error acumulados, vacio si todo OK.
+     * @return list<string> mensajes de error acumulados, vacio si todo OK.
      */
     private function eliminarEnviado(array $a_id): array
     {
         $errores = [];
-        $CambioUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
         foreach ($a_id as $id) {
-            $ids = explode(',', (string)$id);
+            $ids = explode(',', $id);
+            if (count($ids) < 4) {
+                continue;
+            }
             $aWhere = [
-                'id_item_cambio' => $ids[0],
-                'id_usuario' => $ids[1],
-                'sfsv' => $ids[2],
-                'aviso_tipo' => $ids[3],
+                'id_item_cambio' => (int) $ids[0],
+                'id_usuario' => (int) $ids[1],
+                'sfsv' => (int) $ids[2],
+                'aviso_tipo' => (int) $ids[3],
             ];
 
-            $cCambiosUsuario = $CambioUsuarioRepository->getCambiosUsuario($aWhere);
+            $cCambiosUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
             foreach ($cCambiosUsuario as $oCambioUsuario) {
-                if ($oCambioUsuario->DBEliminar() === false) {
+                if ($this->cambioUsuarioRepository->Eliminar($oCambioUsuario) === false) {
                     $errores[] = _("Hay un error, no se ha eliminado")
-                        . ' (' . $oCambioUsuario->getErrorTxt() . ')';
+                        . ' (' . $this->cambioUsuarioRepository->getErrorTxt() . ')';
                 }
             }
         }

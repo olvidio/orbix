@@ -2,12 +2,13 @@
 
 namespace src\cambios\application;
 
-use src\shared\config\ConfigGlobal;
 use DateTimeZone;
 use src\cambios\domain\contracts\CambioDlRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
+use src\shared\config\ConfigGlobal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 
@@ -21,21 +22,21 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
  */
 final class AvisosGenerarListaData
 {
+    public function __construct(
+        private UsuarioRepositoryInterface $usuarioRepository,
+        private PreferenciaRepositoryInterface $preferenciaRepository,
+        private CambioUsuarioRepositoryInterface $cambioUsuarioRepository,
+        private CambioRepositoryInterface $cambioRepository,
+        private CambioDlRepositoryInterface $cambioDlRepository,
+        private CambioAvisoTxtBuilder $cambioAvisoTxtBuilder,
+    ) {
+    }
+
     /**
-     * @param array{id_usuario?: int|string, aviso_tipo?: int|string} $input
-     * @return array{
-     *   error: string,
-     *   a_valores: array,
-     *   aOpcionesUsuarios: array,
-     *   aOpcionesAvisoTipo: array,
-     *   effective_id_usuario: int,
-     *   effective_aviso_tipo: int,
-     *   paths?: array{eliminar: string, eliminar_fecha: string},
-     *   hash_eliminar?: array{campos_no: string},
-     *   hash_eliminar_fecha?: array{campos_form: string}
-     * }
+     * @param array{id_usuario?: int|string, aviso_tipo?: int|string, is_admin?: bool} $input
+     * @return array<string, mixed>
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
         $is_admin = (bool)($input['is_admin'] ?? false);
         if ($is_admin) {
@@ -46,13 +47,13 @@ final class AvisosGenerarListaData
             $aviso_tipo = AvisoTipoId::TIPO_LISTA;
         }
 
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $aOpcionesUsuarios = $UsuarioRepository->getArrayUsuarios();
+        $aOpcionesUsuarios = $this->usuarioRepository->getArrayUsuarios();
         $aOpcionesAvisoTipo = AvisoTipoId::getArrayAvisoTipo();
 
         $a_valores = [];
 
         $baseOut = static function (array $extra) use ($aOpcionesUsuarios, $aOpcionesAvisoTipo, $id_usuario, $aviso_tipo): array {
+            /** @var array<string, mixed> $out */
             $out = array_merge(
                 [
                     'error' => '',
@@ -64,7 +65,7 @@ final class AvisosGenerarListaData
                 ],
                 $extra
             );
-            if (empty($id_usuario)) {
+            if ($id_usuario === 0) {
                 return $out;
             }
 
@@ -82,16 +83,15 @@ final class AvisosGenerarListaData
             return $out;
         };
 
-        if (empty($id_usuario)) {
+        if ($id_usuario === 0) {
             return $baseOut([]);
         }
 
-        $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
-        $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'zona_horaria');
+        $oPreferencia = $this->preferenciaRepository->findById($id_usuario, 'zona_horaria');
         $zona_horaria = $oPreferencia?->getPreferencia() ?? '';
 
         $DateTimeZone = new DateTimeZone('UTC');
-        if (!empty($zona_horaria)) {
+        if ($zona_horaria !== '') {
             try {
                 $DateTimeZone = new DateTimeZone($zona_horaria);
             } catch (\Throwable) {
@@ -101,6 +101,7 @@ final class AvisosGenerarListaData
 
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $dele = ConfigGlobal::mi_dele();
+        /** @var array<int, string> $aSecciones */
         $aSecciones = [1 => $dele, 2 => $dele . 'f'];
 
         $aWhere = [
@@ -109,40 +110,38 @@ final class AvisosGenerarListaData
             'aviso_tipo' => $aviso_tipo,
             'avisado' => 'false',
         ];
-        $CambiosUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
-        $cCambiosUsuario = $CambiosUsuarioRepository->getCambiosUsuario($aWhere);
-
-        $CambioRepository = $GLOBALS['container']->get(CambioRepositoryInterface::class);
-        $CambioDlRepository = $GLOBALS['container']->get(CambioDlRepositoryInterface::class);
+        $cCambiosUsuario = $this->cambioUsuarioRepository->getCambiosUsuario($aWhere);
 
         $i = 0;
         foreach ($cCambiosUsuario as $oCambioUsuario) {
             $id_item_cmb = $oCambioUsuario->getId_item_cambio();
             $id_schema_cmb = $oCambioUsuario->getId_schema_cambio();
             $oCambio = $id_schema_cmb === 3000
-                ? $CambioRepository->findById($id_item_cmb)
-                : $CambioDlRepository->findById($id_item_cmb);
+                ? $this->cambioRepository->findById($id_item_cmb)
+                : $this->cambioDlRepository->findById($id_item_cmb);
             if ($oCambio === null) {
                 continue;
             }
             $quien_cambia = $oCambio->getQuien_cambia();
             $sfsv_quien_cambia = $oCambio->getSfsv_quien_cambia();
             $oTimestamp_cambio_GMT = $oCambio->getTimestamp_cambio();
-            $timestamp_cambio = $oTimestamp_cambio_GMT->setTimezone($DateTimeZone)->getFromLocalHora();
-            $timestamp_orden = $oCambio->getTimestamp_cambio()->format('YmdHis');
+            if (!$oTimestamp_cambio_GMT instanceof DateTimeLocal) {
+                continue;
+            }
+            $timestamp_cambio = (clone $oTimestamp_cambio_GMT)->setTimezone($DateTimeZone)->getFromLocalHora();
+            $timestamp_orden = $oTimestamp_cambio_GMT->format('YmdHis');
 
-            $aviso_txt = $oCambio->getAvisoTxt();
+            $aviso_txt = $this->cambioAvisoTxtBuilder->build($oCambio);
             if ($aviso_txt === false) {
                 continue;
             }
             $i++;
-            if ($sfsv_quien_cambia === $mi_sfsv) {
-                $oUsuarioCmb = $UsuarioRepository->findById($quien_cambia);
-                $quien = $oUsuarioCmb->getUsuario();
+            if ($sfsv_quien_cambia === $mi_sfsv && $quien_cambia !== null) {
+                $oUsuarioCmb = $this->usuarioRepository->findById($quien_cambia);
+                $quien = $oUsuarioCmb?->getUsuarioAsString() ?? '';
             } else {
                 $quien = $aSecciones[$sfsv_quien_cambia] ?? '';
             }
-            // +1000 por si hay dos iguales.
             $num_orden = $timestamp_orden . (1000 + $i);
             $a_valores[$num_orden] = [
                 'sel' => "$id_item_cmb#$id_usuario#$mi_sfsv#$aviso_tipo",

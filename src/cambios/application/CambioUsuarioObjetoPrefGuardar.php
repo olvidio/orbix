@@ -2,9 +2,9 @@
 
 namespace src\cambios\application;
 
-use src\shared\config\ConfigGlobal;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioObjetoPref;
+use src\shared\config\ConfigGlobal;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -17,23 +17,38 @@ final class CambioUsuarioObjetoPrefGuardar
 {
     private const PAD_MAP = [1 => '.', 2 => '..', 3 => '...', 4 => '....', 5 => '.....'];
 
+    public function __construct(
+        private CambioUsuarioObjetoPrefRepositoryInterface $cambioUsuarioObjetoPrefRepository,
+    ) {
+    }
+
     /**
-     * @param array $input
+     * @param array<string, mixed> $input
      * @return array{error: string, id_item_usuario_objeto: int}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $id_item_usuario_objeto = (int)($input['id_item_usuario_objeto'] ?? 0);
-        $id_usuario = (int)($input['id_usuario'] ?? 0);
-        $id_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
+        $id_item_usuario_objeto = isset($input['id_item_usuario_objeto']) && is_numeric($input['id_item_usuario_objeto'])
+            ? (int) $input['id_item_usuario_objeto']
+            : 0;
+        $id_usuario = isset($input['id_usuario']) && is_numeric($input['id_usuario'])
+            ? (int) $input['id_usuario']
+            : 0;
+        $id_tipo_activ = isset($input['id_tipo_activ']) && is_string($input['id_tipo_activ'])
+            ? $input['id_tipo_activ']
+            : '';
         $dl_propia = is_true($input['dl_propia'] ?? '');
-        $objeto = (string)($input['objeto'] ?? '');
-        $aviso_tipo = (int)($input['aviso_tipo'] ?? 0);
-        $id_fase_ref = (int)($input['id_fase_ref'] ?? 0);
+        $objeto = isset($input['objeto']) && is_string($input['objeto']) ? $input['objeto'] : '';
+        $aviso_tipo = isset($input['aviso_tipo']) && is_numeric($input['aviso_tipo'])
+            ? (int) $input['aviso_tipo']
+            : 0;
+        $id_fase_ref = isset($input['id_fase_ref']) && is_numeric($input['id_fase_ref'])
+            ? (int) $input['id_fase_ref']
+            : 0;
         $aviso_off = is_true($input['aviso_off'] ?? '');
         $aviso_on = is_true($input['aviso_on'] ?? '');
         $aviso_outdate = is_true($input['aviso_outdate'] ?? '');
-        $a_casas = (array)($input['casas'] ?? []);
+        $a_casas = isset($input['casas']) && is_array($input['casas']) ? $input['casas'] : [];
 
         if ($id_usuario <= 0) {
             return [
@@ -42,15 +57,14 @@ final class CambioUsuarioObjetoPrefGuardar
             ];
         }
 
-        $Repo = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
         if ($id_item_usuario_objeto > 0) {
-            $oPref = $Repo->findById($id_item_usuario_objeto);
+            $oPref = $this->cambioUsuarioObjetoPrefRepository->findById($id_item_usuario_objeto);
             if ($oPref === null) {
                 $oPref = new CambioUsuarioObjetoPref();
                 $oPref->setId_item_usuario_objeto($id_item_usuario_objeto);
             }
         } else {
-            $newId = $Repo->getNewId();
+            $newId = $this->cambioUsuarioObjetoPrefRepository->getNewId();
             $oPref = new CambioUsuarioObjetoPref();
             $oPref->setId_item_usuario_objeto($newId);
         }
@@ -58,7 +72,7 @@ final class CambioUsuarioObjetoPrefGuardar
         $oPref->setId_usuario($id_usuario);
 
         if ($dl_propia) {
-            $isfsv = (int)substr($id_tipo_activ, 0, 1);
+            $isfsv = substr($id_tipo_activ, 0, 1);
             $dl_org = ConfigGlobal::mi_delef($isfsv);
         } else {
             $dl_org = 'x';
@@ -85,14 +99,17 @@ final class CambioUsuarioObjetoPrefGuardar
         $oPref->setAviso_on($aviso_on);
         $oPref->setAviso_outdate($aviso_outdate);
 
-        if (!empty($a_casas)) {
-            $a_casas = array_filter(array_map('strval', $a_casas), static fn($v) => $v !== '' && $v !== '0');
-            if (!empty($a_casas)) {
+        if ($a_casas !== []) {
+            $a_casas = array_filter(
+                array_map(static fn ($v) => is_scalar($v) ? (string) $v : '', $a_casas),
+                static fn (string $v) => $v !== '' && $v !== '0'
+            );
+            if ($a_casas !== []) {
                 $oPref->setCsv_id_pau(implode(',', $a_casas));
             }
         }
 
-        if ($Repo->Guardar($oPref) === false) {
+        if ($this->cambioUsuarioObjetoPrefRepository->Guardar($oPref) === false) {
             return [
                 'error' => (string)_("Hay un error, no se ha guardado"),
                 'id_item_usuario_objeto' => 0,

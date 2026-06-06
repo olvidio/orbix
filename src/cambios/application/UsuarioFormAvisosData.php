@@ -2,15 +2,15 @@
 
 namespace src\cambios\application;
 
-use src\shared\config\ConfigGlobal;
+use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\value_objects\StatusId;
 use src\cambios\domain\AvisoObjetoCatalog;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Data builder: listado de `CambioUsuarioObjetoPref` de un usuario para
@@ -20,15 +20,23 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class UsuarioFormAvisosData
 {
+    public function __construct(
+        private UsuarioRepositoryInterface $usuarioRepository,
+        private CambioUsuarioPropiedadPrefRepositoryInterface $cambioUsuarioPropiedadPrefRepository,
+        private CambioUsuarioObjetoPrefRepositoryInterface $cambioUsuarioObjetoPrefRepository,
+        private ActividadFaseRepositoryInterface $actividadFaseRepository,
+    ) {
+    }
+
     /**
      * @param array{id_usuario?: int|string, quien?: string} $input
      * @return array{
      *   error: string,
-     *   a_valores: array,
+     *   a_valores: array<int, array<int|string, mixed>>,
      *   nombre_usuario: string,
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
         $id_usuario = (int)($input['id_usuario'] ?? 0);
         $quien = (string)($input['quien'] ?? '');
@@ -36,7 +44,7 @@ final class UsuarioFormAvisosData
         $a_valores = [];
         $nombre_usuario = '';
 
-        if (!ConfigGlobal::is_app_installed('cambios') || empty($id_usuario) || $quien !== 'usuario') {
+        if (!ConfigGlobal::is_app_installed('cambios') || $id_usuario === 0 || $quien !== 'usuario') {
             return [
                 'error' => (string)_("No tiene permiso"),
                 'a_valores' => $a_valores,
@@ -44,21 +52,23 @@ final class UsuarioFormAvisosData
             ];
         }
 
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $oUsuario = $UsuarioRepository->findById($id_usuario);
+        $oUsuario = $this->usuarioRepository->findById($id_usuario);
+        if ($oUsuario === null) {
+            return [
+                'error' => (string)_("No tiene permiso"),
+                'a_valores' => $a_valores,
+                'nombre_usuario' => $nombre_usuario,
+            ];
+        }
         $nombre_usuario = $oUsuario->getUsuarioAsString();
 
         $a_status = StatusId::getArrayStatus();
 
-        $CambiosUsuarioPropiedadesPrefRepository = $GLOBALS['container']->get(CambioUsuarioPropiedadPrefRepositoryInterface::class);
-        $CambiosUsuariosObjetoRepository = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
         $aWhere = ['id_usuario' => $id_usuario, '_ordre' => 'objeto, dl_org, id_tipo_activ_txt'];
-        $cListaTablas = $CambiosUsuariosObjetoRepository->getCambioUsuarioObjetoPrefs($aWhere, []);
+        $cListaTablas = $this->cambioUsuarioObjetoPrefRepository->getCambioUsuarioObjetoPrefs($aWhere, []);
 
         $aTipos_aviso = AvisoTipoId::getArrayAvisoTipo();
         $aObjetos = AvisoObjetoCatalog::getArrayObjetosPosibles();
-
-        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
 
         $i = 0;
         foreach ($cListaTablas as $oCambioUsuarioObjetoPref) {
@@ -73,8 +83,8 @@ final class UsuarioFormAvisosData
             $aviso_on = $oCambioUsuarioObjetoPref->isAviso_on();
             $aviso_outdate = $oCambioUsuarioObjetoPref->isAviso_outdate();
 
-            $isfsv = substr((string)$id_tipo, 0, 1);
-            $mi_dele = ConfigGlobal::mi_delef((int)$isfsv);
+            $isfsv = substr((string) $id_tipo, 0, 1);
+            $mi_dele = ConfigGlobal::mi_delef($isfsv);
             if ($dl_org !== $mi_dele) {
                 $dl_org = (string)_("otras");
             }
@@ -89,7 +99,7 @@ final class UsuarioFormAvisosData
 
             $txt_fases = '';
             if (ConfigGlobal::is_app_installed('procesos')) {
-                $oActividadFase = $ActividadFaseRepository->findById($id_fase_ref);
+                $oActividadFase = $this->actividadFaseRepository->findById($id_fase_ref);
                 if ($oActividadFase !== null) {
                     $txt_fases .= $oActividadFase->getDesc_fase();
                 }
@@ -102,7 +112,7 @@ final class UsuarioFormAvisosData
             $a_valores[$i][7] = $aviso_outdate;
             $a_valores[$i][8] = $aTipos_aviso[$aviso_tipo] ?? '';
 
-            $cListaPropiedades = $CambiosUsuarioPropiedadesPrefRepository->getCambioUsuarioPropiedadPrefs(
+            $cListaPropiedades = $this->cambioUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadPrefs(
                 ['id_item_usuario_objeto' => $id_item_usuario_objeto]
             );
             $txt_cambio = '';

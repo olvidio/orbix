@@ -13,11 +13,16 @@ use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
  */
 final class CambioUsuarioEliminarHastaFecha
 {
+    public function __construct(
+        private CambioUsuarioRepositoryInterface $cambioUsuarioRepository,
+    ) {
+    }
+
     /**
      * @param array{f_fin?: string} $input
      * @return array{ok: bool, mensaje: string}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
         $f_fin = (string)($input['f_fin'] ?? '');
         if ($f_fin === '') {
@@ -26,8 +31,7 @@ final class CambioUsuarioEliminarHastaFecha
                 'mensaje' => (string)_("debe indicar la fecha"),
             ];
         }
-        $CambioUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
-        $rta = $CambioUsuarioRepository->eliminarHastaFecha($f_fin);
+        $rta = $this->cambioUsuarioRepository->eliminarHastaFecha($f_fin);
         if ($rta === false) {
             return [
                 'ok' => false,

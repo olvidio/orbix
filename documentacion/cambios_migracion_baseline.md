@@ -244,3 +244,119 @@ controller/` quedan como wrappers deprecados con `require` al driver.
   `cambios\model\Avisos`). Los wrappers en `apps/cambios/controller/`
   siguen para los crontabs instalados; cuando se actualicen las
   crontabs en produccion, los wrappers podran eliminarse.
+
+## Cierre DI (junio 2026)
+
+### `$GLOBALS['container']` en `src/cambios/`
+
+| Fase | Ficheros con `$GLOBALS['container']` |
+|------|--------------------------------------:|
+| Pre-cierre (application + domain + legacy) | **16** |
+| Post-cierre | **0** |
+
+La entidad `Cambio` ya no llama al contenedor: `getAvisoTxt()` se extrajo a
+`src/cambios/application/CambioAvisoTxtBuilder.php` (inyectado en
+`AvisosGenerarListaData` y `AvisosEnviarMails`).
+
+### Application / legacy
+
+| Clase | Repos / servicios inyectados |
+|-------|------------------------------|
+| `UsuarioFormAvisosData` | `Usuario`, `CambioUsuario*Pref`, `ActividadFase` |
+| `AvisosGenerarListaData` | `Usuario`, `Preferencia`, `CambioUsuario`, `Cambio*`, `CambioAvisoTxtBuilder` |
+| `UsuarioAvisosPrefFormData` | `Usuario`, `Grupo`, `TipoDeActividad`, `CambioUsuarioObjetoPref`, `ActividadFase`, `CasaDl` |
+| `CambioUsuarioPropiedadPrefItemData` | `CambioUsuarioPropiedadPref`, `CasaDl` |
+| `CambioUsuarioObjetoPrefPropiedadesData` | `CambioUsuarioPropiedadPref` |
+| `CambioUsuarioObjetoPrefFasesData` | `TipoDeActividad`, `ActividadFase` |
+| `CambioUsuarioEliminar` / `EliminarHastaFecha` | `CambioUsuario` |
+| `CambioUsuarioObjetoPrefGuardar` / `Eliminar` | `CambioUsuarioObjetoPref` |
+| `CambioUsuarioPropiedadPrefGuardarTodas` / `Preview` / `ItemData` | `CambioUsuarioPropiedadPref` (Preview sin repo) |
+| `RegistrarCambio` | `ActividadAll`, `CambioDl`, `Cambio`, `ActividadProcesoTarea` |
+| `AvisosGenerarTabla` | `Avisos` (legacy), `Cambio`, `ActividadAll`, `Importada`, `TipoDeActividad`, `PersonaSacd`, `TareaProceso`, `CambioUsuario*Pref` |
+| `AvisosEnviarMails` | `CambioUsuario`, `Usuario`, `Preferencia`, `Cambio*`, `CambioAvisoTxtBuilder` |
+| `legacy/Avisos` | `CambioUsuario`, `CambioAnotado`, `Usuario`, `ActividadAll`, `Zona`, `ZonaSacd`, `ActividadCargo` |
+
+Sesión: `instanceof ConfigSnapshot` / `XPermisos` en
+`UsuarioAvisosPrefFormData` y `CambioUsuarioPropiedadPrefItemData`.
+
+### Repos `Pg*` (6)
+
+| Repositorio | PDO |
+|-------------|-----|
+| `PgCambioRepository` | `GlobalPdo::get('oDBPC')` / `oDBPC_Select`; métodos batch usan `oDBC` |
+| `PgCambioDlRepository` | `GlobalPdo::get('oDBC')` / `oDBC_Select` |
+| `PgCambioUsuarioRepository` | `GlobalPdo::get('oDBC')` / `oDBC_Select` |
+| `PgCambioAnotadoRepository` | `GlobalPdo::get('oDBC')` / `oDBC_Select` |
+| `PgCambioUsuarioObjetoPrefRepository` | `GlobalPdo::get('oDBE')` / `oDBE_Select` |
+| `PgCambioUsuarioPropiedadPrefRepository` | `GlobalPdo::get('oDBE')` / `oDBE_Select` |
+
+### HTTP controllers (12)
+
+Todos en `infrastructure/ui/http/controllers/` usan `DependencyResolver::get()`
+(sin `::execute()` estáticos). Entrada POST via `input_int` / `input_string` /
+`input_string_list`.
+
+### CLI (2)
+
+- `avisos_generar_tabla.php` → `DependencyResolver::get(AvisosGenerarTabla::class)`
+- `avisos_generar_mails.php` → `DependencyResolver::get(AvisosEnviarMails::class)`
+
+### `src/cambios/config/dependencies.php`
+
+Registra 6 repositorios + 17 casos de uso (`Avisos` legacy incluido).
+Repos cross-módulo (`Actividad*`, `Usuario`, `CasaDl`, `PersonaSacd`,
+`Zona*`, `ActividadCargo`, etc.) se resuelven por autowire desde los
+`dependencies.php` de sus módulos.
+
+### Listener compartido
+
+`RegistrarCambioListener` (`src/shared/application/listeners/`) recibe
+`RegistrarCambio` por constructor. Registrado en
+`src/shared/config/dependencies.php` con `autowire()`; el `EventBusInterface`
+factory inyecta el listener (ya no hace `new RegistrarCambioListener()`).
+
+## Deuda post-refactor
+
+### Completado
+
+- [x] 0 `$GLOBALS['container']` en todo `src/cambios/`
+- [x] 12 controllers HTTP via `DependencyResolver`
+- [x] Casos de uso con constructor DI (incl. `legacy/Avisos`)
+- [x] `dependencies.php` con todos los use cases
+- [x] 6 Pg repos con `GlobalPdo`
+- [x] Frontend sin `use src\...` en controladores
+- [x] PHPStan: `src/cambios/` sin errores en `phpstan-nobaseline.neon` (0)
+- [x] Tests unitarios (`tests/unit/cambios/`: 97 tests)
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (pre-cierre DI) | `composer phpstan:file -- src/cambios/` | **410** |
+| 2026-06-06 (cierre DI) | `composer phpstan:file -- src/cambios/` | **0** |
+
+Áreas abordadas:
+
+- **Application:** constructor DI en 17 clases; `CambioAvisoTxtBuilder` extraído
+  de `Cambio::getAvisoTxt()`; `instanceof ConfigSnapshot` / `XPermisos` para sesión.
+- **Repos `Pg*`:** `GlobalPdo`, guards `PDOStatement|false`, `array_values` en
+  colecciones, `datosById(): array|false`.
+- **Interfaces / entity / VOs:** PHPDoc retorno; setters nullable en entidades.
+- **db/DBEsquema:** tipos de retorno `: void`, `infoTable(string): array`.
+- **HTTP controllers / CLI:** `DependencyResolver::get()` + `input_*`.
+
+### Pendiente
+
+- [ ] `legacy/Avisos`: conserva `echo`/`exit` en `crear_pid` (deuda documentada).
+- [ ] `AvisosEnviarMails`: sigue usando `mail()` y `sleep(60)` (deuda conocida).
+- [ ] N+1 y acoplamiento legacy en `AvisosGenerarTabla` (fuera de alcance DI).
+
+## Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests existentes pasan (`tests/unit/cambios/`: 97 tests)
+- [x] PHPStan `src/cambios/` en 0 (phpstan-nobaseline.neon)

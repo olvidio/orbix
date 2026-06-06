@@ -17,9 +17,11 @@ class CambioUsuarioPropiedadPref
      *
      * @return string sCondicio
      */
-    public function getTextCambio():string
+    public function getTextCambio(): string|false
     {
-        if (!is_true($this->isValor_new()) && !is_true($this->isValor_old())) return FALSE;
+        if (!is_true($this->isValor_new()) && !is_true($this->isValor_old())) {
+            return false;
+        }
         $sText = _("si el");
         $sText .= ' ';
         if (is_true($this->isValor_new())) $sText .= _("nuevo valor");
@@ -110,7 +112,10 @@ class CambioUsuarioPropiedadPref
      */
     public function setPropiedad(string $propiedad): void
     {
-        $this->propiedad = PropiedadNombre::fromNullableString($propiedad);
+        $vo = PropiedadNombre::fromNullableString($propiedad);
+        if ($vo !== null) {
+            $this->propiedad = $vo;
+        }
     }
 
     public function getPropiedadVo(): PropiedadNombre
@@ -120,9 +125,14 @@ class CambioUsuarioPropiedadPref
 
     public function setPropiedadVo(PropiedadNombre|string|null $texto): void
     {
-        $this->propiedad = $texto instanceof PropiedadNombre
-            ? $texto
-            : PropiedadNombre::fromNullableString($texto);
+        if ($texto instanceof PropiedadNombre) {
+            $this->propiedad = $texto;
+            return;
+        }
+        $vo = PropiedadNombre::fromNullableString($texto);
+        if ($vo !== null) {
+            $this->propiedad = $vo;
+        }
     }
 
     /**

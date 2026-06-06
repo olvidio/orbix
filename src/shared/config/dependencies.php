@@ -20,13 +20,14 @@ return [
     ConnectionRepositoryFactoryInterface::class => autowire(ConnectionRepositoryFactory::class),
 
 // Event Bus - Infraestructura compartida
-    EventBusInterface::class => factory(function () {
+    RegistrarCambioListener::class => autowire(RegistrarCambioListener::class),
+
+    EventBusInterface::class => factory(function (RegistrarCambioListener $registrarCambioListener) {
         $eventBus = new InMemoryEventBus();
 
-        // Registrar listeners
         $eventBus->subscribe(
             EntidadModificada::class,
-            new RegistrarCambioListener()
+            $registrarCambioListener
         );
 
         return $eventBus;
