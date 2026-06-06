@@ -3,21 +3,22 @@
  * Endpoint backend: devuelve el listado de actividades del tipo + periodo
  * elegidos, junto con los centros encargados de cada una y los flags de
  * permiso (ver / modificar / crear) para cada fila.
- *
- * El HTML de la tabla se construye en el controller frontend
- * `frontend/actividadescentro/controller/activ_ctr.php`.
  */
 
 use src\actividadescentro\application\ListaActividadesCtrData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
 $input = [
-    'tipo' => (string)filter_input(INPUT_POST, 'tipo'),
-    'year' => (string)filter_input(INPUT_POST, 'year'),
-    'periodo' => (string)filter_input(INPUT_POST, 'periodo'),
-    'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
+    'tipo' => input_string($_POST, 'tipo'),
+    'year' => input_string($_POST, 'year'),
+    'periodo' => input_string($_POST, 'periodo'),
+    'empiezamin' => input_string($_POST, 'empiezamin'),
+    'empiezamax' => input_string($_POST, 'empiezamax'),
 ];
 
-$data = ListaActividadesCtrData::execute($input);
+/** @var ListaActividadesCtrData $useCase */
+$useCase = DependencyResolver::get(ListaActividadesCtrData::class);
+$data = $useCase->execute($input);
 ContestarJson::enviar('', $data);

@@ -8,17 +8,16 @@ use PHPUnit\Framework\TestCase;
 use src\actividadescentro\application\CentrosDisponiblesData;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 
 final class CentrosDisponiblesDataTest extends TestCase
 {
-    private mixed $previousContainer = null;
     private bool $hadIdioma = false;
     private mixed $previousIdioma = null;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
             $_SESSION['session_auth'] = [];
         }
@@ -34,17 +33,18 @@ final class CentrosDisponiblesDataTest extends TestCase
         } else {
             unset($_SESSION['session_auth']['idioma']);
         }
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
     public function test_tipo_invalido_devuelve_error(): void
     {
-        $out = CentrosDisponiblesData::execute(['tipo' => 'xyz', 'id_activ' => 1]);
+        $useCase = new CentrosDisponiblesData(
+            $this->createStub(CentroEncargadoRepositoryInterface::class),
+            $this->createStub(CentroDlRepositoryInterface::class),
+            $this->createStub(CentroEllasRepositoryInterface::class),
+        );
+
+        $out = $useCase->execute(['tipo' => 'xyz', 'id_activ' => 1]);
 
         $this->assertSame('xyz', $out['tipo']);
         $this->assertSame(1, $out['id_activ']);
@@ -68,20 +68,13 @@ final class CentrosDisponiblesDataTest extends TestCase
         $dl = $this->createStub(CentroDlRepositoryInterface::class);
         $dl->method('getCentros')->willReturn([$c]);
 
-        $GLOBALS['container'] = new class($dl) {
-            public function __construct(private readonly CentroDlRepositoryInterface $dl) {}
+        $useCase = new CentrosDisponiblesData(
+            $this->createStub(CentroEncargadoRepositoryInterface::class),
+            $dl,
+            $this->createStub(CentroEllasRepositoryInterface::class),
+        );
 
-            public function get(string $key): object
-            {
-                if ($key !== CentroDlRepositoryInterface::class) {
-                    throw new \RuntimeException('Clave inesperada: ' . $key);
-                }
-
-                return $this->dl;
-            }
-        };
-
-        $out = CentrosDisponiblesData::execute(['tipo' => 'sr', 'id_activ' => 5]);
+        $out = $useCase->execute(['tipo' => 'sr', 'id_activ' => 5]);
 
         $this->assertArrayNotHasKey('error', $out);
         $this->assertSame([['id_ubi' => 2, 'nombre_ubi' => 'DL2']], $out['centros']);
@@ -107,23 +100,13 @@ final class CentrosDisponiblesDataTest extends TestCase
         $enc->method('getActividadesDeCentros')->with(8, "f_ini BETWEEN '2024-01-01' AND '2024-12-31'")->willReturn([1, 2, 3]);
         $enc->method('getProximasActividadesDeCentro')->with(8, '2024-06-15')->willReturn('5');
 
-        $GLOBALS['container'] = new class($dl, $enc) {
-            public function __construct(
-                private readonly CentroDlRepositoryInterface $dl,
-                private readonly CentroEncargadoRepositoryInterface $enc,
-            ) {}
+        $useCase = new CentrosDisponiblesData(
+            $enc,
+            $dl,
+            $this->createStub(CentroEllasRepositoryInterface::class),
+        );
 
-            public function get(string $key): object
-            {
-                return match ($key) {
-                    CentroDlRepositoryInterface::class => $this->dl,
-                    CentroEncargadoRepositoryInterface::class => $this->enc,
-                    default => throw new \RuntimeException('Clave inesperada: ' . $key),
-                };
-            }
-        };
-
-        $out = CentrosDisponiblesData::execute([
+        $out = $useCase->execute([
             'tipo' => 'sg',
             'id_activ' => 1,
             'inicio' => '2024-01-01',

@@ -5,7 +5,10 @@
  */
 
 use src\actividadescentro\application\CentroEncargadoAsignar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$error_txt = CentroEncargadoAsignar::execute($_POST);
+/** @var CentroEncargadoAsignar $useCase */
+$useCase = DependencyResolver::get(CentroEncargadoAsignar::class);
+$error_txt = $useCase->execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

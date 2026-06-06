@@ -6,16 +6,25 @@
  */
 
 use src\actividadplazas\application\PeticionesActivData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
+$sactividad = input_string($_POST, 'sactividad');
+if ($sactividad === '') {
+    $sactividad = input_string($_POST, 'que');
+}
 
 $input = [
-    'id_nom' => (int)filter_input(INPUT_POST, 'id_nom'),
-    'na' => (string)filter_input(INPUT_POST, 'na'),
-    'sactividad' => (string)(filter_input(INPUT_POST, 'sactividad') ?: filter_input(INPUT_POST, 'que')),
-    'todos' => (int)filter_input(INPUT_POST, 'todos'),
-    'id_ctr_agd' => (int)filter_input(INPUT_POST, 'id_ctr_agd'),
-    'id_ctr_n' => (int)filter_input(INPUT_POST, 'id_ctr_n'),
+    'id_nom' => input_int($_POST, 'id_nom'),
+    'na' => input_string($_POST, 'na'),
+    'sactividad' => $sactividad,
+    'todos' => input_int($_POST, 'todos'),
+    'id_ctr_agd' => input_int($_POST, 'id_ctr_agd'),
+    'id_ctr_n' => input_int($_POST, 'id_ctr_n'),
 ];
 
-$data = PeticionesActivData::execute($input);
-ContestarJson::enviar('', $data);
+/** @var PeticionesActivData $useCase */
+$useCase = DependencyResolver::get(PeticionesActivData::class);
+ContestarJson::enviar('', $useCase->execute($input));

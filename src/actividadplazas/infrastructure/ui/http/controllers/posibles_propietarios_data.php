@@ -10,14 +10,18 @@
  */
 
 use src\actividadplazas\application\PosiblesPropietariosData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
 
 $input = [
-    'id_nom' => (int)filter_input(INPUT_POST, 'id_nom'),
-    'id_activ' => (int)filter_input(INPUT_POST, 'id_activ'),
+    'id_nom' => input_int($_POST, 'id_nom'),
+    'id_activ' => input_int($_POST, 'id_activ'),
 ];
 
-$data = PosiblesPropietariosData::execute($input);
+/** @var PosiblesPropietariosData $useCase */
+$useCase = DependencyResolver::get(PosiblesPropietariosData::class);
+$data = $useCase->execute($input);
 $error = (string)($data['error'] ?? '');
 if ($error !== '') {
     ContestarJson::enviar($error, 'ko');

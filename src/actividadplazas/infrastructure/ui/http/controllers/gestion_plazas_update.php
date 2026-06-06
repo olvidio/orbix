@@ -7,7 +7,15 @@
  */
 
 use src\actividadplazas\application\GestionPlazasUpdate;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
-$error = GestionPlazasUpdate::execute($_POST);
-ContestarJson::enviar($error, 'ok');
+$input = [
+    'data' => input_string($_POST, 'data'),
+    'colName' => input_string($_POST, 'colName'),
+];
+
+/** @var GestionPlazasUpdate $useCase */
+$useCase = DependencyResolver::get(GestionPlazasUpdate::class);
+ContestarJson::enviar($useCase->execute($input), 'ok');

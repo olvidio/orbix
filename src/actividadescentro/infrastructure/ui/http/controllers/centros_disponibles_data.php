@@ -3,21 +3,23 @@
  * Endpoint backend: devuelve los centros disponibles (candidatos) para
  * asignar como encargado de una actividad, filtrados por `tipo`
  * (sg / sr / nagd / sssc / sfsg / sfsr / sfnagd).
- *
- * Para tipo=sg se incluye por cada centro `num_actividades_periodo` y
- * `dif_dias` respecto a `f_ini_act`.
  */
 
 use src\actividadescentro\application\CentrosDisponiblesData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 $input = [
-    'tipo' => (string)filter_input(INPUT_POST, 'tipo'),
-    'id_activ' => (int)filter_input(INPUT_POST, 'id_activ'),
-    'inicio' => (string)filter_input(INPUT_POST, 'inicio'),
-    'fin' => (string)filter_input(INPUT_POST, 'fin'),
-    'f_ini_act' => (string)filter_input(INPUT_POST, 'f_ini_act'),
+    'tipo' => input_string($_POST, 'tipo'),
+    'id_activ' => input_int($_POST, 'id_activ'),
+    'inicio' => input_string($_POST, 'inicio'),
+    'fin' => input_string($_POST, 'fin'),
+    'f_ini_act' => input_string($_POST, 'f_ini_act'),
 ];
 
-$data = CentrosDisponiblesData::execute($input);
+/** @var CentrosDisponiblesData $useCase */
+$useCase = DependencyResolver::get(CentrosDisponiblesData::class);
+$data = $useCase->execute($input);
 ContestarJson::enviar('', $data);

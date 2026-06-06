@@ -6,6 +6,8 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Devuelve la lista de centros disponibles (candidatos) para asignar como
@@ -25,10 +27,22 @@ final class CentrosDisponiblesData
 {
     public const TIPOS_VALIDOS = ['sg', 'sr', 'nagd', 'sssc', 'sfsg', 'sfsr', 'sfnagd'];
 
-    public static function execute(array $input): array
+    public function __construct(
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     *
+     * @return array<string, mixed>
+     */
+    public function execute(array $input): array
     {
-        $tipo = (string)($input['tipo'] ?? '');
-        $id_activ = (int)($input['id_activ'] ?? 0);
+        $tipo = input_string($input, 'tipo');
+        $id_activ = input_int($input, 'id_activ');
         if (!in_array($tipo, self::TIPOS_VALIDOS, true)) {
             return [
                 'tipo' => $tipo,
@@ -38,45 +52,37 @@ final class CentrosDisponiblesData
             ];
         }
 
-        [$aWhere, $aOperador, $usarCentroEllas] = self::filtros($tipo);
-        $repo = $usarCentroEllas
-            ? $GLOBALS['container']->get(CentroEllasRepositoryInterface::class)
-            : $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+        [$aWhere, $aOperador, $usarCentroEllas] = $this->filtros($tipo);
+        $repo = $usarCentroEllas ? $this->centroEllasRepository : $this->centroDlRepository;
         $cCentros = $repo->getCentros($aWhere, $aOperador);
-        if (!is_array($cCentros)) {
-            $cCentros = [];
-        }
 
         $centros = [];
-        // Info adicional solo para sg.
         if ($tipo === 'sg') {
-            $inicio = (string)($input['inicio'] ?? '');
-            $fin = (string)($input['fin'] ?? '');
-            $f_ini_act = (string)($input['f_ini_act'] ?? '');
+            $inicio = input_string($input, 'inicio');
+            $fin = input_string($input, 'fin');
+            $f_ini_act = input_string($input, 'f_ini_act');
             $f_ini_act_iso = '';
-            if (!empty($f_ini_act)) {
+            if ($f_ini_act !== '') {
                 $oDate = DateTimeLocal::createFromLocal($f_ini_act);
                 $f_ini_act_iso = $oDate->getIso();
             }
-            $periodo = (!empty($inicio) && !empty($fin))
+            $periodo = ($inicio !== '' && $fin !== '')
                 ? "f_ini BETWEEN '" . $inicio . "' AND '" . $fin . "'"
                 : '';
 
-            $repoEncargado = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
             foreach ($cCentros as $oCentro) {
-                $id_ubi = (int)$oCentro->getId_ubi();
+                $id_ubi = (int) $oCentro->getId_ubi();
                 $num_activ = 0;
                 if ($periodo !== '') {
-                    $cActivs = $repoEncargado->getActividadesDeCentros($id_ubi, $periodo);
-                    $num_activ = is_array($cActivs) ? count($cActivs) : 0;
+                    $cActivs = $this->centroEncargadoRepository->getActividadesDeCentros($id_ubi, $periodo);
+                    $num_activ = count($cActivs);
                 }
-                $dif = '';
-                if ($f_ini_act_iso !== '') {
-                    $dif = $repoEncargado->getProximasActividadesDeCentro($id_ubi, $f_ini_act_iso);
-                }
+                $dif = $f_ini_act_iso !== ''
+                    ? $this->centroEncargadoRepository->getProximasActividadesDeCentro($id_ubi, $f_ini_act_iso)
+                    : '';
                 $centros[] = [
                     'id_ubi' => $id_ubi,
-                    'nombre_ubi' => (string)$oCentro->getNombre_ubi(),
+                    'nombre_ubi' => (string) $oCentro->getNombre_ubi(),
                     'num_actividades_periodo' => $num_activ,
                     'dif_dias' => $dif,
                 ];
@@ -84,8 +90,8 @@ final class CentrosDisponiblesData
         } else {
             foreach ($cCentros as $oCentro) {
                 $centros[] = [
-                    'id_ubi' => (int)$oCentro->getId_ubi(),
-                    'nombre_ubi' => (string)$oCentro->getNombre_ubi(),
+                    'id_ubi' => (int) $oCentro->getId_ubi(),
+                    'nombre_ubi' => (string) $oCentro->getNombre_ubi(),
                 ];
             }
         }
@@ -98,9 +104,9 @@ final class CentrosDisponiblesData
     }
 
     /**
-     * @return array{0: array, 1: array, 2: bool}  [aWhere, aOperador, usarCentroEllas]
+     * @return array{0: array<string, mixed>, 1: array<string, string>, 2: bool}
      */
-    private static function filtros(string $tipo): array
+    private function filtros(string $tipo): array
     {
         $aWhere = ['active' => 't', '_ordre' => 'nombre_ubi'];
         $aOperador = [];
@@ -120,8 +126,6 @@ final class CentrosDisponiblesData
                 $aOperador['tipo_ctr'] = '~';
                 break;
             case 'sssc':
-                // Misma regla que `ListCtrData` (`ctr_sssc`): centros SSS+ = `ss` o `sss`.
-                // `^sss` dejaba fuera `ss` y no coincide con el criterio de ubis.
                 $aWhere['tipo_ctr'] = '^(ss|sss)$';
                 $aOperador['tipo_ctr'] = '~';
                 break;

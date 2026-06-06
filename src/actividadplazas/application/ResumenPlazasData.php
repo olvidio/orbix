@@ -6,6 +6,8 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -17,27 +19,34 @@ use function src\shared\domain\helpers\is_true;
  */
 final class ResumenPlazasData
 {
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ResumenPlazasService $resumenPlazasService,
+    ) {
+    }
+
     /**
+     * @param array<string, mixed> $input
      * @return array{
      *     id_activ:int,
      *     nom_activ:string,
      *     publicado:bool,
      *     otra_dl:bool,
-     *     a_plazas:array,
+     *     a_plazas:array<string, mixed>,
      *     plazas_totales:int,
      *     tot_calendario:int,
      *     tot_cedidas:int,
      *     tot_conseguidas:int,
      *     tot_disponibles:int,
      *     tot_ocupadas:int,
-     *     dl_opciones:array,
+     *     dl_opciones:array<string, string>,
      *     error?:string
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $id_activ = (int)($input['id_activ'] ?? 0);
-        $nom_activ = (string)($input['nom_activ'] ?? '');
+        $id_activ = input_int($input, 'id_activ');
+        $nom_activ = input_string($input, 'nom_activ');
         if ($id_activ <= 0) {
             return [
                 'error' => (string)_("falta parametro id_activ"),
@@ -56,8 +65,7 @@ final class ResumenPlazasData
             ];
         }
 
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($id_activ);
+        $oActividad = $this->actividadAllRepository->findById($id_activ);
         $publicado = false;
         $otra_dl = false;
         if ($oActividad !== null) {
@@ -68,28 +76,36 @@ final class ResumenPlazasData
             }
         }
 
-        /** @var ResumenPlazasService $gesActividadPlazas */
-        $gesActividadPlazas = $GLOBALS['container']->get(ResumenPlazasService::class);
-        $gesActividadPlazas->setId_activ($id_activ);
-        $a_plazas = $gesActividadPlazas->getResumen();
+        $this->resumenPlazasService->setId_activ($id_activ);
+        $a_plazas = $this->resumenPlazasService->getResumen();
 
         $oDBPropiedades = new DBPropiedades();
         $dl_opciones = $oDBPropiedades->array_posibles_esquemas(true);
 
-        $tot = $a_plazas['total'] ?? [];
+        $totRaw = $a_plazas['total'] ?? [];
+        $tot = is_array($totRaw) ? $totRaw : [];
+        $dl_opciones_out = [];
+        if (is_array($dl_opciones)) {
+            foreach ($dl_opciones as $key => $label) {
+                if (is_string($key) && (is_string($label) || is_int($label))) {
+                    $dl_opciones_out[$key] = (string)$label;
+                }
+            }
+        }
+
         return [
             'id_activ' => $id_activ,
             'nom_activ' => $nom_activ,
             'publicado' => $publicado,
             'otra_dl' => $otra_dl,
             'a_plazas' => $a_plazas,
-            'plazas_totales' => (int)($tot['actividad'] ?? 0),
-            'tot_calendario' => (int)($tot['calendario'] ?? 0),
-            'tot_cedidas' => (int)($tot['cedidas'] ?? 0),
-            'tot_conseguidas' => (int)($tot['conseguidas'] ?? 0),
-            'tot_disponibles' => (int)($tot['disponibles'] ?? 0),
-            'tot_ocupadas' => (int)($tot['ocupadas'] ?? 0),
-            'dl_opciones' => is_array($dl_opciones) ? $dl_opciones : [],
+            'plazas_totales' => is_numeric($tot['actividad'] ?? null) ? (int)$tot['actividad'] : 0,
+            'tot_calendario' => is_numeric($tot['calendario'] ?? null) ? (int)$tot['calendario'] : 0,
+            'tot_cedidas' => is_numeric($tot['cedidas'] ?? null) ? (int)$tot['cedidas'] : 0,
+            'tot_conseguidas' => is_numeric($tot['conseguidas'] ?? null) ? (int)$tot['conseguidas'] : 0,
+            'tot_disponibles' => is_numeric($tot['disponibles'] ?? null) ? (int)$tot['disponibles'] : 0,
+            'tot_ocupadas' => is_numeric($tot['ocupadas'] ?? null) ? (int)$tot['ocupadas'] : 0,
+            'dl_opciones' => $dl_opciones_out,
         ];
     }
 }

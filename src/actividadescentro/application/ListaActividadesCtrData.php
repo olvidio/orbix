@@ -3,11 +3,15 @@
 namespace src\actividadescentro\application;
 
 use src\shared\config\ConfigGlobal;
+use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
+use src\procesos\domain\PermAccion;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use frontend\shared\web\Periodo;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Caso de uso: construye la tabla principal de la pantalla
@@ -24,15 +28,33 @@ use frontend\shared\web\Periodo;
  */
 final class ListaActividadesCtrData
 {
-    public static function execute(array $input): array
-    {
-        $tipo = (string)($input['tipo'] ?? '');
-        $year = (string)($input['year'] ?? '');
-        $periodo = (string)($input['periodo'] ?? '');
-        $empiezamin = (string)($input['empiezamin'] ?? '');
-        $empiezamax = (string)($input['empiezamax'] ?? '');
+    public function __construct(
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private CasaRepositoryInterface $casaRepository,
+    ) {
+    }
 
-        if (empty($periodo)) {
+    /**
+     * @param array<string, mixed> $input
+     *
+     * @return array{
+     *     titulo: string,
+     *     tipo: string,
+     *     inicio_iso: string,
+     *     fin_iso: string,
+     *     filas: list<array<string, mixed>>
+     * }
+     */
+    public function execute(array $input): array
+    {
+        $tipo = input_string($input, 'tipo');
+        $year = input_string($input, 'year');
+        $periodo = input_string($input, 'periodo');
+        $empiezamin = input_string($input, 'empiezamin');
+        $empiezamax = input_string($input, 'empiezamax');
+
+        if ($periodo === '') {
             $periodo = 'actual';
         }
 
@@ -42,8 +64,8 @@ final class ListaActividadesCtrData
         $oPeriodo->setEmpiezaMin($empiezamin);
         $oPeriodo->setEmpiezaMax($empiezamax);
         $oPeriodo->setPeriodo($periodo);
-        $inicioIso = $oPeriodo->getF_ini_iso();
-        $finIso = $oPeriodo->getF_fin_iso();
+        $inicioIso = (string) ($oPeriodo->getF_ini_iso() ?? '');
+        $finIso = (string) ($oPeriodo->getF_fin_iso() ?? '');
 
         $aWhere = [
             'f_ini' => "'$inicioIso','$finIso'",
@@ -54,32 +76,28 @@ final class ListaActividadesCtrData
             'f_ini' => 'BETWEEN',
             'status' => '<',
         ];
-        $regex = self::regexPorTipo($tipo);
+        $regex = $this->regexPorTipo($tipo);
         if ($regex !== null) {
             $aWhere['id_tipo_activ'] = $regex;
             $aOperador['id_tipo_activ'] = '~';
         }
 
-        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-        $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
-
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
-        $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
-        $a_casas = $CasaRepository->getArrayCasas();
+        $cActividades = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
+        $a_casas = $this->casaRepository->getArrayCasas();
 
         $filas = [];
         $orderKeysFecha = [];
         $orderKeysCasa = [];
         foreach ($cActividades as $oActividad) {
-            $id_activ = (int)$oActividad->getId_activ();
-            $id_tipo_activ = (string)$oActividad->getId_tipo_activ();
-            $dl_org = (string)$oActividad->getDl_org();
-            $nom_activ = (string)$oActividad->getNom_activ();
+            $id_activ = (int) $oActividad->getId_activ();
+            $id_tipo_activ = (string) $oActividad->getId_tipo_activ();
+            $dl_org = (string) ($oActividad->getDl_org() ?? '');
+            $nom_activ = (string) $oActividad->getNom_activ();
             $f_ini = $oActividad->getF_ini()?->getFromLocal();
             $f_fin = $oActividad->getF_fin()?->getFromLocal();
             $id_ubi_actividad = $oActividad->getId_ubi();
 
-            [$oPermActiv, $oPermCtr] = self::resolverPermisos($id_activ, $id_tipo_activ, $dl_org);
+            [$oPermActiv, $oPermCtr] = $this->resolverPermisos($id_activ, $id_tipo_activ, $dl_org);
 
             if ($oPermActiv->have_perm_activ('ocupado') === false) {
                 continue;
@@ -90,11 +108,11 @@ final class ListaActividadesCtrData
 
             $centros = [];
             if ($oPermCtr->have_perm_activ('ver') === true) {
-                $cCtrs = $CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ);
+                $cCtrs = $this->centroEncargadoRepository->getCentrosEncargadosActividad($id_activ);
                 foreach ($cCtrs as $oCentro) {
                     $centros[] = [
-                        'id_ubi' => (int)$oCentro->getId_ubi(),
-                        'nombre_ubi' => (string)$oCentro->getNombre_ubi(),
+                        'id_ubi' => (int) $oCentro->getId_ubi(),
+                        'nombre_ubi' => (string) $oCentro->getNombre_ubi(),
                     ];
                 }
             }
@@ -115,14 +133,17 @@ final class ListaActividadesCtrData
                 'perm_crear_ctr' => $oPermCtr->have_perm_activ('crear') === true,
                 'centros' => $centros,
             ];
-            $orderKeysFecha[$idx] = (string)$oActividad->getF_ini()?->getIso();
-            $orderKeysCasa[$idx] = (string)$nombre_ubi_actividad;
+            $fIniVo = $oActividad->getF_ini();
+            $orderKeysFecha[$idx] = $fIniVo instanceof DateTimeLocal ? (string) $fIniVo->getIso() : '';
+            $orderKeysCasa[$idx] = (string) $nombre_ubi_actividad;
         }
 
-        if (!empty($filas)) {
+        if ($filas !== []) {
             array_multisort(
-                $orderKeysFecha, SORT_STRING,
-                $orderKeysCasa, SORT_STRING,
+                $orderKeysFecha,
+                SORT_STRING,
+                $orderKeysCasa,
+                SORT_STRING,
                 $filas
             );
         }
@@ -136,7 +157,7 @@ final class ListaActividadesCtrData
         ];
     }
 
-    private static function regexPorTipo(string $tipo): ?string
+    private function regexPorTipo(string $tipo): ?string
     {
         switch ($tipo) {
             case 'sg':
@@ -158,19 +179,24 @@ final class ListaActividadesCtrData
     }
 
     /**
-     * @return array{0: object, 1: object}  [oPermActiv, oPermCtr]
+     * @return array{0: PermAccion, 1: PermAccion}
      */
-    private static function resolverPermisos(int $id_activ, string $id_tipo_activ, string $dl_org): array
+    private function resolverPermisos(int $id_activ, string $id_tipo_activ, string $dl_org): array
     {
-        if (ConfigGlobal::is_app_installed('procesos') && isset($_SESSION['oPermActividades'])) {
-            $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-            $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-            $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
-        } else {
-            $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
-            $oPermActiv = $oPermActividades->getPermisoActual('datos');
-            $oPermCtr = $oPermActividades->getPermisoActual('ctr');
+        if (ConfigGlobal::is_app_installed('procesos')) {
+            $oPermSesion = $_SESSION['oPermActividades'] ?? null;
+            if ($oPermSesion instanceof PermisosActividades) {
+                $oPermSesion->setActividad($id_activ, $id_tipo_activ, $dl_org);
+                $oPermActiv = $oPermSesion->getPermisoActual('datos');
+                $oPermCtr = $oPermSesion->getPermisoActual('ctr');
+
+                return [$oPermActiv, $oPermCtr];
+            }
         }
+        $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
+        $oPermActiv = $oPermActividades->getPermisoActual('datos');
+        $oPermCtr = $oPermActividades->getPermisoActual('ctr');
+
         return [$oPermActiv, $oPermCtr];
     }
 }

@@ -11,17 +11,12 @@ final class PlazaPeticionPk
     public function __construct(
         private int $idActiv,
         private int $idNom
-    )
-    {
-        if (!is_numeric($idActiv)) {
-            throw new \InvalidArgumentException('id_activ debe ser numérico');
-        }
-        // puede ser negativo para los ex
-        if (!is_numeric($idNom)) {
-            throw new \InvalidArgumentException('id_nom debe numérico');
-        }
+    ) {
     }
 
+    /**
+     * @param array{id_activ: int|string, id_nom: int|string} $pk
+     */
     public static function fromArray(array $pk): self
     {
         return new self((int)$pk['id_activ'], (int)$pk['id_nom']);

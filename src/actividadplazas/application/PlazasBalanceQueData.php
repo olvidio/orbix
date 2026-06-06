@@ -4,7 +4,8 @@ namespace src\actividadplazas\application;
 
 use src\actividades\domain\entity\TiposActividades;
 use src\shared\config\ConfigGlobal;
-use src\ubis\application\services\DelegacionDropdown;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Opciones del desplegable de delegaciones + `id_tipo_activ` resuelto para
@@ -12,13 +13,18 @@ use src\ubis\application\services\DelegacionDropdown;
  */
 final class PlazasBalanceQueData
 {
+    public function __construct(
+        private DelegacionRepositoryInterface $delegacionRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input POST (id_tipo_activ, sasistentes, sactividad, …)
      * @return array{id_tipo_activ: string, delegaciones_opciones: array<string, string>}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $idTipo = (string)($input['id_tipo_activ'] ?? '');
+        $idTipo = input_string($input, 'id_tipo_activ');
         if ($idTipo === '') {
             $ssfsv = '';
             $mi = (int)ConfigGlobal::mi_sfsv();
@@ -28,8 +34,8 @@ final class PlazasBalanceQueData
             if ($mi === 2) {
                 $ssfsv = 'sf';
             }
-            $sa = (string)($input['sasistentes'] ?? '');
-            $sact = (string)($input['sactividad'] ?? '');
+            $sa = input_string($input, 'sasistentes');
+            $sact = input_string($input, 'sactividad');
             $oTipoActiv = new TiposActividades();
             $oTipoActiv->setSfsvText($ssfsv);
             $oTipoActiv->setAsistentesText($sa);
@@ -39,7 +45,25 @@ final class PlazasBalanceQueData
 
         return [
             'id_tipo_activ' => $idTipo,
-            'delegaciones_opciones' => DelegacionDropdown::activasOrdenNombre(),
+            'delegaciones_opciones' => $this->delegacionesActivasOrdenNombre(),
         ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function delegacionesActivasOrdenNombre(): array
+    {
+        $delegaciones = $this->delegacionRepository->getDelegaciones([
+            'active' => true,
+            '_ordre' => 'nombre_dl',
+        ]);
+
+        $opciones = [];
+        foreach ($delegaciones as $dl) {
+            $opciones[$dl->getDlVo()?->value() ?? ''] = $dl->getNombreDlVo()?->value() ?? '';
+        }
+
+        return $opciones;
     }
 }

@@ -25,6 +25,7 @@ class ActividadPlazas
 
     private DelegacionTablaCode $dl_tabla;
 
+    /** @var array<string, int>|null */
     private ?array $cedidas = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
@@ -60,9 +61,6 @@ class ActividadPlazas
         return $this->plazas;
     }
 
-    /**
-     * @param PlazasNumero|null $oPlazasNumero
-     */
     public function setPlazasVo(PlazasNumero|int|null $valor = null): void
     {
         $this->plazas = $valor instanceof PlazasNumero
@@ -75,7 +73,9 @@ class ActividadPlazas
      */
     public function getPlazas(): ?string
     {
-        return $this->plazas?->value();
+        $value = $this->plazas?->value();
+
+        return $value !== null ? (string)$value : null;
     }
 
     /**
@@ -94,9 +94,6 @@ class ActividadPlazas
         return $this->cl;
     }
 
-    /**
-     * @param PlazaClCode|null $oPlazaClCode
-     */
     public function setClVo(PlazaClCode|string|null $texto = null): void
     {
         $this->cl = $texto instanceof PlazaClCode
@@ -130,14 +127,17 @@ class ActividadPlazas
         return $this->dl_tabla;
     }
 
-    /**
-     * @param DelegacionTablaCode $oDelegacionTablaCode
-     */
     public function setDlTablaVo(DelegacionTablaCode|string $texto): void
     {
-        $this->dl_tabla = $texto instanceof DelegacionTablaCode
-            ? $texto
-            : DelegacionTablaCode::fromNullableString($texto);
+        if ($texto instanceof DelegacionTablaCode) {
+            $this->dl_tabla = $texto;
+            return;
+        }
+        $vo = DelegacionTablaCode::fromNullableString($texto);
+        if ($vo === null) {
+            throw new \InvalidArgumentException('DelegacionTablaCode no puede estar vacío');
+        }
+        $this->dl_tabla = $vo;
     }
 
     /**
@@ -153,12 +153,11 @@ class ActividadPlazas
      */
     public function setDlTabla(string $dl_tabla): void
     {
-        $this->dl_tabla = DelegacionTablaCode::fromNullableString($dl_tabla);
+        $this->setDlTablaVo($dl_tabla);
     }
 
     /**
-     *
-     * @return array|null $cedidas
+     * @return array<string, int>|null
      */
     public function getArrayCedidas(): ?array
     {
@@ -166,8 +165,7 @@ class ActividadPlazas
     }
 
     /**
-     *
-     * @param array|null $cedidas
+     * @param array<string, int>|null $cedidas
      */
     public function setCedidas(?array $cedidas = null): void
     {

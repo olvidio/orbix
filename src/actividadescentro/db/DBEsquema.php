@@ -12,44 +12,44 @@ use src\utils_database\domain\entity\DBAbstract;
  */
 class DBEsquema extends DBAbstract
 {
+    private string $dir_base = ServerConf::DIR . "/src/actividadescentro/db";
 
-    private $dir_base = ServerConf::DIR . "/src/actividadescentro/db";
-
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
         if (empty($esquema_sfsv)) {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
         }
-        $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
+        $this->esquema = substr($esquema_sfsv, 0, -1);
         $this->role = '"' . $this->esquema . '"';
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->eliminar_da_ctr_encargados();
-        // eliminar las tablas en la DBSelect para la sincronización.
         if (DBAbstract::hasServerSelect()) {
             $oDBEsquemaSelect = new DBEsquemaSelect();
             $oDBEsquemaSelect->dropAllSelect();
         }
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->create_da_ctr_encargados();
-        // crear las tablas en la DBSelect para la sincronización.
         if (DBAbstract::hasServerSelect()) {
             $oDBEsquemaSelect = new DBEsquemaSelect();
             $oDBEsquemaSelect->createAllSelect();
         }
     }
 
-    public function llenarAll()
+    public function llenarAll(): void
     {
     }
 
-    protected function infoTable($tabla)
+    /**
+     * @return array{tabla: string, nom_tabla: string, campo_seq: string, id_seq: string, filename: string}
+     */
+    protected function infoTable(string $tabla): array
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
@@ -59,6 +59,8 @@ class DBEsquema extends DBAbstract
                 $campo_seq = '';
                 $id_seq = '';
                 break;
+            default:
+                throw new \InvalidArgumentException('Tabla desconocida: ' . $tabla);
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
         $datosTabla['campo_seq'] = $campo_seq;
@@ -67,13 +69,8 @@ class DBEsquema extends DBAbstract
         return $datosTabla;
     }
 
-
-    /**
-     * En la BD Comun (esquema).
-     */
-    public function create_da_ctr_encargados()
+    public function create_da_ctr_encargados(): void
     {
-        // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
 
         $tabla = "da_ctr_encargados";
@@ -81,16 +78,11 @@ class DBEsquema extends DBAbstract
 
         $nom_tabla = $datosTabla['nom_tabla'];
         $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
-
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                         CONSTRAINT $nompkey PRIMARY KEY (id_activ, id_ubi)
-                ) 
+                )
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
@@ -101,9 +93,8 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_da_ctr_encargados()
+    public function eliminar_da_ctr_encargados(): void
     {
-        // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
 
         $datosTabla = $this->infoTable("da_ctr_encargados");
@@ -119,8 +110,4 @@ class DBEsquema extends DBAbstract
 
         $this->delPermisoGlobal('comun');
     }
-
-
-    /* ###################### LLENAR TABLAS ################################ */
-
 }

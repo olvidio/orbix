@@ -9,32 +9,12 @@ use src\actividadplazas\domain\entity\PlazaPeticion;
 
 final class PeticionesGuardarTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_faltan_parametros(): void
     {
         $repo = $this->createMock(PlazaPeticionRepositoryInterface::class);
         $repo->expects($this->never())->method('getPlazasPeticion');
 
-        $GLOBALS['container'] = $this->containerOne(PlazaPeticionRepositoryInterface::class, $repo);
-
-        $msg = PeticionesGuardar::execute(['id_nom' => 1, 'sactividad' => '']);
+        $msg = (new PeticionesGuardar($repo))->execute(['id_nom' => 1, 'sactividad' => '']);
         $this->assertNotSame('', $msg);
     }
 
@@ -49,12 +29,10 @@ final class PeticionesGuardarTest extends TestCase
         $repo->method('findById')->willReturn(null);
         $repo->expects($this->exactly(2))->method('Guardar')->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerOne(PlazaPeticionRepositoryInterface::class, $repo);
-
-        $msg = PeticionesGuardar::execute([
+        $msg = (new PeticionesGuardar($repo))->execute([
             'id_nom' => 100,
             'sactividad' => 'ca',
-            'actividades' => [10, 0, 20],
+            'actividades' => ['10', '0', '20'],
         ]);
         $this->assertSame('', $msg);
     }
@@ -77,12 +55,10 @@ final class PeticionesGuardarTest extends TestCase
                 && $p->getTipo() === 'ca';
         }))->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerOne(PlazaPeticionRepositoryInterface::class, $repo);
-
-        $this->assertSame('', PeticionesGuardar::execute([
+        $this->assertSame('', (new PeticionesGuardar($repo))->execute([
             'id_nom' => 100,
             'sactividad' => 'ca',
-            'actividades' => [10],
+            'actividades' => ['10'],
         ]));
     }
 
@@ -93,34 +69,11 @@ final class PeticionesGuardarTest extends TestCase
         $repo->method('findById')->willReturn(null);
         $repo->method('Guardar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerOne(PlazaPeticionRepositoryInterface::class, $repo);
-
-        $msg = PeticionesGuardar::execute([
+        $msg = (new PeticionesGuardar($repo))->execute([
             'id_nom' => 1,
             'sactividad' => 'ca',
-            'actividades' => [5],
+            'actividades' => ['5'],
         ]);
         $this->assertNotSame('', $msg);
-    }
-
-    /**
-     * @param class-string $iface
-     */
-    private function containerOne(string $iface, object $service): object
-    {
-        return new class($iface, $service) {
-            public function __construct(
-                private readonly string $iface,
-                private readonly object $service
-            ) {}
-
-            public function get(string $id): object
-            {
-                if ($id !== $this->iface) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->service;
-            }
-        };
     }
 }

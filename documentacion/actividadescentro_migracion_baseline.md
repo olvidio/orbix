@@ -276,3 +276,115 @@ renderizar.
   prioridad` reordena; `borrar` elimina.
 - `grep` final `apps/actividadescentro/controller/activ_ctr_ajax.php` → debe
   dar 0 resultados fuera de `languages/*.po*` (gettext cache se regenera).
+
+---
+
+## Cierre DI (2026-06-06)
+
+Seguimiento del cierre DI de `src/actividadescentro/` siguiendo el patron aplicado en
+`zonassacd` ([`zonassacd_migracion_baseline.md`](zonassacd_migracion_baseline.md)),
+`actividadcargos` ([`actividadcargos_migracion_baseline.md`](actividadcargos_migracion_baseline.md)) y
+`actividades` ([`actividades_migracion_baseline.md`](actividades_migracion_baseline.md)).
+
+### Inventario inicial (antes del cierre DI)
+
+| Capa | Ficheros con `$GLOBALS['container']` |
+|------|--------------------------------------:|
+| `application/` | 5 |
+| `infrastructure/persistence/postgresql/` | 1 (`PgCentroEncargadoRepository`, 4 ocurrencias) |
+| **Total** | **6 ficheros** (10 ocurrencias) |
+
+### Estaticos convertidos a instancia + DI
+
+| Clase | Antes | Despues |
+|-------|-------|---------|
+| `CentroEncargadoAsignar` | `CentroEncargadoAsignar::execute()` | `execute()` con `CentroEncargadoRepositoryInterface` |
+| `CentroEncargadoEliminar` | `CentroEncargadoEliminar::execute()` | idem |
+| `CentroEncargadoReordenar` | `CentroEncargadoReordenar::execute()` | idem |
+| `CentrosDisponiblesData` | `CentrosDisponiblesData::execute()` | `execute()` con 3 repos inyectados |
+| `CentrosEncargadosData` | `CentrosEncargadosData::execute()` | `execute()` con `CentroEncargadoRepositoryInterface` |
+| `ListaActividadesCtrData` | `ListaActividadesCtrData::execute()` | `execute()` con 3 repos inyectados |
+| `ActivCtrShellData` | `ActivCtrShellData::build()` estatico | `build()` instancia (sin deps) |
+
+### Domain
+
+| Clase | Cambio |
+|-------|--------|
+| `Info3010` | Constructor DI (`CentroEncargadoRepositoryInterface`), patron `InfoCargo`; `getColeccion()` |
+| `CentroEncargadoRepositoryInterface` | PHPDoc tipado (`list<CentroEncargado>`, `list<CentroDl\|CentroEllas>`, etc.) |
+| `CentroEncargado`, `CentroEncargadoPk` | Tipos de retorno PHPStan |
+
+### Repositorios
+
+| Clase | Cambio |
+|-------|--------|
+| `PgCentroEncargadoRepository` | Constructor DI: `ActividadDlRepository`, `CentroDlRepository`, `CentroEllasRepository`; `GlobalPdo::get('oDBC')` / `oDBC_Select`; guards PDO |
+
+### HTTP controllers
+
+Los 7 controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()` (sin `::execute()` / `::build()` estatico).
+Entrada POST via `input_string` / `input_int`.
+
+### Frontend
+
+`frontend/actividadescentro/controller/activ_ctr.php` ya usa solo `PostRequest` +
+`HashFront` (0 `use src\...`).
+
+### Resultado del cierre DI
+
+| Criterio | Estado |
+|----------|--------|
+| `$GLOBALS['container']` en `src/actividadescentro/` | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | **7/7** |
+| `application/` con constructor DI | **7** clases |
+| Casos de uso en `config/dependencies.php` | **9** entradas `autowire()` (+ repo + `Info3010`) |
+| Tests `tests/unit/actividadescentro/application/` | **17 OK** |
+
+### `src/actividadescentro/config/dependencies.php`
+
+Registra `PgCentroEncargadoRepository` + casos de uso (`ActivCtrShellData`,
+`CentroEncargadoAsignar`, `CentroEncargadoEliminar`, `CentroEncargadoReordenar`,
+`CentrosDisponiblesData`, `CentrosEncargadosData`, `ListaActividadesCtrData`) e
+`Info3010`.
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (inicio) | `composer phpstan:file -- src/actividadescentro/` | **112** |
+| 2026-06-06 (cierre) | `composer phpstan:file -- src/actividadescentro/` | **0** |
+
+Areas abordadas en el cierre (112 → 0):
+
+- Application: constructor DI, `input_*`, `instanceof PermisosActividades`, tipos `PermAccion`.
+- Repos `PgCentroEncargadoRepository` — guards PDO, tipos de retorno, `GlobalPdo`, DI de repos ubis/actividades.
+- Domain: `Info3010` DI, contratos con PHPDoc, VOs y entity tipados.
+- HTTP controllers: `DependencyResolver::get()` + helpers `input_*`.
+- `db/`: return types `: void`, `infoTable()` con shape tipado.
+
+### Deuda post-refactor
+
+#### Completado
+
+- [x] 0 `$GLOBALS['container']` en todo `src/actividadescentro/`
+- [x] Todos los controllers HTTP via `DependencyResolver`
+- [x] Casos de uso con constructor DI
+- [x] `dependencies.php` con todos los use cases
+- [x] Frontend `activ_ctr.php` sin `use src\...`
+- [x] Tests `tests/unit/actividadescentro/application/`: 17 tests
+- [x] PHPStan `src/actividadescentro/` en 0 (phpstan-nobaseline.neon)
+
+#### Pendiente
+
+- [ ] Tests de dominio (`tests/unit/actividadescentro/domain/`) requieren `$_SESSION['session_auth']['sfsv']` en bootstrap (`ConfigGlobal::mi_sfsv()`)
+
+### Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests application pasan (`tests/unit/actividadescentro/application/`: 17 tests)
+- [x] PHPStan `src/actividadescentro/` en 0 (phpstan-nobaseline.neon)

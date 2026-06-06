@@ -3,6 +3,9 @@
 namespace src\actividadescentro\application;
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadescentro\domain\entity\CentroEncargado;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Reordena un `CentroEncargado` en el listado de centros encargados de una
@@ -17,11 +20,19 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
  */
 final class CentroEncargadoReordenar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $id_activ = (int)($input['id_activ'] ?? 0);
-        $id_ubi = (int)($input['id_ubi'] ?? 0);
-        $direccion = (string)($input['num_orden'] ?? '');
+        $id_activ = input_int($input, 'id_activ');
+        $id_ubi = input_int($input, 'id_ubi');
+        $direccion = input_string($input, 'num_orden');
 
         if ($id_activ <= 0 || $id_ubi <= 0) {
             return _("faltan parametros id_activ / id_ubi");
@@ -30,42 +41,40 @@ final class CentroEncargadoReordenar
             return _("direccion de orden incorrecta (mas / menos)");
         }
 
-        $repo = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
-        $cCentros = $repo->getCentrosEncargados([
+        $cCentros = $this->centroEncargadoRepository->getCentrosEncargados([
             'id_activ' => $id_activ,
             '_ordre' => 'num_orden',
         ]);
 
         $errors = '';
-        $i_max = is_array($cCentros) ? count($cCentros) : 0;
+        $i_max = count($cCentros);
         for ($i = 0; $i < $i_max; $i++) {
-            if ($cCentros[$i]->getId_ubi() !== $id_ubi) {
+            $oActual = $cCentros[$i];
+            if ($oActual->getId_ubi() !== $id_ubi) {
                 continue;
             }
-            $num_orden_actual = (int)$cCentros[$i]->getNum_orden();
+            $num_orden_actual = (int) ($oActual->getNum_orden() ?? 0);
 
             if ($direccion === 'mas' && $i >= 1) {
                 $oAnterior = $cCentros[$i - 1];
-                $num_orden_anterior = (int)$oAnterior->getNum_orden();
+                $num_orden_anterior = (int) ($oAnterior->getNum_orden() ?? 0);
                 $oAnterior->setNum_orden($num_orden_actual);
-                if ($repo->Guardar($oAnterior) === false) {
+                if ($this->centroEncargadoRepository->Guardar($oAnterior) === false) {
                     $errors .= _("error al ordenar (1)") . ' ';
                 }
-                $oActual = $cCentros[$i];
                 $oActual->setNum_orden($num_orden_anterior);
-                if ($repo->Guardar($oActual) === false) {
+                if ($this->centroEncargadoRepository->Guardar($oActual) === false) {
                     $errors .= _("error al ordenar (2)") . ' ';
                 }
             } elseif ($direccion === 'menos' && $i < ($i_max - 1)) {
                 $oPosterior = $cCentros[$i + 1];
-                $num_orden_posterior = (int)$oPosterior->getNum_orden();
+                $num_orden_posterior = (int) ($oPosterior->getNum_orden() ?? 0);
                 $oPosterior->setNum_orden($num_orden_actual);
-                if ($repo->Guardar($oPosterior) === false) {
+                if ($this->centroEncargadoRepository->Guardar($oPosterior) === false) {
                     $errors .= _("error al ordenar (3)") . ' ';
                 }
-                $oActual = $cCentros[$i];
                 $oActual->setNum_orden($num_orden_posterior);
-                if ($repo->Guardar($oActual) === false) {
+                if ($this->centroEncargadoRepository->Guardar($oActual) === false) {
                     $errors .= _("error al ordenar (4)") . ' ';
                 }
             }

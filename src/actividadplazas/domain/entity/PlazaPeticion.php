@@ -24,7 +24,7 @@ class PlazaPeticion
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getPlazaPeticionPk()
+    public function getPlazaPeticionPk(): PlazaPeticionPk
     {
         return PlazaPeticionPk::fromArray([
             'id_activ' => $this->id_activ,
@@ -67,9 +67,11 @@ class PlazaPeticion
 
     public function setOrdenVo(PeticionOrden|int|null $valor): void
     {
-        $this->orden = $valor instanceof PeticionOrden
-            ? $valor
-            : PeticionOrden::fromNullableInt($valor);
+        if ($valor instanceof PeticionOrden) {
+            $this->orden = $valor;
+            return;
+        }
+        $this->orden = PeticionOrden::fromNullableInt($valor) ?? PeticionOrden::fromInt(0);
     }
 
     /**
@@ -85,7 +87,7 @@ class PlazaPeticion
      */
     public function setOrden(int $orden): void
     {
-        $this->orden = PeticionOrden::fromNullableInt($orden);
+        $this->orden = PeticionOrden::fromInt($orden);
     }
 
     /**

@@ -294,3 +294,78 @@ Se eliminaron las dos desviaciones documentadas inicialmente:
   `apps/asistentes/controller/form_{1301,3101}.php` (que siguen
   renderizando el `<select>` inicial en servidor mientras no se
   migran al frontend).
+
+## Cierre DI (2026-06-06)
+
+Los 11 controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()` (sin `::execute()` estático).
+Entrada POST via `input_string` / `input_int` / `input_string_list`.
+
+### Resultado del cierre DI
+
+| Criterio | Estado |
+|----------|--------|
+| `$GLOBALS['container']` en `src/actividadplazas/` | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | **11/11** |
+| `application/` con constructor DI | **12** clases (11 use cases + `PlazasDlEdicion`) |
+| Pg repos con `GlobalPdo::get()` | **3/3** |
+| Casos de uso en `config/dependencies.php` | **16** entradas `autowire()` (3 repos + service + 12 use cases) |
+| Tests `tests/unit/actividadplazas/` | **59 OK** |
+
+### `src/actividadplazas/config/dependencies.php`
+
+Registra repositorios del módulo, `ResumenPlazasService` (con deps
+externas de actividades/ubis/asistentes) y todos los use cases:
+`GestionPlazasData`, `GestionPlazasUpdate`, `PeticionesActivData`,
+`PeticionesGuardar`, `PeticionesEliminar`, `PeticionesIncorporar`,
+`PlazasBalanceData`, `PlazasBalanceQueData`, `PlazasCeder`,
+`PlazasDlEdicion`, `PosiblesPropietariosData`, `ResumenPlazasData`.
+
+`PlazasCalendarioMensaje` permanece como helper estático (mensaje de
+ayuda); no requiere registro DI.
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (inicio) | `composer phpstan:file -- src/actividadplazas/` | **167** |
+| 2026-06-06 (cierre) | `composer phpstan:file -- src/actividadplazas/` | **0** |
+
+Áreas abordadas en el cierre (167 → 0):
+
+- Application: `input_*` helpers, `ConfigSnapshot` para `oConfig`,
+  tipos de retorno en payloads JSON, `PlazasDlEdicion` sin guards
+  `array|false` obsoletos.
+- `ResumenPlazasService`: propiedades tipadas, corrección bug
+  `setArrayDl()`, null-checks en `getResumen()` / `getPlazasPropias()`.
+- Domain: entidades/VOs/contratos con PHPDoc `array<string,mixed>`,
+  setters VO sin null en propiedades no-nullables.
+- Repos `PgActividadPlazasRepository`, `PgPlazaPeticionRepository`:
+  guards PDO, tipos de retorno, `GlobalPdo`.
+- HTTP controllers: `DependencyResolver::get()` + helpers `input_*`.
+
+### Deuda post-refactor
+
+#### Completado
+
+- [x] 0 `$GLOBALS['container']` en todo `src/actividadplazas/`
+- [x] Todos los controllers HTTP via `DependencyResolver`
+- [x] Casos de uso con constructor DI
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests `tests/unit/actividadplazas/`: 59 tests
+- [x] PHPStan `src/actividadplazas/` en 0 (phpstan-nobaseline.neon)
+
+#### Pendiente
+
+- [ ] 2 controladores frontend con `use src\` (ver
+  [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md))
+
+### Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests existentes pasan (`tests/unit/actividadplazas/`: 59 tests)
+- [x] PHPStan `src/actividadplazas/` en 0 (phpstan-nobaseline.neon)

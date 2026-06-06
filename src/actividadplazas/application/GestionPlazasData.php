@@ -10,6 +10,7 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Data builder de la pantalla principal `gestion_plazas`.
@@ -22,10 +23,18 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class GestionPlazasData
 {
+    public function __construct(
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private ActividadPlazasRepositoryInterface $actividadPlazasRepository,
+    ) {
+    }
+
     /**
+     * @param array<string, mixed> $input
      * @return array{
-     *     a_cabeceras: array,
-     *     a_valores: array,
+     *     a_cabeceras: list<array<string, mixed>>,
+     *     a_valores: array<int, array<string, mixed>>,
      *     a_grupo: array<string,int>,
      *     extendida: bool,
      *     id_tipo_activ: string,
@@ -36,13 +45,13 @@ final class GestionPlazasData
      *     empiezamax: string
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $Qid_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
-        $Qyear = (string)($input['year'] ?? '');
-        $Qperiodo = (string)($input['periodo'] ?? '');
-        $Qempiezamin = (string)($input['empiezamin'] ?? '');
-        $Qempiezamax = (string)($input['empiezamax'] ?? '');
+        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
+        $Qyear = input_string($input, 'year');
+        $Qperiodo = input_string($input, 'periodo');
+        $Qempiezamin = input_string($input, 'empiezamin');
+        $Qempiezamax = input_string($input, 'empiezamax');
         $Qsactividad = '';
         $extendida = false;
 
@@ -51,9 +60,9 @@ final class GestionPlazasData
             if (ConfigGlobal::mi_sfsv() === 2) {
                 $Qssfsv = 'sf';
             }
-            $Qsasistentes = (string)($input['sasistentes'] ?? '');
-            $Qsactividad = (string)($input['sactividad'] ?? '');
-            $Qsactividad2 = (string)($input['sactividad2'] ?? '');
+            $Qsasistentes = input_string($input, 'sasistentes');
+            $Qsactividad = input_string($input, 'sactividad');
+            $Qsactividad2 = input_string($input, 'sactividad2');
             if ($Qsactividad2 !== '') {
                 $extendida = true;
             }
@@ -100,8 +109,7 @@ final class GestionPlazasData
 
         $mi_reg = ConfigGlobal::mi_region();
         $mi_dl = ConfigGlobal::mi_delef();
-        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $cDelegaciones = $repoDelegacion->getDelegaciones(['region' => $mi_reg, 'dl' => $mi_dl]);
+        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['region' => $mi_reg, 'dl' => $mi_dl]);
         if (empty($cDelegaciones)) {
             return [
                 'a_cabeceras' => [],
@@ -122,7 +130,7 @@ final class GestionPlazasData
         if ($grupo_estudios === null) {
             $cDelegaciones = [$oMiDelegacion];
         } else {
-            $cDelegaciones = $repoDelegacion->getDelegaciones([
+            $cDelegaciones = $this->delegacionRepository->getDelegaciones([
                 'grupo_estudios' => $grupo_estudios,
                 '_ordre' => 'region,dl',
             ]);
@@ -133,7 +141,6 @@ final class GestionPlazasData
         $cActividades = [];
         $id_tipo_activ_regex = '^' . $Qid_tipo_activ;
         $status = StatusId::ACTUAL;
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
         foreach ($cDelegaciones as $oDelegacion) {
             $dl = (string)$oDelegacion->getDlVo()?->value();
             $id_dl = (int)($oDelegacion->getIdDlVo()?->value() ?? 0);
@@ -146,14 +153,13 @@ final class GestionPlazasData
                 '_ordre' => 'publicado,f_ini',
             ];
             $aOperador = ['id_tipo_activ' => '~', 'f_ini' => 'BETWEEN'];
-            $cActividades1 = $ActividadRepository->getActividades($aWhere, $aOperador);
+            $cActividades1 = $this->actividadRepository->getActividades($aWhere, $aOperador);
             array_push($cActividades, ...$cActividades1);
         }
 
         // Plazas por actividad + dl.
         $i = 0;
         $a_valores = [];
-        $ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
         foreach ($cActividades as $oActividad) {
             $i++;
             $id_activ = $oActividad->getId_activ();
@@ -184,7 +190,7 @@ final class GestionPlazasData
             foreach ($a_grupo as $dl => $id_dl) {
                 $pedidas = '-';
                 $concedidas = '-';
-                $cActividadPlazas = $ActividadPlazasRepository->getActividadesPlazas([
+                $cActividadPlazas = $this->actividadPlazasRepository->getActividadesPlazas([
                     'id_dl' => $id_dl,
                     'id_activ' => $id_activ,
                 ]);

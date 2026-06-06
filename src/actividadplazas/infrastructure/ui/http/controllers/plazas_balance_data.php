@@ -6,14 +6,18 @@
  */
 
 use src\actividadplazas\application\PlazasBalanceData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
 $input = [
-    'dl' => (string)filter_input(INPUT_POST, 'dl'),
-    'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),
+    'dl' => input_string($_POST, 'dl'),
+    'id_tipo_activ' => input_string($_POST, 'id_tipo_activ'),
 ];
 
-$data = PlazasBalanceData::execute($input);
+/** @var PlazasBalanceData $useCase */
+$useCase = DependencyResolver::get(PlazasBalanceData::class);
+$data = $useCase->execute($input);
 $error = (string)($data['error'] ?? '');
 unset($data['error']);
 ContestarJson::enviar($error, $data);

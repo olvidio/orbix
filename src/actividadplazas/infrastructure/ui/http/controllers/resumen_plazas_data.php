@@ -6,14 +6,19 @@
  */
 
 use src\actividadplazas\application\ResumenPlazasData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 $input = [
-    'id_activ' => (int)filter_input(INPUT_POST, 'id_activ'),
-    'nom_activ' => (string)filter_input(INPUT_POST, 'nom_activ'),
+    'id_activ' => input_int($_POST, 'id_activ'),
+    'nom_activ' => input_string($_POST, 'nom_activ'),
 ];
 
-$data = ResumenPlazasData::execute($input);
+/** @var ResumenPlazasData $useCase */
+$useCase = DependencyResolver::get(ResumenPlazasData::class);
+$data = $useCase->execute($input);
 $error = (string)($data['error'] ?? '');
 unset($data['error']);
 ContestarJson::enviar($error, $data);

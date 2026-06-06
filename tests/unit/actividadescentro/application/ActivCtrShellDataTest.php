@@ -35,7 +35,8 @@ final class ActivCtrShellDataTest extends TestCase
     public function test_contrato_de_claves_sv(): void
     {
         $_SESSION['session_auth']['sfsv'] = 1;
-        $out = ActivCtrShellData::build(['tipo' => 'sg']);
+        $useCase = new ActivCtrShellData();
+        $out = $useCase->build(['tipo' => 'sg']);
 
         $expectedKeys = [
             'tipo',
@@ -61,9 +62,10 @@ final class ActivCtrShellDataTest extends TestCase
     public function test_sf_remapea_tipos(): void
     {
         $_SESSION['session_auth']['sfsv'] = 2;
+        $useCase = new ActivCtrShellData();
 
-        $this->assertSame('sfsg', ActivCtrShellData::build(['tipo' => 'sg'])['tipo']);
-        $this->assertSame('sfsr', ActivCtrShellData::build(['tipo' => 'sr'])['tipo']);
-        $this->assertSame('sfnagd', ActivCtrShellData::build(['tipo' => 'nagd'])['tipo']);
+        $this->assertSame('sfsg', $useCase->build(['tipo' => 'sg'])['tipo']);
+        $this->assertSame('sfsr', $useCase->build(['tipo' => 'sr'])['tipo']);
+        $this->assertSame('sfnagd', $useCase->build(['tipo' => 'nagd'])['tipo']);
     }
 }

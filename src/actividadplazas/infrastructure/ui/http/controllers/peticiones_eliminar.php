@@ -5,12 +5,16 @@
  */
 
 use src\actividadplazas\application\PeticionesEliminar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 $input = [
-    'id_nom' => (int)filter_input(INPUT_POST, 'id_nom'),
-    'sactividad' => (string)filter_input(INPUT_POST, 'sactividad'),
+    'id_nom' => input_int($_POST, 'id_nom'),
+    'sactividad' => input_string($_POST, 'sactividad'),
 ];
 
-$error = PeticionesEliminar::execute($input);
-ContestarJson::enviar($error, 'ok');
+/** @var PeticionesEliminar $useCase */
+$useCase = DependencyResolver::get(PeticionesEliminar::class);
+ContestarJson::enviar($useCase->execute($input), 'ok');

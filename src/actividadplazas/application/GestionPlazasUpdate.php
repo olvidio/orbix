@@ -6,6 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Mutacion de celda de la tabla editable de `gestion_plazas` (y
@@ -21,23 +22,33 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
  */
 final class GestionPlazasUpdate
 {
+    public function __construct(
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private ActividadPlazasDlRepositoryInterface $actividadPlazasDlRepository,
+        private PlazasDlEdicion $plazasDlEdicion,
+    ) {
+    }
+
     /**
      * Campos POST enviados por el form interno de `TablaEditable`:
      *  - `data`    (JSON) fila editada, con claves `id`, `dlorg`,
      *              `tot`, `<dl>-c`, `<dl>-p`, …
      *  - `colName` (JSON) nombre de la columna modificada (`tot`,
      *              `<dl>-c`, `<dl>-p`, `<dl>-l`).
+     *
+     * @param array<string, mixed> $input
      */
-    public static function execute(array $input): string
+    public function execute(array $input): string
     {
-        $dataRaw = (string)($input['data'] ?? '');
-        $colNameRaw = (string)($input['colName'] ?? '');
+        $dataRaw = input_string($input, 'data');
+        $colNameRaw = input_string($input, 'colName');
         if ($dataRaw === '' || $colNameRaw === '') {
             return '';
         }
         $obj = json_decode($dataRaw);
         $dl = json_decode($colNameRaw);
-        if (!is_object($obj) || $dl === null) {
+        if (!is_object($obj) || !is_string($dl)) {
             return '';
         }
 
@@ -53,42 +64,39 @@ final class GestionPlazasUpdate
         // Plazas totales de la actividad (editable solo si la actividad es
         // de mi dl).
         if ($dl === 'tot' && $mi_dele === $dl_org) {
-            $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-            $oActividadDl = $ActividadDlRepository->findById($id_activ);
+            $oActividadDl = $this->actividadDlRepository->findById($id_activ);
             if ($oActividadDl === null) {
                 return (string)_("no se encuentra la actividad");
             }
             $oActividadDl->setPlazas($plazas);
-            if ($ActividadDlRepository->Guardar($oActividadDl) === false) {
+            if ($this->actividadDlRepository->Guardar($oActividadDl) === false) {
                 $err = (string)_("hay un error, no se ha guardado");
-                return $err . "\n" . $ActividadDlRepository->getErrorTxt();
+                return $err . "\n" . $this->actividadDlRepository->getErrorTxt();
             }
             return '';
         }
 
         // Resto de columnas: `<dl>-c` o `<dl>-p` (concedidas / pedidas).
-        $dl_sigla = substr((string)$dl, 0, -2);
+        $dl_sigla = substr($dl, 0, -2);
         if (ConfigGlobal::mi_sfsv() === 2) {
             // para sf quitar la `f` final
             $dl_sigla = substr($dl_sigla, 0, -1);
         }
         $id_dl = 0;
-        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $dl_sigla]);
-        if (is_array($cDelegaciones) && count($cDelegaciones) > 0) {
-            $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
+        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dl_sigla]);
+        if ($cDelegaciones !== [] && isset($cDelegaciones[0])) {
+            $id_dl = (int)($cDelegaciones[0]->getIdDlVo()?->value() ?? 0);
         }
         // Lectura del cuadro en {@see GestionPlazasData}: da_plazas (calendario común).
         // Lo que edita esta dl se persiste en da_plazas_dl.
-        $oActividadPlazasDl = PlazasDlEdicion::obtenerOCrearDesdeCalendario($id_activ, $id_dl, $mi_dele);
+        $oActividadPlazasDl = $this->plazasDlEdicion->obtenerOCrearDesdeCalendario($id_activ, $id_dl, $mi_dele);
         if ($oActividadPlazasDl === null) {
             return PlazasCalendarioMensaje::faltaRegistro();
         }
         $oActividadPlazasDl->setPlazas($plazas);
-        $ActividadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
-        if ($ActividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
+        if ($this->actividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
             $err = (string)_("hay un error, no se ha guardado");
-            return $err . "\n" . $ActividadPlazasDlRepository->getErrorTxt();
+            return $err . "\n" . $this->actividadPlazasDlRepository->getErrorTxt();
         }
         return '';
     }

@@ -2,39 +2,33 @@
 
 namespace src\actividadescentro\domain\contracts;
 
+use src\actividades\domain\entity\ActividadAll;
 use src\actividadescentro\domain\entity\CentroEncargado;
 use src\actividadescentro\domain\value_objects\CentroEncargadoPk;
+use src\ubis\domain\entity\CentroDl;
+use src\ubis\domain\entity\CentroEllas;
 
-
-/**
- * Interfaz de la clase CentroEncargado y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 19/12/2025
- */
 interface CentroEncargadoRepositoryInterface
 {
-
     public function getProximasActividadesDeCentro(int $id_ubi, string $f_ini_act_iso): string;
 
+    /**
+     * @return list<ActividadAll>
+     */
     public function getActividadesDeCentros(int $iid_ubi, string $scondicion = ''): array;
 
+    /**
+     * @return list<CentroDl|CentroEllas>
+     */
     public function getCentrosEncargadosActividad(int $iid_activ): array;
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo CentroEncargado
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo CentroEncargado
+     * @return list<CentroEncargado>
      */
     public function getCentrosEncargados(array $aWhere = [], array $aOperators = []): array;
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(CentroEncargado $CentroEncargado, bool $registrarCambios = true): bool;
 
@@ -42,24 +36,18 @@ interface CentroEncargadoRepositoryInterface
 
     public function getErrorTxt(): string;
 
-
-
     public function getNomTabla(): string;
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_activ, int $id_ubi): array|bool;
-
-    public function datosByPk(CentroEncargadoPk $pk): array|bool;
+    public function datosById(int $id_activ, int $id_ubi): array|false;
 
     /**
-     * Busca la clase con id_activ en el repositorio.
+     * @return array<string, mixed>|false
      */
+    public function datosByPk(CentroEncargadoPk $pk): array|false;
+
     public function findById(int $id_activ, int $id_ubi): ?CentroEncargado;
 
     public function findByPk(CentroEncargadoPk $pk): ?CentroEncargado;

@@ -8,7 +8,10 @@ use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Data builder de la pantalla `peticiones_activ`: lista de actividades
@@ -20,7 +23,17 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
  */
 final class PeticionesActivData
 {
+    public function __construct(
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private ActividadPubRepositoryInterface $actividadPubRepository,
+        private PlazaPeticionRepositoryInterface $plazaPeticionRepository,
+    ) {
+    }
+
     /**
+     * @param array<string, mixed> $input
      * @return array{
      *     id_nom: int,
      *     ap_nom: string,
@@ -31,21 +44,23 @@ final class PeticionesActivData
      *     tipo: string
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $id_nom = (int)($input['id_nom'] ?? 0);
-        $na = (string)($input['na'] ?? '');
-        $sactividad = (string)($input['sactividad'] ?? $input['que'] ?? '');
-        $todos = (int)($input['todos'] ?? 0);
-        $id_ctr_agd = (int)($input['id_ctr_agd'] ?? 0);
-        $id_ctr_n = (int)($input['id_ctr_n'] ?? 0);
+        $id_nom = input_int($input, 'id_nom');
+        $na = input_string($input, 'na');
+        $sactividad = input_string($input, 'sactividad');
+        if ($sactividad === '') {
+            $sactividad = input_string($input, 'que');
+        }
+        $todos = input_int($input, 'todos');
+        $id_ctr_agd = input_int($input, 'id_ctr_agd');
+        $id_ctr_n = input_int($input, 'id_ctr_n');
 
         if (($na === 'a' || $na === 'agd') && $sactividad === 'ca') {
             $sactividad = 'cv';
         }
 
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $oPersona = $PersonaDlRepository->findById($id_nom);
+        $oPersona = $this->personaDlRepository->findById($id_nom);
         $ap_nom = is_object($oPersona) ? (string)$oPersona->getPrefApellidosNombre() : '';
 
         $aWhere = [];
@@ -53,8 +68,7 @@ final class PeticionesActivData
 
         if ($todos !== 0 && $todos !== 1) {
             $grupo_estudios = $todos;
-            $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-            $cDelegaciones = $DelegacionRepository->getDelegaciones(['grupo_estudios' => $grupo_estudios]);
+            $cDelegaciones = $this->delegacionRepository->getDelegaciones(['grupo_estudios' => $grupo_estudios]);
             if (count($cDelegaciones) > 1) {
                 $aOperador['dl_org'] = 'OR';
             }
@@ -71,15 +85,17 @@ final class PeticionesActivData
         // Periodo del curso.
         $inicurs = '';
         $fincurs = '';
+        /** @var ConfigSnapshot $oConfig */
+        $oConfig = $_SESSION['oConfig'];
         switch ($sactividad) {
             case 'ca':
             case 'cv':
-                $any = $_SESSION['oConfig']->any_final_curs('est');
+                $any = $oConfig->any_final_curs('est');
                 $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'est')->format('Y-m-d');
                 $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'est')->format('Y-m-d');
                 break;
             case 'crt':
-                $any = $_SESSION['oConfig']->any_final_curs('crt');
+                $any = $oConfig->any_final_curs('crt');
                 $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->format('Y-m-d');
                 $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->format('Y-m-d');
                 break;
@@ -109,13 +125,11 @@ final class PeticionesActivData
                 $aWhere['id_tipo_activ'] = $Qid_tipo_activ;
                 $aOperador['id_tipo_activ'] = '~';
 
-                $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-                $cActividadesDl = $ActividadDlRepository->getActividades($aWhere, $aOperador);
+                $cActividadesDl = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
                 // Evitar duplicar las de midele al sacar las publicadas.
                 $aWhere['dl_org'] = $mi_dele;
                 $aOperador['dl_org'] = '!=';
-                $ActividadPubRepository = $GLOBALS['container']->get(ActividadPubRepositoryInterface::class);
-                $cActividadesPub = $ActividadPubRepository->getActividades($aWhere, $aOperador);
+                $cActividadesPub = $this->actividadPubRepository->getActividades($aWhere, $aOperador);
                 $cActividades = array_merge($cActividadesDl, ['-------'], $cActividadesPub);
                 break;
             case 'n':
@@ -130,12 +144,10 @@ final class PeticionesActivData
                 $aWhere['id_tipo_activ'] = $Qid_tipo_activ;
                 $aOperador['id_tipo_activ'] = '~';
 
-                $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-                $cActividadesDl = $ActividadDlRepository->getActividades($aWhere, $aOperador);
+                $cActividadesDl = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
                 $aWhere['dl_org'] = $mi_dele;
                 $aOperador['dl_org'] = '!=';
-                $ActividadPubRepository = $GLOBALS['container']->get(ActividadPubRepositoryInterface::class);
-                $cActividadesPub = $ActividadPubRepository->getActividades($aWhere, $aOperador);
+                $cActividadesPub = $this->actividadPubRepository->getActividades($aWhere, $aOperador);
                 $cActividades = array_merge($cActividadesDl, ['-------'], $cActividadesPub);
                 break;
         }
@@ -154,8 +166,7 @@ final class PeticionesActivData
         }
 
         // Peticiones actuales: borrar las que ya no esten en la lista.
-        $PlazaPeticionRepository = $GLOBALS['container']->get(PlazaPeticionRepositoryInterface::class);
-        $cPlazasPeticion = $PlazaPeticionRepository->getPlazasPeticion([
+        $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion([
             'id_nom' => $id_nom,
             'tipo' => $sactividad,
             '_ordre' => 'orden',
@@ -165,7 +176,7 @@ final class PeticionesActivData
             $id_activ_pet = $oPlazaPeticion->getId_activ();
             if (!in_array($id_activ_pet, $a_IdActividades)) {
                 unset($cPlazasPeticion[$key]);
-                $PlazaPeticionRepository->Eliminar($oPlazaPeticion);
+                $this->plazaPeticionRepository->Eliminar($oPlazaPeticion);
                 continue;
             }
             $sid_activ .= $sid_activ === '' ? $id_activ_pet : ',' . $id_activ_pet;

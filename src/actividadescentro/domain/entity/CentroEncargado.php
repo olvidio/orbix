@@ -20,7 +20,7 @@ class CentroEncargado
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getCentroEncargadoPk()
+    public function getCentroEncargadoPk(): CentroEncargadoPk
     {
         return CentroEncargadoPk::fromArray([
             'id_activ' => $this->id_activ,
@@ -53,7 +53,7 @@ class CentroEncargado
      */
     public function getNum_orden(): ?string
     {
-        return $this->num_orden?->value();
+        return $this->num_orden !== null ? (string) $this->num_orden->value() : null;
     }
 
     /**

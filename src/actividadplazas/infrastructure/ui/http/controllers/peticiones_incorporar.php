@@ -6,14 +6,18 @@
  */
 
 use src\actividadplazas\application\PeticionesIncorporar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
 $input = [
-    'sactividad' => (string)filter_input(INPUT_POST, 'sactividad'),
-    'sasistentes' => (string)filter_input(INPUT_POST, 'sasistentes'),
+    'sactividad' => input_string($_POST, 'sactividad'),
+    'sasistentes' => input_string($_POST, 'sasistentes'),
 ];
 
-$result = PeticionesIncorporar::execute($input);
-$error = (string)($result['error'] ?? '');
+/** @var PeticionesIncorporar $useCase */
+$useCase = DependencyResolver::get(PeticionesIncorporar::class);
+$result = $useCase->execute($input);
+$error = $result['error'];
 unset($result['error']);
 ContestarJson::enviar($error, $result);

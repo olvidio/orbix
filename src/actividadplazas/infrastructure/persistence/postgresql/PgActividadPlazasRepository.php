@@ -2,6 +2,7 @@
 
 namespace src\actividadplazas\infrastructure\persistence\postgresql;
 
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -29,7 +30,7 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBP'];
+        $oDbl = GlobalPdo::get('oDBP');
         $this->setoDbl($oDbl);
         $this->setNomTabla('da_plazas');
     }
@@ -39,9 +40,9 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
     /**
      * devuelve una colección (array) de objetos de tipo ActividadPlazas
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActividadPlazas
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ActividadPlazas>
      * @throws JsonException
      */
     public function getActividadesPlazas(array $aWhere = [], array $aOperators = []): array
@@ -79,29 +80,37 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string)$limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para los json
             $aDatos['cedidas'] = (new ConverterJson($aDatos['cedidas'], true))->fromPg();
             $ActividadPlazas = ActividadPlazas::fromArray($aDatos);
             $ActividadPlazasSet->add($ActividadPlazas);
         }
-        return $ActividadPlazasSet->getTot();
+        return array_values($ActividadPlazasSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -160,6 +169,9 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -169,33 +181,40 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ = $id_activ";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      * @throws JsonException
      */
-    public function datosById(int $id_activ): array|bool
+    public function datosById(int $id_activ): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ = $id_activ";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        // para los json
-        if ($aDatos !== false) {
-            $aDatos['cedidas'] = (new ConverterJson($aDatos['cedidas'], true))->fromPg();
+        if (!is_array($aDatos)) {
+            return false;
         }
-        return $aDatos;
+        $aDatos['cedidas'] = (new ConverterJson($aDatos['cedidas'], true))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string)$key] = $value;
+        }
+
+        return $result;
     }
 
 
@@ -206,7 +225,7 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
     public function findById(int $id_activ): ?ActividadPlazas
     {
         $aDatos = $this->datosById($id_activ);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return ActividadPlazas::fromArray($aDatos);

@@ -4,6 +4,7 @@ namespace src\actividadescentro\application;
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadescentro\domain\entity\CentroEncargado;
+use function src\shared\domain\helpers\input_int;
 
 /**
  * Asigna un `CentroEncargado` nuevo a una actividad.
@@ -15,24 +16,29 @@ use src\actividadescentro\domain\entity\CentroEncargado;
  */
 final class CentroEncargadoAsignar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $id_activ = (int)($input['id_activ'] ?? 0);
-        $id_ubi = (int)($input['id_ubi'] ?? 0);
+        $id_activ = input_int($input, 'id_activ');
+        $id_ubi = input_int($input, 'id_ubi');
         if ($id_activ <= 0 || $id_ubi <= 0) {
             return _("faltan parametros id_activ / id_ubi");
         }
 
-        $repo = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
-
-        // Calcular num_orden = max(num_orden) + 1.
-        $cCentros = $repo->getCentrosEncargados([
+        $cCentros = $this->centroEncargadoRepository->getCentrosEncargados([
             'id_activ' => $id_activ,
             '_ordre' => 'num_orden DESC',
         ]);
-        $num_orden = (is_array($cCentros) && count($cCentros) >= 1)
-            ? ((int)$cCentros[0]->getNum_orden() + 1)
-            : 1; // mejor nop poner 0. Que el primero sea 1
+        $num_orden = count($cCentros) >= 1
+            ? ((int) ($cCentros[0]->getNum_orden() ?? 0) + 1)
+            : 1;
 
         $oCentroEncargado = new CentroEncargado();
         $oCentroEncargado->setId_activ($id_activ);
@@ -40,7 +46,7 @@ final class CentroEncargadoAsignar
         $oCentroEncargado->setNum_orden($num_orden);
         $oCentroEncargado->setEncargo('organizador');
 
-        if ($repo->Guardar($oCentroEncargado) === false) {
+        if ($this->centroEncargadoRepository->Guardar($oCentroEncargado) === false) {
             return _("hay un error, no se ha guardado el centro encargado");
         }
         return '';

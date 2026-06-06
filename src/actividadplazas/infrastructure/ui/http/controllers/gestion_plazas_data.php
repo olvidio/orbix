@@ -6,18 +6,21 @@
  */
 
 use src\actividadplazas\application\GestionPlazasData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
 $input = [
-    'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),
-    'year' => (string)filter_input(INPUT_POST, 'year'),
-    'periodo' => (string)filter_input(INPUT_POST, 'periodo'),
-    'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
-    'sasistentes' => (string)filter_input(INPUT_POST, 'sasistentes'),
-    'sactividad' => (string)filter_input(INPUT_POST, 'sactividad'),
-    'sactividad2' => (string)filter_input(INPUT_POST, 'sactividad2'),
+    'id_tipo_activ' => input_string($_POST, 'id_tipo_activ'),
+    'year' => input_string($_POST, 'year'),
+    'periodo' => input_string($_POST, 'periodo'),
+    'empiezamin' => input_string($_POST, 'empiezamin'),
+    'empiezamax' => input_string($_POST, 'empiezamax'),
+    'sasistentes' => input_string($_POST, 'sasistentes'),
+    'sactividad' => input_string($_POST, 'sactividad'),
+    'sactividad2' => input_string($_POST, 'sactividad2'),
 ];
 
-$data = GestionPlazasData::execute($input);
-ContestarJson::enviar('', $data);
+/** @var GestionPlazasData $useCase */
+$useCase = DependencyResolver::get(GestionPlazasData::class);
+ContestarJson::enviar('', $useCase->execute($input));

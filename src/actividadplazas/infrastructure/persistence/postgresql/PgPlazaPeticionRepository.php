@@ -2,6 +2,7 @@
 
 namespace src\actividadplazas\infrastructure\persistence\postgresql;
 
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
@@ -27,7 +28,7 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
+        $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
         $this->setNomTabla('dap_plazas_peticion_dl');
     }
@@ -37,9 +38,9 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
     /**
      * devuelve una colección (array) de objetos de tipo PlazaPeticion
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo PlazaPeticion
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<PlazaPeticion>
      */
     public function getPlazasPeticion(array $aWhere = [], array $aOperators = []): array
     {
@@ -76,27 +77,35 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string)$limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $PlazaPeticion = PlazaPeticion::fromArray($aDatos);
             $PlazaPeticionSet->add($PlazaPeticion);
         }
-        return $PlazaPeticionSet->getTot();
+        return array_values($PlazaPeticionSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -140,6 +149,9 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -149,33 +161,43 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND id_activ=$id_activ";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_nom
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_nom, int $id_activ): array|bool
+    public function datosById(int $id_nom, int $id_activ): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND id_activ=$id_activ";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string)$key] = $value;
+        }
+
+        return $result;
     }
 
-    public function datosByPk(PlazaPeticionPk $pk): array|bool
+    public function datosByPk(PlazaPeticionPk $pk): array|false
     {
-        return $this->datosById($pk->IdNom(), $pk->IdActiv());
+        return $this->datosById($pk->idNom(), $pk->idActiv());
     }
 
     /**
@@ -184,7 +206,7 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
     public function findById(int $id_nom, int $id_activ): ?PlazaPeticion
     {
         $aDatos = $this->datosById($id_nom, $id_activ);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return PlazaPeticion::fromArray($aDatos);
@@ -192,6 +214,6 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
 
     public function findByPk(PlazaPeticionPk $pk): ?PlazaPeticion
     {
-        return $this->findById($pk->IdNom(), $pk->IdActiv());
+        return $this->findById($pk->idNom(), $pk->idActiv());
     }
 }

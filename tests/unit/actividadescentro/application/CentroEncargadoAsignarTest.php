@@ -11,28 +11,13 @@ use src\actividadescentro\domain\entity\CentroEncargado;
 
 final class CentroEncargadoAsignarTest extends TestCase
 {
-    private mixed $previousContainer = null;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_parametros_faltantes(): void
     {
-        $this->assertNotSame('', CentroEncargadoAsignar::execute(['id_activ' => 0, 'id_ubi' => 1]));
-        $this->assertNotSame('', CentroEncargadoAsignar::execute(['id_activ' => 1, 'id_ubi' => 0]));
+        $repo = $this->createStub(CentroEncargadoRepositoryInterface::class);
+        $useCase = new CentroEncargadoAsignar($repo);
+
+        $this->assertNotSame('', $useCase->execute(['id_activ' => 0, 'id_ubi' => 1]));
+        $this->assertNotSame('', $useCase->execute(['id_activ' => 1, 'id_ubi' => 0]));
     }
 
     public function test_primer_centro_num_orden_1(): void
@@ -49,20 +34,8 @@ final class CentroEncargadoAsignarTest extends TestCase
             }))
             ->willReturn(true);
 
-        $GLOBALS['container'] = new class($repo) {
-            public function __construct(private readonly CentroEncargadoRepositoryInterface $repo) {}
-
-            public function get(string $key): object
-            {
-                if ($key !== CentroEncargadoRepositoryInterface::class) {
-                    throw new \RuntimeException('Clave inesperada: ' . $key);
-                }
-
-                return $this->repo;
-            }
-        };
-
-        $this->assertSame('', CentroEncargadoAsignar::execute(['id_activ' => 3, 'id_ubi' => 7]));
+        $useCase = new CentroEncargadoAsignar($repo);
+        $this->assertSame('', $useCase->execute(['id_activ' => 3, 'id_ubi' => 7]));
     }
 
     public function test_incrementa_num_orden(): void
@@ -79,19 +52,7 @@ final class CentroEncargadoAsignarTest extends TestCase
             }))
             ->willReturn(true);
 
-        $GLOBALS['container'] = new class($repo) {
-            public function __construct(private readonly CentroEncargadoRepositoryInterface $repo) {}
-
-            public function get(string $key): object
-            {
-                if ($key !== CentroEncargadoRepositoryInterface::class) {
-                    throw new \RuntimeException('Clave inesperada: ' . $key);
-                }
-
-                return $this->repo;
-            }
-        };
-
-        $this->assertSame('', CentroEncargadoAsignar::execute(['id_activ' => 1, 'id_ubi' => 2]));
+        $useCase = new CentroEncargadoAsignar($repo);
+        $this->assertSame('', $useCase->execute(['id_activ' => 1, 'id_ubi' => 2]));
     }
 }

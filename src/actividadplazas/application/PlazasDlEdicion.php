@@ -12,26 +12,30 @@ use src\actividadplazas\domain\entity\ActividadPlazas;
  */
 final class PlazasDlEdicion
 {
-    public static function obtenerOCrearDesdeCalendario(int $idActiv, int $idDl, string $dlTabla): ?ActividadPlazas
+    public function __construct(
+        private ActividadPlazasDlRepositoryInterface $actividadPlazasDlRepository,
+        private ActividadPlazasRepositoryInterface $actividadPlazasRepository,
+    ) {
+    }
+
+    public function obtenerOCrearDesdeCalendario(int $idActiv, int $idDl, string $dlTabla): ?ActividadPlazas
     {
-        $dlRepo = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
-        $cLocal = $dlRepo->getActividadesPlazas([
+        $cLocal = $this->actividadPlazasDlRepository->getActividadesPlazas([
             'id_activ' => $idActiv,
             'id_dl' => $idDl,
             'dl_tabla' => $dlTabla,
         ]);
-        if (is_array($cLocal) && $cLocal !== [] && $cLocal !== false) {
+        if ($cLocal !== []) {
             return $cLocal[0];
         }
 
-        $calRepo = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
-        $cCal = $calRepo->getActividadesPlazas([
+        $cCal = $this->actividadPlazasRepository->getActividadesPlazas([
             'id_activ' => $idActiv,
             'id_dl' => $idDl,
             'dl_tabla' => $dlTabla,
         ]);
-        if (!is_array($cCal) || $cCal === [] || $cCal === false) {
-            $cCal = $calRepo->getActividadesPlazas([
+        if ($cCal === []) {
+            $cCal = $this->actividadPlazasRepository->getActividadesPlazas([
                 'id_activ' => $idActiv,
                 'id_dl' => $idDl,
             ]);
@@ -41,15 +45,15 @@ final class PlazasDlEdicion
         $o->setId_dl($idDl);
         $o->setDlTablaVo($dlTabla);
 
-        if (is_array($cCal) && $cCal !== [] && $cCal !== false) {
-            $src = self::elegirFilaCalendario($cCal, $dlTabla);
+        if ($cCal !== []) {
+            $src = $this->elegirFilaCalendario($cCal, $dlTabla);
             $o->setPlazasVo($src->getPlazasVo());
             $cedidas = $src->getArrayCedidas();
             if (is_array($cedidas)) {
                 $o->setCedidas($cedidas);
             }
         }
-        if ($dlRepo->Guardar($o) === false) {
+        if ($this->actividadPlazasDlRepository->Guardar($o) === false) {
             return null;
         }
 
@@ -59,7 +63,7 @@ final class PlazasDlEdicion
     /**
      * @param array<int, ActividadPlazas> $filas
      */
-    private static function elegirFilaCalendario(array $filas, string $dlTabla): ActividadPlazas
+    private function elegirFilaCalendario(array $filas, string $dlTabla): ActividadPlazas
     {
         foreach ($filas as $fila) {
             if ($fila->getDlTablaVo()->value() === $dlTabla) {

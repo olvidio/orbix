@@ -3,6 +3,7 @@
 namespace src\actividadplazas\infrastructure\persistence\postgresql;
 
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -22,7 +23,7 @@ class PgActividadPlazasDlRepository extends PgActividadPlazasRepository implemen
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDB'];
+        $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
         $this->setNomTabla('da_plazas_dl');
     }

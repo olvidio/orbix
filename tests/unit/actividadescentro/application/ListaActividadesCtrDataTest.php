@@ -13,7 +13,6 @@ use src\ubis\domain\contracts\CasaRepositoryInterface;
 
 final class ListaActividadesCtrDataTest extends TestCase
 {
-    private mixed $previousContainer = null;
     private mixed $previousPermActividades = null;
     private bool $hadIdioma = false;
     private mixed $previousIdioma = null;
@@ -21,7 +20,6 @@ final class ListaActividadesCtrDataTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousPermActividades = $_SESSION['oPermActividades'] ?? null;
         unset($_SESSION['oPermActividades']);
         if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
@@ -45,11 +43,6 @@ final class ListaActividadesCtrDataTest extends TestCase
         } else {
             $_SESSION['oPermActividades'] = $this->previousPermActividades;
         }
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -61,9 +54,8 @@ final class ListaActividadesCtrDataTest extends TestCase
         $casa = $this->createStub(CasaRepositoryInterface::class);
         $casa->method('getArrayCasas')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerTres($act, $ce, $casa);
-
-        $out = ListaActividadesCtrData::execute([
+        $useCase = new ListaActividadesCtrData($act, $ce, $casa);
+        $out = $useCase->execute([
             'tipo' => 'sg',
             'year' => '',
             'periodo' => 'actual',
@@ -136,9 +128,8 @@ final class ListaActividadesCtrDataTest extends TestCase
         $casa = $this->createStub(CasaRepositoryInterface::class);
         $casa->method('getArrayCasas')->willReturn([2 => 'Casa dos']);
 
-        $GLOBALS['container'] = $this->containerTres($act, $ce, $casa);
-
-        $out = ListaActividadesCtrData::execute([
+        $useCase = new ListaActividadesCtrData($act, $ce, $casa);
+        $out = $useCase->execute([
             'tipo' => 'sg',
             'periodo' => 'actual',
         ]);
@@ -150,29 +141,5 @@ final class ListaActividadesCtrDataTest extends TestCase
         $this->assertTrue($row['perm_modificar_ctr']);
         $this->assertTrue($row['perm_crear_ctr']);
         $this->assertSame([['id_ubi' => 99, 'nombre_ubi' => 'Enc']], $row['centros']);
-    }
-
-    private function containerTres(
-        ActividadDlRepositoryInterface $a,
-        CentroEncargadoRepositoryInterface $c,
-        CasaRepositoryInterface $s,
-    ): object {
-        return new class($a, $c, $s) {
-            public function __construct(
-                private readonly ActividadDlRepositoryInterface $a,
-                private readonly CentroEncargadoRepositoryInterface $c,
-                private readonly CasaRepositoryInterface $s,
-            ) {}
-
-            public function get(string $key): object
-            {
-                return match ($key) {
-                    ActividadDlRepositoryInterface::class => $this->a,
-                    CentroEncargadoRepositoryInterface::class => $this->c,
-                    CasaRepositoryInterface::class => $this->s,
-                    default => throw new \RuntimeException('Clave inesperada: ' . $key),
-                };
-            }
-        };
     }
 }

@@ -23,9 +23,9 @@ interface PlazaPeticionRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo PlazaPeticion
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo PlazaPeticion
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<PlazaPeticion>
      */
     public function getPlazasPeticion(array $aWhere = [], array $aOperators = []): array;
 
@@ -41,9 +41,15 @@ interface PlazaPeticionRepositoryInterface
 
     public function getNomTabla(): string;
 
-    public function datosById(int $id_nom, int $id_activ): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_nom, int $id_activ): array|false;
 
-    public function datosByPk(PlazaPeticionPk $pk): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosByPk(PlazaPeticionPk $pk): array|false;
 
     public function findById(int $id_nom, int $id_activ): ?PlazaPeticion;
 

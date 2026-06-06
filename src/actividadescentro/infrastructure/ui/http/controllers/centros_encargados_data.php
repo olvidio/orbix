@@ -5,13 +5,18 @@
  */
 
 use src\actividadescentro\application\CentrosEncargadosData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 $input = [
-    'id_activ' => (int)filter_input(INPUT_POST, 'id_activ'),
-    'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),
-    'dl_org' => (string)filter_input(INPUT_POST, 'dl_org'),
+    'id_activ' => input_int($_POST, 'id_activ'),
+    'id_tipo_activ' => input_string($_POST, 'id_tipo_activ'),
+    'dl_org' => input_string($_POST, 'dl_org'),
 ];
 
-$data = CentrosEncargadosData::execute($input);
+/** @var CentrosEncargadosData $useCase */
+$useCase = DependencyResolver::get(CentrosEncargadosData::class);
+$data = $useCase->execute($input);
 ContestarJson::enviar('', $data);

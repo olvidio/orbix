@@ -11,35 +11,31 @@ use src\utils_database\domain\entity\DBAbstract;
  */
 class DB extends DBAbstract
 {
-
     public function __construct()
     {
         $esquema_sfsv = ConfigGlobal::mi_region_dl();
-        $role = substr($esquema_sfsv, 0, -1); // quito la v o la f.
+        $role = substr($esquema_sfsv, 0, -1);
         $this->role = '"' . $role . '"';
         $this->role_vf = '"' . $esquema_sfsv . '"';
 
         $this->esquema = 'global';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
             $this->eliminar_da_ctr_encargados();
         });
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->ejecutarCreateAllGlobal(function (): void {
             $this->create_da_ctr_encargados();
         });
     }
 
-    /**
-     * En la BD Comun (global).
-     */
-    public function create_da_ctr_encargados()
+    public function create_da_ctr_encargados(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
@@ -61,7 +57,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
-    public function eliminar_da_ctr_encargados()
+    public function eliminar_da_ctr_encargados(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
@@ -71,5 +67,4 @@ class DB extends DBAbstract
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
-
 }

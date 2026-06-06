@@ -13,8 +13,8 @@ monta UI (`Lista`, `Hash`, vistas).
 
 | Métrica | Valor |
 |---------|------:|
-| Controladores afectados | **19** |
-| Módulos `frontend/...` afectados | **11** |
+| Controladores afectados | **18** |
+| Módulos `frontend/...` afectados | **10** |
 | (Abr 2026) controladores afectados | 205 |
 
 ## Resumen por módulo
@@ -31,7 +31,6 @@ monta UI (`Lista`, `Hash`, vistas).
 | 1 | `ubis` |
 | 1 | `menus` |
 | 1 | `actividadtarifas` |
-| 1 | `actividadescentro` |
 
 ## Listado completo
 
@@ -40,7 +39,6 @@ monta UI (`Lista`, `Hash`, vistas).
 | `frontend/actividades/controller/actividad_ver.php` | Unico frontend con `$GLOBALS['container']` conocido |
 | `frontend/actividades/controller/planning_casa_modificar.php` | |
 | `frontend/actividades/controller/planning_casa_nueva.php` | |
-| `frontend/actividadescentro/controller/activ_ctr.php` | |
 | `frontend/actividadessacd/controller/activ_sacd.php` | |
 | `frontend/actividadessacd/controller/asignar_sacd_auto.php` | |
 | `frontend/actividadestudios/controller/actualizar_docencia.php` | |
@@ -59,8 +57,8 @@ monta UI (`Lista`, `Hash`, vistas).
 
 ## Modulos ya limpios (antes con deuda)
 
-Entre otros: **`asistentes`** (12 controladores, 0 con `use src\`), **`notas`**,
-**`dossiers`**, **`procesos`**, **`planning`**, **`personas`**, **`profesores`**,
+Entre otros: **`asistentes`** (12 controladores, 0 con `use src\`), **`actividadescentro`**,
+**`notas`**, **`dossiers`**, **`procesos`**, **`planning`**, **`personas`**, **`profesores`**,
 **`encargossacd`**, **`misas`**, **`cambios`**, **`inventario`**, **`casas`**.
 
 ## `require_once("apps/core/global_object.inc")` en el front

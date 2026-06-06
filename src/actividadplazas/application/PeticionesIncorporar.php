@@ -13,8 +13,9 @@ use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
-use src\shared\infrastructure\DependencyResolver;
 use src\actividades\domain\entity\TiposActividades;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Incorpora la primera peticion de plaza de cada numerario/agregado
@@ -27,13 +28,25 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class PeticionesIncorporar
 {
+    public function __construct(
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private ActividadPubRepositoryInterface $actividadPubRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private PlazaPeticionRepositoryInterface $plazaPeticionRepository,
+        private AsistenteDlRepositoryInterface $asistenteDlRepository,
+        private AsistenteOutRepositoryInterface $asistenteOutRepository,
+        private PlazaPropietarioAsignacionInterface $plazaPropietarioAsignacion,
+    ) {
+    }
+
     /**
+     * @param array<string, mixed> $input
      * @return array{incorporadas:int, mensaje_final:string, error:string}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $sactividad = (string)($input['sactividad'] ?? '');
-        $sasistentes = (string)($input['sasistentes'] ?? '');
+        $sactividad = input_string($input, 'sactividad');
+        $sasistentes = input_string($input, 'sasistentes');
 
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $ssfsv = $mi_sfsv === 2 ? 'sf' : 'sv';
@@ -51,15 +64,17 @@ final class PeticionesIncorporar
 
         $inicurs = '';
         $fincurs = '';
+        /** @var ConfigSnapshot $oConfig */
+        $oConfig = $_SESSION['oConfig'];
         switch ($sactividad) {
             case 'ca':
             case 'cv':
-                $any = $_SESSION['oConfig']->any_final_curs('est');
+                $any = $oConfig->any_final_curs('est');
                 $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'est')->format('Y-m-d');
                 $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'est')->format('Y-m-d');
                 break;
             case 'crt':
-                $any = $_SESSION['oConfig']->any_final_curs('crt');
+                $any = $oConfig->any_final_curs('crt');
                 $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->format('Y-m-d');
                 $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->format('Y-m-d');
                 break;
@@ -79,24 +94,21 @@ final class PeticionesIncorporar
             case 'a':
                 $aWhereA['id_tipo_activ'] = $id_tipo_activ;
                 $aOperadorA['id_tipo_activ'] = '~';
-                $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-                $cActividadesDl = $ActividadDlRepository->getActividades($aWhereA, $aOperadorA);
+                $cActividadesDl = $this->actividadDlRepository->getActividades($aWhereA, $aOperadorA);
                 $aWhereA['dl_org'] = $mi_dele;
                 $aOperadorA['dl_org'] = '!=';
-                $ActividadPubRepository = $GLOBALS['container']->get(ActividadPubRepositoryInterface::class);
-                $cActividadesPub = $ActividadPubRepository->getActividades($aWhereA, $aOperadorA);
+                $cActividadesPub = $this->actividadPubRepository->getActividades($aWhereA, $aOperadorA);
                 $cActividades = array_merge($cActividadesDl, $cActividadesPub);
                 $filtro_id_nom = 2;
                 break;
             case 'n':
                 $aWhereA['id_tipo_activ'] = $id_tipo_activ;
                 $aOperadorA['id_tipo_activ'] = '~';
-                $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-                $cActividades1 = $ActividadRepository->getActividades($aWhereA, $aOperadorA);
+                $cActividades1 = $this->actividadRepository->getActividades($aWhereA, $aOperadorA);
                 if ($id_tipo_activ_sup !== '') {
                     $aWhereA['id_tipo_activ'] = $id_tipo_activ_sup;
                     $aOperadorA['id_tipo_activ'] = '~';
-                    $cActividades_sup = $ActividadRepository->getActividades($aWhereA, $aOperadorA);
+                    $cActividades_sup = $this->actividadRepository->getActividades($aWhereA, $aOperadorA);
                     $cActividades = array_merge($cActividades1, $cActividades_sup);
                 } else {
                     $cActividades = $cActividades1;
@@ -105,19 +117,19 @@ final class PeticionesIncorporar
                 break;
         }
 
+        /** @var array<int, string> $aId_activ */
         $aId_activ = [];
         foreach ($cActividades as $oActividad) {
-            $aId_activ[$oActividad->getId_activ()] = $oActividad->getDl_org();
+            $aId_activ[$oActividad->getId_activ()] = (string)($oActividad->getDl_org() ?? '');
         }
 
-        $PlazaPeticionRepository = $GLOBALS['container']->get(PlazaPeticionRepositoryInterface::class);
         $aWhereP = [
             'orden' => 1,
             'tipo' => $sactividad,
             'id_nom' => '^\d{4}' . $filtro_id_nom,
         ];
         $aOperadorP = ['id_nom' => '~'];
-        $cPlazasPeticion = $PlazaPeticionRepository->getPlazasPeticion($aWhereP, $aOperadorP);
+        $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion($aWhereP, $aOperadorP);
 
         $incorporadas = 0;
         $msg_err = '';
@@ -127,24 +139,22 @@ final class PeticionesIncorporar
             if (!array_key_exists($id_activ_new, $aId_activ)) {
                 continue;
             }
-            if (self::tieneAsistencia($id_nom, $aId_activ)) {
+            if ($this->tieneAsistencia($id_nom, $aId_activ)) {
                 continue;
             }
             $dl_org = $aId_activ[$id_activ_new];
-            $dl = preg_replace('/f$/', '', $dl_org);
+            $dl = preg_replace('/f$/', '', $dl_org) ?? $dl_org;
             if ($dl === $mi_dele) {
-                $AsistenteRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
+                $AsistenteRepository = $this->asistenteDlRepository;
             } else {
-                $AsistenteRepository = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
+                $AsistenteRepository = $this->asistenteOutRepository;
             }
             $oAsistenteNew = new Asistente();
             $oAsistenteNew->setId_activ($id_activ_new);
             $oAsistenteNew->setId_nom($id_nom);
             $oAsistenteNew->setPropio(true);
             $oAsistenteNew->setPropietarioVo("$dl>$mi_dele");
-            /** @var PlazaPropietarioAsignacionInterface $plazaPropietario */
-            $plazaPropietario = DependencyResolver::get(PlazaPropietarioAsignacionInterface::class);
-            $err_plaza = $oAsistenteNew->setPlazaComprobando(PlazaId::ASIGNADA, $plazaPropietario);
+            $err_plaza = $oAsistenteNew->setPlazaComprobando(PlazaId::ASIGNADA, $this->plazaPropietarioAsignacion);
             if ($err_plaza !== '') {
                 $msg_err = $err_plaza;
                 continue;
@@ -174,17 +184,15 @@ final class PeticionesIncorporar
      * @param int $id_nom
      * @param array<int,string> $aId_activ id_activ => dl_org
      */
-    private static function tieneAsistencia(int $id_nom, array $aId_activ): bool
+    private function tieneAsistencia(int $id_nom, array $aId_activ): bool
     {
-        $AsistenteRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
-        $cAsistentes = $AsistenteRepository->getAsistentes(['id_nom' => $id_nom, 'propio' => 't']);
+        $cAsistentes = $this->asistenteDlRepository->getAsistentes(['id_nom' => $id_nom, 'propio' => 't']);
         foreach ($cAsistentes as $oAsistente) {
             if (array_key_exists($oAsistente->getId_activ(), $aId_activ)) {
                 return true;
             }
         }
-        $AsistentesOutRepository = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
-        $cAsistentesOut = $AsistentesOutRepository->getAsistentes(['id_nom' => $id_nom, 'propio' => 't']);
+        $cAsistentesOut = $this->asistenteOutRepository->getAsistentes(['id_nom' => $id_nom, 'propio' => 't']);
         foreach ($cAsistentesOut as $oAsistente) {
             if (array_key_exists($oAsistente->getId_activ(), $aId_activ)) {
                 return true;

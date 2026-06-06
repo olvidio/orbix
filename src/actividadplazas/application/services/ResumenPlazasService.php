@@ -33,32 +33,15 @@ class ResumenPlazasService
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_activ de actividadPlazas
-     *
-     * @var integer
-     */
-    protected $iid_activ;
+    private ?int $iid_activ = null;
 
-    /**
-     * Plazas de actividadPlazas
-     *
-     * @var integer
-     */
-    protected $dl_org;
+    private ?string $dl_org = null;
 
-    /**
-     * Array de dl por nombre
-     *
-     * @var array
-     */
-    protected $a_dele;
-    /**
-     * Array de dl por id
-     *
-     * @var array
-     */
-    protected $a_id_dele;
+    /** @var array<int, string> */
+    private array $a_dele = [];
+
+    /** @var array<string, int> */
+    private array $a_id_dele = [];
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
     private ActividadAllRepositoryInterface $ActividadAllRepository;
@@ -91,7 +74,7 @@ class ResumenPlazasService
      * @param false|string $dl_de_paso
      * @return array<string,string> clave "dl_org>dl_destino" => label
      */
-    public function getPosiblesPropietariosOpciones($dl_de_paso = false): array
+    public function getPosiblesPropietariosOpciones(string|false $dl_de_paso = false): array
     {
         $id_activ = $this->getId_activ();
         $mi_dl = ConfigGlobal::mi_delef();
@@ -150,7 +133,7 @@ class ResumenPlazasService
      *
      * @param false|string $dl_de_paso
      */
-    public function esPropiedadClaveDisponible(string $key, $dl_de_paso = false): bool
+    public function esPropiedadClaveDisponible(string $key, string|false $dl_de_paso = false): bool
     {
         if ($key === '' || $key === 'xxx') {
             return false;
@@ -168,7 +151,7 @@ class ResumenPlazasService
      *
      * @param false|string $dl_de_paso
      */
-    public function getPrimeraPropiedadLibre($dl_de_paso = false): ?string
+    public function getPrimeraPropiedadLibre(string|false $dl_de_paso = false): ?string
     {
         foreach ($this->getPosiblesPropietariosOpciones($dl_de_paso) as $key => $label) {
             if ($key === 'xxx') {
@@ -191,7 +174,7 @@ class ResumenPlazasService
      *
      * @param false|string $dl_de_paso
      */
-    public function getPosiblesPropietarios($dl_de_paso = false): Desplegable
+    public function getPosiblesPropietarios(string|false $dl_de_paso = false): Desplegable
     {
         $a_dl = $this->getPosiblesPropietariosOpciones($dl_de_paso);
         return new Desplegable('', $a_dl, '', true);
@@ -200,9 +183,8 @@ class ResumenPlazasService
     /**
      * Devuelve las plazas diponibles para una dl de una actividad
      */
-    public function getPlazasCalendario($dl)
+    public function getPlazasCalendario(string $dl): int
     {
-
         $id_activ = $this->getId_activ();
         $mi_dl = $dl;
         $id_mi_dl = $this->getDlId($mi_dl);
@@ -220,7 +202,7 @@ class ResumenPlazasService
     /**
      * Devuelve las plazas cedidas para una dl de una actividad
      */
-    public function getPlazasCedidas($dl)
+    public function getPlazasCedidas(string $dl): int
     {
         $plazas_cedidas = 0;
         $id_activ = $this->getId_activ();
@@ -245,7 +227,7 @@ class ResumenPlazasService
     /**
      * Devuelve las plazas conseguidas para una dl de un actividad
      */
-    public function getPlazasConseguidas($dl)
+    public function getPlazasConseguidas(string $dl): int
     {
         $id_activ = $this->getId_activ();
         $mi_dl = $dl;
@@ -275,7 +257,7 @@ class ResumenPlazasService
     /**
      * Devuelve las plazas diponibles para una dl de una actividad
      */
-    public function getPlazasDisponibles($dl)
+    public function getPlazasDisponibles(string $dl): int
     {
         $plazas_calendario = $this->getPlazasCalendario($dl);
         $plazas_cedidas = $this->getPlazasCedidas($dl);
@@ -289,7 +271,7 @@ class ResumenPlazasService
     /**
      * Devuelve las plazas totales de una actividad, o las de la casa.
      */
-    public function getPlazasTotales()
+    public function getPlazasTotales(): int|string
     {
         $id_activ = $this->getId_activ();
         $oActividad = $this->ActividadAllRepository->findById($id_activ);
@@ -303,8 +285,10 @@ class ResumenPlazasService
             if ($id_ubi !== null) {
                 $oCasa = Ubi::NewUbi($id_ubi);
                 // Si la casa es un ctr de otra dl, no sé las plazas
-                if ($oCasa !== null && method_exists($oCasa, 'getPlazas')) {
+                if ($oCasa !== null && method_exists($oCasa, 'getPlazasVo')) {
                     $plazas_totales = $oCasa->getPlazasVo()?->value();
+                } elseif ($oCasa !== null && method_exists($oCasa, 'getPlazas')) {
+                    $plazas_totales = $oCasa->getPlazas();
                 }
             }
             if (empty($plazas_totales)) {
@@ -316,18 +300,15 @@ class ResumenPlazasService
     }
 
     /**
-     *
-     * @param integer $id_activ
-     * @return array $a_plazas
-     *
+     * @return array<string, mixed>
      */
-    public function getResumen()
+    public function getResumen(): array
     {
         $a_plazas = [];
         $id_activ = $this->getId_activ();
         $AsistenteActividadService = $this->AsistenteActividadService;
         $oActividad = $this->ActividadAllRepository->findById($id_activ);
-        $dl_org = $oActividad->getDl_org();
+        $dl_org = $oActividad !== null ? (string)($oActividad->getDl_org() ?? '') : '';
         $plazas_totales = $this->getPlazasTotales();
         /*
         // si la actividad no está publicada, no hay plazas de otras dl. Todas para la dl org.
@@ -397,11 +378,7 @@ class ResumenPlazasService
             } else {
                 $num_plazas_calendario = $aa['calendario'];
             }
-            if (!array_key_exists('cedidas', $aa)) {
-                $aCedidas = [];
-            } else {
-                $aCedidas = $aa['cedidas'];
-            }
+            $aCedidas = $aa['cedidas'];
             foreach ($aCedidas as $dl_otra => $num_plazas) {
                 if ($dl != $dl_otra && array_key_exists($dl_otra, $a_plazas)) {
                     $a_plazas[$dl_otra]['conseguidas'][$dl] = $num_plazas;
@@ -419,7 +396,7 @@ class ResumenPlazasService
         }
         foreach ($a_plazas as $dl => $aa) {
             $total_conseguidas = 0;
-            $aCedidas = $aa['conseguidas'];
+            $aCedidas = is_array($aa['conseguidas'] ?? null) ? $aa['conseguidas'] : [];
             foreach ($aCedidas as $dl_otra => $num_plazas) {
                 $total_conseguidas += $num_plazas;
             }
@@ -437,7 +414,8 @@ class ResumenPlazasService
             }
             $total_disponibles += $disponibles;
             $a_plazas[$dl]['disponibles'][$dl] = $disponibles;
-            foreach ($aa['conseguidas'] as $dl_otra => $num) {
+            $conseguidas = is_array($aa['conseguidas'] ?? null) ? $aa['conseguidas'] : [];
+            foreach ($conseguidas as $dl_otra => $num) {
                 // conseguidas - cedidas
                 $a_plazas[$dl]['disponibles'][$dl_otra] = $num;
                 $total_disponibles += $num;
@@ -473,27 +451,34 @@ class ResumenPlazasService
      * @return integer numero de plazas libres para la dl
      *
      */
-    public function getLibres(string $dl = '')
+    public function getLibres(string $dl = ''): int
     {
-        if (empty($dl)) {
+        if ($dl === '') {
             $dl = ConfigGlobal::mi_delef();
         }
 
         $a_plazas = $this->getResumen();
-        // Puede no tener plazas asignadas...
-        if (isset($a_plazas[$dl]['total_disponibles']) && isset ($a_plazas[$dl]['total_ocupadas'])) {
-            $libres = $a_plazas[$dl]['total_disponibles'] - $a_plazas[$dl]['total_ocupadas'];
-        } else {
-            $libres = 0;
+        $dlData = $a_plazas[$dl] ?? null;
+        if (
+            is_array($dlData)
+            && isset($dlData['total_disponibles'], $dlData['total_ocupadas'])
+            && is_numeric($dlData['total_disponibles'])
+            && is_numeric($dlData['total_ocupadas'])
+        ) {
+            return (int)$dlData['total_disponibles'] - (int)$dlData['total_ocupadas'];
         }
-        return $libres;
+
+        return 0;
     }
 
     /**
      * Devuelve el nombre del popietario de la primera plaza libre
      *
      */
-    public function getPropiedadPlazaLibre()
+    /**
+     * @return array{success: bool, mensaje: string, propiedad?: array<string, string>}
+     */
+    public function getPropiedadPlazaLibre(): array
     {
         /*
         puede ser una plaza propia o una cedida.
@@ -555,12 +540,15 @@ class ResumenPlazasService
      *
      * @return integer
      */
-    private function getPlazasPropias()
+    private function getPlazasPropias(): int|string
     {
         $id_activ = $this->getId_activ();
         $mi_dl = ConfigGlobal::mi_delef();
 
         $oActividad = $this->ActividadAllRepository->findById($id_activ);
+        if ($oActividad === null) {
+            return 0;
+        }
         $publicado = $oActividad->isPublicado();
         // Si no está publicada no tiene plazas de calendario.
         // Se toman todas la de la actividad como propias.
@@ -576,67 +564,66 @@ class ResumenPlazasService
     }
 
     /* MÉTODOS PROTECTED --------------------------------------------------------*/
-    public function setId_activ($iid_activ = '')
+    public function setId_activ(int $iid_activ): void
     {
         $this->iid_activ = $iid_activ;
     }
 
-    protected function getId_activ()
+    protected function getId_activ(): int
     {
-        if (!isset($this->iid_activ)) {
+        if ($this->iid_activ === null) {
             exit('error');
         }
         return $this->iid_activ;
     }
 
-    protected function getDl_org()
+    protected function getDl_org(): string
     {
-        if (!isset($this->dl_org)) {
+        if ($this->dl_org === null) {
             $id_activ = $this->getId_activ();
             $oActividad = $this->ActividadAllRepository->findById($id_activ);
-            $this->dl_org = $oActividad->getDl_org();
+            $this->dl_org = $oActividad !== null ? (string)($oActividad->getDl_org() ?? '') : '';
         }
         return $this->dl_org;
     }
 
-    // array de id=>dl
-    protected function setArrayDl()
+    protected function setArrayDl(): void
     {
-        if (!isset($this->a_dele)) {
-            $cDelegaciones = $this->DelegacionRepository->getDelegaciones(array('_ordre' => 'region,dl'));
-            $this->a_dele = [];
-            $this->a_id_dele = [];
-            foreach ($cDelegaciones as $oDelegacion) {
-                $dl = $oDelegacion->getDlVo()?->value() ?? '';
-                if (ConfigGlobal::mi_sfsv() == 2) {
-                    $dl .= 'f';
-                }
-                $id_dl = $oDelegacion->getIdDlVo()?->value() ?? 0;
-                $a_dele[$id_dl] = $dl;
-                $a_id_dele[$dl] = $id_dl;
+        if ($this->a_dele !== []) {
+            return;
+        }
+        $cDelegaciones = $this->DelegacionRepository->getDelegaciones(['_ordre' => 'region,dl']);
+        $a_dele = [];
+        $a_id_dele = [];
+        foreach ($cDelegaciones as $oDelegacion) {
+            $dl = $oDelegacion->getDlVo()?->value() ?? '';
+            if (ConfigGlobal::mi_sfsv() === 2) {
+                $dl .= 'f';
             }
-            $this->a_dele = $a_dele;
-            $this->a_id_dele = $a_id_dele;
+            $id_dl = (int)($oDelegacion->getIdDlVo()?->value() ?? 0);
+            $a_dele[$id_dl] = $dl;
+            $a_id_dele[$dl] = $id_dl;
         }
-        return true;
+        $this->a_dele = $a_dele;
+        $this->a_id_dele = $a_id_dele;
     }
 
-    protected function getDlText($id_dl)
+    protected function getDlText(int $id_dl): string
     {
-        if (!isset($this->a_dele)) {
+        if ($this->a_dele === []) {
             $this->setArrayDl();
         }
-        $a_dele = $this->a_dele;
-        return $a_dele[$id_dl];
+
+        return $this->a_dele[$id_dl] ?? '';
     }
 
-    protected function getDlId($dl)
+    protected function getDlId(string $dl): int
     {
-        if (!isset($this->a_id_dele)) {
+        if ($this->a_id_dele === []) {
             $this->setArrayDl();
         }
-        $a_id_dele = $this->a_id_dele;
-        return $a_id_dele[$dl];
+
+        return $this->a_id_dele[$dl] ?? 0;
     }
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }

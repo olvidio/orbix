@@ -3,6 +3,8 @@
 namespace src\actividadplazas\application;
 
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Elimina todas las peticiones de plaza para un {id_nom, tipo}.
@@ -12,21 +14,28 @@ use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
  */
 final class PeticionesEliminar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private PlazaPeticionRepositoryInterface $plazaPeticionRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $id_nom = (int)($input['id_nom'] ?? 0);
-        $sactividad = (string)($input['sactividad'] ?? '');
+        $id_nom = input_int($input, 'id_nom');
+        $sactividad = input_string($input, 'sactividad');
         if ($id_nom <= 0 || $sactividad === '') {
             return (string)_("faltan parametros id_nom / sactividad");
         }
 
-        $repo = $GLOBALS['container']->get(PlazaPeticionRepositoryInterface::class);
-        $cPlazasPeticion = $repo->getPlazasPeticion([
+        $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion([
             'id_nom' => $id_nom,
             'tipo' => $sactividad,
         ]);
         foreach ($cPlazasPeticion as $oPlazaPeticion) {
-            if ($repo->Eliminar($oPlazaPeticion) === false) {
+            if ($this->plazaPeticionRepository->Eliminar($oPlazaPeticion) === false) {
                 return (string)_("hay un error, no se ha podido eliminar");
             }
         }

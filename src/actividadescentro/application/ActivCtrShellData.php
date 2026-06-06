@@ -3,12 +3,13 @@
 namespace src\actividadescentro\application;
 
 use src\shared\config\ConfigGlobal;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Tipo resuelto y especificaciones de URL para la shell de `activ_ctr` (sin `HashFront` en `src/`).
  * La firma `linkSinVal` se aplica en {@see frontend\actividadescentro\controller\activ_ctr}.
  */
-class ActivCtrShellData
+final class ActivCtrShellData
 {
     /**
      * @param array{tipo?: string, year?: string, periodo?: string} $in
@@ -23,9 +24,9 @@ class ActivCtrShellData
      *     url_eliminar: array{path: string, campos_form: string}
      * }
      */
-    public static function build(array $in): array
+    public function build(array $in): array
     {
-        $Qtipo = (string)($in['tipo'] ?? '');
+        $Qtipo = input_string($in, 'tipo');
         if (ConfigGlobal::mi_sfsv() === 2) {
             switch ($Qtipo) {
                 case 'sg':

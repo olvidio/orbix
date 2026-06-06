@@ -5,7 +5,10 @@
  */
 
 use src\actividadescentro\application\CentroEncargadoReordenar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$error_txt = CentroEncargadoReordenar::execute($_POST);
+/** @var CentroEncargadoReordenar $useCase */
+$useCase = DependencyResolver::get(CentroEncargadoReordenar::class);
+$error_txt = $useCase->execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

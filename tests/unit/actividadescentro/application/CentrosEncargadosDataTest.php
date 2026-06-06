@@ -10,13 +10,11 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 
 final class CentrosEncargadosDataTest extends TestCase
 {
-    private mixed $previousContainer = null;
     private mixed $previousPermActividades = null;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousPermActividades = $_SESSION['oPermActividades'] ?? null;
         unset($_SESSION['oPermActividades']);
         if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
@@ -32,17 +30,15 @@ final class CentrosEncargadosDataTest extends TestCase
         } else {
             $_SESSION['oPermActividades'] = $this->previousPermActividades;
         }
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
     public function test_id_activ_no_positivo_devuelve_vacio(): void
     {
-        $out = CentrosEncargadosData::execute(['id_activ' => 0]);
+        $repo = $this->createStub(CentroEncargadoRepositoryInterface::class);
+        $useCase = new CentrosEncargadosData($repo);
+
+        $out = $useCase->execute(['id_activ' => 0]);
 
         $this->assertSame([
             'id_activ' => 0,
@@ -68,20 +64,8 @@ final class CentrosEncargadosDataTest extends TestCase
         $repo = $this->createStub(CentroEncargadoRepositoryInterface::class);
         $repo->method('getCentrosEncargadosActividad')->with(3)->willReturn([$centro]);
 
-        $GLOBALS['container'] = new class($repo) {
-            public function __construct(private readonly CentroEncargadoRepositoryInterface $repo) {}
-
-            public function get(string $key): object
-            {
-                if ($key !== CentroEncargadoRepositoryInterface::class) {
-                    throw new \RuntimeException('Clave inesperada: ' . $key);
-                }
-
-                return $this->repo;
-            }
-        };
-
-        $out = CentrosEncargadosData::execute([
+        $useCase = new CentrosEncargadosData($repo);
+        $out = $useCase->execute([
             'id_activ' => 3,
             'id_tipo_activ' => '100000',
             'dl_org' => 'u',

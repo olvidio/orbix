@@ -27,7 +27,7 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 ## Estado global (junio 2026)
 
 - **`apps/<modulo>/` de negocio:** eliminados; solo persisten `apps/core/` y `apps/web/`.
-- **Frontend con `use src\...` en controladores:** **16** ficheros en **10** ámbulos (actividades cerrado; antes 19).
+- **Frontend con `use src\...` en controladores:** **18** ficheros en **10** ámbulos (actividadescentro cerrado; inventario en [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md)).
 - **PHPStan:** nivel 9; ~18.500 ocurrencias en baseline (A=629, B=9368, C=8520).
 - **`$GLOBALS['container']` en `src/`:** ~530 ficheros repartidos por módulo (ver matriz).
 
@@ -47,10 +47,10 @@ Columnas:
 | **asistentes** | ✓ | 0 | 0 | **Cierre DI completado.** Piloto de referencia; ver [deuda residual](asistentes_migracion_baseline.md#deuda-post-refactor) (PHPStan, tests) |
 | **actividadcargos** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadcargos_migracion_baseline.md) |
 | **actividades** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividades_migracion_baseline.md) |
-| actividadescentro | ✓ | 1 | 7 | 1 controlador frontend pendiente |
+| **actividadescentro** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadescentro_migracion_baseline.md) |
 | actividadessacd | ✓ | 2 | 16 | 2 controladores frontend pendientes |
 | actividadestudios | ✓ | 2 | 31 | Slices completos; 2 controladores frontend pendientes |
-| actividadplazas | ✓ | 2 | 11 | 2 controladores frontend pendientes |
+| actividadplazas | ✓ | 2 | 0 | **Cierre DI + PHPStan** (2026-06-06); 2 controladores frontend pendientes; ver [baseline](actividadplazas_migracion_baseline.md) |
 | actividadtarifas | ✓ | 1 | 14 | 1 controlador frontend pendiente |
 | asignaturas | — | 0 | 7 | Sin baseline |
 | cambios | ✓ | 0 | 16 | Migración estructural completa |

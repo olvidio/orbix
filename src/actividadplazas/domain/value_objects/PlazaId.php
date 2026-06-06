@@ -11,6 +11,9 @@ final class PlazaId
     public const CONFIRMADA = 5;
 
 
+    /**
+     * @return array<int, string>
+     */
     public static function getArrayPosiblesPlazas(): array
     {
         return [

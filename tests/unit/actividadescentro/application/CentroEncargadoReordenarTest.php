@@ -11,29 +11,14 @@ use src\actividadescentro\domain\entity\CentroEncargado;
 
 final class CentroEncargadoReordenarTest extends TestCase
 {
-    private mixed $previousContainer = null;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_parametros_o_direccion_invalidos(): void
     {
-        $this->assertNotSame('', CentroEncargadoReordenar::execute(['id_activ' => 0, 'id_ubi' => 1, 'num_orden' => 'mas']));
-        $this->assertNotSame('', CentroEncargadoReordenar::execute(['id_activ' => 1, 'id_ubi' => 0, 'num_orden' => 'mas']));
-        $this->assertNotSame('', CentroEncargadoReordenar::execute(['id_activ' => 1, 'id_ubi' => 1, 'num_orden' => 'arriba']));
+        $repo = $this->createStub(CentroEncargadoRepositoryInterface::class);
+        $useCase = new CentroEncargadoReordenar($repo);
+
+        $this->assertNotSame('', $useCase->execute(['id_activ' => 0, 'id_ubi' => 1, 'num_orden' => 'mas']));
+        $this->assertNotSame('', $useCase->execute(['id_activ' => 1, 'id_ubi' => 0, 'num_orden' => 'mas']));
+        $this->assertNotSame('', $useCase->execute(['id_activ' => 1, 'id_ubi' => 1, 'num_orden' => 'arriba']));
     }
 
     public function test_mas_intercambia_con_anterior(): void
@@ -51,26 +36,14 @@ final class CentroEncargadoReordenarTest extends TestCase
         $repo->method('getCentrosEncargados')->willReturn([$a, $b]);
         $repo->expects($this->exactly(2))->method('Guardar')->willReturn(true);
 
-        $GLOBALS['container'] = new class($repo) {
-            public function __construct(private readonly CentroEncargadoRepositoryInterface $repo) {}
-
-            public function get(string $key): object
-            {
-                if ($key !== CentroEncargadoRepositoryInterface::class) {
-                    throw new \RuntimeException('Clave inesperada: ' . $key);
-                }
-
-                return $this->repo;
-            }
-        };
-
-        $this->assertSame('', CentroEncargadoReordenar::execute([
+        $useCase = new CentroEncargadoReordenar($repo);
+        $this->assertSame('', $useCase->execute([
             'id_activ' => 1,
             'id_ubi' => 20,
             'num_orden' => 'mas',
         ]));
 
-        $this->assertSame(2, (int) $a->getNum_orden());
-        $this->assertSame(1, (int) $b->getNum_orden());
+        $this->assertSame('2', $a->getNum_orden());
+        $this->assertSame('1', $b->getNum_orden());
     }
 }

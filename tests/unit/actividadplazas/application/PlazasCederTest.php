@@ -4,6 +4,7 @@ namespace Tests\unit\actividadplazas\application;
 
 use PHPUnit\Framework\TestCase;
 use src\actividadplazas\application\PlazasCeder;
+use src\actividadplazas\application\PlazasDlEdicion;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
@@ -14,13 +15,11 @@ use src\ubis\domain\value_objects\DelegacionId;
 
 final class PlazasCederTest extends TestCase
 {
-    private mixed $previousContainer;
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['session_auth'] = [
             'id_usuario' => 1,
@@ -31,24 +30,19 @@ final class PlazasCederTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_SESSION = $this->previousSession;
         parent::tearDown();
     }
 
     public function test_faltan_parametros(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([
-            DelegacionRepositoryInterface::class => $this->createMock(DelegacionRepositoryInterface::class),
-            ActividadPlazasDlRepositoryInterface::class => $this->createMock(ActividadPlazasDlRepositoryInterface::class),
-            ActividadPlazasRepositoryInterface::class => $this->createMock(ActividadPlazasRepositoryInterface::class),
-        ]);
+        $useCase = $this->makeUseCase(
+            $this->createMock(DelegacionRepositoryInterface::class),
+            $this->createMock(ActividadPlazasDlRepositoryInterface::class),
+            $this->createMock(ActividadPlazasRepositoryInterface::class),
+        );
 
-        $msg = PlazasCeder::execute(['id_activ' => 0, 'region_dl' => 'R-x']);
+        $msg = $useCase->execute(['id_activ' => 0, 'region_dl' => 'R-x']);
         $this->assertNotSame('', $msg);
     }
 
@@ -66,13 +60,7 @@ final class PlazasCederTest extends TestCase
         $calRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
         $calRepo->method('getActividadesPlazas')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DelegacionRepositoryInterface::class => $delegRepo,
-            ActividadPlazasDlRepositoryInterface::class => $plazasDlRepo,
-            ActividadPlazasRepositoryInterface::class => $calRepo,
-        ]);
-
-        $msg = PlazasCeder::execute([
+        $msg = $this->makeUseCase($delegRepo, $plazasDlRepo, $calRepo)->execute([
             'id_activ' => 99,
             'region_dl' => 'H-dlx',
             'num_plazas' => 2,
@@ -98,13 +86,7 @@ final class PlazasCederTest extends TestCase
         $oPlazas->expects($this->once())->method('setCedidas')->with([]);
         $plazasDlRepo->expects($this->once())->method('Guardar')->with($oPlazas)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DelegacionRepositoryInterface::class => $delegRepo,
-            ActividadPlazasDlRepositoryInterface::class => $plazasDlRepo,
-            ActividadPlazasRepositoryInterface::class => $calRepo,
-        ]);
-
-        $msg = PlazasCeder::execute([
+        $msg = $this->makeUseCase($delegRepo, $plazasDlRepo, $calRepo)->execute([
             'id_activ' => 1,
             'region_dl' => 'X-dlx',
             'num_plazas' => 0,
@@ -133,14 +115,7 @@ final class PlazasCederTest extends TestCase
 
         $calRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DelegacionRepositoryInterface::class => $delegRepo,
-            ActividadPlazasDlRepositoryInterface::class => $plazasDlRepo,
-            ActividadPlazasRepositoryInterface::class => $calRepo,
-            ResumenPlazasService::class => $resumenSvc,
-        ]);
-
-        $msg = PlazasCeder::execute([
+        $msg = $this->makeUseCase($delegRepo, $plazasDlRepo, $calRepo, $resumenSvc)->execute([
             'id_activ' => 1,
             'region_dl' => 'X-dlx',
             'num_plazas' => 2,
@@ -169,14 +144,7 @@ final class PlazasCederTest extends TestCase
 
         $calRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DelegacionRepositoryInterface::class => $delegRepo,
-            ActividadPlazasDlRepositoryInterface::class => $plazasDlRepo,
-            ActividadPlazasRepositoryInterface::class => $calRepo,
-            ResumenPlazasService::class => $resumenSvc,
-        ]);
-
-        $msg = PlazasCeder::execute([
+        $msg = $this->makeUseCase($delegRepo, $plazasDlRepo, $calRepo, $resumenSvc)->execute([
             'id_activ' => 1,
             'region_dl' => 'X-dly',
             'num_plazas' => 3,
@@ -206,14 +174,7 @@ final class PlazasCederTest extends TestCase
 
         $calRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DelegacionRepositoryInterface::class => $delegRepo,
-            ActividadPlazasDlRepositoryInterface::class => $plazasDlRepo,
-            ActividadPlazasRepositoryInterface::class => $calRepo,
-            ResumenPlazasService::class => $resumenSvc,
-        ]);
-
-        $msg = PlazasCeder::execute([
+        $msg = $this->makeUseCase($delegRepo, $plazasDlRepo, $calRepo, $resumenSvc)->execute([
             'id_activ' => 1,
             'region_dl' => 'X-dly',
             'num_plazas' => 2,
@@ -221,21 +182,19 @@ final class PlazasCederTest extends TestCase
         $this->assertSame('', $msg);
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
+    private function makeUseCase(
+        DelegacionRepositoryInterface $delegRepo,
+        ActividadPlazasDlRepositoryInterface $plazasDlRepo,
+        ActividadPlazasRepositoryInterface $calRepo,
+        ?ResumenPlazasService $resumenSvc = null,
+    ): PlazasCeder {
+        $resumenSvc ??= $this->createMock(ResumenPlazasService::class);
 
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        return new PlazasCeder(
+            $delegRepo,
+            $plazasDlRepo,
+            $resumenSvc,
+            new PlazasDlEdicion($plazasDlRepo, $calRepo),
+        );
     }
 }

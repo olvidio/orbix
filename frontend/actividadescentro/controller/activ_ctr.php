@@ -8,7 +8,7 @@
  * La pantalla se limita a renderizar la barra de filtros (periodo) y los
  * contenedores vacios. El listado + todas las mutaciones se cargan via AJAX
  * contra los endpoints `/src/actividadescentro/*` definidos en
- * `src/actividadescentro/config/routes.php`. Sin `use src\...`.
+ * `src/actividadescentro/config/routes.php`. Solo capa frontend en imports.
  */
 
 use frontend\shared\config\AppUrlConfig;

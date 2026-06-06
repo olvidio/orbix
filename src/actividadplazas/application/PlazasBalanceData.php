@@ -9,6 +9,8 @@ use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Data builder del grid comparativo A vs B de plazas concedidas y
@@ -19,21 +21,30 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class PlazasBalanceData
 {
+    public function __construct(
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private ActividadPlazasRepositoryInterface $actividadPlazasRepository,
+        private AsistenteActividadService $asistenteActividadService,
+    ) {
+    }
+
     /**
+     * @param array<string, mixed> $input
      * @return array{
      *     error?:string,
      *     dlA:string,
      *     dlB:string,
      *     concedidasA2B:int,
      *     concedidasB2A:int,
-     *     a_cabeceras:array,
-     *     a_valores:array
+     *     a_cabeceras:list<array<string, mixed>>,
+     *     a_valores:array<int, array<string, mixed>>
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $Qdl = (string)($input['dl'] ?? '');
-        $Qid_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
+        $Qdl = input_string($input, 'dl');
+        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
 
         $dlA = ConfigGlobal::mi_delef();
         if ($Qdl === '') {
@@ -49,28 +60,30 @@ final class PlazasBalanceData
 
         $inicurs = '';
         $fincurs = '';
+        /** @var ConfigSnapshot $oConfig */
+        $oConfig = $_SESSION['oConfig'];
         switch ($sactividad) {
             case 'ca':
             case 'cv':
-                $any = $_SESSION['oConfig']->any_final_curs('est');
+                $any = $oConfig->any_final_curs('est');
                 $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'est')->format('Y-m-d');
                 $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'est')->format('Y-m-d');
                 break;
             case 'crt':
-                $any = $_SESSION['oConfig']->any_final_curs('crt');
+                $any = $oConfig->any_final_curs('crt');
                 $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->format('Y-m-d');
                 $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->format('Y-m-d');
                 break;
         }
 
-        $status = StatusId::ACTUAL;
+        $status = (string)StatusId::ACTUAL;
         $mi_dl = $dlA;
 
-        $a_plazasA = self::plazasPorActividad($dlA, $dlB, 'tono1', $Qid_tipo_activ, $status, $inicurs, $fincurs, $mi_dl);
+        $a_plazasA = $this->plazasPorActividad($dlA, $dlB, 'tono1', $Qid_tipo_activ, $status, $inicurs, $fincurs, $mi_dl);
         $concedidasA2B = $a_plazasA['plazasB'];
         $a_valoresA = $a_plazasA['a_valores'];
 
-        $a_plazasB = self::plazasPorActividad($dlB, $dlA, 'tono2', $Qid_tipo_activ, $status, $inicurs, $fincurs, $mi_dl);
+        $a_plazasB = $this->plazasPorActividad($dlB, $dlA, 'tono2', $Qid_tipo_activ, $status, $inicurs, $fincurs, $mi_dl);
         $concedidasB2A = $a_plazasB['plazasB'];
         $a_valoresB = $a_plazasB['a_valores'];
 
@@ -97,9 +110,9 @@ final class PlazasBalanceData
     }
 
     /**
-     * @return array{plazasA:int, plazasB:int, a_valores:array}
+     * @return array{plazasA:int, plazasB:int, a_valores:array<int, array<string, mixed>>}
      */
-    private static function plazasPorActividad(
+    private function plazasPorActividad(
         string $dlA,
         string $dlB,
         string $clase,
@@ -109,14 +122,9 @@ final class PlazasBalanceData
         string $fincurs,
         string $mi_dl
     ): array {
-        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
-        $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
-
-        $cDelegaciones = $DelegacionRepository->getDelegaciones(['dl' => $dlA]);
+        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dlA]);
         $id_dlA = isset($cDelegaciones[0]) ? (int)($cDelegaciones[0]->getIdDlVo()?->value() ?? 0) : 0;
-        $cDelegaciones = $DelegacionRepository->getDelegaciones(['dl' => $dlB]);
+        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dlB]);
         $id_dlB = isset($cDelegaciones[0]) ? (int)($cDelegaciones[0]->getIdDlVo()?->value() ?? 0) : 0;
 
         $aWhereA = [
@@ -127,7 +135,7 @@ final class PlazasBalanceData
             '_ordre' => 'f_ini',
         ];
         $aOperador = ['id_tipo_activ' => '~', 'f_ini' => 'BETWEEN'];
-        $cActividadesA = $ActividadRepository->getActividades($aWhereA, $aOperador);
+        $cActividadesA = $this->actividadRepository->getActividades($aWhereA, $aOperador);
 
         $i = 0;
         $a_valores = [];
@@ -147,24 +155,24 @@ final class PlazasBalanceData
             $a_valores[$i]['dlorg'] = $dl_org;
 
             $concedidasA = 0;
-            $cActividadPlazas = $ActividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dlA, 'id_activ' => $id_activ]);
+            $cActividadPlazas = $this->actividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dlA, 'id_activ' => $id_activ]);
             foreach ($cActividadPlazas as $oActividadPlazas) {
                 if ($dl_org === $oActividadPlazas->getDl_tabla()) {
-                    $concedidasA = $oActividadPlazas->getPlazas();
+                    $concedidasA = $oActividadPlazas->getPlazasVo()?->value() ?? 0;
                 }
             }
-            $ocupadasA = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $dlA);
+            $ocupadasA = $this->asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $dlA);
             $libresA = $ocupadasA < 0 ? '-' : $concedidasA - $ocupadasA;
             $sumaConcedidasA += $concedidasA;
 
             $concedidasB = 0;
-            $cActividadPlazas = $ActividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dlB, 'id_activ' => $id_activ]);
+            $cActividadPlazas = $this->actividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dlB, 'id_activ' => $id_activ]);
             foreach ($cActividadPlazas as $oActividadPlazas) {
                 if ($dl_org === $oActividadPlazas->getDl_tabla()) {
-                    $concedidasB = $oActividadPlazas->getPlazas();
+                    $concedidasB = $oActividadPlazas->getPlazasVo()?->value() ?? 0;
                 }
             }
-            $ocupadasB = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $dlB);
+            $ocupadasB = $this->asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $dlB);
             $libresB = $ocupadasB < 0 ? '-' : $concedidasB - $ocupadasB;
             $sumaConcedidasB += $concedidasB;
 
