@@ -3,7 +3,7 @@
 ## Objetivo
 Mantener una estructura consistente basada en DDD para todo nuevo código en `src/`, reduciendo acoplamientos con legacy y evitando mezclar capas.
 
-**Mejoras y migraciones aplazadas (no son reglas vigentes):** [`documentacion/backlog.md`](documentacion/backlog.md). Para trabajo ya acotado a un ámbito existe también convención de ficheros tipo `documentacion/<tema>_pendiente*.md` o `*_migracion_baseline.md`.
+**Índice de refactorización (estado por módulo, fases, checklists):** [`documentacion/REFACTOR_INDICE.md`](documentacion/REFACTOR_INDICE.md). **Mejoras y migraciones aplazadas (no son reglas vigentes):** [`documentacion/backlog.md`](documentacion/backlog.md). Para trabajo ya acotado a un ámbito existe también convención de ficheros tipo `documentacion/<tema>_pendiente*.md` o `*_migracion_baseline.md`.
 
 ## Estructura mínima por módulo
 Todo módulo nuevo debe seguir esta base:

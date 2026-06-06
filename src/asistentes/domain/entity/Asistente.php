@@ -2,10 +2,9 @@
 
 namespace src\asistentes\domain\entity;
 
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\shared\config\ConfigGlobal;
-use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
+use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\value_objects\AsistenteEncargo;
 use src\asistentes\domain\value_objects\AsistenteObserv;
 use src\asistentes\domain\value_objects\AsistenteObservEst;
@@ -335,90 +334,31 @@ class Asistente extends Entity implements AggregateRoot
     }
 
     /**
-     * Plaza asignada o confirmada exige propietario. Si falta, se elige la primera
-     * opcion libre del desplegable (p. ej. "1 de 2"); "2 de 2" no esta disponible.
-     * Solo se comprueba al pasar a asignada/confirmada desde un estado inferior.
-     *
-     * @return string vacio si ok, mensaje de error si no hay propiedad posible
-     */
-    private function asegurarPropietarioPlaza(int $plaza_actual, int $plaza): string
-    {
-        if (!ConfigGlobal::is_app_installed('actividadplazas')) {
-            return '';
-        }
-        if ($plaza <= PlazaId::DENEGADA) {
-            return '';
-        }
-        if ($plaza_actual >= PlazaId::ASIGNADA) {
-            return '';
-        }
-
-        /** @var \Psr\Container\ContainerInterface $container */
-        $container = $GLOBALS['container'];
-        /** @var ResumenPlazasService $gesActividadPlazas */
-        $gesActividadPlazas = $container->get(ResumenPlazasService::class);
-        $gesActividadPlazas->setId_activ($this->id_activ);
-        $dl_de_paso = $this->resolverDlDePaso();
-
-        $propietario = $this->getPropietarioVo()?->value() ?? '';
-        if ($propietario !== '' && $propietario !== 'xxx') {
-            if (!$gesActividadPlazas->esPropiedadClaveDisponible($propietario, $dl_de_paso)) {
-                return (string)_("Ya están todas las plazas ocupadas");
-            }
-
-            return '';
-        }
-
-        $prop = $gesActividadPlazas->getPrimeraPropiedadLibre($dl_de_paso);
-        if ($prop === null) {
-            return (string)_("Ya están todas las plazas ocupadas");
-        }
-
-        $this->setPropietarioVo($prop);
-
-        return '';
-    }
-
-    /**
-     * @return false|string dl de paso para PersonaEx, false en caso contrario
-     */
-    private function resolverDlDePaso(): false|string
-    {
-        $oPersona = Persona::findPersonaEnGlobal($this->id_nom);
-        if (!is_object($oPersona)) {
-            return false;
-        }
-
-        $obj_pau = str_replace('personas\\model\\entity\\', '', get_class($oPersona));
-        if ($obj_pau === 'PersonaEx') {
-            return $oPersona->getDl();
-        }
-
-        return false;
-    }
-
-    /**
      * No puede estar en setPlaza, porque cuando se hidrata con la DB entra en un bucle infinito
+     *
      * @deprecated usar setPlazaVoComprobando()
      * @return string vacio si ok, mensaje de error si la plaza exige propietario y no hay libre
      */
-    public function setPlazaComprobando(?int $plaza = null): string
-    {
+    public function setPlazaComprobando(
+        ?int $plaza = null,
+        ?PlazaPropietarioAsignacionInterface $plazaPropietario = null,
+    ): string {
         $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
         $plaza = (int) $plaza;
         $this->plaza = PlazaId::fromNullableInt($plaza);
 
-        return $this->asegurarPropietarioPlaza($plaza_actual, $plaza);
+        return $plazaPropietario?->asegurar($this, $plaza_actual, $plaza) ?? '';
     }
 
     /**
      * No puede estar en setPlaza, porque cuando se hidrata con la DB entra en un bucle infinito
      *
-     * @param PlazaId|null $oPlazaId
      * @return string vacio si ok, mensaje de error si la plaza exige propietario y no hay libre
      */
-    public function setPlazaVoComprobando(PlazaId|int|null $oPlazaId = null): string
-    {
+    public function setPlazaVoComprobando(
+        PlazaId|int|null $oPlazaId = null,
+        ?PlazaPropietarioAsignacionInterface $plazaPropietario = null,
+    ): string {
         $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
         $iplaza = $oPlazaId instanceof PlazaId
             ? $oPlazaId?->value()
@@ -426,7 +366,7 @@ class Asistente extends Entity implements AggregateRoot
         $iplaza = (int) $iplaza;
         $this->plaza = PlazaId::fromNullableInt($iplaza);
 
-        return $this->asegurarPropietarioPlaza($plaza_actual, $iplaza);
+        return $plazaPropietario?->asegurar($this, $plaza_actual, $iplaza) ?? '';
     }
 
     /**

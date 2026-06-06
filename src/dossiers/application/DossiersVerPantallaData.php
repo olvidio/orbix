@@ -10,6 +10,7 @@ use src\shared\domain\DatosTablaRepo;
 use src\shared\infrastructure\ProvidesRepositories;
 use src\personas\domain\entity\Persona;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 
 /**
  * Cuerpo de dossiers_ver: datos de cabecera + lista o ficha.
@@ -227,7 +228,7 @@ class DossiersVerPantallaData
             $nameClaseSelect = $oResSelect->resolveSelectClassFqcn($oTipoDossier) ?? '';
 
             if (!empty($nameClaseSelect)) {
-                $claseSelect = new $nameClaseSelect();
+                $claseSelect = DependencyResolver::get($nameClaseSelect);
                 $claseSelect->setId_dossier($id_dossier);
                 $claseSelect->setPau($pau);
                 $claseSelect->setObj_pau($Qobj_pau);
@@ -281,7 +282,7 @@ class DossiersVerPantallaData
             } else {
                 $clase_info = DossierVerDatosTablaInfoClassResolver::resolveFullyQualifiedClassName($oTipoDossier);
                 $Qclase_info_enc = urlencode($clase_info);
-                $oInfoClase = new $clase_info();
+                $oInfoClase = DependencyResolver::get($clase_info);
                 $oInfoClase->setId_pau($id_pau);
                 if (method_exists($oInfoClase, 'setObj_pau')) {
                     $oInfoClase->setObj_pau($Qobj_pau);

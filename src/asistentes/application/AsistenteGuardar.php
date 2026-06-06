@@ -4,6 +4,7 @@ namespace src\asistentes\application;
 
 use src\shared\config\ConfigGlobal;
 use src\asistentes\application\services\AsistenteApplicationService;
+use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
@@ -26,6 +27,7 @@ final class AsistenteGuardar
         private AsistenteApplicationService $asistenteApplicationService,
         private DossierRepositoryInterface $dossierRepository,
         private AsistenteEliminar $asistenteEliminar,
+        private PlazaPropietarioAsignacionInterface $plazaPropietarioAsignacion,
     ) {
     }
 
@@ -113,7 +115,10 @@ final class AsistenteGuardar
             $Qpropietario = '';
         }
         $oAsistente->setPropietarioVo($Qpropietario);
-        $err_plaza = $oAsistente->setPlazaVoComprobando((int) ($input['plaza'] ?? 0));
+        $err_plaza = $oAsistente->setPlazaVoComprobando(
+            (int) ($input['plaza'] ?? 0),
+            $this->plazaPropietarioAsignacion,
+        );
         if ($err_plaza !== '') {
             return $err_plaza;
         }

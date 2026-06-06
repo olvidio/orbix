@@ -11,7 +11,9 @@ use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
+use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
+use src\shared\infrastructure\DependencyResolver;
 use src\actividades\domain\entity\TiposActividades;
 
 /**
@@ -140,7 +142,9 @@ final class PeticionesIncorporar
             $oAsistenteNew->setId_nom($id_nom);
             $oAsistenteNew->setPropio(true);
             $oAsistenteNew->setPropietarioVo("$dl>$mi_dele");
-            $err_plaza = $oAsistenteNew->setPlazaComprobando(PlazaId::ASIGNADA);
+            /** @var PlazaPropietarioAsignacionInterface $plazaPropietario */
+            $plazaPropietario = DependencyResolver::get(PlazaPropietarioAsignacionInterface::class);
+            $err_plaza = $oAsistenteNew->setPlazaComprobando(PlazaId::ASIGNADA, $plazaPropietario);
             if ($err_plaza !== '') {
                 $msg_err = $err_plaza;
                 continue;

@@ -2,7 +2,6 @@
 
 namespace src\asistentes\domain;
 
-use Psr\Container\ContainerInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
@@ -20,8 +19,10 @@ class InfoAsistenteDl extends DatosInfoRepo
     /** Dossier “actividades de una persona”. */
     private const ID_TIPO_DOSSIER = 1301;
 
-    public function __construct()
-    {
+    public function __construct(
+        private AsistenteActividadService $asistenteActividadService,
+        private AsistenteDlRepositoryInterface $asistenteDlRepository,
+    ) {
         $this->setTxtTitulo(_('actividades como asistente'));
         $this->setTxtEliminar(_('¿Está seguro que desea borrar a esta persona de esta actividad?'));
         $this->setTxtBuscar();
@@ -63,11 +64,13 @@ class InfoAsistenteDl extends DatosInfoRepo
         $aWhereNom = ['id_nom' => $this->id_pau];
         $aOperadorNom = [];
 
-        /** @var ContainerInterface $container */
-        $container = $GLOBALS['container'];
-        /** @var AsistenteActividadService $service */
-        $service = $container->get(AsistenteActividadService::class);
-        return $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereActividad, $aOperadorActividad, true);
+        return $this->asistenteActividadService->getActividadesDeAsistente(
+            $aWhereNom,
+            $aOperadorNom,
+            $aWhereActividad,
+            $aOperadorActividad,
+            true,
+        );
     }
 
     /**
@@ -75,17 +78,7 @@ class InfoAsistenteDl extends DatosInfoRepo
      */
     public function getFicha()
     {
-        $RepositoryInterface = $this->getRepositoryInterface();
-        if (empty($RepositoryInterface)) {
-            $repo = str_replace('domain\entity', 'domain\contracts', (string)$this->obj);
-            $RepositoryInterface = $repo . 'RepositoryInterface';
-        }
-
         $oFicha = null;
-        /** @var ContainerInterface $container */
-        $container = $GLOBALS['container'];
-        /** @var \src\asistentes\domain\contracts\AsistenteDlRepositoryInterface $oRepository */
-        $oRepository = $container->get($RepositoryInterface);
         switch ($this->mod) {
             case 'nuevo':
                 return parent::getFicha();
@@ -99,7 +92,7 @@ class InfoAsistenteDl extends DatosInfoRepo
                 if (!is_array($pk) || !isset($pk['id_activ'], $pk['id_nom'])) {
                     return null;
                 }
-                $oFicha = $oRepository->findById((int)$pk['id_activ'], (int)$pk['id_nom']);
+                $oFicha = $this->asistenteDlRepository->findById((int)$pk['id_activ'], (int)$pk['id_nom']);
                 break;
             default:
                 break;

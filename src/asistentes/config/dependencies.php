@@ -14,7 +14,12 @@ use src\asistentes\application\ListaEstCtrData;
 use src\asistentes\application\ListaPlazasConjuntoActividades;
 use src\asistentes\application\ListaUltimaActivData;
 use src\asistentes\application\ListaUltimQueCtrData;
+use src\asistentes\application\PlazaPropietarioAsignacion;
+use src\asistentes\domain\InfoAsistenteDl;
+use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\application\QueCtrListaData;
+use src\asistentes\application\Select_actividades_de_una_persona;
+use src\asistentes\application\Select_asistentes_a_una_actividad;
 use src\asistentes\application\TablaPeticionesData;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\application\services\AsistenteApplicationService;
@@ -59,4 +64,9 @@ return [
     ListaUltimQueCtrData::class => autowire(ListaUltimQueCtrData::class),
     QueCtrListaData::class => autowire(QueCtrListaData::class),
     TablaPeticionesData::class => autowire(TablaPeticionesData::class),
+    Select_actividades_de_una_persona::class => autowire(Select_actividades_de_una_persona::class),
+    Select_asistentes_a_una_actividad::class => autowire(Select_asistentes_a_una_actividad::class),
+    PlazaPropietarioAsignacionInterface::class => autowire(PlazaPropietarioAsignacion::class),
+    PlazaPropietarioAsignacion::class => autowire(PlazaPropietarioAsignacion::class),
+    InfoAsistenteDl::class => autowire(InfoAsistenteDl::class),
 ];

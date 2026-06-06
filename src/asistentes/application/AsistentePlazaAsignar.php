@@ -3,6 +3,7 @@
 namespace src\asistentes\application;
 
 use src\asistentes\application\services\AsistenteApplicationService;
+use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 
 /**
  * Cambia la plaza asignada de un lote de asistentes (columna `plaza`).
@@ -14,6 +15,7 @@ final class AsistentePlazaAsignar
 {
     public function __construct(
         private AsistenteApplicationService $asistenteApplicationService,
+        private PlazaPropietarioAsignacionInterface $plazaPropietarioAsignacion,
     ) {
     }
 
@@ -48,7 +50,7 @@ final class AsistentePlazaAsignar
                 continue;
             }
             if ($plaza !== null && $plaza !== '') {
-                $err_plaza = $oAsistente->setPlazaComprobando((int) $plaza);
+                $err_plaza = $oAsistente->setPlazaComprobando((int) $plaza, $this->plazaPropietarioAsignacion);
                 if ($err_plaza !== '') {
                     $msg_err .= $err_plaza . "\n";
                     continue;

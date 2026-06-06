@@ -2,7 +2,6 @@
 
 namespace src\asistentes\application;
 
-use Psr\Container\ContainerInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
@@ -36,12 +35,15 @@ class Select_asistentes_a_una_actividad
 {
     private const ID_TIPO_DOSSIER = 3101;
 
-    private function getContainer(): ContainerInterface
-    {
-        /** @var ContainerInterface $container */
-        $container = $GLOBALS['container'];
-
-        return $container;
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ResumenPlazasService $resumenPlazasService,
+        private AsistenteRepositoryInterface $asistenteRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private CargoRepositoryInterface $cargoRepository,
+        private PersonaFinderService $personaFinderService,
+        private TelecoPersonaService $telecoPersonaService,
+    ) {
     }
 
     private $a_ref_perm;
@@ -129,9 +131,7 @@ class Select_asistentes_a_una_actividad
 
     private function getDatosActividad(): void
     {
-        /** @var ActividadAllRepositoryInterface $ActividadAllRepository */
-        $ActividadAllRepository = $this->getContainer()->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($this->id_pau);
+        $oActividad = $this->actividadAllRepository->findById($this->id_pau);
         if ($oActividad === null) {
             $this->msg_err = sprintf(_('No se ha encontrado la actividad con id: %s'), $this->id_pau);
 
@@ -170,18 +170,14 @@ class Select_asistentes_a_una_actividad
 
     private function contarPlazas(): void
     {
-        /** @var ResumenPlazasService $gesActividadPlazasR */
-        $gesActividadPlazasR = $this->getContainer()->get(ResumenPlazasService::class);
-        $gesActividadPlazasR->setId_activ($this->id_pau);
+        $this->resumenPlazasService->setId_activ($this->id_pau);
         $this->a_plazas_conseguidas = [];
-        $this->a_plazas_resumen = $gesActividadPlazasR->getResumen();
+        $this->a_plazas_resumen = $this->resumenPlazasService->getResumen();
     }
 
     public function getCargos(): void
     {
-        /** @var ActividadAllRepositoryInterface $ActividadAllRepository */
-        $ActividadAllRepository = $this->getContainer()->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($this->id_pau);
+        $oActividad = $this->actividadAllRepository->findById($this->id_pau);
         if ($oActividad === null) {
             $this->msg_err = sprintf(_('No se ha encontrado la actividad con id: %s'), $this->id_pau);
 
@@ -192,20 +188,12 @@ class Select_asistentes_a_una_actividad
         $oPermDossier = new PermDossier();
         $this->a_ref_perm = $oPermDossier->perm_pers_activ($this->id_tipo_activ,$dl_propia);
 
-        /** @var AsistenteRepositoryInterface $AsistenteRepository */
-        $AsistenteRepository = $this->getContainer()->get(AsistenteRepositoryInterface::class);
         $c = 0;
         $num = 0;
         $a_valores = [];
         $this->aListaCargos = [];
-        /** @var ActividadCargoRepositoryInterface $ActividadCargoRepository */
-        $ActividadCargoRepository = $this->getContainer()->get(ActividadCargoRepositoryInterface::class);
-        $cCargosEnActividad = $ActividadCargoRepository->getActividadCargos(['id_activ' => $this->id_pau]);
+        $cCargosEnActividad = $this->actividadCargoRepository->getActividadCargos(['id_activ' => $this->id_pau]);
         $mi_sfsv = ConfigGlobal::mi_sfsv();
-        /** @var CargoRepositoryInterface $CargoRepository */
-        $CargoRepository = $this->getContainer()->get(CargoRepositoryInterface::class);
-        /** @var PersonaFinderService $PersonaFinderService */
-        $PersonaFinderService = $this->getContainer()->get(PersonaFinderService::class);
         /** @var XPermisos $oPerm */
         $oPerm = $_SESSION['oPerm'];
         foreach ($cCargosEnActividad as $oActividadCargo) {
@@ -216,7 +204,7 @@ class Select_asistentes_a_una_actividad
             $id_nom = $oActividadCargo->getId_nom();
             $this->aListaCargos[] = $id_nom;
             $id_cargo = $oActividadCargo->getId_cargo();
-            $oCargo = $CargoRepository->findById($id_cargo);
+            $oCargo = $this->cargoRepository->findById($id_cargo);
             if ($oCargo === null) {
                 continue;
             }
@@ -227,12 +215,12 @@ class Select_asistentes_a_una_actividad
             }
 
             if ($this->dl_org !== $this->mi_dele) {
-                $oPersona = $PersonaFinderService->findPersonaEnDl($id_nom);
+                $oPersona = $this->personaFinderService->findPersonaEnDl($id_nom);
                 if ($oPersona === null) {
                     continue;
                 }
             } else {
-                $oPersona = $PersonaFinderService->findPersonaEnGlobal($id_nom);
+                $oPersona = $this->personaFinderService->findPersonaEnGlobal($id_nom);
             }
 
             if ($oPersona === null) {
@@ -245,18 +233,16 @@ class Select_asistentes_a_una_actividad
             $nombre = $oPersona->getNom();
             $apellidos = $oPersona->getApellidos();
             $sacd = ($oPersona->isSacd()) ? _("sí") : '';
-            /** @var TelecoPersonaService $telecoService */
-            $telecoService = $this->getContainer()->get(TelecoPersonaService::class);
             $telfs = '';
-            $telfs_fijo = $telecoService->getTelecosPorTipo($id_nom, "telf", " / ", "*", false);
-            $telfs_movil = $telecoService->getTelecosPorTipo($id_nom, "móvil", " / ", "*", false);
+            $telfs_fijo = $this->telecoPersonaService->getTelecosPorTipo($id_nom, "telf", " / ", "*", false);
+            $telfs_movil = $this->telecoPersonaService->getTelecosPorTipo($id_nom, "móvil", " / ", "*", false);
             if (!empty($telfs_fijo) && !empty($telfs_movil)) {
                 $telfs = $telfs_fijo . " / " . $telfs_movil;
             } else {
                 $telfs .= $telfs_fijo ?? '';
                 $telfs .= $telfs_movil ?? '';
             }
-            $mails = $telecoService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", false);
+            $mails = $this->telecoPersonaService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", false);
 
             $observ_cargo = $oActividadCargo->getObserv();
             $dl_asistente = $oPersona->getDl();
@@ -271,7 +257,7 @@ class Select_asistentes_a_una_actividad
             $plaza = PlazaId::PEDIDA;
             $aWhere = ['id_activ' => $this->id_pau, 'id_nom' => $id_nom];
             $aOperador = ['id_activ' => '=', 'id_nom' => '='];
-            if (!empty($id_nom) && $cAsistente = $AsistenteRepository->getAsistentes($aWhere, $aOperador)) {
+            if (!empty($id_nom) && $cAsistente = $this->asistenteRepository->getAsistentes($aWhere, $aOperador)) {
                 if (is_array($cAsistente) && count($cAsistente) > 1) {
                     $tabla = '';
                     foreach ($cAsistente as $Asistente) {
@@ -365,12 +351,8 @@ class Select_asistentes_a_una_actividad
 
     public function getAsistentes(): void
     {
-        /** @var AsistenteRepositoryInterface $AsistenteRepository */
-        $AsistenteRepository = $this->getContainer()->get(AsistenteRepositoryInterface::class);
         $this->a_asistentes = [];
-        $cAsistentes = $AsistenteRepository->getAsistentes(['id_activ' => $this->id_pau]);
-        /** @var PersonaFinderService $PersonaFinderService */
-        $PersonaFinderService = $this->getContainer()->get(PersonaFinderService::class);
+        $cAsistentes = $this->asistenteRepository->getAsistentes(['id_activ' => $this->id_pau]);
         foreach ($cAsistentes as $oAsistente) {
             $this->num++;
             $id_nom = $oAsistente->getId_nom();
@@ -380,12 +362,12 @@ class Select_asistentes_a_una_actividad
             }
 
             if ($this->dl_org !== $this->mi_dele) {
-                $oPersona = $PersonaFinderService->findPersonaEnDl($id_nom);
+                $oPersona = $this->personaFinderService->findPersonaEnDl($id_nom);
                 if ($oPersona === null) {
                     continue;
                 }
             } else {
-                $oPersona = $PersonaFinderService->findPersonaEnGlobal($id_nom);
+                $oPersona = $this->personaFinderService->findPersonaEnGlobal($id_nom);
             }
 
             if ($oPersona === null) {
@@ -400,18 +382,16 @@ class Select_asistentes_a_una_actividad
             $sacd = ($oPersona->isSacd()) ? _("sí") : '';
             $dl_asistente = $oPersona->getDl();
             $ctr_dl = $oPersona->getCentro_o_dl();
-            /** @var TelecoPersonaService $telecoService */
-            $telecoService = $this->getContainer()->get(TelecoPersonaService::class);
             $telfs = '';
-            $telfs_fijo = $telecoService->getTelecosPorTipo($id_nom, "telf", " / ", "*", false);
-            $telfs_movil = $telecoService->getTelecosPorTipo($id_nom, "móvil", " / ", "*", false);
+            $telfs_fijo = $this->telecoPersonaService->getTelecosPorTipo($id_nom, "telf", " / ", "*", false);
+            $telfs_movil = $this->telecoPersonaService->getTelecosPorTipo($id_nom, "móvil", " / ", "*", false);
             if (!empty($telfs_fijo) && !empty($telfs_movil)) {
                 $telfs = $telfs_fijo . " / " . $telfs_movil;
             } else {
                 $telfs .= $telfs_fijo ?? '';
                 $telfs .= $telfs_movil ?? '';
             }
-            $mails = $telecoService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", false);
+            $mails = $this->telecoPersonaService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", false);
 
             $propio = $oAsistente->isPropio();
             $falta = $oAsistente->isFalta();

@@ -7,6 +7,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asistentes\application\AsistenteEliminar;
 use src\asistentes\application\AsistenteGuardar;
 use src\asistentes\application\services\AsistenteApplicationService;
+use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\entity\Dossier;
@@ -36,6 +37,7 @@ final class AsistenteGuardarTest extends TestCase
         ?AsistenteApplicationService $app = null,
         ?DossierRepositoryInterface $dosRepo = null,
         ?AsistenteEliminar $asistenteEliminar = null,
+        ?PlazaPropietarioAsignacionInterface $plazaPropietario = null,
     ): AsistenteGuardar {
         $app ??= $this->createMock(AsistenteApplicationService::class);
         $dosRepo ??= $this->createMock(DossierRepositoryInterface::class);
@@ -44,7 +46,8 @@ final class AsistenteGuardarTest extends TestCase
             $this->createMock(MatriculaRepositoryInterface::class),
             $this->createMock(DossierRepositoryInterface::class),
         );
-        return new AsistenteGuardar($app, $dosRepo, $asistenteEliminar);
+        $plazaPropietario ??= $this->createMock(PlazaPropietarioAsignacionInterface::class);
+        return new AsistenteGuardar($app, $dosRepo, $asistenteEliminar, $plazaPropietario);
     }
 
     public function test_mod_no_soportado(): void

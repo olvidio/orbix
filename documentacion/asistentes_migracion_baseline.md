@@ -319,3 +319,68 @@ Estrategia mixta (mismo patron que `actividadestudios` Slice 3):
 - El campo `codigo` en `d_tipos_dossiers` para 1301/3101 se asume ya
   poblado (confirmacion explicita del usuario; respuesta "db_codes:
   exist" en la conversacion origen del refactor).
+
+## Deuda post-refactor
+
+Migracion estructural **completa** (`apps/asistentes/` eliminado). Este modulo
+es el **piloto de cierre** descrito en
+[`documentacion/REFACTOR_INDICE.md`](REFACTOR_INDICE.md).
+
+### Completado tras los 3 slices
+
+| Criterio | Estado |
+|----------|--------|
+| `frontend/asistentes/controller/` sin `use src\...` | **0/12** |
+| Sin `require_once` de `global_object.inc` en controladores | **0/12** |
+| Lecturas via `PostRequest` + endpoints `*_data.php` | si |
+| Helpers de render en `frontend/asistentes/helpers/` (`*Render.php`, firma `link_spec`) | 9 ficheros |
+| Mutaciones JSON (`asistente_guardar`, `eliminar`, `plaza_asignar`) | si |
+
+### Pendiente (cierre del modulo)
+
+#### 1. `$GLOBALS['container']` en `src/asistentes/` — **cerrado**
+
+| Capa | Estado |
+|------|--------|
+| `infrastructure/ui/http/controllers/` | `DependencyResolver::get()` |
+| `application/` | DI por constructor (`Select_*`, casos de uso, `PlazaPropietarioAsignacion`) |
+| `domain/` | Sin `$GLOBALS`; validacion de plaza via puerto `PlazaPropietarioAsignacionInterface` |
+
+**Completado (2026-06-06):**
+
+- 15 controllers HTTP via [`DependencyResolver`](../../src/shared/infrastructure/DependencyResolver.php).
+- `Select_*` + `InfoAsistenteDl`: DI; instanciacion desde
+  [`DossiersVerPantallaData`](../../src/dossiers/application/DossiersVerPantallaData.php)
+  con `DependencyResolver::get($fqcn)`.
+- `Asistente::setPlaza*Comprobando`: delega en
+  [`PlazaPropietarioAsignacion`](../../src/asistentes/application/PlazaPropietarioAsignacion.php)
+  (implementa contrato de dominio); inyectado desde `AsistenteGuardar` / `AsistentePlazaAsignar`.
+
+#### 2. PHPStan
+
+- ~106 entradas en `phpstan-baseline.neon` con rutas bajo `src/asistentes/` o
+  `frontend/asistentes/`.
+- Tras cada fichero migrado a DI: `composer phpstan:file -- <ruta>` y reducir
+  baseline.
+
+#### 3. Tests y cobertura
+
+- Verificar carpetas `tests/unit/asistentes` y `tests/integration/asistentes`.
+- Casos de uso de mutacion (`AsistenteGuardar`, `AsistenteEliminar`,
+  `AsistentePlazaAsignar`) y builders `*Data` principales: al menos integracion.
+
+#### 4. Documentacion y referencias
+
+- Sustituir menciones a `refactor.md` por `agents.md` en comentarios del modulo
+  (si quedan).
+- Mantener alineados menus (`menus.csv`, `aux_metamenus.csv`, `comun.sql`) tras
+  cambios de URL.
+
+### Checklist de cierre (marcar al terminar)
+
+Ver checklist completo en [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] 0 `$GLOBALS['container']` en todo `src/asistentes/`
+- [x] Todos los controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [ ] PHPStan sin entradas nuevas; baseline del modulo reducido
+- [ ] Tests de mutaciones y lecturas principales en verde

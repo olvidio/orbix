@@ -2,7 +2,6 @@
 
 namespace src\asistentes\application;
 
-use Psr\Container\ContainerInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
@@ -30,12 +29,10 @@ class Select_actividades_de_una_persona
 {
     private const ID_TIPO_DOSSIER = 1301;
 
-    private function getContainer(): ContainerInterface
-    {
-        /** @var ContainerInterface $container */
-        $container = $GLOBALS['container'];
-
-        return $container;
+    public function __construct(
+        private AsistenteActividadService $asistenteActividadService,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+    ) {
     }
 
     private array $ref_perm = [];
@@ -157,15 +154,17 @@ class Select_actividades_de_una_persona
         $a_valores = [];
         $aWhereNom = ['id_nom' => $this->id_pau];
         $aOperadorNom = [];
-        /** @var AsistenteActividadService $service */
-        $service = $this->getContainer()->get(AsistenteActividadService::class);
-        $cActividadesAsistente = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperator, true);
-        /** @var ActividadAllRepositoryInterface $ActividadAllRepository */
-        $ActividadAllRepository = $this->getContainer()->get(ActividadAllRepositoryInterface::class);
+        $cActividadesAsistente = $this->asistenteActividadService->getActividadesDeAsistente(
+            $aWhereNom,
+            $aOperadorNom,
+            $aWhere,
+            $aOperator,
+            true,
+        );
         foreach ($cActividadesAsistente as $oAsistente) {
             $i++;
             $id_activ = $oAsistente->getId_activ();
-            $oActividad = $ActividadAllRepository->findById($id_activ);
+            $oActividad = $this->actividadAllRepository->findById($id_activ);
             if ($oActividad === null) {
                 continue;
             }

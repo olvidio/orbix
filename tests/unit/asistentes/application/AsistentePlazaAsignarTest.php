@@ -5,6 +5,7 @@ namespace Tests\unit\asistentes\application;
 use PHPUnit\Framework\TestCase;
 use src\asistentes\application\AsistentePlazaAsignar;
 use src\asistentes\application\services\AsistenteApplicationService;
+use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
 
 final class AsistentePlazaAsignarTest extends TestCase
@@ -28,10 +29,13 @@ final class AsistentePlazaAsignarTest extends TestCase
         parent::tearDown();
     }
 
-    private function createSut(?AsistenteApplicationService $app = null): AsistentePlazaAsignar
-    {
+    private function createSut(
+        ?AsistenteApplicationService $app = null,
+        ?PlazaPropietarioAsignacionInterface $plazaPropietario = null,
+    ): AsistentePlazaAsignar {
         $app ??= $this->createMock(AsistenteApplicationService::class);
-        return new AsistentePlazaAsignar($app);
+        $plazaPropietario ??= $this->createMock(PlazaPropietarioAsignacionInterface::class);
+        return new AsistentePlazaAsignar($app, $plazaPropietario);
     }
 
     public function test_falta_id_activ(): void
@@ -55,7 +59,7 @@ final class AsistentePlazaAsignarTest extends TestCase
     {
         $o = $this->createMock(Asistente::class);
         $o->method('perm_modificar')->willReturn(true);
-        $o->expects($this->once())->method('setPlazaComprobando')->with(3)->willReturn('');
+        $o->expects($this->once())->method('setPlazaComprobando')->with(3, $this->anything())->willReturn('');
 
         $app = $this->createMock(AsistenteApplicationService::class);
         $app->method('findById')->with(9, 5)->willReturn($o);
