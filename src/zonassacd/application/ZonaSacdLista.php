@@ -2,19 +2,27 @@
 
 namespace src\zonassacd\application;
 
-use src\shared\config\ConfigGlobal;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\shared\config\ConfigGlobal;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use function src\shared\domain\helpers\is_true;
 
-class ZonaSacdLista
+final class ZonaSacdLista
 {
-    public static function execute(string $id_zona): array
+    public function __construct(
+        private PersonaSacdRepositoryInterface $personaSacdRepository,
+        private ZonaSacdRepositoryInterface $zonaSacdRepository,
+        private ZonaRepositoryInterface $zonaRepository,
+    ) {
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(string $id_zona): array
     {
-        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
-        $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
         $a_valores = [];
         if ($id_zona === 'no') {
             $mi_dl = ConfigGlobal::mi_delef();
@@ -26,12 +34,12 @@ class ZonaSacdLista
                 '_ordre' => 'apellido1,apellido2,nom',
             ];
             $aOperador = ['id_tabla' => 'IN'];
-            $cSacds = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
+            $cSacds = $this->personaSacdRepository->getPersonas($aWhere, $aOperador);
             $i = 0;
             foreach ($cSacds as $oPersona) {
                 $id_nom = $oPersona->getId_nom();
-                $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_nom' => $id_nom]);
-                if (is_array($cZonaSacd) && count($cZonaSacd) < 1) {
+                $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_nom' => $id_nom]);
+                if ($cZonaSacd === []) {
                     $a_valores[$i]['sel'] = $id_nom;
                     $a_valores[$i][1] = $oPersona->getPrefApellidosNombre();
                     $a_valores[$i][2] = $oPersona->getId_tabla();
@@ -39,16 +47,17 @@ class ZonaSacdLista
                 }
             }
         } else {
-            $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-            $oZona = $ZonaRepository->findById($id_zona);
-            $nombre_zona = $oZona->getNombre_zona();
-            $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_zona' => $id_zona], []);
+            $oZona = $this->zonaRepository->findById((int) $id_zona);
+            $nombre_zona = $oZona?->getNombre_zona() ?? '';
+            $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_zona' => $id_zona], []);
             $i = 0;
             $aAp1 = [];
             foreach ($cZonaSacd as $oZonaSacd) {
                 $id_nom = $oZonaSacd->getId_nom();
                 $oPersona = Persona::findPersonaEnGlobal($id_nom);
-                $ap_nom = $oPersona === null ? sprintf(_("No encuentro e nadie con id_nom %s"), $id_nom) : $oPersona->getPrefApellidosNombre();
+                $ap_nom = $oPersona === null
+                    ? sprintf(_("No encuentro e nadie con id_nom %s"), $id_nom)
+                    : $oPersona->getPrefApellidosNombre();
                 $aAp1[$i] = $ap_nom;
                 $a_valores[$i]['sel'] = $id_nom;
                 $a_valores[$i][1] = $ap_nom;
@@ -63,7 +72,7 @@ class ZonaSacdLista
                 $a_valores[$i][10] = is_true($oZonaSacd->isDw7()) ? 'x' : '-';
                 $i++;
             }
-            if (!empty($a_valores)) {
+            if ($a_valores !== []) {
                 array_multisort($aAp1, SORT_ASC, SORT_STRING, $a_valores);
             }
         }

@@ -13,9 +13,9 @@ use src\utils_database\domain\entity\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ServerConf::DIR . "/src/zonassacd/db";
+    private string $dir_base = ServerConf::DIR . "/src/zonassacd/db";
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
         if (empty($esquema_sfsv)) {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
@@ -25,7 +25,7 @@ class DBEsquema extends DBAbstract
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->eliminar_zonas();
         $this->eliminar_zonas_grupos();
@@ -37,7 +37,7 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->create_zonas();
         $this->create_zonas_grupos();
@@ -49,13 +49,16 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function llenarAll()
+    public function llenarAll(): void
     {
         $this->llenar_zonas();
         $this->llenar_zonas_grupos();
     }
 
-    protected function infoTable($tabla)
+    /**
+     * @return array{tabla: string, nom_tabla: string, campo_seq: string, id_seq: string, filename: string}
+     */
+    protected function infoTable(string $tabla): array
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
@@ -75,6 +78,11 @@ class DBEsquema extends DBAbstract
                 $campo_seq = 'id_item';
                 $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
                 break;
+            default:
+                $nom_tabla = $this->getNomTabla($tabla);
+                $campo_seq = '';
+                $id_seq = '';
+                break;
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
         $datosTabla['campo_seq'] = $campo_seq;
@@ -86,7 +94,7 @@ class DBEsquema extends DBAbstract
     /**
      * En la BD sf/sv (esquema).
      */
-    public function create_zonas()
+    public function create_zonas(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -145,7 +153,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function eliminar_zonas()
+    public function eliminar_zonas(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -172,7 +180,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function create_zonas_grupos()
+    public function create_zonas_grupos(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -222,7 +230,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function eliminar_zonas_grupos()
+    public function eliminar_zonas_grupos(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -249,7 +257,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function create_zonas_sacd()
+    public function create_zonas_sacd(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -303,7 +311,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function eliminar_zonas_sacd()
+    public function eliminar_zonas_sacd(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -331,7 +339,7 @@ class DBEsquema extends DBAbstract
     }
 
     //// LLENAR 
-    public function llenar_zonas()
+    public function llenar_zonas(): void
     {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"' . $this->esquema . '"';
@@ -384,7 +392,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv-e');
     }
 
-    public function llenar_zonas_grupos()
+    public function llenar_zonas_grupos(): void
     {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"' . $this->esquema . '"';
@@ -421,7 +429,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv-e');
     }
 
-    public function llenar_zonas_sacd()
+    public function llenar_zonas_sacd(): void
     {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"' . $this->esquema . '"';

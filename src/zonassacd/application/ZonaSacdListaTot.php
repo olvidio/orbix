@@ -2,32 +2,39 @@
 
 namespace src\zonassacd\application;
 
-use src\shared\config\ConfigGlobal;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\shared\config\ConfigGlobal;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
-class ZonaSacdListaTot
+final class ZonaSacdListaTot
 {
-    public static function execute(): array
+    public function __construct(
+        private PersonaSacdRepositoryInterface $personaSacdRepository,
+        private ZonaSacdRepositoryInterface $zonaSacdRepository,
+        private ZonaRepositoryInterface $zonaRepository,
+    ) {
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(): array
     {
         $mi_dl = ConfigGlobal::mi_delef();
         $aWhere = ['sacd' => 't', 'dl' => $mi_dl, '_ordre' => 'apellido1,apellido2,nom'];
-        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
-        $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-        $cSacds = $PersonaSacdRepository->getPersonas($aWhere);
+        $cSacds = $this->personaSacdRepository->getPersonas($aWhere);
         $a_valores = [];
         $i = 0;
         foreach ($cSacds as $oPersona) {
             $id_nom = $oPersona->getId_nom();
             $ap_nom = $oPersona->getPrefApellidosNombre();
-            $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_nom' => $id_nom]);
+            $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_nom' => $id_nom]);
             $a_zonas = [];
             foreach ($cZonaSacd as $oZonaSacd) {
                 $id_zona = $oZonaSacd->getId_zona();
                 $propia = $oZonaSacd->isPropia();
-                $oZona = $ZonaRepository->findById($id_zona);
+                $oZona = $this->zonaRepository->findById($id_zona);
                 $orden = $propia === true ? 0 : $oZona?->getOrden() ?? 0;
                 $a_zonas[$orden] = [$oZona?->getNombre_zona() ?? '', $propia];
             }

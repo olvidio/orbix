@@ -4,37 +4,21 @@ namespace src\zonassacd\domain\contracts;
 
 use src\zonassacd\domain\entity\Zona;
 
-
-/**
- * Interfaz de la clase Zona y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 24/12/2025
- */
 interface ZonaRepositoryInterface
 {
-
-
     public function isJefeZona(int $id_nom): bool;
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayZonas(?int $iid_nom_jefe = null): array;
 
-
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
     /**
-     * devuelve una colección (array) de objetos de tipo Zona
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Zona
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Zona>
      */
     public function getZonas(array $aWhere = [], array $aOperators = []): array;
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(Zona $Zona): bool;
 
@@ -42,23 +26,14 @@ interface ZonaRepositoryInterface
 
     public function getErrorTxt(): string;
 
-
-
     public function getNomTabla(): string;
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_zona
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_zona): array|bool;
+    public function datosById(int $id_zona): array|false;
 
-    /**
-     * Busca la clase con id_zona en el repositorio.
-     */
     public function findById(int $id_zona): ?Zona;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

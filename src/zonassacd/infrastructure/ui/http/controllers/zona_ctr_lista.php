@@ -1,7 +1,12 @@
 <?php
 
-use src\zonassacd\application\ZonaCtrLista;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\zonassacd\application\ZonaCtrLista;
+use function src\shared\domain\helpers\input_string;
 
-$Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
-ContestarJson::enviar('', ZonaCtrLista::execute($Qid_zona));
+$input = ['id_zona' => input_string($_POST, 'id_zona')];
+
+/** @var ZonaCtrLista $useCase */
+$useCase = DependencyResolver::get(ZonaCtrLista::class);
+ContestarJson::enviar('', $useCase->execute($input['id_zona']));

@@ -2,43 +2,30 @@
 
 namespace src\zonassacd\infrastructure\persistence\postgresql;
 
+use PDO;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
-use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
 use src\zonassacd\domain\entity\ZonaGrupo;
 
-
-/**
- * Clase que adapta la tabla zonas_grupos a la interfaz del repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 24/12/2025
- */
 class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoRepositoryInterface
 {
     use HandlesPdoErrors;
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBE'];
+        $oDbl = GlobalPdo::get('oDBE');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBE_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('zonas_grupos');
     }
 
     /**
-     * retorna un array
-     * Els posibles grups de zones
-     *
-     * @param string optional $sCondicion Condició de búsqueda (amb el WHERE).
-     * @return array|bool
+     * @return array<int|string, string>
      */
     public function getArrayZonaGrupos(string $sCondicion = ''): array
     {
@@ -49,23 +36,24 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
 				$sCondicion
 				ORDER BY orden";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         while ($aRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $aOpciones[$aRow['id_grupo']] = $aRow['nombre_grupo'];
+            if (!is_array($aRow) || !isset($aRow['id_grupo'], $aRow['nombre_grupo'])) {
+                continue;
+            }
+            $aOpciones[$aRow['id_grupo']] = (string) $aRow['nombre_grupo'];
         }
         return $aOpciones;
     }
 
-
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
     /**
-     * devuelve una colección (array) de objetos de tipo ZonaGrupo
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ZonaGrupo
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<ZonaGrupo>
      */
     public function getZonasGrupo(array $aWhere = [], array $aOperators = []): array
     {
@@ -85,7 +73,6 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
                 $aCondicion[] = $a;
             }
-            // operadores que no requieren valores
             if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
                 unset($aWhere[$camp]);
             }
@@ -98,34 +85,40 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
         }
         $sCondicion = implode(' AND ', $aCondicion);
         if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
+            $sCondicion = ' WHERE ' . $sCondicion;
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $ZonaGrupo = ZonaGrupo::fromArray($aDatos);
             $ZonaGrupoSet->add($ZonaGrupo);
         }
-        return $ZonaGrupoSet->getTot();
+        return array_values($ZonaGrupoSet->getTot());
     }
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(ZonaGrupo $ZonaGrupo): bool
     {
@@ -136,10 +129,6 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-
-    /**
-     * Si no existe el registro, hace un insert, si existe, se hace el update.
-     */
     public function Guardar(ZonaGrupo $ZonaGrupo): bool
     {
         $id_grupo = $ZonaGrupo->getId_grupo();
@@ -149,20 +138,20 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
 
         $aDatos = $ZonaGrupo->toArrayForDatabase();
         if ($bInsert === false) {
-            //UPDATE
             unset($aDatos['id_grupo']);
             $update = "
 					nombre_grupo             = :nombre_grupo,
 					orden                    = :orden";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_grupo = $id_grupo";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
-        else {
-            // INSERT
-            $campos = "(id_grupo,nombre_grupo,orden)";
-            $valores = "(:id_grupo,:nombre_grupo,:orden)";
+        } else {
+            $campos = '(id_grupo,nombre_grupo,orden)';
+            $valores = '(:id_grupo,:nombre_grupo,:orden)';
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        if ($stmt === false) {
+            return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -173,47 +162,57 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_grupo = $id_grupo";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_grupo
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_grupo): array |bool
+    public function datosById(int $id_grupo): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_grupo = $id_grupo";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
-
-    /**
-     * Busca la clase con id_grupo en la base de datos .
-     */
     public function findById(int $id_grupo): ?ZonaGrupo
     {
         $aDatos = $this->datosById($id_grupo);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return ZonaGrupo::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('zonas_grupos_id_grupo_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

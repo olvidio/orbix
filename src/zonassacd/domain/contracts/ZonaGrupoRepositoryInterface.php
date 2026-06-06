@@ -4,33 +4,19 @@ namespace src\zonassacd\domain\contracts;
 
 use src\zonassacd\domain\entity\ZonaGrupo;
 
-
-/**
- * Interfaz de la clase ZonaGrupo y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 24/12/2025
- */
 interface ZonaGrupoRepositoryInterface
 {
-
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayZonaGrupos(string $sCondicion = ''): array;
 
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
     /**
-     * devuelve una colección (array) de objetos de tipo ZonaGrupo
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ZonaGrupo
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<ZonaGrupo>
      */
     public function getZonasGrupo(array $aWhere = [], array $aOperators = []): array;
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(ZonaGrupo $ZonaGrupo): bool;
 
@@ -38,23 +24,14 @@ interface ZonaGrupoRepositoryInterface
 
     public function getErrorTxt(): string;
 
-
-
     public function getNomTabla(): string;
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_grupo
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_grupo): array|bool;
+    public function datosById(int $id_grupo): array|false;
 
-    /**
-     * Busca la clase con id_grupo en el repositorio.
-     */
     public function findById(int $id_grupo): ?ZonaGrupo;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

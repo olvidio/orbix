@@ -2,43 +2,30 @@
 
 namespace src\zonassacd\infrastructure\persistence\postgresql;
 
+use PDO;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
-use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\zonassacd\domain\entity\ZonaSacd;
-use function src\shared\domain\helpers\is_true;
 
-
-/**
- * Clase que adapta la tabla zonas_sacd a la interfaz del repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 24/12/2025
- */
 class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepositoryInterface
 {
     use HandlesPdoErrors;
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBE'];
+        $oDbl = GlobalPdo::get('oDBE');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBE_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('zonas_sacd');
     }
 
     /**
-     * retorna l'array de id_nom dels sacd de la zona
-     *
-     * @param integer iid_zona.
-     * @return array|bool
+     * @return list<int>
      */
     public function getIdSacdsDeZona(int $iid_zona): array
     {
@@ -49,21 +36,24 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
 				WHERE id_zona=$iid_zona
 				ORDER BY id_nom";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aLista = [];
         foreach ($stmt as $aDades) {
-            $aLista[] = $aDades['id_nom'];
+            if (!is_array($aDades) || !isset($aDades['id_nom'])) {
+                continue;
+            }
+            $aLista[] = is_numeric($aDades['id_nom']) ? (int) $aDades['id_nom'] : 0;
         }
         return $aLista;
     }
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ZonaSacd
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ZonaSacd
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<ZonaSacd>
      */
     public function getZonasSacds(array $aWhere = [], array $aOperators = []): array
     {
@@ -83,7 +73,6 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
                 $aCondicion[] = $a;
             }
-            // operadores que no requieren valores
             if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
                 unset($aWhere[$camp]);
             }
@@ -96,34 +85,40 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
         }
         $sCondicion = implode(' AND ', $aCondicion);
         if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
+            $sCondicion = ' WHERE ' . $sCondicion;
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $ZonaSacd = ZonaSacd::fromArray($aDatos);
             $ZonaSacdSet->add($ZonaSacd);
         }
-        return $ZonaSacdSet->getTot();
+        return array_values($ZonaSacdSet->getTot());
     }
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(ZonaSacd $ZonaSacd): bool
     {
@@ -134,10 +129,6 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-
-    /**
-     * Si no existe el registro, hace un insert, si existe, se hace el update.
-     */
     public function Guardar(ZonaSacd $ZonaSacd): bool
     {
         $id_item = $ZonaSacd->getId_item();
@@ -147,7 +138,6 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
 
         $aDatos = $ZonaSacd->toArrayForDatabase();
         if ($bInsert === false) {
-            //UPDATE
             unset($aDatos['id_item']);
             $update = "
 					id_nom                   = :id_nom,
@@ -162,13 +152,14 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
 					dw7                      = :dw7";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
-        else {
-            // INSERT
-            $campos = "(id_item,id_nom,id_zona,propia,dw1,dw2,dw3,dw4,dw5,dw6,dw7)";
-            $valores = "(:id_item,:id_nom,:id_zona,:propia,:dw1,:dw2,:dw3,:dw4,:dw5,:dw6,:dw7)";
+        } else {
+            $campos = '(id_item,id_nom,id_zona,propia,dw1,dw2,dw3,dw4,dw5,dw6,dw7)';
+            $valores = '(:id_item,:id_nom,:id_zona,:propia,:dw1,:dw2,:dw3,:dw4,:dw5,:dw6,:dw7)';
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        if ($stmt === false) {
+            return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -179,47 +170,57 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array |bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
-
-    /**
-     * Busca la clase con id_item en la base de datos .
-     */
     public function findById(int $id_item): ?ZonaSacd
     {
         $aDatos = $this->datosById($id_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return ZonaSacd::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('zonas_sacd_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

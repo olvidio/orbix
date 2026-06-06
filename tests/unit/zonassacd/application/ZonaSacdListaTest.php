@@ -80,12 +80,8 @@ final class ZonaSacdListaTest extends TestCase
             [['id_nom' => 102], [], [$this->createStub(ZonaSacd::class)]],
         ]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            PersonaSacdRepositoryInterface::class => $personaRepo,
-            ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
-        ]);
-
-        $out = ZonaSacdLista::execute('no');
+        $lista = new ZonaSacdLista($personaRepo, $zonaSacdRepo, $this->createStub(ZonaRepositoryInterface::class));
+        $out = $lista->execute('no');
 
         $this->assertCount(1, $out['a_valores']);
         $first = reset($out['a_valores']);
@@ -125,14 +121,15 @@ final class ZonaSacdListaTest extends TestCase
         ]);
 
         $GLOBALS['container'] = $this->containerFromMap([
-            PersonaSacdRepositoryInterface::class
-                => $this->createStub(PersonaSacdRepositoryInterface::class),
-            ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
-            ZonaRepositoryInterface::class => $zonaRepo,
             PersonaFinderService::class => $finder,
         ]);
 
-        $out = ZonaSacdLista::execute('5');
+        $lista = new ZonaSacdLista(
+            $this->createStub(PersonaSacdRepositoryInterface::class),
+            $zonaSacdRepo,
+            $zonaRepo,
+        );
+        $out = $lista->execute('5');
 
         $this->assertCount(2, $out['a_valores']);
         // Ordenados alfabeticamente por `ap_nom`.
@@ -166,14 +163,15 @@ final class ZonaSacdListaTest extends TestCase
         $finder->method('findPersonaEnGlobal')->willReturn(null);
 
         $GLOBALS['container'] = $this->containerFromMap([
-            PersonaSacdRepositoryInterface::class
-                => $this->createStub(PersonaSacdRepositoryInterface::class),
-            ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
-            ZonaRepositoryInterface::class => $zonaRepo,
             PersonaFinderService::class => $finder,
         ]);
 
-        $out = ZonaSacdLista::execute('7');
+        $lista = new ZonaSacdLista(
+            $this->createStub(PersonaSacdRepositoryInterface::class),
+            $zonaSacdRepo,
+            $zonaRepo,
+        );
+        $out = $lista->execute('7');
 
         $this->assertCount(1, $out['a_valores']);
         $first = reset($out['a_valores']);
@@ -191,13 +189,12 @@ final class ZonaSacdListaTest extends TestCase
             ->with(['id_zona' => '3'], [])
             ->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            PersonaSacdRepositoryInterface::class => $this->createStub(PersonaSacdRepositoryInterface::class),
-            ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
-            ZonaRepositoryInterface::class => $zonaRepo,
-        ]);
-
-        $out = ZonaSacdLista::execute('3');
+        $lista = new ZonaSacdLista(
+            $this->createStub(PersonaSacdRepositoryInterface::class),
+            $zonaSacdRepo,
+            $zonaRepo,
+        );
+        $out = $lista->execute('3');
 
         $this->assertSame([], $out['a_valores']);
     }

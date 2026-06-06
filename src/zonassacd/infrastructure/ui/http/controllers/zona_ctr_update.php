@@ -1,10 +1,16 @@
 <?php
 
-use src\zonassacd\application\ZonaCtrUpdate;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\zonassacd\application\ZonaCtrUpdate;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
 
-$Qid_zona_new = (string)filter_input(INPUT_POST, 'id_zona_new');
-$QAsel = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$QAsel = empty($QAsel) ? [] : $QAsel;
+$input = [
+    'id_zona_new' => input_string($_POST, 'id_zona_new'),
+    'sel' => input_string_list($_POST, 'sel'),
+];
 
-ContestarJson::enviar('', ZonaCtrUpdate::execute($Qid_zona_new, $QAsel));
+/** @var ZonaCtrUpdate $useCase */
+$useCase = DependencyResolver::get(ZonaCtrUpdate::class);
+ContestarJson::enviar('', $useCase->execute($input['id_zona_new'], $input['sel']));

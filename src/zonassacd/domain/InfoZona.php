@@ -4,14 +4,15 @@ namespace src\zonassacd\domain;
 
 use src\shared\domain\DatosInfoRepo;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\entity\Zona;
 
 /* No vale el underscore en el nombre */
 
 class InfoZona extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private ZonaRepositoryInterface $zonaRepository,
+    ) {
         $this->setTxtTitulo(_("zonas de misas"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta zona?"));
         $this->setTxtBuscar(_("zona a buscar"));
@@ -23,20 +24,19 @@ class InfoZona extends DatosInfoRepo
         $this->setRepositoryInterface(ZonaRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<Zona>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'orden');
+            $aWhere = ['_ordre' => 'orden'];
             $aOperador = [];
         } else {
-            $aWhere = array('nom' => $this->k_buscar);
-            $aOperador = array('nom' => 'sin_acentos');
+            $aWhere = ['nom' => $this->k_buscar];
+            $aOperador = ['nom' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->getRepositoryInterface());
-        $Coleccion = $oLista->getZonas($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->zonaRepository->getZonas($aWhere, $aOperador);
     }
 }

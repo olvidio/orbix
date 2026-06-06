@@ -2,16 +2,27 @@
 
 namespace src\zonassacd\application;
 
+use src\permisos\domain\XPermisos;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
-class ZonaCtrPage
+final class ZonaCtrPage
 {
-    public static function getData(): array
+    public function __construct(
+        private ZonaRepositoryInterface $zonaRepository,
+    ) {
+    }
+
+    /**
+     * @return array{a_opciones: array<int|string, string>, perm_des: bool}
+     */
+    public function getData(): array
     {
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+        $oPerm = $_SESSION['oPerm'] ?? null;
+
         return [
-            'a_opciones' => $ZonaRepository->getArrayZonas(),
-            'perm_des' => (bool)(($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))),
+            'a_opciones' => $this->zonaRepository->getArrayZonas(),
+            'perm_des' => $oPerm instanceof XPermisos
+                && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd')),
         ];
     }
 }

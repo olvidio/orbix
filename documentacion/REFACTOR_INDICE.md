@@ -78,7 +78,7 @@ Columnas:
 | ubiscamas | — | 0 | 10 | Sin baseline |
 | usuarios | — | 2 | 44 | `login`/`recovery` — excepciones a valorar |
 | utils_database | — | 0 | 0 | — |
-| zonassacd | ✓ | 0 | 8 | Baseline corto |
+| zonassacd | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](zonassacd_migracion_baseline.md) |
 
 **Módulos sin fila:** solo `src/shared/` (infra transversal; no es un módulo de negocio).
 

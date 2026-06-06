@@ -1,6 +1,9 @@
 <?php
 
-use src\zonassacd\application\ZonaSacdListaTot;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\zonassacd\application\ZonaSacdListaTot;
 
-ContestarJson::enviar('', ZonaSacdListaTot::execute());
+/** @var ZonaSacdListaTot $useCase */
+$useCase = DependencyResolver::get(ZonaSacdListaTot::class);
+ContestarJson::enviar('', $useCase->execute());

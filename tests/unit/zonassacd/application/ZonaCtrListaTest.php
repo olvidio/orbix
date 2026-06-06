@@ -9,6 +9,7 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
+use src\permisos\domain\XPermisos;
 use src\zonassacd\application\ZonaCtrLista;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\entity\Zona;
@@ -27,24 +28,17 @@ use src\zonassacd\domain\entity\Zona;
  */
 final class ZonaCtrListaTest extends TestCase
 {
-    private mixed $previousContainer;
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['oPerm'] = $this->oPermStub([]);
     }
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_SESSION = $this->previousSession;
         parent::tearDown();
     }
@@ -71,14 +65,12 @@ final class ZonaCtrListaTest extends TestCase
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
         $zonaRepo->expects($this->never())->method('findById');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CentroDlRepositoryInterface::class => $centroDlRepo,
-            CentroEllasRepositoryInterface::class
-                => $this->createStub(CentroEllasRepositoryInterface::class),
-            ZonaRepositoryInterface::class => $zonaRepo,
-        ]);
-
-        $out = ZonaCtrLista::execute('no');
+        $lista = new ZonaCtrLista(
+            $centroDlRepo,
+            $this->createStub(CentroEllasRepositoryInterface::class),
+            $zonaRepo,
+        );
+        $out = $lista->execute('no');
 
         $this->assertSame('tabla', $out['tipo']);
         $this->assertCount(1, $out['a_valores']);
@@ -109,14 +101,12 @@ final class ZonaCtrListaTest extends TestCase
         $zonaRepo->expects($this->never())->method('findById');
 
         $_SESSION['oPerm'] = $this->oPermStub(['vcsd' => true]);
-        $GLOBALS['container'] = $this->containerFromMap([
-            CentroDlRepositoryInterface::class
-                => $this->createStub(CentroDlRepositoryInterface::class),
-            CentroEllasRepositoryInterface::class => $centroEllasRepo,
-            ZonaRepositoryInterface::class => $zonaRepo,
-        ]);
-
-        $out = ZonaCtrLista::execute('no_sf');
+        $lista = new ZonaCtrLista(
+            $this->createStub(CentroDlRepositoryInterface::class),
+            $centroEllasRepo,
+            $zonaRepo,
+        );
+        $out = $lista->execute('no_sf');
 
         $this->assertCount(1, $out['a_valores']);
         $first = reset($out['a_valores']);
@@ -139,13 +129,8 @@ final class ZonaCtrListaTest extends TestCase
         $zonaRepo->method('findById')->willReturn($this->zonaStub('Zona 9'));
 
         $_SESSION['oPerm'] = $this->oPermStub(['des' => true]);
-        $GLOBALS['container'] = $this->containerFromMap([
-            CentroDlRepositoryInterface::class => $centroDlRepo,
-            CentroEllasRepositoryInterface::class => $centroEllasRepo,
-            ZonaRepositoryInterface::class => $zonaRepo,
-        ]);
-
-        $out = ZonaCtrLista::execute('9');
+        $lista = new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo);
+        $out = $lista->execute('9');
 
         $this->assertCount(2, $out['a_valores']);
         $vals = array_values($out['a_valores']);
@@ -169,13 +154,8 @@ final class ZonaCtrListaTest extends TestCase
         $zonaRepo->method('findById')->willReturn($this->zonaStub('Zona 9'));
 
         // Sin permisos `des` ni `vcsd` -> el centro SF (id `2055`) se filtra.
-        $GLOBALS['container'] = $this->containerFromMap([
-            CentroDlRepositoryInterface::class => $centroDlRepo,
-            CentroEllasRepositoryInterface::class => $centroEllasRepo,
-            ZonaRepositoryInterface::class => $zonaRepo,
-        ]);
-
-        $out = ZonaCtrLista::execute('9');
+        $lista = new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo);
+        $out = $lista->execute('9');
 
         $this->assertCount(1, $out['a_valores']);
         $first = reset($out['a_valores']);
@@ -210,33 +190,13 @@ final class ZonaCtrListaTest extends TestCase
     /**
      * @param array<string, bool> $perms
      */
-    private function oPermStub(array $perms): object
+    private function oPermStub(array $perms): XPermisos
     {
-        return new class ($perms) {
-            /** @param array<string, bool> $perms */
-            public function __construct(private readonly array $perms) {}
-            public function have_perm_oficina(string $p): bool
-            {
-                return $this->perms[$p] ?? false;
-            }
-        };
+        $stub = $this->createMock(XPermisos::class);
+        $stub->method('have_perm_oficina')->willReturnCallback(
+            static fn (string $p): bool => $perms[$p] ?? false
+        );
+        return $stub;
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
-    }
 }

@@ -1,12 +1,24 @@
 <?php
 
-use src\zonassacd\application\ZonaSacdUpdate;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\zonassacd\application\ZonaSacdUpdate;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
 
-$Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
-$Qid_zona_new = (string)filter_input(INPUT_POST, 'id_zona_new');
-$Qacumular = (int)filter_input(INPUT_POST, 'acumular');
-$QAsel = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$QAsel = empty($QAsel) ? [] : $QAsel;
+$input = [
+    'id_zona' => input_string($_POST, 'id_zona'),
+    'id_zona_new' => input_string($_POST, 'id_zona_new'),
+    'acumular' => input_int($_POST, 'acumular'),
+    'sel' => input_string_list($_POST, 'sel'),
+];
 
-ContestarJson::enviar('', ZonaSacdUpdate::execute($Qid_zona, $Qid_zona_new, $Qacumular, $QAsel));
+/** @var ZonaSacdUpdate $useCase */
+$useCase = DependencyResolver::get(ZonaSacdUpdate::class);
+ContestarJson::enviar('', $useCase->execute(
+    $input['id_zona'],
+    $input['id_zona_new'],
+    $input['acumular'],
+    $input['sel'],
+));

@@ -13,14 +13,14 @@ use src\shared\infrastructure\persistence\postgresql\DBRefresh;
 class DBEsquemaSelect extends DBEsquema
 {
 
-    public function dropAllSelect()
+    public function dropAllSelect(): void
     {
         $this->eliminar_zonas_select();
         $this->eliminar_zonas_grupos_select();
         $this->eliminar_zonas_sacd_select();
     }
 
-    public function createAllSelect()
+    public function createAllSelect(): void
     {
         $this->create_zonas_select();
         $this->create_zonas_grupos_select();
@@ -33,7 +33,7 @@ class DBEsquemaSelect extends DBEsquema
     /**
      * En la BD sv-e (esquema).
      */
-    public function create_zonas_select()
+    public function create_zonas_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -72,13 +72,13 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_zonas_select()
+    public function eliminar_zonas_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("zonas");
     }
 
-    public function create_zonas_grupos_select()
+    public function create_zonas_grupos_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -117,13 +117,13 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_zonas_grupos_select()
+    public function eliminar_zonas_grupos_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("zonas_grupos");
     }
 
-    public function create_zonas_sacd_select()
+    public function create_zonas_sacd_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -162,7 +162,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_zonas_sacd_select()
+    public function eliminar_zonas_sacd_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("zonas_sacd");

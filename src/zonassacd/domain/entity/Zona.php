@@ -107,6 +107,9 @@ class Zona
         return 'id_zona';
     }
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
         $oProfesorSet = new Set();
@@ -114,7 +117,7 @@ class Zona
         $oProfesorSet->add($this->getDatosOrden());
         $oProfesorSet->add($this->getDatosId_grupo());
         $oProfesorSet->add($this->getDatosId_nom());
-        return $oProfesorSet->getTot();
+        return array_values($oProfesorSet->getTot());
     }
 
     /**
