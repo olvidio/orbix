@@ -17,6 +17,9 @@ final class NivelStgrId
     public const BC = 11; //	bienio-cuadrienio
 
 
+    /**
+     * @return array<int, string>
+     */
     public static function getArrayNivelStgrOn(): array
     {
         $a_status = [
@@ -28,6 +31,9 @@ final class NivelStgrId
         return $a_status;
     }
 
+    /**
+     * @return array<int, string>
+     */
     public static function getArrayNivelStgr(): array
     {
         $a_status = [
@@ -76,11 +82,11 @@ final class NivelStgrId
         return $this->value === $other->value();
     }
 
-    public static function generarNivelStgr($id_tipo_activ)
+    public static function generarNivelStgr(int|string $id_tipo_activ): int
     {
-        //según la tabla común: public.xa_nivel_stgr
-        $nivel_stgr = '';
-        switch ($id_tipo_activ) {
+        $nivel_stgr = 0;
+        $id = is_string($id_tipo_activ) ? (int) $id_tipo_activ : $id_tipo_activ;
+        switch ($id) {
             case 112000: //bienio
             case 112020:
             case 133000:

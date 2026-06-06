@@ -17,6 +17,7 @@
  */
 
 use src\actividades\application\ActividadSelectUbiData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
@@ -28,8 +29,9 @@ if ($Qtipo !== 'freq' && $Qtipo !== 'region') {
     exit;
 }
 
-$service = new ActividadSelectUbiData();
-$data = $service->execute([
+/** @var ActividadSelectUbiData $useCase */
+$useCase = DependencyResolver::get(ActividadSelectUbiData::class);
+$data = $useCase->execute([
     'dl_org' => $Qdl_org,
     'isfsv' => $Qisfsv,
 ]);

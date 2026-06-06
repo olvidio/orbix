@@ -12,6 +12,8 @@ use src\ubis\domain\contracts\CasaRepositoryInterface;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -25,12 +27,21 @@ use function src\shared\domain\helpers\is_true;
  */
 class ListaActivTabla
 {
+    public function __construct(
+        private ActividadRepositoryInterface $actividadRepository,
+        private CasaRepositoryInterface $casaRepository,
+        private TipoTarifaRepositoryInterface $tipoTarifaRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+    ) {
+    }
+
     /**
-     * @param array $input Filtros ya saneados. Claves esperadas:
+     * @param array<string, mixed> $input Filtros ya saneados. Claves esperadas:
      *   que, status (int|array), id_tipo_activ, filtro_lugar, id_ubi, periodo,
      *   year, dl_org, empiezamin, empiezamax, c_activ (array), asist (array),
      *   seccion (array), ssfsv, sasistentes, sactividad, snom_tipo, titulo.
-     * @param array $opts Opciones de entorno. Claves:
+     * @param array<string, mixed> $opts Opciones de entorno. Claves:
      *   mi_sfsv (int), perm_vcsd (bool), perm_des (bool), perm_sg (bool),
      *   perm_admin (bool), is_dmz (bool).
      * @return array{
@@ -38,30 +49,30 @@ class ListaActivTabla
      *   ver_hora: int,
      *   ver_tarifa: int,
      *   ver_sacd: int,
-     *   a_cabeceras: array,
-     *   a_valores: array
+     *   a_cabeceras: list<array<string, mixed>|string>,
+     *   a_valores: array<int, array<int, mixed>>
      * }
      */
     public function execute(array $input, array $opts): array
     {
-        $Qque = (string)($input['que'] ?? '');
+        $Qque = input_string($input, 'que');
         $Qstatus = $input['status'] ?? 0;
-        $Qid_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
-        $Qid_ubi = (int)($input['id_ubi'] ?? 0);
-        $Qperiodo = (string)($input['periodo'] ?? '');
-        $Qyear = (string)($input['year'] ?? '');
-        $Qdl_org = (string)($input['dl_org'] ?? '');
-        $Qempiezamin = (string)($input['empiezamin'] ?? '');
-        $Qempiezamax = (string)($input['empiezamax'] ?? '');
-        $Qc_activ = (array)($input['c_activ'] ?? []);
-        $Qasist = (array)($input['asist'] ?? []);
-        $Qseccion = (array)($input['seccion'] ?? []);
-        $Qssfsv = (string)($input['ssfsv'] ?? '');
-        $Qsasistentes = (string)($input['sasistentes'] ?? '');
-        $Qsactividad = (string)($input['sactividad'] ?? '');
-        $Qsnom_tipo = (string)($input['snom_tipo'] ?? '');
+        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
+        $Qid_ubi = input_int($input, 'id_ubi');
+        $Qperiodo = input_string($input, 'periodo');
+        $Qyear = input_string($input, 'year');
+        $Qdl_org = input_string($input, 'dl_org');
+        $Qempiezamin = input_string($input, 'empiezamin');
+        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qc_activ = is_array($input['c_activ'] ?? null) ? $input['c_activ'] : [];
+        $Qasist = is_array($input['asist'] ?? null) ? $input['asist'] : [];
+        $Qseccion = is_array($input['seccion'] ?? null) ? $input['seccion'] : [];
+        $Qssfsv = input_string($input, 'ssfsv');
+        $Qsasistentes = input_string($input, 'sasistentes');
+        $Qsactividad = input_string($input, 'sactividad');
+        $Qsnom_tipo = input_string($input, 'snom_tipo');
 
-        $mi_sfsv = (int)($opts['mi_sfsv'] ?? 0);
+        $mi_sfsv = input_int($opts, 'mi_sfsv');
         $perm_vcsd = (bool)($opts['perm_vcsd'] ?? false);
         $perm_des = (bool)($opts['perm_des'] ?? false);
         $perm_sg = (bool)($opts['perm_sg'] ?? false);
@@ -73,7 +84,7 @@ class ListaActivTabla
         if (is_array($Qstatus)) {
             $cond_status = '';
             foreach ($Qstatus as $status) {
-                $cond_status .= $status;
+                $cond_status .= is_scalar($status) ? (string) $status : '';
             }
             $aWhere['status'] = $cond_status;
             $aOperador['status'] = '~';
@@ -87,7 +98,10 @@ class ListaActivTabla
                 foreach ($Qseccion as $seccion_temp) {
                     foreach ($Qasist as $asist_temp) {
                         foreach ($Qc_activ as $c_activ_temp) {
-                            $codi_activ_v[] = $seccion_temp . $asist_temp . $c_activ_temp . '...';
+                            $s = is_scalar($seccion_temp) ? (string) $seccion_temp : '';
+                            $a = is_scalar($asist_temp) ? (string) $asist_temp : '';
+                            $c = is_scalar($c_activ_temp) ? (string) $c_activ_temp : '';
+                            $codi_activ_v[] = $s . $a . $c . '...';
                         }
                     }
                 }
@@ -151,12 +165,12 @@ class ListaActivTabla
         }
 
         $aWhere['_ordre'] = 'f_ini';
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+        $ActividadRepository = $this->actividadRepository;
         $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
 
         if ($Qque === 'list_active_inv_sg' || $Qque === 'list_activ_sr') {
             // El titulo lo suele enviar el formulario que_lista_activ_sg / que_lista_activ_sr.
-            $titulo = ucfirst((string)($input['titulo'] ?? ''));
+            $titulo = ucfirst(input_string($input, 'titulo'));
         } else {
             $titulo = ucfirst(_("listado de actividades"));
         }
@@ -211,10 +225,10 @@ class ListaActivTabla
         }
 
         $a_valores = [];
-        $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
-        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+        $CasaRepository = $this->casaRepository;
+        $TipoTarifaRepository = $this->tipoTarifaRepository;
+        $CentroEncargadoRepository = $this->centroEncargadoRepository;
+        $ActividadCargoRepository = $this->actividadCargoRepository;
 
         $i = 0;
         foreach ($cActividades as $oActividad) {
@@ -229,7 +243,7 @@ class ListaActivTabla
             $tarifa = $oActividad->getTarifa();
             $observ = $oActividad->getObserv();
 
-            $oCasa = $CasaRepository->findById($id_ubi);
+            $oCasa = $id_ubi !== null ? $CasaRepository->findById($id_ubi) : null;
             $nombre_ubi = '';
             $comun = '';
             if ($oCasa !== null) {
@@ -279,9 +293,9 @@ class ListaActivTabla
             $a_valores[$i][8] = $sasistentesTxt;
             $a_valores[$i][9] = $snom_tipoTxt;
             $a_valores[$i][10] = $nombre_ubi;
-            if ($ver_tarifa === 1) {
+            if ($ver_tarifa === 1 && $tarifa !== null) {
                 $oTarifa = $TipoTarifaRepository->findById($tarifa);
-                $a_valores[$i][11] = $oTarifa->getLetra();
+                $a_valores[$i][11] = $oTarifa?->getLetra() ?? '';
             }
             $ctrs = '';
             foreach ($CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oEncargado) {

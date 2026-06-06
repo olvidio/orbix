@@ -3,7 +3,9 @@
 namespace src\actividades\application;
 
 use src\shared\config\ConfigGlobal;
+use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
+use src\permisos\domain\XPermisos;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -20,6 +22,9 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
 
 /**
  * Construye el listado de actividades que cumplen los filtros fijados por
@@ -43,32 +48,57 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class ActividadSelectListado
 {
+    public function __construct(
+        private RoleRepositoryInterface $roleRepository,
+        private ActividadPubRepositoryInterface $actividadPubRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private CasaRepositoryInterface $casaRepository,
+        private CentroRepositoryInterface $centroRepository,
+        private PreferenciaRepositoryInterface $preferenciaRepository,
+        private TipoTarifaRepositoryInterface $tipoTarifaRepository,
+        private ImportadaRepositoryInterface $importadaRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
+     */
     public function ejecutar(array $input, int $stackGo): array
     {
         $num_max_actividades = 200;
 
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        $permOficina = static function (string $perm) use ($oPerm): bool {
+            return $oPerm instanceof XPermisos && $oPerm->have_perm_oficina($perm);
+        };
+        $oPermActividadesSesion = $_SESSION['oPermActividades'] ?? null;
+
         $mi_dele = ConfigGlobal::mi_delef();
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-        $Qcontinuar = (string)($input['continuar'] ?? '');
-        $Qmodo = (string)($input['modo'] ?? '');
-        $Qstatus = (int)($input['status'] ?? 0);
-        $Qid_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
-        $Qfiltro_lugar = (string)($input['filtro_lugar'] ?? '');
-        $Qid_ubi = (int)($input['id_ubi'] ?? 0);
-        $Qnom_activ = (string)($input['nom_activ'] ?? '');
-        $Qperiodo = (string)($input['periodo'] ?? '');
-        $Qyear = (string)($input['year'] ?? '');
-        $Qdl_org = (string)($input['dl_org'] ?? '');
-        $Qempiezamin = (string)($input['empiezamin'] ?? '');
-        $Qempiezamax = (string)($input['empiezamax'] ?? '');
-        $Qfases_on = array_filter((array)($input['fases_on'] ?? []));
-        $Qfases_off = array_filter((array)($input['fases_off'] ?? []));
-        $Qpublicado = (int)($input['publicado'] ?? 0);
-        $Qssfsv = (string)($input['ssfsv'] ?? '');
-        $Qsasistentes = (string)($input['sasistentes'] ?? '');
-        $Qsactividad = (string)($input['sactividad'] ?? '');
-        $Qsactividad2 = (string)($input['sactividad2'] ?? '');
+        $Qcontinuar = input_string($input, 'continuar');
+        $Qmodo = input_string($input, 'modo');
+        $Qstatus = input_int($input, 'status');
+        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
+        $Qfiltro_lugar = input_string($input, 'filtro_lugar');
+        $Qid_ubi = input_int($input, 'id_ubi');
+        $Qnom_activ = input_string($input, 'nom_activ');
+        $Qperiodo = input_string($input, 'periodo');
+        $Qyear = input_string($input, 'year');
+        $Qdl_org = input_string($input, 'dl_org');
+        $Qempiezamin = input_string($input, 'empiezamin');
+        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qfases_on = input_string_list($input, 'fases_on');
+        $Qfases_off = input_string_list($input, 'fases_off');
+        $Qpublicado = input_int($input, 'publicado');
+        $Qssfsv = input_string($input, 'ssfsv');
+        $Qsasistentes = input_string($input, 'sasistentes');
+        $Qsactividad = input_string($input, 'sactividad');
+        $Qsactividad2 = input_string($input, 'sactividad2');
 
         if (empty($Qperiodo)) {
             $Qperiodo = 'actual';
@@ -77,7 +107,7 @@ final class ActividadSelectListado
 
         $aWhere = [];
         $aOperador = [];
-        if ($Qstatus !== 9 && !empty($Qstatus)) {
+        if ($Qstatus !== 9) {
             $aWhere['status'] = $Qstatus;
         }
         $extendida = FALSE;
@@ -148,7 +178,7 @@ final class ActividadSelectListado
         $oMiUsuario = ConfigGlobal::MiUsuario();
         $id_role = $oMiUsuario->getId_role();
 
-        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
+        $RoleRepository = $this->roleRepository;
         $aRolesPau = $RoleRepository->getArrayRolesPau();
 
         $a_botones = [];
@@ -160,7 +190,7 @@ final class ActividadSelectListado
                 $a_botones[] = ['txt' => _("datos"), 'click' => "jsForm.mandar(\"#seleccionados\",\"datos\")"];
                 $a_botones[] = ['txt' => _("publicar"), 'click' => "jsForm.update(\"#seleccionados\",\"publicar\")"];
             }
-            if (ConfigGlobal::is_app_installed('asignaturas') && $_SESSION['oPerm']->have_perm_oficina('est')) {
+            if (ConfigGlobal::is_app_installed('asignaturas') && $permOficina('est')) {
                 $a_botones[] = ['txt' => _("asignaturas"), 'click' => "jsForm.mandar(\"#seleccionados\",\"asig\")"];
             }
         } else {
@@ -168,9 +198,7 @@ final class ActividadSelectListado
                 $a_botones = [['txt' => _("datos"), 'click' => "jsForm.mandar(\"#seleccionados\",\"datos\")"]];
             } else {
                 $a_botones[] = ['txt' => _("datos"), 'click' => "jsForm.mandar(\"#seleccionados\",\"datos\")"];
-                if (($_SESSION['oPerm']->have_perm_oficina('vcsd'))
-                    || ($_SESSION['oPerm']->have_perm_oficina('des'))
-                    || ($_SESSION['oPerm']->have_perm_oficina('calendario'))) {
+                if ($permOficina('vcsd') || $permOficina('des') || $permOficina('calendario')) {
                     $a_botones[] = ['txt' => _("duplicar"), 'click' => "jsForm.update(\"#seleccionados\",\"duplicar\")"];
                     $a_botones[] = ['txt' => _("borrar"), 'click' => "fnjs_borrar(\"#seleccionados\",\"eliminar\")"];
                     $a_botones[] = ['txt' => _("cambiar tipo"), 'click' => "jsForm.mandar(\"#seleccionados\",\"cambiar_tipo\")"];
@@ -191,15 +219,13 @@ final class ActividadSelectListado
                     $a_botones[] = ['txt' => _("proceso"), 'click' => "jsForm.mandar(\"#seleccionados\",\"proceso\")"];
                 }
                 if (ConfigGlobal::is_app_installed('asignaturas')) {
-                    if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+                    if ($permOficina('est')) {
                         $a_botones[] = ['txt' => _("asignaturas"), 'click' => "jsForm.mandar(\"#seleccionados\",\"asig\")"];
                     }
-                    if (($_SESSION['oPerm']->have_perm_oficina('est'))
-                        || ($_SESSION['oPerm']->have_perm_oficina('agd'))
-                        || ($_SESSION['oPerm']->have_perm_oficina('sm'))) {
+                    if ($permOficina('est') || $permOficina('agd') || $permOficina('sm')) {
                         $a_botones[] = ['txt' => _("plan estudios"), 'click' => "jsForm.mandar(\"#seleccionados\",\"plan_estudios\")"];
                     }
-                    if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+                    if ($permOficina('est')) {
                         $a_botones[] = ['txt' => _("listas de clase"), 'click' => "jsForm.mandar(\"#seleccionados\",\"lista_clase\")"];
                         $a_botones[] = ['txt' => _("posibles asignaturas"), 'click' => "jsForm.mandar(\"#seleccionados\",\"posibles_asignaturas\")"];
                     }
@@ -217,7 +243,7 @@ final class ActividadSelectListado
             ['name' => _("hora ini"), 'width' => 40, 'class' => 'fecha'],
             ['name' => _("hora fin"), 'width' => 40, 'class' => 'fecha'],
         ];
-        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+        if ($permOficina('vcsd') || $permOficina('des')) {
             $a_cabeceras[] = ['name' => _("sf/sv"), 'width' => 40];
         }
         $a_cabeceras[] = ['name' => _("tar."), 'width' => 40];
@@ -231,7 +257,7 @@ final class ActividadSelectListado
 
         if (!empty($Qmodo) && $Qmodo === 'importar') {
             $mod = 'importar';
-            $ActividadRepository = $GLOBALS['container']->get(ActividadPubRepositoryInterface::class);
+            $ActividadRepository = $this->actividadPubRepository;
             if (empty($Qdl_org)) {
                 $aWhere['dl_org'] = $mi_dele;
                 $aOperador['dl_org'] = '!=';
@@ -239,7 +265,7 @@ final class ActividadSelectListado
             $obj_pau = 'ActividadPub';
         } else {
             $mod = '';
-            $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+            $ActividadRepository = $this->actividadRepository;
             $obj_pau = 'Actividad';
         }
 
@@ -275,9 +301,9 @@ final class ActividadSelectListado
             ];
         }
 
-        $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
+        $CasaRepository = $this->casaRepository;
         $a_OpcionesCasas = $CasaRepository->getArrayCasas();
-        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+        $CentroRepository = $this->centroRepository;
         $a_OpcionesCentros = $CentroRepository->getArrayCentrosCdc();
         $a_casas = $a_OpcionesCasas + $a_OpcionesCentros;
 
@@ -289,18 +315,23 @@ final class ActividadSelectListado
         $sPrefs = '';
         $id_usuario = ConfigGlobal::mi_id_usuario();
         $tipo = 'tabla_presentacion';
-        $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
+        $PreferenciaRepository = $this->preferenciaRepository;
         $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
         if ($oPreferencia !== null) {
             $sPrefs = $oPreferencia->getPreferenciaAsString();
         }
-        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
-        $ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
+        $TipoTarifaRepository = $this->tipoTarifaRepository;
+        $ImportadaRepository = $this->importadaRepository;
+        $CentroEncargadoRepository = $this->centroEncargadoRepository;
+
+        $oPermActivDefault = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
+        $oPermActiv = $oPermActivDefault->getPermisoActual('datos');
+        $oPermSacd = $oPermActivDefault->getPermisoActual('sacd');
 
         foreach ($cActividades as $oActividad) {
             $id_activ = $oActividad->getId_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
+            $id_tipo_activ_txt = (string) $id_tipo_activ;
             $nom_activ = $oActividad->getNom_activ();
             $id_ubi_actividad = $oActividad->getId_ubi();
             $dl_org = $oActividad->getDl_org();
@@ -323,7 +354,7 @@ final class ActividadSelectListado
             } else {
                 if (ConfigGlobal::is_app_installed('procesos')) {
                     if (!empty($Qfases_on) || !empty($Qfases_off)) {
-                        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+                        $ActividadProcesoTareaRepository = $this->actividadProcesoTareaRepository;
                         $aFasesCompletadas = $ActividadProcesoTareaRepository->getFasesCompletadas($id_activ);
                         if (!empty($Qfases_on)) {
                             foreach ($Qfases_on as $id_fase) {
@@ -340,9 +371,11 @@ final class ActividadSelectListado
                             }
                         }
                     }
-                    $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-                    $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-                    $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
+                    if ($oPermActividadesSesion instanceof PermisosActividades) {
+                        $oPermActividadesSesion->setActividad($id_activ, $id_tipo_activ_txt, $dl_org);
+                        $oPermActiv = $oPermActividadesSesion->getPermisoActual('datos');
+                        $oPermSacd = $oPermActividadesSesion->getPermisoActual('sacd');
+                    }
                 }
             }
             $i++;
@@ -350,7 +383,7 @@ final class ActividadSelectListado
             $oTipoActividad = new TiposActividades($id_tipo_activ);
             $isfsv = $oTipoActividad->getSfsvId();
             $ssfsv = $oTipoActividad->getSfsvText();
-            if ($mi_sfsv !== $isfsv && !($_SESSION['oPerm']->have_perm_oficina('des'))) {
+            if ($mi_sfsv !== $isfsv && !$permOficina('des')) {
                 $sactividad = $oTipoActividad->getActividadText();
                 $nom_activ = "$ssfsv $sactividad";
             }
@@ -368,7 +401,7 @@ final class ActividadSelectListado
                 $a_valores[$i][3] = sprintf(_("ocupado %s (%s-%s)"), $ssfsv, $f_ini, $f_fin);
                 $a_valores[$i][4] = '';
                 $a_valores[$i][5] = '';
-                if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+                if ($permOficina('vcsd') || $permOficina('des')) {
                     $a_valores[$i][6] = $ssfsv;
                 }
                 $a_valores[$i][7] = '';
@@ -389,12 +422,12 @@ final class ActividadSelectListado
                 if (ConfigGlobal::is_app_installed('actividadessacd')) {
                     $aprobado = TRUE;
                     if (ConfigGlobal::mi_sfsv() === 2 && ConfigGlobal::is_app_installed('procesos')) {
-                        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+                        $ActividadProcesoTareaRepository = $this->actividadProcesoTareaRepository;
                         $aprobado = $ActividadProcesoTareaRepository->getSacdAprobado($id_activ);
                     }
                     if (!ConfigGlobal::is_app_installed('procesos')
                         || ($oPermSacd->have_perm_activ('ver') === true && $aprobado)) {
-                        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+                        $ActividadCargoRepository = $this->actividadCargoRepository;
                         foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
                             $sacds .= $oPersona->getPrefApellidosNombre() . "# ";
                         }
@@ -415,9 +448,9 @@ final class ActividadSelectListado
                 $a_valores[$i]['sel'] = "$id_activ#$nom_activ";
                 $con = '';
                 $flag = 0;
-                if (preg_match("/^[12][45]/", $id_tipo_activ)) {
-                    if (preg_match("/^[12][45]1/", $id_tipo_activ)) {
-                        $w = $oF_ini->format('w');
+                if (preg_match("/^[12][45]/", $id_tipo_activ_txt)) {
+                    if (preg_match("/^[12][45]1/", $id_tipo_activ_txt)) {
+                        $w = $oF_ini instanceof DateTimeLocal ? (int) $oF_ini->format('w') : 0;
                         $flag = ($w < 4) ? 0 : 1;
                     }
                     if (empty($flag)) {
@@ -446,7 +479,7 @@ final class ActividadSelectListado
                 }
                 $a_valores[$i][4] = $h_ini;
                 $a_valores[$i][5] = $h_fin;
-                if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+                if ($permOficina('vcsd') || $permOficina('des')) {
                     $a_valores[$i][6] = $ssfsv;
                 }
                 $a_valores[$i][7] = $tarifa_letra;
@@ -475,7 +508,8 @@ final class ActividadSelectListado
                 }
             }
             $a_NombreCasa[$i] = $nombre_ubi_actividad;
-            $a_FechaIni[$i] = $oActividad->getF_ini()->getIso();
+            $fIniRow = $oActividad->getF_ini();
+            $a_FechaIni[$i] = $fIniRow instanceof DateTimeLocal ? $fIniRow->getIso() : '';
         }
         if (!empty($a_valores)) {
             array_multisort(
@@ -485,8 +519,8 @@ final class ActividadSelectListado
         }
 
         $num = $i;
-        $Qid_sel = $input['sel'] ?? [];
-        $Qscroll_id = (string)($input['scroll_id'] ?? '');
+        $Qid_sel = input_string_list($input, 'sel');
+        $Qscroll_id = input_string($input, 'scroll_id');
         if (!empty($a_valores)) {
             if (!empty($Qid_sel)) {
                 $a_valores['select'] = $Qid_sel;
@@ -501,9 +535,11 @@ final class ActividadSelectListado
         } else {
             $resultado = sprintf(_("%s actividades encontradas"), $num);
         }
-        $oF_qini = new DateTimeLocal($inicioIso);
+        $inicioIsoStr = is_string($inicioIso) ? $inicioIso : date('Y-m-d');
+        $finIsoStr = is_string($finIso) ? $finIso : date('Y-m-d');
+        $oF_qini = new DateTimeLocal($inicioIsoStr);
         $QinicioLocal = $oF_qini->getFromLocal();
-        $oF_qfin = new DateTimeLocal($finIso);
+        $oF_qfin = new DateTimeLocal($finIsoStr);
         $QfinLocal = $oF_qfin->getFromLocal();
         $resultado .= ' ' . sprintf(_("entre %s y %s"), $QinicioLocal, $QfinLocal);
 

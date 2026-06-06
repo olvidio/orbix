@@ -20,6 +20,11 @@ use frontend\shared\web\Desplegable;
  */
 final class ActividadQueFiltrosBloque
 {
+    public function __construct(
+        private ActividadLugar $actividadLugar,
+    ) {
+    }
+
     public function ejecutar(
         int $sfsv,
         string $modo,
@@ -33,7 +38,7 @@ final class ActividadQueFiltrosBloque
             return '';
         }
 
-        $mi_dele = ConfigGlobal::mi_delef($sfsv);
+        $mi_dele = ConfigGlobal::mi_delef((string) $sfsv);
 
         $oDesplFiltroLugar = Desplegable::desdeOpciones(DelegacionDropdown::dlURegionesFiltro($sfsv), 'filtro_lugar');
         $oDesplFiltroLugar->setAction('fnjs_lugar()');
@@ -41,8 +46,7 @@ final class ActividadQueFiltrosBloque
 
         $oDesplegableCasasHtml = '';
         if (!empty($filtro_lugar)) {
-            $oActividadLugar = new ActividadLugar();
-            $aOpcionesCasas = $oActividadLugar->getLugaresPosibles($filtro_lugar);
+            $aOpcionesCasas = $this->actividadLugar->getLugaresPosibles($filtro_lugar);
             $oDesplegableCasas = Desplegable::desdeOpciones($aOpcionesCasas, 'id_ubi');
             $oDesplegableCasas->setBlanco(true);
             if (!empty($id_ubi)) {

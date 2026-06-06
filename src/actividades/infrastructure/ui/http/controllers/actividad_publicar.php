@@ -9,24 +9,14 @@
  * @subpackage    actividades
  */
 
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\application\ActividadPublicar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-$error_txt = '';
-
-if (!empty($a_sel)) {
-    $ActividadDlRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-    foreach ($a_sel as $id) {
-        $id_activ = (integer)strtok($id, '#');
-        $oActividad = $ActividadDlRepository->findById($id_activ);
-        $oActividad->setPublicado('t');
-        if ($ActividadDlRepository->Guardar($oActividad) === false) {
-            $error_txt .= _("hay un error, no se ha guardado");
-            $error_txt .= "\n" . $ActividadDlRepository->getErrorTxt();
-        }
-    }
-}
+/** @var ActividadPublicar $useCase */
+$useCase = DependencyResolver::get(ActividadPublicar::class);
+$error_txt = $useCase->execute(['sel' => $a_sel]);
 
 ContestarJson::enviar($error_txt);

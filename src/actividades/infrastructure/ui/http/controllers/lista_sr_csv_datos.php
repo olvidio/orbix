@@ -6,6 +6,7 @@
  */
 
 use src\actividades\application\ListaSrCsvListado;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
@@ -19,7 +20,8 @@ $input = [
     'id_cdc' => (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
 ];
 
-$useCase = new ListaSrCsvListado();
+/** @var ListaSrCsvListado $useCase */
+$useCase = DependencyResolver::get(ListaSrCsvListado::class);
 $data = $useCase->ejecutar($input);
 
 ContestarJson::enviar('', $data);

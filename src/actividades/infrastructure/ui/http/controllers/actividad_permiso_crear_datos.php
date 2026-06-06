@@ -5,6 +5,7 @@
  * desde solo-frontend llamar con PostRequest y cookies de sesión.
  */
 
+use src\permisos\domain\PermisosActividades;
 use src\shared\web\ContestarJson;
 
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
@@ -18,16 +19,17 @@ if ($Qdl === '') {
 }
 $dl_propia = !($Qdl === 'f' || $Qdl === '0' || strcasecmp($Qdl, 'false') === 0);
 
-if (!isset($_SESSION['oPermActividades'])) {
+$oPermActividades = $_SESSION['oPermActividades'] ?? null;
+if (!($oPermActividades instanceof PermisosActividades)) {
     ContestarJson::enviar(_('Sesión sin permisos de actividades'), []);
 
     return;
 }
 
-$_SESSION['oPermActividades']->setId_tipo_activ($Qid_tipo_activ);
+$oPermActividades->setId_tipo_activ($Qid_tipo_activ);
 
 ob_start();
-$result = $_SESSION['oPermActividades']->getPermisoCrear($dl_propia);
+$result = $oPermActividades->getPermisoCrear($dl_propia);
 $aviso = ob_get_clean();
 
 ContestarJson::enviar('', [

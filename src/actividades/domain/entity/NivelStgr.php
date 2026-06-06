@@ -54,7 +54,7 @@ class NivelStgr
      */
     public function setNivel_stgr(int $nivel_stgr): void
     {
-        $this->nivel_stgr = NivelStgrId::fromNullableInt($nivel_stgr);
+        $this->nivel_stgr = new NivelStgrId($nivel_stgr);
     }
 
     // Nuevos métodos con Value Objects
@@ -65,9 +65,11 @@ class NivelStgr
 
     public function setNivelStgrVo(NivelStgrId|int $id): void
     {
-        $this->nivel_stgr = $id instanceof NivelStgrId
-            ? $id
-            :  NivelStgrId::fromNullableInt($id);
+        if ($id instanceof NivelStgrId) {
+            $this->nivel_stgr = $id;
+        } elseif (is_int($id)) {
+            $this->nivel_stgr = new NivelStgrId($id);
+        }
     }
 
     /**
@@ -101,9 +103,11 @@ class NivelStgr
 
     public function setDescNivelVo(NivelStgrDesc|string|null $texto): void
     {
-        $this->desc_nivel = $texto instanceof NivelStgrDesc
-            ? $texto
-            : NivelStgrBreve::fromNullableString($texto);
+        if ($texto instanceof NivelStgrDesc) {
+            $this->desc_nivel = $texto;
+        } elseif (is_string($texto) && $texto !== '') {
+            $this->desc_nivel = new NivelStgrDesc($texto);
+        }
     }
 
     /**
@@ -184,6 +188,9 @@ class NivelStgr
         return 'nivel_stgr';
     }
 
+    /**
+     * @return list<mixed>
+     */
     public function getDatosCampos(): array
     {
         $oNivelStgrSet = new Set();
@@ -191,7 +198,7 @@ class NivelStgr
         $oNivelStgrSet->add($this->getDatosDesc_nivel());
         $oNivelStgrSet->add($this->getDatosDesc_breve());
         $oNivelStgrSet->add($this->getDatosOrden());
-        return $oNivelStgrSet->getTot();
+        return array_values($oNivelStgrSet->getTot());
     }
 
     /**

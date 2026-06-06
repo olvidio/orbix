@@ -3,7 +3,12 @@
 namespace src\actividades\application;
 
 use src\shared\config\ConfigGlobal;
+use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
+use src\permisos\domain\XPermisos;
+
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
@@ -28,22 +33,34 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class ListaActividadesSgListado
 {
+    public function __construct(
+        private ActividadRepositoryInterface $actividadRepository,
+        private PreferenciaRepositoryInterface $preferenciaRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
+     */
     public function ejecutar(array $input, int $stackGo): array
     {
         $num_max_actividades = 200;
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-        $Qcontinuar = (string)($input['continuar'] ?? '');
-        $Qstatus = (int)($input['status'] ?? 0);
-        $Qtipo_activ_sg = (string)($input['tipo_activ_sg'] ?? '');
-        $Qid_ubi = (int)($input['id_ubi'] ?? 0);
-        $Qperiodo = (string)($input['periodo'] ?? '');
-        $Qyear = (string)($input['year'] ?? '');
-        $Qdl_org = (string)($input['dl_org'] ?? '');
-        $Qempiezamin = (string)($input['empiezamin'] ?? '');
-        $Qempiezamax = (string)($input['empiezamax'] ?? '');
-        $Qid_sel = $input['sel'] ?? [];
-        $Qscroll_id = (string)($input['scroll_id'] ?? '');
+        $Qcontinuar = input_string($input, 'continuar');
+        $Qstatus = input_int($input, 'status');
+        $Qtipo_activ_sg = input_string($input, 'tipo_activ_sg');
+        $Qid_ubi = input_int($input, 'id_ubi');
+        $Qperiodo = input_string($input, 'periodo');
+        $Qyear = input_string($input, 'year');
+        $Qdl_org = input_string($input, 'dl_org');
+        $Qempiezamin = input_string($input, 'empiezamin');
+        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qid_sel = is_array($input['sel'] ?? null) ? $input['sel'] : [];
+        $Qscroll_id = input_string($input, 'scroll_id');
 
         $Qstatus = empty($Qstatus) ? StatusId::ACTUAL : $Qstatus;
 
@@ -94,7 +111,7 @@ final class ListaActividadesSgListado
             $aWhere['dl_org'] = $Qdl_org;
         }
 
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+        $ActividadRepository = $this->actividadRepository;
 
         $a_botones = [
             ['txt' => _('cargos'), 'click' => "jsForm.mandar(\"#seleccionados\",\"carg\")"],
@@ -144,14 +161,14 @@ final class ListaActividadesSgListado
         $sin = 0;
         $a_valores = [];
         $id_usuario = ConfigGlobal::mi_id_usuario();
-        $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
+        $PreferenciaRepository = $this->preferenciaRepository;
         $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'tabla_presentacion');
         // (sPrefs se calculaba pero no se usaba en el listado; se omite.)
         if ($oPreferencia !== null) {
             // no-op: preservamos la carga por compat con el comportamiento original
             $oPreferencia->getPreferencia();
         }
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
+        $CentroEncargadoRepository = $this->centroEncargadoRepository;
 
         foreach ($cActividades as $oActividad) {
             $id_activ = $oActividad->getId_activ();
@@ -165,9 +182,13 @@ final class ListaActividadesSgListado
             $precio = $oActividad->getPrecio();
 
             if (ConfigGlobal::is_app_installed('procesos')) {
-                $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-                $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-                $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
+                $oPermSesion = $_SESSION['oPermActividades'] ?? null;
+                if (!($oPermSesion instanceof PermisosActividades)) {
+                    continue;
+                }
+                $oPermSesion->setActividad($id_activ, (string) $id_tipo_activ, $dl_org ?? '');
+                $oPermActiv = $oPermSesion->getPermisoActual('datos');
+                $oPermSacd = $oPermSesion->getPermisoActual('sacd');
             } else {
                 $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
                 $oPermActiv = $oPermActividades->getPermisoActual('datos');
@@ -178,7 +199,8 @@ final class ListaActividadesSgListado
             $oTipoActividad = new TiposActividades($id_tipo_activ);
             $isfsv = $oTipoActividad->getSfsvId();
             $ssfsv = $oTipoActividad->getSfsvText();
-            if ($mi_sfsv !== $isfsv && !$_SESSION['oPerm']->have_perm_oficina('des')) {
+            $oPerm = $_SESSION['oPerm'] ?? null;
+            if ($mi_sfsv !== $isfsv && !($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('des'))) {
                 $sactividadOtra = $oTipoActividad->getActividadText();
                 $nom_activ = "$ssfsv $sactividadOtra";
             }
@@ -207,7 +229,7 @@ final class ListaActividadesSgListado
             $nombre_ubi = '';
             if (!empty($id_ubi) && $id_ubi !== 1) {
                 $oCasa = Ubi::newUbi($id_ubi);
-                $nombre_ubi = $oCasa->getNombre_ubi();
+                $nombre_ubi = $oCasa?->getNombre_ubi() ?? '';
             } else {
                 if ($id_ubi === 1 && $lugar_esp) {
                     $nombre_ubi = $lugar_esp;
@@ -220,7 +242,7 @@ final class ListaActividadesSgListado
             $sacds = "";
             if (ConfigGlobal::is_app_installed('actividadessacd')) {
                 if ($oPermSacd->have_perm_action('ver') === true) {
-                    $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+                    $ActividadCargoRepository = $this->actividadCargoRepository;
                     foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
                         $sacds .= $oPersona->getPrefApellidosNombre() . "# ";
                     }

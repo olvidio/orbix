@@ -4,6 +4,7 @@
  */
 
 use src\actividades\application\ActividadFaseCompletadaDatos;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $Qid_activ = (int)filter_input(INPUT_POST, 'id_activ');
@@ -15,5 +16,5 @@ if ($Qid_fase === 0) {
     $Qid_fase = (int)filter_input(INPUT_GET, 'id_fase');
 }
 
-$data = (new ActividadFaseCompletadaDatos())->ejecutar($Qid_activ, $Qid_fase);
+$data = DependencyResolver::get(ActividadFaseCompletadaDatos::class)->ejecutar($Qid_activ, $Qid_fase);
 ContestarJson::enviar('', $data);

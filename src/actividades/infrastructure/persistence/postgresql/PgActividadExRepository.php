@@ -4,6 +4,7 @@ namespace src\actividades\infrastructure\persistence\postgresql;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadExRepositoryInterface;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\utils_database\domain\GenerateIdGlobal;
 use src\actividades\domain\entity\TiposActividades;
@@ -25,9 +26,9 @@ class PgActividadExRepository extends PgActividadAllRepository implements Activi
     public function __construct(TiposActividades $tiposActividades)
     {
         parent::__construct($tiposActividades);
-        $oDbl = $GLOBALS['oDBRC'];
+        $oDbl = GlobalPdo::get('oDBRC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBRC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBRC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('a_actividades_ex');
     }
@@ -36,7 +37,12 @@ class PgActividadExRepository extends PgActividadAllRepository implements Activi
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('a_actividades_ex_id_auto_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+        return is_numeric($id) ? (int) $id : 0;
     }
 
     /**

@@ -93,19 +93,29 @@ class TiposActividades
     private string $sactividad = '';
     private string $snom_tipo = '';
 
+    /** @var array<string, int|string> */
     private array $aSfsv = self::A_SFSV;
+    /** @var array<string, int|string> */
     private array $aAsistentes = self::A_ASISTENTES;
+    /** @var array<string, string> */
     private array $aActividad1Digito = self::A_ACTIVIDAD_1_DIGITO;
+    /** @var array<string, int|string> */
     private array $aActividad2Digitos = self::A_ACTIVIDAD_2_DIGITOS;
 
+    /** @var array<int|string, string> */
     private array $afSfsv = [];
+    /** @var array<int|string, string> */
     private array $afAsistentes = [];
+    /** @var array<int|string, string> */
     private array $afActividad1Digito = [];
+    /** @var array<int|string, int|string> */
     private array $afActividad2Digitos = [];
 
     private bool $extendida = false;
-    private array $afNom_tipo;
-    private array $aNom_tipo;
+    /** @var array<int|string, string> */
+    private array $afNom_tipo = [];
+    /** @var array<int, string> */
+    private array $aNom_tipo = [];
     private ?TipoDeActividadRepositoryInterface $TipoDeActividadRepository = null;
 
     /**
@@ -121,7 +131,7 @@ class TiposActividades
         ?TipoDeActividadRepositoryInterface $repository = null
     ) {
         $this->setExtendida($extendida);
-        if (isset($id) && $id !== '') {
+        if ($id !== '') {
             $this->separarId((string)$id);
         }
         $this->TipoDeActividadRepository = $repository;
@@ -154,29 +164,33 @@ class TiposActividades
     private function resolveRepository(): TipoDeActividadRepositoryInterface
     {
         if ($this->TipoDeActividadRepository === null) {
-            $this->TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+            $this->TipoDeActividadRepository = \src\shared\infrastructure\DependencyResolver::get(TipoDeActividadRepositoryInterface::class);
         }
         return $this->TipoDeActividadRepository;
     }
 
+    /** @return array<int|string, string> */
     private function getFlipSfsv(): array
     {
         if (empty($this->afSfsv)) $this->afSfsv = array_flip($this->aSfsv);
         return $this->afSfsv;
     }
 
+    /** @return array<int|string, string> */
     private function getFlipAsistentes(): array
     {
         if (empty($this->afAsistentes)) $this->afAsistentes = array_flip($this->aAsistentes);
         return $this->afAsistentes;
     }
 
+    /** @return array<int|string, string> */
     private function getFlipActividad1Digito(): array
     {
         if (empty($this->afActividad1Digito)) $this->afActividad1Digito = array_flip($this->aActividad1Digito);
         return $this->afActividad1Digito;
     }
 
+    /** @return array<int|string, int|string> */
     private function getFlipActividad2Digitos(): array
     {
         if (empty($this->afActividad2Digitos)) $this->afActividad2Digitos = array_flip($this->aActividad2Digitos);
@@ -211,7 +225,7 @@ class TiposActividades
         }
     }
 
-    public function setPosiblesAll($bAll): void
+    public function setPosiblesAll(bool $bAll): void
     {
         if ($bAll === false) {
             unset ($this->aSfsv['all']);
@@ -221,6 +235,9 @@ class TiposActividades
     /**
      * Separa un id_tipo_activ con posibles asistentes en
      * un array de id_tipo_activ separados.
+     */
+    /**
+     * @return array<string, string>
      */
     public function getArrayAsistentesIndividual(): array
     {
@@ -297,7 +314,7 @@ class TiposActividades
     {
         $aText = $this->getFlipSfsv();
         if (is_numeric($this->ssfsv)) {
-            return $aText[$this->ssfsv];
+            return (string) ($aText[$this->ssfsv] ?? 'all');
         }
         return 'all';
     }
@@ -307,7 +324,7 @@ class TiposActividades
         if ($sSfsv === null) {
             $sSfsv = 'all';
         }
-        $this->ssfsv = $this->aSfsv[$sSfsv];
+        $this->ssfsv = (string) ($this->aSfsv[$sSfsv] ?? '.');
     }
 
     public function getSfsvId(): int
@@ -315,7 +332,7 @@ class TiposActividades
         return (int)$this->ssfsv;
     }
 
-    public function setSfsvId($isfsv): void
+    public function setSfsvId(int|string $isfsv): void
     {
         $this->ssfsv = (string)$isfsv;
     }
@@ -325,6 +342,9 @@ class TiposActividades
         return '^' . $this->ssfsv;
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getSfsvPosibles(): array
     {
         $aText = $this->getFlipSfsv();
@@ -335,7 +355,7 @@ class TiposActividades
     {
         $aText = $this->getFlipAsistentes();
         if (is_numeric($this->sasistentes)) {
-            return $aText[$this->sasistentes];
+            return (string) ($aText[$this->sasistentes] ?? 'all');
         }
         return 'all';
     }
@@ -357,7 +377,7 @@ class TiposActividades
             $asis = $a_asistentes_multiple[0];
             $asistentes_txt = $this->aAsistentes[$asis];
         }
-        $this->sasistentes = $asistentes_txt;
+        $this->sasistentes = (string) $asistentes_txt;
     }
 
     public function getAsistentesId(): int
@@ -365,7 +385,7 @@ class TiposActividades
         return (int)$this->sasistentes;
     }
 
-    public function setAsistentesId($id): void
+    public function setAsistentesId(int|string $id): void
     {
         $this->sasistentes = (string)$id;
     }
@@ -375,6 +395,9 @@ class TiposActividades
         return $this->getSfsvRegexp() . $this->sasistentes;
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getAsistentesPosibles(): array
     {
         $aText = $this->getFlipAsistentes();
@@ -386,23 +409,19 @@ class TiposActividades
     {
         if (is_numeric($this->sactividad)) {
             $aText = $this->extendida ? $this->getFlipActividad2Digitos() : $this->getFlipActividad1Digito();
-            return $aText[$this->sactividad];
+            return (string) ($aText[$this->sactividad] ?? 'all');
         }
         return 'all';
     }
 
-    public function setActividadText($sActividad): bool
+    public function setActividadText(string $sActividad): bool
     {
-        if (is_string($sActividad)) {
-            if (empty($sActividad) || $sActividad === '.') {
-                $sActividad = 'all';
-            }
-            $this->sactividad = $this->aActividad1Digito[$sActividad];
-            if ($this->extendida) {
-                $this->sactividad = $this->aActividad2Digitos[$sActividad];
-            }
-        } else {
-            return false;
+        if (empty($sActividad) || $sActividad === '.') {
+            $sActividad = 'all';
+        }
+        $this->sactividad = (string) $this->aActividad1Digito[$sActividad];
+        if ($this->extendida) {
+            $this->sactividad = (string) $this->aActividad2Digitos[$sActividad];
         }
         return true;
     }
@@ -411,21 +430,17 @@ class TiposActividades
     {
         $aText = $this->getFlipActividad2Digitos();
         if (is_numeric($this->sactividad)) {
-            return $aText[$this->sactividad];
+            return (string) ($aText[$this->sactividad] ?? 'all');
         }
         return 'all';
     }
 
-    public function setActividad2DigitosText($sActividad): bool
+    public function setActividad2DigitosText(string $sActividad): bool
     {
-        if (is_string($sActividad)) {
-            if (empty($sActividad)) {
-                $sActividad = 'all';
-            }
-            $this->sactividad = $this->aActividad2Digitos[$sActividad];
-        } else {
-            return false;
+        if (empty($sActividad)) {
+            $sActividad = 'all';
         }
+        $this->sactividad = (string) $this->aActividad2Digitos[$sActividad];
         return true;
     }
 
@@ -434,9 +449,9 @@ class TiposActividades
         return $this->sactividad;
     }
 
-    public function setActividadId($id): void
+    public function setActividadId(int|string $id): void
     {
-        $this->sactividad = $id;
+        $this->sactividad = (string) $id;
     }
 
     public function getActividadRegexp(): string
@@ -444,37 +459,41 @@ class TiposActividades
         return $this->getAsistentesRegexp() . $this->sactividad;
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getActividadesPosibles1Digito(): array
     {
         $aText = $this->getFlipActividad1Digito();
         return $this->resolveRepository()->getActividadesPosibles(1, $aText, $this->getAsistentesRegexp());
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getActividadesPosibles2Digitos(): array
     {
-        $aText = $this->getFlipActividad2Digitos();
+        $aText = [];
+        foreach ($this->getFlipActividad2Digitos() as $k => $v) {
+            $aText[$k] = (string) $v;
+        }
         return $this->resolveRepository()->getActividadesPosibles(2, $aText, $this->getAsistentesRegexp());
     }
 
     public function getNom_tipoText(): string
     {
         if (is_numeric($this->snom_tipo)) {
-            if (isset($this->afNom_tipo)) {
-                return $this->afNom_tipo[$this->snom_tipo] ?? '?';
+            if ($this->afNom_tipo === []) {
+                $this->getNom_tipoPosibles3Digitos();
             }
-            $this->getNom_tipoPosibles3Digitos();
             return $this->afNom_tipo[$this->snom_tipo] ?? '?';
         }
         return 'all';
     }
 
-    public function setNom_tipoText($sNom_tipo): bool
+    public function setNom_tipoText(string $sNom_tipo): bool
     {
-        if (is_string($sNom_tipo)) {
-            $this->snom_tipo = $this->aNom_tipo[$sNom_tipo];
-        } else {
-            return false;
-        }
+        $this->snom_tipo = (string) ($this->aNom_tipo[$sNom_tipo] ?? $sNom_tipo);
         return true;
     }
 
@@ -485,9 +504,15 @@ class TiposActividades
 
     public function getNom_tipoRegexp(): string
     {
+        if ($this->sregexp_id_tipo_activ !== '') {
+            return '^' . $this->sregexp_id_tipo_activ;
+        }
         return $this->getActividadRegexp() . $this->snom_tipo;
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getNom_tipoPosibles3Digitos(): array
     {
         $rta = $this->resolveRepository()->getNom_tipoPosibles(3, $this->getActividadRegexp());
@@ -496,6 +521,9 @@ class TiposActividades
         return $rta['tipo_nom'];
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getNom_tipoPosibles2Digitos(): array
     {
         $rta = $this->resolveRepository()->getNom_tipoPosibles(2, $this->getActividadRegexp());
@@ -508,6 +536,9 @@ class TiposActividades
      * Retorna els posibles id_tipo en format de array.
      *
      * @param string $regexp expresió regular per tornar el id (substring('bla' from regexp) del postgresql).
+     */
+    /**
+     * @return array<int|string, true>
      */
     public function getId_tipoPosibles(string $regexp = '.*'): array
     {

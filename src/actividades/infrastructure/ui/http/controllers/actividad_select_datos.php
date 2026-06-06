@@ -6,6 +6,7 @@
  */
 
 use src\shared\web\ContestarJson;
+use src\shared\infrastructure\DependencyResolver;
 use src\actividades\application\ActividadSelectListado;
 
 $input = [
@@ -33,7 +34,8 @@ $input = [
 ];
 $stackGo = (int)filter_input(INPUT_POST, 'stack_go');
 
-$useCase = new ActividadSelectListado();
+/** @var ActividadSelectListado $useCase */
+$useCase = DependencyResolver::get(ActividadSelectListado::class);
 $data = $useCase->ejecutar($input, $stackGo);
 
 ContestarJson::enviar('', $data);

@@ -107,9 +107,11 @@ class ActividadAll
 
     public function setIdTipoActivVo(ActividadTipoId|int $vo): void
     {
-        $this->id_tipo_activ = $vo instanceof ActividadTipoId
-            ? $vo
-            : ActividadTipoId::fromNullableInt($vo);
+        if ($vo instanceof ActividadTipoId) {
+            $this->id_tipo_activ = $vo;
+        } elseif (is_int($vo)) {
+            $this->id_tipo_activ = new ActividadTipoId($vo);
+        }
     }
 
     /**
@@ -163,9 +165,11 @@ class ActividadAll
 
     public function setNomActivVo(ActividadNomText|string|null $vo): void
     {
-        $this->nom_activ = $vo instanceof ActividadNomText
-            ? $vo
-            : ActividadNomText::fromNullableString($vo);
+        if ($vo instanceof ActividadNomText) {
+            $this->nom_activ = $vo;
+        } elseif (is_string($vo) && $vo !== '') {
+            $this->nom_activ = new ActividadNomText($vo);
+        }
     }
 
     public function getId_ubi(): ?int
@@ -213,7 +217,9 @@ class ActividadAll
 
     public function setF_ini(DateTimeLocal|null $df_ini = null): void
     {
-        $this->f_ini = $df_ini;
+        if ($df_ini !== null) {
+            $this->f_ini = $df_ini;
+        }
     }
 
     public function getH_ini(): TimeLocal|NullTimeLocal|null
@@ -233,7 +239,9 @@ class ActividadAll
 
     public function setF_fin(DateTimeLocal|null $df_fin = null): void
     {
-        $this->f_fin = $df_fin;
+        if ($df_fin !== null) {
+            $this->f_fin = $df_fin;
+        }
     }
 
     public function getH_fin(): TimeLocal|NullTimeLocal|null
@@ -317,9 +325,11 @@ class ActividadAll
 
     public function setStatusVo(StatusId|int|null $vo): void
     {
-        $this->status = $vo instanceof StatusId
-            ? $vo
-            : StatusId::fromNullableInt($vo);
+        if ($vo instanceof StatusId) {
+            $this->status = $vo;
+        } elseif (is_int($vo)) {
+            $this->status = new StatusId($vo);
+        }
     }
 
     /**
@@ -491,7 +501,9 @@ class ActividadAll
      */
     public function setId_tabla(?string $sid_tabla = null): void
     {
-        $this->id_tabla = new IdTablaCode($sid_tabla);
+        $this->id_tabla = ($sid_tabla !== null && $sid_tabla !== '')
+            ? new IdTablaCode($sid_tabla)
+            : null;
     }
 
     public function getIdTablaVo(): ?IdTablaCode
@@ -645,7 +657,7 @@ class ActividadAll
         return $this->time_txt($this->getH_fin(), $default);
     }
 
-    private function time_txt(?TimeLocal $h, string $default): string
+    private function time_txt(TimeLocal|NullTimeLocal|null $h, string $default): string
     {
         if ($h === null || $h instanceof NullTimeLocal) {
             return $default;

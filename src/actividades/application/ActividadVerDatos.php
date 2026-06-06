@@ -13,6 +13,9 @@ use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use frontend\shared\web\Desplegable;
 use src\actividades\domain\entity\TiposActividades;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 /**
  * Devuelve todos los datos y fragmentos HTML que el formulario
  * "ver/editar actividad" necesita para renderizarse, sin que la capa
@@ -27,6 +30,15 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class ActividadVerDatos
 {
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private TipoTarifaRepositoryInterface $tipoTarifaRepository,
+        private LocalRepositoryInterface $localRepository,
+        private RepeticionRepositoryInterface $repeticionRepository,
+        private RelacionTarifaTipoActividadRepositoryInterface $relacionTarifaTipoActividadRepository,
+    ) {
+    }
+
     /**
      * Nivel STGR por defecto en formulario según `id_tipo_activ` (p. ej. cursos de repaso → R).
      * Usa parsing extendido de {@see TiposActividades} para reconocer `ca-repaso`, `cv-repaso`, etc.
@@ -37,13 +49,14 @@ final class ActividadVerDatos
             return NivelStgrId::N;
         }
         $oTipo = new TiposActividades($idTipoActiv, true);
-        if (str_contains($oTipo->getActividad2DigitosText() ?? '', 'est')) {
+        $actividad2 = $oTipo->getActividad2DigitosText();
+        if (str_contains($actividad2, 'est')) {
             return NivelStgrId::C1;
         }
-        if (str_contains($oTipo->getActividad2DigitosText() ?? '', 'repaso')) {
+        if (str_contains($actividad2, 'repaso')) {
             return NivelStgrId::R;
         }
-        if (str_contains($oTipo->getActividad2DigitosText() ?? '', 'semestre')) {
+        if (str_contains($actividad2, 'semestre')) {
             return NivelStgrId::C1;
         }
 
@@ -51,7 +64,7 @@ final class ActividadVerDatos
     }
 
     /**
-     * @param array $input Claves admitidas (todas opcionales):
+     * @param array<string, mixed> $input Claves admitidas (todas opcionales):
      *   - id_activ (int): si > 0, carga actividad por id.
      *   - isfsv (int)
      *   - dl_org (string)
@@ -59,25 +72,26 @@ final class ActividadVerDatos
      *   - tarifa, nivel_stgr, idioma, id_repeticion, id_ubi, lugar_esp
      *   - id_tipo_activ (string): caso 'nuevo', para tarifa por defecto.
      *   - calc_tarifa_inicial (bool)
+     * @return array<string, mixed>
      */
     public function ejecutar(array $input): array
     {
-        $id_activ = (int)($input['id_activ'] ?? 0);
-        $isfsv = (int)($input['isfsv'] ?? 0);
-        $dl_org = (string)($input['dl_org'] ?? '');
-        $Bdl = (string)($input['Bdl'] ?? 't');
+        $id_activ = input_int($input, 'id_activ');
+        $isfsv = input_int($input, 'isfsv');
+        $dl_org = input_string($input, 'dl_org');
+        $Bdl = input_string($input, 'Bdl', 't');
         $tarifa = $input['tarifa'] ?? '';
-        $idioma = (string)($input['idioma'] ?? '');
-        $id_repeticion = (int)($input['id_repeticion'] ?? 0);
-        $id_ubi = (int)($input['id_ubi'] ?? 0);
-        $lugar_esp = (string)($input['lugar_esp'] ?? '');
-        $id_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
+        $idioma = input_string($input, 'idioma');
+        $id_repeticion = input_int($input, 'id_repeticion');
+        $id_ubi = input_int($input, 'id_ubi');
+        $lugar_esp = input_string($input, 'lugar_esp');
+        $id_tipo_activ = input_string($input, 'id_tipo_activ');
         $nivel_stgr = $input['nivel_stgr'] ?? self::nivelStgrPorDefectoParaIdTipoActividad($id_tipo_activ);
         $calcTarifaInicial = !empty($input['calc_tarifa_inicial']);
 
         $entidad = null;
         if ($id_activ > 0) {
-            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+            $ActividadAllRepository = $this->actividadAllRepository;
             $oActividad = $ActividadAllRepository->findById($id_activ);
             if ($oActividad !== null) {
                 $entidad = [
@@ -123,7 +137,7 @@ final class ActividadVerDatos
         $oDesplDl->setOpcion_sel($dl_org);
         $html_despl_dl_org = $oDesplDl->desplegable();
 
-        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+        $TipoTarifaRepository = $this->tipoTarifaRepository;
         $aOpciones = $TipoTarifaRepository->getArrayTipoTarifas($isfsv);
         $oDesplTarifa = new Desplegable();
         $oDesplTarifa->setOpciones($aOpciones);
@@ -138,7 +152,7 @@ final class ActividadVerDatos
         $oDesplNivel->setOpcion_sel($nivel_stgr);
         $html_despl_nivel_stgr = $oDesplNivel->desplegable();
 
-        $LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
+        $LocalRepository = $this->localRepository;
         $aOpciones = $LocalRepository->getArrayLocales();
         $oDesplIdioma = new Desplegable();
         $oDesplIdioma->setBlanco(true);
@@ -147,7 +161,7 @@ final class ActividadVerDatos
         $oDesplIdioma->setOpcion_sel($idioma);
         $html_despl_idioma = $oDesplIdioma->desplegable();
 
-        $RepeticionRepository = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
+        $RepeticionRepository = $this->repeticionRepository;
         $aOpciones = $RepeticionRepository->getArrayRepeticion();
         $oDesplRepeticion = new Desplegable();
         $oDesplRepeticion->setOpciones($aOpciones);
@@ -193,13 +207,13 @@ final class ActividadVerDatos
         }
 
         if ($calcTarifaInicial && $id_tipo_activ !== '') {
-            $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
+            $RelacionTarifaTipoActividadRepository = $this->relacionTarifaTipoActividadRepository;
             $aWhereT = [
                 'id_tipo_activ' => $id_tipo_activ,
                 '_ordre' => 'id_serie',
             ];
             $cActiTipoTarifa = $RelacionTarifaTipoActividadRepository->getTipoActivTarifas($aWhereT);
-            if (!empty($cActiTipoTarifa) && count($cActiTipoTarifa) > 0) {
+            if ($cActiTipoTarifa !== []) {
                 $payload['tarifa_inicial'] = $cActiTipoTarifa[0]->getId_tarifa();
             } else {
                 $payload['tarifa_inicial'] = null;

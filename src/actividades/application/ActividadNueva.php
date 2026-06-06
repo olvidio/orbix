@@ -14,52 +14,61 @@ use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividadplazas\domain\entity\ActividadPlazas;
+use src\permisos\domain\PermisosActividades;
 use src\shared\domain\value_objects\Dinero;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\usuarios\domain\value_objects\IdLocale;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 class ActividadNueva
 {
+    public function __construct(
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private ActividadExRepositoryInterface $actividadExRepository,
+        private ImportadaRepositoryInterface $importadaRepository,
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private ActividadPlazasDlRepositoryInterface $actividadPlazasDlRepository,
+    ) {
+    }
 
-    public static function actividadNueva(array $datosActividad): string
+    /**
+     * @param array<string, mixed> $datosActividad
+     */
+    public function actividadNueva(array $datosActividad): string
     {
-        $error_txt = '';
+        $Qdl_org = input_string($datosActividad, 'dl_org');
+        $Qpublicado = filter_var($datosActividad['publicado'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $Qid_tipo_activ = input_string($datosActividad, 'id_tipo_activ');
+        $Qnom_activ = input_string($datosActividad, 'nom_activ');
+        $Qf_ini = input_string($datosActividad, 'f_ini');
+        $Qf_fin = input_string($datosActividad, 'f_fin');
+        $Qstatus = input_int($datosActividad, 'status');
+        $Qid_ubi = input_int($datosActividad, 'id_ubi');
+        $Qlugar_esp = input_string($datosActividad, 'lugar_esp');
+        $Qdesc_activ = input_string($datosActividad, 'desc_activ');
+        $Qprecio = $datosActividad['precio'] ?? null;
+        $Qnum_asistentes = input_int($datosActividad, 'num_asistentes');
+        $Qobserv = input_string($datosActividad, 'observ');
+        $Qnivel_stgr = input_int($datosActividad, 'nivel_stgr');
+        $Qid_repeticion = input_int($datosActividad, 'id_repeticion');
+        $Qobserv_material = input_string($datosActividad, 'observ_material');
+        $Qtarifa = input_int($datosActividad, 'tarifa');
+        $Qh_ini = input_string($datosActividad, 'h_ini');
+        $Qh_fin = input_string($datosActividad, 'h_fin');
+        $Qplazas = input_int($datosActividad, 'plazas');
+        $Qidioma = input_string($datosActividad, 'idioma');
 
-        $Qdl_org = $datosActividad['dl_org'];
-        $Qpublicado = $datosActividad['publicado'];
-        $Qid_tipo_activ = $datosActividad['id_tipo_activ'];
-        $Qnom_activ = $datosActividad['nom_activ'];
-        $Qf_ini = $datosActividad['f_ini'];
-        $Qf_fin = $datosActividad['f_fin'];
-        $Qstatus = $datosActividad['status'];
-        $Qid_ubi = $datosActividad['id_ubi'];
-        $Qlugar_esp = $datosActividad['lugar_esp'];
-        $Qdesc_activ = $datosActividad['desc_activ'];
-        //$Qtipo_horario = $datosActividad['tipo_horario'];
-        $Qprecio = $datosActividad['precio'];
-        $Qnum_asistentes = $datosActividad['num_asistentes'];
-        $Qobserv = $datosActividad['observ'];
-        $Qnivel_stgr = $datosActividad['nivel_stgr'];
-        $Qid_repeticion = $datosActividad['id_repeticion'];
-        $Qobserv_material = $datosActividad['observ_material'];
-        $Qtarifa = $datosActividad['tarifa'];
-        $Qh_ini = $datosActividad['h_ini'];
-        $Qh_fin = $datosActividad['h_fin'];
-        $Qplazas = $datosActividad['plazas'];
-        $Qidioma = (string)($datosActividad['idioma'] ?? '');
-
-        // si estoy creando una actividad de otra dl es porque la quiero importar y por tanto debe estar publicada.
         if ($Qdl_org !== ConfigGlobal::mi_delef()) {
             $Qpublicado = true;
-            // comprobar que no es una dl que ya tiene su esquema
             $oDBPropiedades = new DBPropiedades();
             $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE, TRUE);
             $is_dl_in_orbix = FALSE;
             foreach ($a_posibles_esquemas as $esquema) {
                 $row = explode('-', $esquema);
-                if ($row[1] === $Qdl_org) {
+                if (($row[1] ?? '') === $Qdl_org) {
                     $is_dl_in_orbix = TRUE;
                     break;
                 }
@@ -67,54 +76,55 @@ class ActividadNueva
             if ($is_dl_in_orbix) {
                 throw new \RuntimeException(_("No puede crear una actividad que organiza una dl/r que ya usa aquinate"));
             }
-
         }
 
-        // permiso
-        // para dl y dlf:
-        $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $Qdl_org);
+        $dl_org_no_f = (string) preg_replace('/(\.*)f$/', '\1', $Qdl_org);
         $dl_propia = ConfigGlobal::mi_dele() === $dl_org_no_f;
         if (ConfigGlobal::is_app_installed('procesos')) {
-            $_SESSION['oPermActividades']->setId_tipo_activ($Qid_tipo_activ);
-            if ($_SESSION['oPermActividades']->getPermisoCrear($dl_propia) === FALSE) {
+            $oPermActividades = $_SESSION['oPermActividades'] ?? null;
+            if (!($oPermActividades instanceof PermisosActividades)) {
+                throw new \RuntimeException(_('sesión de permisos no disponible'));
+            }
+            $oPermActividades->setId_tipo_activ($Qid_tipo_activ);
+            if ($oPermActividades->getPermisoCrear($dl_propia) === false) {
                 throw new \RuntimeException(_("No tiene permiso para crear una actividad de este tipo"));
             }
         }
 
-        //Compruebo que estén todos los campos necesarios
-        if (empty($Qnom_activ) || empty($Qf_ini) || empty($Qf_fin) || empty($Qstatus) || empty($Qdl_org)) {
+        if ($Qnom_activ === '' || $Qf_ini === '' || $Qf_fin === '' || $Qstatus === 0 || $Qdl_org === '') {
             throw new \RuntimeException(_("debe llenar todos los campos que tengan un (*)"));
         }
 
         $isfsv = substr($Qid_tipo_activ, 0, 1);
         $mi_dele = ConfigGlobal::mi_delef($isfsv);
         if ($Qdl_org === $mi_dele) {
-            $ActividadRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+            $ActividadRepository = $this->actividadDlRepository;
             $newId = $ActividadRepository->getNewId();
             $newIdActividad = $ActividadRepository->getNewIdActividad($newId);
             $oActividad = new ActividadAll();
             $oActividad->setId_activ($newIdActividad);
             $oActividad->setIdTablaVo(new IdTablaCode('dl'));
         } else {
-            $ActividadRepository = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
+            $ActividadRepository = $this->actividadExRepository;
             $newId = $ActividadRepository->getNewId();
             $newIdActividad = $ActividadRepository->getNewIdActividad($newId);
             $oActividad = new ActividadAll();
             $oActividad->setId_activ($newIdActividad);
             $oActividad->setPublicado(true);
             $oActividad->setIdTablaVo(new IdTablaCode('ex'));
-            $Qstatus = StatusId::ACTUAL; // Que sea estado actual.
+            $Qstatus = StatusId::ACTUAL;
         }
         $oActividad->setDl_org($Qdl_org);
-        if (isset($Qid_tipo_activ)) {
-            if ($oActividad->setId_tipo_activ($Qid_tipo_activ) === false) {
+        if ($Qid_tipo_activ !== '') {
+            try {
+                $oActividad->setId_tipo_activ((int) $Qid_tipo_activ);
+            } catch (\InvalidArgumentException) {
                 throw new \RuntimeException(_("tipo de actividad incorrecto"));
             }
         }
         $oActividad->setNom_activ($Qnom_activ);
 
-        // En el caso de tener id_ubi (!=1) borro el campo lugar_esp.
-        if (!empty($Qid_ubi) && $Qid_ubi !== 1) {
+        if ($Qid_ubi !== 0 && $Qid_ubi !== 1) {
             $oActividad->setId_ubi($Qid_ubi);
             $oActividad->setLugar_esp('');
         } else {
@@ -122,96 +132,57 @@ class ActividadNueva
             $oActividad->setLugar_esp($Qlugar_esp);
         }
         $oActividad->setDesc_activ($Qdesc_activ);
-        // asegurar tipo correcto para f_ini
-        $oF_ini = empty($Qf_ini) ? null : DateTimeLocal::createFromLocal($Qf_ini);
-        $oActividad->setF_ini($oF_ini);
-        // asegurar tipo correcto para f_fin
-        $oF_fin = empty($Qf_fin) ? null : DateTimeLocal::createFromLocal($Qf_fin);
-        $oActividad->setF_fin($oF_fin);
-        //$oActividad->setTipo_horario($Qtipo_horario);
-        if ($Qprecio === null) {
-            $oActividad->setPrecioVo(null);
-        } elseif (is_string($Qprecio)) {
-            $t = trim($Qprecio);
-            if ($t === '') {
-                $oActividad->setPrecioVo(null);
-            } elseif (is_numeric($t)) {
-                $oActividad->setPrecioVo((float)$t);
-            } else {
-                $oActividad->setPrecioVo(Dinero::fromString($t));
-            }
-        } elseif (is_int($Qprecio) || is_float($Qprecio)) {
-            $oActividad->setPrecioVo((float)$Qprecio);
-        } elseif (is_numeric($Qprecio)) {
-            $oActividad->setPrecioVo((float)$Qprecio);
-        } else {
-            throw new \RuntimeException(_('precio no válido'));
-        }
+        $oActividad->setF_ini(DateTimeLocal::createFromLocal($Qf_ini));
+        $oActividad->setF_fin(DateTimeLocal::createFromLocal($Qf_fin));
+        $oActividad->setPrecioVo(Dinero::fromInput($Qprecio));
         $oActividad->setNum_asistentes($Qnum_asistentes);
         $oActividad->setStatus($Qstatus);
         $oActividad->setObserv($Qobserv);
-        // Si nivel_stgr está vacío, pongo el calculado.
-        if (empty($Qnivel_stgr)) {
+        if ($Qnivel_stgr === 0) {
             $Qnivel_stgr = NivelStgrId::generarNivelStgr($Qid_tipo_activ);
         }
         $oActividad->setNivel_stgr($Qnivel_stgr);
         $oActividad->setId_repeticion($Qid_repeticion);
         $oActividad->setObserv_material($Qobserv_material);
         $oActividad->setTarifa($Qtarifa);
-        // asegurar tipo correcto para h_ini
-        $oH_ini = empty($Qh_ini) ? null : TimeLocal::fromString($Qh_ini);
-        $oActividad->setH_ini($oH_ini);
-        // asegurar tipo correcto para h_fin
-        $oH_fin = empty($Qh_fin) ? null : TimeLocal::fromString($Qh_fin);
-        $oActividad->setH_fin($oH_fin);
+        $oActividad->setH_ini($Qh_ini === '' ? null : TimeLocal::fromString($Qh_ini));
+        $oActividad->setH_fin($Qh_fin === '' ? null : TimeLocal::fromString($Qh_fin));
         $oActividad->setPublicado($Qpublicado);
         $oActividad->setPlazas($Qplazas);
-        $idiomaVo = empty($Qidioma) ? null : new IdLocale($Qidioma);
-        $oActividad->setIdiomaVo($idiomaVo);
+        $oActividad->setIdiomaVo($Qidioma === '' ? null : new IdLocale($Qidioma));
         if ($ActividadRepository->Guardar($oActividad) === false) {
             throw new \RuntimeException(_("hay un error, no se ha guardado") . ": " . $ActividadRepository->getErrorTxt());
         }
-        // si estoy creando una actividad de otra dl es porque la quiero importar.
         if ($Qdl_org !== $mi_dele) {
-            $ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
             $id_activ = $oActividad->getId_activ();
             $oImportada = new Importada();
             $oImportada->setId_activ($id_activ);
-            if ($ImportadaRepository->Guardar($oImportada) === false) {
-                throw new \RuntimeException(_("hay un error, no se ha importado") . ": " . $ImportadaRepository->getErrorTxt());
+            if ($this->importadaRepository->Guardar($oImportada) === false) {
+                throw new \RuntimeException(_("hay un error, no se ha importado") . ": " . $this->importadaRepository->getErrorTxt());
             }
         }
-        // Por defecto pongo todas las plazas en mi dl
-        if (ConfigGlobal::is_app_installed('actividadplazas')) {
-            if (!empty($Qplazas) && $Qdl_org === $mi_dele) {
-                $id_activ = $oActividad->getId_activ();
-                $id_dl = 0;
-                $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-                $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
-                if (is_array($cDelegaciones) && count($cDelegaciones)) {
-                    $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
-                }
-                //Si es la dl_org, son plazas concedidas, sino pedidas.
-                $ActividadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
-                $cActividadPlazasDl = $ActividadPlazasDlRepository->getActividadesPlazas(['id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele]);
-                if ($cActividadPlazasDl === false) {
-                    throw new \RuntimeException(_("hay un error, no se ha guardado") . ": " . $ActividadPlazasDlRepository->getErrorTxt());
-                }
-                $oActividadPlazasDl = (is_array($cActividadPlazasDl) && count($cActividadPlazasDl) > 0)
-                    ? reset($cActividadPlazasDl)
-                    : null;
-                if ($oActividadPlazasDl === null) {
-                    $oActividadPlazasDl = new ActividadPlazas();
-                    $oActividadPlazasDl->setId_activ($id_activ);
-                    $oActividadPlazasDl->setId_dl($id_dl);
-                    $oActividadPlazasDl->setDlTablaVo($mi_dele);
-                }
-                $oActividadPlazasDl->setPlazas($Qplazas);
-
-                //print_r($oActividadPlazasDl);
-                if ($ActividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
-                    throw new \RuntimeException(_("hay un error, no se ha guardado") . ": " . $ActividadPlazasDlRepository->getErrorTxt());
-                }
+        if (ConfigGlobal::is_app_installed('actividadplazas') && $Qplazas > 0 && $Qdl_org === $mi_dele) {
+            $id_activ = $oActividad->getId_activ();
+            $id_dl = 0;
+            $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $mi_dele]);
+            if ($cDelegaciones !== []) {
+                $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
+            }
+            $cActividadPlazasDl = $this->actividadPlazasDlRepository->getActividadesPlazas([
+                'id_activ' => $id_activ,
+                'id_dl' => $id_dl,
+                'dl_tabla' => $mi_dele,
+            ]);
+            $oActividadPlazasDl = $cActividadPlazasDl[0] ?? null;
+            if (!($oActividadPlazasDl instanceof ActividadPlazas)) {
+                $oActividadPlazasDl = new ActividadPlazas();
+                $oActividadPlazasDl->setId_activ($id_activ);
+                $oActividadPlazasDl->setId_dl($id_dl);
+                $oActividadPlazasDl->setDlTablaVo($mi_dele);
+            }
+            $oActividadPlazasDl->setPlazas($Qplazas);
+            if ($this->actividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
+                throw new \RuntimeException(_("hay un error, no se ha guardado") . ": " . $this->actividadPlazasDlRepository->getErrorTxt());
             }
         }
         return (string) $oActividad->getId_activ();

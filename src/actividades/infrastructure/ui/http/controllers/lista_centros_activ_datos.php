@@ -6,6 +6,7 @@
  */
 
 use src\actividades\application\ListaCentrosActivDatos;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
@@ -17,7 +18,8 @@ $input = [
     'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
 ];
 
-$useCase = new ListaCentrosActivDatos();
+/** @var ListaCentrosActivDatos $useCase */
+$useCase = DependencyResolver::get(ListaCentrosActivDatos::class);
 $data = $useCase->ejecutar($input);
 
 ContestarJson::enviar('', $data);

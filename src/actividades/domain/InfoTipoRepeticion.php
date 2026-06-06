@@ -9,9 +9,9 @@ use src\shared\domain\DatosInfoRepo;
 
 class InfoTipoRepeticion extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private RepeticionRepositoryInterface $repeticionRepository,
+    ) {
         $this->setTxtTitulo(_("tipo de repetición de actividad"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este tipo de repetición?"));
         $this->setTxtBuscar(_("buscar un tipo de repetición"));
@@ -23,7 +23,10 @@ class InfoTipoRepeticion extends DatosInfoRepo
         $this->setRepositoryInterface(RepeticionRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<\src\actividades\domain\entity\Repeticion>
+     */
+    public function getColeccion(): array
     {
         $aWhere = [];
         $aOperador = [];
@@ -34,8 +37,7 @@ class InfoTipoRepeticion extends DatosInfoRepo
             $aOperador['repeticion'] = 'sin_acentos';
         }
         $aWhere['_ordre'] = 'temporada, repeticion';
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getRepeticiones($aWhere, $aOperador);
+        $Coleccion = $this->repeticionRepository->getRepeticiones($aWhere, $aOperador);
 
         return $Coleccion;
     }

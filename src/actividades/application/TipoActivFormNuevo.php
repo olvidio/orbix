@@ -11,6 +11,9 @@ use frontend\shared\helpers\TipoActivGestionFormHashCompose;
  */
 class TipoActivFormNuevo
 {
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(array $input = []): string
     {
         $oActividadTipo = new ActividadTipo();

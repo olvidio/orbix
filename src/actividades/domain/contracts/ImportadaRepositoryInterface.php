@@ -22,12 +22,11 @@ interface ImportadaRepositoryInterface
 	/**
 	 * devuelve una colección (array) de objetos de tipo Importada
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo Importada
-	
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<Importada>
 	 */
-	public function getImportadas(array $aWhere=[], array $aOperators=[]): array;
+	public function getImportadas(array $aWhere = [], array $aOperators = []): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
@@ -44,16 +43,13 @@ interface ImportadaRepositoryInterface
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
-     * 
-     * @param int $id_activ
-     * @return array|bool
-	
+     *
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_activ): array|bool;
+    public function datosById(int $id_activ): array|false;
 	
     /**
      * Busca la clase con id_activ en el repositorio.
-	
      */
     public function findById(int $id_activ): ?Importada;
 }

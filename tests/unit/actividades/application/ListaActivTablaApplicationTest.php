@@ -9,29 +9,21 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\actividadtarifas\domain\entity\TipoTarifa;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
-use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
-
 final class ListaActivTablaApplicationTest extends TestCase
 {
-    private mixed $previousContainer;
     private mixed $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? null;
         $_SESSION['session_auth'] = ['sfsv' => 1, 'idioma' => 'es_ES'];
     }
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         if ($this->previousSession === null) {
             unset($_SESSION);
         } else {
@@ -45,84 +37,13 @@ final class ListaActivTablaApplicationTest extends TestCase
         $actRepo = $this->createMock(ActividadRepositoryInterface::class);
         $actRepo->method('getActividades')->willReturn([]);
 
-        $prefRepo = $this->createMock(PreferenciaRepositoryInterface::class);
-
-        $GLOBALS['container'] = new class($actRepo, $prefRepo) {
-            public function __construct(
-                private readonly object $actRepo,
-                private readonly object $prefRepo
-            ) {}
-
-            public function get(string $id): object
-            {
-                return match ($id) {
-                    ActividadRepositoryInterface::class => $this->actRepo,
-                    CasaRepositoryInterface::class => $this->emptyCasaRepo(),
-                    TipoTarifaRepositoryInterface::class => $this->emptyTarifaRepo(),
-                    CentroEncargadoRepositoryInterface::class => $this->emptyCentroEncRepo(),
-                    ActividadCargoRepositoryInterface::class => $this->emptyCargoRepo(),
-                    PreferenciaRepositoryInterface::class => $this->prefRepo,
-                    default => throw new \RuntimeException($id),
-                };
-            }
-
-            private function emptyCasaRepo(): object
-            {
-                return new class {
-                    public function findById(int $id): object
-                    {
-                        return new class {
-                            public function getNombre_ubi(): string
-                            {
-                                return '';
-                            }
-
-                            public function isSv(): bool
-                            {
-                                return false;
-                            }
-
-                            public function isSf(): bool
-                            {
-                                return false;
-                            }
-                        };
-                    }
-                };
-            }
-
-            private function emptyTarifaRepo(): object
-            {
-                return new class {
-                    public function findById(?int $id): ?object
-                    {
-                        return null;
-                    }
-                };
-            }
-
-            private function emptyCentroEncRepo(): object
-            {
-                return new class {
-                    public function getCentrosEncargadosActividad(int $id): array
-                    {
-                        return [];
-                    }
-                };
-            }
-
-            private function emptyCargoRepo(): object
-            {
-                return new class {
-                    public function getActividadSacds(int $id): array
-                    {
-                        return [];
-                    }
-                };
-            }
-        };
-
-        $out = (new ListaActivTabla())->execute(
+        $out = (new ListaActivTabla(
+            $actRepo,
+            $this->emptyCasaRepo(),
+            $this->emptyTarifaRepo(),
+            $this->emptyCentroEncRepo(),
+            $this->emptyCargoRepo(),
+        ))->execute(
             [
                 'que' => 'list_activ',
                 'periodo' => 'actual',
@@ -183,7 +104,7 @@ final class ListaActivTablaApplicationTest extends TestCase
 
             public function getTarifa(): ?int
             {
-                return null;
+                return 1;
             }
 
             public function getObserv(): string
@@ -198,13 +119,10 @@ final class ListaActivTablaApplicationTest extends TestCase
         $casaRepo = $this->createMock(CasaRepositoryInterface::class);
         $casaRepo->method('findById')->with(99999)->willReturn(null);
 
+        $tipoTarifa = $this->createMock(TipoTarifa::class);
+        $tipoTarifa->method('getLetra')->willReturn('A');
         $tarifaRepo = $this->createMock(TipoTarifaRepositoryInterface::class);
-        $tarifaRepo->method('findById')->willReturn(new class {
-            public function getLetra(): string
-            {
-                return 'A';
-            }
-        });
+        $tarifaRepo->method('findById')->with(1)->willReturn($tipoTarifa);
 
         $centroEncRepo = $this->createMock(CentroEncargadoRepositoryInterface::class);
         $centroEncRepo->method('getCentrosEncargadosActividad')->willReturn([]);
@@ -212,29 +130,7 @@ final class ListaActivTablaApplicationTest extends TestCase
         $cargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
         $cargoRepo->method('getActividadSacds')->willReturn([]);
 
-        $GLOBALS['container'] = new class($actRepo, $casaRepo, $tarifaRepo, $centroEncRepo, $cargoRepo) {
-            public function __construct(
-                private readonly object $actRepo,
-                private readonly object $casaRepo,
-                private readonly object $tarifaRepo,
-                private readonly object $centroEncRepo,
-                private readonly object $cargoRepo,
-            ) {}
-
-            public function get(string $id): object
-            {
-                return match ($id) {
-                    ActividadRepositoryInterface::class => $this->actRepo,
-                    CasaRepositoryInterface::class => $this->casaRepo,
-                    TipoTarifaRepositoryInterface::class => $this->tarifaRepo,
-                    CentroEncargadoRepositoryInterface::class => $this->centroEncRepo,
-                    ActividadCargoRepositoryInterface::class => $this->cargoRepo,
-                    default => throw new \RuntimeException($id),
-                };
-            }
-        };
-
-        $out = (new ListaActivTabla())->execute(
+        $out = (new ListaActivTabla($actRepo, $casaRepo, $tarifaRepo, $centroEncRepo, $cargoRepo))->execute(
             [
                 'que' => 'list_activ_compl',
                 'periodo' => 'actual',
@@ -272,69 +168,13 @@ final class ListaActivTablaApplicationTest extends TestCase
             )
             ->willReturn([]);
 
-        $prefRepo = $this->createMock(PreferenciaRepositoryInterface::class);
-
-        $GLOBALS['container'] = new class($actRepo, $prefRepo) {
-            public function __construct(
-                private readonly object $actRepo,
-                private readonly object $prefRepo,
-            ) {}
-
-            public function get(string $id): object
-            {
-                return match ($id) {
-                    ActividadRepositoryInterface::class => $this->actRepo,
-                    CasaRepositoryInterface::class => $this->emptyCasaRepo(),
-                    TipoTarifaRepositoryInterface::class => $this->emptyTarifaRepo(),
-                    CentroEncargadoRepositoryInterface::class => $this->emptyCentroEncRepo(),
-                    ActividadCargoRepositoryInterface::class => $this->emptyCargoRepo(),
-                    PreferenciaRepositoryInterface::class => $this->prefRepo,
-                    default => throw new \RuntimeException($id),
-                };
-            }
-
-            private function emptyCasaRepo(): object
-            {
-                return new class {
-                    public function findById(int $id): ?object
-                    {
-                        return null;
-                    }
-                };
-            }
-
-            private function emptyTarifaRepo(): object
-            {
-                return new class {
-                    public function findById(?int $id): ?object
-                    {
-                        return null;
-                    }
-                };
-            }
-
-            private function emptyCentroEncRepo(): object
-            {
-                return new class {
-                    public function getCentrosEncargadosActividad(int $id): array
-                    {
-                        return [];
-                    }
-                };
-            }
-
-            private function emptyCargoRepo(): object
-            {
-                return new class {
-                    public function getActividadSacds(int $id): array
-                    {
-                        return [];
-                    }
-                };
-            }
-        };
-
-        (new ListaActivTabla())->execute(
+        (new ListaActivTabla(
+            $actRepo,
+            $this->emptyCasaRepo(),
+            $this->emptyTarifaRepo(),
+            $this->emptyCentroEncRepo(),
+            $this->emptyCargoRepo(),
+        ))->execute(
             [
                 'que' => 'list_activ',
                 'periodo' => 'tot_any',
@@ -351,5 +191,37 @@ final class ListaActivTablaApplicationTest extends TestCase
                 'is_dmz' => true,
             ]
         );
+    }
+
+    private function emptyCasaRepo(): CasaRepositoryInterface
+    {
+        $repo = $this->createMock(CasaRepositoryInterface::class);
+        $repo->method('findById')->willReturn(null);
+
+        return $repo;
+    }
+
+    private function emptyTarifaRepo(): TipoTarifaRepositoryInterface
+    {
+        $repo = $this->createMock(TipoTarifaRepositoryInterface::class);
+        $repo->method('findById')->willReturn(null);
+
+        return $repo;
+    }
+
+    private function emptyCentroEncRepo(): CentroEncargadoRepositoryInterface
+    {
+        $repo = $this->createMock(CentroEncargadoRepositoryInterface::class);
+        $repo->method('getCentrosEncargadosActividad')->willReturn([]);
+
+        return $repo;
+    }
+
+    private function emptyCargoRepo(): ActividadCargoRepositoryInterface
+    {
+        $repo = $this->createMock(ActividadCargoRepositoryInterface::class);
+        $repo->method('getActividadSacds')->willReturn([]);
+
+        return $repo;
     }
 }

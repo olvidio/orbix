@@ -13,6 +13,9 @@ use src\usuarios\domain\value_objects\ValorPreferencia;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
+use src\permisos\domain\XPermisos;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -27,18 +30,34 @@ use function src\shared\domain\helpers\is_true;
  */
 final class ListaSrCsvListado
 {
+    public function __construct(
+        private PreferenciaRepositoryInterface $preferenciaRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private CasaRepositoryInterface $casaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
+     */
     public function ejecutar(array $input): array
     {
         $mi_sfsv = ConfigGlobal::mi_sfsv();
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        $permOficina = static function (string $perm) use ($oPerm): bool {
+            return $oPerm instanceof XPermisos && $oPerm->have_perm_oficina($perm);
+        };
 
-        $Qperiodo = (string)($input['periodo'] ?? '');
-        $Qyear = (string)($input['year'] ?? '');
-        $Qdl_org = (string)($input['dl_org'] ?? '');
-        $Qempiezamin = (string)($input['empiezamin'] ?? '');
-        $Qempiezamax = (string)($input['empiezamax'] ?? '');
-        $Qa_activ = (array)($input['c_activ'] ?? []);
-        $Qa_status = (array)($input['status'] ?? []);
-        $Qa_id_cdc = (array)($input['id_cdc'] ?? []);
+        $Qperiodo = input_string($input, 'periodo');
+        $Qyear = input_string($input, 'year');
+        $Qdl_org = input_string($input, 'dl_org');
+        $Qempiezamin = input_string($input, 'empiezamin');
+        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qa_activ = input_string_list($input, 'c_activ');
+        $Qa_status = input_string_list($input, 'status');
+        $Qa_id_cdc = input_string_list($input, 'id_cdc');
 
         if (empty($Qperiodo)) {
             $Qperiodo = 'curso_ca';
@@ -54,9 +73,12 @@ final class ListaSrCsvListado
             'ubis_compartidos' => $json_cdc,
         ];
         $json_busqueda = json_encode($aPref);
+        if (!is_string($json_busqueda)) {
+            $json_busqueda = '{}';
+        }
         $id_usuario = ConfigGlobal::mi_id_usuario();
         $tipo = 'busqueda_activ_sr';
-        $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
+        $PreferenciaRepository = $this->preferenciaRepository;
         $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
         if ($oPreferencia === null) {
             $oPreferencia = new Preferencia();
@@ -71,13 +93,9 @@ final class ListaSrCsvListado
 
         $aWhere = [];
         $aOperador = [];
-        if (is_array($Qa_status) && count($Qa_status) > 0) {
+        if ($Qa_status !== []) {
             if (count($Qa_status) > 1) {
-                $cond_status = '';
-                foreach ($Qa_status as $status) {
-                    $cond_status .= $status;
-                }
-                $aWhere['status'] = "[$cond_status]";
+                $aWhere['status'] = '[' . implode('', $Qa_status) . ']';
             } else {
                 $aWhere['status'] = $Qa_status[0];
             }
@@ -87,12 +105,9 @@ final class ListaSrCsvListado
         $aOperador['status'] = '~';
 
         $cv_crt = '';
-        if (is_array($Qa_activ) && count($Qa_activ) > 0) {
+        if ($Qa_activ !== []) {
             if (count($Qa_activ) > 1) {
-                foreach ($Qa_activ as $c_activ) {
-                    $cv_crt .= $c_activ;
-                }
-                $cond_act = "[$cv_crt]";
+                $cond_act = '[' . implode('', $Qa_activ) . ']';
             } else {
                 $cond_act = $Qa_activ[0];
             }
@@ -116,11 +131,13 @@ final class ListaSrCsvListado
 
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
+        $inicioIsoStr = is_string($inicioIso) ? $inicioIso : date('Y-m-d');
+        $finIsoStr = is_string($finIso) ? $finIso : date('Y-m-d');
         if ($Qperiodo === 'desdeHoy') {
-            $aWhere['f_fin'] = "'$inicioIso','$finIso'";
+            $aWhere['f_fin'] = "'$inicioIsoStr','$finIsoStr'";
             $aOperador['f_fin'] = 'BETWEEN';
         } else {
-            $aWhere['f_ini'] = "'$inicioIso','$finIso'";
+            $aWhere['f_ini'] = "'$inicioIsoStr','$finIsoStr'";
             $aOperador['f_ini'] = 'BETWEEN';
         }
         if (!empty($Qdl_org)) {
@@ -128,7 +145,7 @@ final class ListaSrCsvListado
         }
         $aWhere['_ordre'] = 'f_ini';
 
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+        $ActividadRepository = $this->actividadRepository;
         $cActividades_1 = $ActividadRepository->getActividades($aWhere, $aOperador);
         $cActividadesxTipo = [];
         foreach ($cActividades_1 as $oActividad) {
@@ -137,10 +154,10 @@ final class ListaSrCsvListado
         }
 
         $cActividadesxUbi = [];
-        if (is_array($Qa_id_cdc) && count($Qa_id_cdc) > 0) {
+        if ($Qa_id_cdc !== []) {
             unset($aWhere['id_tipo_activ']);
             unset($aOperador['id_tipo_activ']);
-            $cond_ubis = "{" . implode(', ', $Qa_id_cdc) . "}";
+            $cond_ubis = '{' . implode(', ', $Qa_id_cdc) . '}';
             $aWhere['id_ubi'] = $cond_ubis;
             $aOperador['id_ubi'] = 'ANY';
             $cActividades_2 = $ActividadRepository->getActividades($aWhere, $aOperador);
@@ -165,8 +182,8 @@ final class ListaSrCsvListado
 
         $a_valores = [];
         $i = 0;
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
-        $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
+        $CentroEncargadoRepository = $this->centroEncargadoRepository;
+        $CasaRepository = $this->casaRepository;
         foreach ($cActividades as $oActividad) {
             $i++;
             $id_activ = $oActividad->getId_activ();
@@ -177,7 +194,7 @@ final class ListaSrCsvListado
             $f_ini = $oActividad->getF_ini()?->getFromLocal();
             $f_fin = $oActividad->getF_fin()?->getFromLocal();
 
-            $oUbi = $CasaRepository->findById($id_ubi);
+            $oUbi = $CasaRepository->findById((int) $id_ubi);
             $nombre_ubi = $oUbi?->getNombre_ubi() ?? '';
 
             $oTipoActiv = new TiposActividades($id_tipo_activ);
@@ -185,10 +202,7 @@ final class ListaSrCsvListado
             $sactividad = $oTipoActiv->getActividadText();
             $snom_tipo = $oTipoActiv->getNom_tipoText();
 
-            if ((($_SESSION['oPerm']->have_perm_oficina('sg'))
-                        || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
-                        || ($_SESSION['oPerm']->have_perm_oficina('des'))) && !($_SESSION['oPerm']->have_perm_oficina('admin'))
-            ) {
+            if (($permOficina('sg') || $permOficina('vcsd') || $permOficina('des')) && !$permOficina('admin')) {
                 if ($snom_tipo === "(sin especificar)") {
                     $snom_tipo = "";
                 }

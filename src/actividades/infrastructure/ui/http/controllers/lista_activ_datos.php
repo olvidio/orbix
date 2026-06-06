@@ -7,7 +7,10 @@
 
 use src\shared\web\ContestarJson;
 use src\actividades\application\ListaActivTabla;
+use src\permisos\domain\XPermisos;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\config\ConfigGlobal;
+use function src\shared\domain\helpers\input_string_list;
 
 $input = [
     'que' => (string)filter_input(INPUT_POST, 'que'),
@@ -20,9 +23,9 @@ $input = [
     'dl_org' => (string)filter_input(INPUT_POST, 'dl_org'),
     'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
     'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
-    'c_activ' => (array)filter_input(INPUT_POST, 'c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'asist' => (array)filter_input(INPUT_POST, 'asist', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'seccion' => (array)filter_input(INPUT_POST, 'seccion', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'c_activ' => input_string_list(['c_activ' => filter_input(INPUT_POST, 'c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: []], 'c_activ'),
+    'asist' => input_string_list(['asist' => filter_input(INPUT_POST, 'asist', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: []], 'asist'),
+    'seccion' => input_string_list(['seccion' => filter_input(INPUT_POST, 'seccion', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: []], 'seccion'),
     'ssfsv' => (string)filter_input(INPUT_POST, 'ssfsv'),
     'sasistentes' => (string)filter_input(INPUT_POST, 'sasistentes'),
     'sactividad' => (string)filter_input(INPUT_POST, 'sactividad'),
@@ -30,17 +33,17 @@ $input = [
     'titulo' => (string)filter_input(INPUT_POST, 'titulo'),
 ];
 
-$oPerm = $_SESSION['oPerm'];
+$oPerm = $_SESSION['oPerm'] ?? null;
 $opts = [
     'mi_sfsv' => ConfigGlobal::mi_sfsv(),
-    'perm_vcsd' => $oPerm->have_perm_oficina('vcsd'),
-    'perm_des' => $oPerm->have_perm_oficina('des'),
-    'perm_sg' => $oPerm->have_perm_oficina('sg'),
-    'perm_admin' => $oPerm->have_perm_oficina('admin'),
+    'perm_vcsd' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('vcsd'),
+    'perm_des' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('des'),
+    'perm_sg' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('sg'),
+    'perm_admin' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('admin'),
     'is_dmz' => ConfigGlobal::is_dmz(),
 ];
 
-$useCase = new ListaActivTabla();
+$useCase = DependencyResolver::get(ListaActivTabla::class);
 $data = $useCase->execute($input, $opts);
 
 ContestarJson::enviar('', $data);

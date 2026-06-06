@@ -5,6 +5,7 @@ namespace src\actividades\infrastructure\persistence\postgresql;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\utils_database\domain\GenerateIdGlobal;
 use src\actividades\domain\entity\TiposActividades;
@@ -26,9 +27,9 @@ class PgActividadDlRepository extends PgActividadAllRepository implements Activi
     public function __construct(TiposActividades $tiposActividades)
     {
         parent::__construct($tiposActividades);
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('a_actividades_dl');
     }
@@ -37,7 +38,12 @@ class PgActividadDlRepository extends PgActividadAllRepository implements Activi
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('a_actividades_dl_id_auto_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+        return is_numeric($id) ? (int) $id : 0;
     }
 
     /**
@@ -49,7 +55,7 @@ class PgActividadDlRepository extends PgActividadAllRepository implements Activi
         return GenerateIdGlobal::generateIdGlobal($miRegionDl, $this->getNomTabla(), $id);
     }
 
-    public function deleteActividadesEnPeriodoEnProyecto($f_ini, $f_fin): bool
+    public function deleteActividadesEnPeriodoEnProyecto(string $f_ini, string $f_fin): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -61,7 +67,10 @@ class PgActividadDlRepository extends PgActividadAllRepository implements Activi
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-    public function getArrayActividadesEnPeriodoNoEnProyecto($f_ini, $f_fin): array
+    /**
+     * @return array<int, string>
+     */
+    public function getArrayActividadesEnPeriodoNoEnProyecto(string $f_ini, string $f_fin): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -71,12 +80,17 @@ class PgActividadDlRepository extends PgActividadAllRepository implements Activi
         $sql = "SELECT id_activ,nom_activ FROM $nom_tabla
                     WHERE f_ini >= '$f_ini' AND f_ini <= '$f_fin' AND status != $status";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return [];
+        }
         $aOpciones = [];
         foreach ($stmt as $row) {
-            $id_activ = $row[0];
-            $nom_activ = $row[1];
-            $aOpciones[$id_activ] = $nom_activ;
+            if (!is_array($row)) {
+                continue;
+            }
+            $id_activ = $row[0] ?? 0;
+            $nom_activ = $row[1] ?? '';
+            $aOpciones[is_numeric($id_activ) ? (int) $id_activ : 0] = is_scalar($nom_activ) ? (string) $nom_activ : '';
         }
         return $aOpciones;
     }

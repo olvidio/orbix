@@ -5,15 +5,20 @@ namespace src\actividades\application;
 use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
 
+use function src\shared\domain\helpers\input_string;
+
 /**
  * Devuelve la tabla HTML de nombres de tipo de actividad (id, nombre). Portado
  * del case `nom_tipo_tabla` del dispatcher legacy.
  */
 class ActividadTipoGetNomTipoTabla
 {
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(array $input = []): string
     {
-        $Qentrada = (string)($input['entrada'] ?? '');
+        $Qentrada = input_string($input, 'entrada');
 
         $aux = $Qentrada . '..';
         $oTipoActiv = new TiposActividades($aux, true);
@@ -32,7 +37,6 @@ class ActividadTipoGetNomTipoTabla
         $oTabla->setBotones([]);
         $oTabla->setCabeceras($a_cabeceras);
         $oTabla->setDatos($a_valores);
-        // Sin formato fijo, Lista consultaría preferencia_tabla_get por HTTP (no existe en unit tests).
         $oTabla->setFormatoTabla('html');
 
         return $oTabla->mostrar_tabla();

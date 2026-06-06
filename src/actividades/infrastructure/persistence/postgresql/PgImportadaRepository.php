@@ -8,6 +8,7 @@ use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\actividades\domain\contracts\ImportadaRepositoryInterface;
 use src\actividades\domain\entity\Importada;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -26,9 +27,9 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('a_importadas');
     }
@@ -38,9 +39,9 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
     /**
      * devuelve una colección (array) de objetos de tipo Importada
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Importada
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Importada>
      */
     public function getImportadas(array $aWhere = [], array $aOperators = []): array
     {
@@ -77,27 +78,31 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return [];
+        }
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Importada = Importada::fromArray($aDatos);
             $ImportadaSet->add($Importada);
         }
-        return $ImportadaSet->getTot();
+        return array_values($ImportadaSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -135,8 +140,11 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
             $valores = "(:id_activ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) {
+                return false;
+            }
         }
-        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_activ): bool
@@ -144,7 +152,10 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ = $id_activ";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -156,17 +167,26 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_activ): array |bool
+    public function datosById(int $id_activ): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ = $id_activ";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 

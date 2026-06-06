@@ -9,6 +9,7 @@
  */
 
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\DependencyResolver;
 use src\actividades\application\ActividadQueFiltrosBloque;
 use src\shared\web\ContestarJson;
 
@@ -27,7 +28,8 @@ $publicado = (int)filter_input(INPUT_POST, 'publicado');
 
 $proceso_installed = ConfigGlobal::is_app_installed('procesos');
 
-$useCase = new ActividadQueFiltrosBloque();
+/** @var ActividadQueFiltrosBloque $useCase */
+$useCase = DependencyResolver::get(ActividadQueFiltrosBloque::class);
 $html = $useCase->ejecutar($sfsv, $modo, $dl_org, $filtro_lugar, $id_ubi, $publicado, $proceso_installed);
 
 ContestarJson::enviar('', ['html' => $html]);

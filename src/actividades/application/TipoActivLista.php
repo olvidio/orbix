@@ -12,10 +12,18 @@ use src\actividades\domain\entity\TiposActividades;
  */
 class TipoActivLista
 {
+    public function __construct(
+        private TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(array $input = []): string
     {
         $aWhere = ['_ordre' => 'id_tipo_activ'];
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $TipoDeActividadRepository = $this->tipoDeActividadRepository;
         $cTiposDeActividades = $TipoDeActividadRepository->getTiposDeActividades($aWhere);
 
         $a_cabeceras = [

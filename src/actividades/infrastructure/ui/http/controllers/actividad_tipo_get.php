@@ -21,6 +21,7 @@ use src\actividades\application\ActividadTipoGetLugar;
 use src\actividades\application\ActividadTipoGetNomTipo;
 use src\actividades\application\ActividadTipoGetNomTipoTabla;
 use src\actividades\application\ActividadTipoGetNivelStgrDefecto;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $Qsalida = (string)filter_input(INPUT_POST, 'salida');
@@ -30,35 +31,53 @@ $Qsalida = (string)filter_input(INPUT_POST, 'salida');
 // el `<select>`. El payload se envia directamente bajo `data`.
 switch ($Qsalida) {
     case 'asistentes':
-        ContestarJson::enviar('', (new ActividadTipoGetAsistentes())->execute($_POST));
+        /** @var ActividadTipoGetAsistentes $useCase */
+        $useCase = DependencyResolver::get(ActividadTipoGetAsistentes::class);
+        ContestarJson::enviar('', $useCase->execute($_POST));
         exit;
     case 'actividad':
-        ContestarJson::enviar('', (new ActividadTipoGetActividad())->execute($_POST));
+        /** @var ActividadTipoGetActividad $useCase */
+        $useCase = DependencyResolver::get(ActividadTipoGetActividad::class);
+        ContestarJson::enviar('', $useCase->execute($_POST));
         exit;
     case 'nom_tipo':
-        ContestarJson::enviar('', (new ActividadTipoGetNomTipo())->execute($_POST));
+        /** @var ActividadTipoGetNomTipo $useCase */
+        $useCase = DependencyResolver::get(ActividadTipoGetNomTipo::class);
+        ContestarJson::enviar('', $useCase->execute($_POST));
         exit;
     case 'lugar':
-        ContestarJson::enviar('', (new ActividadTipoGetLugar())->execute($_POST));
+        /** @var ActividadTipoGetLugar $useCase */
+        $useCase = DependencyResolver::get(ActividadTipoGetLugar::class);
+        ContestarJson::enviar('', $useCase->execute($_POST));
         exit;
     case 'dl_org':
-        ContestarJson::enviar('', (new ActividadTipoGetDlOrg())->execute($_POST));
+        /** @var ActividadTipoGetDlOrg $useCase */
+        $useCase = DependencyResolver::get(ActividadTipoGetDlOrg::class);
+        ContestarJson::enviar('', $useCase->execute($_POST));
         exit;
     case 'filtro_lugar':
-        ContestarJson::enviar('', (new ActividadTipoGetFiltroLugar())->execute($_POST));
+        /** @var ActividadTipoGetFiltroLugar $useCase */
+        $useCase = DependencyResolver::get(ActividadTipoGetFiltroLugar::class);
+        ContestarJson::enviar('', $useCase->execute($_POST));
         exit;
 }
 
 // Salidas que devuelven HTML/valor escalar (bajo `content`).
 switch ($Qsalida) {
     case 'nom_tipo_tabla':
-        $content = (new ActividadTipoGetNomTipoTabla())->execute($_POST);
+        /** @var ActividadTipoGetNomTipoTabla $useCase */
+        $useCase = DependencyResolver::get(ActividadTipoGetNomTipoTabla::class);
+        $content = $useCase->execute($_POST);
         break;
     case 'id_tarifa':
-        $content = (new ActividadTipoGetIdTarifa())->execute($_POST);
+        /** @var ActividadTipoGetIdTarifa $useCase */
+        $useCase = DependencyResolver::get(ActividadTipoGetIdTarifa::class);
+        $content = $useCase->execute($_POST);
         break;
     case 'nivel_stgr_defecto':
-        $content = (new ActividadTipoGetNivelStgrDefecto())->execute($_POST);
+        /** @var ActividadTipoGetNivelStgrDefecto $useCase */
+        $useCase = DependencyResolver::get(ActividadTipoGetNivelStgrDefecto::class);
+        $content = $useCase->execute($_POST);
         break;
     default:
         ContestarJson::enviar(sprintf(_('opción no definida: salida=%s'), $Qsalida));

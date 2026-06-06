@@ -10,39 +10,18 @@
  * @subpackage    actividades
  */
 
-use src\shared\config\ConfigGlobal;
-use src\actividades\domain\contracts\ImportadaRepositoryInterface;
-use src\actividades\domain\entity\Importada;
-use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\actividades\application\ActividadImportar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-$error_txt = '';
-$avisos = [];
+/** @var ActividadImportar $useCase */
+$useCase = DependencyResolver::get(ActividadImportar::class);
+$result = $useCase->execute(['sel' => $a_sel]);
 
-if (!empty($a_sel)) {
-    $ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
-    foreach ($a_sel as $id) {
-        $id_activ = (integer)strtok($id, '#');
-        $oImportada = new Importada();
-        $oImportada->setId_activ($id_activ);
-        if ($ImportadaRepository->Guardar($oImportada) === false) {
-            $error_txt .= _("hay un error, no se ha importado");
-            $error_txt .= "\n" . $ImportadaRepository->getErrorTxt();
-        }
-        if (ConfigGlobal::is_app_installed('procesos')) {
-            $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
-            $ActividadProcesoTareaRepository->generarProceso((string) $id_activ, ConfigGlobal::mi_sfsv(), true);
-            foreach ($ActividadProcesoTareaRepository->consumirAvisosGenerarProceso() as $aviso) {
-                $avisos[] = $aviso;
-            }
-        }
-    }
+if ($result['error_txt'] === '' && $result['avisos'] !== []) {
+    ContestarJson::enviar('', ['avisos' => $result['avisos']]);
 }
 
-if ($error_txt === '' && $avisos !== []) {
-    ContestarJson::enviar('', ['avisos' => $avisos]);
-}
-
-ContestarJson::enviar($error_txt);
+ContestarJson::enviar($result['error_txt']);

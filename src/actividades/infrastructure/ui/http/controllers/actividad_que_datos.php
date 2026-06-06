@@ -5,6 +5,7 @@
  */
 
 use src\actividades\application\ActividadQueDatos;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $perm_jefe = filter_input(INPUT_POST, 'perm_jefe') === 't';
@@ -39,6 +40,6 @@ if ($sfsv_all !== null) {
     $payloadIn['sfsv_all'] = $sfsv_all;
 }
 
-$data = (new ActividadQueDatos())->execute($payloadIn);
+$data = DependencyResolver::get(ActividadQueDatos::class)->execute($payloadIn);
 
 ContestarJson::enviar('', $data);

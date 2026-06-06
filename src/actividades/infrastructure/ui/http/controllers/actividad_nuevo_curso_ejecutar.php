@@ -6,6 +6,7 @@
  */
 
 use src\actividades\application\ActividadNuevoCursoEjecutar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
@@ -14,7 +15,8 @@ $input = [
     'ver_lista' => (string)filter_input(INPUT_POST, 'ver_lista'),
 ];
 
-$useCase = new ActividadNuevoCursoEjecutar();
+/** @var ActividadNuevoCursoEjecutar $useCase */
+$useCase = DependencyResolver::get(ActividadNuevoCursoEjecutar::class);
 $data = $useCase->ejecutar($input);
 
 ContestarJson::enviar('', $data);

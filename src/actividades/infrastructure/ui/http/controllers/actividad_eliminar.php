@@ -15,55 +15,18 @@
  * @subpackage    actividades
  */
 
-use src\shared\config\ConfigGlobal;
-use src\actividades\application\BorrarActividad;
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\application\ActividadEliminar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-$error_txt = '';
-$ActividadDlRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-
-if (!empty($a_sel)) {
-    foreach ($a_sel as $id) {
-        $id_activ = (integer)strtok($id, '#');
-        $oActividad = $ActividadDlRepository->findById($id_activ);
-        $id_tipo_activ = $oActividad->getId_tipo_activ();
-        $dl_org = $oActividad->getDl_org();
-
-        if (ConfigGlobal::is_app_installed('procesos')) {
-            $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-            $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-            if ($oPermActiv->have_perm_activ('borrar') === TRUE) {
-                $error_txt .= BorrarActividad::ejecutar($id_activ);
-            } else {
-                $error_txt .= _("No tiene permiso para borrar esta actividad");
-            }
-        } else {
-            $error_txt .= BorrarActividad::ejecutar($id_activ);
-        }
-    }
-}
-
-// si vengo desde la presentacion del planning, ya tengo el id_activ.
-if (!empty($Qid_activ)) {
-    $oActividad = $ActividadDlRepository->findById($Qid_activ);
-    $id_tipo_activ = $oActividad->getId_tipo_activ();
-    $dl_org = $oActividad->getDl_org();
-
-    if (ConfigGlobal::is_app_installed('procesos')) {
-        $_SESSION['oPermActividades']->setActividad($Qid_activ, $id_tipo_activ, $dl_org);
-        $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-        if ($oPermActiv->have_perm_activ('borrar') === TRUE) {
-            $error_txt .= BorrarActividad::ejecutar($Qid_activ);
-        } else {
-            $error_txt .= _("No tiene permiso para borrar esta actividad");
-        }
-    } else {
-        $error_txt .= BorrarActividad::ejecutar($Qid_activ);
-    }
-}
+/** @var ActividadEliminar $useCase */
+$useCase = DependencyResolver::get(ActividadEliminar::class);
+$error_txt = $useCase->execute([
+    'sel' => $a_sel,
+    'id_activ' => $Qid_activ,
+]);
 
 ContestarJson::enviar($error_txt);

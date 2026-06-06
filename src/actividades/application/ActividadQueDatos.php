@@ -34,7 +34,7 @@ final class ActividadQueDatos
         $oActividadTipo = new ActividadTipo();
         $oActividadTipo->setPerm_jefe(!empty($input['perm_jefe']));
         $idTipo = $input['id_tipo_activ'] ?? 0;
-        if ($idTipo === '' || $idTipo === null) {
+        if ($idTipo === '') {
             $oActividadTipo->setId_tipo_activ(0);
         } elseif (is_numeric((string)$idTipo)) {
             $oActividadTipo->setId_tipo_activ((int)$idTipo);

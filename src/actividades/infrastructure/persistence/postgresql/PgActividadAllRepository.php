@@ -12,6 +12,8 @@ use src\planning\domain\value_objects\PlanningStyle;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\permisos\domain\PermisosActividades;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\curso_est;
@@ -35,10 +37,8 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     public function __construct(TiposActividades $tiposActividades)
     {
         $this->tiposActividades = $tiposActividades;
-        $oDbl = $GLOBALS['oDBPC'];
-        $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
-        $this->setoDbl_select($oDbl_Select);
+        $this->setoDbl(GlobalPdo::get('oDBPC'));
+        $this->setoDbl_select(GlobalPdo::get('oDBPC_Select'));
         $this->setNomTabla('a_actividades_all');
     }
 
@@ -55,7 +55,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
      * Se requiere del array $_SESSION['oPermActividades'] para saber si se tiene permisos para ver...
      *
      */
-    public function actividadesDeUnaCasa(int $id_ubi, DateTimeLocal $oFini, DateTimeLocal $oFfin, $cdc_sel = 0): array
+    public function actividadesDeUnaCasa(int $id_ubi, DateTimeLocal $oFini, DateTimeLocal $oFfin, int $cdc_sel = 0): array
     {
         $oIniPlanning = $oFini;
         $a = 0;
@@ -89,8 +89,16 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             $id_activ = $oActividad->getId_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $oF_ini_act = $oActividad->getF_ini();
+            if (!($oF_ini_act instanceof DateTimeLocal)) {
+                $a++;
+                continue;
+            }
             $h_ini = $oActividad->getH_ini();
             $oF_fin_act = $oActividad->getF_fin();
+            if (!($oF_fin_act instanceof DateTimeLocal)) {
+                $a++;
+                continue;
+            }
             $h_fin = $oActividad->getH_fin();
             $dl_org = $oActividad->getDl_org();
             $nom_activ = $oActividad->getNom_activ();
@@ -114,8 +122,13 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             $hfi = (string)$h_fin?->format('H:i');
 
             // mirar permisos.
-            $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-            $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+            $oPermSesion = $_SESSION['oPermActividades'] ?? null;
+            if (!($oPermSesion instanceof PermisosActividades)) {
+                $a++;
+                continue;
+            }
+            $oPermSesion->setActividad($id_activ, (string) $id_tipo_activ, $dl_org);
+            $oPermActiv = $oPermSesion->getPermisoActual('datos');
 
             if ($oPermActiv->have_perm_activ('ocupado') === false) {
                 $a++;
@@ -154,14 +167,13 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         if ($a > 0) {
             return $a_cdc;
         }
-
         return [];
     }
 
     /**
      * retorna si hi ha una activitat coincident en dates de l'altre secció.
      */
-    public function getCoincidencia($oActividad): bool
+    public function getCoincidencia(ActividadAll $oActividad): bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTablaSelect();
@@ -172,8 +184,11 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $id = (string)$id_tipo_activ; // para convertir id_tipo_activ en un string.
         $seccion = ($id[0] === "1") ? 2 : 1;
         $oFini0 = $oActividad->getF_ini();
-        $oFini1 = clone $oFini0;
         $oFfin0 = $oActividad->getF_fin();
+        if (!($oFini0 instanceof DateTimeLocal) || !($oFfin0 instanceof DateTimeLocal)) {
+            return false;
+        }
+        $oFini1 = clone $oFini0;
         $oFfin1 = clone $oFfin0;
         $oFini0->sub(new DateInterval($interval));
         $oFini1->add(new DateInterval($interval));
@@ -190,15 +205,21 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
 
         //echo "sql: $sql<br>";
         $stmt = $this->prepareAndExecute($oDbl, $sql, [], __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
-        return $stmt->fetchColumn() > 0;
+        return (int) $stmt->fetchColumn() > 0;
     }
 
     /**
      * retorna l'array amb el id_ubi de les activitats sel·leccionades
      *
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<int|null>
      */
-    public function getUbis($aWhere = [], $aOperators = []): array
+    public function getUbis(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTablaSelect();
@@ -219,25 +240,34 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi !== '') $sCondi = " WHERE " . $sCondi;
-        if (isset($GLOBALS['oGestorSessioDelegación'])) {
-            $sLimit = $GLOBALS['oGestorSessioDelegación']->getLimitPaginador("$nom_tabla", $sCondi, $aWhere);
-        } else {
-            $sLimit = '';
-        }
+        $sLimit = $this->getLimitPaginador("$nom_tabla", $sCondi, $aWhere);
         $sOrdre = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
-        if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
+        $ordreUbis = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreUbis) && $ordreUbis !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreUbis;
+        }
+        unset($aWhere['_ordre']);
         $sQry = "SELECT id_ubi FROM $nom_tabla " . $sCondi . " GROUP BY id_ubi" . $sOrdre;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aUbis = [];
         foreach ($stmt as $aDades) {
-            $aUbis[] = $aDades['id_ubi'];
+            if (!is_array($aDades)) {
+                continue;
+            }
+            $idUbi = $aDades['id_ubi'] ?? null;
+            $aUbis[] = is_numeric($idUbi) ? (int) $idUbi : null;
         }
         return $aUbis;
     }
 
-    public function getArrayActividadesDeTipo($sid_tipo = '......', $scondicion = ''): array
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayActividadesDeTipo(string $sid_tipo = '......', string $scondicion = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTablaSelect();
@@ -246,23 +276,37 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
 	   	   WHERE id_tipo_activ::text ~ '" . $sid_tipo . "' $scondicion
 		   ORDER by f_ini";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         foreach ($stmt as $aClave) {
-            $clave = $aClave[0];
-            $val = $aClave[1];
-            $aOpciones[$clave] = $val;
+            if (!is_array($aClave)) {
+                continue;
+            }
+            $clave = $aClave[0] ?? null;
+            $val = $aClave[1] ?? '';
+            if (is_int($clave) || is_string($clave)) {
+                $aOpciones[$clave] = is_scalar($val) ? (string) $val : '';
+            }
         }
         return $aOpciones;
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayActividadesEstudios(): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTablaSelect();
 
         $cond_nivel_stgr = "(nivel_stgr < 6 OR nivel_stgr=11)";
-        $any_final = $_SESSION['oConfig']?->any_final_curs('est') ?? date('Y');
+        $oConfig = $_SESSION['oConfig'] ?? null;
+        $any_final = is_object($oConfig) && method_exists($oConfig, 'any_final_curs')
+            ? (int) $oConfig->any_final_curs('est')
+            : (int) date('Y');
         $any = $any_final - 2;
         $inicurs = curso_est("inicio", $any, "est")->format('Y-m-d');
         $scondicion = "AND f_ini > '$inicurs'";
@@ -271,12 +315,20 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
 	   	   WHERE " . $cond_nivel_stgr . " $scondicion
 		   ORDER by f_ini";
         $stmt = $this->prepareAndExecute($oDbl, $sQuery, [], __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         foreach ($stmt as $aClave) {
-            $clave = $aClave[0];
-            $val = $aClave[1];
-            $aOpciones[$clave] = $val;
+            if (!is_array($aClave)) {
+                continue;
+            }
+            $clave = $aClave[0] ?? null;
+            $val = $aClave[1] ?? '';
+            if (is_int($clave) || is_string($clave)) {
+                $aOpciones[$clave] = is_scalar($val) ? (string) $val : '';
+            }
         }
         return $aOpciones;
     }
@@ -284,8 +336,11 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     /**
      * retorna l'array de id d'Actividad
      *
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return array<string, int>
      */
-    public function getArrayIdsWithKeyFini($aWhere = [], $aOperators = []): array
+    public function getArrayIdsWithKeyFini(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTablaSelect();
@@ -303,23 +358,30 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
-        if (isset($GLOBALS['oGestorSessioDelegación'])) {
-            $sLimit = $GLOBALS['oGestorSessioDelegación']->getLimitPaginador('a_actividades', $sCondi, $aWhere);
-        } else {
-            $sLimit = '';
-        }
+        $sLimit = $this->getLimitPaginador('a_actividades', $sCondi, $aWhere);
         $sOrdre = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
-        if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
+        $ordreIds = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreIds) && $ordreIds !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreIds;
+        }
+        unset($aWhere['_ordre']);
         $sQry = "SELECT * FROM $nom_tabla" . $sCondi . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $i = 0;
         $aListaId = [];
         foreach ($stmt as $aDades) {
+            if (!is_array($aDades)) {
+                continue;
+            }
             $i++;
-            $f_ini_iso = $aDades['f_ini'] . '#' . $i; // Añado $i por si empiezan el mismo dia.
-            $aListaId[$f_ini_iso] = $aDades['id_activ'];
+            $fIni = $aDades['f_ini'] ?? '';
+            $f_ini_iso = (is_scalar($fIni) ? (string) $fIni : '') . '#' . $i;
+            $idActiv = $aDades['id_activ'] ?? 0;
+            $aListaId[$f_ini_iso] = is_numeric($idActiv) ? (int) $idActiv : 0;
         }
         return $aListaId;
     }
@@ -327,11 +389,9 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ActividadAll
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActividadAll
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<ActividadAll>
      */
     public function getActividades(array $aWhere = [], array $aOperators = []): array
     {
@@ -368,20 +428,25 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
@@ -394,7 +459,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             $ActividadAll = ActividadAll::fromArray($aDatos);
             $ActividadAllSet->add($ActividadAll);
         }
-        return $ActividadAllSet->getTot();
+        return array_values($ActividadAllSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -463,7 +528,10 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
-        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
+        return $this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_activ): bool
@@ -471,36 +539,42 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ = $id_activ";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_activ): array|bool
+    public function datosById(int $id_activ): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTablaSelect();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ = $id_activ";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
-            $aDatos['h_ini'] = (new ConverterDate('time', $aDatos['h_ini']))->fromPg();
-            $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
-            $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
+        if (!is_array($aDatos)) {
+            return false;
         }
-        return $aDatos;
+        $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
+        $aDatos['h_ini'] = (new ConverterDate('time', $aDatos['h_ini']))->fromPg();
+        $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
+        $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 
@@ -510,10 +584,22 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     public function findById(int $id_activ): ?ActividadAll
     {
         $aDatos = $this->datosById($id_activ);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
-        // Usa el método fromArray() del trait Hydratable (más limpio)
         return ActividadAll::fromArray($aDatos);
+    }
+
+    /**
+     * @param array<string, mixed> $aWhere
+     */
+    private function getLimitPaginador(string $nomTabla, string $sCondi, array $aWhere): string
+    {
+        $oGestor = $GLOBALS['oGestorSessioDelegación'] ?? null;
+        if (is_object($oGestor) && method_exists($oGestor, 'getLimitPaginador')) {
+            return (string) $oGestor->getLimitPaginador($nomTabla, $sCondi, $aWhere);
+        }
+
+        return '';
     }
 }

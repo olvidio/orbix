@@ -298,3 +298,24 @@ function input_int(array $input, string $key, int $default = 0): int
 
     return $default;
 }
+
+/**
+ * @param array<string, mixed> $input
+ * @return list<string>
+ */
+function input_string_list(array $input, string $key): array
+{
+    if (!isset($input[$key]) || !is_array($input[$key])) {
+        return [];
+    }
+    $result = [];
+    foreach ($input[$key] as $item) {
+        if (is_string($item)) {
+            $result[] = $item;
+        } elseif (is_int($item) || is_float($item)) {
+            $result[] = (string) $item;
+        }
+    }
+
+    return $result;
+}

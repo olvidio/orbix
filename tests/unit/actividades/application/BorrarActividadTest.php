@@ -17,24 +17,6 @@ use Tests\myTest;
  */
 class BorrarActividadTest extends myTest
 {
-    private mixed $previousContainer;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    public function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_dl_propia_proyecto_eliminar_ok_devuelve_vacio(): void
     {
         $actividad = $this->createMock(ActividadAll::class);
@@ -48,12 +30,9 @@ class BorrarActividadTest extends myTest
         $dlRepo = $this->createMock(ActividadDlRepositoryInterface::class);
         $dlRepo->expects($this->once())->method('Eliminar')->with($actividad)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerWith([
-            ActividadAllRepositoryInterface::class => $allRepo,
-            ActividadDlRepositoryInterface::class => $dlRepo,
-        ]);
+        $useCase = new BorrarActividad($allRepo, $dlRepo, $this->createMock(ActividadExRepositoryInterface::class), $this->createMock(ImportadaRepositoryInterface::class));
 
-        $this->assertSame('', BorrarActividad::ejecutar(10));
+        $this->assertSame('', $useCase->ejecutar(10));
     }
 
     public function test_dl_propia_proyecto_eliminar_falla_devuelve_mensaje(): void
@@ -70,12 +49,9 @@ class BorrarActividadTest extends myTest
         $dlRepo->method('Eliminar')->willReturn(false);
         $dlRepo->method('getErrorTxt')->willReturn('detalle');
 
-        $GLOBALS['container'] = $this->containerWith([
-            ActividadAllRepositoryInterface::class => $allRepo,
-            ActividadDlRepositoryInterface::class => $dlRepo,
-        ]);
+        $useCase = new BorrarActividad($allRepo, $dlRepo, $this->createMock(ActividadExRepositoryInterface::class), $this->createMock(ImportadaRepositoryInterface::class));
 
-        $out = BorrarActividad::ejecutar(1);
+        $out = $useCase->ejecutar(1);
         $this->assertStringContainsString('no se ha eliminado', $out);
         $this->assertStringContainsString('detalle', $out);
     }
@@ -94,12 +70,9 @@ class BorrarActividadTest extends myTest
         $dlRepo = $this->createMock(ActividadDlRepositoryInterface::class);
         $dlRepo->expects($this->once())->method('Guardar')->with($actividad)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerWith([
-            ActividadAllRepositoryInterface::class => $allRepo,
-            ActividadDlRepositoryInterface::class => $dlRepo,
-        ]);
+        $useCase = new BorrarActividad($allRepo, $dlRepo, $this->createMock(ActividadExRepositoryInterface::class), $this->createMock(ImportadaRepositoryInterface::class));
 
-        $this->assertSame('', BorrarActividad::ejecutar(2));
+        $this->assertSame('', $useCase->ejecutar(2));
     }
 
     public function test_otra_dl_importada_elimina_importada(): void
@@ -117,12 +90,9 @@ class BorrarActividadTest extends myTest
         $impRepo->expects($this->once())->method('findById')->with(3)->willReturn($importada);
         $impRepo->expects($this->once())->method('Eliminar')->with($importada);
 
-        $GLOBALS['container'] = $this->containerWith([
-            ActividadAllRepositoryInterface::class => $allRepo,
-            ImportadaRepositoryInterface::class => $impRepo,
-        ]);
+        $useCase = new BorrarActividad($allRepo, $this->createMock(ActividadDlRepositoryInterface::class), $this->createMock(ActividadExRepositoryInterface::class), $impRepo);
 
-        $this->assertSame('', BorrarActividad::ejecutar(3));
+        $this->assertSame('', $useCase->ejecutar(3));
     }
 
     public function test_otra_dl_ex_marca_borrable_en_repositorio_ex(): void
@@ -138,29 +108,8 @@ class BorrarActividadTest extends myTest
         $exRepo = $this->createMock(ActividadExRepositoryInterface::class);
         $exRepo->expects($this->once())->method('Guardar')->with($actividad)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerWith([
-            ActividadAllRepositoryInterface::class => $allRepo,
-            ActividadExRepositoryInterface::class => $exRepo,
-        ]);
+        $useCase = new BorrarActividad($allRepo, $this->createMock(ActividadDlRepositoryInterface::class), $exRepo, $this->createMock(ImportadaRepositoryInterface::class));
 
-        $this->assertSame('', BorrarActividad::ejecutar(4));
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerWith(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!isset($this->services[$id])) {
-                    throw new \RuntimeException('Servicio DI no registrado en test: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        $this->assertSame('', $useCase->ejecutar(4));
     }
 }

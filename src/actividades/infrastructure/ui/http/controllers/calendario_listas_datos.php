@@ -6,6 +6,7 @@
  */
 
 use src\actividades\application\CalendarioListasDatos;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
@@ -19,7 +20,8 @@ $input = [
     'id_cdc' => (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
 ];
 
-$useCase = new CalendarioListasDatos();
+/** @var CalendarioListasDatos $useCase */
+$useCase = DependencyResolver::get(CalendarioListasDatos::class);
 $data = $useCase->ejecutar($input);
 
 ContestarJson::enviar('', $data);

@@ -54,7 +54,7 @@ class Repeticion
      */
     public function getId_repeticion(): int
     {
-        return $this->id_repeticion->value();
+        return $this->id_repeticion->value() ?? 0;
     }
 
     /**
@@ -111,9 +111,11 @@ class Repeticion
 
     public function setRepeticionVo(RepeticionText|string|null $texto): void
     {
-        $this->repeticion = $texto instanceof RepeticionText
-            ? $texto
-            : RepeticionText::fromNullableString($texto);
+        if ($texto instanceof RepeticionText) {
+            $this->repeticion = $texto;
+        } elseif (is_string($texto) && $texto !== '') {
+            $this->repeticion = new RepeticionText($texto);
+        }
     }
 
     /**
@@ -147,9 +149,11 @@ class Repeticion
 
     public function setTemporadaVo(TemporadaCode|string|null $texto): void
     {
-        $this->temporada = $texto instanceof TemporadaCode
-            ? $texto
-            : TemporadaCode::fromNullableString($texto);
+        if ($texto instanceof TemporadaCode) {
+            $this->temporada = $texto;
+        } elseif (is_string($texto) && $texto !== '') {
+            $this->temporada = new TemporadaCode($texto);
+        }
     }
 
 
@@ -203,6 +207,9 @@ class Repeticion
         return 'id_repeticion';
     }
 
+    /**
+     * @return list<mixed>
+     */
     public function getDatosCampos(): array
     {
         $oRepeticionSet = new Set();
@@ -210,7 +217,7 @@ class Repeticion
         $oRepeticionSet->add($this->getDatosRepeticion());
         $oRepeticionSet->add($this->getDatosTemporada());
         $oRepeticionSet->add($this->getDatosTipo());
-        return $oRepeticionSet->getTot();
+        return array_values($oRepeticionSet->getTot());
     }
 
     /**

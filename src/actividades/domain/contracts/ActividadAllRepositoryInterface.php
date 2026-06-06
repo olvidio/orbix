@@ -18,24 +18,40 @@ use src\shared\domain\value_objects\DateTimeLocal;
 interface ActividadAllRepositoryInterface
 {
 
-    public function actividadesDeUnaCasa(int $id_ubi, DateTimeLocal $oFini, DateTimeLocal $oFfin, $cdc_sel = 0): array;
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function actividadesDeUnaCasa(int $id_ubi, DateTimeLocal $oFini, DateTimeLocal $oFfin, int $cdc_sel = 0): array;
 
-    public function getCoincidencia($oActividad): bool;
+    public function getCoincidencia(ActividadAll $oActividad): bool;
 
-    public function getUbis($aWhere = [], $aOperators = []): array;
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<int|null>
+     */
+    public function getUbis(array $aWhere = [], array $aOperators = []): array;
 
-    public function getArrayActividadesDeTipo($sid_tipo = '......', $scondicion = ''): array;
+    /**
+     * @return array<int, string>
+     */
+    public function getArrayActividadesDeTipo(string $sid_tipo = '......', string $scondicion = ''): array;
 
-    public function getArrayIdsWithKeyFini($aWhere = [], $aOperators = []): array;
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return array<string, int>
+     */
+    public function getArrayIdsWithKeyFini(array $aWhere = [], array $aOperators = []): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadAll
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActividadAll
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ActividadAll>
      */
     public function getActividades(array $aWhere = [], array $aOperators = []): array;
 
@@ -55,10 +71,9 @@ interface ActividadAllRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_activ): array|bool;
+    public function datosById(int $id_activ): array|false;
 
     /**
      * Busca la clase con id_activ en el repositorio.

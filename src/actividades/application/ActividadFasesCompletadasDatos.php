@@ -12,6 +12,11 @@ use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
  */
 final class ActividadFasesCompletadasDatos
 {
+    public function __construct(
+        private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+    ) {
+    }
+
     /**
      * @return array{fases_completadas: list<int>}
      */
@@ -21,9 +26,9 @@ final class ActividadFasesCompletadasDatos
             return ['fases_completadas' => []];
         }
 
-        $repo = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $repo = $this->actividadProcesoTareaRepository;
         $fases = $repo->getFasesCompletadas($idActiv);
 
-        return ['fases_completadas' => array_map(static fn ($id) => (int)$id, $fases)];
+        return ['fases_completadas' => array_values(array_map(static fn ($id) => (int) $id, $fases))];
     }
 }

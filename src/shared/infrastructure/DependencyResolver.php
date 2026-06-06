@@ -10,6 +10,11 @@ namespace src\shared\infrastructure;
  */
 final class DependencyResolver
 {
+    /**
+     * @template T of object
+     * @param class-string<T> $id
+     * @return T
+     */
     public static function get(string $id): object
     {
         return $GLOBALS['container']->get($id);

@@ -9,39 +9,12 @@ use Tests\myTest;
 
 final class ListaSrCsvQueDatosTest extends myTest
 {
-    private mixed $previousContainer;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    public function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_sin_preferencia_usa_defaults(): void
     {
         $prefRepo = $this->createMock(PreferenciaRepositoryInterface::class);
         $prefRepo->method('findById')->willReturn(null);
 
-        $GLOBALS['container'] = new class($prefRepo) {
-            public function __construct(private readonly object $prefRepo) {}
-
-            public function get(string $id): object
-            {
-                return $this->prefRepo;
-            }
-        };
-
-        $out = (new ListaSrCsvQueDatos())->ejecutar();
+        $out = (new ListaSrCsvQueDatos($prefRepo))->ejecutar();
 
         $this->assertSame('curso_ca', $out['periodo']);
         $this->assertSame('', $out['sel_ubis']);
@@ -64,16 +37,7 @@ final class ListaSrCsvQueDatosTest extends myTest
         $prefRepo = $this->createMock(PreferenciaRepositoryInterface::class);
         $prefRepo->method('findById')->willReturn($pref);
 
-        $GLOBALS['container'] = new class($prefRepo) {
-            public function __construct(private readonly object $prefRepo) {}
-
-            public function get(string $id): object
-            {
-                return $this->prefRepo;
-            }
-        };
-
-        $out = (new ListaSrCsvQueDatos())->ejecutar();
+        $out = (new ListaSrCsvQueDatos($prefRepo))->ejecutar();
 
         $this->assertSame('actual', $out['periodo']);
         $this->assertSame('7,8', $out['sel_ubis']);

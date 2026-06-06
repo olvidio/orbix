@@ -4,6 +4,8 @@ namespace src\actividades\application;
 
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 
+use function src\shared\domain\helpers\input_string;
+
 /**
  * Devuelve el id_tarifa asociado a un id_tipo_activ. Portado del case
  * `id_tarifa` del dispatcher legacy.
@@ -15,19 +17,27 @@ use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryI
  */
 class ActividadTipoGetIdTarifa
 {
+    public function __construct(
+        private RelacionTarifaTipoActividadRepositoryInterface $relacionTarifaTipoActividadRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(array $input = []): string
     {
-        $id_tipo_activ = (string)($input['entrada'] ?? '');
+        $id_tipo_activ = input_string($input, 'entrada');
         $aWhere = [
             'id_tipo_activ' => $id_tipo_activ,
             '_ordre' => 'id_serie',
         ];
 
-        $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
+        $RelacionTarifaTipoActividadRepository = $this->relacionTarifaTipoActividadRepository;
         $cActiTipoTarifa = $RelacionTarifaTipoActividadRepository->getTipoActivTarifas($aWhere);
 
-        if (!empty($cActiTipoTarifa) && count($cActiTipoTarifa) > 0) {
-            return (string)$cActiTipoTarifa[0]->getId_tarifa();
+        if ($cActiTipoTarifa !== []) {
+            return (string) $cActiTipoTarifa[0]->getId_tarifa();
         }
 
         return '';

@@ -4,9 +4,10 @@
  */
 
 use src\shared\web\ContestarJson;
+use src\shared\infrastructure\DependencyResolver;
 use src\actividades\application\ActividadStatusLabelsDatos;
 
 $withAll = filter_input(INPUT_POST, 'with_all') === 't';
-$data = (new ActividadStatusLabelsDatos())->execute($withAll);
+$data = DependencyResolver::get(ActividadStatusLabelsDatos::class)->execute($withAll);
 
 ContestarJson::enviar('', $data);

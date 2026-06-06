@@ -8,6 +8,7 @@
  */
 
 use src\actividades\application\ActividadVerDatos;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $Qid_activ = (int)filter_input(INPUT_POST, 'id_activ');
@@ -23,7 +24,8 @@ $Qlugar_esp = (string)filter_input(INPUT_POST, 'lugar_esp');
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 $QcalcTarifa = (int)filter_input(INPUT_POST, 'calc_tarifa_inicial');
 
-$useCase = new ActividadVerDatos();
+/** @var ActividadVerDatos $useCase */
+$useCase = DependencyResolver::get(ActividadVerDatos::class);
 $data = $useCase->ejecutar([
     'id_activ' => $Qid_activ,
     'isfsv' => $Qisfsv,

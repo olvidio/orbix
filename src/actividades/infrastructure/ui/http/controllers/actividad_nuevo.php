@@ -10,6 +10,7 @@
  */
 
 use src\actividades\application\ActividadNueva;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $Qinom_tipo_val = (string)filter_input(INPUT_POST, 'inom_tipo_val');
@@ -46,7 +47,9 @@ $datosActividad = [
 
 $error_txt = '';
 try {
-    ActividadNueva::actividadNueva($datosActividad);
+    /** @var ActividadNueva $useCase */
+    $useCase = DependencyResolver::get(ActividadNueva::class);
+    $useCase->actividadNueva($datosActividad);
 } catch (Exception $e) {
     $error_txt = $e->getMessage();
 }

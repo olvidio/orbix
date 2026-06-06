@@ -5,18 +5,31 @@ namespace src\actividades\application;
 use frontend\actividades\helpers\TipoActivMetadataLoader;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 
+use function src\shared\domain\helpers\input_int;
+
 /**
  * Elimina un tipo de actividad. Portado del case `eliminar` del dispatcher
  * legacy.
  */
 class TipoActivEliminar
 {
+    public function __construct(
+        private TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(array $input = []): string
     {
-        $Qid_tipo_activ = (int)($input['id_tipo_activ'] ?? 0);
+        $Qid_tipo_activ = input_int($input, 'id_tipo_activ');
 
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $TipoDeActividadRepository = $this->tipoDeActividadRepository;
         $oTipoDeActividad = $TipoDeActividadRepository->findById($Qid_tipo_activ);
+        if ($oTipoDeActividad === null) {
+            return _('tipo de actividad no encontrado');
+        }
         if ($TipoDeActividadRepository->Eliminar($oTipoDeActividad) === false) {
             return _("hay un error, no se ha eliminado");
         }

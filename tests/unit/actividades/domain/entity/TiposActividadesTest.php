@@ -19,22 +19,22 @@ final class TiposActividadesTest extends myTest
                 return [];
             }
 
-            public function getTiposDeProcesos($sid_tipo_activ = '......', $bdl_propia = true, $sfsv = ''): array
+            public function getTiposDeProcesos(string $sid_tipo_activ = '......', bool $bdl_propia = true, string $sfsv = ''): array
             {
                 return [];
             }
 
-            public function getId_tipoPosibles($regexp, $filtro_regexp_txt): array
+            public function getId_tipoPosibles(string $regexp, string $filtro_regexp_txt): array
             {
                 return [];
             }
 
-            public function getNom_tipoPosibles($num_digitos, $filtro_regexp_txt): array
+            public function getNom_tipoPosibles(int $num_digitos, string $filtro_regexp_txt): array
             {
                 return ['tipo_nom' => [], 'nom_tipo' => []];
             }
 
-            public function getAsistentesPosibles($aText, $filtro_regex_txt): array
+            public function getAsistentesPosibles(array $aText, string $filtro_regex_txt): array
             {
                 return [];
             }
@@ -44,12 +44,12 @@ final class TiposActividadesTest extends myTest
                 return [];
             }
 
-            public function getSfsvPosibles($aText): array
+            public function getSfsvPosibles(array $aText): array
             {
                 return [];
             }
 
-            public function getTiposDeActividades(array $aWhere = [], array $aOperators = []): array|bool
+            public function getTiposDeActividades(array $aWhere = [], array $aOperators = []): array
             {
                 return [];
             }
@@ -74,9 +74,9 @@ final class TiposActividadesTest extends myTest
                 return '';
             }
 
-            public function datosById(int $id_tipo_activ): array|bool
+            public function datosById(int $id_tipo_activ): array|false
             {
-                return [];
+                return false;
             }
 
             public function findById(int $id_tipo_activ): ?TipoDeActividad

@@ -12,7 +12,8 @@
  */
 
 use src\shared\web\ContestarJson;
+use src\shared\infrastructure\DependencyResolver;
 use src\actividades\application\TipoActivMetadata;
 
-$payload = (new TipoActivMetadata())->execute();
+$payload = DependencyResolver::get(TipoActivMetadata::class)->execute();
 ContestarJson::enviar('', $payload);

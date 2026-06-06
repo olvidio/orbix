@@ -5,15 +5,20 @@ namespace src\actividades\application;
 use frontend\shared\helpers\TipoActivGestionFormHashCompose;
 use src\actividades\domain\entity\TiposActividades;
 
+use function src\shared\domain\helpers\input_int;
+
 /**
  * Devuelve el HTML del formulario para modificar/eliminar un tipo de actividad
  * existente. Portado del case `form_modificar` del dispatcher legacy.
  */
 class TipoActivFormModificar
 {
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(array $input = []): string
     {
-        $Qid_tipo_activ = (int)($input['id_tipo_activ'] ?? 0);
+        $Qid_tipo_activ = input_int($input, 'id_tipo_activ');
         $oTiposActividades = new TiposActividades($Qid_tipo_activ);
 
         $nom_actividad = $oTiposActividades->getSfsvText();

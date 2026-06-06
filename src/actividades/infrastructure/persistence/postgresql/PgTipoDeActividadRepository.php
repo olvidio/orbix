@@ -9,6 +9,7 @@ use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\entity\TipoDeActividad;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\is_true;
@@ -29,10 +30,8 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
-        $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
-        $this->setoDbl_select($oDbl_Select);
+        $this->setoDbl(GlobalPdo::get('oDBC'));
+        $this->setoDbl_select(GlobalPdo::get('oDBC_Select'));
         $this->setNomTabla('a_tipos_actividad');
     }
 
@@ -43,7 +42,9 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         $query = "SELECT id_tipo_activ
 		   	FROM $nom_tabla  where id_tipo_activ::text ~'" . $sid_tipo_activ . "' order by id_tipo_activ";
         $stmt = $this->pdoQuery($oDbl, $query, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return [];
+        }
         $a_id_tipos = [];
         foreach ($stmt->fetchAll() as $row) {
             $id_tipo_activ = $row['id_tipo_activ'];
@@ -57,14 +58,9 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
     }
 
     /**
-     * retorna l'array de tipos de procesos posibles per el tipus d'activitat.
-     *
-     * @param string sid_tipo_activ
-     * @param boolean dl_propia
-     * @param string ssfsv ( '',1,2,all)
-     * @return array|bool
+     * @return list<int>
      */
-    public function getTiposDeProcesos($sid_tipo_activ = '......', $bdl_propia = true, $sfsv = ''): array
+    public function getTiposDeProcesos(string $sid_tipo_activ = '......', bool $bdl_propia = true, string $sfsv = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -74,10 +70,10 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
             case 'all':
                 $a_sfsv = [1, 2];
                 break;
-            case 1:
+            case '1':
                 $a_sfsv = [1];
                 break;
-            case 2:
+            case '2':
                 $a_sfsv = [2];
                 break;
             default:
@@ -106,63 +102,94 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
                         GROUP BY $nom_tipo_proceso_ex";
             }
             $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) {
+                return [];
+            }
             foreach ($stmt as $aDades) {
-                if (!empty($aDades['id_tipo_proceso'])) {
-                    $aTiposDeProcesos[] = $aDades['id_tipo_proceso'];
+                if (!is_array($aDades)) {
+                    continue;
+                }
+                $idTipoProceso = $aDades['id_tipo_proceso'] ?? null;
+                if (is_numeric($idTipoProceso)) {
+                    $aTiposDeProcesos[] = (int) $idTipoProceso;
                 }
             }
         }
         return $aTiposDeProcesos;
     }
 
-    public function getId_tipoPosibles($regexp, $filtro_regexp_txt): array
+    public function getId_tipoPosibles(string $regexp, string $filtro_regexp_txt): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $query = "SELECT substring(id_tipo_activ::text from '" . $regexp . "')
 		   	FROM $nom_tabla  where id_tipo_activ::text ~'" . $filtro_regexp_txt . "' order by id_tipo_activ";
         $stmt = $this->pdoQuery($oDbl, $query, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return [];
+        }
         $a_id_tipos = [];
         foreach ($stmt->fetchAll() as $row) {
-            $id_tipo = $row[0];
-            $a_id_tipos[$id_tipo] = true;
+            if (!is_array($row)) {
+                continue;
+            }
+            $id_tipo = $row[0] ?? null;
+            if (is_int($id_tipo) || is_string($id_tipo)) {
+                $a_id_tipos[$id_tipo] = true;
+            }
         }
         return $a_id_tipos;
     }
 
-    public function getNom_tipoPosibles($num_digitos, $filtro_regexp_txt): array
+    public function getNom_tipoPosibles(int $num_digitos, string $filtro_regexp_txt): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $query = "SELECT * FROM $nom_tabla where id_tipo_activ::text ~'$filtro_regexp_txt' order by id_tipo_activ";
         $stmt = $this->pdoQuery($oDbl, $query, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return ['tipo_nom' => [], 'nom_tipo' => []];
+        }
         $tipo_nom = [];
         $nom_tipo = [];
         $i = 0;
         $char_ini = 6 - $num_digitos;
         foreach ($stmt->fetchAll() as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
             $i++;
-            $nom_tipo[$i] = $row['nombre'] . '#' . $row['id_tipo_activ'];
-            $num = substr($row['id_tipo_activ'], $char_ini, $num_digitos);
-            $tipo_nom[$num] = $row['nombre'];
+            $nombreRaw = $row['nombre'] ?? '';
+            $idTipoRaw = $row['id_tipo_activ'] ?? '';
+            $nombre = is_scalar($nombreRaw) ? (string) $nombreRaw : '';
+            $idTipo = is_scalar($idTipoRaw) ? (string) $idTipoRaw : '';
+            $nom_tipo[$i] = $nombre . '#' . $idTipo;
+            $num = substr($idTipo, $char_ini, $num_digitos);
+            $tipo_nom[$num] = $nombre;
         }
         return ['tipo_nom' => $tipo_nom,
             'nom_tipo' => $nom_tipo];
     }
 
-    public function getAsistentesPosibles($aText, $filtro_regex_txt): array
+    public function getAsistentesPosibles(array $aText, string $filtro_regex_txt): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $query_ta = "select substr(id_tipo_activ::text,2,1) as ta2
 			from $nom_tabla where id_tipo_activ::text ~'" . $filtro_regex_txt . "' group by ta2 order by ta2";
         $stmt = $this->pdoQuery($oDbl, $query_ta, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return [];
+        }
         $asistentes = [];
         foreach ($stmt->fetchAll() as $row) {
-            $asistentes[$row[0]] = $aText[$row[0]];
+            if (!is_array($row)) {
+                continue;
+            }
+            $key = $row[0] ?? null;
+            if (is_int($key) || is_string($key)) {
+                $asistentes[$key] = $aText[$key] ?? '';
+            }
         }
         return $asistentes;
     }
@@ -174,6 +201,10 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
      * @param string $expr_txt
      * @return string[]
      */
+    /**
+     * @param array<int|string, string> $aText
+     * @return array<int|string, string>
+     */
     public function getActividadesPosibles(int $num_digitos, array $aText, string $expr_txt): array
     {
         $oDbl = $this->getoDbl_Select();
@@ -181,35 +212,49 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         $query_ta = "select substr(id_tipo_activ::text,3,$num_digitos) as ta3
 			from $nom_tabla where id_tipo_activ::text ~'$expr_txt' group by ta3 order by ta3";
         $stmt = $this->pdoQuery($oDbl, $query_ta, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return [];
+        }
         $actividades = [];
         foreach ($stmt->fetchAll() as $row) {
-            $actividades[$row[0]] = $aText[$row[0]];
+            if (!is_array($row)) {
+                continue;
+            }
+            $key = $row[0] ?? null;
+            if (is_int($key) || is_string($key)) {
+                $actividades[$key] = $aText[$key] ?? '';
+            }
         }
         return $actividades;
     }
 
-    public function getSfsvPosibles($aText): array
+    public function getSfsvPosibles(array $aText): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "select substr(id_tipo_activ::text,1,1) as ta1 from $nom_tabla where id_tipo_activ::text ~ '' group by ta1 order by ta1";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return [];
+        }
         $sfsv = [];
         foreach ($stmt->fetchAll() as $row) {
-            $sfsv[$row[0]] = $aText[$row[0]];
+            if (!is_array($row)) {
+                continue;
+            }
+            $key = $row[0] ?? null;
+            if (is_int($key) || is_string($key)) {
+                $sfsv[$key] = $aText[$key] ?? '';
+            }
         }
         return $sfsv;
     }
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo TipoDeActividad
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo TipoDeActividad
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<TipoDeActividad>
      */
     public function getTiposDeActividades(array $aWhere = [], array $aOperators = []): array
     {
@@ -246,27 +291,31 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return [];
+        }
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $TipoDeActividad = TipoDeActividad::fromArray($aDatos);
             $TipoDeActividadSet->add($TipoDeActividad);
         }
-        return $TipoDeActividadSet->getTot();
+        return array_values($TipoDeActividadSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -310,7 +359,10 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
-        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
+        return $this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_tipo_activ): bool
@@ -318,7 +370,10 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tipo_activ = $id_tipo_activ";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -330,17 +385,26 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_tipo_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_tipo_activ): array|bool
+    public function datosById(int $id_tipo_activ): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tipo_activ = $id_tipo_activ";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 
@@ -350,7 +414,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
     public function findById(int $id_tipo_activ): ?TipoDeActividad
     {
         $aDatos = $this->datosById($id_tipo_activ);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return TipoDeActividad::fromArray($aDatos);

@@ -4,6 +4,10 @@ namespace src\actividades\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\contracts\RepeticionRepositoryInterface;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -17,13 +21,30 @@ use function src\shared\domain\helpers\is_true;
  */
 final class ActividadNuevoCursoEjecutar
 {
+    public function __construct(
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private RepeticionRepositoryInterface $repeticionRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array{html: string, copiadas: int}
+     */
     public function ejecutar(array $input): array
     {
-        $Qyear_ref = (int)($input['year_ref'] ?? 0);
-        $Qyear = (int)($input['year'] ?? 0);
+        $Qyear_ref = input_int($input, 'year_ref');
+        $Qyear = input_int($input, 'year');
         $ver_lista = !empty($input['ver_lista']);
 
-        $oNuevoCurso = new ActividadNuevoCurso();
+        $oNuevoCurso = new ActividadNuevoCurso(
+            $this->repeticionRepository,
+            $this->actividadDlRepository,
+            $this->centroEncargadoRepository,
+            $this->actividadProcesoTareaRepository,
+        );
         $oNuevoCurso->setRegistrarCambios(false);
         $oNuevoCurso->setVer_lista($ver_lista);
         $oNuevoCurso->setYear($Qyear);
@@ -35,7 +56,7 @@ final class ActividadNuevoCursoEjecutar
 
         $inicio_org = $Qyear_ref . '-1-1';
         $fin_org = $Qyear_ref . '-12-31';
-        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $ActividadDlRepository = $this->actividadDlRepository;
         $aWhere = [];
         $aOperador = [];
         $aWhere['dl_org'] = "'" . ConfigGlobal::mi_dele() . "','" . ConfigGlobal::mi_dele() . "f'";

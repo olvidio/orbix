@@ -10,36 +10,15 @@ use src\actividades\application\TipoActivUpdate;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\entity\TipoDeActividad;
 use src\actividades\domain\value_objects\TipoActivNombre;
-use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 
 final class TipoActivCrudApplicationTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_tipo_activ_nuevo_id_incorrecto_anexa_mensaje(): void
     {
         $repo = $this->createMock(TipoDeActividadRepositoryInterface::class);
         $repo->expects($this->once())->method('Guardar')->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerOne(TipoDeActividadRepositoryInterface::class, $repo);
-
-        $out = (new TipoActivNuevo())->execute([
+        $out = (new TipoActivNuevo($repo))->execute([
             'isfsv_val' => '1',
             'iasistentes_val' => '1',
             'iactividad_val' => '1',
@@ -54,9 +33,7 @@ final class TipoActivCrudApplicationTest extends TestCase
         $repo = $this->createMock(TipoDeActividadRepositoryInterface::class);
         $repo->method('Guardar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerOne(TipoDeActividadRepositoryInterface::class, $repo);
-
-        $out = (new TipoActivNuevo())->execute([
+        $out = (new TipoActivNuevo($repo))->execute([
             'isfsv_val' => '1',
             'iasistentes_val' => '1',
             'iactividad_val' => '1',
@@ -76,9 +53,7 @@ final class TipoActivCrudApplicationTest extends TestCase
         $repo->method('findById')->with(123456)->willReturn($entity);
         $repo->method('Guardar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerOne(TipoDeActividadRepositoryInterface::class, $repo);
-
-        $msg = (new TipoActivUpdate())->execute([
+        $msg = (new TipoActivUpdate($repo))->execute([
             'id_tipo_activ' => 123456,
             'nom_tipo_activ' => 'new',
         ]);
@@ -95,9 +70,7 @@ final class TipoActivCrudApplicationTest extends TestCase
         $repo->method('findById')->willReturn($entity);
         $repo->method('Guardar')->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerOne(TipoDeActividadRepositoryInterface::class, $repo);
-
-        $this->assertSame('', (new TipoActivUpdate())->execute([
+        $this->assertSame('', (new TipoActivUpdate($repo))->execute([
             'id_tipo_activ' => 123456,
             'nom_tipo_activ' => 'new',
         ]));
@@ -112,9 +85,7 @@ final class TipoActivCrudApplicationTest extends TestCase
         $repo->method('findById')->willReturn($entity);
         $repo->method('Eliminar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerOne(TipoDeActividadRepositoryInterface::class, $repo);
-
-        $msg = (new TipoActivEliminar())->execute(['id_tipo_activ' => 123456]);
+        $msg = (new TipoActivEliminar($repo))->execute(['id_tipo_activ' => 123456]);
         $this->assertStringContainsString('no se ha eliminado', $msg);
     }
 
@@ -127,9 +98,7 @@ final class TipoActivCrudApplicationTest extends TestCase
         $repo->method('findById')->willReturn($entity);
         $repo->method('Eliminar')->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerOne(TipoDeActividadRepositoryInterface::class, $repo);
-
-        $this->assertSame('', (new TipoActivEliminar())->execute(['id_tipo_activ' => 123456]));
+        $this->assertSame('', (new TipoActivEliminar($repo))->execute(['id_tipo_activ' => 123456]));
     }
 
     public function test_tipo_activ_lista_html_con_repositorio_vacio(): void
@@ -137,46 +106,7 @@ final class TipoActivCrudApplicationTest extends TestCase
         $repo = $this->createMock(TipoDeActividadRepositoryInterface::class);
         $repo->method('getTiposDeActividades')->willReturn([]);
 
-        $prefRepo = $this->createMock(PreferenciaRepositoryInterface::class);
-
-        $GLOBALS['container'] = new class($repo, $prefRepo) {
-            public function __construct(
-                private readonly object $tipoRepo,
-                private readonly object $prefRepo
-            ) {}
-
-            public function get(string $id): object
-            {
-                return match ($id) {
-                    TipoDeActividadRepositoryInterface::class => $this->tipoRepo,
-                    PreferenciaRepositoryInterface::class => $this->prefRepo,
-                    default => throw new \RuntimeException('Unexpected DI key: ' . $id),
-                };
-            }
-        };
-
-        $html = (new TipoActivLista())->execute();
+        $html = (new TipoActivLista($repo))->execute();
         $this->assertNotSame('', $html);
-    }
-
-    /**
-     * @param class-string $iface
-     */
-    private function containerOne(string $iface, object $service): object
-    {
-        return new class($iface, $service) {
-            public function __construct(
-                private readonly string $iface,
-                private readonly object $service
-            ) {}
-
-            public function get(string $id): object
-            {
-                if ($id !== $this->iface) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->service;
-            }
-        };
     }
 }

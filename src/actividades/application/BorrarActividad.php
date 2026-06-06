@@ -22,21 +22,31 @@ use src\actividades\domain\value_objects\StatusId;
  */
 class BorrarActividad
 {
-    public static function ejecutar(int $id_activ): string
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private ActividadExRepositoryInterface $actividadExRepository,
+        private ImportadaRepositoryInterface $importadaRepository,
+    ) {
+    }
+
+    public function ejecutar(int $id_activ): string
     {
         $error_txt = '';
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($id_activ);
+        $oActividad = $this->actividadAllRepository->findById($id_activ);
+        if ($oActividad === null) {
+            return _("actividad no encontrada");
+        }
 
-        $dl_org = $oActividad->getDl_org();
+        $dl_org = $oActividad->getDl_org() ?? '';
         $id_tabla = $oActividad->getId_tabla();
 
         // para des => dl y dlf:
-        $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
+        $dl_org_no_f = (string) preg_replace('/(\.*)f$/', '\1', $dl_org);
         $dl_propia = ConfigGlobal::mi_dele() === $dl_org_no_f;
 
         if ($dl_propia) {
-            $repoActividad = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+            $repoActividad = $this->actividadDlRepository;
             $status = $oActividad->getStatus();
             if (!empty($status) && $status === StatusId::PROYECTO) {
                 if ($repoActividad->Eliminar($oActividad) === false) {
@@ -51,11 +61,12 @@ class BorrarActividad
         } else {
             if ($id_tabla === 'dl') {
                 // No se puede eliminar una actividad de otra dl. Hay que borrarla como importada
-                $ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
-                $oImportada = $ImportadaRepository->findById($id_activ);
-                $ImportadaRepository->Eliminar($oImportada);
+                $oImportada = $this->importadaRepository->findById($id_activ);
+                if ($oImportada !== null) {
+                    $this->importadaRepository->Eliminar($oImportada);
+                }
             } else {
-                $repoActividad = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
+                $repoActividad = $this->actividadExRepository;
                 $oActividad->setStatus(StatusId::BORRABLE);
                 if ($repoActividad->Guardar($oActividad) === false) {
                     $error_txt = _("hay un error, no se ha guardado") . "\n" . $repoActividad->getErrorTxt();

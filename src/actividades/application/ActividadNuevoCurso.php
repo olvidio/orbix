@@ -11,6 +11,7 @@ use src\actividades\domain\value_objects\IdTablaCode;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\actividadescentro\domain\entity\CentroEncargado;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
@@ -22,6 +23,13 @@ use src\shared\domain\value_objects\TimeLocal;
  */
 class ActividadNuevoCurso
 {
+    public function __construct(
+        private RepeticionRepositoryInterface $repeticionRepository,
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+    ) {
+    }
 
     /**
      *
@@ -34,51 +42,38 @@ class ActividadNuevoCurso
      *
      * @var bool
      */
-    private $bVer_lista = FALSE;
-    /**
-     *
-     * @var integer
-     */
-    private $iyear_ref;
-    /**
-     *
-     * @var integer
-     */
-    private $iyear;
-    /**
-     *
-     * @var array
-     */
-    private $aRepeticion;
+    private bool $bVer_lista = false;
+    private int $iyear_ref = 0;
+    private int $iyear = 0;
+    /** @var array<int, int> */
+    private array $aRepeticion = [];
 
     /** @var list<string> */
     private array $avisosProceso = [];
 
-    private function getRepetiones()
+    /**
+     * @return array<int, int>
+     */
+    private function getRepetiones(): array
     {
-        if (!isset($this->aRepeticion)) {
-            $RepeticionRepository = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
+        if ($this->aRepeticion === []) {
+            $RepeticionRepository = $this->repeticionRepository;
             $cRepeticiones = $RepeticionRepository->getRepeticiones();
-            $this->aRepeticion = [];
             foreach ($cRepeticiones as $oRepeticion) {
                 $id_repeticion = $oRepeticion->getId_repeticion();
                 $TipoRepeticion = $oRepeticion->getTipoRepeticion();
-                $this->aRepeticion[$id_repeticion] = $TipoRepeticion;
+                if ($TipoRepeticion !== null) {
+                    $this->aRepeticion[$id_repeticion] = $TipoRepeticion;
+                }
             }
         }
         return $this->aRepeticion;
     }
 
-    /**
-     * Busca el solape de actividades en el periodo
-     *
-     * @param string date iso $inicio
-     * @param string date iso $fin
-     */
-    public function comprobar_solapes($inicio, $fin)
+    public function comprobar_solapes(string $inicio, string $fin): string
     {
         $txt = '';
-        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $ActividadDlRepository = $this->actividadDlRepository;
         $aWhere = [
             'dl_org' => ConfigGlobal::mi_delef(),
             'f_ini' => "'$inicio','$fin'",
@@ -100,12 +95,17 @@ class ActividadNuevoCurso
                 // cambio de ubi
                 continue; //salto al siguiente.
             }
-            $oF_fin = clone $cActividades[$i]->getF_fin();
+            $fFin = $cActividades[$i]->getF_fin();
+            $fIniNext = $cActividades[$i + 1]->getF_ini();
+            if (!($fFin instanceof DateTimeLocal) || !($fIniNext instanceof DateTimeLocal)) {
+                continue;
+            }
+            $oF_fin = clone $fFin;
             $h_fin = $this->horaComoTexto($cActividades[$i]->getH_fin(), '10:00:00');
             [$h, $m, $s] = array_pad(explode(':', $h_fin), 3, '0');
             $oF_fin->setTime((int) $h, (int) $m, (int) $s);
 
-            $oF_ini = clone $cActividades[$i + 1]->getF_ini();
+            $oF_ini = clone $fIniNext;
             $h_ini = $this->horaComoTexto($cActividades[$i + 1]->getH_ini(), '20:00:00');
             [$h, $m, $s] = array_pad(explode(':', $h_ini), 3, '0');
             $oF_ini->setTime((int) $h, (int) $m, (int) $s);
@@ -133,17 +133,10 @@ class ActividadNuevoCurso
         return $txt === '' ? $porDefecto : $txt;
     }
 
-    /**
-     * borra las actividades en proyecto para las fechas indicadas, y
-     * devuelve una lista con las actividades que no están en proyecto, y que no se han borrado.
-     *
-     * @param string date iso $f_ini
-     * @param string date iso $f_fin
-     */
-    function borrar_actividades_periodo($f_ini, $f_fin)
+    public function borrar_actividades_periodo(string $f_ini, string $f_fin): string
     {
         $txt = '';
-        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $ActividadDlRepository = $this->actividadDlRepository;
         $ActividadDlRepository->deleteActividadesEnPeriodoEnProyecto($f_ini, $f_fin);
 
         if (ConfigGlobal::is_app_installed('procesos')) {
@@ -170,8 +163,8 @@ class ActividadNuevoCurso
         // comprobar que no quedan actividades en otro estado
         $cActividades = $ActividadDlRepository->getArrayActividadesEnPeriodoNoEnProyecto($f_ini, $f_fin);
         $rta_txt = '';
-        foreach ($cActividades as $oActividad) {
-            $rta_txt .= $oActividad->getNom_activ() . "<br>";
+        foreach ($cActividades as $nom_activ) {
+            $rta_txt .= (string) $nom_activ . '<br>';
         }
         if (!empty($rta_txt)) {
             $txt .= _("actividades no eliminadas, porque su estado no es proyecto") . ":<br>";
@@ -180,7 +173,7 @@ class ActividadNuevoCurso
         return $txt;
     }
 
-    function crear_actividad($oActividadOrigen)
+    public function crear_actividad(ActividadAll $oActividadOrigen): string
     {
         $txt = '';
         $aRepeticion = $this->getRepetiones();
@@ -191,9 +184,12 @@ class ActividadNuevoCurso
             $txt .= "<br>";
             return $txt;
         }
-        $tipo = $aRepeticion[$id_repeticion];
+        $tipo = $aRepeticion[$id_repeticion] ?? 0;
         $oFini = $oActividadOrigen->getF_ini();
         $oFfin = $oActividadOrigen->getF_fin();
+        if (!($oFini instanceof DateTimeLocal) || !($oFfin instanceof DateTimeLocal)) {
+            return $txt . _('fechas de actividad no válidas') . '<br>';
+        }
         switch ($tipo) {
             case 1: // por dia de la semana
                 // miro si es bisiesto o si el anterior es bisiesto
@@ -219,8 +215,8 @@ class ActividadNuevoCurso
                 $oFini->add($dif_pascua);
                 $oFfin->add($dif_pascua);
                 break;
-            default: // El resto no se repite.
-                return;
+            default:
+                return $txt;
         }
         //cambio el nombre
         $f_ini_new = $oFini->getFromLocal();
@@ -231,13 +227,16 @@ class ActividadNuevoCurso
         $patron = '/^(.*)(\(.*?-.*?\))(.*)/';
         $sustitucion = '$1(' . $fechas_new . ')$3';
         $nom_activ_new = preg_replace($patron, $sustitucion, $nom_activ);
+        if (!is_string($nom_activ_new) || $nom_activ_new === '') {
+            $nom_activ_new = $nom_activ;
+        }
 
         if ($this->getVer_lista()) {
             echo "$tipo=> $fechas_new :: $nom_activ_new<br>";
         }
         //cambio el status a proyecto:
         $status = StatusId::PROYECTO;
-        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $ActividadDlRepository = $this->actividadDlRepository;
         $newId = $ActividadDlRepository->getNewId();
         $newIdActividad = $ActividadDlRepository->getNewIdActividad($newId);
         $oActividad = new ActividadAll();
@@ -262,8 +261,10 @@ class ActividadNuevoCurso
         $oActividad->setObserv_material($oActividadOrigen->getObserv_material());
         $oActividad->setLugar_esp($oActividadOrigen->getLugar_esp());
         $oActividad->setTarifa($oActividadOrigen->getTarifa());
-        $oActividad->setH_ini($oActividadOrigen->getH_ini());
-        $oActividad->setH_fin($oActividadOrigen->getH_fin());
+        $hIni = $oActividadOrigen->getH_ini();
+        $hFin = $oActividadOrigen->getH_fin();
+        $oActividad->setH_ini($hIni instanceof TimeLocal ? $hIni : null);
+        $oActividad->setH_fin($hFin instanceof TimeLocal ? $hFin : null);
         if ($ActividadDlRepository->Guardar($oActividad, $this->registrarCambios) === false) {
             echo "ERROR: no se ha guardado la actividad<br>";
             exit;
@@ -274,14 +275,17 @@ class ActividadNuevoCurso
 
         if (ConfigGlobal::is_app_installed('actividadescentro')) {
             // También copio los centros encargados.
-            $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
+            $CentroEncargadoRepository = $this->centroEncargadoRepository;
             $cEncargados = $CentroEncargadoRepository->getCentrosEncargados(array('id_activ' => $oActividadOrigen->getId_activ()));
             foreach ($cEncargados as $oCentroEncargado) {
+                if (!($oCentroEncargado instanceof CentroEncargado)) {
+                    continue;
+                }
                 $newEncargado = clone $oCentroEncargado;
                 $newEncargado->setId_activ($id_actividad_new);
                 if ($CentroEncargadoRepository->Guardar($newEncargado, $this->registrarCambios) === false) {
                     echo _("hay un error, no se ha guardado");
-                    echo "\n" . $newEncargado->getErrorTxt();
+                    echo "\n" . $CentroEncargadoRepository->getErrorTxt();
                 }
             }
         }
@@ -294,7 +298,7 @@ class ActividadNuevoCurso
 
     private function crear_fases(int $id_activ, ActividadAll $oActividad): void
     {
-        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $ActividadProcesoTareaRepository = $this->actividadProcesoTareaRepository;
         $ActividadProcesoTareaRepository->generarProceso((string) $id_activ, '', false, $oActividad);
         foreach ($ActividadProcesoTareaRepository->consumirAvisosGenerarProceso() as $aviso) {
             $this->avisosProceso[] = $aviso;
@@ -330,7 +334,7 @@ class ActividadNuevoCurso
      * bVer_lista
      * @return bool
      */
-    public function getVer_lista()
+    public function getVer_lista(): bool
     {
         return $this->bVer_lista;
     }
@@ -340,7 +344,7 @@ class ActividadNuevoCurso
      * @param bool $bVer_lista
      * @return ActividadNuevoCurso
      */
-    public function setVer_lista(bool $bVer_lista)
+    public function setVer_lista(bool $bVer_lista): self
     {
         $this->bVer_lista = $bVer_lista;
         return $this;
@@ -350,7 +354,7 @@ class ActividadNuevoCurso
      * iyear
      * @return integer
      */
-    public function getYear()
+    public function getYear(): int
     {
         return $this->iyear;
     }
@@ -360,7 +364,7 @@ class ActividadNuevoCurso
      * @param int $iyear
      * @return ActividadNuevoCurso
      */
-    public function setYear(int $iyear)
+    public function setYear(int $iyear): self
     {
         $this->iyear = $iyear;
         return $this;
@@ -370,7 +374,7 @@ class ActividadNuevoCurso
      * iyear_ref
      * @return integer
      */
-    public function getYear_ref()
+    public function getYear_ref(): int
     {
         return $this->iyear_ref;
     }
@@ -380,7 +384,7 @@ class ActividadNuevoCurso
      * @param int $iyear_ref
      * @return ActividadNuevoCurso
      */
-    public function setYear_ref(int $iyear_ref)
+    public function setYear_ref(int $iyear_ref): self
     {
         $this->iyear_ref = $iyear_ref;
         return $this;

@@ -24,6 +24,11 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class TipoActivMetadata
 {
+    public function __construct(
+        private TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+    ) {
+    }
+
     /**
      * @return array{
      *     maps: array{
@@ -53,17 +58,15 @@ final class TipoActivMetadata
      */
     private function cargarFilas(): array
     {
-        $repository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $repository = $this->tipoDeActividadRepository;
         $cTiposDeActividades = $repository->getTiposDeActividades(['_ordre' => 'id_tipo_activ']);
 
         $filas = [];
-        if (is_array($cTiposDeActividades)) {
-            foreach ($cTiposDeActividades as $oTipo) {
-                $filas[] = [
-                    'id_tipo_activ' => (int)$oTipo->getId_tipo_activ(),
-                    'nombre' => (string)$oTipo->getNombre(),
-                ];
-            }
+        foreach ($cTiposDeActividades as $oTipo) {
+            $filas[] = [
+                'id_tipo_activ' => (int) $oTipo->getId_tipo_activ(),
+                'nombre' => (string) $oTipo->getNombre(),
+            ];
         }
 
         return $filas;

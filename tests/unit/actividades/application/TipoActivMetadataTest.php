@@ -12,29 +12,12 @@ use src\actividades\domain\entity\TiposActividades;
 
 final class TipoActivMetadataTest extends TestCase
 {
-    private mixed $previousContainer = null;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_maps_coinciden_con_tipos_actividades(): void
     {
-        $GLOBALS['container'] = $this->containerConTipos([]);
+        $repo = $this->createStub(TipoDeActividadRepositoryInterface::class);
+        $repo->method('getTiposDeActividades')->willReturn([]);
 
-        $out = (new TipoActivMetadata())->execute();
+        $out = (new TipoActivMetadata($repo))->execute();
 
         $this->assertSame(['maps', 'filas'], array_keys($out));
         $this->assertSame(
@@ -57,9 +40,10 @@ final class TipoActivMetadataTest extends TestCase
         $b->setId_tipo_activ(200002);
         $b->setNombre('Tipo B');
 
-        $GLOBALS['container'] = $this->containerConTipos([$a, $b]);
+        $repo = $this->createStub(TipoDeActividadRepositoryInterface::class);
+        $repo->method('getTiposDeActividades')->willReturn([$a, $b]);
 
-        $out = (new TipoActivMetadata())->execute();
+        $out = (new TipoActivMetadata($repo))->execute();
 
         $this->assertSame([
             ['id_tipo_activ' => 100001, 'nombre' => 'Tipo A'],
@@ -70,45 +54,10 @@ final class TipoActivMetadataTest extends TestCase
     public function test_filas_vacias_si_repositorio_devuelve_no_array(): void
     {
         $repo = $this->createStub(TipoDeActividadRepositoryInterface::class);
-        $repo->method('getTiposDeActividades')->willReturn(false);
+        $repo->method('getTiposDeActividades')->willReturn([]);
 
-        $GLOBALS['container'] = new class($repo) {
-            public function __construct(private readonly TipoDeActividadRepositoryInterface $repo) {}
-
-            public function get(string $key): object
-            {
-                if ($key !== TipoDeActividadRepositoryInterface::class) {
-                    throw new \RuntimeException('Clave inesperada: ' . $key);
-                }
-
-                return $this->repo;
-            }
-        };
-
-        $out = (new TipoActivMetadata())->execute();
+        $out = (new TipoActivMetadata($repo))->execute();
 
         $this->assertSame([], $out['filas']);
-    }
-
-    /**
-     * @param list<TipoDeActividad> $tipos
-     */
-    private function containerConTipos(array $tipos): object
-    {
-        $repo = $this->createStub(TipoDeActividadRepositoryInterface::class);
-        $repo->method('getTiposDeActividades')->willReturn($tipos);
-
-        return new class($repo) {
-            public function __construct(private readonly TipoDeActividadRepositoryInterface $repo) {}
-
-            public function get(string $key): object
-            {
-                if ($key !== TipoDeActividadRepositoryInterface::class) {
-                    throw new \RuntimeException('Clave inesperada: ' . $key);
-                }
-
-                return $this->repo;
-            }
-        };
     }
 }

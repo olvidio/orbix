@@ -11,6 +11,9 @@ final class StatusId
     public const ALL = 9;
 
 
+    /**
+     * @return array<int, string>
+     */
     public static function getArrayStatus(bool $includeAll = false): array
     {
         $a_status = [

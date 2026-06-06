@@ -6,23 +6,18 @@ final class ActividadTipoId
 {
     private int $value;
 
-    /**
-     * @param int|string $value Debe representar exactamente 6 dígitos.
-     */
     public function __construct(?int $value)
     {
-        // Aceptar string para poder validar longitud exacta; luego guardar como int
-        $str = (string)$value;
-        $str = trim($str);
+        if ($value === null) {
+            throw new \InvalidArgumentException('ActividadTipoId no puede ser null');
+        }
+        $str = trim((string) $value);
         $this->validate($str);
-        $this->value = (int)$str;
+        $this->value = (int) $str;
     }
 
     private function validate(string $str): void
     {
-        if ($str === null) {
-            return;
-        }
         if (!preg_match('/^\d{6}$/', $str)) {
             throw new \InvalidArgumentException('ActividadTipoId debe tener exactamente 6 dígitos');
         }

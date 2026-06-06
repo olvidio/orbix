@@ -2,6 +2,10 @@
 
 namespace src\actividades\application;
 
+use src\shared\infrastructure\GlobalPdo;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 /**
  * Recolecta las opciones de desplegables usadas en la pantalla "seleccionar
  * lugar para una actividad" (frontend/actividades/controller/actividad_select_ubi).
@@ -12,7 +16,7 @@ namespace src\actividades\application;
 class ActividadSelectUbiData
 {
     /**
-     * @param array $input Admite:
+     * @param array<string, mixed> $input Admite:
      *   - 'dl_org' (string): delegacion organizadora (si esta vacia, no se
      *                        listan opciones frecuentes).
      *   - 'isfsv'  (int):    1 = solo sv, 2 = solo sf, otro = sin filtro.
@@ -23,8 +27,8 @@ class ActividadSelectUbiData
      */
     public function execute(array $input = []): array
     {
-        $dl_org = (string)($input['dl_org'] ?? '');
-        $isfsv = (int)($input['isfsv'] ?? 0);
+        $dl_org = input_string($input, 'dl_org');
+        $isfsv = input_int($input, 'isfsv');
 
         switch ($isfsv) {
             case 1:
@@ -39,7 +43,7 @@ class ActividadSelectUbiData
 
         $opcionesFreq = [];
         if ($dl_org !== '') {
-            $oDbl = $GLOBALS['oDBC'];
+            $oDbl = GlobalPdo::get('oDBC');
             $sql_freq = "select distinct id_ubi,nombre_ubi "
                 . "from a_actividades_dl join u_cdc_dl using (id_ubi) "
                 . "where dl_org=" . $oDbl->quote($dl_org) . " $donde_sfsv "
@@ -47,14 +51,21 @@ class ActividadSelectUbiData
             $oDBSt_q_freq = $oDbl->query($sql_freq);
             if ($oDBSt_q_freq !== false) {
                 while ($row = $oDBSt_q_freq->fetch(\PDO::FETCH_NUM)) {
-                    $opcionesFreq[(string)$row[0]] = (string)$row[1];
+                    if (!is_array($row)) {
+                        continue;
+                    }
+                    $k = $row[0] ?? '';
+                    $v = $row[1] ?? '';
+                    if (is_scalar($k) && is_scalar($v)) {
+                        $opcionesFreq[(string) $k] = (string) $v;
+                    }
                 }
             }
         }
 
         // Desplegable region: delegaciones + regiones activas (se excluyen las cr
         // del listado de delegaciones para evitar duplicados con regiones).
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $sql_dl_lugar = "SELECT 'dl|'||u.dl,u.nombre_dl FROM xu_dl u WHERE active='t' AND u.dl !~ '^cr' ";
         $sql_r_lugar = "SELECT 'r|'||u.region,u.nombre_region FROM xu_region u WHERE active='t' ";
         $sql_u_lugar = $sql_dl_lugar . " UNION " . $sql_r_lugar . " ORDER BY 2";
@@ -63,7 +74,14 @@ class ActividadSelectUbiData
         $opcionesRegion = [];
         if ($oDBSt !== false) {
             while ($row = $oDBSt->fetch(\PDO::FETCH_NUM)) {
-                $opcionesRegion[(string)$row[0]] = (string)$row[1];
+                if (!is_array($row)) {
+                    continue;
+                }
+                $k = $row[0] ?? '';
+                $v = $row[1] ?? '';
+                if (is_scalar($k) && is_scalar($v)) {
+                    $opcionesRegion[(string) $k] = (string) $v;
+                }
             }
         }
 

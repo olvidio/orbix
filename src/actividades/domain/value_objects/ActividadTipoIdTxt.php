@@ -6,9 +6,6 @@ final class ActividadTipoIdTxt
 {
     private int $value;
 
-    /**
-     * @param int|string $value Debe representar exactamente 6 dígitos.
-     */
     public function __construct(string $value)
     {
         // Aceptar string para poder validar longitud exacta; luego guardar como int

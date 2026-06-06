@@ -4,7 +4,10 @@ namespace src\actividades\application;
 
 use src\shared\config\ConfigGlobal;
 use src\dossiers\application\PermisoDossier;
+use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
+
+use function src\shared\domain\helpers\input_string;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
@@ -30,6 +33,18 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class CalendarioListasDatos
 {
+    public function __construct(
+        private CasaDlRepositoryInterface $casaDlRepository,
+        private TipoTarifaRepositoryInterface $tipoTarifaRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private CasaRepositoryInterface $casaRepository,
+        private CentroRepositoryInterface $centroRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private AsistenteActividadService $asistenteActividadService,
+    ) {
+    }
+
     private const EQUIVALENCIAS_GM_OFICINA = [
         'n' => 'sm',
         'agd' => 'agd',
@@ -39,16 +54,20 @@ final class CalendarioListasDatos
         'sr' => 'sr',
     ];
 
+    /**
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
+     */
     public function ejecutar(array $input): array
     {
-        $Qque = (string)($input['que'] ?? '');
-        $Qver_ctr = (string)($input['ver_ctr'] ?? '');
-        $Qperiodo = (string)($input['periodo'] ?? '');
-        $Qyear = (string)($input['year'] ?? '');
-        $Qyeardefault = (string)($input['yeardefault'] ?? '');
-        $Qempiezamin = (string)($input['empiezamin'] ?? '');
-        $Qempiezamax = (string)($input['empiezamax'] ?? '');
-        $Qaid_cdc = (array)($input['id_cdc'] ?? []);
+        $Qque = input_string($input, 'que');
+        $Qver_ctr = input_string($input, 'ver_ctr');
+        $Qperiodo = input_string($input, 'periodo');
+        $Qyear = input_string($input, 'year');
+        $Qyeardefault = input_string($input, 'yeardefault');
+        $Qempiezamin = input_string($input, 'empiezamin');
+        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qaid_cdc = is_array($input['id_cdc'] ?? null) ? $input['id_cdc'] : [];
 
         $miSfsv = ConfigGlobal::mi_sfsv();
         $ver_ctr = empty($Qver_ctr) ? 'no' : $Qver_ctr;
@@ -61,7 +80,13 @@ final class CalendarioListasDatos
             case 'lista_cdc':
                 $tipo = 'casa';
                 if (!empty($Qaid_cdc)) {
-                    $v = '{' . implode(', ', $Qaid_cdc) . '}';
+                    $cdcIds = [];
+                    foreach ($Qaid_cdc as $cdcId) {
+                        if (is_scalar($cdcId)) {
+                            $cdcIds[] = (string) $cdcId;
+                        }
+                    }
+                    $v = '{' . implode(', ', $cdcIds) . '}';
                     $aWhereCasa['id_ubi'] = $v;
                     $aOperadorCasa['id_ubi'] = 'ANY';
                 }
@@ -117,7 +142,7 @@ final class CalendarioListasDatos
         $oTiposActividades = null;
         switch ($tipo) {
             case 'casa':
-                $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
+                $CasaDlRepository = $this->casaDlRepository;
                 $cCasas = $CasaDlRepository->getCasas($aWhereCasa, $aOperadorCasa);
                 foreach ($cCasas as $oCasa) {
                     $aGrupos[$oCasa->getId_ubi()] = $oCasa->getNombre_ubi();
@@ -146,13 +171,13 @@ final class CalendarioListasDatos
 
         $warnings = '';
         $a_ubi_activ = [];
-        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
-        $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
-        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
+        $TipoTarifaRepository = $this->tipoTarifaRepository;
+        $ActividadRepository = $this->actividadRepository;
+        $CentroEncargadoRepository = $this->centroEncargadoRepository;
+        $CasaRepository = $this->casaRepository;
+        $CentroRepository = $this->centroRepository;
+        $CentroDlRepository = $this->centroDlRepository;
+        $AsistenteActividadService = $this->asistenteActividadService;
 
         foreach (array_keys($aGrupos) as $key) {
             $aWhere = [];
@@ -179,7 +204,7 @@ final class CalendarioListasDatos
                         $aOperador['id_tipo_activ'] = '~';
                         $cActividadesOtros = $ActividadRepository->getActividades($aWhere, $aOperador);
                         $cActividades = array_merge($cActividadesOtros, $cActividadesSSSC);
-                    } else {
+                    } elseif ($oTiposActividades !== null) {
                         $oTiposActividades->setAsistentesId($key);
                         $aWhere['id_tipo_activ'] = $oTiposActividades->getNom_tipoRegexp();
                         $aOperador['id_tipo_activ'] = '~';
@@ -188,7 +213,7 @@ final class CalendarioListasDatos
                     break;
             }
 
-            if (!is_array($cActividades) || count($cActividades) === 0) {
+            if ($cActividades === []) {
                 $a_ubi_activ[$key] = [];
                 continue;
             }
@@ -236,9 +261,13 @@ final class CalendarioListasDatos
                 }
 
                 if (ConfigGlobal::is_app_installed('procesos')) {
-                    $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-                    $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-                    $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
+                    $oPermSesion = $_SESSION['oPermActividades'] ?? null;
+                    if (!($oPermSesion instanceof PermisosActividades)) {
+                        continue;
+                    }
+                    $oPermSesion->setActividad($id_activ, (string) $id_tipo_activ, $dl_org ?? '');
+                    $oPermActiv = $oPermSesion->getPermisoActual('datos');
+                    $oPermCtr = $oPermSesion->getPermisoActual('ctr');
                 } else {
                     $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
                     $oPermActiv = $oPermActividades->getPermisoActual('datos');
@@ -270,8 +299,12 @@ final class CalendarioListasDatos
                     $a_ubi_activ[$key][$a]['h_ini'] = $h_ini;
                     $a_ubi_activ[$key][$a]['h_fin'] = $h_fin;
                     $a_ubi_activ[$key][$a]['num_asistentes'] = $num_asistentes;
-                    $oTipoTarifa = $TipoTarifaRepository->findById($tarifa);
-                    $a_ubi_activ[$key][$a]['id_tarifa'] = $oTipoTarifa?->getLetra() ?? '';
+                    $letraTarifa = '';
+                    if ($tarifa !== null) {
+                        $oTipoTarifa = $TipoTarifaRepository->findById($tarifa);
+                        $letraTarifa = $oTipoTarifa?->getLetra() ?? '';
+                    }
+                    $a_ubi_activ[$key][$a]['id_tarifa'] = $letraTarifa;
                 }
 
                 $a_ubi_activ[$key][$a]['ctr_encargados'] = '';

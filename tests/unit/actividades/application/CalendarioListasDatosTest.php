@@ -7,7 +7,15 @@ namespace Tests\unit\actividades\application;
 use frontend\shared\web\Lista;
 use PHPUnit\Framework\TestCase;
 use src\actividades\application\CalendarioListasDatos;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\asistentes\application\services\AsistenteActividadService;
 use src\shared\domain\value_objects\TimeLocal;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
 
 final class CalendarioListasDatosTest extends TestCase
 {
@@ -32,7 +40,16 @@ final class CalendarioListasDatosTest extends TestCase
 
     public function test_que_desconocido_devuelve_mensaje(): void
     {
-        $out = (new CalendarioListasDatos())->ejecutar(['que' => '__no_existe__']);
+        $out = (new CalendarioListasDatos(
+            $this->createMock(CasaDlRepositoryInterface::class),
+            $this->createMock(TipoTarifaRepositoryInterface::class),
+            $this->createMock(ActividadRepositoryInterface::class),
+            $this->createMock(CentroEncargadoRepositoryInterface::class),
+            $this->createMock(CasaRepositoryInterface::class),
+            $this->createMock(CentroRepositoryInterface::class),
+            $this->createMock(CentroDlRepositoryInterface::class),
+            $this->createMock(AsistenteActividadService::class),
+        ))->ejecutar(['que' => '__no_existe__']);
         $this->assertArrayHasKey('html', $out);
         $this->assertStringContainsString('opción no definida', $out['html']);
     }

@@ -35,6 +35,18 @@ final class Dinero
         return new self($value);
     }
 
+    public static function fromInput(mixed $value): ?self
+    {
+        if ($value === null || $value === '' || $value === false) {
+            return null;
+        }
+        if (!is_int($value) && !is_float($value) && !is_string($value)) {
+            return null;
+        }
+
+        return new self($value);
+    }
+
     public static function fromString(string $amount): self
     {
         return new self($amount);

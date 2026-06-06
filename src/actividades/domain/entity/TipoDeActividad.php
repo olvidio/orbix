@@ -24,7 +24,7 @@ class TipoDeActividad
      * Establece el valor del atributo iid_tipo_proceso_(sf/sv) de TipoDeActividad
      *
      */
-    private function setId_tipo_proceso(?int $id_tipo_proceso, int $sfsv): void
+    public function setId_tipo_proceso(?int $id_tipo_proceso, int $sfsv): void
     {
         if ($sfsv === 1) {
             $this->id_tipo_proceso_sv = $id_tipo_proceso;
@@ -158,9 +158,11 @@ class TipoDeActividad
 
     public function setNombreVo(TipoActivNombre|string $texto): void
     {
-        $this->nombre = $texto instanceof TipoActivNombre
-            ? $texto
-            : TipoActivNombre::fromNullableString($texto);
+        if ($texto instanceof TipoActivNombre) {
+            $this->nombre = $texto;
+        } elseif ($texto !== '') {
+            $this->nombre = new TipoActivNombre($texto);
+        }
     }
 
     /**

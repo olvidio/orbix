@@ -17,19 +17,43 @@ use src\actividades\domain\entity\TipoDeActividad;
 interface TipoDeActividadRepositoryInterface
 {
 
+    /**
+     * @return array<int, string>
+     */
     public function getArrayTiposActividad(string $sid_tipo_activ = '......'): array;
 
-    public function getTiposDeProcesos($sid_tipo_activ = '......', $bdl_propia = true, $sfsv = ''): array;
+    /**
+     * @return list<int>
+     */
+    public function getTiposDeProcesos(string $sid_tipo_activ = '......', bool $bdl_propia = true, string $sfsv = ''): array;
 
-    public function getId_tipoPosibles($regexp, $filtro_regexp_txt): array;
+    /**
+     * @return array<int|string, true>
+     */
+    public function getId_tipoPosibles(string $regexp, string $filtro_regexp_txt): array;
 
-    public function getNom_tipoPosibles($num_digitos, $filtro_regexp_txt): array;
+    /**
+     * @return array{tipo_nom: array<int|string, string>, nom_tipo: array<int, string>}
+     */
+    public function getNom_tipoPosibles(int $num_digitos, string $filtro_regexp_txt): array;
 
-    public function getAsistentesPosibles($aText, $filtro_regex_txt): array;
+    /**
+     * @param array<int|string, string> $aText
+     * @return array<int|string, string>
+     */
+    public function getAsistentesPosibles(array $aText, string $filtro_regex_txt): array;
 
+    /**
+     * @param array<int|string, string> $aText
+     * @return array<int|string, string>
+     */
     public function getActividadesPosibles(int $num_digitos, array $aText, string $expr_txt): array;
 
-    public function getSfsvPosibles($aText): array;
+    /**
+     * @param array<int|string, string> $aText
+     * @return array<int|string, string>
+     */
+    public function getSfsvPosibles(array $aText): array;
 
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -37,9 +61,9 @@ interface TipoDeActividadRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo TipoDeActividad
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo TipoDeActividad
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<TipoDeActividad>
      */
     public function getTiposDeActividades(array $aWhere = [], array $aOperators = []): array;
 
@@ -59,10 +83,9 @@ interface TipoDeActividadRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_tipo_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_tipo_activ): array|bool;
+    public function datosById(int $id_tipo_activ): array|false;
 
     /**
      * Busca la clase con id_tipo_activ en el repositorio.

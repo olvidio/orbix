@@ -17,6 +17,9 @@ use src\actividades\domain\value_objects\RepeticionId;
 interface RepeticionRepositoryInterface
 {
 
+    /**
+     * @return array<int, string>
+     */
     public function getArrayRepeticion(): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -24,9 +27,9 @@ interface RepeticionRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Repeticion
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Repeticion
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Repeticion>
      */
     public function getRepeticiones(array $aWhere = [], array $aOperators = []): array;
 
@@ -46,16 +49,16 @@ interface RepeticionRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(RepeticionId $id_repeticion): array|bool;
+    public function datosById(RepeticionId $id_repeticion): array|false;
 
     /**
      * Busca la clase con id_repeticion en el repositorio.
      */
     public function findById(RepeticionId $id_repeticion): ?Repeticion;
 
-    public function getNewId();
+    public function getNewId(): int;
 
     public function getNewIdVo(): RepeticionId;
 }

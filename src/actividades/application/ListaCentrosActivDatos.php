@@ -6,6 +6,9 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use frontend\shared\web\Periodo;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 /**
  * Lista centros encargados de actividades en un periodo dado y, para cada
  * actividad, enumera los otros centros encargados.
@@ -18,14 +21,24 @@ use frontend\shared\web\Periodo;
  */
 final class ListaCentrosActivDatos
 {
+    public function __construct(
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
+     */
     public function ejecutar(array $input): array
     {
-        $Qid_ctr_num = (int)($input['id_ctr_num'] ?? 0);
-        $Qa_id_ctr = (array)($input['id_ctr'] ?? []);
-        $Qperiodo = (string)($input['periodo'] ?? '');
-        $Qyear = (string)($input['year'] ?? '');
-        $Qempiezamin = (string)($input['empiezamin'] ?? '');
-        $Qempiezamax = (string)($input['empiezamax'] ?? '');
+        $Qid_ctr_num = input_int($input, 'id_ctr_num');
+        $Qa_id_ctr = is_array($input['id_ctr'] ?? null) ? $input['id_ctr'] : [];
+        $Qperiodo = input_string($input, 'periodo');
+        $Qyear = input_string($input, 'year');
+        $Qempiezamin = input_string($input, 'empiezamin');
+        $Qempiezamax = input_string($input, 'empiezamax');
 
         if (empty($Qperiodo)) {
             $Qperiodo = 'actual';
@@ -46,7 +59,7 @@ final class ListaCentrosActivDatos
             $condicion_periodo = "f_ini BETWEEN '$inicioIso' AND '$finIso'";
         }
 
-        $CentroRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+        $CentroRepository = $this->centroDlRepository;
         $aWhere = [];
         $aOperador = [];
         if (empty($Qid_ctr_num)) {
@@ -59,7 +72,13 @@ final class ListaCentrosActivDatos
                 $aWhere = ['tipo_ctr' => '^s[^s]', '_ordre' => 'nombre_ubi'];
                 $aOperador = ['tipo_ctr' => '~'];
             } else {
-                $aWhere['id_ubi'] = implode(',', $Qa_id_ctr);
+                $idCtrList = [];
+                foreach ($Qa_id_ctr as $idCtr) {
+                    if (is_scalar($idCtr)) {
+                        $idCtrList[] = (string) $idCtr;
+                    }
+                }
+                $aWhere['id_ubi'] = implode(',', $idCtrList);
                 $aOperador['id_ubi'] = 'IN';
             }
             $cCentros = $CentroRepository->getCentros($aWhere, $aOperador);
@@ -68,7 +87,7 @@ final class ListaCentrosActivDatos
         $c = 0;
         $a_centros = [];
         $a_actividades = [];
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
+        $CentroEncargadoRepository = $this->centroEncargadoRepository;
         foreach ($cCentros as $oCentro) {
             $c++;
             $id_ubi = $oCentro->getId_ubi();
@@ -101,7 +120,7 @@ final class ListaCentrosActivDatos
             $centro = $a_centros[$c];
             $html .= "<h3>" . htmlspecialchars($centro, ENT_QUOTES, 'UTF-8') . "</h3>";
             $html .= "<table>";
-            if (!empty($a_actividades[$c]) && is_array($a_actividades[$c])) {
+            if (!empty($a_actividades[$c])) {
                 foreach ($a_actividades[$c] as $actividad) {
                     $html .= "<tr><td>" . htmlspecialchars($actividad['nom_activ'], ENT_QUOTES, 'UTF-8') . "</td>";
                     $html .= "<td>" . ($actividad['mas_ctr'] ?? '') . "</td></tr>";

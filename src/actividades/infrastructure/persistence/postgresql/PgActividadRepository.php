@@ -3,6 +3,7 @@
 namespace src\actividades\infrastructure\persistence\postgresql;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\actividades\domain\entity\TiposActividades;
 
@@ -23,9 +24,9 @@ class PgActividadRepository extends PgActividadAllRepository implements Activida
     public function __construct(TiposActividades $tiposActividades)
     {
         parent::__construct($tiposActividades);
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl_select($oDbl_Select);
         // `av_actividades` es vista (UNION…) y no admite INSERT/UPDATE; las escrituras van a la tabla física del esquema.
         $this->setNomTabla('a_actividades_dl');
