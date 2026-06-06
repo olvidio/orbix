@@ -14,14 +14,12 @@ use src\ubis\domain\entity\Direccion;
 
 final class CartaPresentacionFormDataTest extends TestCase
 {
-    private mixed $previousContainer;
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         ConfigGlobal::setTest_mode(true);
         $_SESSION['session_auth'] = [
@@ -34,23 +32,18 @@ final class CartaPresentacionFormDataTest extends TestCase
     {
         $_SESSION = $this->previousSession;
         ConfigGlobal::setTest_mode(false);
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
     public function test_faltan_ids(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([
-            DireccionCentroRepositoryInterface::class => $this->createMock(DireccionCentroRepositoryInterface::class),
-            CentroRepositoryInterface::class => $this->createMock(CentroRepositoryInterface::class),
-            CartaPresentacionRepositoryInterface::class => $this->createMock(CartaPresentacionRepositoryInterface::class),
-        ]);
+        $useCase = new CartaPresentacionFormData(
+            $this->createMock(DireccionCentroRepositoryInterface::class),
+            $this->createMock(CentroRepositoryInterface::class),
+            $this->createMock(CartaPresentacionRepositoryInterface::class),
+        );
 
-        $rta = CartaPresentacionFormData::execute([]);
+        $rta = $useCase->execute([]);
         $this->assertFalse($rta['ok']);
         $this->assertNotSame('', $rta['mensaje']);
     }
@@ -63,13 +56,13 @@ final class CartaPresentacionFormDataTest extends TestCase
         $repoCentro = $this->createMock(CentroRepositoryInterface::class);
         $repoCentro->method('findById')->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DireccionCentroRepositoryInterface::class => $repoDir,
-            CentroRepositoryInterface::class => $repoCentro,
-            CartaPresentacionRepositoryInterface::class => $this->createMock(CartaPresentacionRepositoryInterface::class),
-        ]);
+        $useCase = new CartaPresentacionFormData(
+            $repoDir,
+            $repoCentro,
+            $this->createMock(CartaPresentacionRepositoryInterface::class),
+        );
 
-        $rta = CartaPresentacionFormData::execute(['id_ubi' => 1, 'id_direccion' => 2]);
+        $rta = $useCase->execute(['id_ubi' => 1, 'id_direccion' => 2]);
         $this->assertFalse($rta['ok']);
         $this->assertNotSame('', $rta['mensaje']);
     }
@@ -87,13 +80,13 @@ final class CartaPresentacionFormDataTest extends TestCase
         $repoCentro = $this->createMock(CentroRepositoryInterface::class);
         $repoCentro->method('findById')->willReturn($oCentro);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DireccionCentroRepositoryInterface::class => $repoDir,
-            CentroRepositoryInterface::class => $repoCentro,
-            CartaPresentacionRepositoryInterface::class => $this->createMock(CartaPresentacionRepositoryInterface::class),
-        ]);
+        $useCase = new CartaPresentacionFormData(
+            $repoDir,
+            $repoCentro,
+            $this->createMock(CartaPresentacionRepositoryInterface::class),
+        );
 
-        $rta = CartaPresentacionFormData::execute(['id_ubi' => 1, 'id_direccion' => 2]);
+        $rta = $useCase->execute(['id_ubi' => 1, 'id_direccion' => 2]);
         $this->assertFalse($rta['ok']);
         $this->assertSame('Centro X', $rta['nombre_ubi']);
         $this->assertNotSame('', $rta['mensaje']);
@@ -117,13 +110,8 @@ final class CartaPresentacionFormDataTest extends TestCase
         $repoCarta = $this->createMock(CartaPresentacionRepositoryInterface::class);
         $repoCarta->method('findById')->with(5, 6)->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DireccionCentroRepositoryInterface::class => $repoDir,
-            CentroRepositoryInterface::class => $repoCentro,
-            CartaPresentacionRepositoryInterface::class => $repoCarta,
-        ]);
-
-        $rta = CartaPresentacionFormData::execute(['id_ubi' => 5, 'id_direccion' => 6]);
+        $rta = (new CartaPresentacionFormData($repoDir, $repoCentro, $repoCarta))
+            ->execute(['id_ubi' => 5, 'id_direccion' => 6]);
         $this->assertTrue($rta['ok']);
         $this->assertSame('Mi centro', $rta['nombre_ubi']);
         $this->assertSame('', $rta['pres_nom']);
@@ -156,13 +144,8 @@ final class CartaPresentacionFormDataTest extends TestCase
         $repoCarta = $this->createMock(CartaPresentacionRepositoryInterface::class);
         $repoCarta->method('findById')->willReturn($oCarta);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DireccionCentroRepositoryInterface::class => $repoDir,
-            CentroRepositoryInterface::class => $repoCentro,
-            CartaPresentacionRepositoryInterface::class => $repoCarta,
-        ]);
-
-        $rta = CartaPresentacionFormData::execute(['id_ubi' => 1, 'id_direccion' => 2]);
+        $rta = (new CartaPresentacionFormData($repoDir, $repoCentro, $repoCarta))
+            ->execute(['id_ubi' => 1, 'id_direccion' => 2]);
         $this->assertTrue($rta['ok']);
         $this->assertStringContainsString('Sede A', $rta['nombre_ubi']);
         $this->assertSame('Dir', $rta['pres_nom']);
@@ -170,23 +153,5 @@ final class CartaPresentacionFormDataTest extends TestCase
         $this->assertSame('a@b.c', $rta['pres_mail']);
         $this->assertSame('z', $rta['zona']);
         $this->assertSame('o', $rta['observ']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

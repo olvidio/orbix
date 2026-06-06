@@ -133,3 +133,98 @@ Al empezar, `src/cartaspresentacion/` ya tiene dominio (`entity`,
   se enlaza desde `menus.csv` ni desde otros `apps/*`, asi que se borra el
   contenido y se deja un `require` al frontend equivalente con nota de
   deprecacion.
+
+## Resultado del cierre DI (2026-06-06)
+
+| Criterio | Estado |
+|----------|--------|
+| `$GLOBALS['container']` en `src/cartaspresentacion/` | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | **8/8** |
+| `application/` con constructor DI | **8** clases |
+| Pg repos con `GlobalPdo::get()` | **3/3** |
+| Casos de uso en `config/dependencies.php` | **11** entradas `autowire()` |
+| Tests `tests/unit/cartaspresentacion/` | **48 OK** |
+
+### Application (constructor DI)
+
+| Clase | Repos / deps inyectados |
+|-------|-------------------------|
+| `CartaPresentacionFormData` | `DireccionCentroRepositoryInterface`, `CentroRepositoryInterface`, `CartaPresentacionRepositoryInterface` |
+| `CartasPresentacionPoblacionesData` | `DireccionCentroRepositoryInterface`, `CentroDlRepositoryInterface`, `DireccionCentroDlRepositoryInterface`, `RelacionCentroDlDireccionRepositoryInterface` |
+| `CartaPresentacionUpdate` | `CartaPresentacionRepositoryInterface`, `CartaPresentacionDlRepositoryInterface`, `CartaPresentacionExRepositoryInterface`, `CentroRepositoryInterface` |
+| `CartasPresentacionUbisListaData` | 7 repos (cartaspresentacion Dl + ubis Centro/Direccion/Relacion Dl y Ex) |
+| `CartasPresentacionBuscarOpcionesData` | `DireccionCentroRepositoryInterface` |
+| `CartasPresentacionListaData` | `CartaPresentacionDlRepositoryInterface`, `CartaPresentacionRepositoryInterface`, `CentroRepositoryInterface`, `DireccionCentroRepositoryInterface`, `RelacionCentroDireccionRepositoryInterface` |
+| `CartaPresentacionEliminar` | `CartaPresentacionRepositoryInterface` |
+| `CartasPresentacionShellData` | sin deps (solo `ConfigGlobal`) |
+
+`CartaPresentacionUpdate::sanear()` usa `cartaPresentacionDlRepository->Eliminar()`
+en lugar del legacy `DBEliminar()` de la entidad.
+
+### Repositorios
+
+| Clase | Cambio |
+|-------|--------|
+| `PgCartaPresentacionRepository` | `GlobalPdo::get('oDBP')`; guards PDO; tipos de retorno |
+| `PgCartaPresentacionDlRepository` | `GlobalPdo::get('oDB')` |
+| `PgCartaPresentacionExRepository` | `GlobalPdo::get('oDBR')` |
+
+### HTTP controllers
+
+Los 8 controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()` (sin `::execute()` / `::build()` estaticos).
+Entrada POST via `input_int` / `input_string`.
+
+### `src/cartaspresentacion/config/dependencies.php`
+
+Registra 3 repositorios + 8 casos de uso `*Data` / mutaciones.
+
+Repos cross-modulo (`Centro*`, `Direccion*`, `Relacion*`) se resuelven por
+autowire desde `src/ubis/config/dependencies.php`.
+
+## Deuda post-refactor
+
+### Completado
+
+- [x] 0 `$GLOBALS['container']` en todo `src/cartaspresentacion/`
+- [x] Todos los controllers HTTP via `DependencyResolver`
+- [x] Casos de uso con constructor DI
+- [x] `dependencies.php` con todos los use cases
+- [x] Pg repos con `GlobalPdo`
+- [x] Frontend sin `use src\...` en controladores
+- [x] PHPStan: `src/cartaspresentacion/` sin errores en `phpstan-nobaseline.neon` (0)
+- [x] Tests unitarios application (`tests/unit/cartaspresentacion/`: 48 tests)
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (inicio) | `composer phpstan:file -- src/cartaspresentacion/` | **131** |
+| 2026-06-06 (cierre DI) | `composer phpstan:file -- src/cartaspresentacion/` | **0** |
+
+Areas abordadas:
+
+- **Application:** constructor DI en 8 clases; `CartaPresentacionUpdate` con
+  ambos repos Dl/Ex; `CartasPresentacionListaData` con 5 repos; tipos en
+  payloads y metodos privados de agrupacion HTML.
+- **Repos `Pg*`:** `GlobalPdo`, guards `PDOStatement|false`, `array_values` en
+  colecciones, `datosById(): array|false`.
+- **Interfaces / entity / VOs:** PHPDoc retorno; `PresentacionPk` sin checks
+  redundantes; `getPresentacionPk(): PresentacionPk`.
+- **db/DB*, DBEsquema:** tipos de retorno `: void`, `infoTable(string): array`.
+- **HTTP controllers:** `DependencyResolver::get()` + `input_*`.
+
+### Pendiente
+
+- [ ] N+1 en `CartasPresentacionListaData` (heredado del legacy; fuera de
+  alcance del cierre DI).
+
+## Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests existentes pasan (`tests/unit/cartaspresentacion/`: 48 tests)
+- [x] PHPStan `src/cartaspresentacion/` en 0 (phpstan-nobaseline.neon)

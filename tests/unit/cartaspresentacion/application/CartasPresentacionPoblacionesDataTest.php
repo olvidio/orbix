@@ -13,31 +13,16 @@ use src\ubis\domain\entity\Direccion;
 
 final class CartasPresentacionPoblacionesDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_filtro_desconocido_devuelve_opciones_vacias(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([
-            DireccionCentroRepositoryInterface::class => $this->createMock(DireccionCentroRepositoryInterface::class),
-        ]);
+        $useCase = new CartasPresentacionPoblacionesData(
+            $this->createMock(DireccionCentroRepositoryInterface::class),
+            $this->createMock(CentroDlRepositoryInterface::class),
+            $this->createMock(DireccionCentroDlRepositoryInterface::class),
+            $this->createMock(RelacionCentroDlDireccionRepositoryInterface::class),
+        );
 
-        $rta = CartasPresentacionPoblacionesData::execute(['filtro' => '']);
+        $rta = $useCase->execute(['filtro' => '']);
         $this->assertSame('poblacion_sel', $rta['id']);
         $this->assertSame([], $rta['opciones']);
     }
@@ -50,11 +35,14 @@ final class CartasPresentacionPoblacionesDataTest extends TestCase
             ->with($this->stringContains("pais ILIKE 'españa'"))
             ->willReturn(['Madrid' => 'Madrid']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DireccionCentroRepositoryInterface::class => $repo,
-        ]);
+        $useCase = new CartasPresentacionPoblacionesData(
+            $repo,
+            $this->createMock(CentroDlRepositoryInterface::class),
+            $this->createMock(DireccionCentroDlRepositoryInterface::class),
+            $this->createMock(RelacionCentroDlDireccionRepositoryInterface::class),
+        );
 
-        $rta = CartasPresentacionPoblacionesData::execute(['filtro' => 'get_H']);
+        $rta = $useCase->execute(['filtro' => 'get_H']);
         $this->assertSame(['Madrid' => 'Madrid'], $rta['opciones']);
     }
 
@@ -75,32 +63,14 @@ final class CartasPresentacionPoblacionesDataTest extends TestCase
         $repoDir = $this->createMock(DireccionCentroDlRepositoryInterface::class);
         $repoDir->method('findById')->with(77)->willReturn($oDir);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DireccionCentroRepositoryInterface::class => $this->createMock(DireccionCentroRepositoryInterface::class),
-            CentroDlRepositoryInterface::class => $repoCentro,
-            DireccionCentroDlRepositoryInterface::class => $repoDir,
-            RelacionCentroDlDireccionRepositoryInterface::class => $repoCtrx,
-        ]);
+        $useCase = new CartasPresentacionPoblacionesData(
+            $this->createMock(DireccionCentroRepositoryInterface::class),
+            $repoCentro,
+            $repoDir,
+            $repoCtrx,
+        );
 
-        $rta = CartasPresentacionPoblacionesData::execute(['filtro' => 'get_dl']);
+        $rta = $useCase->execute(['filtro' => 'get_dl']);
         $this->assertSame(['Salamanca' => 'Salamanca'], $rta['opciones']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

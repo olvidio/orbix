@@ -18,8 +18,15 @@ use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
  */
 final class CartaPresentacionFormData
 {
+    public function __construct(
+        private DireccionCentroRepositoryInterface $direccionCentroRepository,
+        private CentroRepositoryInterface $centroRepository,
+        private CartaPresentacionRepositoryInterface $cartaPresentacionRepository,
+    ) {
+    }
+
     /**
-     * @param array{id_ubi?: int|string, id_direccion?: int|string} $input
+     * @param array{id_ubi?: int, id_direccion?: int} $input
      * @return array{
      *   ok: bool,
      *   mensaje: string,
@@ -35,10 +42,10 @@ final class CartaPresentacionFormData
      *   hash_update?: array{campos_hidden: array<string, int>, campos_form: string}
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $id_ubi = (int)($input['id_ubi'] ?? 0);
-        $id_direccion = (int)($input['id_direccion'] ?? 0);
+        $id_ubi = $input['id_ubi'] ?? 0;
+        $id_direccion = $input['id_direccion'] ?? 0;
 
         $base = [
             'ok' => false,
@@ -58,13 +65,10 @@ final class CartaPresentacionFormData
             return $base;
         }
 
-        $repoDireccion = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
-        $repoCentro = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-
-        $oDireccion = $repoDireccion->findById($id_direccion);
+        $oDireccion = $this->direccionCentroRepository->findById($id_direccion);
         $nom_sede = (string)($oDireccion?->getNom_sede() ?? '');
 
-        $oCentro = $repoCentro->findById($id_ubi);
+        $oCentro = $this->centroRepository->findById($id_ubi);
         if ($oCentro === null) {
             $base['mensaje'] = (string)_("Centro no encontrado");
             return $base;
@@ -81,8 +85,7 @@ final class CartaPresentacionFormData
             return $base;
         }
 
-        $repoCarta = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
-        $oCarta = $repoCarta->findById($id_ubi, $id_direccion);
+        $oCarta = $this->cartaPresentacionRepository->findById($id_ubi, $id_direccion);
 
         return [
             'ok' => true,

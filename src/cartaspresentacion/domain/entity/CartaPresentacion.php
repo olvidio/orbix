@@ -31,7 +31,7 @@ class CartaPresentacion
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getPresentacionPk()
+    public function getPresentacionPk(): PresentacionPk
     {
         return PresentacionPk::fromArray(['id_ubi' => $this->id_ubi,
             'id_direccion' => $this->id_direccion,
@@ -70,7 +70,7 @@ class CartaPresentacion
     }
 
     /**
-     * @param PresNombreText|null $oPresNombreText
+     * @param PresNombreText|string|null $texto
      */
     public function setPresNomVo(PresNombreText|string|null $texto = null): void
     {
@@ -104,7 +104,7 @@ class CartaPresentacion
     }
 
     /**
-     * @param PresTelefonoText|null $oPresTelefonoText
+     * @param PresTelefonoText|string|null $texto
      */
     public function setPresTelfVo(PresTelefonoText|string|null $texto = null): void
     {
@@ -138,7 +138,7 @@ class CartaPresentacion
     }
 
     /**
-     * @param PresEmailText|null $oPresEmailText
+     * @param PresEmailText|string|null $texto
      */
     public function setPresMailVo(PresEmailText|string|null $texto = null): void
     {
@@ -173,7 +173,7 @@ class CartaPresentacion
     }
 
     /**
-     * @param PresZonaText|null $oPresZonaText
+     * @param PresZonaText|string|null $texto
      */
     public function setZonaVo(PresZonaText|string|null $texto = null): void
     {
@@ -207,7 +207,7 @@ class CartaPresentacion
     }
 
     /**
-     * @param PresObservText|null $oPresObservText
+     * @param PresObservText|string|null $texto
      */
     public function setObservVo(PresObservText|string|null $texto = null): void
     {

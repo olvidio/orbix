@@ -23,9 +23,9 @@ interface CartaPresentacionRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo CartaPresentacion
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo CartaPresentacion
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<CartaPresentacion>
      */
     public function getCartasPresentacion(array $aWhere = [], array $aOperators = []): array;
 
@@ -47,11 +47,14 @@ interface CartaPresentacionRepositoryInterface
      *
      * @param int $id_ubi
      * @param int $id_direccion
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_ubi, int $id_direccion): array|bool;
+    public function datosById(int $id_ubi, int $id_direccion): array|false;
 
-    public function datosByPk(PresentacionPk $pk): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosByPk(PresentacionPk $pk): array|false;
 
     /**
      * Busca la clase con id_direccion en el repositorio.

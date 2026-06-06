@@ -5,7 +5,9 @@
  */
 
 use src\cartaspresentacion\application\CartasPresentacionBuscarOpcionesData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$data = CartasPresentacionBuscarOpcionesData::execute();
-ContestarJson::enviar('', $data);
+/** @var CartasPresentacionBuscarOpcionesData $useCase */
+$useCase = DependencyResolver::get(CartasPresentacionBuscarOpcionesData::class);
+ContestarJson::enviar('', $useCase->execute());

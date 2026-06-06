@@ -9,14 +9,19 @@
  */
 
 use src\cartaspresentacion\application\CartasPresentacionListaData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
+use function src\shared\domain\helpers\input_string;
+
 $input = [
-    'que' => (string)filter_input(INPUT_POST, 'que'),
-    'poblacion' => (string)filter_input(INPUT_POST, 'poblacion'),
-    'pais' => (string)filter_input(INPUT_POST, 'pais'),
-    'region' => (string)filter_input(INPUT_POST, 'region'),
-    'dl' => (string)filter_input(INPUT_POST, 'dl'),
+    'que' => input_string($_POST, 'que'),
+    'poblacion' => input_string($_POST, 'poblacion'),
+    'pais' => input_string($_POST, 'pais'),
+    'region' => input_string($_POST, 'region'),
+    'dl' => input_string($_POST, 'dl'),
 ];
-$data = CartasPresentacionListaData::execute($input);
-ContestarJson::enviar('', $data);
+
+/** @var CartasPresentacionListaData $useCase */
+$useCase = DependencyResolver::get(CartasPresentacionListaData::class);
+ContestarJson::enviar('', $useCase->execute($input));

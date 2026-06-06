@@ -2,19 +2,12 @@
 
 namespace src\cartaspresentacion\infrastructure\persistence\postgresql;
 
-use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterface;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionExRepositoryInterface;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 
-
 /**
- * Clase que adapta la tabla du_presentacion_dl a la interfaz del repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 20/12/2025
+ * Clase que adapta la tabla du_presentacion_ex a la interfaz del repositorio
  */
 class PgCartaPresentacionExRepository extends PgCartaPresentacionRepository implements CartaPresentacionExRepositoryInterface
 {
@@ -23,9 +16,7 @@ class PgCartaPresentacionExRepository extends PgCartaPresentacionRepository impl
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDBR'];
-        $this->setoDbl($oDbl);
+        $this->setoDbl(GlobalPdo::get('oDBR'));
         $this->setNomTabla('du_presentacion_ex');
     }
-
 }

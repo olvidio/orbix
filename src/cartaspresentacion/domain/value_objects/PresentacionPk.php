@@ -9,19 +9,14 @@ namespace src\cartaspresentacion\domain\value_objects;
 final class PresentacionPk
 {
     public function __construct(
-        private int    $idUbi,
-        private int    $idDireccion
-    )
-    {
-        if (!is_numeric($idUbi)) {
-            throw new \InvalidArgumentException('id_ubi debe ser numérico');
-        }
-        // puede ser negativo para los ex
-        if (!is_numeric($idDireccion)) {
-            throw new \InvalidArgumentException('id_dirección debe numérico');
-        }
+        private int $idUbi,
+        private int $idDireccion,
+    ) {
     }
 
+    /**
+     * @param array{id_ubi: int|string, id_direccion: int|string} $pk
+     */
     public static function fromArray(array $pk): self
     {
         return new self((int)$pk['id_ubi'], (int)$pk['id_direccion']);

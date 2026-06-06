@@ -11,6 +11,7 @@ use src\ubis\application\UbisTiposLaborEtiquetas;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
+use src\ubis\domain\entity\Centro;
 
 use function src\shared\domain\helpers\strsinacentocmp;
 use function src\shared\domain\helpers\strtoupper_dlb;
@@ -32,8 +33,16 @@ use function src\shared\domain\helpers\strtoupper_dlb;
  */
 final class CartasPresentacionListaData
 {
-    /** @var string */
     private string $msgError = '';
+
+    public function __construct(
+        private CartaPresentacionDlRepositoryInterface $cartaPresentacionDlRepository,
+        private CartaPresentacionRepositoryInterface $cartaPresentacionRepository,
+        private CentroRepositoryInterface $centroRepository,
+        private DireccionCentroRepositoryInterface $direccionCentroRepository,
+        private RelacionCentroDireccionRepositoryInterface $relacionCentroDireccionRepository,
+    ) {
+    }
 
     /**
      * @param array{
@@ -45,35 +54,25 @@ final class CartasPresentacionListaData
      * } $input
      * @return array{html_lista:string, html_errores:string}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        return (new self())->run($input);
-    }
-
-    /**
-     * @param array<string,mixed> $input
-     * @return array{html_lista:string, html_errores:string}
-     */
-    private function run(array $input): array
-    {
-        $que = (string)($input['que'] ?? '');
+        $que = $input['que'] ?? '';
 
         $ordenar_dl = 1;
+        /** @var array<string, mixed> $a_mega */
         $a_mega = [];
 
         if ($que === 'lista_dl') {
-            $repo = $GLOBALS['container']->get(CartaPresentacionDlRepositoryInterface::class);
             $mi_dele = ConfigGlobal::mi_delef();
-            $a_mega = $this->cartasRepoAgrupadas($repo, $ordenar_dl, $mi_dele);
+            $a_mega = $this->cartasRepoAgrupadas($this->cartaPresentacionDlRepository, $ordenar_dl, $mi_dele);
         } elseif ($que === 'lista_todo') {
-            $repo = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
-            $a_mega = $this->cartasRepoAgrupadas($repo, $ordenar_dl, null);
+            $a_mega = $this->cartasRepoAgrupadas($this->cartaPresentacionRepository, $ordenar_dl, null);
         } elseif ($que === 'get') {
             $a_mega = $this->cartasFiltro($input, $ordenar_dl);
         }
 
         $html_lista = '';
-        if (!empty($a_mega)) {
+        if ($a_mega !== []) {
             $html_lista = $this->renderListaCartas($a_mega, $ordenar_dl);
         }
 
@@ -95,16 +94,18 @@ final class CartasPresentacionListaData
      * Todas las cartas del repo agrupadas; si `$soloDl` no es null, filtra
      * por esa delegacion.
      *
-     * @return array<mixed>
+     * @return array<string, mixed>
      */
-    private function cartasRepoAgrupadas($repo, int $ordenar_dl, ?string $soloDl): array
-    {
-        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+    private function cartasRepoAgrupadas(
+        CartaPresentacionRepositoryInterface $repo,
+        int $ordenar_dl,
+        ?string $soloDl,
+    ): array {
         $cCartas = $repo->getCartasPresentacion();
         $a_mega_tmp = [];
         foreach ($cCartas as $oCarta) {
             $id_ubi = $oCarta->getId_ubi();
-            $oCentro = $CentroRepository->findById($id_ubi);
+            $oCentro = $this->centroRepository->findById($id_ubi);
             if ($oCentro === null) {
                 continue;
             }
@@ -113,25 +114,31 @@ final class CartasPresentacionListaData
             }
             $a_mega_tmp[] = $this->megaArray($oCarta, $oCentro, $ordenar_dl);
         }
-        return empty($a_mega_tmp) ? [] : array_merge_recursive(...$a_mega_tmp);
+        if ($a_mega_tmp === []) {
+            return [];
+        }
+        return array_merge_recursive(...$a_mega_tmp);
     }
 
     /**
      * Modo `get` del dispatcher original: filtra por poblacion/pais/region/dl.
      *
-     * @param array<string,mixed> $input
-     * @return array<mixed>
+     * @param array{
+     *   poblacion?: string,
+     *   pais?: string,
+     *   region?: string,
+     *   dl?: string
+     * } $input
+     * @return array<string, mixed>
      */
     private function cartasFiltro(array $input, int $ordenar_dl): array
     {
-        $Qpoblacion = (string)($input['poblacion'] ?? '');
-        $Qpais = (string)($input['pais'] ?? '');
-        $Qregion = (string)($input['region'] ?? '');
-        $Qdl = (string)($input['dl'] ?? '');
+        $Qpoblacion = $input['poblacion'] ?? '';
+        $Qpais = $input['pais'] ?? '';
+        $Qregion = $input['region'] ?? '';
+        $Qdl = $input['dl'] ?? '';
 
-        $repoCarta = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
-        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-
+        /** @var array<string, mixed> $a_mega */
         $a_mega = [];
 
         if ($Qpais !== '' || $Qpoblacion !== '') {
@@ -146,45 +153,43 @@ final class CartasPresentacionListaData
                 $aOperador['pais'] = 'sin_acentos';
             }
 
-            $DireccionCentroRepository = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
-            $cDirecciones = $DireccionCentroRepository->getDirecciones($aWhere, $aOperador);
-            $RelCtrDir = $GLOBALS['container']->get(RelacionCentroDireccionRepositoryInterface::class);
+            $cDirecciones = $this->direccionCentroRepository->getDirecciones($aWhere, $aOperador);
 
             $a_mega_tmp = [];
             foreach ($cDirecciones as $oDireccion) {
                 $id_direccion = $oDireccion->getId_direccion();
-                $cId_ubis = $RelCtrDir->getUbisPorDireccion($id_direccion);
+                $cId_ubis = $this->relacionCentroDireccionRepository->getUbisPorDireccion($id_direccion);
                 foreach ($cId_ubis as $aUbi) {
-                    $oCentro = $CentroRepository->findById($aUbi['id_ubi']);
+                    $oCentro = $this->centroRepository->findById($aUbi['id_ubi']);
                     if ($oCentro === null || !$oCentro->isActive()) {
                         continue;
                     }
-                    $oCarta = $repoCarta->findById($oCentro->getId_ubi(), $id_direccion);
+                    $oCarta = $this->cartaPresentacionRepository->findById($oCentro->getId_ubi(), $id_direccion);
                     if ($oCarta !== null) {
                         $a_mega_tmp[] = $this->megaArray($oCarta, $oCentro, $ordenar_dl);
                     }
                 }
             }
-            if (!empty($a_mega_tmp)) {
+            if ($a_mega_tmp !== []) {
                 $a_mega = array_merge_recursive(...$a_mega_tmp);
             }
 
             // Extiendo la busqueda al campo `zona`.
             if ($Qpoblacion !== '') {
-                $cCartasZona = $repoCarta->getCartasPresentacion(
+                $cCartasZona = $this->cartaPresentacionRepository->getCartasPresentacion(
                     ['zona' => $Qpoblacion],
                     ['zona' => 'sin_acentos']
                 );
                 $a_mega_tmp = [];
                 foreach ($cCartasZona as $oCarta) {
-                    $oCentro = $CentroRepository->findById($oCarta->getId_ubi());
+                    $oCentro = $this->centroRepository->findById($oCarta->getId_ubi());
                     if ($oCentro === null) {
                         continue;
                     }
                     $a_mega_tmp[] = $this->megaArray($oCarta, $oCentro, $ordenar_dl);
                 }
-                if (!empty($a_mega_tmp)) {
-                    $a_mega = array_merge_recursive(...$a_mega_tmp);
+                if ($a_mega_tmp !== []) {
+                    $a_mega = array_merge_recursive($a_mega, ...$a_mega_tmp);
                 }
             }
         }
@@ -208,47 +213,46 @@ final class CartasPresentacionListaData
 
     /**
      * @param array<string,string> $aWhere
-     * @return array<mixed>
+     * @return array<string, mixed>
      */
     private function cartasPorCondicionCentro(array $aWhere, int $ordenar_dl): array
     {
-        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-        $repoCarta = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
-
-        $cCentros = $CentroRepository->getCentros($aWhere, []);
+        $cCentros = $this->centroRepository->getCentros($aWhere, []);
         $a_mega_tmp = [];
         foreach ($cCentros as $oCentro) {
-            $cCartas = $repoCarta->getCartasPresentacion(['id_ubi' => $oCentro->getId_ubi()]);
+            $cCartas = $this->cartaPresentacionRepository->getCartasPresentacion(['id_ubi' => $oCentro->getId_ubi()]);
             foreach ($cCartas as $oCarta) {
                 $a_mega_tmp[] = $this->megaArray($oCarta, $oCentro, $ordenar_dl);
             }
         }
-        return empty($a_mega_tmp) ? [] : array_merge_recursive(...$a_mega_tmp);
+        if ($a_mega_tmp === []) {
+            return [];
+        }
+        return array_merge_recursive(...$a_mega_tmp);
     }
 
     /**
      * Copia casi textual de `mega_array()` del controlador legacy.
      *
-     * @return array<string, array<string, array<string, string>>>
+     * @return array<string, mixed>
      */
-    private function megaArray(CartaPresentacion $oPresentacion, $oCentro, int $ordenar_dl): array
+    private function megaArray(CartaPresentacion $oPresentacion, Centro $oCentro, int $ordenar_dl): array
     {
         $a_mega = [];
         $id_ubi = $oPresentacion->getId_ubi();
         $id_direccion = $oPresentacion->getId_direccion();
-        $pres_nom = (string)$oPresentacion->getPres_nom();
-        $pres_telf = (string)$oPresentacion->getPres_telf();
-        $pres_mail = (string)$oPresentacion->getPres_mail();
-        $zona = (string)$oPresentacion->getZona();
+        $pres_nom = (string)($oPresentacion->getPres_nom() ?? '');
+        $pres_telf = (string)($oPresentacion->getPres_telf() ?? '');
+        $pres_mail = (string)($oPresentacion->getPres_mail() ?? '');
+        $zona = (string)($oPresentacion->getZona() ?? '');
 
-        $dl = $oCentro->getDl();
-        $region = $oCentro->getRegion();
-        $tipo_ctr = $oCentro->getTipo_ctr();
+        $dl = (string)$oCentro->getDl();
+        $region = (string)$oCentro->getRegion();
+        $tipo_ctr = (string)$oCentro->getTipo_ctr();
         $tipo_labor = $oCentro->getTipo_labor();
         $id_ctr_padre = $oCentro->getId_ctr_padre();
 
-        $DireccionRepository = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
-        $oDireccion = $DireccionRepository->findById($id_direccion);
+        $oDireccion = $this->direccionCentroRepository->findById($id_direccion);
         $direccion = $oDireccion?->getDireccionVo()?->value() ?? '';
         $poblacion = (string)($oDireccion?->getPoblacion() ?? '');
         $c_p = (string)($oDireccion?->getC_p() ?? '');
@@ -257,60 +261,59 @@ final class CartasPresentacionListaData
         $a_p = '';
 
         $obj_pau_centro = $this->objPauFromCentro($oCentro);
-        $telf = UbiTelecoService::texto($obj_pau_centro, (int)$id_ubi, 'telf', '*', ' / ');
-        $fax = UbiTelecoService::texto($obj_pau_centro, (int)$id_ubi, 'fax', '*', ' / ');
-        if (!empty($fax)) {
+        $telf = UbiTelecoService::texto($obj_pau_centro, $id_ubi, 'telf', '*', ' / ');
+        $fax = UbiTelecoService::texto($obj_pau_centro, $id_ubi, 'fax', '*', ' / ');
+        if ($fax !== '') {
             $fax = self::formatTelf($fax);
             $telf .= ' fax:' . $fax;
         }
         // Si es una dl o r fuera de España, pongo el e-mail del centro.
         if ($region !== 'H' && (strpos($tipo_ctr, 'cr') !== false || strpos($tipo_ctr, 'dl') !== false)) {
             // 15 es el id para otros asuntos (20 es para asuntos de gobierno).
-            $mail = UbiTelecoService::texto($obj_pau_centro, (int)$id_ubi, 'e-mail', '15', ' / ');
-            if (!empty($mail)) {
+            $mail = UbiTelecoService::texto($obj_pau_centro, $id_ubi, 'e-mail', '15', ' / ');
+            if ($mail !== '') {
                 $pres_mail .= 'mail casa: ' . $mail;
             }
         }
 
+        /** @var list<array{direccion: string, a_p: string, c_p: string, poblacion: string, telf: string}> $a_direccion */
         $a_direccion = [];
-        if (!empty($id_ctr_padre)) {
-            $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-            $oCentro1 = $CentroRepository->findById($id_ctr_padre);
+        if ($id_ctr_padre !== null && $id_ctr_padre !== 0) {
+            $oCentro1 = $this->centroRepository->findById($id_ctr_padre);
             if ($oCentro1 !== null) {
                 $cDirecciones1 = $oCentro1->getDirecciones();
-                if (!empty($cDirecciones1)) {
+                if ($cDirecciones1 !== []) {
                     $oDireccion1 = $cDirecciones1[0];
                     $obj_pau_ctr_padre = $this->objPauFromCentro($oCentro1);
-                    $telf1 = UbiTelecoService::texto($obj_pau_ctr_padre, (int)$id_ctr_padre, 'telf', '*', ' / ');
+                    $telf1 = UbiTelecoService::texto($obj_pau_ctr_padre, $id_ctr_padre, 'telf', '*', ' / ');
                     $a_direccion[] = [
                         'direccion' => $oDireccion1->getDireccionVo()?->value() ?? '',
-                        'a_p' => $oDireccion1->getA_p(),
-                        'c_p' => $oDireccion1->getC_p(),
-                        'poblacion' => $oDireccion1->getPoblacion(),
+                        'a_p' => (string)$oDireccion1->getA_p(),
+                        'c_p' => (string)$oDireccion1->getC_p(),
+                        'poblacion' => (string)$oDireccion1->getPoblacion(),
                         'telf' => $telf1,
                     ];
                 }
             }
         }
         // Si hay una segunda direccion del centro que sea principal, se añade.
-        $GesCtrxDireccion = $GLOBALS['container']->get(RelacionCentroDireccionRepositoryInterface::class);
-        $cCtrxDirecciones = $GesCtrxDireccion->getDireccionesPorUbi($id_ubi);
-        if (!empty($cCtrxDirecciones)) {
+        $cCtrxDirecciones = $this->relacionCentroDireccionRepository->getDireccionesPorUbi($id_ubi);
+        if ($cCtrxDirecciones !== []) {
             foreach ($cCtrxDirecciones as $aCtrxDireccion) {
                 if (($aCtrxDireccion['principal'] ?? false) === false) {
                     continue;
                 }
                 $id_dir = (int)$aCtrxDireccion['id_direccion'];
-                if ($id_dir !== (int)$id_direccion) {
-                    $oDireccion2 = $DireccionRepository->findById($id_dir);
+                if ($id_dir !== $id_direccion) {
+                    $oDireccion2 = $this->direccionCentroRepository->findById($id_dir);
                     if ($oDireccion2 === null) {
                         continue;
                     }
                     $a_direccion[] = [
                         'direccion' => $oDireccion2->getDireccionVo()?->value() ?? '',
-                        'a_p' => $oDireccion2->getA_p(),
-                        'c_p' => $oDireccion2->getC_p(),
-                        'poblacion' => $oDireccion2->getPoblacion(),
+                        'a_p' => (string)$oDireccion2->getA_p(),
+                        'c_p' => (string)$oDireccion2->getC_p(),
+                        'poblacion' => (string)$oDireccion2->getPoblacion(),
                         'telf' => '',
                     ];
                 }
@@ -333,7 +336,7 @@ final class CartasPresentacionListaData
         $aTiposLabor = UbisTiposLaborEtiquetas::mapBitToEtiqueta();
         $aTipo = [];
         $edad = '';
-        if (!empty($tipo_labor)) {
+        if ($tipo_labor !== null && $tipo_labor !== 0) {
             if (($tipo_labor & 128) === 128) { $aTipo[] = $aTiposLabor[128]; }
             if (($tipo_labor & 256) === 256) { $aTipo[] = $aTiposLabor[256]; }
             if (($tipo_labor & 64) === 64)   { $aTipo[] = $aTiposLabor[64];  }
@@ -358,7 +361,7 @@ final class CartasPresentacionListaData
             }
         } else {
             $this->msgError .= $this->msgError !== '' ? ', ' : '';
-            $this->msgError .= $oCentro->getNombre_ubi();
+            $this->msgError .= (string)$oCentro->getNombre_ubi();
         }
         if ($zona !== '') {
             $edad .= "<br>$zona";
@@ -379,13 +382,10 @@ final class CartasPresentacionListaData
         return $a_mega;
     }
 
-    private function objPauFromCentro($oCentro): string
+    private function objPauFromCentro(Centro $oCentro): string
     {
-        if ($oCentro === null) {
-            return 'Centro';
-        }
-        $tipo_ubi = method_exists($oCentro, 'getTipo_ubi') ? (string)$oCentro->getTipo_ubi() : '';
-        $dl = method_exists($oCentro, 'getDl') ? (string)$oCentro->getDl() : '';
+        $tipo_ubi = (string)$oCentro->getTipo_ubi();
+        $dl = (string)$oCentro->getDl();
         if ($tipo_ubi === 'ctrex') {
             return 'CentroEx';
         }
@@ -396,7 +396,18 @@ final class CartasPresentacionListaData
     }
 
     /**
-     * @param array<string,mixed> $a_texto
+     * @param array{
+     *   pres_nom: string,
+     *   pres_telf: string,
+     *   pres_mail: string,
+     *   direccion: string,
+     *   nom_sede: string,
+     *   a_p: string,
+     *   c_p: string,
+     *   poblacion: string,
+     *   telf: string,
+     *   a_direccion: list<array{direccion: string, a_p: string, c_p: string, poblacion: string, telf: string}>
+     * } $a_texto
      */
     private function datosACeldas(array $a_texto): string
     {
@@ -415,7 +426,7 @@ final class CartasPresentacionListaData
         $a_p = $a_p === '' ? '' : "$a_p<br>";
         $col1 = "$pres_nom<br>$nom_sede$direccion<br>$a_p$c_p $poblacion";
         $col2 = "$pres_telf<br>$pres_mail<br>$telf";
-        if (!empty($a_direccion)) {
+        if ($a_direccion !== []) {
             foreach ($a_direccion as $aa_direccion) {
                 $d1 = $aa_direccion['direccion'];
                 $c1 = $aa_direccion['c_p'];
@@ -431,7 +442,7 @@ final class CartasPresentacionListaData
     }
 
     /**
-     * @param array<mixed> $a_mega
+     * @param array<string, mixed> $a_mega
      */
     private function renderListaCartas(array $a_mega, int $ordenar_dl): string
     {
@@ -441,27 +452,36 @@ final class CartasPresentacionListaData
 
         if ($ordenar_dl === 1) {
             foreach ($a_mega as $tipo => $a_dl_pob_edad) {
+                if (!is_array($a_dl_pob_edad)) {
+                    continue;
+                }
                 uksort($a_dl_pob_edad, 'src\shared\domain\helpers\strsinacentocmp');
                 $html .= '<h3>';
-                $html .= sprintf(_("Cartas de presentación de %s"), $tipo);
+                $html .= sprintf(_("Cartas de presentación de %s"), (string)$tipo);
                 $html .= '</h3>';
                 $dl_anterior = '';
                 foreach ($a_dl_pob_edad as $dl => $a_pob_edad) {
+                    if (!is_array($a_pob_edad)) {
+                        continue;
+                    }
                     uksort($a_pob_edad, 'src\shared\domain\helpers\strsinacentocmp');
                     if ($dl !== $dl_anterior) {
-                        $html .= "<h3>$dl - $tipo</h3>";
+                        $html .= '<h3>' . (string)$dl . ' - ' . (string)$tipo . '</h3>';
                     }
                     $html .= '<table>';
                     $html .= $this->renderPoblacionesTabla($a_pob_edad, $class);
                     $html .= '</table>';
-                    $dl_anterior = $dl;
+                    $dl_anterior = (string)$dl;
                 }
             }
         } else {
             foreach ($a_mega as $tipo => $a_pob_edad) {
+                if (!is_array($a_pob_edad)) {
+                    continue;
+                }
                 uksort($a_pob_edad, 'src\shared\domain\helpers\strsinacentocmp');
                 $html .= '<h3>';
-                $html .= sprintf(_("Cartas de presentación de %s"), $tipo);
+                $html .= sprintf(_("Cartas de presentación de %s"), (string)$tipo);
                 $html .= '</h3>';
                 $html .= '<table>';
                 $html .= $this->renderPoblacionesTabla($a_pob_edad, $class);
@@ -473,16 +493,19 @@ final class CartasPresentacionListaData
     }
 
     /**
-     * @param array<string, mixed> $a_pob_edad
+     * @param array<mixed, mixed> $a_pob_edad
      */
     private function renderPoblacionesTabla(array $a_pob_edad, string $class): string
     {
         $html = '';
         $poblacion_anterior = '';
         foreach ($a_pob_edad as $poblacion => $a_edad) {
+            if (!is_array($a_edad)) {
+                continue;
+            }
             krsort($a_edad); // primero m, despues j
             if ($poblacion !== $poblacion_anterior || $poblacion === '') {
-                $html .= "<tr><td $class>" . strtoupper_dlb((string)$poblacion) . "</td>";
+                $html .= '<tr><td ' . $class . '>' . strtoupper_dlb((string)$poblacion) . '</td>';
             }
             $f = 0;
             foreach ($a_edad as $edad => $texto) {
@@ -495,17 +518,18 @@ final class CartasPresentacionListaData
                     foreach ($texto as $txt) {
                         $ff++;
                         if ($ff > 1) {
-                            $html .= "<tr><td></td><td $class></td>";
+                            $html .= '<tr><td></td><td ' . $class . '></td>';
                         } else {
-                            $html .= "<td $class>$edad</td>";
+                            $html .= '<td ' . $class . '>' . (string)$edad . '</td>';
                         }
-                        $html .= "$txt</tr>";
+                        $html .= (is_scalar($txt) ? (string)$txt : '') . '</tr>';
                     }
                 } else {
-                    $html .= "<td $class>$edad</td>$texto</tr>";
+                    $html .= '<td ' . $class . '>' . (string)$edad . '</td>'
+                        . (is_scalar($texto) ? (string)$texto : '') . '</tr>';
                 }
             }
-            $poblacion_anterior = $poblacion;
+            $poblacion_anterior = (string)$poblacion;
         }
         return $html;
     }
@@ -519,7 +543,7 @@ final class CartasPresentacionListaData
         $a_telf = explode(' / ', $number);
         $formattedValue = [];
         foreach ($a_telf as $tel) {
-            $formattedValue[] = preg_replace($regex, "\\1 \\2 \\3\\4", $tel);
+            $formattedValue[] = preg_replace($regex, "\\1 \\2 \\3\\4", $tel) ?? $tel;
         }
         return implode(' / ', $formattedValue);
     }

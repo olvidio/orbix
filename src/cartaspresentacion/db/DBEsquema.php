@@ -13,11 +13,11 @@ use src\utils_database\domain\entity\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ServerConf::DIR . "/src/cartaspresentacion/db";
+    private string $dir_base = ServerConf::DIR . "/src/cartaspresentacion/db";
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
-        if (empty($esquema_sfsv)) {
+        if ($esquema_sfsv === null || $esquema_sfsv === '') {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
         }
         $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
@@ -26,31 +26,40 @@ class DBEsquema extends DBAbstract
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->eliminar_presentacion();
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->create_presentacion();
         // NO crear las tablas en la DBSelect para la sincronización.
         // Las tablas están en el servidor interno
     }
 
-    public function llenarAll()
+    public function llenarAll(): void
     {
     }
 
-    protected function infoTable($tabla)
+    /**
+     * @return array{tabla: string, nom_tabla: string, campo_seq: string, id_seq: string, filename: string}
+     */
+    protected function infoTable(string $tabla): array
     {
         $datosTabla = [];
+        $datosTabla['tabla'] = $tabla;
         switch ($tabla) {
-            case "du_presentacion":
-                $datosTabla['tabla'] = "du_presentacion_dl";
-                $nom_tabla = $this->getNomTabla("du_presentacion_dl");
+            case 'du_presentacion':
+                $datosTabla['tabla'] = 'du_presentacion_dl';
+                $nom_tabla = $this->getNomTabla('du_presentacion_dl');
                 $campo_seq = '';
-                $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
+                $id_seq = $nom_tabla . '_' . $campo_seq . '_seq';
+                break;
+            default:
+                $nom_tabla = $this->getNomTabla($tabla);
+                $campo_seq = '';
+                $id_seq = '';
                 break;
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
@@ -60,7 +69,7 @@ class DBEsquema extends DBAbstract
         return $datosTabla;
     }
 
-    public function create_presentacion()
+    public function create_presentacion(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -107,7 +116,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function eliminar_presentacion()
+    public function eliminar_presentacion(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;

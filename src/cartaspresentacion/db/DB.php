@@ -25,14 +25,14 @@ class DB extends DBAbstract
         $this->esquema = 'public';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
             $this->eliminar_presentacion();
         });
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->ejecutarCreateAllGlobal(function (): void {
             $this->create_presentacion();
@@ -46,7 +46,7 @@ class DB extends DBAbstract
      *  // OJO Corresponde al esquema public, no al global.
      */
 
-    public function create_presentacion()
+    public function create_presentacion(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "du_presentacion";
@@ -70,7 +70,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
-    public function create_presentacion_resto()
+    public function create_presentacion_resto(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -116,7 +116,7 @@ class DB extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function eliminar_presentacion()
+    public function eliminar_presentacion(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "du_presentacion";

@@ -6,11 +6,16 @@
  */
 
 use src\cartaspresentacion\application\CartasPresentacionUbisListaData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
+use function src\shared\domain\helpers\input_string;
+
 $input = [
-    'tipo_lista' => (string)filter_input(INPUT_POST, 'tipo_lista'),
-    'poblacion_sel' => (string)filter_input(INPUT_POST, 'poblacion_sel'),
+    'tipo_lista' => input_string($_POST, 'tipo_lista'),
+    'poblacion_sel' => input_string($_POST, 'poblacion_sel'),
 ];
-$data = CartasPresentacionUbisListaData::execute($input);
-ContestarJson::enviar('', $data);
+
+/** @var CartasPresentacionUbisListaData $useCase */
+$useCase = DependencyResolver::get(CartasPresentacionUbisListaData::class);
+ContestarJson::enviar('', $useCase->execute($input));

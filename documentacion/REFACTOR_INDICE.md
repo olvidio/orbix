@@ -54,7 +54,7 @@ Columnas:
 | **actividadtarifas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadtarifas_migracion_baseline.md) |
 | **asignaturas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](asignaturas_migracion_baseline.md) |
 | cambios | ✓ | 0 | 16 | Migración estructural completa |
-| cartaspresentacion | ✓ | 0 | 7 | Migración estructural completa |
+| **cartaspresentacion** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](cartaspresentacion_migracion_baseline.md) |
 | casas | ✓ | 0 | 15 | Baseline de planificación; código ya en `frontend/` + `src/` |
 | certificados | — | 0 | 19 | Sin baseline |
 | configuracion | — | 0 | 11 | Sin baseline |
@@ -103,7 +103,7 @@ Excepciones a documentar explícitamente en el inventario: `login.php`, `recover
 Orden sugerido por madurez y volumen de `$GLOBALS`:
 
 1. **asistentes** (piloto de referencia; 0 deuda frontend)
-2. dossiers, planning, permisos, cartaspresentacion (pocos `GLOBALS`)
+2. dossiers, planning, permisos (pocos `GLOBALS`)
 3. actividadcargos, zonassacd, actividadplazas, actividadescentro, **actividadestudios**
 4. profesores, certificados, asistentes-adyacentes (personas, cambios, casas)
 5. encargossacd, misas, procesos, notas

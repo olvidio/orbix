@@ -21,6 +21,14 @@ use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
  */
 final class CartasPresentacionPoblacionesData
 {
+    public function __construct(
+        private DireccionCentroRepositoryInterface $direccionCentroRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private DireccionCentroDlRepositoryInterface $direccionCentroDlRepository,
+        private RelacionCentroDlDireccionRepositoryInterface $relacionCentroDlDireccionRepository,
+    ) {
+    }
+
     /**
      * @param array{filtro?: string} $input
      * @return array{
@@ -32,14 +40,14 @@ final class CartasPresentacionPoblacionesData
      *   action: string
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $filtro = (string)($input['filtro'] ?? '');
+        $filtro = $input['filtro'] ?? '';
 
         $aOpciones = match ($filtro) {
-            'get_H' => self::poblacionesPaisEspaña(),
-            'get_r' => self::poblacionesPaisExtranjero(),
-            'get_dl' => self::poblacionesDelegacion(),
+            'get_H' => $this->poblacionesPaisEspaña(),
+            'get_r' => $this->poblacionesPaisExtranjero(),
+            'get_dl' => $this->poblacionesDelegacion(),
             default => [],
         };
 
@@ -56,38 +64,30 @@ final class CartasPresentacionPoblacionesData
     /**
      * @return array<string,string>
      */
-    private static function poblacionesPaisEspaña(): array
+    private function poblacionesPaisEspaña(): array
     {
-        $repo = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
-        $opciones = (array)$repo->getArrayPoblaciones("WHERE pais ILIKE 'españa'");
-        return $opciones;
+        return (array)$this->direccionCentroRepository->getArrayPoblaciones("WHERE pais ILIKE 'españa'");
     }
 
     /**
      * @return array<string,string>
      */
-    private static function poblacionesPaisExtranjero(): array
+    private function poblacionesPaisExtranjero(): array
     {
-        $repo = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
-        $opciones = (array)$repo->getArrayPoblaciones("WHERE pais NOT ILIKE 'españa'");
-        return $opciones;
+        return (array)$this->direccionCentroRepository->getArrayPoblaciones("WHERE pais NOT ILIKE 'españa'");
     }
 
     /**
      * @return array<string,string>
      */
-    private static function poblacionesDelegacion(): array
+    private function poblacionesDelegacion(): array
     {
-        $repoCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $repoDir = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
-        $repoCtrxDir = $GLOBALS['container']->get(RelacionCentroDlDireccionRepositoryInterface::class);
-
-        $cCentros = $repoCentro->getCentros();
+        $cCentros = $this->centroDlRepository->getCentros();
         $poblaciones = [];
         foreach ($cCentros as $oCentro) {
-            $aDirecciones = $repoCtrxDir->getDireccionesPorUbi($oCentro->getId_ubi());
+            $aDirecciones = $this->relacionCentroDlDireccionRepository->getDireccionesPorUbi($oCentro->getId_ubi());
             foreach ($aDirecciones as $aDireccion) {
-                $oDir = $repoDir->findById((int)$aDireccion['id_direccion']);
+                $oDir = $this->direccionCentroDlRepository->findById((int)$aDireccion['id_direccion']);
                 if ($oDir === null) {
                     continue;
                 }

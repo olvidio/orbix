@@ -12,25 +12,29 @@ use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface
  */
 final class CartaPresentacionEliminar
 {
+    public function __construct(
+        private CartaPresentacionRepositoryInterface $cartaPresentacionRepository,
+    ) {
+    }
+
     /**
-     * @param array{id_ubi?: int|string, id_direccion?: int|string} $input
+     * @param array{id_ubi?: int, id_direccion?: int} $input
      * @return array{ok: bool, mensaje: string}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $id_ubi = (int)($input['id_ubi'] ?? 0);
-        $id_direccion = (int)($input['id_direccion'] ?? 0);
+        $id_ubi = $input['id_ubi'] ?? 0;
+        $id_direccion = $input['id_direccion'] ?? 0;
         if ($id_ubi === 0 || $id_direccion === 0) {
             return ['ok' => false, 'mensaje' => (string)_("Faltan id_ubi o id_direccion")];
         }
 
-        $repo = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
-        $oCarta = $repo->findById($id_ubi, $id_direccion);
+        $oCarta = $this->cartaPresentacionRepository->findById($id_ubi, $id_direccion);
         if ($oCarta === null) {
             return ['ok' => false, 'mensaje' => (string)_("Carta de presentacion no encontrada")];
         }
 
-        if ($repo->Eliminar($oCarta) === false) {
+        if ($this->cartaPresentacionRepository->Eliminar($oCarta) === false) {
             return ['ok' => false, 'mensaje' => (string)_("Hay un error, no se ha borrado.")];
         }
         return ['ok' => true, 'mensaje' => ''];

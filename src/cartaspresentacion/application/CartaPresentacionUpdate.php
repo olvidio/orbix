@@ -21,23 +21,38 @@ use src\ubis\domain\entity\Ubi;
  */
 final class CartaPresentacionUpdate
 {
+    public function __construct(
+        private CartaPresentacionRepositoryInterface $cartaPresentacionRepository,
+        private CartaPresentacionDlRepositoryInterface $cartaPresentacionDlRepository,
+        private CartaPresentacionExRepositoryInterface $cartaPresentacionExRepository,
+        private CentroRepositoryInterface $centroRepository,
+    ) {
+    }
+
     /**
-     * @param array<string,mixed> $input
+     * @param array{
+     *   id_ubi?: int,
+     *   id_direccion?: int,
+     *   pres_nom?: string,
+     *   pres_telf?: string,
+     *   pres_mail?: string,
+     *   zona?: string,
+     *   observ?: string
+     * } $input
      * @return array{ok: bool, mensaje: string}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $id_ubi = (int)($input['id_ubi'] ?? 0);
-        $id_direccion = (int)($input['id_direccion'] ?? 0);
+        $id_ubi = $input['id_ubi'] ?? 0;
+        $id_direccion = $input['id_direccion'] ?? 0;
         if ($id_ubi === 0 || $id_direccion === 0) {
             return ['ok' => false, 'mensaje' => (string)_("Faltan id_ubi o id_direccion")];
         }
 
-        $repoCarta = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
-        $oCarta = $repoCarta->findById($id_ubi, $id_direccion);
+        $oCarta = $this->cartaPresentacionRepository->findById($id_ubi, $id_direccion);
 
         if ($oCarta === null) {
-            $repoWrite = self::resolveWriteRepo($id_ubi);
+            $repoWrite = $this->resolveWriteRepo($id_ubi);
             if ($repoWrite === null) {
                 return ['ok' => false, 'mensaje' => (string)_("No puede modificar datos de otra dl")];
             }
@@ -45,20 +60,20 @@ final class CartaPresentacionUpdate
             $oCarta->setId_ubi($id_ubi);
             $oCarta->setId_direccion($id_direccion);
         } else {
-            $repoWrite = $repoCarta;
+            $repoWrite = $this->cartaPresentacionRepository;
         }
 
-        $oCarta->setPres_nom((string)($input['pres_nom'] ?? ''));
-        $oCarta->setPres_telf((string)($input['pres_telf'] ?? ''));
-        $oCarta->setPres_mail((string)($input['pres_mail'] ?? ''));
-        $oCarta->setZona((string)($input['zona'] ?? ''));
-        $oCarta->setObserv((string)($input['observ'] ?? ''));
+        $oCarta->setPres_nom($input['pres_nom'] ?? '');
+        $oCarta->setPres_telf($input['pres_telf'] ?? '');
+        $oCarta->setPres_mail($input['pres_mail'] ?? '');
+        $oCarta->setZona($input['zona'] ?? '');
+        $oCarta->setObserv($input['observ'] ?? '');
 
         if ($repoWrite->Guardar($oCarta) === false) {
             return ['ok' => false, 'mensaje' => (string)_("Hay un error, no se ha guardado.")];
         }
 
-        self::sanear();
+        $this->sanear();
         return ['ok' => true, 'mensaje' => ''];
     }
 
@@ -66,18 +81,17 @@ final class CartaPresentacionUpdate
      * Decide, al crear una carta nueva, que repositorio usar segun si el
      * centro es de la propia dl o un `cr` extranjero.
      */
-    private static function resolveWriteRepo(int $id_ubi): mixed
+    private function resolveWriteRepo(int $id_ubi): ?CartaPresentacionRepositoryInterface
     {
-        $repoCentro = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-        $oCentro = $repoCentro->findById($id_ubi);
+        $oCentro = $this->centroRepository->findById($id_ubi);
         if ($oCentro === null) {
             return null;
         }
         if ((string)$oCentro->getDl() === ConfigGlobal::mi_delef()) {
-            return $GLOBALS['container']->get(CartaPresentacionDlRepositoryInterface::class);
+            return $this->cartaPresentacionDlRepository;
         }
         if ((string)$oCentro->getTipo_ctr() === 'cr') {
-            return $GLOBALS['container']->get(CartaPresentacionExRepositoryInterface::class);
+            return $this->cartaPresentacionExRepository;
         }
         return null;
     }
@@ -87,10 +101,9 @@ final class CartaPresentacionUpdate
      * pertenece al centro (salvaguarda despues de un update). Copia de
      * `sanear()` del dispatcher legacy.
      */
-    private static function sanear(): void
+    private function sanear(): void
     {
-        $repo = $GLOBALS['container']->get(CartaPresentacionDlRepositoryInterface::class);
-        $cCartas = $repo->getCartasPresentacion();
+        $cCartas = $this->cartaPresentacionDlRepository->getCartasPresentacion();
         foreach ($cCartas as $oCarta) {
             $id_ubi = $oCarta->getId_ubi();
             $id_direccion = $oCarta->getId_direccion();
@@ -105,7 +118,7 @@ final class CartaPresentacionUpdate
                 $a_direcciones_ctr[] = $oDir->getId_direccion();
             }
             if (!in_array($id_direccion, $a_direcciones_ctr, false)) {
-                $oCarta->DBEliminar();
+                $this->cartaPresentacionDlRepository->Eliminar($oCarta);
             }
         }
     }

@@ -2,24 +2,18 @@
 
 namespace src\cartaspresentacion\infrastructure\persistence\postgresql;
 
-use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
 use src\cartaspresentacion\domain\entity\CartaPresentacion;
 use src\cartaspresentacion\domain\value_objects\PresentacionPk;
+use src\shared\infrastructure\GlobalPdo;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 
-
 /**
- * Clase que adapta la tabla du_presentacion_dl a la interfaz del repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 20/12/2025
+ * Clase que adapta la tabla du_presentacion a la interfaz del repositorio
  */
 class PgCartaPresentacionRepository extends ClaseRepository implements CartaPresentacionRepositoryInterface
 {
@@ -27,19 +21,14 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBP'];
-        $this->setoDbl($oDbl);
+        $this->setoDbl(GlobalPdo::get('oDBP'));
         $this->setNomTabla('du_presentacion');
     }
 
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
     /**
-     * devuelve una colección (array) de objetos de tipo CartaPresentacion
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo CartaPresentacion
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<CartaPresentacion>
      */
     public function getCartasPresentacion(array $aWhere = [], array $aOperators = []): array
     {
@@ -49,17 +38,13 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
+            if ($camp === '_ordre' || $camp === '_limit') {
                 continue;
             }
             $sOperador = $aOperators[$camp] ?? '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
                 $aCondicion[] = $a;
             }
-            // operadores que no requieren valores
             if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
                 unset($aWhere[$camp]);
             }
@@ -72,34 +57,39 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
         }
         $sCondicion = implode(' AND ', $aCondicion);
         if ($sCondicion !== '') {
-            $sCondicion = " WHERE " . $sCondicion;
+            $sCondicion = ' WHERE ' . $sCondicion;
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string)$limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $CartaPresentacion =  CartaPresentacion::fromArray($aDatos);
-            $CartaPresentacionSet->add($CartaPresentacion);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $CartaPresentacionSet->add(CartaPresentacion::fromArray($aDatos));
         }
-        return $CartaPresentacionSet->getTot();
+        return array_values($CartaPresentacionSet->getTot());
     }
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(CartaPresentacion $CartaPresentacion): bool
     {
@@ -110,7 +100,6 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
         $sql = "DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi AND id_direccion = $id_direccion";
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -125,7 +114,6 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
 
         $aDatos = $CartaPresentacion->toArrayForDatabase();
         if ($bInsert === false) {
-            //UPDATE
             unset($aDatos['id_ubi']);
             unset($aDatos['id_direccion']);
             $update = "
@@ -137,11 +125,13 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
             $sql = "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi AND id_direccion = $id_direccion";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
-            $campos = "(id_direccion,id_ubi,pres_nom,pres_telf,pres_mail,zona,observ)";
-            $valores = "(:id_direccion,:id_ubi,:pres_nom,:pres_telf,:pres_mail,:zona,:observ)";
+            $campos = '(id_direccion,id_ubi,pres_nom,pres_telf,pres_mail,zona,observ)';
+            $valores = '(:id_direccion,:id_ubi,:pres_nom,:pres_telf,:pres_mail,:zona,:observ)';
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        if ($stmt === false) {
+            return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -152,44 +142,51 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi AND id_direccion = $id_direccion";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_ubi
-     * @param int $id_direccion
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_ubi, int $id_direccion): array|bool
+    public function datosById(int $id_ubi, int $id_direccion): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi AND id_direccion = $id_direccion";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
-    }
-
-    public function datosByPk(PresentacionPk $pk): array|bool
-    {
-        return $this->datosById($pk->idUbi(), $pk->idDireccion());
-
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string)$key] = $value;
+        }
+        return $result;
     }
 
     /**
-     * Busca la clase con id_direccion en la base de datos .
+     * @return array<string, mixed>|false
      */
+    public function datosByPk(PresentacionPk $pk): array|false
+    {
+        return $this->datosById($pk->idUbi(), $pk->idDireccion());
+    }
+
     public function findById(int $id_ubi, int $id_direccion): ?CartaPresentacion
     {
         $aDatos = $this->datosById($id_ubi, $id_direccion);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return CartaPresentacion::fromArray($aDatos);

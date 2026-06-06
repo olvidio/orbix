@@ -9,8 +9,13 @@
  */
 
 use src\cartaspresentacion\application\CartasPresentacionPoblacionesData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$input = ['filtro' => (string)filter_input(INPUT_POST, 'filtro')];
-$data = CartasPresentacionPoblacionesData::execute($input);
-ContestarJson::enviar('', $data);
+use function src\shared\domain\helpers\input_string;
+
+$input = ['filtro' => input_string($_POST, 'filtro')];
+
+/** @var CartasPresentacionPoblacionesData $useCase */
+$useCase = DependencyResolver::get(CartasPresentacionPoblacionesData::class);
+ContestarJson::enviar('', $useCase->execute($input));

@@ -26,6 +26,17 @@ use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
  */
 final class CartasPresentacionUbisListaData
 {
+    public function __construct(
+        private DireccionCentroDlRepositoryInterface $direccionCentroDlRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private RelacionCentroDireccionRepositoryInterface $relacionCentroDireccionRepository,
+        private CartaPresentacionDlRepositoryInterface $cartaPresentacionDlRepository,
+        private CentroExRepositoryInterface $centroExRepository,
+        private RelacionCentroExDireccionRepositoryInterface $relacionCentroExDireccionRepository,
+        private DireccionCentroExRepositoryInterface $direccionCentroExRepository,
+    ) {
+    }
+
     /**
      * @param array{tipo_lista?: string, poblacion_sel?: string} $input
      * @return array{
@@ -35,18 +46,18 @@ final class CartasPresentacionUbisListaData
      *   a_valores: array<int, array<int, string|array<string,string>>>,
      * }
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $tipo_lista = (string)($input['tipo_lista'] ?? '');
-        $poblacion_sel = (string)($input['poblacion_sel'] ?? '');
+        $tipo_lista = $input['tipo_lista'] ?? '';
+        $poblacion_sel = $input['poblacion_sel'] ?? '';
 
         return match ($tipo_lista) {
-            'get_dl' => self::buildDl($poblacion_sel),
-            'get_r' => self::buildEx(),
+            'get_dl' => $this->buildDl($poblacion_sel),
+            'get_r' => $this->buildEx(),
             default => [
                 'tipo_lista' => $tipo_lista,
                 'explicacion' => '',
-                'a_cabeceras' => self::cabeceras(),
+                'a_cabeceras' => $this->cabeceras(),
                 'a_valores' => [],
             ],
         };
@@ -60,16 +71,12 @@ final class CartasPresentacionUbisListaData
      *   a_valores: array<int, array<int, string|array<string,string>>>
      * }
      */
-    private static function buildDl(string $poblacion_sel): array
+    private function buildDl(string $poblacion_sel): array
     {
         $cDirCentros = [];
 
         if ($poblacion_sel !== '') {
-            $repoDireccion = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
-            $repoCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-            $repoCtrxDir = $GLOBALS['container']->get(RelacionCentroDireccionRepositoryInterface::class);
-
-            $cDirecciones = $repoDireccion->getDirecciones(
+            $cDirecciones = $this->direccionCentroDlRepository->getDirecciones(
                 ['poblacion' => $poblacion_sel],
                 ['poblacion' => 'sin_acentos']
             );
@@ -77,10 +84,10 @@ final class CartasPresentacionUbisListaData
             foreach ($cDirecciones as $oDireccion) {
                 $d++;
                 $id_direccion = $oDireccion->getId_direccion();
-                $cId_ubis = $repoCtrxDir->getUbisPorDireccion($id_direccion);
+                $cId_ubis = $this->relacionCentroDireccionRepository->getUbisPorDireccion($id_direccion);
                 $cCentros = [];
                 foreach ($cId_ubis as $aId_ubi) {
-                    $oCentro = $repoCentro->findById((int)$aId_ubi['id_ubi']);
+                    $oCentro = $this->centroDlRepository->findById((int)$aId_ubi['id_ubi']);
                     if ($oCentro !== null) {
                         $cCentros[] = $oCentro;
                     }
@@ -94,7 +101,6 @@ final class CartasPresentacionUbisListaData
             }
         }
 
-        $repoCarta = $GLOBALS['container']->get(CartaPresentacionDlRepositoryInterface::class);
         $a_valores = [];
         $orden_nom = [];
         $c = 0;
@@ -111,8 +117,8 @@ final class CartasPresentacionUbisListaData
                 }
                 $nombre_ubi .= $nom_sede === '' ? '' : " ($nom_sede)";
 
-                $activo = $repoCarta->findById($id_ubi, (int)$id_direccion) !== null;
-                $a_valores[$c] = self::buildFila($id_direccion, $id_ubi, $nombre_ubi, $activo, $txt_direccion);
+                $activo = $this->cartaPresentacionDlRepository->findById($id_ubi, (int)$id_direccion) !== null;
+                $a_valores[$c] = $this->buildFila($id_direccion, $id_ubi, $nombre_ubi, $activo, $txt_direccion);
                 $orden_nom[$c] = strtolower($nombre_ubi);
             }
         }
@@ -125,7 +131,7 @@ final class CartasPresentacionUbisListaData
         return [
             'tipo_lista' => 'get_dl',
             'explicacion' => $explicacion,
-            'a_cabeceras' => self::cabeceras(),
+            'a_cabeceras' => $this->cabeceras(),
             'a_valores' => $a_valores,
         ];
     }
@@ -138,16 +144,11 @@ final class CartasPresentacionUbisListaData
      *   a_valores: array<int, array<int, string|array<string,string>>>
      * }
      */
-    private static function buildEx(): array
+    private function buildEx(): array
     {
-        $repoCentro = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
-        $repoCtrxDir = $GLOBALS['container']->get(RelacionCentroExDireccionRepositoryInterface::class);
-        $repoDireccion = $GLOBALS['container']->get(DireccionCentroExRepositoryInterface::class);
-        $repoCarta = $GLOBALS['container']->get(CartaPresentacionDlRepositoryInterface::class);
-
         $aWhere = ['tipo_ctr' => 'cr|dl', 'active' => 't', '_ordre' => 'nombre_ubi'];
         $aOperador = ['tipo_ctr' => '~'];
-        $cCentros = $repoCentro->getCentros($aWhere, $aOperador);
+        $cCentros = $this->centroExRepository->getCentros($aWhere, $aOperador);
 
         $c = 0;
         $a_valores = [];
@@ -157,19 +158,19 @@ final class CartasPresentacionUbisListaData
             $id_ubi = $oCentro->getId_ubi();
             $nombre_ubi_base = $oCentro->getNombre_ubi();
 
-            $cCtrxDir = $repoCtrxDir->getDireccionesPorUbi($id_ubi);
+            $cCtrxDir = $this->relacionCentroExDireccionRepository->getDireccionesPorUbi($id_ubi);
             foreach ($cCtrxDir as $aCtrxDir) {
                 $id_direccion = (int)$aCtrxDir['id_direccion'];
-                $oDireccion = $repoDireccion->findById($id_direccion);
+                $oDireccion = $this->direccionCentroExRepository->findById($id_direccion);
                 if ($oDireccion === null) {
                     continue;
                 }
                 $txt_direccion = $oDireccion->getDireccionPostal(' - ');
                 $nom_sede = (string)$oDireccion->getNom_sede();
                 $nombre_ubi = $nombre_ubi_base . ($nom_sede === '' ? '' : " ($nom_sede)");
-                $activo = $repoCarta->findById($id_ubi, $id_direccion) !== null;
+                $activo = $this->cartaPresentacionDlRepository->findById($id_ubi, $id_direccion) !== null;
 
-                $a_valores[$c] = self::buildFila($id_direccion, $id_ubi, $nombre_ubi, $activo, $txt_direccion);
+                $a_valores[$c] = $this->buildFila($id_direccion, $id_ubi, $nombre_ubi, $activo, $txt_direccion);
                 $orden_nom[$c] = strtolower($nombre_ubi);
             }
         }
@@ -180,7 +181,7 @@ final class CartasPresentacionUbisListaData
         return [
             'tipo_lista' => 'get_r',
             'explicacion' => '',
-            'a_cabeceras' => self::cabecerasEx(),
+            'a_cabeceras' => $this->cabecerasEx(),
             'a_valores' => $a_valores,
         ];
     }
@@ -188,10 +189,8 @@ final class CartasPresentacionUbisListaData
     /**
      * @return array<int, string|array<string,string>>
      */
-    private static function buildFila(int|string $id_direccion, int|string $id_ubi, string $nombre_ubi, bool $activo, string $txt_direccion): array
+    private function buildFila(int $id_direccion, int $id_ubi, string $nombre_ubi, bool $activo, string $txt_direccion): array
     {
-        $id_direccion = (int)$id_direccion;
-        $id_ubi = (int)$id_ubi;
         $pres = $activo ? _("si") : _("no");
 
         $fila = [];
@@ -218,7 +217,7 @@ final class CartasPresentacionUbisListaData
     /**
      * @return array<int,array<string,mixed>>
      */
-    private static function cabeceras(): array
+    private function cabeceras(): array
     {
         return [
             ['name' => ucfirst(_("nombre")), 'width' => 20, 'formatter' => 'clickFormatter'],
@@ -231,9 +230,9 @@ final class CartasPresentacionUbisListaData
     /**
      * @return array<int,array<string,mixed>>
      */
-    private static function cabecerasEx(): array
+    private function cabecerasEx(): array
     {
-        $cab = self::cabeceras();
+        $cab = $this->cabeceras();
         $cab[3]['name'] = ucfirst(_("direccion"));
         return $cab;
     }

@@ -13,7 +13,7 @@ final class CartasPresentacionShellData
     /**
      * @return array<string, mixed>
      */
-    public static function build(): array
+    public function execute(): array
     {
         return [
             'mi_dele' => ConfigGlobal::mi_delef(),

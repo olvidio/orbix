@@ -17,6 +17,11 @@ use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
  */
 final class CartasPresentacionBuscarOpcionesData
 {
+    public function __construct(
+        private DireccionCentroRepositoryInterface $direccionCentroRepository,
+    ) {
+    }
+
     /**
      * @return array{
      *   opciones_region: array<string, string>,
@@ -26,13 +31,11 @@ final class CartasPresentacionBuscarOpcionesData
      *   hash_lista: array{campos_hidden: array<string, string>, campos_form: string, campos_no: string}
      * }
      */
-    public static function execute(): array
+    public function execute(): array
     {
-        $repoDireccion = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
-
         return [
             'opciones_region' => RegionDropdown::activasOrdenNombre(),
-            'opciones_pais' => (array)$repoDireccion->getArrayPaises(),
+            'opciones_pais' => (array)$this->direccionCentroRepository->getArrayPaises(),
             'opciones_delegacion' => DelegacionDropdown::byRegiones(['H']),
             'paths' => [
                 'lista' => 'frontend/cartaspresentacion/controller/cartas_presentacion_lista.php',

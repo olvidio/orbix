@@ -5,13 +5,19 @@
  */
 
 use src\cartaspresentacion\application\CartaPresentacionFormData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+
+use function src\shared\domain\helpers\input_int;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 $input = [
-    'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),
-    'id_direccion' => (int)filter_input(INPUT_POST, 'id_direccion'),
+    'id_ubi' => input_int($_POST, 'id_ubi'),
+    'id_direccion' => input_int($_POST, 'id_direccion'),
 ];
-$data = CartaPresentacionFormData::execute($input);
+
+/** @var CartaPresentacionFormData $useCase */
+$useCase = DependencyResolver::get(CartaPresentacionFormData::class);
+$data = $useCase->execute($input);
 ContestarJson::enviar('', $data);

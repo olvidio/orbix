@@ -29,9 +29,9 @@ final class CartasPresentacionShellDataTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_build_incluye_mi_dele_y_paths(): void
+    public function test_execute_incluye_mi_dele_y_paths(): void
     {
-        $data = CartasPresentacionShellData::build();
+        $data = (new CartasPresentacionShellData())->execute();
 
         $this->assertSame(ConfigGlobal::mi_delef(), $data['mi_dele']);
         $this->assertArrayHasKey('paths', $data);
