@@ -3,6 +3,9 @@
 namespace src\actividadcargos\application;
 
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\domain\entity\ActividadCargo;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaPub;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -12,9 +15,9 @@ use function src\shared\domain\helpers\is_true;
 final class SelectCargosDeActividadTableData
 {
     /**
-     * @param iterable<mixed> $cCargosEnActividad filas {@see ActividadCargo} u objetos con la misma superficie
-     * @param callable(int|null): (object|null) $findPersona devuelve persona con getPrefApellidosNombre, getCentro_o_dl, getId_tabla
-     * @param array<string, array{perm?: mixed, obj?: mixed, nom?: mixed}> $aRefPerm salida de {@see PermDossier::perm_pers_activ()}
+     * @param iterable<ActividadCargo> $cCargosEnActividad
+     * @param callable(?int): (PersonaDl|PersonaPub|null) $findPersona
+     * @param array<string, array{perm?: mixed, obj?: mixed, nom?: mixed}> $aRefPerm
      * @return array{a_valores: array<int|string, mixed>, msg_err: string}
      */
     public static function buildValorRows(
@@ -40,7 +43,7 @@ final class SelectCargosDeActividadTableData
             $tipo_cargo = '';
             $cargo = '';
             if ($oCargo !== null) {
-                $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
+                $tipo_cargo = $oCargo->getTipoCargoVo()?->value() ?? '';
                 $cargo = $oCargo->getCargoVo()->value();
             }
             if ($tipo_cargo === 'sacd' && $mi_sfsv === 2) {
@@ -59,7 +62,8 @@ final class SelectCargosDeActividadTableData
             $observ = (string) ($oActividadCargo->getObserv() ?? '');
 
             $permiso = 1;
-            if ($id_tabla = $oPersona->getId_tabla()) {
+            $id_tabla = $oPersona->getId_tabla();
+            if ($id_tabla !== '') {
                 $a_act = $aRefPerm[$id_tabla] ?? null;
                 $permiso = (!empty($a_act) && !empty($a_act['perm'])) ? 3 : 1;
             } else {
@@ -77,7 +81,7 @@ final class SelectCargosDeActividadTableData
             $a_valores[$c][4] = $observ;
         }
 
-        if (!empty($a_valores)) {
+        if ($a_valores !== []) {
             if (!empty($qidSel)) {
                 $a_valores['select'] = $qidSel;
             }

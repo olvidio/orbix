@@ -4,61 +4,42 @@ namespace src\actividadcargos\domain\contracts;
 
 use src\actividadcargos\domain\entity\Cargo;
 
-use function src\shared\domain\helpers\is_true;
 /**
  * Interfaz de la clase Cargo y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 17/11/2025
  */
 interface CargoRepositoryInterface
 {
+    /**
+     * @return list<int>
+     */
     public function getArrayIdCargosSacd(): array;
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayCargos(string $tipo_cargo = ''): array;
 
-/* --------------------  BASiC SEARCH ---------------------------------------- */
-
-	/**
-	 * devuelve una colección (array) de objetos de tipo Cargo
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo Cargo
-	
-	 */
-	public function getCargos(array $aWhere=[], array $aOperators=[]): array;
-	
-/* -------------------- ENTIDAD --------------------------------------------- */
-
-	public function Eliminar(Cargo $Cargo): bool;
-
-	public function Guardar(Cargo $Cargo): bool;
-
-	public function getErrorTxt(): string;
-
-
-
-	public function getNomTabla(): string;
-	
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     * 
-     * @param int $id_cargo
-     * @return array|bool
-	
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Cargo>
      */
-    public function datosById(int $id_cargo): array|bool;
-	
+    public function getCargos(array $aWhere = [], array $aOperators = []): array;
+
+    public function Eliminar(Cargo $Cargo): bool;
+
+    public function Guardar(Cargo $Cargo): bool;
+
+    public function getErrorTxt(): string;
+
+    public function getNomTabla(): string;
+
     /**
-     * Busca la clase con id_cargo en el repositorio.
-	
+     * @return array<string, mixed>|false
      */
+    public function datosById(int $id_cargo): array|false;
+
     public function findById(int $id_cargo): ?Cargo;
-	
-    public function getNewId();
+
+    public function getNewId(): int;
 }

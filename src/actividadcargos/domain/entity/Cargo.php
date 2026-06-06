@@ -60,9 +60,11 @@ class Cargo
 
     public function setCargoVo(CargoCode|string|null $codigo): void
     {
-        $this->cargo = $codigo instanceof CargoCode
-            ? $codigo
-            : TipoCargoCode::fromNullableString($codigo);
+        if ($codigo instanceof CargoCode) {
+            $this->cargo = $codigo;
+        } elseif (is_string($codigo) && $codigo !== '') {
+            $this->cargo = new CargoCode($codigo);
+        }
     }
 
     public function getOrdenCargoVo(): ?OrdenCargo
@@ -178,6 +180,9 @@ class Cargo
      * Devuelve una colección de objetor tipo DatosCampo
      *
      */
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
         $oCargoSet = new Set();
@@ -187,7 +192,7 @@ class Cargo
         $oCargoSet->add($this->getDatosSf());
         $oCargoSet->add($this->getDatosSv());
         $oCargoSet->add($this->getDatosTipo_cargo());
-        return $oCargoSet->getTot();
+        return array_values($oCargoSet->getTot());
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace src\actividadcargos\application;
 
-use src\shared\config\ConfigGlobal;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
@@ -12,6 +11,10 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\shared\config\ConfigGlobal;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -20,36 +23,52 @@ use function src\shared\domain\helpers\is_true;
  */
 final class FormCargosDeActividadData
 {
+    public function __construct(
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private CargoRepositoryInterface $cargoRepository,
+        private PersonaNRepositoryInterface $personaNRepository,
+        private PersonaNaxRepositoryInterface $personaNaxRepository,
+        private PersonaAgdRepositoryInterface $personaAgdRepository,
+        private PersonaSRepositoryInterface $personaSRepository,
+        private PersonaSSSCRepositoryInterface $personaSSSCRepository,
+        private PersonaExRepositoryInterface $personaExRepository,
+    ) {
+    }
+
     /**
-     * @return array{error?: string, redir?: string, obj: string, id_nom_real: int|string, ape_nom: string, observ: string, puede_agd: mixed, chk: string, Qmod: string, id_dossier: int, personas_select?: array{opciones: array<int|string, string>, opcion_sel?: string}|null, cargos_select: array{opciones: array<int|string, string>, opcion_sel: string}, hash_form_config: array{campos_form: string, campos_no: string, campos_hidden: array<string, mixed>}, url_cargo_nuevo: string, url_cargo_editar: string, show_person_desplegable: bool, show_asis: bool, Qid_pau: int, Qid_item: int|string, Qobj_pau: string, Qid_schema: int|string, Qid_nom: int}
+     * @param array<string, mixed> $post
+     * @return array<string, mixed>
      */
-    public static function build(array $post): array
+    public function build(array $post): array
     {
         $Qid_item = '';
         $Qid_cargo = '';
 
-        $Qpermiso = (string)($post['permiso'] ?? '');
-        $Qid_dossier = (int)($post['id_dossier'] ?? 0);
+        $Qpermiso = input_string($post, 'permiso');
+        $Qid_dossier = input_int($post, 'id_dossier');
         if ($Qid_dossier <= 0) {
             $Qid_dossier = 3102;
         }
 
-        $a_sel = isset($post['sel']) ? (array)$post['sel'] : [];
+        $a_sel = input_string_list($post, 'sel');
         $Qid_schema = '';
-        if (!empty($a_sel)) {
-            $Qid_nom = (int)strtok($a_sel[0], '#');
-            $Qid_item = (int)strtok('#');
-            $Qid_item = empty($Qid_item) ? '' : $Qid_item;
+        if ($a_sel !== []) {
+            $Qid_nom = (int) strtok($a_sel[0], '#');
+            $parsedItem = strtok('#');
+            $Qid_item = '';
+            if ($parsedItem !== false && is_numeric($parsedItem)) {
+                $Qid_item = (int) $parsedItem;
+            }
             strtok('#');
-            $Qid_schema = (int)strtok('#');
+            $parsedSchema = strtok('#');
+            $Qid_schema = $parsedSchema !== false ? (int) $parsedSchema : 0;
         } else {
-            $Qid_nom = (int)($post['id_nom'] ?? 0);
+            $Qid_nom = input_int($post, 'id_nom');
         }
 
-        $Qmod = (string)($post['mod'] ?? '');
-        $pau = (string)($post['pau'] ?? '');
-        $Qid_pau = (int)($post['id_pau'] ?? 0);
-        $Qobj_pau = (string)($post['obj_pau'] ?? '');
+        $Qmod = input_string($post, 'mod');
+        $Qid_pau = input_int($post, 'id_pau');
+        $Qobj_pau = input_string($post, 'obj_pau');
 
         $obj = 'ActividadCargo';
 
@@ -59,17 +78,16 @@ final class FormCargosDeActividadData
         $puede_agd = '';
         $personas_select = null;
 
-        if (!empty($Qid_item)) {
-            $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-            $cActividadCargo = $ActividadCargoRepository->getActividadCargos([
+        if ($Qid_item !== '') {
+            $cActividadCargo = $this->actividadCargoRepository->getActividadCargos([
                 'id_item' => $Qid_item,
                 'id_schema' => $Qid_schema,
             ]);
             $oActividadCargo = $cActividadCargo[0];
             $Qid_cargo = $oActividadCargo->getId_cargo();
-            $Qid_nom = $oActividadCargo->getId_nom();
+            $Qid_nom = (int) ($oActividadCargo->getId_nom() ?? 0);
             $puede_agd = $oActividadCargo->isPuede_agd();
-            $observ = $oActividadCargo->getObserv();
+            $observ = (string) ($oActividadCargo->getObserv() ?? '');
 
             $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
             if (!is_object($oPersona)) {
@@ -85,45 +103,27 @@ final class FormCargosDeActividadData
                 }
                 $ape_nom = $oPersona->getPrefApellidosNombre();
                 $id_nom_real = $Qid_nom;
-            } elseif (!empty($Qobj_pau)) {
+            } elseif ($Qobj_pau !== '') {
                 $obj_pau = strtok(urldecode($Qobj_pau), '&');
                 strtok('&');
-                switch ($obj_pau) {
-                    case 'PersonaN':
-                        $oOpciones = $GLOBALS['container']->get(PersonaNRepositoryInterface::class)->getArrayPersonas();
-                        break;
-                    case 'PersonaNax':
-                        $oOpciones = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class)->getArrayPersonas();
-                        break;
-                    case 'PersonaAgd':
-                        $oOpciones = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class)->getArrayPersonas();
-                        break;
-                    case 'PersonaS':
-                        $oOpciones = $GLOBALS['container']->get(PersonaSRepositoryInterface::class)->getArrayPersonas();
-                        break;
-                    case 'PersonaSSSC':
-                        $oOpciones = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class)->getArrayPersonas();
-                        break;
-                    case 'PersonaEx':
-                        $dec = urldecode($Qobj_pau);
-                        strtok($dec, '&');
-                        $tail = strtok('&');
-                        $na_val = 'p' . substr((string)$tail, (int)strpos((string)$tail, '=') + 1);
-                        $oOpciones = $GLOBALS['container']->get(PersonaExRepositoryInterface::class)->getArrayPersonas($na_val);
-                        break;
-                    default:
-                        $oOpciones = [];
-                }
+                $oOpciones = match ($obj_pau) {
+                    'PersonaN' => $this->personaNRepository->getArrayPersonas(),
+                    'PersonaNax' => $this->personaNaxRepository->getArrayPersonas(),
+                    'PersonaAgd' => $this->personaAgdRepository->getArrayPersonas(),
+                    'PersonaS' => $this->personaSRepository->getArrayPersonas(),
+                    'PersonaSSSC' => $this->personaSSSCRepository->getArrayPersonas(),
+                    'PersonaEx' => $this->resolvePersonaExOpciones($Qobj_pau),
+                    default => [],
+                };
                 $personas_select = ['opciones' => $oOpciones];
             } else {
                 return ['redir' => 'go_atras'];
             }
         }
 
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         $cargos_select = [
-            'opciones' => $CargoRepository->getArrayCargos(),
-            'opcion_sel' => (string)$Qid_cargo,
+            'opciones' => $this->cargoRepository->getArrayCargos(),
+            'opcion_sel' => (string) $Qid_cargo,
         ];
 
         $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
@@ -137,7 +137,7 @@ final class FormCargosDeActividadData
             'obj_pau' => $Qobj_pau,
             'permiso' => $Qpermiso,
         ];
-        if (!empty($id_nom_real)) {
+        if ($id_nom_real !== '') {
             $a_camposHidden['id_nom'] = $id_nom_real;
         } else {
             if ($Qmod === 'nuevo') {
@@ -165,8 +165,8 @@ final class FormCargosDeActividadData
             'Qid_schema' => $Qid_schema,
             'Qid_nom' => $Qid_nom,
             'id_dossier' => $Qid_dossier,
-            'show_person_desplegable' => empty($id_nom_real),
-            'show_asis' => $Qmod === 'nuevo' && empty($id_nom_real),
+            'show_person_desplegable' => $id_nom_real === '',
+            'show_asis' => $Qmod === 'nuevo' && $id_nom_real === '',
             'cargos_select' => $cargos_select,
             'hash_form_config' => [
                 'campos_form' => $camposForm,
@@ -181,5 +181,22 @@ final class FormCargosDeActividadData
         }
 
         return $out;
+    }
+
+    /**
+     * @return array<int|string, string>
+     */
+    private function resolvePersonaExOpciones(string $qobjPau): array
+    {
+        $dec = urldecode($qobjPau);
+        strtok($dec, '&');
+        $tail = strtok('&');
+        if ($tail === false) {
+            return [];
+        }
+        $eqPos = strpos($tail, '=');
+        $na_val = 'p' . ($eqPos !== false ? substr($tail, $eqPos + 1) : '');
+
+        return $this->personaExRepository->getArrayPersonas($na_val);
     }
 }

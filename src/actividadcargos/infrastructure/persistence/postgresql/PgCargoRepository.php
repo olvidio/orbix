@@ -9,17 +9,11 @@ use PDO;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\Cargo;
 use src\actividadcargos\domain\value_objects\TipoCargoCode;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla xd_orden_cargo a la interfaz del repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 17/11/2025
  */
 class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterface
 {
@@ -27,64 +21,76 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('xd_orden_cargo');
     }
 
+    /**
+     * @return list<int>
+     */
     public function getArrayIdCargosSacd(): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $tipo_cargo = TipoCargoCode::SACD;
-        $where = empty($tipo_cargo) ? '' : " WHERE tipo_cargo = '$tipo_cargo' ";
+        $where = " WHERE tipo_cargo = '$tipo_cargo' ";
         $sQuery = "SELECT id_cargo,cargo 
                 FROM $nom_tabla
                 $where
                 ORDER BY orden_cargo";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aIdCargo = [];
         foreach ($stmt as $aDades) {
-            $id_cargo = $aDades['id_cargo'];
-            $aIdCargo[] = $id_cargo;
+            if (!is_array($aDades) || !isset($aDades['id_cargo'])) {
+                continue;
+            }
+            $aIdCargo[] = is_numeric($aDades['id_cargo']) ? (int) $aDades['id_cargo'] : 0;
         }
         return $aIdCargo;
-
     }
+
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayCargos(string $tipo_cargo = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $where = empty($tipo_cargo) ? '' : " WHERE tipo_cargo = '$tipo_cargo' ";
+        $where = $tipo_cargo === '' ? '' : " WHERE tipo_cargo = '$tipo_cargo' ";
         $sQuery = "SELECT id_cargo,cargo 
                 FROM $nom_tabla
                 $where
                 ORDER BY orden_cargo";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aIdCargo = [];
         foreach ($stmt as $aDades) {
+            if (!is_array($aDades) || !isset($aDades['id_cargo'], $aDades['cargo'])) {
+                continue;
+            }
             $id_cargo = $aDades['id_cargo'];
-            $cargo = $aDades['cargo'];
+            $cargo = (string) $aDades['cargo'];
             $aIdCargo[$id_cargo] = $cargo;
         }
         return $aIdCargo;
-
     }
 
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
     /**
-     * devuelve una colección (array) de objetos de tipo Cargo
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Cargo
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Cargo>
      */
     public function getCargos(array $aWhere = [], array $aOperators = []): array
     {
@@ -94,24 +100,17 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
+            if ($camp === '_ordre' || $camp === '_limit') {
                 continue;
             }
             $sOperador = $aOperators[$camp] ?? '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
                 $aCondicion[] = $a;
             }
-            // operadores que no requieren valores
             if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
                 unset($aWhere[$camp]);
             }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN' || $sOperador === 'TXT') {
                 unset($aWhere[$camp]);
             }
         }
@@ -121,30 +120,36 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $Cargo = Cargo::fromArray($aDatos);
             $CargoSet->add($Cargo);
         }
-        return $CargoSet->getTot();
+        return array_values($CargoSet->getTot());
     }
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(Cargo $Cargo): bool
     {
@@ -155,10 +160,6 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-
-    /**
-     * Si no existe el registro, hace un insert, si existe, se hace el update.
-     */
     public function Guardar(Cargo $Cargo): bool
     {
         $id_cargo = $Cargo->getId_cargo();
@@ -168,7 +169,6 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
 
         $aDatos = $Cargo->toArrayForDatabase();
         if ($bInsert === false) {
-            //UPDATE
             unset($aDatos['id_cargo']);
             $update = "
 					cargo                    = :cargo,
@@ -178,13 +178,14 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
 					tipo_cargo               = :tipo_cargo";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_cargo = $id_cargo";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
-        else {
-            //INSERT
+        } else {
             $campos = "(id_cargo,cargo,orden_cargo,sf,sv,tipo_cargo)";
             $valores = "(:id_cargo,:cargo,:orden_cargo,:sf,:sv,:tipo_cargo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        if ($stmt === false) {
+            return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -195,46 +196,57 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_cargo = $id_cargo";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_cargo
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_cargo): array |bool
+    public function datosById(int $id_cargo): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_cargo = $id_cargo";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
-
-    /**
-     * Busca la clase con id_cargo en la base de datos .
-     */
     public function findById(int $id_cargo): ?Cargo
     {
         $aDatos = $this->datosById($id_cargo);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Cargo::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('xd_orden_cargo_id_cargo_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

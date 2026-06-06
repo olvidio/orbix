@@ -1,6 +1,7 @@
 <?php
 
 use src\actividadcargos\application\ActividadCargoEditar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 /**
@@ -14,5 +15,7 @@ $input['asis_presente'] = isset($_POST['asis_presente']) && $_POST['asis_present
     ? '1'
     : (isset($_POST['asis']) ? '1' : '');
 
-$error_txt = ActividadCargoEditar::execute($input);
+/** @var ActividadCargoEditar $useCase */
+$useCase = DependencyResolver::get(ActividadCargoEditar::class);
+$error_txt = $useCase->execute($input);
 ContestarJson::enviar($error_txt, 'ok');

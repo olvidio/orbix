@@ -128,3 +128,100 @@ frontend/actividadcargos/
 
 - `update_3102` case `eliminar`: la condicion `$Qelim_asis === 2` comparaba string vs int (bug silencioso: nunca borraba al asistente). `ActividadCargoEliminar` hace la comparacion como int, restaurando la semantica pretendida.
 - `isset($_POST['asis'])` (ambiguedad checkbox desmarcado vs campo ausente): el frontend emite un input oculto `asis_presente=1` siempre que el form incluye el checkbox `asis`, y el endpoint `cargo_editar.php` lo traduce al flag equivalente antes de pasarlo al caso de uso.
+
+---
+
+## Cierre DI (2026-06-06)
+
+Seguimiento del cierre DI de `src/actividadcargos/` siguiendo el patron aplicado en
+`actividades` ([`actividades_migracion_baseline.md`](actividades_migracion_baseline.md)) y
+`asistentes` ([`asistentes_migracion_baseline.md`](asistentes_migracion_baseline.md)).
+
+### Inventario inicial (antes del cierre DI)
+
+| Capa | Ficheros con `$GLOBALS['container']` |
+|------|--------------------------------------:|
+| `application/` | 7 |
+| `infrastructure/persistence/postgresql/` | 1 (`PgActividadCargoDlRepository`, 8 ocurrencias) |
+| `domain/` | 2 (`InfoCargo`, `ActividadCargo::isSacd`) |
+| **Total** | **10** (41 ocurrencias) |
+
+### Estaticos convertidos a instancia + DI
+
+| Clase | Antes | Despues |
+|-------|-------|---------|
+| `ActividadCargoNuevo` | `ActividadCargoNuevo::execute()` | `execute()` con repos + `AsistenteApplicationService` |
+| `ActividadCargoEditar` | `ActividadCargoEditar::execute()` | idem |
+| `ActividadCargoEliminar` | `ActividadCargoEliminar::execute()` | idem |
+| `FormCargosDeActividadData` | `FormCargosDeActividadData::build()` | `build()` con 8 repos inyectados |
+| `FormCargosPersonasEnActividadData` | `FormCargosPersonasEnActividadData::build()` | `build()` con 3 repos inyectados |
+| `Select_cargos_de_actividad` | service locator en `loadValores()` | constructor DI (3 repos) |
+| `Select_cargos_personas_en_actividad` | service locator en `loadValores()` | constructor DI (3 repos) |
+
+### Domain
+
+| Clase | Cambio |
+|-------|--------|
+| `InfoCargo` | Constructor DI (`CargoRepositoryInterface`), patron `InfoTipoRepeticion` |
+| `ActividadCargo::isSacd()` | Fallback via `DependencyResolver::get(CargoRepositoryInterface)` + cache estatico (deuda documentada) |
+| `PgActividadCargoDlRepository` | Constructor DI: `CargoRepository`, `PersonaSacdRepository`, `ActividadAllRepository`, `AsistenteActividadService`, `ActividadRepository`; `GlobalPdo` para PDO |
+
+### HTTP controllers
+
+Los 6 controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()` (sin `::execute()` estatico).
+
+### Resultado del cierre DI
+
+| Criterio | Estado |
+|----------|--------|
+| `$GLOBALS['container']` en `src/actividadcargos/` | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | **6/6** |
+| `application/` con constructor DI | **7** clases |
+| Casos de uso en `config/dependencies.php` | **11** entradas `autowire()` |
+| Tests `tests/unit/actividadcargos/` | **60 OK** |
+
+### `src/actividadcargos/config/dependencies.php`
+
+Registra repositorios del modulo + casos de uso (`ActividadCargoNuevo`,
+`ActividadCargoEditar`, `ActividadCargoEliminar`), builders `*Data`, widgets
+`Select_*` e `InfoCargo`.
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (inicio) | `composer phpstan:file -- src/actividadcargos/` | **226** |
+| 2026-06-06 (cierre) | `composer phpstan:file -- src/actividadcargos/` | **0** |
+
+Areas abordadas en el cierre (226 → 0):
+
+- Repos `PgActividadCargoDlRepository`, `PgCargoRepository`, `PgCargoOAsistente` — guards PDO, tipos de retorno, `GlobalPdo`.
+- Application: `input_int`/`input_string`, session guards `XPermisos`, tipos en `*TableData`.
+- Domain: `InfoCargo` DI, `Cargo::setCargoVo` bugfix, contratos con PHPDoc.
+- HTTP controllers: `DependencyResolver::get()` sin casts invalidos.
+
+### Deuda post-refactor
+
+#### Completado
+
+- [x] 0 `$GLOBALS['container']` en todo `src/actividadcargos/`
+- [x] Todos los controllers HTTP via `DependencyResolver`
+- [x] Casos de uso / widgets con constructor DI
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests `tests/unit/actividadcargos/`: 60 tests
+- [x] PHPStan `src/actividadcargos/` en 0 (phpstan-nobaseline.neon)
+
+#### Pendiente
+
+- [ ] `ActividadCargo::isSacd()`: eliminar fallback `DependencyResolver` en dominio (migrar callers a inyeccion explicita de `CargoRepositoryInterface`)
+
+### Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests existentes pasan (`tests/unit/actividadcargos/`: 60 tests)
+- [x] PHPStan `src/actividadcargos/` en 0 (phpstan-nobaseline.neon)

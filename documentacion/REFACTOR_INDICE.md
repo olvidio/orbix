@@ -45,7 +45,7 @@ Columnas:
 | Módulo | Baseline | `use src\` | `GLOBALS` | Estado / notas |
 |--------|:--------:|----------:|----------:|----------------|
 | **asistentes** | ✓ | 0 | 0 | **Cierre DI completado.** Piloto de referencia; ver [deuda residual](asistentes_migracion_baseline.md#deuda-post-refactor) (PHPStan, tests) |
-| actividadcargos | ✓ | 0 | 10 | Migración completa (piloto original) |
+| **actividadcargos** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadcargos_migracion_baseline.md) |
 | **actividades** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividades_migracion_baseline.md) |
 | actividadescentro | ✓ | 1 | 7 | 1 controlador frontend pendiente |
 | actividadessacd | ✓ | 2 | 16 | 2 controladores frontend pendientes |

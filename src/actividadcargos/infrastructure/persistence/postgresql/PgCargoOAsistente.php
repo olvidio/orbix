@@ -4,44 +4,37 @@ namespace src\actividadcargos\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
+use PDOStatement;
 use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividadcargos\domain\entity\CargoOAsistente;
+use src\actividades\domain\entity\ActividadAll;
+use src\personas\domain\entity\PersonaGlobal;
+use function src\shared\domain\helpers\is_true;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 
 /**
- * GestorCargoOAsistente
- *
- * Classe per gestionar la llista d'objectes de la clase CargoOAsistente
- *
- * @package delegación
- * @subpackage model
- * @author Daniel Serrabou
- * @version 1.0
- * @created 01/10/2010
+ * GestorCargoOAsistente — lista de objetos CargoOAsistente.
  */
 class PgCargoOAsistente implements CargoOAsistenteInterface
 {
-  use HandlesPdoErrors;
+    use HandlesPdoErrors;
 
     private PDO $oDbl;
 
-    function __construct()
+    public function __construct()
     {
-        $this->oDbl = $GLOBALS['oDBE'];
+        $this->oDbl = GlobalPdo::get('oDBE');
     }
 
     /**
-     * retorna l'array d'objectes tipus CargoOAsistente
-     *
-     * @param integer id_nom
-     * @return array|bool
+     * @return list<CargoOAsistente>
      */
     public function getCargoOAsistente(int $iid_nom): array
     {
         $oDbl = $this->oDbl;
 
         $oCargoOAsistenteSet = new Set();
-        // lista de id_activ ordenados, primero los propios.
         $sQuery = "SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_dl WHERE id_nom=$iid_nom
 					UNION ALL
 		        SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_out WHERE id_nom=$iid_nom
@@ -50,28 +43,43 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
 				ORDER BY 1,2 DESC";
 
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aRepe = [];
         $c = 0;
         foreach ($stmt as $aDades) {
-            if (in_array($aDades['id_activ'], $aRepe)) { // si está repetido, el primero tiene propio=true.
-                // Añado al primero el id_cargo del segundo.
-                $Obj = $oCargoOAsistenteSet->getElement($c - 1);
-                $Obj->setId_cargo($aDades['id_cargo']);
-                $oCargoOAsistenteSet->setElement($c - 1, $Obj);
+            if (!is_array($aDades) || !isset($aDades['id_activ'])) {
                 continue;
             }
-            $oCargoOAsistente = new CargoOAsistente($aDades['id_activ']);
+            $id_activ = is_numeric($aDades['id_activ']) ? (int) $aDades['id_activ'] : 0;
+            if (in_array($id_activ, $aRepe, true)) {
+                $Obj = $oCargoOAsistenteSet->getElement($c - 1);
+                if ($Obj instanceof CargoOAsistente && isset($aDades['id_cargo'])) {
+                    $Obj->setId_cargo(is_numeric($aDades['id_cargo']) ? (int) $aDades['id_cargo'] : 0);
+                    $oCargoOAsistenteSet->setElement($c - 1, $Obj);
+                }
+                continue;
+            }
+            $oCargoOAsistente = new CargoOAsistente($id_activ);
             $oCargoOAsistente->setId_nom($iid_nom);
-            $oCargoOAsistente->setPropio($aDades['propio']);
+            if (isset($aDades['propio'])) {
+                $oCargoOAsistente->setPropio(is_true($aDades['propio']));
+            }
             $oCargoOAsistenteSet->add($oCargoOAsistente);
-            $aRepe[] = $aDades['id_activ'];
+            $aRepe[] = $id_activ;
             $c++;
         }
-        return $oCargoOAsistenteSet->getTot();
+        return array_values($oCargoOAsistenteSet->getTot());
     }
 
-    function getSolapes(array $cPersonas,array $cActividades):array
+    /**
+     * @param iterable<PersonaGlobal> $cPersonas
+     * @param iterable<ActividadAll> $cActividades
+     * @return array<int, list<int>>
+     */
+    public function getSolapes(iterable $cPersonas, iterable $cActividades): array
     {
         $oDbl = $this->oDbl;
 
@@ -100,21 +108,29 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
 
         $sql = "INSERT INTO $tabla_tmp (id_activ, f_ini, f_fin, id_ubi) VALUES (:id_activ, :f_ini, :f_fin, :id_ubi);";
         $sentencia_1 = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        foreach ($cActividades as $oActividad) {
-            $aDadesActiv['id_activ'] = $oActividad->getId_activ();
-            $aDadesActiv['f_ini'] = $oActividad->getF_ini()->getIso();
-            $aDadesActiv['f_fin'] = $oActividad->getF_fin()->getIso();
-            $aDadesActiv['id_ubi'] = $oActividad->getId_ubi();
-
-            $this->pdoExecute($sentencia_1, $aDadesActiv, __METHOD__, __FILE__, __LINE__);
+        if ($sentencia_1 instanceof PDOStatement) {
+            foreach ($cActividades as $oActividad) {
+                $fIni = $oActividad->getF_ini();
+                $fFin = $oActividad->getF_fin();
+                if ($fIni === null || $fFin === null || !method_exists($fIni, 'getIso') || !method_exists($fFin, 'getIso')) {
+                    continue;
+                }
+                $aDadesActiv = [
+                    'id_activ' => $oActividad->getId_activ(),
+                    'f_ini' => $fIni->getIso(),
+                    'f_fin' => $fFin->getIso(),
+                    'id_ubi' => $oActividad->getId_ubi(),
+                ];
+                $this->pdoExecute($sentencia_1, $aDadesActiv, __METHOD__, __FILE__, __LINE__);
+            }
         }
-
 
         $sql2 = "INSERT INTO $tabla_p_tmp (id_nom, id_activ, f_ini, f_fin, id_ubi) VALUES (:id_nom, :id_activ, :f_ini, :f_fin, :id_ubi);";
         $sentencia_2 = $this->pdoPrepare($oDbl, $sql2, __METHOD__, __FILE__, __LINE__);
-        foreach ($cPersonas as $oPersona) {
-            $id_nom = $oPersona->getId_nom();
-            $sQuery = "SELECT d.id_activ, d.propio, 0 as id_cargo, a.f_ini, a.f_fin, a.id_ubi
+        if ($sentencia_2 instanceof PDOStatement) {
+            foreach ($cPersonas as $oPersona) {
+                $id_nom = $oPersona->getId_nom();
+                $sQuery = "SELECT d.id_activ, d.propio, 0 as id_cargo, a.f_ini, a.f_fin, a.id_ubi
                         FROM d_asistentes_dl d JOIN $tabla_tmp a USING (id_activ) WHERE id_nom=$id_nom
                         UNION ALL
                     SELECT d.id_activ, d.propio, 0 as id_cargo, a.f_ini, a.f_fin, a.id_ubi
@@ -124,31 +140,33 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
                         FROM d_cargos_activ_dl d JOIN $tabla_tmp a USING (id_activ) WHERE id_nom=$id_nom
                     ORDER BY 1,2 DESC";
 
-            $cargosoAsistencias = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
-
-            $aRepe = [];
-            $c = 0;
-            foreach ($cargosoAsistencias as $aDades) {
-                if (in_array($aDades['id_activ'], $aRepe)) { // si está repetido, el primero tiene propio=true.
+                $cargosoAsistencias = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+                if ($cargosoAsistencias === false) {
                     continue;
                 }
-                $aDadesSacd['id_nom'] = $id_nom;
-                $aDadesSacd['id_activ'] = $aDades['id_activ'];
-                $aDadesSacd['f_ini'] = $aDades['f_ini'];
-                $aDadesSacd['f_fin'] = $aDades['f_fin'];
-                $aDadesSacd['id_ubi'] = $aDades['id_ubi'];
-                // insertar datos en la tabla $tabla_p_tmp:
-                $this->pdoExecute($sentencia_2, $aDadesSacd, __METHOD__, __FILE__, __LINE__);
 
-                $aRepe[] = $aDades['id_activ'];
-                $c++;
+                $aRepe = [];
+                foreach ($cargosoAsistencias as $aDades) {
+                    if (!is_array($aDades) || !isset($aDades['id_activ'])) {
+                        continue;
+                    }
+                    $id_activ = is_numeric($aDades['id_activ']) ? (int) $aDades['id_activ'] : 0;
+                    if (in_array($id_activ, $aRepe, true)) {
+                        continue;
+                    }
+                    $aDadesSacd = [
+                        'id_nom' => $id_nom,
+                        'id_activ' => $id_activ,
+                        'f_ini' => $aDades['f_ini'] ?? null,
+                        'f_fin' => $aDades['f_fin'] ?? null,
+                        'id_ubi' => $aDades['id_ubi'] ?? null,
+                    ];
+                    $this->pdoExecute($sentencia_2, $aDadesSacd, __METHOD__, __FILE__, __LINE__);
+                    $aRepe[] = $id_activ;
+                }
             }
         }
 
-
-        // solapes:
-        // More details can be found in the manual:
-        // http://www.postgresql.org/docs/current/static/rangetypes.html#RANGETYPES-INCLUSIVITY
         $sQuery = "
                 SELECT f1.*
                 FROM $tabla_p_tmp f1
@@ -160,36 +178,36 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
                 ORDER BY f1.id_nom,f1.f_ini
                 ;
         ";
-        // No me deja ordenar en el sql
         $solapes = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($solapes === false) {
+            return [];
+        }
 
         $a_solapes = [];
-        $id_nom_anterior = '';
+        $id_nom_anterior = 0;
         $a_actividades = [];
         foreach ($solapes as $aDades) {
-            $id_nom = $aDades['id_nom'];
-            $id_activ = $aDades['id_activ'];
+            if (!is_array($aDades) || !isset($aDades['id_nom'], $aDades['id_activ'])) {
+                continue;
+            }
+            $id_nom = (int) $aDades['id_nom'];
+            $id_activ = is_numeric($aDades['id_activ']) ? (int) $aDades['id_activ'] : 0;
 
             if ($id_nom === $id_nom_anterior) {
                 $a_actividades[] = $id_activ;
             } else {
-                if (!empty($id_nom_anterior)) {
+                if ($id_nom_anterior > 0) {
                     $a_solapes[$id_nom_anterior] = $a_actividades;
                     $a_actividades = [];
                 }
-                $a_solapes[$id_nom] = '';
                 $a_actividades[] = $id_activ;
             }
             $id_nom_anterior = $id_nom;
         }
-        // el último:
-        $a_solapes[$id_nom] = $a_actividades;
+        if ($id_nom_anterior > 0) {
+            $a_solapes[$id_nom_anterior] = $a_actividades;
+        }
 
         return $a_solapes;
-
     }
-    /* MÉTODOS PROTECTED --------------------------------------------------------*/
-
-    /* MÉTODOS GET y SET --------------------------------------------------------*/
-
 }

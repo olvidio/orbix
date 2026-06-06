@@ -5,13 +5,14 @@ namespace src\actividadcargos\domain;
 /* No vale el underscore en el nombre */
 
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\domain\entity\Cargo;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoCargo extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private CargoRepositoryInterface $cargoRepository,
+    ) {
         $this->setTxtTitulo(_("cargos"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este cargo?"));
         $this->setTxtBuscar(_("buscar un cargo"));
@@ -23,20 +24,19 @@ class InfoCargo extends DatosInfoRepo
         $this->setRepositoryInterface(CargoRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<Cargo>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'cargo');
+            $aWhere = ['_ordre' => 'cargo'];
             $aOperador = [];
         } else {
-            $aWhere = array('cargo' => $this->k_buscar);
-            $aOperador = array('cargo' => 'sin_acentos');
+            $aWhere = ['cargo' => $this->k_buscar];
+            $aOperador = ['cargo' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getCargos($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->cargoRepository->getCargos($aWhere, $aOperador);
     }
 }

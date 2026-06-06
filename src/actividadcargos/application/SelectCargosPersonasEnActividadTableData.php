@@ -3,6 +3,7 @@
 namespace src\actividadcargos\application;
 
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\domain\entity\ActividadCargo;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use function src\shared\domain\helpers\is_true;
 
@@ -13,6 +14,8 @@ use function src\shared\domain\helpers\is_true;
 final class SelectCargosPersonasEnActividadTableData
 {
     /**
+     * @param iterable<ActividadCargo> $cCargosEnActividad
+     * @param array<string, array{perm?: mixed, nom?: mixed}> $refPerm
      * @return array<int|string, mixed> mismo formato que {@see Lista::setDatos}
      */
     public static function buildValorRows(
@@ -40,6 +43,9 @@ final class SelectCargosPersonasEnActividadTableData
             }
 
             $oActividad = $actAllRepo->findById($id_activ);
+            if ($oActividad === null) {
+                continue;
+            }
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
 
@@ -47,7 +53,7 @@ final class SelectCargosPersonasEnActividadTableData
             $observ = (string) ($oActividadCargo->getObserv() ?? '');
 
             $id_tipo = substr((string) $id_tipo_activ, 0, 3);
-            $act = !empty($refPerm[$id_tipo]) ? $refPerm[$id_tipo] : '';
+            $act = $refPerm[$id_tipo] ?? [];
             $permiso = (!empty($act) && !empty($act['perm'])) ? 3 : 1;
 
             $a_valores[$c]['sel'] = $permiso === 3 ? "$id_item#$elim_asis_default" : '';
@@ -57,7 +63,7 @@ final class SelectCargosPersonasEnActividadTableData
             $a_valores[$c][4] = $observ;
         }
 
-        if (!empty($a_valores)) {
+        if ($a_valores !== []) {
             if (!empty($qidSel)) {
                 $a_valores['select'] = $qidSel;
             }

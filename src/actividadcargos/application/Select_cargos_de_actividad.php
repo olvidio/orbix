@@ -11,9 +11,12 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaPub;
 use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
+use src\permisos\domain\XPermisos;
 
 /**
  * Widget del dossier `3102` (codigo `cargos_de_actividad`): relacion de personas
@@ -28,6 +31,13 @@ use src\actividades\domain\entity\TiposActividades;
  */
 class Select_cargos_de_actividad
 {
+    public function __construct(
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private CargoRepositoryInterface $cargoRepository,
+    ) {
+    }
+
     /** @var array<string, array{perm: mixed, obj: mixed, nom: mixed}>|null */
     private ?array $a_ref_perm = null;
 
@@ -91,11 +101,10 @@ class Select_cargos_de_actividad
             return;
         }
 
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-
-        $oActividad = $ActividadAllRepository->findById($this->id_pau);
+        $oActividad = $this->actividadAllRepository->findById($this->id_pau);
+        if ($oActividad === null) {
+            return;
+        }
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
         $dl_propia = (ConfigGlobal::mi_delef() === $dl_org);
@@ -104,7 +113,10 @@ class Select_cargos_de_actividad
 
         $this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");
         $elim_asis_default = 1;
-        if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        if ($oPerm instanceof XPermisos
+            && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+        ) {
             $oTipoActiv = new TiposActividades($id_tipo_activ);
             $sasistentes = $oTipoActiv->getAsistentesText();
             if ($sasistentes === 's' || $sasistentes === 'sg') {
@@ -114,14 +126,16 @@ class Select_cargos_de_actividad
         }
 
         $mi_sfsv = ConfigGlobal::mi_sfsv();
-        $cCargosEnActividad = $ActividadCargoRepository->getActividadCargos(['id_activ' => $this->id_pau]);
+        $cCargosEnActividad = $this->actividadCargoRepository->getActividadCargos(['id_activ' => $this->id_pau]);
 
         $result = SelectCargosDeActividadTableData::buildValorRows(
             $elim_asis_default,
             $mi_sfsv,
             $cCargosEnActividad,
-            $CargoRepository,
-            static fn (?int $id_nom) => Persona::findPersonaEnGlobal($id_nom),
+            $this->cargoRepository,
+            static fn (?int $id_nom): PersonaDl|PersonaPub|null => $id_nom !== null
+                ? Persona::findPersonaEnGlobal($id_nom)
+                : null,
             $this->a_ref_perm ?? [],
             $this->Qid_sel,
             $this->Qscroll_id,
@@ -192,24 +206,25 @@ class Select_cargos_de_actividad
                 'id_pau' => $this->id_pau,
             ];
             array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
-            $nom = sprintf(_("añadir %s"), $val['nom']);
+            $nomTxt = $val['nom'] ?? '';
+            $nom = sprintf(_("añadir %s"), is_scalar($nomTxt) ? (string) $nomTxt : '');
             $this->aLinks_dl[$nom] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);
         }
     }
 
-    public function getId_dossier() { return $this->id_dossier; }
+    public function getId_dossier(): int|string { return $this->id_dossier; }
     public function getPau(): string { return $this->pau; }
     public function getObj_pau(): string { return $this->obj_pau; }
     public function getId_pau(): int { return $this->id_pau; }
     public function getPermiso(): int { return $this->permiso; }
 
-    public function setId_dossier($id_dossier): void { $this->id_dossier = $id_dossier; }
-    public function setPau($pau): void { $this->pau = (string)$pau; }
-    public function setObj_pau($obj_pau): void { $this->obj_pau = (string)$obj_pau; }
-    public function setId_pau($id_pau): void { $this->id_pau = (int)$id_pau; }
-    public function setPermiso($permiso): void { $this->permiso = (int)$permiso; }
-    public function setQid_sel($Qid_sel): void { $this->Qid_sel = $Qid_sel; }
-    public function setQscroll_id($Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
-    public function setBloque($bloque): void { $this->bloque = (string)$bloque; }
-    public function setQueSel($queSel): void { $this->queSel = (string)$queSel; }
+    public function setId_dossier(int|string $id_dossier): void { $this->id_dossier = $id_dossier; }
+    public function setPau(string|int|float|bool|null $pau = null): void { $this->pau = $pau === null ? '' : (string) $pau; }
+    public function setObj_pau(string|int|float|bool|null $obj_pau = null): void { $this->obj_pau = $obj_pau === null ? '' : (string) $obj_pau; }
+    public function setId_pau(string|int|float|bool|null $id_pau = null): void { $this->id_pau = (int) ($id_pau ?? 0); }
+    public function setPermiso(string|int|float|bool|null $permiso = null): void { $this->permiso = (int) ($permiso ?? 0); }
+    public function setQid_sel(int|string|null $Qid_sel): void { $this->Qid_sel = $Qid_sel; }
+    public function setQscroll_id(int|string|null $Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
+    public function setBloque(string|int|float|bool|null $bloque = null): void { $this->bloque = $bloque === null ? '' : (string) $bloque; }
+    public function setQueSel(string|int|float|bool|null $queSel = null): void { $this->queSel = $queSel === null ? '' : (string) $queSel; }
 }

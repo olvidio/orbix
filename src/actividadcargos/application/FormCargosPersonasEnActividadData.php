@@ -2,12 +2,16 @@
 
 namespace src\actividadcargos\application;
 
-use src\shared\config\ConfigGlobal;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\value_objects\StatusId;
 use frontend\shared\web\Desplegable;
+use src\shared\config\ConfigGlobal;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -15,7 +19,15 @@ use function src\shared\domain\helpers\is_true;
  */
 final class FormCargosPersonasEnActividadData
 {
+    public function __construct(
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private CargoRepositoryInterface $cargoRepository,
+    ) {
+    }
+
     /**
+     * @param iterable<ActividadAll> $cActividades
      * @return list<array{id_activ: int, nom_activ: string}>
      */
     public static function actividadesToRows(iterable $cActividades): array
@@ -23,37 +35,37 @@ final class FormCargosPersonasEnActividadData
         $rows = [];
         foreach ($cActividades as $oActividad) {
             $rows[] = [
-                'id_activ' => (int)$oActividad->getId_activ(),
-                'nom_activ' => (string)$oActividad->getNom_activ(),
+                'id_activ' => (int) $oActividad->getId_activ(),
+                'nom_activ' => (string) $oActividad->getNom_activ(),
             ];
         }
         return $rows;
     }
 
     /**
+     * @param array<string, mixed> $post
      * @return array<string, mixed> Incluye `hash_form_config` (el front convierte a `hash_campos_html`).
      */
-    public static function build(array $post): array
+    public function build(array $post): array
     {
         $Qid_item = '';
         $id_cargo = '';
 
-        $Qpermiso = (int)($post['permiso'] ?? 0);
+        $Qpermiso = input_int($post, 'permiso');
 
-        $a_sel = isset($post['sel']) ? (array)$post['sel'] : [];
+        $a_sel = input_string_list($post, 'sel');
         $Qque_dl = '';
         $Qid_tipo = 0;
-        if (!empty($a_sel)) {
-            $Qid_item = (int)strtok($a_sel[0], '#');
+        if ($a_sel !== []) {
+            $Qid_item = (int) strtok($a_sel[0], '#');
         } else {
-            $Qque_dl = (string)($post['que_dl'] ?? '');
-            $Qid_tipo = (int)($post['id_tipo'] ?? 0);
+            $Qque_dl = input_string($post, 'que_dl');
+            $Qid_tipo = input_int($post, 'id_tipo');
         }
 
-        $Qmod = (string)($post['mod'] ?? '');
-        $pau = (string)($post['pau'] ?? '');
-        $Qid_pau = (int)($post['id_pau'] ?? 0);
-        $Qid_dossier = (int)($post['id_dossier'] ?? 0);
+        $Qmod = input_string($post, 'mod');
+        $Qid_pau = input_int($post, 'id_pau');
+        $Qid_dossier = input_int($post, 'id_dossier');
         if ($Qid_dossier <= 0) {
             $Qid_dossier = 1302;
         }
@@ -66,20 +78,24 @@ final class FormCargosPersonasEnActividadData
         $puede_agd = '';
         $aActividadesRows = [];
 
-        if (!empty($Qid_item)) {
-            $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-            $oActividadCargo = $ActividadCargoRepository->findById($Qid_item);
+        if ($Qid_item !== '') {
+            $oActividadCargo = $this->actividadCargoRepository->findById($Qid_item);
+            if ($oActividadCargo === null) {
+                return ['error' => _('no encuentro el cargo')];
+            }
             $id_activ = $oActividadCargo->getId_activ();
             $id_cargo = $oActividadCargo->getId_cargo();
             $puede_agd = $oActividadCargo->isPuede_agd();
-            $observ = $oActividadCargo->getObserv();
+            $observ = (string) ($oActividadCargo->getObserv() ?? '');
 
-            $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-            $oActividad = $ActividadRepository->findById($id_activ);
+            $oActividad = $this->actividadRepository->findById($id_activ);
+            if ($oActividad === null) {
+                return ['error' => _('actividad no encontrada')];
+            }
             $nom_activ = $oActividad->getNom_activ();
             $id_activ_real = $id_activ;
         } else {
-            if (empty($Qid_tipo)) {
+            if ($Qid_tipo === 0) {
                 $mi_sfsv = ConfigGlobal::mi_sfsv();
                 $id_tipo = '^' . $mi_sfsv;
             } else {
@@ -87,7 +103,7 @@ final class FormCargosPersonasEnActividadData
             }
             $aWhere = [];
             $aOperadores = [];
-            if (!empty($Qque_dl)) {
+            if ($Qque_dl !== '') {
                 $aWhere['dl_org'] = $Qque_dl;
             } else {
                 $aWhere['dl_org'] = ConfigGlobal::mi_delef();
@@ -98,17 +114,15 @@ final class FormCargosPersonasEnActividadData
             $aWhere['status'] = StatusId::ACTUAL;
             $aWhere['_ordre'] = 'f_ini';
 
-            $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
             $aActividadesRows = self::actividadesToRows(
-                $ActividadRepository->getActividades($aWhere, $aOperadores)
+                $this->actividadRepository->getActividades($aWhere, $aOperadores)
             );
         }
 
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         $oDesplegableCargos = new Desplegable();
         $oDesplegableCargos->setNombre('id_cargo');
         $oDesplegableCargos->setBlanco(false);
-        $oDesplegableCargos->setOpciones($CargoRepository->getArrayCargos());
+        $oDesplegableCargos->setOpciones($this->cargoRepository->getArrayCargos());
         $oDesplegableCargos->setOpcion_sel($id_cargo);
 
         $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
@@ -120,7 +134,7 @@ final class FormCargosPersonasEnActividadData
             'id_nom' => $Qid_pau,
             'mod' => $Qmod,
         ];
-        if (!empty($id_activ_real)) {
+        if ($id_activ_real !== '') {
             $a_camposHidden['id_activ'] = $id_activ_real;
         } else {
             if ($Qmod === 'nuevo') {

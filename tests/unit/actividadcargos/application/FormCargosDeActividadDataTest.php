@@ -6,8 +6,14 @@ namespace Tests\unit\actividadcargos\application;
 
 use PHPUnit\Framework\TestCase;
 use src\actividadcargos\application\FormCargosDeActividadData;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 
 /**
@@ -15,27 +21,10 @@ use src\shared\config\ConfigGlobal;
  */
 final class FormCargosDeActividadDataTest extends TestCase
 {
-    private mixed $previousContainer = null;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_build_sin_item_ni_dossier_3101_ni_obj_pau_devuelve_redir(): void
     {
-        $data = FormCargosDeActividadData::build([
+        $builder = $this->makeBuilder();
+        $data = $builder->build([
             'id_dossier' => 3102,
             'id_nom' => 0,
         ]);
@@ -45,24 +34,13 @@ final class FormCargosDeActividadDataTest extends TestCase
 
     public function test_build_con_obj_pau_persona_n_incluye_desplegables_y_hash(): void
     {
-        $GLOBALS['container'] = $this->containerMap([
-            PersonaNRepositoryInterface::class => new class {
-                /** @return array<int|string, string> */
-                public function getArrayPersonas(): array
-                {
-                    return [10 => 'Uno'];
-                }
-            },
-            CargoRepositoryInterface::class => new class {
-                /** @return array<int|string, string> */
-                public function getArrayCargos(): array
-                {
-                    return [5 => 'Cargo A'];
-                }
-            },
-        ]);
+        $personaN = $this->createMock(PersonaNRepositoryInterface::class);
+        $personaN->method('getArrayPersonas')->willReturn([10 => 'Uno']);
+        $cargo = $this->createMock(CargoRepositoryInterface::class);
+        $cargo->method('getArrayCargos')->willReturn([5 => 'Cargo A']);
+        $builder = $this->makeBuilder(personaN: $personaN, cargo: $cargo);
 
-        $data = FormCargosDeActividadData::build([
+        $data = $builder->build([
             'obj_pau' => 'PersonaN',
             'mod' => 'nuevo',
             'pau' => 'pau1',
@@ -98,22 +76,13 @@ final class FormCargosDeActividadDataTest extends TestCase
 
     public function test_build_cumple_contrato_de_claves_con_obj_pau(): void
     {
-        $GLOBALS['container'] = $this->containerMap([
-            PersonaNRepositoryInterface::class => new class {
-                public function getArrayPersonas(): array
-                {
-                    return [];
-                }
-            },
-            CargoRepositoryInterface::class => new class {
-                public function getArrayCargos(): array
-                {
-                    return [];
-                }
-            },
-        ]);
+        $personaN = $this->createMock(PersonaNRepositoryInterface::class);
+        $personaN->method('getArrayPersonas')->willReturn([]);
+        $cargo = $this->createMock(CargoRepositoryInterface::class);
+        $cargo->method('getArrayCargos')->willReturn([]);
+        $builder = $this->makeBuilder(personaN: $personaN, cargo: $cargo);
 
-        $data = FormCargosDeActividadData::build([
+        $data = $builder->build([
             'obj_pau' => 'PersonaN',
             'mod' => 'nuevo',
             'id_pau' => 0,
@@ -152,22 +121,40 @@ final class FormCargosDeActividadDataTest extends TestCase
         $this->assertIsString($data['url_cargo_editar']);
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
+    private function makeBuilder(
+        ?object $personaN = null,
+        ?object $cargo = null,
+    ): FormCargosDeActividadData {
+        $cargoRepo = $cargo ?? $this->createMock(CargoRepositoryInterface::class);
+        if ($cargo === null) {
+            $cargoRepo->method('getArrayCargos')->willReturn([]);
+        }
 
-            public function get(string $key): object
-            {
-                if (!isset($this->services[$key])) {
-                    throw new \RuntimeException('Servicio no registrado en test: ' . $key);
-                }
+        $personaNRepo = $personaN ?? $this->createMock(PersonaNRepositoryInterface::class);
+        if ($personaN === null) {
+            $personaNRepo->method('getArrayPersonas')->willReturn([]);
+        }
 
-                return $this->services[$key];
-            }
-        };
+        $personaNax = $this->createMock(PersonaNaxRepositoryInterface::class);
+        $personaNax->method('getArrayPersonas')->willReturn([]);
+        $personaAgd = $this->createMock(PersonaAgdRepositoryInterface::class);
+        $personaAgd->method('getArrayPersonas')->willReturn([]);
+        $personaS = $this->createMock(PersonaSRepositoryInterface::class);
+        $personaS->method('getArrayPersonas')->willReturn([]);
+        $personaSssc = $this->createMock(PersonaSSSCRepositoryInterface::class);
+        $personaSssc->method('getArrayPersonas')->willReturn([]);
+        $personaEx = $this->createMock(PersonaExRepositoryInterface::class);
+        $personaEx->method('getArrayPersonas')->willReturn([]);
+
+        return new FormCargosDeActividadData(
+            $this->createMock(ActividadCargoRepositoryInterface::class),
+            $cargoRepo,
+            $personaNRepo,
+            $personaNax,
+            $personaAgd,
+            $personaS,
+            $personaSssc,
+            $personaEx,
+        );
     }
 }

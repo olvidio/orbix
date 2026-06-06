@@ -17,6 +17,7 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\contracts\UnitOfWorkInterface;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\DispatchesDomainEvents;
 use src\shared\traits\HandlesPdoErrors;
 use function src\shared\domain\helpers\is_true;
@@ -38,12 +39,18 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
 
     protected UnitOfWorkInterface $unitOfWork;
 
-    public function __construct(UnitOfWorkInterface $unitOfWork)
-    {
+    public function __construct(
+        UnitOfWorkInterface $unitOfWork,
+        private CargoRepositoryInterface $cargoRepository,
+        private PersonaSacdRepositoryInterface $personaSacdRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private AsistenteActividadService $asistenteActividadService,
+        private ActividadRepositoryInterface $actividadRepository,
+    ) {
         $this->unitOfWork = $unitOfWork;
-        $oDbl = $GLOBALS['oDBE'];
+        $oDbl = GlobalPdo::get('oDBE');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBE_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('d_cargos_activ_dl');
     }
@@ -52,15 +59,17 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * retorna l'array de id_nom dels sacd que atenen l'activitat
      *
      */
+    /**
+     * @return list<int>
+     */
     public function getActividadIdSacds(int $iid_activ): array
     {
         // Los sacd los pongo en la base de datos comun.
-        $oDbl = $GLOBALS['oDBC_Select'];
+        $oDbl = GlobalPdo::get('oDBC_Select');
         $nom_tabla = 'c' . $this->getNomTabla();
 
         // valores del id_cargo de tipo_cargo = sacd:
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
+        $aIdCargos_sacd = $this->cargoRepository->getArrayCargos('sacd');
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
         $sQuery = "SELECT id_nom, id_cargo
@@ -68,10 +77,16 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
 				WHERE id_activ= $iid_activ  AND id_cargo IN ($txt_where_cargos)
 				ORDER BY id_cargo";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aLista = [];
         foreach ($stmt as $aDades) {
-            $aLista[] = $aDades['id_nom'];
+            if (!is_array($aDades) || !isset($aDades['id_nom'])) {
+                continue;
+            }
+            $aLista[] = is_numeric($aDades['id_nom']) ? (int) $aDades['id_nom'] : 0;
         }
         return $aLista;
     }
@@ -80,16 +95,18 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * retorna l'array d'objectes de tipus Persona
      *
      */
+    /**
+     * @return list<\src\personas\domain\entity\Persona>
+     */
     public function getActividadSacds(int $iid_activ): array
     {
         // Los sacd los pongo en la base de datos comun.
-        $oDbl = $GLOBALS['oDBC_Select'];
+        $oDbl = GlobalPdo::get('oDBC_Select');
         $nom_tabla = 'c' . $this->getNomTabla();
         $oPersonaSet = new Set();
 
         // valores del id_cargo de tipo_cargo = sacd:
-        $CargoREpository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $aIdCargos_sacd = $CargoREpository->getArrayCargos('sacd');
+        $aIdCargos_sacd = $this->cargoRepository->getArrayCargos('sacd');
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
         $sQuery = "SELECT id_nom, id_cargo
@@ -97,11 +114,16 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
 				WHERE id_activ = $iid_activ AND id_cargo IN ($txt_where_cargos)
 				ORDER BY id_cargo";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
-        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
         foreach ($stmt as $aDades) {
-            $id_nom = $aDades['id_nom'];
-            $oPersona = $PersonaSacdRepository->findById($id_nom);
+            if (!is_array($aDades) || !isset($aDades['id_nom'])) {
+                continue;
+            }
+            $id_nom = is_numeric($aDades['id_nom']) ? (int) $aDades['id_nom'] : 0;
+            $oPersona = $this->personaSacdRepository->findById($id_nom);
             if ($oPersona === null) {
                 // si estoy dentro y soy sv, puedo mirar la tabla correcta:
                 if (ConfigGlobal::is_dmz() === FALSE && ConfigGlobal::mi_sfsv() === 1) {
@@ -115,8 +137,10 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
                     // Si es de otra dl, ya es lo que toca: No tengo acceso a la tablas de cp_sacd.
                     // Desde dentro accedo a PersonaIn, pero desde fuera NO.
                     // nom actividad:
-                    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-                    $oActividad = $ActividadAllRepository->findById($iid_activ);
+                    $oActividad = $this->actividadAllRepository->findById($iid_activ);
+                    if ($oActividad === null) {
+                        continue;
+                    }
                     $nom_activ = $oActividad->getNom_activ();
                     $msg = sprintf(_("No se tiene acceso al nombre de (es de otra dl o el sacd no está en DB-comun) id_nom: %s"), $id_nom);
                     $msg .= '<br>';
@@ -129,18 +153,21 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
                 $oPersonaSet->add($oPersona);
             }
         }
-        return $oPersonaSet->getTot();
+        return array_values($oPersonaSet->getTot());
     }
 
     /**
      * retorna l'array d'objectes de tipus ActividadCargo
      *
+     * @param array<string, mixed> $aWhereNom
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return array<string, ActividadCargo>
      */
-    public function getActividadCargosDeAsistente(array $aWhereNom, $aWhere = [], $aOperators = []): array
+    public function getActividadCargosDeAsistente(array $aWhereNom, array $aWhere = [], array $aOperators = []): array
     {
         // seleccionar las actividades según los criterios de búsqueda.
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $aListaIds = $ActividadAllRepository->getArrayIdsWithKeyFini($aWhere, $aOperators);
+        $aListaIds = $this->actividadAllRepository->getArrayIdsWithKeyFini($aWhere, $aOperators);
 
         $cCargos = $this->getActividadCargos($aWhereNom);
         // descarto los que no están.
@@ -150,8 +177,14 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
             $id_activ = $oActividadCargo->getId_activ();
             if (in_array($id_activ, $aListaIds)) {
                 $i++;
-                $oActividad = $ActividadAllRepository->findById($id_activ);
+                $oActividad = $this->actividadAllRepository->findById($id_activ);
+                if ($oActividad === null) {
+                    continue;
+                }
                 $oF_ini = $oActividad->getF_ini();
+                if ($oF_ini === null) {
+                    continue;
+                }
                 $f_ini_iso = $oF_ini->format('Y-m-d') . '#' . $i; // Añado $i por si empiezan el mismo dia.
                 $cCargosOk[$f_ini_iso] = $oActividadCargo;
             }
@@ -166,27 +199,25 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * retorna un array amb els asistents i el carrec (si el té):
      *        $aAsis[$id_activ] = array('id_activ','id_nom','propio','id_cargo');
      *
-     * @param array $aWhere para la asistencia (id_nom y plaza)
-     * @param array $aOperador para la asistencia (id_nom y plaza)
-     * @param array $aWhereAct para la Actividad
-     * @param array $aOperadorAct para la Actividad
-     * @return array
+     * @param array<string, mixed> $aWhere para la asistencia (id_nom y plaza)
+     * @param array<string, string> $aOperador para la asistencia (id_nom y plaza)
+     * @param array<string, mixed> $aWhereAct para la Actividad
+     * @param array<string, string> $aOperadorAct para la Actividad
+     * @return array<int, array{id_activ: int, id_nom: int|string, propio: mixed, plaza?: mixed, id_cargo?: int}>
      */
-    public function getAsistenteCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array
+    public function getAsistenteCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array
     {
 
         if (empty($aWhere['id_nom'])) {
             return [];
         }
-        $id_nom = $aWhere['id_nom'];
+        $id_nom = is_numeric($aWhere['id_nom']) ? (int) $aWhere['id_nom'] : 0;
 
-        $service = $GLOBALS['container']->get(AsistenteActividadService::class);
-        $cAsistentes = $service->getActividadesDeAsistente($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+        $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
 
-        $cCargos = $this->getActividadCargos(array('id_nom' => $id_nom));
+        $cCargos = $this->getActividadCargos(['id_nom' => $id_nom]);
         // seleccionar las actividades según los criterios de búsqueda.
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $aListaIds = $ActividadRepository->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
+        $aListaIds = $this->actividadRepository->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
         // descarto los que no estan.
         $cActividadesOk = [];
         foreach ($cCargos as $oCargo) {
@@ -232,24 +263,23 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * retorna un array amb els carrecs (perque sigui compatible amb: getAsistenteCargoDeActividad).
      *       $aAsis[$id_activ] = array('id_activ','id_nom','propio','id_cargo');
      *
-     * @param array $aWhere para la asistencia (id_nom y plaza)
-     * @param array $aOperador para la asistencia (id_nom y plaza)
-     * @param array $aWhereAct para la Actividad
-     * @param array $aOperadorAct para la Actividad
-     * @return array
+     * @param array<string, mixed> $aWhere para la asistencia (id_nom y plaza)
+     * @param array<string, string> $aOperador para la asistencia (id_nom y plaza)
+     * @param array<string, mixed> $aWhereAct para la Actividad
+     * @param array<string, string> $aOperadorAct para la Actividad
+     * @return array<int, array{id_activ: int, id_nom: int|string, propio: string, id_cargo: int, plaza: int}>
      */
-    public function getCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array
+    public function getCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array
     {
 
         if (empty($aWhere['id_nom'])) {
             return [];
         }
-        $id_nom = $aWhere['id_nom'];
+        $id_nom = is_numeric($aWhere['id_nom']) ? (int) $aWhere['id_nom'] : 0;
 
-        $cCargos = $this->getActividadCargos(array('id_nom' => $id_nom));
+        $cCargos = $this->getActividadCargos(['id_nom' => $id_nom]);
         // seleccionar las actividades segun los criterios de búsqueda.
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $aListaIds = $ActividadRepository->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
+        $aListaIds = $this->actividadRepository->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
         // descarto los que no están.
         $cActividadesOk = [];
         foreach ($cCargos as $oCargo) {
@@ -285,9 +315,9 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
     /**
      * devuelve una colección (array) de objetos de tipo ActividadCargo
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActividadCargo
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ActividadCargo>
      */
     public function getActividadCargos(array $aWhere = [], array $aOperators = []): array
     {
@@ -324,27 +354,35 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $ActividadCargo = ActividadCargo::fromArray($aDatos);
             $ActividadCargoSet->add($ActividadCargo);
         }
-        return $ActividadCargoSet->getTot();
+        return array_values($ActividadCargoSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -381,7 +419,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
         $bInsert = $this->isNew($id_item);
 
         // Obtener datos actuales si es UPDATE
-        $datosActuales = $bInsert ? [] : $this->datosById($id_item) ?? [];
+        $datosActuales = $bInsert ? [] : ($this->datosById($id_item) ?: []);
 
         $aDatos = $ActividadCargo->toArrayForDatabase();
         unset($aDatos['domainEvents']);
@@ -397,13 +435,15 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
 					observ                   = :observ";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
-        else {
+        } else {
             // INSERT
             $campos = "(id_activ,id_cargo,id_nom,puede_agd,observ,id_item)";
             $valores = "(:id_activ,:id_cargo,:id_nom,:puede_agd,:observ,:id_item)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        if ($stmt === false) {
+            return false;
         }
         $success = $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
 
@@ -426,8 +466,11 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
@@ -436,17 +479,26 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array |bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 
@@ -463,11 +515,17 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
 
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('d_cargos_activ_dl_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 
 }

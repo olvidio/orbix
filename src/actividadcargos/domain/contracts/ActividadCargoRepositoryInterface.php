@@ -4,42 +4,53 @@ namespace src\actividadcargos\domain\contracts;
 
 use src\actividadcargos\domain\entity\ActividadCargo;
 
-
 /**
  * Interfaz de la clase ActividadCargo y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 18/12/2025
  */
 interface ActividadCargoRepositoryInterface
 {
-
+    /**
+     * @return list<int>
+     */
     public function getActividadIdSacds(int $iid_activ): array;
 
+    /**
+     * @return list<\src\personas\domain\entity\Persona>
+     */
     public function getActividadSacds(int $iid_activ): array;
 
-    public function getActividadCargosDeAsistente(array $aWhereNom, $aWhere = [], $aOperators = []): array;
-
-    public function getAsistenteCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array;
-
-    public function getCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array;
-
-
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
+    /**
+     * @param array<string, mixed> $aWhereNom
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return array<string, ActividadCargo>
+     */
+    public function getActividadCargosDeAsistente(array $aWhereNom, array $aWhere = [], array $aOperators = []): array;
 
     /**
-     * devuelve una colección (array) de objetos de tipo ActividadCargo
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActividadCargo
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperador
+     * @param array<string, mixed> $aWhereAct
+     * @param array<string, string> $aOperadorAct
+     * @return array<int, array<string, mixed>>
+     */
+    public function getAsistenteCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array;
+
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperador
+     * @param array<string, mixed> $aWhereAct
+     * @param array<string, string> $aOperadorAct
+     * @return array<int, array<string, mixed>>
+     */
+    public function getCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array;
+
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<ActividadCargo>
      */
     public function getActividadCargos(array $aWhere = [], array $aOperators = []): array;
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(ActividadCargo $ActividadCargo): bool;
 
@@ -47,23 +58,14 @@ interface ActividadCargoRepositoryInterface
 
     public function getErrorTxt(): string;
 
-
-
     public function getNomTabla(): string;
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool;
+    public function datosById(int $id_item): array|false;
 
-    /**
-     * Busca la clase con id_item en el repositorio.
-     */
     public function findById(int $id_item): ?ActividadCargo;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

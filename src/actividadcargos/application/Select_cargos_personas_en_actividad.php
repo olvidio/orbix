@@ -14,6 +14,7 @@ use src\personas\domain\entity\Persona;
 use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 use frontend\shared\web\BotonesCurso;
 use frontend\shared\web\Lista;
+use src\permisos\domain\XPermisos;
 
 /**
  * Widget del dossier `1302` (codigo `cargos_personas_en_actividad`): relacion
@@ -26,6 +27,13 @@ use frontend\shared\web\Lista;
  */
 class Select_cargos_personas_en_actividad
 {
+    public function __construct(
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private CargoRepositoryInterface $cargoRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+    ) {
+    }
+
     /** @var array<string, array{perm: mixed, nom: mixed}>|null */
     private ?array $ref_perm = null;
 
@@ -109,18 +117,17 @@ class Select_cargos_personas_en_actividad
         $this->ref_perm = $oPermDossier->perm_activ_pers($id_tabla);
 
         $this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");
-        if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        if ($oPerm instanceof XPermisos
+            && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+        ) {
             $this->txt_eliminar .= "\\n" . _("esto también borrará a esta persona de la lista de asistentes");
             $elim_asis_default = 2;
         } else {
             $elim_asis_default = 1;
         }
 
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-
-        $cCargosEnActividad = $ActividadCargoRepository->getActividadCargosDeAsistente(
+        $cCargosEnActividad = $this->actividadCargoRepository->getActividadCargosDeAsistente(
             ['id_nom' => $this->id_pau],
             $aWhere,
             $aOperator
@@ -130,8 +137,8 @@ class Select_cargos_personas_en_actividad
             $mi_sfsv,
             $elim_asis_default,
             $cCargosEnActividad,
-            $CargoRepository,
-            $ActividadAllRepository,
+            $this->cargoRepository,
+            $this->actividadAllRepository,
             $this->ref_perm ?? [],
             $this->Qid_sel,
             $this->Qscroll_id,
@@ -205,7 +212,8 @@ class Select_cargos_personas_en_actividad
                 'id_pau' => $this->id_pau,
             ];
             array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
-            $this->aLinks_dl[$val['nom']] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);
+            $nomTxt = $val['nom'] ?? '';
+            $this->aLinks_dl[is_scalar($nomTxt) ? (string) $nomTxt : ''] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);
         }
         foreach ($this->ref_perm as $clave => $val) {
             if (empty($val['perm'])) {
@@ -220,25 +228,26 @@ class Select_cargos_personas_en_actividad
                 'id_pau' => $this->id_pau,
             ];
             array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
-            $this->aLinks_otros[$val['nom']] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);
+            $nomTxt = $val['nom'] ?? '';
+            $this->aLinks_otros[is_scalar($nomTxt) ? (string) $nomTxt : ''] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);
         }
     }
 
-    public function getId_dossier() { return $this->id_dossier; }
+    public function getId_dossier(): int|string { return $this->id_dossier; }
     public function getPau(): string { return $this->pau; }
     public function getObj_pau(): string { return $this->obj_pau; }
     public function getId_pau(): int { return $this->id_pau; }
     public function getPermiso(): int { return $this->permiso; }
     public function getModo_curso(): int { return $this->modo_curso; }
 
-    public function setId_dossier($id_dossier): void { $this->id_dossier = $id_dossier; }
-    public function setPau($pau): void { $this->pau = (string)$pau; }
-    public function setObj_pau($obj_pau): void { $this->obj_pau = (string)$obj_pau; }
-    public function setId_pau($id_pau): void { $this->id_pau = (int)$id_pau; }
-    public function setPermiso($permiso): void { $this->permiso = (int)$permiso; }
-    public function setModo_curso($modo_curso): void { $this->modo_curso = (int)$modo_curso; }
-    public function setQid_sel($Qid_sel): void { $this->Qid_sel = $Qid_sel; }
-    public function setQscroll_id($Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
-    public function setBloque($bloque): void { $this->bloque = (string)$bloque; }
-    public function setQueSel($queSel): void { $this->queSel = (string)$queSel; }
+    public function setId_dossier(int|string $id_dossier): void { $this->id_dossier = $id_dossier; }
+    public function setPau(string|int|float|bool|null $pau = null): void { $this->pau = $pau === null ? '' : (string) $pau; }
+    public function setObj_pau(string|int|float|bool|null $obj_pau = null): void { $this->obj_pau = $obj_pau === null ? '' : (string) $obj_pau; }
+    public function setId_pau(string|int|float|bool|null $id_pau = null): void { $this->id_pau = (int) ($id_pau ?? 0); }
+    public function setPermiso(string|int|float|bool|null $permiso = null): void { $this->permiso = (int) ($permiso ?? 0); }
+    public function setModo_curso(string|int|float|bool|null $modo_curso = null): void { $this->modo_curso = (int) ($modo_curso ?? 0); }
+    public function setQid_sel(int|string|null $Qid_sel): void { $this->Qid_sel = $Qid_sel; }
+    public function setQscroll_id(int|string|null $Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
+    public function setBloque(string|int|float|bool|null $bloque = null): void { $this->bloque = $bloque === null ? '' : (string) $bloque; }
+    public function setQueSel(string|int|float|bool|null $queSel = null): void { $this->queSel = $queSel === null ? '' : (string) $queSel; }
 }

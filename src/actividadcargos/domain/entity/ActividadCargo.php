@@ -5,6 +5,7 @@ namespace src\actividadcargos\domain\entity;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\value_objects\ObservacionesCargo;
 use src\shared\domain\entity\Entity;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\traits\Hydratable;
 
 /**
@@ -66,10 +67,17 @@ class ActividadCargo extends Entity
         return $this->isSacd() ? 'ActividadCargoSacd' : 'ActividadCargoNoSacd';
     }
 
+    /** @var list<int>|null cache de ids sacd (deferred DI para legacy `new ActividadCargo()`) */
+    private static ?array $idCargosSacdCache = null;
+
     private function isSacd(): bool
     {
-        $a_id_cargo_sacd = $GLOBALS['container']->get(CargoRepositoryInterface::class)->getArrayIdCargosSacd();
-        return in_array($this->id_cargo, $a_id_cargo_sacd, true);
+        if (self::$idCargosSacdCache === null) {
+            self::$idCargosSacdCache = DependencyResolver::get(CargoRepositoryInterface::class)
+                ->getArrayIdCargosSacd();
+        }
+
+        return in_array($this->id_cargo, self::$idCargosSacdCache, true);
     }
 
     public function getId_schema(): int

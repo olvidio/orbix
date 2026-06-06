@@ -22,15 +22,6 @@ final class TipoCargoCode
         self::D_EST,
     ];
 
-    private const TRANSLATIONS = [
-        self::D => 'Director',
-        self::SD => 'Subdirector',
-        self::SCL => 'Secretario',
-        self::SACD => 'Sacerdote',
-        self::COORDINA => 'Coordinador',
-        self::D_EST => 'Director de estudios',
-    ];
-
     private string $value;
 
     public function __construct(string $value)
