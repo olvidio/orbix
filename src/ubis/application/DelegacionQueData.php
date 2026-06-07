@@ -6,15 +6,24 @@ use src\ubis\application\services\DelegacionDropdown;
 
 /**
  * Opciones del formulario delegaciones (traslado de ubis).
- *
- * @return array{opciones_dl_destino: array<string, string>}
  */
 final class DelegacionQueData
 {
-    public static function execute(): array
+    public function __construct(
+        private DelegacionDropdown $delegacionDropdown,
+    ) {
+    }
+
+    /**
+     * @return array{opciones_dl_destino: array<string, string>}
+     */
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(): array
     {
         return [
-            'opciones_dl_destino' => DelegacionDropdown::listaRegDele(false),
+            'opciones_dl_destino' => $this->delegacionDropdown->listaRegDele(false),
         ];
     }
 }

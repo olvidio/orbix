@@ -9,6 +9,7 @@ use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\personas\domain\contracts\TrasladoRepositoryInterface;
 use src\personas\domain\entity\Traslado;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -27,8 +28,7 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
-        $this->setoDbl($oDbl);
+        $this->setoDbl(GlobalPdo::get('oDB'));
         $this->setNomTabla('d_traslados');
     }
 
@@ -37,9 +37,9 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
     /**
      * devuelve una colección (array) de objetos de tipo Traslado
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Traslado
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Traslado> Una colección de objetos de tipo Traslado
      */
     public function getTraslados(array $aWhere = [], array $aOperators = []): array
     {
@@ -76,29 +76,37 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para las fechas del postgres (texto iso)
             $aDatos['f_traslado'] = (new ConverterDate('date', $aDatos['f_traslado']))->fromPg();
             $Traslado = Traslado::fromArray($aDatos);
             $TrasladoSet->add($Traslado);
         }
-        return $TrasladoSet->getTot();
+        return array_values($TrasladoSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -148,6 +156,9 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -157,6 +168,9 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -168,21 +182,29 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_traslado'] = (new ConverterDate('date', $aDatos['f_traslado']))->fromPg();
+        if (!is_array($aDatos)) {
+            return false;
         }
-        return $aDatos;
+        $aDatos['f_traslado'] = (new ConverterDate('date', $aDatos['f_traslado']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string)$key] = $value;
+        }
+
+        return $result;
     }
 
 
@@ -192,16 +214,22 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
     public function findById(int $id_item): ?Traslado
     {
         $aDatos = $this->datosById($id_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Traslado::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('d_traslados_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

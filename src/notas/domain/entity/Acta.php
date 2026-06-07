@@ -2,6 +2,9 @@
 
 namespace src\notas\domain\entity;
 
+use src\shared\infrastructure\DependencyResolver;
+
+
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\value_objects\ActaNumero;
@@ -18,6 +21,7 @@ use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class Acta
 {
+
     use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
@@ -29,7 +33,7 @@ class Acta
 
     private ?int $id_activ = null;
 
-    private DateTimeLocal $f_acta;
+    private ?DateTimeLocal $f_acta = null;
 
     private ?Libro $libro = null;
 
@@ -53,9 +57,11 @@ class Acta
 
     public function setActaVo(ActaNumero|string|null $oActaNumero): void
     {
-        $this->acta = $oActaNumero instanceof ActaNumero
-            ? $oActaNumero
-            : ActaNumero::fromNullableString($oActaNumero);
+        if ($oActaNumero instanceof ActaNumero) {
+            $this->acta = $oActaNumero;
+        } elseif ($oActaNumero !== null && $oActaNumero !== '') {
+            $this->acta = new ActaNumero($oActaNumero);
+        }
     }
 
     /**
@@ -71,7 +77,7 @@ class Acta
      */
     public function setActa(string $acta): void
     {
-        $this->acta = ActaNumero::fromNullableString($acta);
+        $this->acta = new ActaNumero($acta);
     }
 
 
@@ -83,21 +89,25 @@ class Acta
         return $this->id_asignatura?->value();
     }
 
-    public function getIdAsignaturaVo(): AsignaturaId
+    public function getIdAsignaturaVo(): ?AsignaturaId
     {
         return $this->id_asignatura;
     }
 
     public function setId_asignatura(?int $id_asignatura = null): void
     {
-        $this->id_asignatura = AsignaturaId::fromNullableInt($id_asignatura);
+        $this->id_asignatura = new AsignaturaId((int) $id_asignatura);
     }
 
     public function setIdAsignaturaVo(AsignaturaId|int|null $id_asignatura): void
     {
-        $this->id_asignatura = $id_asignatura instanceof AsignaturaId
-            ? $id_asignatura
-            : AsignaturaId::fromNullableInt($id_asignatura);
+        if ($id_asignatura instanceof AsignaturaId) {
+            $this->id_asignatura = $id_asignatura;
+        } elseif ($id_asignatura !== null) {
+            $this->id_asignatura = new AsignaturaId($id_asignatura);
+        } else {
+            $this->id_asignatura = null;
+        }
     }
 
 
@@ -143,7 +153,8 @@ class Acta
      */
     public function getLibro(): ?string
     {
-        return $this->libro?->value();
+        $v = $this->libro?->value();
+        return $v !== null ? (string) $v : null;
     }
 
     /**
@@ -172,7 +183,8 @@ class Acta
      */
     public function getPagina(): ?string
     {
-        return $this->pagina?->value();
+        $v = $this->pagina?->value();
+        return $v !== null ? (string) $v : null;
     }
 
     /**
@@ -202,7 +214,8 @@ class Acta
      */
     public function getLinea(): ?string
     {
-        return $this->linea?->value();
+        $v = $this->linea?->value();
+        return $v !== null ? (string) $v : null;
     }
 
     /**
@@ -307,7 +320,7 @@ class Acta
      * inventa el valor del acta, si no es correcto
      *
      */
-    public static function inventarActa(string $valor, DateTimeLocal|string $fecha): string
+    public static function inventarActa(string $valor, DateTimeLocal|NullDateTimeLocal|string|null $fecha): string
     {
         $valor = trim($valor);
         // comprobar si hace falta, o ya está bien el acta como está
@@ -315,18 +328,18 @@ class Acta
         if (!preg_match($reg_exp, $valor)) {
             // inventar acta.
             // Se puede usar la función desde personaNota, por eso se puede pasar la fecha.
-            if (empty($fecha)) {
+            if ($fecha === null || $fecha === '' || $fecha instanceof NullDateTimeLocal) {
                 $any = '?';
                 $num_acta = 'x';
             } else {
-                if (is_object($fecha)) {
+                if ($fecha instanceof DateTimeLocal) {
                     $oData = $fecha;
                 } else {
                     $oData = DateTimeLocal::createFromLocal($fecha);
                 }
                 $any = $oData->format('y');
                 // inventar acta.
-                $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+                $ActaRepository = DependencyResolver::get(ActaRepositoryInterface::class);
                 $num_acta = 1 + $ActaRepository->getUltimaActa($any, $valor);
             }
             // no sé nada

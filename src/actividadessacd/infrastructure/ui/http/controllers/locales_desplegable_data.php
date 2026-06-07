@@ -1,16 +1,12 @@
 <?php
+/**
+ * Endpoint backend: desplegable de locales para filtros sacd.
+ */
 
-use src\shared\web\ContestarJson;
 use src\actividadessacd\application\LocalesDesplegableData;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 
-require_once 'frontend/shared/global_header_front.inc';
-
-$error = '';
-$data = [];
-try {
-    $data = LocalesDesplegableData::execute();
-} catch (\Throwable $e) {
-    $error = $e->getMessage();
-}
-
-ContestarJson::enviar($error, $data);
+/** @var LocalesDesplegableData $useCase */
+$useCase = DependencyResolver::get(LocalesDesplegableData::class);
+ContestarJson::enviar('', $useCase->execute());

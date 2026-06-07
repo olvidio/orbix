@@ -3,6 +3,7 @@
 namespace src\shared;
 
 use src\shared\domain\DatosTablaRepo;
+use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
 
 $Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
@@ -13,7 +14,7 @@ $Qobj_pau = (integer)filter_input(INPUT_POST, 'obj_pau');
 
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info_encoded);
-$oInfoClase = new $obj();
+$oInfoClase = DatosInfoRepoResolver::resolve($obj);
 if (method_exists($oInfoClase, 'setObj_pau')) {
     $oInfoClase->setObj_pau($Qobj_pau);
 }

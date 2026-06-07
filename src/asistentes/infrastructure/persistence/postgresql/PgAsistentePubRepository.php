@@ -31,7 +31,7 @@ class PgAsistentePubRepository extends PgAsistenteRepository implements Asistent
         $this->setNomTabla('d_asistentes_de_paso');
     }
 
-    function getListaAsistentesDistintos($aId_activ = array())
+    public function getListaAsistentesDistintos(array $aId_activ = []): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $where = '';

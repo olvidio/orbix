@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -25,27 +26,33 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('xu_tipo_casa');
     }
 
-    public function getArrayTiposCasa(): array
+    /**
+     * @return array<int|string, string>
+     */
+public function getArrayTiposCasa(): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT tipo_casa, nombre_tipo_casa
 				FROM $nom_tabla
 				ORDER BY tipo_casa";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
-        foreach ($stmt as $aClave) {
-            $clave = $aClave[0];
-            $val = $aClave[1];
-            $aOpciones[$clave] = $val;
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            if (!is_array($row) || !isset($row['id'], $row['nombre_teleco'])) {
+                continue;
+            }
+            $aOpciones[(string) $row['id']] = (string) $row['nombre_teleco'];
         }
         return $aOpciones;
     }
@@ -55,9 +62,9 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
     /**
      * devuelve una colección (array) de objetos de tipo TipoCasa
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo TipoCasa
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<TipoCasa> Una colección de objetos de tipo TipoCasa
      */
     public function getTiposCasa(array $aWhere = [], array $aOperators = []): array
     {
@@ -94,34 +101,42 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $TipoCasa = TipoCasa::fromArray($aDatos);
             $TipoCasaSet->add($TipoCasa);
         }
-        return $TipoCasaSet->getTot();
+        return array_values($TipoCasaSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(TipoCasa $TipoCasa): bool
     {
-        $tipo_casa = $TipoCasa->getTipoCasaVo()?->value();
+        $tipo_casa = $TipoCasa->getTipoCasaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'";
@@ -134,7 +149,7 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
      */
     public function Guardar(TipoCasa $TipoCasa): bool
     {
-        $tipo_casa = $TipoCasa->getTipoCasaVo()?->value();
+        $tipo_casa = $TipoCasa->getTipoCasaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($tipo_casa);
@@ -154,6 +169,9 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -163,6 +181,9 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -174,15 +195,26 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $tipo_casa
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $tipo_casa): array|bool
+    public function datosById(string $tipo_casa): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
 
     }
 
@@ -193,7 +225,7 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
     public function findById(string $tipo_casa): ?TipoCasa
     {
         $aDatos = $this->datosById($tipo_casa);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return TipoCasa::fromArray($aDatos);

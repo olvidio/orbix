@@ -29,7 +29,7 @@ Referencias actualizadas en documentacion y plantillas de menu:
 - `php -l` en rutas, application, controllers `src`, controllers `frontend`, wrappers `apps`.
 - Mismos ids de tabla y columnas que el baseline.
 
-## Siguiente lote sugerido
+## Slices posteriores (lote 2)
 
-- `lista_por_departamentos.php` y despues `ficha_profesor_stgr.php` (mayor acoplamiento).
-- Aplicar los mismos criterios descritos en [`refactor.md`](../refactor.md) en la raiz del repositorio.
+- `lista_por_departamentos` y `ficha_profesor_stgr` migrados a `frontend/profesores` + endpoints `/src/profesores/`.
+- Ver [`profesores_migracion_baseline.md`](profesores_migracion_baseline.md#cierre-di-junio-2026) para el cierre DI + PHPStan (junio 2026).

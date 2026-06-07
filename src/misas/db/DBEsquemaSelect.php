@@ -10,42 +10,31 @@ use src\shared\infrastructure\persistence\postgresql\DBRefresh;
  */
 class DBEsquemaSelect extends DBEsquema
 {
-
-    public function dropAllSelect()
+    public function dropAllSelect(): void
     {
         $this->eliminar_cuadricula_select();
         $this->eliminar_iniciales_select();
         $this->eliminar_rel_encargo_ctr_select();
     }
 
-    public function createAllSelect()
+    public function createAllSelect(): void
     {
         $this->create_cuadricula_select();
         $this->create_iniciales_select();
         $this->create_rel_encargo_ctr_select();
-        // renovar subscripciones
         $DBRefresh = new DBRefresh();
         $DBRefresh->refreshSubscriptionModulo('comun');
     }
 
-    /**
-     * En la BD Comun (esquema).
-     */
-    public function create_iniciales_select()
+    public function create_iniciales_select(): void
     {
-        // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
 
         $tabla = "misa_iniciales";
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
-        $campo_seq = $datosTabla['campo_seq'];
         $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
@@ -56,13 +45,12 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
-
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function eliminar_iniciales_select()
+    public function eliminar_iniciales_select(): void
     {
         $datosTabla = $this->infoTable("misa_iniciales");
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -70,21 +58,15 @@ class DBEsquemaSelect extends DBEsquema
         $this->eliminarDeComunSelect($nom_tabla);
     }
 
-    public function create_cuadricula_select()
+    public function create_cuadricula_select(): void
     {
-        // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
 
         $tabla = "misa_cuadricula";
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
-        $campo_seq = $datosTabla['campo_seq'];
         $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
@@ -95,13 +77,12 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
-
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function eliminar_cuadricula_select()
+    public function eliminar_cuadricula_select(): void
     {
         $datosTabla = $this->infoTable("misa_cuadricula");
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -109,21 +90,15 @@ class DBEsquemaSelect extends DBEsquema
         $this->eliminarDeComunSelect($nom_tabla);
     }
 
-    public function create_rel_encargo_ctr_select()
+    public function create_rel_encargo_ctr_select(): void
     {
-        // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
 
         $tabla = "misa_rel_encargo_ctr";
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
-        $campo_seq = $datosTabla['campo_seq'];
         $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
@@ -134,18 +109,16 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
-
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function eliminar_rel_encargo_ctr_select()
+    public function eliminar_rel_encargo_ctr_select(): void
     {
         $datosTabla = $this->infoTable("misa_rel_encargo_ctr");
         $nom_tabla = $datosTabla['nom_tabla'];
 
         $this->eliminarDeComunSelect($nom_tabla);
     }
-
 }

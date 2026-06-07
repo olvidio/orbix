@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\VerEncargosZonaData;
 use src\shared\web\ContestarJson;
@@ -9,4 +10,7 @@ if ($Qorden === '') {
     $Qorden = 'orden';
 }
 
-ContestarJson::enviar('', VerEncargosZonaData::getData($Qid_zona, $Qorden));
+/** @var VerEncargosZonaData $useCase */
+$useCase = DependencyResolver::get(VerEncargosZonaData::class);
+$result = $useCase->getData($Qid_zona, $Qorden);
+ContestarJson::enviar('', $result);

@@ -16,16 +16,19 @@ use src\personas\domain\entity\Situacion;
 interface SituacionRepositoryInterface
 {
 
-    public function getArraySituaciones($traslado = false);
+    /**
+     * @return array<string, string>
+     */
+    public function getArraySituaciones(bool $traslado = false): array;
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Situacion
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo Situacion
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<Situacion> Una colección de objetos de tipo Situacion
 	
 	 */
 	public function getSituaciones(array $aWhere=[], array $aOperators=[]): array;
@@ -45,10 +48,10 @@ interface SituacionRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param string $situacion
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(string $situacion): array|bool;
+    public function datosById(string $situacion): array|false;
 	
     /**
      * Busca la clase con situacion en el repositorio.

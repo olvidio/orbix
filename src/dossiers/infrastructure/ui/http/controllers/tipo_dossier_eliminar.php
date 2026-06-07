@@ -1,11 +1,10 @@
 <?php
 
 use src\dossiers\application\TipoDossierEliminar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-/**
- * Elimina un `TipoDossier`.
- * Responde JSON `{success, mensaje, data}`.
- */
-$error_txt = TipoDossierEliminar::execute($_POST);
+/** @var TipoDossierEliminar $useCase */
+$useCase = DependencyResolver::get(TipoDossierEliminar::class);
+$error_txt = $useCase->execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

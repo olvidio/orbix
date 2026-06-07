@@ -12,19 +12,24 @@ use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
  */
 final class ListasComTxtGet
 {
+
+    public function __construct(
+        private EncargoTextoRepositoryInterface $encargoTextoRepository
+    ) {
+    }
+
     /**
      * @return array{texto: string}
      */
-    public static function execute(string $clave, string $idioma): array
+    public function execute(string $clave, string $idioma): array
     {
-        $EncargoTextoRepository = $GLOBALS['container']->get(EncargoTextoRepositoryInterface::class);
-        $cEncargoTextos = $EncargoTextoRepository->getEncargoTextos([
+        $cEncargoTextos = $this->encargoTextoRepository->getEncargoTextos([
             'clave' => $clave,
             'idioma' => $idioma,
         ]);
 
         $texto = '';
-        if (is_array($cEncargoTextos) && count($cEncargoTextos) > 0) {
+        if ($cEncargoTextos !== []) {
             $texto = (string)$cEncargoTextos[0]->getTexto();
         }
 

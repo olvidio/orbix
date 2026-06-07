@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 /**
  * Esta página genera un fichero con todos los textos de los menús que hay en la base de datos,
  * para poder traducirlos por gettex
@@ -15,7 +16,8 @@ use src\shared\config\ServerConf;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 
-$MenusRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
+/** @var MenuDbRepositoryInterface $MenusRepository */
+$MenusRepository = DependencyResolver::get(MenuDbRepositoryInterface::class);
 $cMenus = $MenusRepository->getMenuDbs(['ok' => 't', '_ordre' => 'id_grupmenu,orden']);
 
 $texto = "<?php\n //Menus interiores\n";
@@ -28,7 +30,8 @@ foreach ($cMenus as $oMenuDb) {
 }
 
 // Añadir los tipos de repetición
-$RepeticionRepository = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
+/** @var RepeticionRepositoryInterface $RepeticionRepository */
+$RepeticionRepository = DependencyResolver::get(RepeticionRepositoryInterface::class);
 $cRepeticion = $RepeticionRepository->getRepeticiones();
 
 $texto .= "//tipos de repetición actividades\n";

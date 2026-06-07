@@ -4,41 +4,49 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
+
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\notas\domain\value_objects\CursoStgr;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\services\TelecoPersonaService;
+use src\personas\domain\entity\PersonaAgd;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaN;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\entity\CentroDl;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Tabla de `asig_faltan_select` (asignaturas pendientes por persona).
  */
 final class AsigFaltanSelectTablaData
 {
+
+    public function __construct(
+        private readonly TelecoPersonaService $telecoPersonaService,
+        private readonly CentroDlRepositoryInterface $centroDlRepository,
+        private readonly PersonaDlRepositoryInterface $personaDlRepository,
+        private readonly PersonaNRepositoryInterface $personaNRepository,
+        private readonly PersonaAgdRepositoryInterface $personaAgdRepository,
+    ) {
+    }
     /**
-     * @param array{
-     *   numero:int,
-     *   b_c:string,
-     *   c1:string,
-     *   c2:string,
-     *   personas_n:string,
-     *   personas_agd:string,
-     *   lista:string
-     * } $in
+     * @param array<string, mixed> $in
      * @return array{titulo:string, obj_pau:string, lista:bool, rows: list<array{id_nom:int, id_tabla:string, nom:string, nombre_ubi:string, stgr:string, asig_txt:string|int, telfs:string, mails:string}>}
      */
-    public static function execute(array $in): array
+    public function execute(array $in): array
     {
-        $Qnumero = (int)($in['numero'] ?? 0);
-        $Qb_c = (string)($in['b_c'] ?? '');
-        $Qc1 = (string)($in['c1'] ?? '');
-        $Qc2 = (string)($in['c2'] ?? '');
-        $Qpersonas_n = (string)($in['personas_n'] ?? '');
-        $Qpersonas_agd = (string)($in['personas_agd'] ?? '');
-        $Qlista = (string)($in['lista'] ?? '');
+        $Qnumero = input_int($in, 'numero');
+        $Qb_c = input_string($in, 'b_c');
+        $Qc1 = input_string($in, 'c1');
+        $Qc2 = input_string($in, 'c2');
+        $Qpersonas_n = input_string($in, 'personas_n');
+        $Qpersonas_agd = input_string($in, 'personas_agd');
+        $Qlista = input_string($in, 'lista');
 
         $isTrue = static function (string $v): bool {
             return $v === '1' || $v === 'true' || $v === 'on' || $v === 't';
@@ -102,10 +110,10 @@ final class AsigFaltanSelectTablaData
             $curso_txt
         );
 
-        $repoPersona = self::personaRepository($obj_pau);
+        $repoPersona = $this->personaRepository($obj_pau);
         $a_NivelStgr = NivelStgrId::getArrayNivelStgr();
-        $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+        $telecoService = $this->telecoPersonaService;
+        $CentroDlRepository = $this->centroDlRepository;
         $ambito = ConfigGlobal::mi_ambito();
 
         $rows = [];
@@ -117,34 +125,37 @@ final class AsigFaltanSelectTablaData
             }
             $id_tabla = $oPersona->getId_tabla();
             $nom = $oPersona->getPrefApellidosNombre();
-            $nivel_stgr = $oPersona->getNivelStgrVo()->value();
-            $stgr = $a_NivelStgr[$nivel_stgr] ?? '';
+            $nivelStgrVo = $oPersona->getNivelStgrVo();
+            $stgr = $nivelStgrVo !== null ? ($a_NivelStgr[$nivelStgrVo->value()] ?? '') : '';
 
             if ($ambito === 'rstgr') {
-                $nombre_ubi = $oPersona->getDl();
+                $nombre_ubi = (string) ($oPersona->getDl() ?? '');
             } else {
                 $id_ctr = $oPersona->getId_ctr();
+                if ($id_ctr === null) {
+                    continue;
+                }
                 $oCentroDl = $CentroDlRepository->findById($id_ctr);
-                $nombre_ubi = $oCentroDl->getNombre_ubi();
+                $nombre_ubi = $oCentroDl instanceof CentroDl ? $oCentroDl->getNombre_ubi() : '';
             }
 
             $telfs_fijo = $telecoService->getTelecosPorTipo($id_nom, 'telf', ' / ', '*', false);
             $telfs_movil = $telecoService->getTelecosPorTipo($id_nom, 'móvil', ' / ', '*', false);
-            if (!empty($telfs_fijo) && !empty($telfs_movil)) {
+            if ($telfs_fijo !== '' && $telfs_movil !== '') {
                 $telfs = $telfs_fijo . ' / ' . $telfs_movil;
             } else {
-                $telfs = ($telfs_fijo ?? '') . ($telfs_movil ?? '');
+                $telfs = $telfs_fijo . $telfs_movil;
             }
             $mails = $telecoService->getTelecosPorTipo($id_nom, 'e-mail', ' / ', '*', false);
 
-            if ($lista) {
+            if ($lista && is_array($aAsignaturas)) {
                 $as = '';
                 foreach ($aAsignaturas as $asig) {
-                    $as .= empty($as) ? '' : ' / ';
-                    $as .= $asig;
+                    $as .= $as === '' ? '' : ' / ';
+                    $as .= (string) $asig;
                 }
             } else {
-                $as = $aAsignaturas;
+                $as = is_int($aAsignaturas) ? $aAsignaturas : (int) $aAsignaturas;
             }
 
             $rows[] = [
@@ -167,12 +178,12 @@ final class AsigFaltanSelectTablaData
         ];
     }
 
-    private static function personaRepository(string $obj_pau): object
+    private function personaRepository(string $obj_pau): PersonaDlRepositoryInterface|PersonaNRepositoryInterface|PersonaAgdRepositoryInterface
     {
         return match ($obj_pau) {
-            'PersonaDl' => $GLOBALS['container']->get(PersonaDlRepositoryInterface::class),
-            'PersonaN' => $GLOBALS['container']->get(PersonaNRepositoryInterface::class),
-            'PersonaAgd' => $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class),
+            'PersonaDl' => $this->personaDlRepository,
+            'PersonaN' => $this->personaNRepository,
+            'PersonaAgd' => $this->personaAgdRepository,
             default => throw new \InvalidArgumentException('obj_pau'),
         };
     }

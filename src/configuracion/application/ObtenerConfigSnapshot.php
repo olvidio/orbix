@@ -40,8 +40,8 @@ final class ObtenerConfigSnapshot
             idiomaDefault:           $this->value('idioma_default'),
             iniContadorCertificados: $this->value('ini_contador_certificados'),
             jefeCalendario:          $this->value('jefe_calendario'),
-            aCursoStgr:              $this->jsonArray('curso_stgr'),
-            aCursoCrt:               $this->jsonArray('curso_crt'),
+            aCursoStgr:              $this->cursoArray('curso_stgr'),
+            aCursoCrt:               $this->cursoArray('curso_crt'),
         );
     }
 
@@ -51,6 +51,9 @@ final class ObtenerConfigSnapshot
         return $oConfigSchema?->getValorVo()?->value();
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     private function jsonArray(string $parametro): ?array
     {
         $raw = $this->value($parametro);
@@ -58,6 +61,29 @@ final class ObtenerConfigSnapshot
             return null;
         }
         $decoded = json_decode($raw, true);
-        return is_array($decoded) ? $decoded : null;
+        if (!is_array($decoded)) {
+            return null;
+        }
+        /** @var array<string, mixed> $decoded */
+        return $decoded;
+    }
+
+    /**
+     * @return array{ini_dia?: int, ini_mes?: int, fin_dia?: int, fin_mes?: int}|null
+     */
+    private function cursoArray(string $parametro): ?array
+    {
+        $raw = $this->jsonArray($parametro);
+        if ($raw === null) {
+            return null;
+        }
+        $result = [];
+        foreach (['ini_dia', 'ini_mes', 'fin_dia', 'fin_mes'] as $key) {
+            if (array_key_exists($key, $raw) && is_numeric($raw[$key])) {
+                $result[$key] = (int)$raw[$key];
+            }
+        }
+
+        return $result === [] ? null : $result;
     }
 }

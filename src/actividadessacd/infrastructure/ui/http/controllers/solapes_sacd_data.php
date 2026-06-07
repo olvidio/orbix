@@ -1,18 +1,20 @@
 <?php
 /**
- * Endpoint backend: devuelve el listado de sacd con actividades
- * incompatibles (solapes) en el periodo.
+ * Endpoint backend: devuelve sacd con actividades incompatibles (solapes).
  */
 
 use src\actividadessacd\application\SolapesSacdData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
 $input = [
-    'year' => (string)filter_input(INPUT_POST, 'year'),
-    'periodo' => (string)filter_input(INPUT_POST, 'periodo'),
-    'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
+    'year' => input_string($_POST, 'year'),
+    'periodo' => input_string($_POST, 'periodo'),
+    'empiezamin' => input_string($_POST, 'empiezamin'),
+    'empiezamax' => input_string($_POST, 'empiezamax'),
 ];
 
-$data = SolapesSacdData::execute($input);
-ContestarJson::enviar('', $data);
+/** @var SolapesSacdData $useCase */
+$useCase = DependencyResolver::get(SolapesSacdData::class);
+ContestarJson::enviar('', $useCase->execute($input));

@@ -1,12 +1,19 @@
 <?php
 /**
- * Endpoint backend: upsert/delete del texto de comunicacion
- * (`clave`, `idioma`, `texto`). Si `texto === ''` elimina la fila.
- * Responde JSON `{success, mensaje, data:'ok'}` via `ContestarJson::enviar`.
+ * Endpoint backend: guarda/elimina texto de comunicacion sacd.
  */
 
 use src\actividadessacd\application\TextoComunicacionGuardar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
-$error_txt = TextoComunicacionGuardar::execute($_POST);
-ContestarJson::enviar($error_txt, 'ok');
+$input = [
+    'clave' => input_string($_POST, 'clave'),
+    'idioma' => input_string($_POST, 'idioma'),
+    'texto' => input_string($_POST, 'texto'),
+];
+
+/** @var TextoComunicacionGuardar $useCase */
+$useCase = DependencyResolver::get(TextoComunicacionGuardar::class);
+ContestarJson::enviar($useCase->execute($input), 'ok');

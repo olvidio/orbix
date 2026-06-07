@@ -120,6 +120,231 @@ class DescTeleco
         return 'id_item';
     }
 
+    /**
+
+
+     * @return array<string, mixed>
+
+
+     */
+
+
+    /**
+
+
+
+     * @return array<string, mixed>
+
+
+
+     */
+
+
+
+    /**
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+     */
+
+
+
+
+    /**
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+     */
+
+
+
+
+
+    /**
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+
+
     public function getDatosCampos(): array
     {
         $oDescTelecoSet = new Set();

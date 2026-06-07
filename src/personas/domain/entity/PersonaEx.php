@@ -24,6 +24,8 @@ use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\LocaleCode;
 use src\shared\domain\value_objects\NullDateTimeLocal;
+use src\shared\infrastructure\DependencyResolver;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\value_objects\DelegacionCode;
@@ -87,6 +89,11 @@ class PersonaEx
 
     private ?bool $profesor_stgr = false;
 
+    public function getId_ctr(): ?int
+    {
+        return null;
+    }
+
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
     public function getId_schema(): int
     {
@@ -135,7 +142,10 @@ class PersonaEx
      */
     public function setId_tabla(string $sid_tabla): void
     {
-        $this->id_tabla = PersonaTablaCode::fromNullableString($sid_tabla);
+        $idTabla = PersonaTablaCode::fromNullableString($sid_tabla);
+        if ($idTabla !== null) {
+            $this->id_tabla = $idTabla;
+        }
     }
 
     public function getIdTablaVo(): PersonaTablaCode
@@ -145,9 +155,12 @@ class PersonaEx
 
     public function setIdTablaVo(PersonaTablaCode|string|null $idTabla): void
     {
-        $this->id_tabla = $idTabla instanceof PersonaTablaCode
+        $resolved = $idTabla instanceof PersonaTablaCode
             ? $idTabla
             : PersonaTablaCode::fromNullableString($idTabla);
+        if ($resolved !== null) {
+            $this->id_tabla = $resolved;
+        }
     }
 
     /**
@@ -287,7 +300,10 @@ class PersonaEx
      */
     public function setApellido1(string $apellido1): void
     {
-        $this->apellido1 = PersonaApellido1Text::fromNullableString($apellido1);
+        $vo = PersonaApellido1Text::fromNullableString($apellido1);
+        if ($vo !== null) {
+            $this->apellido1 = $vo;
+        }
     }
 
     public function getApellido1Vo(): PersonaApellido1Text
@@ -297,9 +313,12 @@ class PersonaEx
 
     public function setApellido1Vo(PersonaApellido1Text|string|null $apellido1): void
     {
-        $this->apellido1 = $apellido1 instanceof PersonaApellido1Text
+        $resolved = $apellido1 instanceof PersonaApellido1Text
             ? $apellido1
             : PersonaApellido1Text::fromNullableString($apellido1);
+        if ($resolved !== null) {
+            $this->apellido1 = $resolved;
+        }
     }
 
     /**
@@ -409,7 +428,10 @@ class PersonaEx
      */
     public function setSituacion(string $situacion): void
     {
-        $this->situacion = SituacionCode::fromNullableString($situacion);
+        $resolved = SituacionCode::fromNullableString($situacion);
+        if ($resolved !== null) {
+            $this->situacion = $resolved;
+        }
     }
 
     public function getSituacionVo(): SituacionCode
@@ -419,9 +441,12 @@ class PersonaEx
 
     public function setSituacionVo(SituacionCode|string|null $situacion): void
     {
-        $this->situacion = $situacion instanceof SituacionCode
+        $resolved = $situacion instanceof SituacionCode
             ? $situacion
             : SituacionCode::fromNullableString($situacion);
+        if ($resolved !== null) {
+            $this->situacion = $resolved;
+        }
     }
 
     public function getF_situacion(): DateTimeLocal|NullDateTimeLocal|null
@@ -504,7 +529,7 @@ class PersonaEx
     /**
      * @deprecated use getNivelStgrVo() instead
      */
-    public function getNivel_stgr(): ?string
+    public function getNivel_stgr(): ?int
     {
         return $this->nivel_stgr?->value();
     }
@@ -786,6 +811,7 @@ class PersonaEx
 
     public function getCentro_o_dl(): string
     {
+        $ctr = '';
         $classname = get_class($this);
         $matches = [];
         if (preg_match('@\\\\(\w+)$@', $classname, $matches)) {
@@ -793,13 +819,14 @@ class PersonaEx
         }
         switch ($classname) {
             case 'PersonaSacd':
-                $ctr = $this->getDl();
+                $ctr = (string)($this->getDl() ?? '');
                 if ($ctr === ConfigGlobal::mi_dele()) {
-                    $oPersonasDl = new PersonaDl($this->getId_nom());
-                    $id_ctr = $oPersonasDl->getId_ctr();
+                    $PersonaDlRepository = DependencyResolver::get(PersonaDlRepositoryInterface::class);
+                    $oPersonasDl = $PersonaDlRepository->findById($this->getId_nom());
+                    $id_ctr = $oPersonasDl?->getId_ctr();
                     $oCentroDl = null;
                     if ($id_ctr !== null) {
-                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                        $CentroDlRepository = DependencyResolver::get(CentroDlRepositoryInterface::class);
                         $oCentroDl = $CentroDlRepository->findById($id_ctr);
                     }
                     $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
@@ -808,17 +835,17 @@ class PersonaEx
             case 'PersonaEx':
             case 'PersonaIn':
             case 'PersonaPub':
-                $ctr = $this->getDl();
+                $ctr = (string)($this->getDl() ?? '');
                 break;
             case 'PersonaGlobal':
                 $oCentroDl = null;
                 if ($this->getId_ctr() !== null) {
                     // OJO CON las regiones de stgr
                     if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                        $CentroRepository = DependencyResolver::get(CentroRepositoryInterface::class);
                         $oCentroDl = $CentroRepository->findById($this->getId_ctr());
                     } else {
-                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                        $CentroDlRepository = DependencyResolver::get(CentroDlRepositoryInterface::class);
                         $oCentroDl = $CentroDlRepository->findById($this->getId_ctr());
                     }
                 }
@@ -834,10 +861,10 @@ class PersonaEx
                 if ($this->getId_ctr() !== null) {
                     // OJO CON las regiones de stgr
                     if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                        $CentroRepository = DependencyResolver::get(CentroRepositoryInterface::class);
                         $oCentro = $CentroRepository->findById($this->getId_ctr());
                     } else {
-                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                        $CentroDlRepository = DependencyResolver::get(CentroDlRepositoryInterface::class);
                         $oCentro = $CentroDlRepository->findById($this->getId_ctr());
                     }
                 }

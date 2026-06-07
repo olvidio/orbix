@@ -29,9 +29,12 @@ class Situacion
 
     public function setSituacionVo(SituacionCode|string|null $codigo): void
     {
-        $this->situacion = $codigo instanceof SituacionCode
+        $resolved = $codigo instanceof SituacionCode
             ? $codigo
             : SituacionCode::fromNullableString($codigo);
+        if ($resolved !== null) {
+            $this->situacion = $resolved;
+        }
     }
 
     public function getNombreSituacionVo(): ?SituacionName
@@ -76,6 +79,9 @@ class Situacion
     {
         return 'situacion';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

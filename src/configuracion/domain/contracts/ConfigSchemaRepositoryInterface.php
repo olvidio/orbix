@@ -21,9 +21,9 @@ interface ConfigSchemaRepositoryInterface
 	/**
 	 * devuelve una colección (array) de objetos de tipo ConfigSchema
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo ConfigSchema
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<ConfigSchema> Una colección de objetos de tipo ConfigSchema
 	
 	 */
 	public function getConfigSchemas(array $aWhere=[], array $aOperators=[]): array;
@@ -45,10 +45,10 @@ interface ConfigSchemaRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param string $parametro
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(string $parametro): array|bool;
+    public function datosById(string $parametro): array|false;
 	
     /**
      * Busca la clase con parametro en el repositorio.

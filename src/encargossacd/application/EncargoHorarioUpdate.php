@@ -2,6 +2,9 @@
 
 namespace src\encargossacd\application;
 
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoHorario;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -12,43 +15,49 @@ use src\shared\domain\value_objects\TimeLocal;
  */
 final class EncargoHorarioUpdate
 {
+
+    public function __construct(
+        private EncargoHorarioRepositoryInterface $encargoHorarioRepository
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $post
      * @return array{ok: true}|array{_error: string}
      */
-    public static function ejecutar(array $post): array
+    public function ejecutar(array $post): array
     {
-        $mod = (string)($post['mod'] ?? '');
-        $repo = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
-
+        $mod = input_string($post, 'mod');
         if ($mod === 'eliminar') {
-            if (empty($post['sel_nom']) || !is_array($post['sel_nom'])) {
+            $selNom = $post['sel_nom'];
+            if (!is_array($selNom) || !array_key_exists(0, $selNom)) {
                 return ['_error' => _('acción no válida')];
             }
-            $token = (string)$post['sel_nom'][0];
+            $first = $selNom[0];
+            $token = is_scalar($first) ? (string) $first : '';
             $parts = explode('#', $token, 2);
             $id_item_h = (int)$parts[0];
-            $o = $repo->findById($id_item_h);
-            if ($o !== null && $repo->Eliminar($o) === false) {
-                return ['_error' => $repo->getErrorTxt()];
+            $o = $this->encargoHorarioRepository->findById($id_item_h);
+            if ($o !== null && $this->encargoHorarioRepository->Eliminar($o) === false) {
+                return ['_error' => $this->encargoHorarioRepository->getErrorTxt()];
             }
 
             return ['ok' => true];
         }
 
-        $Qdia = (string)($post['dia'] ?? '');
-        $Qid_item_h = (int)($post['id_item_h'] ?? 0);
-        $Qid_enc = (int)($post['id_enc'] ?? 0);
-        $Qf_ini = (string)($post['f_ini'] ?? '');
-        $Qf_fin = (string)($post['f_fin'] ?? '');
-        $Qdia_ref = isset($post['dia_ref']) ? (string)$post['dia_ref'] : '';
-        $Qdia_num = isset($post['dia_num']) && $post['dia_num'] !== '' ? (int)$post['dia_num'] : 0;
-        $Qmas_menos = (string)($post['mas_menos'] ?? '');
-        $Qdia_inc = isset($post['dia_inc']) && $post['dia_inc'] !== '' ? (int)$post['dia_inc'] : 0;
-        $Qh_ini = (string)($post['h_ini'] ?? '');
-        $Qh_fin = (string)($post['h_fin'] ?? '');
-        $Qn_sacd = isset($post['n_sacd']) && $post['n_sacd'] !== '' ? (int)$post['n_sacd'] : 0;
-        $Qmes = isset($post['mes']) && $post['mes'] !== '' ? (int)$post['mes'] : 0;
+        $Qdia = input_string($post, 'dia');
+        $Qid_item_h = input_int($post, 'id_item_h');
+        $Qid_enc = input_int($post, 'id_enc');
+        $Qf_ini = input_string($post, 'f_ini');
+        $Qf_fin = input_string($post, 'f_fin');
+        $Qdia_ref = input_string($post, 'dia_ref');
+        $Qdia_num = input_int($post, 'dia_num');
+        $Qmas_menos = input_string($post, 'mas_menos');
+        $Qdia_inc = input_int($post, 'dia_inc');
+        $Qh_ini = input_string($post, 'h_ini');
+        $Qh_fin = input_string($post, 'h_fin');
+        $Qn_sacd = input_int($post, 'n_sacd');
+        $Qmes = input_int($post, 'mes');
 
         $oF_ini = $Qf_ini === '' ? null : new DateTimeLocal($Qf_ini);
         $oF_fin = $Qf_fin === '' ? null : new DateTimeLocal($Qf_fin);
@@ -64,7 +73,7 @@ final class EncargoHorarioUpdate
                 return ['_error' => _('Debe llenar todos los campos que tengan un (*)')];
             }
 
-            $newId = $repo->getNewId();
+            $newId = $this->encargoHorarioRepository->getNewId();
             $o = new EncargoHorario();
             $o->setId_item_h((int)$newId);
             $o->setId_enc($Qid_enc);
@@ -78,8 +87,8 @@ final class EncargoHorarioUpdate
             $o->setH_fin($oH_fin);
             $o->setN_sacd($Qn_sacd);
             $o->setMes($Qmes);
-            if ($repo->Guardar($o) === false) {
-                return ['_error' => _('hay un error, no se ha guardado') . "\n" . $repo->getErrorTxt()];
+            if ($this->encargoHorarioRepository->Guardar($o) === false) {
+                return ['_error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoHorarioRepository->getErrorTxt()];
             }
 
             return ['ok' => true];
@@ -90,7 +99,7 @@ final class EncargoHorarioUpdate
                 return ['_error' => _('Debe llenar todos los campos que tengan un (*)')];
             }
 
-            $o = $repo->findById($Qid_item_h);
+            $o = $this->encargoHorarioRepository->findById($Qid_item_h);
             if ($o === null) {
                 return ['_error' => _('registro no encontrado')];
             }
@@ -105,8 +114,8 @@ final class EncargoHorarioUpdate
             $o->setH_fin($oH_fin);
             $o->setN_sacd($Qn_sacd);
             $o->setMes($Qmes);
-            if ($repo->Guardar($o) === false) {
-                return ['_error' => _('hay un error, no se ha guardado') . "\n" . $repo->getErrorTxt()];
+            if ($this->encargoHorarioRepository->Guardar($o) === false) {
+                return ['_error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoHorarioRepository->getErrorTxt()];
             }
 
             return ['ok' => true];

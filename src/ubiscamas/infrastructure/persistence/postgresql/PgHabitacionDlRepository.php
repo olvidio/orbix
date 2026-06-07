@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubiscamas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 
@@ -19,9 +20,9 @@ class PgHabitacionDlRepository extends PgHabitacionRepository implements Habitac
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('du_habitaciones_dl');
     }

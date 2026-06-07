@@ -153,7 +153,7 @@ function strsinacentocmp($str1, $str2): int
 /**
  * Ordena filas de profesor por apellido1, apellido2 y nombre (sin acentos).
  *
- * @param list<array{ap1: string, ap2?: string, nom: string}> $filas
+ * @param list<array{id_nom: int, ap_nom: string, ap1: string, ap2?: string, nom: string}> $filas
  */
 function usort_profesores_por_apellidos(array &$filas): void
 {

@@ -13,7 +13,8 @@ class EncargoTipo
     use Hydratable;
 
     // NO se usan, son solo para asegurar que exista la traducción
-    private function traduccion()
+    /** @return string */
+    private function traduccion(): string
     {
         $p = _("opcional");
         $a = _("módulos");
@@ -67,7 +68,7 @@ class EncargoTipo
      */
     public function setId_tipo_enc(int $id_tipo_enc): void
     {
-        $this->id_tipo_enc = EncargoTipoId::fromNullableInt($id_tipo_enc);
+        $this->id_tipo_enc = (EncargoTipoId::fromNullableInt($id_tipo_enc) ?? throw new \InvalidArgumentException('id_tipo_enc cannot be empty'));
     }
 
     public function getTipoEncIdVo(): EncargoTipoId
@@ -79,7 +80,7 @@ class EncargoTipo
     {
         $this->id_tipo_enc = $vo instanceof EncargoTipoId
             ? $vo
-            : EncargoTipoId::fromNullableInt($vo);
+            : (EncargoTipoId::fromNullableInt($vo) ?? throw new \InvalidArgumentException('id_tipo_enc cannot be empty'));
     }
 
 
@@ -97,7 +98,7 @@ class EncargoTipo
      */
     public function setTipo_enc(string $tipo_enc): void
     {
-        $this->tipo_enc = EncargoTipoText::fromNullableString($tipo_enc);
+        $this->tipo_enc = (EncargoTipoText::fromNullableString($tipo_enc) ?? throw new \InvalidArgumentException('tipo_enc cannot be empty'));
     }
 
     public function getTipoEncVo(): EncargoTipoText
@@ -109,7 +110,7 @@ class EncargoTipo
     {
         $this->tipo_enc = $vo instanceof EncargoTipoText
             ? $vo
-            : EncargoTipoText::fromNullableString($vo);
+            : (EncargoTipoText::fromNullableString($vo) ?? throw new \InvalidArgumentException('tipo_enc cannot be empty'));
     }
 
 
@@ -127,7 +128,7 @@ class EncargoTipo
      */
     public function setMod_horario(int $mod_horario): void
     {
-        $this->mod_horario = EncargoModHorarioId::fromNullableInt($mod_horario);
+        $this->mod_horario = (EncargoModHorarioId::fromNullableInt($mod_horario) ?? throw new \InvalidArgumentException('mod_horario cannot be empty'));
     }
 
     public function getModHorarioVo(): EncargoModHorarioId
@@ -139,7 +140,7 @@ class EncargoTipo
     {
         $this->mod_horario = $vo instanceof EncargoModHorarioId
             ? $vo
-            : EncargoModHorarioId::fromNullableInt($vo);
+            : (EncargoModHorarioId::fromNullableInt($vo) ?? throw new \InvalidArgumentException('mod_horario cannot be empty'));
     }
 
 
@@ -149,8 +150,13 @@ class EncargoTipo
         return 'id_tipo_enc';
     }
 
-  public function getDatosCampos(): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDatosCampos(): array
     {
+        $this->traduccion();
+
         $oEncargoTipoSet = new Set();
         $oEncargoTipoSet->add($this->getDatosId_tipo_enc());
         $oEncargoTipoSet->add($this->getDatosTipo_enc());

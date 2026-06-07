@@ -9,28 +9,27 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use frontend\shared\web\Periodo;
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
 /**
- * Caso de uso: devuelve los datos estructurados para la tabla de
- * actividades candidatas a cambiar de fase, segun filtros de tipo de
- * actividad, dl_propia, periodo y accion (marcar/desmarcar).
- *
- * El frontend renderiza el formulario con `frontend\shared\web\Lista` + `web\Hash`.
+ * Caso de uso: datos estructurados para tabla de actividades candidatas a cambiar de fase.
  */
 class FasesActivCambioLista
 {
+    public function __construct(
+        private readonly ActividadDlRepositoryInterface $actividadDlRepository,
+        private readonly ActividadRepositoryInterface $actividadRepository,
+        private readonly TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        private readonly TareaProcesoRepositoryInterface $tareaProcesoRepository,
+        private readonly ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+        private readonly ProcesoActividadService $procesoActividadService,
+    ) {
+    }
+
     /**
-     * @return array{
-     *     error:string,
-     *     msg:string,
-     *     num_activ:int,
-     *     num_ok:int,
-     *     accion:string,
-     *     id_fase_nueva:string,
-     *     a_cabeceras:array<int,string>,
-     *     a_valores:array<mixed>
-     * }
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
      */
     public function execute(array $input): array
     {
@@ -39,27 +38,27 @@ class FasesActivCambioLista
             'msg' => '',
             'num_activ' => 0,
             'num_ok' => 0,
-            'accion' => (string)($input['accion'] ?? ''),
-            'id_fase_nueva' => (string)($input['id_fase_nueva'] ?? ''),
+            'accion' => input_string($input, 'accion'),
+            'id_fase_nueva' => input_string($input, 'id_fase_nueva'),
             'a_cabeceras' => [],
             'a_valores' => [],
         ];
 
-        $Qid_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
-        $Qdl_propia = (string)($input['dl_propia'] ?? '');
-        $Qid_fase_nueva = (string)($input['id_fase_nueva'] ?? '');
-        if (empty($Qid_fase_nueva)) {
+        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
+        $Qdl_propia = input_string($input, 'dl_propia');
+        $Qid_fase_nueva = input_string($input, 'id_fase_nueva');
+        if ($Qid_fase_nueva === '') {
             $empty['error'] = _("Debe poner la fase nueva");
             return $empty;
         }
 
-        $Qperiodo = (string)($input['periodo'] ?? '');
-        $Qyear = (string)($input['year'] ?? '');
-        $Qempiezamin = (string)($input['empiezamin'] ?? '');
-        $Qempiezamax = (string)($input['empiezamax'] ?? '');
-        $Qaccion = (string)($input['accion'] ?? '');
+        $Qperiodo = input_string($input, 'periodo');
+        $Qyear = input_string($input, 'year');
+        $Qempiezamin = input_string($input, 'empiezamin');
+        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qaccion = input_string($input, 'accion');
 
-        if (empty($Qperiodo)) {
+        if ($Qperiodo === '') {
             $Qperiodo = 'actual';
         }
 
@@ -72,12 +71,12 @@ class FasesActivCambioLista
             $isfsv = (int)$Qid_tipo_activ[0];
         }
         if (is_true($Qdl_propia)) {
-            $aWhere['dl_org'] = ConfigGlobal::mi_delef($isfsv);
-            $ActividadRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+            $aWhere['dl_org'] = ConfigGlobal::mi_delef((string) $isfsv);
+            $ActividadRepository = $this->actividadDlRepository;
         } else {
-            $aWhere['dl_org'] = ConfigGlobal::mi_delef($isfsv);
+            $aWhere['dl_org'] = ConfigGlobal::mi_delef((string) $isfsv);
             $aOperador['dl_org'] = '!=';
-            $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+            $ActividadRepository = $this->actividadRepository;
         }
         $aWhere['status'] = 4;
         $aOperador['status'] = '<';
@@ -104,17 +103,8 @@ class FasesActivCambioLista
         $a_valores = [];
         $aWhere['_ordre'] = 'f_ini';
         $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
-        if (!is_array($cActividades)) {
-            $empty['error'] = _("faltan condiciones para la selección");
-            return $empty;
-        }
         $num_activ = count($cActividades);
         $num_ok = 0;
-
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
-        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
-        $ProcesoActividadService = $GLOBALS['container']->get(ProcesoActividadService::class);
 
         $i = 0;
         foreach ($cActividades as $oActividad) {
@@ -122,45 +112,61 @@ class FasesActivCambioLista
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $nom_activ = $oActividad->getNom_activ();
             $i++;
-            $oTipoDeActiv = $TipoDeActividadRepository->findById($id_tipo_activ);
+            $oTipoDeActiv = $this->tipoDeActividadRepository->findById($id_tipo_activ);
+            if ($oTipoDeActiv === null) {
+                continue;
+            }
             $id_tipo_proceso = $oTipoDeActiv->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
+            if ($id_tipo_proceso === null) {
+                continue;
+            }
             $aWhereTP = [
                 'id_tipo_proceso' => $id_tipo_proceso,
                 'id_fase' => $Qid_fase_nueva,
             ];
-            $cTareasProceso = $TareaProcesoRepository->getTareasProceso($aWhereTP);
-            $aFases_previas = $cTareasProceso[0]->getJson_fases_previas(true);
+            $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso($aWhereTP);
+            if ($cTareasProceso === []) {
+                continue;
+            }
+            $aFases_previas = $cTareasProceso[0]->getJsonFasesPreviasAsList();
 
-            $aFases_estado = $ActividadProcesoTareaRepository->getListaFaseEstado($id_activ);
-            $aFases_completadas = $ActividadProcesoTareaRepository->getFasesCompletadas($id_activ);
+            $aFases_estado = $this->actividadProcesoTareaRepository->getListaFaseEstado($id_activ);
+            $aFases_completadas = $this->actividadProcesoTareaRepository->getFasesCompletadas($id_activ);
 
             $mensaje = '';
             $ok_fases_previas = false;
             if ($Qaccion === 'desmarcar') {
                 $mensaje = _("No tiene marcada la fase");
-                if (in_array($Qid_fase_nueva, $aFases_completadas)) {
+                if (in_array((int) $Qid_fase_nueva, $aFases_completadas, true)) {
                     $ok_fases_previas = true;
                     $mensaje = 'ok';
                 }
             } else {
-                if (empty($aFases_estado)) {
+                if ($aFases_estado === []) {
                     $mensaje = _("No tiene proceso. Debe crearlo");
                     $a_valores[$i]['clase'] = 'wrong-soft';
                 } else {
-                    if (in_array($Qid_fase_nueva, $aFases_completadas)) {
+                    if (in_array((int) $Qid_fase_nueva, $aFases_completadas, true)) {
                         $mensaje = _("Ya la tiene");
                     } else {
-                        if (!empty($aFases_previas)) {
+                        if ($aFases_previas !== []) {
                             $ok_fases_previas = true;
                             foreach ($aFases_previas as $aaFase_previa) {
-                                $id_fase_previa = $aaFase_previa['id_fase'];
-                                $mensaje_requisito = $aaFase_previa['mensaje'];
-                                if (in_array($id_fase_previa, $aFases_completadas)) {
+                                $id_fase_previa_raw = $aaFase_previa['id_fase'] ?? '';
+                                if ($id_fase_previa_raw === '' || !is_numeric($id_fase_previa_raw)) {
+                                    continue;
+                                }
+                                $id_fase_previa = (int) $id_fase_previa_raw;
+                                $mensaje_requisitoRaw = $aaFase_previa['mensaje'] ?? '';
+                                $mensaje_requisito = is_string($mensaje_requisitoRaw) ? $mensaje_requisitoRaw : '';
+                                if ($id_fase_previa > 0 && in_array($id_fase_previa, $aFases_completadas, true)) {
                                     $mensaje = _("ok, tiene la(s) fase(s) previa(s)");
                                 } else {
                                     $ok_fases_previas = false;
                                     $fase_tarea_previa = $id_fase_previa . '#0';
-                                    $mensaje .= empty($mensaje_requisito) ? $ProcesoActividadService->getMensaje($fase_tarea_previa, 'marcar') : $mensaje_requisito;
+                                    $mensaje .= $mensaje_requisito === ''
+                                        ? $this->procesoActividadService->getMensaje($fase_tarea_previa, 'marcar')
+                                        : $mensaje_requisito;
                                 }
                             }
                         } else {

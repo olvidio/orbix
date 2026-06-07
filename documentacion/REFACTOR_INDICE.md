@@ -48,7 +48,7 @@ Columnas:
 | **actividadcargos** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadcargos_migracion_baseline.md) |
 | **actividades** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividades_migracion_baseline.md) |
 | **actividadescentro** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadescentro_migracion_baseline.md) |
-| actividadessacd | ✓ | 2 | 16 | 2 controladores frontend pendientes |
+| actividadessacd | ✓ | 2 | 0 | **Cierre DI + PHPStan** (2026-06-06); 2 controladores frontend pendientes; ver [baseline](actividadessacd_migracion_baseline.md) |
 | **actividadestudios** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadestudios_migracion_baseline.md) |
 | actividadplazas | ✓ | 2 | 0 | **Cierre DI + PHPStan** (2026-06-06); 2 controladores frontend pendientes; ver [baseline](actividadplazas_migracion_baseline.md) |
 | **actividadtarifas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadtarifas_migracion_baseline.md) |
@@ -56,27 +56,27 @@ Columnas:
 | **cambios** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](cambios_migracion_baseline.md) |
 | **cartaspresentacion** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](cartaspresentacion_migracion_baseline.md) |
 | casas | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](casas_migracion_baseline.md) |
-| certificados | — | 0 | 19 | Sin baseline |
-| configuracion | — | 0 | 11 | Sin baseline |
-| dbextern | — | 0 | 14 | Sin baseline |
+| **certificados** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](certificados_migracion_baseline.md) |
+| **configuracion** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); `ConfigSnapshot` cross-modulo; ver [baseline](configuracion_migracion_baseline.md) |
+| **dbextern** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](dbextern_migracion_baseline.md) |
 | devel_codegen | — | 2 | 0 | Herramienta interna; excepción tolerable |
-| devel_db_admin | — | 0 | 11 | Patrón de referencia en `agents.md` |
-| dossiers | ✓ | 0 | 7 | Migración completa (`apps/dossiers/` eliminado) |
-| encargossacd | ✓ | 0 | 36 | Slices completos; revisar deuda en baseline |
-| inventario | — | 0 | 48 | Sin baseline; mayor concentración de `$GLOBALS` |
-| menus | — | 1 | 20 | 1 controlador frontend pendiente |
-| misas | ✓ | 0 | 33 | Slices 7–11 completados |
-| notas | ✓ | 0 | 37 | Migración amplia; [deuda legacy documentada](notas_migracion_baseline.md#deuda-tecnica-pendiente-post-refactor) |
-| pasarela | — | 0 | 6 | Sin baseline |
-| permisos | ✓ | 0 | 1 | Casi limpio |
-| personas | ✓ | 0 | 18 | Pantallas principales migradas |
-| planning | ✓ | 0 | 8 | Slices 1–4 completados |
-| procesos | ✓ | 0 | 27 | `apps/procesos/` eliminado |
-| profesores | ✓ | 0 | 19 | Lote 1 cerrado; ver [`profesores_lote1_cierre.md`](profesores_lote1_cierre.md) |
-| tablonanuncios | — | 0 | 2 | Sin baseline |
-| ubis | — | 1 | 47 | 1 controlador frontend pendiente |
-| ubiscamas | — | 0 | 10 | Sin baseline |
-| usuarios | — | 2 | 44 | `login`/`recovery` — excepciones a valorar |
+| **devel_db_admin** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); herramienta interna; ver [baseline](devel_db_admin_migracion_baseline.md) |
+| **dossiers** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](dossiers_migracion_baseline.md) |
+| encargossacd | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](encargossacd_migracion_baseline.md#cierre-di-2026-06-06) |
+| **inventario** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](inventario_migracion_baseline.md) |
+| **menus** | ✓ | 1 | 0 | **Cierre DI + PHPStan** (2026-06-06); `menus_importar_de_ficheros_a_ref` excepcion frontend; ver [baseline](menus_migracion_baseline.md) |
+| **misas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](misas_migracion_baseline.md#cierre-di-junio-2026) |
+| notas | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](notas_migracion_baseline.md#cierre-di-2026-06-06) |
+| **pasarela** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](pasarela_migracion_baseline.md) |
+| **permisos** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); domain-only; ver [baseline](permisos_migracion_baseline.md) |
+| **personas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](personas_migracion_baseline.md) |
+| **planning** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](planning_migracion_baseline.md) |
+| **procesos** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](procesos_migracion_baseline.md#cierre-di--phpstan-2026-06-06) |
+| **profesores** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](profesores_migracion_baseline.md#cierre-di-junio-2026) |
+| **tablonanuncios** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](tablonanuncios_migracion_baseline.md) |
+| **ubis** | ✓ | 1 | 0 | **Cierre DI + PHPStan** (2026-06-07 verificado, 433→0); `plano_bytea.php` excepción frontend; ver [baseline](ubis_migracion_baseline.md) |
+| **ubiscamas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](ubiscamas_migracion_baseline.md) |
+| **usuarios** | ✓ | 2 | 0 | **Cierre DI + PHPStan** (2026-06-06); `login`/`recovery` excepciones frontend; ver [baseline](usuarios_migracion_baseline.md) |
 | utils_database | — | 0 | 0 | — |
 | zonassacd | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](zonassacd_migracion_baseline.md) |
 
@@ -90,7 +90,7 @@ Columnas:
 
 - Mantener actualizado este índice y [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md).
 - Añadir sección **«Deuda post-refactor»** en baselines de módulos ya migrados (plantilla: [asistentes](asistentes_migracion_baseline.md#deuda-post-refactor), [notas](notas_migracion_baseline.md#deuda-tecnica-pendiente-post-refactor)).
-- Crear baselines mínimos para módulos sin documento (`actividades`, `inventario`, `ubis`, `usuarios`, …) cuando se abra trabajo allí.
+- Crear baselines mínimos para módulos sin documento (`actividades`, `inventario`, `ubis`, …) cuando se abra trabajo allí.
 
 ### Fase 1 — Cerrar los 19 controladores frontend
 
@@ -103,11 +103,11 @@ Excepciones a documentar explícitamente en el inventario: `login.php`, `recover
 Orden sugerido por madurez y volumen de `$GLOBALS`:
 
 1. **asistentes** (piloto de referencia; 0 deuda frontend)
-2. dossiers, planning, permisos (pocos `GLOBALS`)
+2. dossiers
 3. actividadcargos, zonassacd, actividadplazas, actividadescentro, **actividadestudios**
 4. profesores, certificados, asistentes-adyacentes (personas, cambios, casas)
-5. encargossacd, misas, procesos, notas
-6. inventario, ubis, usuarios (mayor `$GLOBALS`)
+5. encargossacd, misas, **procesos** ✓, notas
+6. inventario, ubis (mayor `$GLOBALS` restante)
 
 ### Fase 3 — PHPStan incremental (no global de golpe)
 

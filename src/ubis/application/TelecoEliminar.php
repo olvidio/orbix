@@ -2,25 +2,32 @@
 
 namespace src\ubis\application;
 
-use src\shared\infrastructure\ProvidesRepositories;
+use src\ubis\application\services\UbiRepositoryResolver;
 
 final class TelecoEliminar
 {
-    use ProvidesRepositories;
-
-    public static function execute(string $obj_pau, array $a_pkey): array
-    {
-        return (new self())->run($obj_pau, $a_pkey);
+    public function __construct(
+        private UbiRepositoryResolver $ubiRepositoryResolver,
+    ) {
     }
 
-    private function run(string $obj_pau, array $a_pkey): array
+    /**
+     * @param list<int|string> $a_pkey
+     * @return array{ok: true}
+     */
+    public function execute(string $obj_pau, array $a_pkey): array
     {
-        $Repository = $this->getTelecoRepository($obj_pau);
+        $Repository = $this->ubiRepositoryResolver->getTelecoRepository($obj_pau);
 
         foreach ($a_pkey as $pkey) {
-            $TelecoUbi = $Repository->findById($pkey);
+            $id = is_int($pkey) ? $pkey : (int) $pkey;
+            $TelecoUbi = $Repository->findById($id);
+            if ($TelecoUbi === null) {
+                continue;
+            }
             $Repository->Eliminar($TelecoUbi);
         }
+
         return ['ok' => true];
     }
 }

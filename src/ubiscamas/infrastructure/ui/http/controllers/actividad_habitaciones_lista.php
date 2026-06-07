@@ -1,18 +1,21 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
-use src\shared\web\ContestarJson;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
+use src\shared\web\ContestarJson;
 use src\ubiscamas\application\HabitacionesCamaLista;
+use function src\shared\domain\helpers\input_int;
 
-$Qid_activ = (string)filter_input(INPUT_POST, 'id_activ');
+$Qid_activ = input_int($_POST, 'id_activ');
 
-$HabitacionCamaLista = new HabitacionesCamaLista();
-$data = $HabitacionCamaLista((int)$Qid_activ);
+/** @var HabitacionesCamaLista $habitacionCamaLista */
+$habitacionCamaLista = DependencyResolver::get(HabitacionesCamaLista::class);
+$data = $habitacionCamaLista($Qid_activ);
 
 if (!empty($data['success'])) {
     $web = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-    $id_activ = (int)$data['id_activ'];
+    $id_activ = $Qid_activ;
 
     $data['reload_main_link_spec'] = [
         'path' => 'frontend/ubiscamas/controller/lista_habitaciones.php',
@@ -39,5 +42,4 @@ if (!empty($data['success'])) {
     ];
 }
 
-$error_txt = '';
-ContestarJson::enviar($error_txt, $data);
+ContestarJson::enviar('', $data);

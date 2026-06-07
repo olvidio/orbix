@@ -1,12 +1,18 @@
 <?php
 
+use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\UbisListaData;
 use src\shared\web\ContestarJson;
 
-$Qnombre_ubi = (string)filter_input(INPUT_POST, 'nombre_ubi');
-$data = UbisListaData::execute($Qnombre_ubi);
-if (isset($data['error'])) {
-    ContestarJson::enviar((string)$data['error'], []);
+use function src\shared\domain\helpers\input_string;
+
+$Qnombre_ubi = input_string($_POST, 'nombre_ubi');
+
+/** @var UbisListaData $useCase */
+$useCase = DependencyResolver::get(UbisListaData::class);
+$data = $useCase->execute($Qnombre_ubi);
+if (array_key_exists('error', $data)) {
+    ContestarJson::enviar(input_string($data, 'error'), []);
     return;
 }
 ContestarJson::enviar('', [

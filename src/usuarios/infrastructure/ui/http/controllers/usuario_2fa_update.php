@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\Secret2FA;
@@ -12,8 +13,12 @@ $Qsecret_2fa = (string)filter_input(INPUT_POST, 'secret_2fa');
 $Qenable_2fa = (bool)filter_input(INPUT_POST, 'enable_2fa');
 $Qverification_code = (string)filter_input(INPUT_POST, 'verification_code');
 
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);
+if ($oUsuario === null) {
+    ContestarJson::enviar(_('Usuario no encontrado'), []);
+    return;
+}
 
 // Si se está activando 2FA, verificar el código
 if ($Qenable_2fa) {

@@ -59,6 +59,9 @@ class ProfesorJuramento
         return 'id_item';
     }
 
+  /** @return array<string, mixed> */
+
+
   public function getDatosCampos(): array
     {
         $oProfesorJuramentoSet = new Set();

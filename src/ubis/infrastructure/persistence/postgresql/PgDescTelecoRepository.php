@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -26,19 +27,25 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('xd_desc_teleco');
     }
 
-    public function getArrayDescTelecoPersonas($sdepende): array
+    /**
+     * @return array<int|string, string>
+     */
+public function getArrayDescTelecoPersonas(string $sdepende): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_item, desc_teleco FROM $nom_tabla WHERE persona='t' AND id_tipo_teleco='$sdepende' ORDER BY orden";
         $stmt = $this->prepareAndExecute($oDbl, $sQuery, [], __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $aClave) {
@@ -47,12 +54,17 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
         return $aOpciones;
     }
 
-    public function getArrayDescTelecoUbis($sdepende): array
+    /**
+     * @return array<int|string, string>
+     */
+public function getArrayDescTelecoUbis(string $sdepende): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_item, desc_teleco FROM $nom_tabla WHERE ubi='t' AND id_tipo_teleco='$sdepende' ORDER BY orden";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $aClave) {
@@ -66,9 +78,9 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
     /**
      * devuelve una colección (array) de objetos de tipo DescTeleco
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo DescTeleco
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<DescTeleco> Una colección de objetos de tipo DescTeleco
      */
     public function getDescsTeleco(array $aWhere = [], array $aOperators = []): array
     {
@@ -105,27 +117,35 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $DescTeleco = DescTeleco::fromArray($aDatos);
             $DescTelecoSet->add($DescTeleco);
         }
-        return $DescTelecoSet->getTot();
+        return array_values($DescTelecoSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -170,6 +190,9 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -179,6 +202,9 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -190,15 +216,26 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array |bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
 
     }
 
@@ -209,7 +246,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
     public function findById(int $id_item): ?DescTeleco
     {
         $aDatos = $this->datosById($id_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return DescTeleco::fromArray($aDatos);
@@ -219,6 +256,12 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('xd_desc_teleco_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

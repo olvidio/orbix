@@ -1,12 +1,17 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qid_ubi = input_int($_POST, 'id_ubi');
 $error_txt = '';
 
-$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+/** @var LugarRepositoryInterface $LugarRepository */
+$LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
 $cLugares = $LugarRepository->getLugares(['id_ubi' => $Qid_ubi, '_ordre' => 'nom_lugar']);
 $a = 0;
 $a_valores = [];

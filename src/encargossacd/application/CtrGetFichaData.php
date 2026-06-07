@@ -20,37 +20,43 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
  */
 final class CtrGetFichaData
 {
+
+    public function __construct(
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private EncargoDominioService $dominioService,
+        private EncargoHorarioRepositoryInterface $encargoHorarioRepository,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdHorarioRepositoryInterface $encargoSacdHorarioRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository,
+        private EncargoTipoRepositoryInterface $encargoTipoRepository,
+        private PersonaSacdRepositoryInterface $personaSacdRepository
+    ) {
+    }
+
     /**
      * @return array<string, mixed>
      */
-    public static function execute(int $id_ubi, int $seleccion_sacd): array
+    public function execute(int $id_ubi, int $seleccion_sacd): array
     {
         $f_hoy = date('Y-m-d');
 
-        $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
-        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoHorarioRepository = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-        $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
-        $oDominio = new EncargoDominioService();
+        $oDominio = $this->dominioService;
 
         [$chk_prelatura, $chk_de_paso, $chk_sssc, $aOpcionesSacd] =
-            $PersonaSacdRepository->getArraySacdyCheckBox($seleccion_sacd);
+            $this->personaSacdRepository->getArraySacdyCheckBox($seleccion_sacd);
         $aOpcionesSacdSssc = null;
 
-        $oCentroDl = $CentroDlRepository->findById($id_ubi);
+        $oCentroDl = $this->centroDlRepository->findById($id_ubi);
         $tipo_centro = $oCentroDl !== null ? (string)$oCentroDl->getTipo_ctr() : '';
 
-        $cEncargos = $EncargoRepository->getEncargos(
+        $cEncargos = $this->encargoRepository->getEncargos(
             ['id_ubi' => $id_ubi, 'id_tipo_enc' => '(1|2|3).0'],
             ['id_tipo_enc' => '~'],
         );
 
         $encargos = [];
 
-        if (!is_array($cEncargos) || count($cEncargos) === 0) {
+        if ($cEncargos === []) {
             $id_ubi_txt = (string)$id_ubi;
             $cl_checked = ((int)($id_ubi_txt[0] ?? 0) === 2) ? '' : 'checked';
 
@@ -60,30 +66,18 @@ final class CtrGetFichaData
             $mod = 'editar';
             foreach ($cEncargos as $oEncargo) {
                 $id_tipo_enc = (int)$oEncargo->getId_tipo_enc();
-                $oEncargoTipo = $EncargoTipoRepository->findById($id_tipo_enc);
+                $oEncargoTipo = $this->encargoTipoRepository->findById($id_tipo_enc);
                 $mod_horario = $oEncargoTipo !== null ? (int)$oEncargoTipo->getMod_horario() : 0;
                 $id_enc = (int)$oEncargo->getId_enc();
 
-                $encargo = [
-                    'id_enc' => $id_enc,
-                    'id_tipo_enc' => $id_tipo_enc,
-                    'mod_horario' => $mod_horario,
-                    'desc_enc' => (string)($oEncargo->getDesc_enc() ?? ''),
-                    'observ' => (string)($oEncargo->getObserv() ?? ''),
-                    'cl_checked' => '',
-                    'actual_id_sacd_titular' => 0,
-                    'actual_id_sacd_suplente' => 0,
-                    'dedic_ctr_m' => '',
-                    'dedic_ctr_t' => '',
-                    'dedic_ctr_v' => '',
-                    'dedic_m' => ['' /* s=0 reservado para titular */],
-                    'dedic_t' => [''],
-                    'dedic_v' => [''],
-                    'dedic_sacd' => [''],
-                    'colaboradores' => [],
-                ];
+                $encargo = self::encargoVacio('');
+                $encargo['id_enc'] = $id_enc;
+                $encargo['id_tipo_enc'] = $id_tipo_enc;
+                $encargo['mod_horario'] = $mod_horario;
+                $encargo['desc_enc'] = (string)($oEncargo->getDesc_enc() ?? '');
+                $encargo['observ'] = (string)($oEncargo->getObserv() ?? '');
 
-                $cHorarios = self::cargarHorariosEncargo($EncargoHorarioRepository, $id_enc, $f_hoy);
+                $cHorarios = $this->cargarHorariosEncargo($this->encargoHorarioRepository, $id_enc, $f_hoy);
                 if ($mod_horario !== 3) {
                     foreach ($cHorarios as $oHor) {
                         $modulo = $oHor->getDia_ref();
@@ -98,7 +92,7 @@ final class CtrGetFichaData
                     }
                 }
 
-                $cSacd = self::cargarEncargosSacd($EncargoSacdRepository, $id_enc, $f_hoy);
+                $cSacd = $this->cargarEncargosSacd($this->encargoSacdRepository, $id_enc, $f_hoy);
                 $s = 0;
                 foreach ($cSacd as $oEncargoSacd) {
                     $modo = (int)$oEncargoSacd->getModo();
@@ -108,8 +102,8 @@ final class CtrGetFichaData
                             // fallthrough
                         case 3:
                             $encargo['actual_id_sacd_titular'] = (int)$oEncargoSacd->getId_nom();
-                            self::rellenarHorarioTitular(
-                                $EncargoSacdHorarioRepository,
+                            $this->rellenarHorarioTitular(
+                                $this->encargoSacdHorarioRepository,
                                 $oDominio,
                                 $encargo,
                                 $id_enc,
@@ -123,22 +117,22 @@ final class CtrGetFichaData
                         case 5:
                             $s++;
                             $id_nom = (int)$oEncargoSacd->getId_nom();
-                            $colab = self::construirColaborador(
-                                $EncargoSacdHorarioRepository,
+                            $colab = $this->construirColaborador(
+                                $this->encargoSacdHorarioRepository,
                                 $oDominio,
                                 $id_enc,
                                 $id_nom,
                                 $mod_horario,
                                 $s,
                             );
-                            $encargo['dedic_m'][$s] = $colab['dedic_m'];
-                            $encargo['dedic_t'][$s] = $colab['dedic_t'];
-                            $encargo['dedic_v'][$s] = $colab['dedic_v'];
-                            $encargo['dedic_sacd'][$s] = $colab['dedic_sacd'];
+                            $encargo['dedic_m'] = self::assignAtIndex($encargo['dedic_m'], $s, $colab['dedic_m']);
+                            $encargo['dedic_t'] = self::assignAtIndex($encargo['dedic_t'], $s, $colab['dedic_t']);
+                            $encargo['dedic_v'] = self::assignAtIndex($encargo['dedic_v'], $s, $colab['dedic_v']);
+                            $encargo['dedic_sacd'] = self::assignAtIndex($encargo['dedic_sacd'], $s, $colab['dedic_sacd']);
 
                             if (!array_key_exists($id_nom, $aOpcionesSacd)) {
                                 if ($aOpcionesSacdSssc === null) {
-                                    [, , , $aOpcionesSacdSssc] = $PersonaSacdRepository->getArraySacdyCheckBox(10);
+                                    [, , , $aOpcionesSacdSssc] = $this->personaSacdRepository->getArraySacdyCheckBox(10);
                                 }
                             }
                             $encargo['colaboradores'][] = [
@@ -172,7 +166,25 @@ final class CtrGetFichaData
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array{
+     *     id_enc: int,
+     *     id_tipo_enc: int,
+     *     mod_horario: int,
+     *     desc_enc: string,
+     *     observ: string,
+     *     cl_checked: string,
+     *     actual_id_sacd_titular: int,
+     *     actual_id_sacd_suplente: int,
+     *     dedic_ctr_m: string,
+     *     dedic_ctr_t: string,
+     *     dedic_ctr_v: string,
+     *     dedic_m: array<int, string>,
+     *     dedic_t: array<int, string>,
+     *     dedic_v: array<int, string>,
+     *     dedic_sacd: array<int, string>,
+     *     colaboradores: list<array<string, mixed>>,
+     *     sacd_num: int
+     * }
      */
     private static function encargoVacio(string $cl_checked): array
     {
@@ -188,16 +200,19 @@ final class CtrGetFichaData
             'dedic_ctr_m' => '',
             'dedic_ctr_t' => '',
             'dedic_ctr_v' => '',
-            'dedic_m' => [''],
-            'dedic_t' => [''],
-            'dedic_v' => [''],
-            'dedic_sacd' => [''],
+            'dedic_m' => [0 => ''],
+            'dedic_t' => [0 => ''],
+            'dedic_v' => [0 => ''],
+            'dedic_sacd' => [0 => ''],
             'colaboradores' => [],
             'sacd_num' => 1,
         ];
     }
 
-    private static function cargarHorariosEncargo(
+    /**
+     * @return list<\src\encargossacd\domain\entity\EncargoHorario>
+     */
+    private function cargarHorariosEncargo(
         EncargoHorarioRepositoryInterface $repo,
         int $id_enc,
         string $f_hoy,
@@ -210,10 +225,13 @@ final class CtrGetFichaData
         $aWhere1 = $base + ['f_fin' => "'$f_hoy'"];
         $cHor1 = $repo->getEncargoHorarios($aWhere1, ['f_fin' => '>']);
 
-        return array_merge(is_array($cHor0) ? $cHor0 : [], is_array($cHor1) ? $cHor1 : []);
+        return array_merge($cHor0, $cHor1);
     }
 
-    private static function cargarEncargosSacd(
+    /**
+     * @return list<\src\encargossacd\domain\entity\EncargoSacd>
+     */
+    private function cargarEncargosSacd(
         EncargoSacdRepositoryInterface $repo,
         int $id_enc,
         string $f_hoy,
@@ -226,13 +244,31 @@ final class CtrGetFichaData
         $aWhere1 = $base + ['f_fin' => "'$f_hoy'"];
         $c1 = $repo->getEncargosSacd($aWhere1, ['f_fin' => '>']);
 
-        return array_merge(is_array($c0) ? $c0 : [], is_array($c1) ? $c1 : []);
+        return array_merge($c0, $c1);
     }
 
     /**
-     * @param array<string, mixed> $encargo
+     * @param array{
+     *     id_enc: int,
+     *     id_tipo_enc: int,
+     *     mod_horario: int,
+     *     desc_enc: string,
+     *     observ: string,
+     *     cl_checked: string,
+     *     actual_id_sacd_titular: int,
+     *     actual_id_sacd_suplente: int,
+     *     dedic_ctr_m: string,
+     *     dedic_ctr_t: string,
+     *     dedic_ctr_v: string,
+     *     dedic_m: array<int, string>,
+     *     dedic_t: array<int, string>,
+     *     dedic_v: array<int, string>,
+     *     dedic_sacd: array<int, string>,
+     *     colaboradores: list<array<string, mixed>>,
+     *     sacd_num: int
+     * } $encargo
      */
-    private static function rellenarHorarioTitular(
+    private function rellenarHorarioTitular(
         EncargoSacdHorarioRepositoryInterface $repo,
         EncargoDominioService $oDominio,
         array &$encargo,
@@ -249,7 +285,7 @@ final class CtrGetFichaData
             ],
             ['f_fin' => 'IS NULL'],
         );
-        if (!is_array($cH)) {
+        if ($cH === []) {
             return;
         }
 
@@ -259,20 +295,20 @@ final class CtrGetFichaData
             foreach ($cH as $oH) {
                 $h++;
                 $parcial = $oDominio->texto_horario(
-                    (string)$oH->getMas_menos(),
-                    (string)$oH->getDia_ref(),
-                    (string)$oH->getDia_inc(),
-                    (string)$oH->getDia_num(),
-                    (string)$oH->getH_ini(),
-                    (string)$oH->getH_fin(),
-                    (string)$oH->getN_sacd(),
+                    (string) ($oH->getMas_menos() ?? ''),
+                    (string) ($oH->getDia_ref() ?? ''),
+                    (string) ($oH->getDia_inc() ?? ''),
+                    (string) ($oH->getDia_num() ?? ''),
+                    $this->timeToString($oH->getH_ini()),
+                    $this->timeToString($oH->getH_fin()),
+                    '',
                 );
                 if ($h > 1) {
                     $txt .= ' y ';
                 }
                 $txt .= $parcial;
             }
-            $encargo['dedic_sacd'][0] = $txt === '' ? _('crear horario') : $txt;
+            $encargo['dedic_sacd'] = self::assignAtIndex($encargo['dedic_sacd'], 0, $txt === '' ? _('crear horario') : $txt);
 
             return;
         }
@@ -281,11 +317,11 @@ final class CtrGetFichaData
             $modulo = $oH->getDia_ref();
             $val = (string)($oH->getDia_inc() ?? '');
             if ($modulo === 'm') {
-                $encargo['dedic_m'][0] = $val;
+                $encargo['dedic_m'] = self::assignAtIndex($encargo['dedic_m'], 0, $val);
             } elseif ($modulo === 't') {
-                $encargo['dedic_t'][0] = $val;
+                $encargo['dedic_t'] = self::assignAtIndex($encargo['dedic_t'], 0, $val);
             } elseif ($modulo === 'v') {
-                $encargo['dedic_v'][0] = $val;
+                $encargo['dedic_v'] = self::assignAtIndex($encargo['dedic_v'], 0, $val);
             }
         }
     }
@@ -293,7 +329,7 @@ final class CtrGetFichaData
     /**
      * @return array{dedic_m: string, dedic_t: string, dedic_v: string, dedic_sacd: string}
      */
-    private static function construirColaborador(
+    private function construirColaborador(
         EncargoSacdHorarioRepositoryInterface $repo,
         EncargoDominioService $oDominio,
         int $id_enc,
@@ -317,7 +353,7 @@ final class CtrGetFichaData
             ],
             ['f_fin' => 'IS NULL'],
         );
-        if (!is_array($cH)) {
+        if ($cH === []) {
             return $out;
         }
 
@@ -327,13 +363,13 @@ final class CtrGetFichaData
             foreach ($cH as $oH) {
                 $h++;
                 $parcial = $oDominio->texto_horario(
-                    (string)$oH->getMas_menos(),
-                    (string)$oH->getDia_ref(),
-                    (string)$oH->getDia_inc(),
-                    (string)$oH->getDia_num(),
-                    (string)$oH->getH_ini(),
-                    (string)$oH->getH_fin(),
-                    (string)$oH->getN_sacd(),
+                    (string) ($oH->getMas_menos() ?? ''),
+                    (string) ($oH->getDia_ref() ?? ''),
+                    (string) ($oH->getDia_inc() ?? ''),
+                    (string) ($oH->getDia_num() ?? ''),
+                    $this->timeToString($oH->getH_ini()),
+                    $this->timeToString($oH->getH_fin()),
+                    '',
                 );
                 if ($h > 1) {
                     $txt .= ' y ';
@@ -360,21 +396,51 @@ final class CtrGetFichaData
         return $out;
     }
 
+    private function timeToString(mixed $time): string
+    {
+        if ($time === null) {
+            return '';
+        }
+        return is_scalar($time) || (is_object($time) && method_exists($time, '__toString'))
+            ? (string) $time
+            : (is_object($time) && method_exists($time, 'value') ? (string) $time->value() : '');
+    }
+
     /**
      * @param array<int|string, mixed> $in
      * @return array<string, string>
      */
-    private static function arrayStringKeyed(array $in): array
+    private function arrayStringKeyed(array $in): array
     {
         $out = [];
         foreach ($in as $k => $v) {
-            $out[(string)$k] = (string)$v;
+            $out[(string) $k] = is_scalar($v) ? (string) $v : '';
         }
 
         return $out;
     }
 
-    private static function tienePermDes(): bool
+    /**
+     * @param array<int, string> $values
+     * @return array<int, string>
+     */
+    /**
+     * @param array<int, string>|mixed $values
+     * @return array<int, string>
+     */
+    private static function assignAtIndex(mixed $values, int $index, string $value): array
+    {
+        $list = is_array($values) ? $values : [0 => ''];
+        $list[$index] = $value;
+        $out = [];
+        foreach ($list as $k => $v) {
+            $out[(int) $k] = is_scalar($v) ? (string) $v : '';
+        }
+
+        return $out;
+    }
+
+    private function tienePermDes(): bool
     {
         if (empty($_SESSION['oPerm'])) {
             return false;

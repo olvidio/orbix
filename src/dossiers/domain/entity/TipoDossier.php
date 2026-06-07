@@ -39,11 +39,11 @@ class TipoDossier
 
     private ?int $id_tipo_dossier_rel = null;
 
-    private ?int $permiso_lectura;
+    private int $permiso_lectura = 0;
 
     private ?int $permiso_escritura = null;
 
-    private ?bool $depende_modificar;
+    private bool $depende_modificar = false;
 
     private ?TipoDossierApp $app = null;
 
@@ -111,7 +111,7 @@ class TipoDossier
     {
         $this->tabla_from = $texto instanceof TipoDossierTablaFrom
             ? $texto
-            : TipoDossierTablaFrom::fromNullableString($texto);
+            : (TipoDossierTablaFrom::fromNullableString(is_string($texto) ? $texto : null) ?? throw new \InvalidArgumentException('tabla_from cannot be empty'));
     }
 
     /**
@@ -127,7 +127,11 @@ class TipoDossier
      */
     public function setTabla_from(string $tabla_from): void
     {
-        $this->tabla_from = TipoDossierTablaFrom::fromNullableString($tabla_from);
+        $vo = TipoDossierTablaFrom::fromNullableString($tabla_from);
+        if ($vo === null) {
+            throw new \InvalidArgumentException('tabla_from cannot be empty');
+        }
+        $this->tabla_from = $vo;
     }
 
     /**
@@ -283,7 +287,6 @@ class TipoDossier
     }
 
     /**
-     * @param TipoDossierClass|null $oTipoDossierClass
      */
     public function setClassVo(TipoDossierClass|string|null $texto = null): void
     {
@@ -329,7 +332,7 @@ class TipoDossier
      */
     public function getDb(): ?string
     {
-        return $this->db?->value();
+        return $this->db !== null ? (string) $this->db->value() : null;
     }
 
     /**
@@ -375,6 +378,10 @@ class TipoDossier
     {
         return 'id_tipo_dossier';
     }
+
+
+    /** @return array<string, mixed> */
+
 
 
     public function getDatosCampos():array

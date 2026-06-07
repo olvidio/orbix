@@ -65,7 +65,7 @@ class Region
      */
     public function getRegion(): string
     {
-        return $this->region->value();
+        return $this->region?->value() ?? '';
     }
 
 
@@ -74,7 +74,7 @@ class Region
      */
     public function setRegion(string $region): void
     {
-        $this->region = RegionCode::fromNullableString($region);
+        $this->region = new RegionCode($region);
     }
 
     // Value Object API for region code (sigla)
@@ -136,6 +136,231 @@ class Region
     {
         return 'id_region';
     }
+
+    /**
+
+
+     * @return array<string, mixed>
+
+
+     */
+
+
+    /**
+
+
+
+     * @return array<string, mixed>
+
+
+
+     */
+
+
+
+    /**
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+     */
+
+
+
+
+    /**
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+     */
+
+
+
+
+
+    /**
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+
 
     public function getDatosCampos(): array
     {

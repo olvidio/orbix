@@ -4,31 +4,28 @@ namespace src\dbextern\domain\contracts;
 
 use src\dbextern\domain\entity\PersonaBDU;
 
-/**
- * Interfaz del repositorio de PersonaBDU
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 7/5/2026
- */
 interface PersonaBDURepositoryInterface
 {
-
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
+    /**
+     * @return list<PersonaBDU>
+     */
     public function getPersonaBDUQuery(string $sQuery = ''): array;
 
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<PersonaBDU>
+     */
     public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array;
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function getErrorTxt(): string;
 
     public function getNomTabla(): string;
 
-    public function datosById(int $id_listas): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_listas): array|false;
 
     public function findById(int $id_listas): ?PersonaBDU;
 }

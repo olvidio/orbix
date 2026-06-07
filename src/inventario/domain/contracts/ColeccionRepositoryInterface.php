@@ -16,6 +16,12 @@ use src\inventario\domain\entity\Coleccion;
 interface ColeccionRepositoryInterface
 {
 
+    /**
+     * @return array<int|string, string>
+     */
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayColecciones(): array;
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -23,9 +29,9 @@ interface ColeccionRepositoryInterface
 	/**
 	 * devuelve una colección (array) de objetos de tipo Coleccion
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo Coleccion
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<Coleccion> Una colección de objetos de tipo Coleccion
 	
 	 */
 	public function getColecciones(array $aWhere=[], array $aOperators=[]): array;
@@ -47,10 +53,10 @@ interface ColeccionRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param int $id_coleccion
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(int $id_coleccion): array|bool;
+    public function datosById(int $id_coleccion): array|false;
 	
     /**
      * Busca la clase con id_coleccion en el repositorio.
@@ -58,5 +64,5 @@ interface ColeccionRepositoryInterface
      */
     public function findById(int $id_coleccion): ?Coleccion;
 	
-    public function getNewId();
+    public function getNewId(): int;
 }

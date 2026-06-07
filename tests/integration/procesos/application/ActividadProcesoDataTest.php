@@ -3,6 +3,7 @@
 namespace Tests\integration\procesos\application;
 
 use src\procesos\application\ActividadProcesoData;
+use src\shared\infrastructure\DependencyResolver;
 use Tests\myTest;
 
 /**
@@ -15,7 +16,7 @@ class ActividadProcesoDataTest extends myTest
 {
     public function test_id_inexistente_devuelve_nombre_vacio(): void
     {
-        $data = ActividadProcesoData::execute(999999999);
+        $data = DependencyResolver::get(ActividadProcesoData::class)->execute(999999999);
 
         $this->assertIsArray($data);
         $this->assertSame(999999999, $data['id_activ']);

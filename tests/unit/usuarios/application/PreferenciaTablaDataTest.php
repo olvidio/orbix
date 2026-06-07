@@ -12,15 +12,12 @@ use src\usuarios\domain\value_objects\ValorPreferencia;
 
 final class PreferenciaTablaDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
             $_SESSION['session_auth'] = [];
@@ -32,11 +29,6 @@ final class PreferenciaTablaDataTest extends TestCase
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -51,11 +43,8 @@ final class PreferenciaTablaDataTest extends TestCase
             ->with(100, 'tabla_presentacion')
             ->willReturn($pref);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            PreferenciaRepositoryInterface::class => $repo,
-        ]);
-
-        $out = PreferenciaTablaData::execute('');
+        $useCase = new PreferenciaTablaData($repo);
+        $out = $useCase->execute('');
 
         $this->assertSame('html', $out['formato_tabla']);
         $this->assertNull($out['slickgrid']);
@@ -75,32 +64,10 @@ final class PreferenciaTablaDataTest extends TestCase
             [44, 'slickGrid_migrid_ca_ES', $pref44],
         ]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            PreferenciaRepositoryInterface::class => $repo,
-        ]);
-
-        $out = PreferenciaTablaData::execute('migrid');
+        $useCase = new PreferenciaTablaData($repo);
+        $out = $useCase->execute('migrid');
 
         $this->assertSame('', $out['formato_tabla']);
         $this->assertSame(['columns' => [1, 2]], $out['slickgrid']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
     }
 }

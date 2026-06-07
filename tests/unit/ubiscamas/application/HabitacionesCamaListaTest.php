@@ -20,37 +20,17 @@ use src\ubiscamas\domain\value_objects\TipoLavabo;
 
 final class HabitacionesCamaListaTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_actividad_inexistente(): void
     {
         $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
         $actRepo->method('findById')->with(5)->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadAllRepositoryInterface::class => $actRepo,
-            AsistenteActividadService::class => $this->createMock(AsistenteActividadService::class),
-            HabitacionDlRepositoryInterface::class => $this->createMock(HabitacionDlRepositoryInterface::class),
-            CamaDlRepositoryInterface::class => $this->createMock(CamaDlRepositoryInterface::class),
-        ]);
-
-        $out = (new HabitacionesCamaLista())(5);
+        $out = (new HabitacionesCamaLista(
+            $actRepo,
+            $this->createMock(AsistenteActividadService::class),
+            $this->createMock(HabitacionDlRepositoryInterface::class),
+            $this->createMock(CamaDlRepositoryInterface::class),
+        ))(5);
 
         $this->assertSame(['error' => 'Actividad not found'], $out);
     }
@@ -64,14 +44,12 @@ final class HabitacionesCamaListaTest extends TestCase
         $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
         $actRepo->method('findById')->willReturn($act);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadAllRepositoryInterface::class => $actRepo,
-            AsistenteActividadService::class => $this->createMock(AsistenteActividadService::class),
-            HabitacionDlRepositoryInterface::class => $this->createMock(HabitacionDlRepositoryInterface::class),
-            CamaDlRepositoryInterface::class => $this->createMock(CamaDlRepositoryInterface::class),
-        ]);
-
-        $out = (new HabitacionesCamaLista())(1);
+        $out = (new HabitacionesCamaLista(
+            $actRepo,
+            $this->createMock(AsistenteActividadService::class),
+            $this->createMock(HabitacionDlRepositoryInterface::class),
+            $this->createMock(CamaDlRepositoryInterface::class),
+        ))(1);
 
         $this->assertSame(['error' => 'No Ubi assigned to activity'], $out);
     }
@@ -116,14 +94,12 @@ final class HabitacionesCamaListaTest extends TestCase
         $asistenteSvc = $this->createMock(AsistenteActividadService::class);
         $asistenteSvc->method('getAsistentesDeActividad')->with(9)->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadAllRepositoryInterface::class => $actRepo,
-            AsistenteActividadService::class => $asistenteSvc,
-            HabitacionDlRepositoryInterface::class => $habRepo,
-            CamaDlRepositoryInterface::class => $camaRepo,
-        ]);
-
-        $out = (new HabitacionesCamaLista())(9);
+        $out = (new HabitacionesCamaLista(
+            $actRepo,
+            $asistenteSvc,
+            $habRepo,
+            $camaRepo,
+        ))(9);
 
         $this->assertTrue($out['success']);
         $this->assertSame(9, $out['id_activ']);
@@ -133,24 +109,5 @@ final class HabitacionesCamaListaTest extends TestCase
         $this->assertCount(1, $out['a_valores']);
         $this->assertSame("$hid#$cid", $out['a_valores'][1]['sel']);
         $this->assertSame(_('completo'), $out['a_valores'][1][4]);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
     }
 }

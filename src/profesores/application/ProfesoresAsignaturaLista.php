@@ -8,14 +8,26 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\services\TelecoPersonaService;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
+use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use src\profesores\domain\services\ProfesorAsignaturaService;
 
-class ProfesoresAsignaturaLista
+final class ProfesoresAsignaturaLista
 {
-    public static function getTablaData(int $id_asignatura): array
+    public function __construct(
+        private ProfesorAsignaturaService $profesorAsignaturaService,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private ProfesorDocenciaStgrRepositoryInterface $profesorDocenciaStgrRepository,
+        private TelecoPersonaDlRepositoryInterface $telecoPersonaDlRepository,
+        private TelecoPersonaService $telecoPersonaService,
+    ) {
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getTablaData(int $id_asignatura): array
     {
-        $ProfesorAsignaturaService = $GLOBALS['container']->get(ProfesorAsignaturaService::class);
-        $cProfesores = $ProfesorAsignaturaService->getArrayProfesoresAsignatura(new AsignaturaId($id_asignatura));
+        $cProfesores = $this->profesorAsignaturaService->getArrayProfesoresAsignatura(new AsignaturaId($id_asignatura));
 
         $a_cabeceras = [];
         $a_cabeceras[] = ['name' => ucfirst(_("apellidos, nombre")), 'formatter' => 'clickFormatter'];
@@ -26,14 +38,13 @@ class ProfesoresAsignaturaLista
 
         $a_valores = [];
         $i = 0;
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $ProfesorDocenciaStgrRepository = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
-        $TelecoPersonaDlRepository = $GLOBALS['container']->get(TelecoPersonaDlRepositoryInterface::class);
-        $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
 
         foreach ($cProfesores['departamento'] as $id_nom => $ap_nom) {
             $i++;
-            $oPersonaDl = $PersonaDlRepository->findById($id_nom);
+            $oPersonaDl = $this->personaDlRepository->findById($id_nom);
+            if ($oPersonaDl === null) {
+                continue;
+            }
             $centro = $oPersonaDl->getCentro_o_dl();
             if (ConfigGlobal::mi_ambito() === 'rstgr') {
                 $centro = $oPersonaDl->getDl() . " - " . $centro;
@@ -44,12 +55,12 @@ class ProfesoresAsignaturaLista
                 'id_asignatura' => $id_asignatura,
                 '_ordre' => 'curso_inicio DESC',
             ];
-            $cDocencia = $ProfesorDocenciaStgrRepository->getProfesorDocenciasStgr($aWhere);
-            $txt_docencia = self::buildTextoDocencia($cDocencia);
+            $cDocencia = $this->profesorDocenciaStgrRepository->getProfesorDocenciasStgr($aWhere);
+            $txt_docencia = $this->buildTextoDocencia($cDocencia);
 
-            $mails = $telecoService->getTelecosPorTipo($id_nom, 'e-mail', ' / ');
-            $telfs = $telecoService->getTelecosPorTipo($id_nom, 'telf', " / ", "*");
-            $telfs .= $telecoService->getTelecosPorTipo($id_nom, 'móvil', " / ", "*");
+            $mails = $this->telecoPersonaService->getTelecosPorTipo($id_nom, 'e-mail', ' / ');
+            $telfs = $this->telecoPersonaService->getTelecosPorTipo($id_nom, 'telf', " / ", "*");
+            $telfs .= $this->telecoPersonaService->getTelecosPorTipo($id_nom, 'móvil', " / ", "*");
 
             $a_valores[$i]['sel'] = (string)$id_nom;
             $a_valores[$i][1] = ['ira' => '', 'valor' => $ap_nom];
@@ -61,18 +72,21 @@ class ProfesoresAsignaturaLista
 
         foreach ($cProfesores['ampliacion'] as $id_nom => $ap_nom) {
             $i++;
-            $oPersonaDl = $PersonaDlRepository->findById($id_nom);
+            $oPersonaDl = $this->personaDlRepository->findById($id_nom);
+            if ($oPersonaDl === null) {
+                continue;
+            }
             $aWhere = [
                 'id_nom' => $id_nom,
                 'id_asignatura' => $id_asignatura,
                 '_ordre' => 'curso_inicio DESC',
             ];
-            $cDocencia = $ProfesorDocenciaStgrRepository->getProfesorDocenciasStgr($aWhere);
-            $txt_docencia = self::buildTextoDocencia($cDocencia);
+            $cDocencia = $this->profesorDocenciaStgrRepository->getProfesorDocenciasStgr($aWhere);
+            $txt_docencia = $this->buildTextoDocencia($cDocencia);
 
             $telfs = '';
             $mails = '';
-            $cTelecoPersona = $TelecoPersonaDlRepository->getTelecosPersona(['id_nom' => $id_nom]);
+            $cTelecoPersona = $this->telecoPersonaDlRepository->getTelecosPersona(['id_nom' => $id_nom]);
             foreach ($cTelecoPersona as $oTelecoPersona) {
                 $tipo = $oTelecoPersona->getId_tipo_teleco();
                 switch ($tipo) {
@@ -102,7 +116,10 @@ class ProfesoresAsignaturaLista
         ];
     }
 
-    private static function buildTextoDocencia(array $cDocencia): string
+    /**
+     * @param list<ProfesorDocenciaStgr> $cDocencia
+     */
+    private function buildTextoDocencia(array $cDocencia): string
     {
         $txt_docencia = '';
         foreach ($cDocencia as $oProfesorDocenciaStgr) {

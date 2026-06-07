@@ -1,6 +1,7 @@
 <?php
 
 namespace src\inventario\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -28,7 +29,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
+        $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
         $this->setNomTabla('i_documentos_dl');
     }
@@ -38,9 +39,9 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
     /**
      * devuelve una colección (array) de objetos de tipo Documento
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Documento
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Documento> Una colección de objetos de tipo Documento
      */
     public function getDocumentos(array $aWhere = [], array $aOperators = []): array
     {
@@ -77,23 +78,31 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para las fechas del postgres (texto iso)
             $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
             $aDatos['f_asignado'] = (new ConverterDate('date', $aDatos['f_asignado']))->fromPg();
@@ -103,7 +112,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
             $Documento = Documento::fromArray($aDatos);
             $DocumentoSet->add($Documento);
         }
-        return $DocumentoSet->getTot();
+        return array_values($DocumentoSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -206,6 +215,12 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
             $valores = "(:id_doc,:id_tipo_doc,:id_ubi,:id_lugar,:f_recibido,:f_asignado,:observ,:observ_ctr,:f_ult_comprobacion,:en_busqueda,:perdido,:f_perdido,:eliminado,:f_eliminado,:num_reg,:num_ini,:num_fin,:identificador,:num_ejemplares)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
+    }
+        if ($stmt === false) {
+            return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -216,6 +231,9 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_doc = $id_doc";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -226,25 +244,33 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param DocumentoId $id_doc
-     * @return array|bool
+     * @param int $id_doc
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_doc): array|bool
+    public function datosById(int $id_doc): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_doc = $id_doc";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
-            $aDatos['f_asignado'] = (new ConverterDate('date', $aDatos['f_asignado']))->fromPg();
-            $aDatos['f_ult_comprobacion'] = (new ConverterDate('date', $aDatos['f_ult_comprobacion']))->fromPg();
-            $aDatos['f_perdido'] = (new ConverterDate('date', $aDatos['f_perdido']))->fromPg();
-            $aDatos['f_eliminado'] = (new ConverterDate('date', $aDatos['f_eliminado']))->fromPg();
+        if ($stmt === false) {
+            return false;
         }
-        return $aDatos;
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        // para las fechas del postgres (texto iso)
+        $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
+        $aDatos['f_asignado'] = (new ConverterDate('date', $aDatos['f_asignado']))->fromPg();
+        $aDatos['f_ult_comprobacion'] = (new ConverterDate('date', $aDatos['f_ult_comprobacion']))->fromPg();
+        $aDatos['f_perdido'] = (new ConverterDate('date', $aDatos['f_perdido']))->fromPg();
+        $aDatos['f_eliminado'] = (new ConverterDate('date', $aDatos['f_eliminado']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 
@@ -254,16 +280,22 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
     public function findById(int $id_doc): ?Documento
     {
         $aDatos = $this->datosById($id_doc);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Documento::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('i_documentos_dl_id_doc_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

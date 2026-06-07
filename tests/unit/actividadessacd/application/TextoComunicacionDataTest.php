@@ -15,25 +15,7 @@ use src\actividadessacd\domain\value_objects\SacdTextoTexto;
  */
 final class TextoComunicacionDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
-    public function test_normalizar_idioma_sin_underscore_devuelve_igual(): void
+        public function test_normalizar_idioma_sin_underscore_devuelve_igual(): void
     {
         $this->assertSame('ca', TextoComunicacionData::normalizarIdioma('ca'));
         $this->assertSame('es', TextoComunicacionData::normalizarIdioma('es'));
@@ -50,55 +32,36 @@ final class TextoComunicacionDataTest extends TestCase
         $this->assertSame('', TextoComunicacionData::normalizarIdioma(''));
     }
 
-    public function test_sin_clave_devuelve_texto_vacio(): void
-    {
+    public function test_sin_clave_devuelve_texto_vacio(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
         $repo->expects($this->never())->method('getActividadSacdTextos');
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionData::execute(['clave' => '', 'idioma' => 'ca']);
+        $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute(['clave' => '', 'idioma' => 'ca']);
         $this->assertSame(['texto' => ''], $out);
     }
 
-    public function test_sin_idioma_devuelve_texto_vacio(): void
-    {
+    public function test_sin_idioma_devuelve_texto_vacio(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
         $repo->expects($this->never())->method('getActividadSacdTextos');
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionData::execute(['clave' => 'com_sacd', 'idioma' => '']);
+        $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute(['clave' => 'com_sacd', 'idioma' => '']);
         $this->assertSame(['texto' => ''], $out);
     }
 
-    public function test_texto_inexistente_devuelve_cadena_vacia(): void
-    {
+    public function test_texto_inexistente_devuelve_cadena_vacia(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
         $repo->method('getActividadSacdTextos')
             ->with(['clave' => 'com_sacd', 'idioma' => 'es'])
             ->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionData::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'es_ES.UTF-8',
         ]);
         $this->assertSame(['texto' => ''], $out);
     }
 
-    public function test_texto_existente_se_devuelve_tal_cual(): void
-    {
+    public function test_texto_existente_se_devuelve_tal_cual(): void {
         $oTexto = new ActividadSacdTexto();
         $oTexto->setId_item(1);
         $oTexto->setTextoVo(new SacdTextoTexto('hola sacd'));
@@ -108,29 +71,18 @@ final class TextoComunicacionDataTest extends TestCase
             ->with(['clave' => 'com_sacd', 'idioma' => 'ca'])
             ->willReturn([$oTexto]);
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionData::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'ca_ES.UTF-8',
         ]);
         $this->assertSame(['texto' => 'hola sacd'], $out);
     }
 
-    public function test_repo_devuelve_false_se_trata_como_vacio(): void
-    {
+    public function test_repo_devuelve_lista_vacia_se_trata_como_vacio(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
-        $repo->method('getActividadSacdTextos')->willReturn(false);
+        $repo->method('getActividadSacdTextos')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionData::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionData($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'ca',
         ]);

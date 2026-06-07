@@ -2,7 +2,13 @@
 
 namespace src\notas\application;
 
+use function src\shared\domain\helpers\input_int;
+use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\notas\application\support\PersonaNotaInputParser;
+use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 /**
  * Edita una `PersonaNota` existente. Ataca siempre a la tabla padre
@@ -11,13 +17,34 @@ use src\notas\application\support\PersonaNotaInputParser;
  */
 final class PersonaNotaEditar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private readonly PersonaNotaInputParser $personaNotaInputParser,
+        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+        private readonly DelegacionRepositoryInterface $delegacionRepository,
+        private readonly DbSchemaRepositoryInterface $dbSchemaRepository,
+        private readonly DossierRepositoryInterface $dossierRepository,
+        private readonly PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
         try {
-            $oPersonaNota = PersonaNotaInputParser::parse($input);
-            $oEditar = new EditarPersonaNota($oPersonaNota);
-            $id_asignatura_real = (int)($input['id_asignatura_real'] ?? 0);
+            $oPersonaNota = $this->personaNotaInputParser->parse($input);
+            $oEditar = new EditarPersonaNota(
+                $oPersonaNota,
+                $this->personaNotaRepository,
+                $this->delegacionRepository,
+                $this->dbSchemaRepository,
+                $this->dossierRepository,
+                $this->personaNotaDlRepository,
+            );
+            $id_asignatura_real = input_int($input, 'id_asignatura_real');
             $oEditar->editar($id_asignatura_real);
+
             return '';
         } catch (\RuntimeException $e) {
             return $e->getMessage();

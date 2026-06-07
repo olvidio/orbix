@@ -23,7 +23,7 @@ class DB extends DBAbstract
         $this->esquema = 'public';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
             $this->eliminar_du_camas();
@@ -31,7 +31,7 @@ class DB extends DBAbstract
         });
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->ejecutarCreateAllGlobal(function (): void {
             $this->create_du_habitaciones();
@@ -43,7 +43,7 @@ class DB extends DBAbstract
      * En la BD Comun (public).
      * OJO Corresponde al esquema public, no al global.
      */
-    public function create_du_habitaciones()
+    public function create_du_habitaciones(): void
     {
         $esquema_org = $this->esquema;
         $this->esquema = 'public';
@@ -74,21 +74,17 @@ class DB extends DBAbstract
         $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_ubi_idx ON $nom_tabla USING btree (id_ubi); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_habitacion_idx ON $nom_tabla USING btree (id_habitacion); ";
 
-        //$a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS {$tabla}_udx ON $nom_tabla USING btree (id_schema,id_ubi); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT 3000";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        // Asegurarme que todos pueden leer:
         $a_sql[] = "GRANT SELECT,DELETE ON $nom_tabla TO PUBLIC; ";
 
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
-        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
     }
 
-    public function eliminar_du_habitaciones()
+    public function eliminar_du_habitaciones(): void
     {
         $esquema_org = $this->esquema;
         $this->esquema = 'public';
@@ -100,14 +96,13 @@ class DB extends DBAbstract
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
-        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
     }
 
     /**
      * En la BD Comun (public).
      */
-    public function create_du_camas()
+    public function create_du_camas(): void
     {
         $esquema_org = $this->esquema;
         $this->esquema = 'public';
@@ -134,7 +129,7 @@ class DB extends DBAbstract
         $this->esquema = $esquema_org;
     }
 
-    public function eliminar_du_camas()
+    public function eliminar_du_camas(): void
     {
         $esquema_org = $this->esquema;
         $this->esquema = 'public';

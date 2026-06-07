@@ -7,11 +7,21 @@ use function src\shared\domain\helpers\is_true;
 
 final class DireccionesEditarData
 {
-    public static function execute(int $id_ubi, string $mod, string $obj_dir, string $id_direccion_csv, int $idx, string $inc): array
+    public function __construct(
+        private DireccionesResolver $direccionesResolver,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(int $id_ubi, string $mod, string $obj_dir, string $id_direccion_csv, int $idx, string $inc): array
     {
-        $repoUbi = DireccionesResolver::ubiRepo($obj_dir);
+        $repoUbi = $this->direccionesResolver->ubiRepo($obj_dir);
         $oUbi = $repoUbi->findById($id_ubi);
-
+        if ($oUbi === null) {
+            $data['sin_direccion'] = true;
+            return $data;
+        }
         $data = [
             'sin_direccion' => false,
             'msg_sin_direccion' => _("este ubi no dispone de una dirección. Compruebe primero si existe, en este caso, asígnesela. En caso contrario cree una nueva."),
@@ -64,6 +74,10 @@ final class DireccionesEditarData
                 return $data;
             }
             $oDireccion = $oDireccionDetallada->getDireccionVo();
+            if ($oDireccion === null) {
+                $data['sin_direccion'] = true;
+                return $data;
+            }
             $data['idx'] = $idx;
             $data['id_direccion_actual'] = $id_direccion_actual;
             $data['nom_sede'] = $oDireccion->getNom_sede();

@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
@@ -11,7 +12,7 @@ $id_usuario = ConfigGlobal::mi_id_usuario();
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-$PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
+$PreferenciaRepository = DependencyResolver::get(PreferenciaRepositoryInterface::class);
 
 $error_txt = '';
 if ($Qque === "slickGrid") {
@@ -27,11 +28,17 @@ if ($Qque === "slickGrid") {
     }
     // si no se han cambiado las columnas visibles, pongo las actuales (sino las borra).
     $aPrefs = json_decode($QsPrefs, true, 512, JSON_THROW_ON_ERROR);
-    if ($aPrefs['colVisible'] === 'noCambia') {
-        $sPrefs_old = $oPreferencia->getPreferenciaVo()->value();
+    if (!is_array($aPrefs)) {
+        $aPrefs = [];
+    }
+    if (($aPrefs['colVisible'] ?? '') === 'noCambia') {
+        $sPrefs_old = $oPreferencia->getPreferenciaVo()?->value() ?? '';
         $aPrefs_old = json_decode($sPrefs_old, true);
+        if (!is_array($aPrefs_old)) {
+            $aPrefs_old = [];
+        }
         $aPrefs['colVisible'] = empty($aPrefs_old['colVisible']) ? '' : $aPrefs_old['colVisible'];
-        $QsPrefs = json_encode($aPrefs, true);
+        $QsPrefs = json_encode($aPrefs, JSON_THROW_ON_ERROR);
     }
 
     $oPreferencia->setPreferenciaVo(new ValorPreferencia($QsPrefs));
@@ -118,7 +125,9 @@ if ($Qque === "slickGrid") {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
-    $_SESSION['session_auth']['ordenApellidos'] = $QordenApellidos;
+    if (isset($_SESSION['session_auth']) && is_array($_SESSION['session_auth'])) {
+        $_SESSION['session_auth']['ordenApellidos'] = $QordenApellidos;
+    }
 
     // Guardar idioma:
     $Qidioma_nou = (string)filter_input(INPUT_POST, 'idioma_nou');
@@ -138,7 +147,9 @@ if ($Qque === "slickGrid") {
     $Qzona_horaria_nou = (string)filter_input(INPUT_POST, 'zona_horaria_nou');
     // mejor guardar la zona en text, porque el identificador cambia según la versión de php
     $a_zonas_horarias = DateTimeZone::listIdentifiers();
-    $zona_horaria_txt = $a_zonas_horarias[$Qzona_horaria_nou];
+    $zona_horaria_txt = is_numeric($Qzona_horaria_nou) && isset($a_zonas_horarias[(int)$Qzona_horaria_nou])
+        ? $a_zonas_horarias[(int)$Qzona_horaria_nou]
+        : '';
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'zona_horaria');
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();

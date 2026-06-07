@@ -4,9 +4,16 @@ namespace src\ubis\application;
 
 final class DireccionesTablaData
 {
-    public static function execute(int $id_ubi, string $obj_dir, string $c_p, string $ciudad, string $pais): array
+    public function __construct(
+        private DireccionesResolver $direccionesResolver,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(int $id_ubi, string $obj_dir, string $c_p, string $ciudad, string $pais): array
     {
-        $DireccionRepository = DireccionesResolver::direccionRepo($obj_dir);
+        $DireccionRepository = $this->direccionesResolver->direccionRepo($obj_dir);
         $aWhere = [];
         $aOperador = [];
         if ($c_p !== '') {

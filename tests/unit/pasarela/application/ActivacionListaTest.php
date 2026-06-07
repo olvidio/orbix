@@ -7,6 +7,7 @@ namespace Tests\unit\pasarela\application;
 use PHPUnit\Framework\TestCase;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\pasarela\application\ActivacionLista;
+use src\pasarela\domain\Activacion;
 use src\pasarela\domain\contracts\PasarelaConfigRepositoryInterface;
 
 final class ActivacionListaTest extends TestCase
@@ -38,11 +39,10 @@ final class ActivacionListaTest extends TestCase
         $tipoRepo->method('getNom_tipoPosibles')->willReturn(['tipo_nom' => [], 'nom_tipo' => []]);
 
         $GLOBALS['container'] = $this->containerFromMap([
-            PasarelaConfigRepositoryInterface::class => $pasRepo,
             TipoDeActividadRepositoryInterface::class => $tipoRepo,
         ]);
 
-        $out = ActivacionLista::execute();
+        $out = (new ActivacionLista(new Activacion($pasRepo)))->execute();
         $this->assertSame('3 días', $out['default']);
         $this->assertCount(2, $out['excepciones']);
         $ids = array_column($out['excepciones'], 'id_tipo_activ');
@@ -63,6 +63,7 @@ final class ActivacionListaTest extends TestCase
                 if (!array_key_exists($id, $this->services)) {
                     throw new \RuntimeException('Unexpected DI key: ' . $id);
                 }
+
                 return $this->services[$id];
             }
         };

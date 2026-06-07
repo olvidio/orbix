@@ -2,10 +2,11 @@
 
 use frontend\shared\helpers\SignedDownloadToken;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$tk = isset($_GET['tk']) ? trim((string) $_GET['tk']) : '';
+$tk = (isset($_GET['tk']) && is_scalar($_GET['tk'])) ? trim((string) $_GET['tk']) : '';
 
 $Qid_item = 0;
 $parsed = SignedDownloadToken::parse($tk);
@@ -20,7 +21,8 @@ if ($Qid_item <= 0) {
     exit;
 }
 
-$certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
+/** @var CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository */
+$certificadoEmitidoRepository = DependencyResolver::get(CertificadoEmitidoRepositoryInterface::class);
 $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
 
 if ($oCertificadoEmitido === null) {
@@ -39,7 +41,6 @@ if ($doc === null || $doc === '') {
 }
 
 $nombre_fichero = ($oCertificadoEmitido->getCertificado() ?? 'certificado') . '.pdf';
-
 $ctype = 'application/octet-stream';
 
 header('Content-Description: File Transfer');
@@ -57,5 +58,4 @@ ob_start();
 ob_clean();
 flush();
 echo $doc;
-
-exit();
+exit;

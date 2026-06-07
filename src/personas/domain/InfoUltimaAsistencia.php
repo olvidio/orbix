@@ -3,15 +3,16 @@
 namespace src\personas\domain;
 
 use src\personas\domain\contracts\UltimaAsistenciaRepositoryInterface;
+use src\personas\domain\entity\UltimaAsistencia;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
 
 class InfoUltimaAsistencia extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private UltimaAsistenciaRepositoryInterface $ultimaAsistenciaRepository,
+    ) {
         $this->setTxtTitulo(_("dossier de última aistencia a tipo de actividad"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta actividad?"));
         $this->setTxtBuscar();
@@ -24,30 +25,25 @@ class InfoUltimaAsistencia extends DatosInfoRepo
         $this->setRepositoryInterface(UltimaAsistenciaRepositoryInterface::class);
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return 1006;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<UltimaAsistencia>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
+        $aWhere = [];
+        $aOperador = [];
         if (!empty($this->id_pau)) {
             $aWhere['id_nom'] = $this->id_pau;
         }
         if (empty($this->k_buscar)) {
             $aWhere['_ordre'] = 'f_ini';
-            $aOperador = [];
-        } else {
-            //$aWhere['f_ini'] = $this->k_buscar;
         }
 
-
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getUltimasAsistencias($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->ultimaAsistenciaRepository->getUltimasAsistencias($aWhere, $aOperador);
     }
-
 }

@@ -16,42 +16,17 @@ use src\asistentes\domain\entity\Asistente;
  */
 final class SacdEliminarTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
-    public function test_sin_id_activ_devuelve_error(): void
-    {
-        $GLOBALS['container'] = $this->containerFromMap([]);
-
-        $out = SacdEliminar::execute(['id_activ' => 0, 'id_cargo' => 2001, 'id_nom' => 111]);
+        public function test_sin_id_activ_devuelve_error(): void {
+        $out = (new \src\actividadessacd\application\SacdEliminar($this->createMock(\src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface::class), $this->createMock(\src\asistentes\domain\contracts\AsistenteDlRepositoryInterface::class)))->execute(['id_activ' => 0, 'id_cargo' => 2001, 'id_nom' => 111]);
         $this->assertStringContainsString('no se sabe cual borrar', $out);
     }
 
-    public function test_sin_id_cargo_devuelve_error(): void
-    {
-        $GLOBALS['container'] = $this->containerFromMap([]);
-
-        $out = SacdEliminar::execute(['id_activ' => 500, 'id_cargo' => 0, 'id_nom' => 111]);
+    public function test_sin_id_cargo_devuelve_error(): void {
+        $out = (new \src\actividadessacd\application\SacdEliminar($this->createMock(\src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface::class), $this->createMock(\src\asistentes\domain\contracts\AsistenteDlRepositoryInterface::class)))->execute(['id_activ' => 500, 'id_cargo' => 0, 'id_nom' => 111]);
         $this->assertStringContainsString('no se sabe cual borrar', $out);
     }
 
-    public function test_elimina_cargo_existente_y_asistencia(): void
-    {
+    public function test_elimina_cargo_existente_y_asistencia(): void {
         $oCargo = new ActividadCargo();
         $oCargo->setId_activ(500);
         $oCargo->setId_cargo(2001);
@@ -76,12 +51,7 @@ final class SacdEliminarTest extends TestCase
             ->with($oAsistencia)
             ->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            AsistenteDlRepositoryInterface::class => $asistenteRepo,
-        ]);
-
-        $out = SacdEliminar::execute([
+        $out = (new \src\actividadessacd\application\SacdEliminar($activCargoRepo, $asistenteRepo))->execute([
             'id_activ' => 500,
             'id_cargo' => 2001,
             'id_nom' => 111,
@@ -89,8 +59,7 @@ final class SacdEliminarTest extends TestCase
         $this->assertSame('', $out);
     }
 
-    public function test_id_nom_cero_no_toca_asistencia(): void
-    {
+    public function test_id_nom_cero_no_toca_asistencia(): void {
         $oCargo = new ActividadCargo();
         $oCargo->setId_cargo(2001);
 
@@ -102,12 +71,7 @@ final class SacdEliminarTest extends TestCase
         $asistenteRepo->expects($this->never())->method('findById');
         $asistenteRepo->expects($this->never())->method('Eliminar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            AsistenteDlRepositoryInterface::class => $asistenteRepo,
-        ]);
-
-        $out = SacdEliminar::execute([
+        $out = (new \src\actividadessacd\application\SacdEliminar($activCargoRepo, $asistenteRepo))->execute([
             'id_activ' => 500,
             'id_cargo' => 2001,
             'id_nom' => 0,
@@ -115,8 +79,7 @@ final class SacdEliminarTest extends TestCase
         $this->assertSame('', $out);
     }
 
-    public function test_error_si_no_elimina_cargo(): void
-    {
+    public function test_error_si_no_elimina_cargo(): void {
         $oCargo = new ActividadCargo();
         $oCargo->setId_cargo(2001);
 
@@ -127,12 +90,7 @@ final class SacdEliminarTest extends TestCase
         $asistenteRepo = $this->createMock(AsistenteDlRepositoryInterface::class);
         $asistenteRepo->method('findById')->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            AsistenteDlRepositoryInterface::class => $asistenteRepo,
-        ]);
-
-        $out = SacdEliminar::execute([
+        $out = (new \src\actividadessacd\application\SacdEliminar($activCargoRepo, $asistenteRepo))->execute([
             'id_activ' => 500,
             'id_cargo' => 2001,
             'id_nom' => 111,
@@ -140,8 +98,7 @@ final class SacdEliminarTest extends TestCase
         $this->assertStringContainsString('no se ha eliminado el cargo', $out);
     }
 
-    public function test_error_si_no_elimina_asistencia(): void
-    {
+    public function test_error_si_no_elimina_asistencia(): void {
         $oCargo = new ActividadCargo();
         $oCargo->setId_cargo(2001);
 
@@ -155,12 +112,7 @@ final class SacdEliminarTest extends TestCase
         $asistenteRepo->method('findById')->willReturn($oAsistencia);
         $asistenteRepo->method('Eliminar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            AsistenteDlRepositoryInterface::class => $asistenteRepo,
-        ]);
-
-        $out = SacdEliminar::execute([
+        $out = (new \src\actividadessacd\application\SacdEliminar($activCargoRepo, $asistenteRepo))->execute([
             'id_activ' => 500,
             'id_cargo' => 2001,
             'id_nom' => 111,
@@ -168,8 +120,7 @@ final class SacdEliminarTest extends TestCase
         $this->assertStringContainsString('no se ha eliminado la asistencia', $out);
     }
 
-    public function test_cargo_inexistente_no_rompe_y_sigue_con_asistencia(): void
-    {
+    public function test_cargo_inexistente_no_rompe_y_sigue_con_asistencia(): void {
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
         $activCargoRepo->method('getActividadCargos')->willReturn([]);
         $activCargoRepo->expects($this->never())->method('Eliminar');
@@ -178,12 +129,7 @@ final class SacdEliminarTest extends TestCase
         $asistenteRepo->method('findById')->willReturn(null);
         $asistenteRepo->expects($this->never())->method('Eliminar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            AsistenteDlRepositoryInterface::class => $asistenteRepo,
-        ]);
-
-        $out = SacdEliminar::execute([
+        $out = (new \src\actividadessacd\application\SacdEliminar($activCargoRepo, $asistenteRepo))->execute([
             'id_activ' => 500,
             'id_cargo' => 2001,
             'id_nom' => 111,

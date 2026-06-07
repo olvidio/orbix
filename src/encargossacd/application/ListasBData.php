@@ -2,6 +2,8 @@
 
 namespace src\encargossacd\application;
 
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
@@ -17,6 +19,17 @@ use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
  */
 final class ListasBData
 {
+
+    public function __construct(
+        private EncargoAplicacionService $aplicacionService,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository
+    ) {
+    }
+
     /**
      * @return array{
      *     cabecera_left: string,
@@ -25,11 +38,17 @@ final class ListasBData
      *     Html: string
      * }
      */
-    public static function execute(int $sf): array
+    public function execute(int $sf): array
     {
-        $oService = new EncargoAplicacionService();
+        $oService = $this->aplicacionService;
 
-        $any = $_SESSION['oConfig']->any_final_curs('crt');
+        /** @var ConfigSnapshot $oConfig */
+
+
+        $oConfig = $_SESSION['oConfig'];
+
+
+        $any = $oConfig->any_final_curs('crt');
         $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->getFromLocal();
         $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->getFromLocal();
 
@@ -45,10 +64,6 @@ final class ListasBData
         $tipos_de_ctr = ['igl', 'cgioc', '^cgi$'];
 
         $Html = '';
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-
         foreach ($tipos_de_ctr as $tipo_ctr_que) {
             switch ($tipo_ctr_que) {
                 case 'igl':
@@ -76,22 +91,22 @@ final class ListasBData
             $aOperador = ['tipo_ctr' => '~'];
 
             if ($sf === 1) {
-                $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+                $cCentros = $this->centroEllasRepository->getCentros($aWhere, $aOperador) ?: [];
             } else {
-                $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                $cCentros = $this->centroDlRepository->getCentros($aWhere, $aOperador) ?: [];
             }
-            $cCentros = $GesCentros->getCentros($aWhere, $aOperador) ?: [];
 
             foreach ($cCentros as $oCentro) {
                 $id_ubi = $oCentro->getId_ubi();
                 $nombre_ubi = $oCentro->getNombre_ubi();
                 $tipo_ctr = $oCentro->getTipo_ctr();
+                /** @var array<int, string> $cargos */
                 $cargos = [];
-                $cEncargos = $EncargoRepository->getEncargos(['id_ubi' => $id_ubi]) ?: [];
+                $cEncargos = $this->encargoRepository->getEncargos(['id_ubi' => $id_ubi]) ?: [];
                 $sacds = [];
                 foreach ($cEncargos as $oEncargo) {
                     $id_enc = $oEncargo->getId_enc();
-                    $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd(
+                    $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(
                         ['id_enc' => $id_enc, 'f_fin' => 'null', '_ordre' => 'modo'],
                         ['f_fin' => 'IS NULL'],
                     ) ?: [];
@@ -100,14 +115,14 @@ final class ListasBData
                         $s++;
                         $modo = (int)$oEncargoSacd->getModo();
                         $id_nom = $oEncargoSacd->getId_nom();
-                        $oPersona = $PersonaDlRepository->findById($id_nom);
+                        $oPersona = $this->personaDlRepository->findById($id_nom);
                         if ($oPersona === null) {
                             continue;
                         }
                         $nom_ap = $oPersona->getNombreApellidosCrSin();
                         $dedicacion_txt = $oService->dedicacion($id_nom, $id_enc);
 
-                        if (!empty($cargos[$id_nom])) {
+                        if (array_key_exists($id_nom, $cargos) && $cargos[$id_nom] !== '') {
                             $orden_cargo = strtok((string)$cargos[$id_nom], '#');
                             $cargo = strtok('#');
                             if ($cargo === 'sacd') {

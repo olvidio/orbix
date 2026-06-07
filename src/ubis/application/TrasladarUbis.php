@@ -2,18 +2,25 @@
 
 namespace src\ubis\application;
 
+use function src\shared\domain\helpers\input_string;
+
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\TrasladoUbiRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 
 final class TrasladarUbis
 {
+    public function __construct(
+        private TrasladoUbiRepositoryInterface $rasladoUbiRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      */
-    public static function execute(array $input): string
+    public function execute(array $input): string
     {
-        $dl_dst = (string)($input['dl_dst'] ?? '');
+        $dl_dst = input_string($input, 'dl_dst');
         $a_sel = $input['sel'] ?? [];
         if (!is_array($a_sel)) {
             $a_sel = [];
@@ -26,23 +33,27 @@ final class TrasladarUbis
         $mi_region_dl = ConfigGlobal::mi_region_dl();
         $esquema_org = substr($mi_region_dl, 0, -1);
 
-        $TrasladoUbiRepository = $GLOBALS['container']->get(TrasladoUbiRepositoryInterface::class);
+        $TrasladoUbiRepository = $this->rasladoUbiRepository;
 
         foreach ($a_sel as $id_ubi) {
+            if (!is_int($id_ubi) && !is_string($id_ubi)) {
+                continue;
+            }
             $oUbi = Ubi::NewUbi($id_ubi);
             if ($oUbi === null) {
                 continue;
             }
+            $idUbiInt = is_int($id_ubi) ? $id_ubi : (int) $id_ubi;
 
             $classname = self::shortClassName($oUbi);
             switch ($classname) {
                 case 'Centro':
                 case 'CentroDl':
-                    $TrasladoUbiRepository->trasladoCtr((int)$id_ubi, $esquema_org, $dl_dst);
+                    $TrasladoUbiRepository->trasladoCtr($idUbiInt, $esquema_org, $dl_dst);
                     break;
                 case 'Casa':
                 case 'CasaDl':
-                    $TrasladoUbiRepository->trasladoCdc((int)$id_ubi, $esquema_org, $dl_dst);
+                    $TrasladoUbiRepository->trasladoCdc($idUbiInt, $esquema_org, $dl_dst);
                     break;
             }
         }

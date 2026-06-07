@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
@@ -20,8 +21,8 @@ class PgDireccionCentroExRepository extends PgDireccionRepository implements Dir
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDBR'];
-        $oDbl_Select = $GLOBALS['oDBR'];
+        $oDbl = GlobalPdo::get('oDBR');
+        $oDbl_Select = GlobalPdo::get('oDBR');
         $this->setoDbl($oDbl);
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('u_dir_ctr_ex');
@@ -31,13 +32,19 @@ class PgDireccionCentroExRepository extends PgDireccionRepository implements Dir
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('u_dir_ctr_ex_id_auto_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 
     /**
      * @throws \Exception
      */
-    public function getNewIdDireccion($id): int
+    public function getNewIdDireccion(int $id): int
     {
         $miRegionDl = ConfigGlobal::mi_region_dl();
         return GenerateIdGlobal::generateIdGlobal($miRegionDl, $this->getNomTabla(), $id);

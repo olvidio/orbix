@@ -16,6 +16,15 @@ use src\menus\domain\entity\TemplateMenu;
 interface TemplateMenuRepositoryInterface
 {
 
+    /**
+     * @return array<int|string, string>
+     */
+    /**
+     * @return array<int|string, string>
+     */
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayTemplates(): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -23,9 +32,9 @@ interface TemplateMenuRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo TemplateMenu
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo TemplateMenu
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<TemplateMenu> Una colección de objetos de tipo TemplateMenu
      */
     public function getTemplatesMenus(array $aWhere = [], array $aOperators = []): array;
 
@@ -46,9 +55,9 @@ interface TemplateMenuRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_template_menu
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_template_menu): array|bool;
+    public function datosById(int $id_template_menu): array|false;
 
     /**
      * Busca la clase con id_template_menu en el repositorio.
@@ -57,6 +66,6 @@ interface TemplateMenuRepositoryInterface
 
     public function findByName(string $nombre): ?TemplateMenu;
 
-    public function getNewId();
+    public function getNewId(): int;
 
 }

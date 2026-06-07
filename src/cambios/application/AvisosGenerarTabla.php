@@ -5,6 +5,7 @@ namespace src\cambios\application;
 use src\shared\config\ConfigGlobal;
 use src\cambios\application\legacy\Avisos;
 use src\permisos\domain\PermisosActividades;
+use src\shared\infrastructure\DependencyResolver;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ImportadaRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
@@ -225,7 +226,10 @@ class AvisosGenerarTabla
                         // fase on
                         if (in_array($id_fase_ref, $aFases_cmb)) {
                             if (is_true($aviso_on)) {
-                                $oPermActividades = new PermisosActividades($id_usuario);
+                                $oPermActividades = DependencyResolver::make(
+                                    PermisosActividades::class,
+                                    ['idUsuario' => $id_usuario]
+                                );
                                 $oPermActividades->setActividad($id_activ);
                                 $oPermActividades->setFasesCompletadas($aFases_cmb);
                                 $oPermActiv = $oPermActividades->getPermisoActual($afecta);
@@ -250,7 +254,10 @@ class AvisosGenerarTabla
                         } else {
                             // fase off
                             if (is_true($aviso_off)) {
-                                $oPermActividades = new PermisosActividades($id_usuario);
+                                $oPermActividades = DependencyResolver::make(
+                                    PermisosActividades::class,
+                                    ['idUsuario' => $id_usuario]
+                                );
                                 $oPermActividades->setActividad($id_activ);
                                 $oPermActividades->setFasesCompletadas($aFases_cmb);
                                 $oPermActiv = $oPermActividades->getPermisoActual($afecta);

@@ -31,14 +31,14 @@ class DB extends DBAbstract
         $this->esquema = 'global';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
             $this->eliminar_aux_usuarios_ctr_perm();
         });
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->ejecutarCreateAllGlobal(function (): void {
             $this->create_aux_usuarios_ctr_perm();
@@ -48,7 +48,7 @@ class DB extends DBAbstract
     /**
      * En la BD sf-e/sv-e [exterior] (global).
      */
-    public function create_aux_usuarios_ctr_perm()
+    public function create_aux_usuarios_ctr_perm(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
@@ -70,7 +70,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
     }
 
-    public function eliminar_aux_usuarios_ctr_perm()
+    public function eliminar_aux_usuarios_ctr_perm(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));

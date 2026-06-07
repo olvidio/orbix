@@ -1,11 +1,13 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use frontend\shared\helpers\SignedDownloadToken;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$tk = isset($_GET['tk']) ? trim((string) $_GET['tk']) : '';
+$tkRaw = $_GET['tk'] ?? '';
+$tk = is_string($tkRaw) ? trim($tkRaw) : '';
 
 $Qacta = '';
 $parsed = SignedDownloadToken::parse($tk);
@@ -20,7 +22,7 @@ if ($Qacta === '') {
     exit;
 }
 
-$ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+$ActaRepository = DependencyResolver::get(ActaRepositoryInterface::class);
 $oActa = $ActaRepository->findById($Qacta);
 
 if ($oActa === null) {

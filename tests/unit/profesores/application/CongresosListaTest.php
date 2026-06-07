@@ -12,26 +12,18 @@ use src\shared\domain\value_objects\DateTimeLocal;
 
 final class CongresosListaTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
     }
 
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -59,12 +51,8 @@ final class CongresosListaTest extends TestCase
             50 => ['ap_nom' => 'García, Juan', 'dl' => 'dl1'],
         ]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ProfesorStgrService::class => $svc,
-            ProfesorCongresoRepositoryInterface::class => $repoCongreso,
-        ]);
-
-        $out = CongresosLista::getTablaData();
+        $useCase = new CongresosLista($svc, $repoCongreso);
+        $out = $useCase->getTablaData();
 
         $this->assertSame('tabla_congreso', $out['id_tabla']);
         $this->assertArrayNotHasKey(1, $out['a_cabeceras']);
@@ -102,12 +90,8 @@ final class CongresosListaTest extends TestCase
             1 => ['ap_nom' => 'Nom', 'dl' => 'reg_dl'],
         ]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ProfesorStgrService::class => $svc,
-            ProfesorCongresoRepositoryInterface::class => $repoCongreso,
-        ]);
-
-        $out = CongresosLista::getTablaData();
+        $useCase = new CongresosLista($svc, $repoCongreso);
+        $out = $useCase->getTablaData();
 
         $this->assertSame(_('dl'), $out['a_cabeceras'][1]);
         $this->assertSame('reg_dl', $out['a_valores'][1][1]);
@@ -121,25 +105,6 @@ final class CongresosListaTest extends TestCase
             public function getAmbito(): string
             {
                 return $this->ambito;
-            }
-        };
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
             }
         };
     }

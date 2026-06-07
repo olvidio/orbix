@@ -5,8 +5,9 @@
  * sin `use src` sobre Role/PauType en frontend.
  */
 
-use src\shared\web\ContestarJson;
 use src\planning\application\PlanningCasaQueFormData;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -14,7 +15,9 @@ $error = '';
 $data = [];
 
 try {
-    $data = PlanningCasaQueFormData::execute();
+    /** @var PlanningCasaQueFormData $useCase */
+    $useCase = DependencyResolver::get(PlanningCasaQueFormData::class);
+    $data = $useCase->execute();
 } catch (\Throwable $e) {
     $error = $e->getMessage();
 }

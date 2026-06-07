@@ -14,6 +14,11 @@ use function src\shared\domain\helpers\input_string;
  */
 class ActividadTipoGetDlOrg
 {
+    public function __construct(
+        private DelegacionDropdown $delegacionDropdown,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array{id: string, opciones: array<int|string,string>, selected: string, blanco: bool}
@@ -26,7 +31,7 @@ class ActividadTipoGetDlOrg
 
         return [
             'id' => 'dl_org',
-            'opciones' => DelegacionDropdown::delegacionesURegiones($sfsvInt, true),
+            'opciones' => $this->delegacionDropdown->delegacionesURegiones($sfsvInt, true),
             'selected' => $dl_default,
             'blanco' => true,
         ];

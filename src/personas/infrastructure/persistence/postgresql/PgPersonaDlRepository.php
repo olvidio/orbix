@@ -4,6 +4,7 @@ namespace src\personas\infrastructure\persistence\postgresql;
 
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\entity\PersonaDl;
+use src\shared\infrastructure\GlobalPdo;
 
 /**
  * Clase que adapta la tabla personas_dl a la interfaz del repositorio
@@ -18,14 +19,14 @@ class PgPersonaDlRepository extends PgPersonaDlRepositoryBase implements Persona
 {
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
-        $this->setoDbl($oDbl);
+        $this->setoDbl(GlobalPdo::get('oDB'));
         $this->setNomTabla('personas_dl');
     }
 
     /**
      * Crea una entidad PersonaDl desde un array de datos
      */
+    /** @param array<string, mixed> $aDatos */
     protected function createEntityFromArray(array $aDatos): PersonaDl
     {
         return PersonaDl::fromArray($aDatos);
@@ -34,7 +35,7 @@ class PgPersonaDlRepository extends PgPersonaDlRepositoryBase implements Persona
     public function findById(int $id_nom): ?PersonaDl
     {
         $aDatos = $this->datosById($id_nom);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return PersonaDl::fromArray($aDatos);

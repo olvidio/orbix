@@ -1,13 +1,16 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\BuscarPlanCtrData;
 use src\shared\web\ContestarJson;
 
-$Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
+$Qid_zona = (int)filter_input(INPUT_POST, 'id_zona', FILTER_VALIDATE_INT);
 
-$payload = BuscarPlanCtrData::getData($Qid_zona);
-if ($payload['view'] === 'none') {
+/** @var BuscarPlanCtrData $useCase */
+$useCase = DependencyResolver::get(BuscarPlanCtrData::class);
+$result = $useCase->getData($Qid_zona);
+if ($result['view'] === 'none') {
     ContestarJson::enviar(_('No tiene permiso para ver esta página'));
 } else {
-    ContestarJson::enviar('', $payload);
+    ContestarJson::enviar('', $result);
 }

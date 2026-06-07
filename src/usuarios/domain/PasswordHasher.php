@@ -18,10 +18,10 @@ class PasswordHasher
      * Encripta el password con salt + whirlpool. Si se pasa un hash previo se
      * reutiliza su salt (para verificar contra el almacenado).
      */
-    public function encode($clear, $hashed = NULL)
+    public function encode(string $clear, ?string $hashed = null): string
     {
         $salt_len = 100;
-        if (empty($hashed)) {
+        if ($hashed === null || $hashed === '') {
             for ($salt = '', $x = 0; $x++ < $salt_len; $salt .= bin2hex(chr(random_int(0, 255)))) ;
         } else {
             $salt = substr($hashed, 0, $salt_len * 2);
@@ -32,13 +32,9 @@ class PasswordHasher
     /**
      * Devuelve un array con el mensaje.
      *
-     * @param Username $user
-     * @param string $password
-     * @return array
-     *       $jsondata['success'] = true|false;
-     *       $jsondata['mensaje'] = 'ok';
+     * @return array{success: bool, mensaje: string}
      */
-    public function is_valid_password(Username $user, string $password)
+    public function is_valid_password(Username $user, string $password): array
     {
         $username = $user->value();
         $cmd_cracklib_check = shell_exec(sprintf("command -v cracklib-check"));
@@ -51,7 +47,10 @@ class PasswordHasher
         }
     }
 
-    private function is_valid_password_1($username, $password)
+    /**
+     * @return array{success: bool, mensaje: string}
+     */
+    private function is_valid_password_1(string $username, string $password): array
     {
         /* Del Windows:
          * Enabling this policy setting requires passwords to meet the following requirements:
@@ -68,24 +67,23 @@ class PasswordHasher
          *Any Unicode character that is categorized as an alphabetic character but is not uppercase or lowercase. This includes Unicode characters from Asian languages.
          */
 
-        $lower_user = strtolower($username ?? '');
-        $lower_pwd = strtolower($password ?? '');
+        $lower_user = strtolower($username);
+        $lower_pwd = strtolower($password);
         $txt_err = '';
 
         if (strpos($lower_pwd, '"') !== false) {
-            $txt_err .= empty($txt_err) ? '' : "\n";
-            $txt_err .= "$username: password($password) ";
+            $txt_err = "$username: password($password) ";
             $txt_err .= _("No se pueden usar las comillas en el password");
         }
 
         if (strpos($lower_pwd, $lower_user) !== false) {
-            $txt_err .= empty($txt_err) ? '' : "\n";
+            $txt_err .= $txt_err === '' ? '' : "\n";
             $txt_err .= "$username: password($password) ";
             $txt_err .= _("El nombre de usuario No puede estar en el password");
         }
 
         if (strlen($password) < 8) {
-            $txt_err .= empty($txt_err) ? '' : "\n";
+            $txt_err .= $txt_err === '' ? '' : "\n";
             $txt_err .= "$username: password($password) ";
             $txt_err .= _("Debe tener más de 8 caracteres");
         }
@@ -110,7 +108,7 @@ class PasswordHasher
         }
 
         if ($numCriteria < 3) {
-            $txt_err .= empty($txt_err) ? '' : "\n";
+            $txt_err .= $txt_err === '' ? '' : "\n";
             $txt_err .= "$username: password($password) ";
             $txt_err .= _("Debe incluir como mínimo una letra mayúscula, un número y un caracter especial");
         }
@@ -124,7 +122,10 @@ class PasswordHasher
         return $jsondata;
     }
 
-    private function is_valid_password_2($username, $pw, $score_ref = 55)
+    /**
+     * @return array{success: bool, mensaje: string}
+     */
+    private function is_valid_password_2(string $username, string $pw, int $score_ref = 55): array
     {
         $CRACKLIB = shell_exec(sprintf("command -v cracklib-check"));
         $PWSCORE = shell_exec(sprintf("command -v pwscore")) . ' ' . $username;

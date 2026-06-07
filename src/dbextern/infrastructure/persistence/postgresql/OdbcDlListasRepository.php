@@ -3,39 +3,35 @@
 namespace src\dbextern\infrastructure\persistence\postgresql;
 
 use PDO;
+use RuntimeException;
 use src\dbextern\domain\entity\DlListas;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 
-/**
- * GestorDlListas
- *
- * Classe per gestionar la llista d'objectes de la clase DlListas
- *
- * @package delegación
- * @subpackage model
- * @author Daniel Serrabou
- * @version 1.0
- * @created 5/12/2019
- */
 class OdbcDlListasRepository extends ClaseRepository
 {
     use HandlesPdoErrors;
 
-    function __construct()
+    public function __construct()
     {
-        if (!empty($GLOBALS['oDBListas']) && $GLOBALS['oDBListas'] === 'error') {
+        try {
+            $oDbl = GlobalPdo::get('oDBListas');
+        } catch (RuntimeException) {
             exit(_("no se puede conectar con la base de datos de Listas"));
         }
-        $oDbl = $GLOBALS['oDBListas'];
         $this->setoDbl($oDbl);
         $this->setoDbl_Select($oDbl);
         $this->setNomTabla('dbo.q_Aux_Dl');
     }
 
-
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<DlListas>
+     */
     public function getDlListas(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
@@ -44,24 +40,17 @@ class OdbcDlListasRepository extends ClaseRepository
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            if ($camp === '_limit') {
+            if ($camp === '_ordre' || $camp === '_limit') {
                 continue;
             }
             $sOperador = $aOperators[$camp] ?? '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
                 $aCondicion[] = $a;
             }
-            // operadores que no requieren valores
             if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
                 unset($aWhere[$camp]);
             }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'TXT') {
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN' || $sOperador === 'TXT') {
                 unset($aWhere[$camp]);
             }
         }
@@ -71,30 +60,28 @@ class OdbcDlListasRepository extends ClaseRepository
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+        if (isset($aWhere['_ordre']) && is_string($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
             $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
         }
-        if (isset($aWhere['_ordre'])) {
-            unset($aWhere['_ordre']);
-        }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+        unset($aWhere['_ordre']);
+        if (isset($aWhere['_limit']) && is_string($aWhere['_limit']) && $aWhere['_limit'] !== '') {
             $sLimit = ' LIMIT ' . $aWhere['_limit'];
         }
-        if (isset($aWhere['_limit'])) {
-            unset($aWhere['_limit']);
-        }
+        unset($aWhere['_limit']);
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $DlListas = DlListas::fromArray($aDatos);
             $DlListaSet->add($DlListas);
         }
-        return $DlListaSet->getTot();
-    }
 
-    /* -------------------- ENTIDAD --------------------------------------------- */
+        return array_values($DlListaSet->getTot());
+    }
 
     public function Eliminar(DlListas $DlListas): bool
     {
@@ -102,13 +89,10 @@ class OdbcDlListasRepository extends ClaseRepository
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE numero_dl = $numero_dl";
+
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-
-    /**
-     * Si no existe el registro, hace un insert, si existe, se hace el update.
-     */
     public function Guardar(DlListas $DlListas): bool
     {
         $numero_dl = $DlListas->getNumero_dl();
@@ -118,7 +102,6 @@ class OdbcDlListasRepository extends ClaseRepository
 
         $aDatos = $DlListas->toArrayForDatabase();
         if ($bInsert === false) {
-            //UPDATE
             unset($aDatos['nuemro_dl']);
             $update = "
 					dl                  = :dl,
@@ -128,12 +111,16 @@ class OdbcDlListasRepository extends ClaseRepository
             $sql = "UPDATE $nom_tabla SET $update WHERE nuemro_dl = $numero_dl";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
             $campos = "(nuemro_dl,dl,nombre_dl,abr_r,numero_r)";
             $valores = "(:nuemro_dl,:dl,:nombre_dl,:abr_r,:numero_r)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+
+        if ($stmt === false) {
+            return false;
+        }
+
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -143,40 +130,45 @@ class OdbcDlListasRepository extends ClaseRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE numero_dl = $numero_dl";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        if (!$stmt->rowCount()) {
-            return TRUE;
+        if ($stmt === false || !$stmt->rowCount()) {
+            return true;
         }
+
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $numero_dl
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $numero_dl): array|bool
+    public function datosById(int $numero_dl): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE numero_dl = $numero_dl";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+
+        return $result;
     }
 
-
-    /**
-     * Busca la clase con id_enc en la base de datos .
-     */
     public function findById(int $numero_dl): ?DlListas
     {
         $aDatos = $this->datosById($numero_dl);
         if (empty($aDatos)) {
             return null;
         }
+
         return DlListas::fromArray($aDatos);
     }
 }

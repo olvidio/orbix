@@ -18,16 +18,16 @@ use src\dossiers\domain\value_objects\DossierPk as DossierPkAlias;
 interface DossierRepositoryInterface
 {
 
-    //public function DossiersNotEmpty($pau = '', $id = ''): array|bool;
+    //public function DossiersNotEmpty($pau = '', $id = ''): array<string, mixed>|false;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Dossier
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Dossier
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Dossier> Una colección de objetos de tipo Dossier
      */
     public function getDossieres(array $aWhere = [], array $aOperators = []): array;
 
@@ -46,12 +46,17 @@ interface DossierRepositoryInterface
     /**
      * @deprecated usar datosByPk
      */
-    public function datosById(int $id_tipo_dossier, int $id_pau, string $tabla): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_tipo_dossier, int $id_pau, string $tabla): array|false;
 
     /**
      * Obtiene los datos por clave primaria compuesta usando un Value Object
+     *
+     * @return array<string, mixed>|false
      */
-    public function datosByPk(DossierPkAlias $pk): array|bool;
+    public function datosByPk(DossierPkAlias $pk): array|false;
 
     /**
      * @deprecated usar findByPk

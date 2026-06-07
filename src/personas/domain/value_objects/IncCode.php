@@ -7,6 +7,7 @@ use InvalidArgumentException;
 final class IncCode
 {
 
+    /** @return array<string, string> */
     public static function getArrayIncCode(): array
     {
         return [

@@ -5,39 +5,22 @@ declare(strict_types=1);
 namespace Tests\unit\ubis\application;
 
 use PHPUnit\Framework\TestCase;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\application\CalendarioPeriodosGetData;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\domain\entity\CasaPeriodo;
-use src\shared\domain\value_objects\DateTimeLocal;
 
 final class CalendarioPeriodosGetDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_id_no_positivo_devuelve_array_vacio_sin_consultar_repo(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([
-            CasaPeriodoRepositoryInterface::class => $this->createMock(CasaPeriodoRepositoryInterface::class),
-        ]);
+        $repo = $this->createMock(CasaPeriodoRepositoryInterface::class);
+        $repo->expects($this->never())->method('getCasaPeriodos');
 
-        $this->assertSame([], CalendarioPeriodosGetData::execute(0));
-        $this->assertSame([], CalendarioPeriodosGetData::execute(-3));
+        $useCase = new CalendarioPeriodosGetData($repo);
+
+        $this->assertSame([], $useCase->execute(0));
+        $this->assertSame([], $useCase->execute(-3));
     }
 
     public function test_mapea_periodos_del_repositorio(): void
@@ -60,11 +43,8 @@ final class CalendarioPeriodosGetDataTest extends TestCase
             ->with(['id_ubi' => 7, '_ordre' => 'f_ini'])
             ->willReturn([$periodo]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CasaPeriodoRepositoryInterface::class => $repo,
-        ]);
-
-        $out = CalendarioPeriodosGetData::execute(7);
+        $useCase = new CalendarioPeriodosGetData($repo);
+        $out = $useCase->execute(7);
 
         $this->assertSame([
             [
@@ -75,24 +55,5 @@ final class CalendarioPeriodosGetDataTest extends TestCase
                 'sfsv' => 1,
             ],
         ], $out['rows']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
     }
 }

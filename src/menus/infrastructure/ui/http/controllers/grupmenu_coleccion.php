@@ -2,17 +2,22 @@
 
 use src\menus\application\GrupMenuColeccionUseCase;
 use src\menus\application\MenusVisiblesPorGrupoMenuUseCase;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$GrupMenusCollecion = new GrupMenuColeccionUseCase();
-$cGrupMenus = $GrupMenusCollecion();
-$menusVisiblesPorGrupo = new MenusVisiblesPorGrupoMenuUseCase();
+/** @var GrupMenuColeccionUseCase $grupMenusCollecion */
+$grupMenusCollecion = DependencyResolver::get(GrupMenuColeccionUseCase::class);
+$cGrupMenus = $grupMenusCollecion();
+
+/** @var MenusVisiblesPorGrupoMenuUseCase $menusVisiblesPorGrupo */
+$menusVisiblesPorGrupo = DependencyResolver::get(MenusVisiblesPorGrupoMenuUseCase::class);
 
 $ambito = 'dl';
-if (isset($_SESSION['oConfig']) && method_exists($_SESSION['oConfig'], 'getAmbito')) {
-    $ambito = $_SESSION['oConfig']->getAmbito();
+$oConfig = $_SESSION['oConfig'] ?? null;
+if (is_object($oConfig) && method_exists($oConfig, 'getAmbito')) {
+    $ambito = $oConfig->getAmbito();
 }
 
 $a_valores = [];
@@ -24,10 +29,8 @@ foreach ($cGrupMenus as $GrupMenu) {
     $a_valores[$i]['grupmenu'] = $GrupMenu->getGrup_menu($ambito);
     $a_valores[$i]['orden'] = $GrupMenu->getOrden() ?? 0;
     $a_valores[$i]['menus'] = ($menusVisiblesPorGrupo)($id_gm);
-
 }
 
 $data['a_valores'] = $a_valores;
 
-// envía una Response (`data` anidado para la app Kotlin; PostRequest espera enviar()+data string).
 ContestarJson::enviarDataAnidado($error_txt, $data);

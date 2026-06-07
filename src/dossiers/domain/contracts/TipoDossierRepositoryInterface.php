@@ -28,16 +28,19 @@ interface TipoDossierRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo usando VO.
      * Devuelve false si no existe la fila en la base de datos
      */
-    public function datosByIdVo(TipoDossierId $id): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosByIdVo(TipoDossierId $id): array|false;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TipoDossier
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo TipoDossier
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<TipoDossier> Una colección de objetos de tipo TipoDossier
      */
     public function getTiposDossiers(array $aWhere = [], array $aOperators = []): array;
 
@@ -53,7 +56,10 @@ interface TipoDossierRepositoryInterface
 
     public function getNomTabla(): string;
 
-    public function datosById(int $id_tipo_dossier): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_tipo_dossier): array|false;
 
     public function findById(int $id_tipo_dossier): ?TipoDossier;
 

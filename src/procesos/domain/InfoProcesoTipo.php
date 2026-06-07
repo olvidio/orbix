@@ -9,9 +9,9 @@ use src\shared\domain\DatosInfoRepo;
 
 class InfoProcesoTipo extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ProcesoTipoRepositoryInterface $procesoTipoRepository,
+    ) {
         $this->setTxtTitulo(_("Tipos de procesos que puede tener una actividad"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este tipo de proceso?"));
         $this->setTxtBuscar(_("tipo de proceso a buscar"));
@@ -20,24 +20,22 @@ class InfoProcesoTipo extends DatosInfoRepo
         $this->setClase('src\\procesos\\domain\\entity\\ProcesoTipo');
         $this->setMetodoGestor('getProcesoTipos');
 
-
         $this->setRepositoryInterface(ProcesoTipoRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'nom_proceso');
+            $aWhere = ['_ordre' => 'nom_proceso'];
             $aOperador = [];
         } else {
-            $aWhere = array('nom' => $this->k_buscar);
-            $aOperador = array('nom' => 'sin_acentos');
+            $aWhere = ['nom' => $this->k_buscar];
+            $aOperador = ['nom' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->getRepositoryInterface());
-        $Coleccion = $oLista->getProcesoTipos($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->procesoTipoRepository->getProcesoTipos($aWhere, $aOperador);
     }
 }

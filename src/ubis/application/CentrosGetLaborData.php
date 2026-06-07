@@ -8,9 +8,16 @@ use src\ubis\domain\CuadrosLaborBits;
 
 class CentrosGetLaborData
 {
-    public static function execute(): array
+    public function __construct(
+        private CentroDlRepositoryInterface $centroDlRepository,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(): array
     {
-        $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+        $oGesCentrosDl = $this->centroDlRepository;
         $aWhere = ['active' => 't', '_ordre' => 'nombre_ubi'];
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
 

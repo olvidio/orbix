@@ -1,76 +1,89 @@
 <?php
 
+declare(strict_types=1);
+
 namespace src\devel_db_admin\infrastructure;
 
-
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
+use src\configuracion\domain\contracts\AppRepositoryInterface;
+use src\configuracion\domain\contracts\ModuloInstaladoRepositoryInterface;
 use src\configuracion\domain\ModulosConfig;
 
 class AppDB
 {
+    private int $id_mod;
+    private ModulosConfig $oModuloConfig;
 
-    private $id_mod;
-    private $nom_mod;
-    private $oModuloConfig;
-
-    public function __construct($id_mod)
-    {
+    public function __construct(
+        int $id_mod,
+        ModuloRepositoryInterface $moduloRepository,
+        AppRepositoryInterface $appRepository,
+        ModuloInstaladoRepositoryInterface $moduloInstaladoRepository,
+    ) {
         $this->id_mod = $id_mod;
-        $ModuloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
-        $oModulo = $ModuloRepository->findById($id_mod);
-        $this->nom_mod = $oModulo->getNomVo()->value();
-
-        $this->oModuloConfig = new ModulosConfig();
+        $oModulo = $moduloRepository->findById($id_mod);
+        if ($oModulo === null) {
+            throw new \InvalidArgumentException(sprintf('Módulo %d no encontrado.', $id_mod));
+        }
+        $this->oModuloConfig = new ModulosConfig($moduloRepository, $appRepository, $moduloInstaladoRepository);
     }
 
     /*
      * Genera las tablas del esquema correspondiente
      */
-    public function createTables()
+    public function createTables(): void
     {
-        $a_todasApps = $_SESSION['config']['a_apps'];
-        // buscar para cada app requerida.
+        $configSession = $_SESSION['config'] ?? null;
+        $sessionApps = is_array($configSession) ? ($configSession['a_apps'] ?? null) : null;
+        if (!is_array($sessionApps)) {
+            return;
+        }
+        /** @var array<string, int|string> $a_todasApps */
+        $a_todasApps = $sessionApps;
         $a_apps = $this->oModuloConfig->getApps($this->id_mod);
         foreach ($a_apps as $id_app) {
-            $nom_app = array_search($id_app, $a_todasApps);
-            $this->createTablesApp($nom_app);
+            $nom_app = array_search($id_app, $a_todasApps, true);
+            if ($nom_app === false) {
+                continue;
+            }
+            $this->createTablesApp((string) $nom_app);
         }
-
     }
 
-    private function createTablesApp(string $nom_app)
+    private function createTablesApp(string $nom_app): void
     {
-        $clase_esquema = "$nom_app\\db\\DBEsquema";
-        if (class_exists($clase_esquema)) {
-            $ClaseEsquema = new $clase_esquema();
-            $ClaseEsquema->createAll();
-            $ClaseEsquema->llenarAll();
-        }
+        $legacyClass = "$nom_app\\db\\DBEsquema";
+        $srcClass = 'src\\' . "$nom_app\\db\\DBEsquema";
+        ModuleDbClassInvoker::invokeMethod($legacyClass, $srcClass, 'createAll');
+        ModuleDbClassInvoker::invokeMethod($legacyClass, $srcClass, 'llenarAll');
     }
 
     /*
      * Eliminar las tablas del esquema correspondiente
      */
-    public function dropTables()
+    public function dropTables(): void
     {
-        $a_todasApps = $_SESSION['config']['a_apps'];
-        // buscar para cada app requerida.
+        $configSession = $_SESSION['config'] ?? null;
+        $sessionApps = is_array($configSession) ? ($configSession['a_apps'] ?? null) : null;
+        if (!is_array($sessionApps)) {
+            return;
+        }
+        /** @var array<string, int|string> $a_todasApps */
+        $a_todasApps = $sessionApps;
         $a_apps = $this->oModuloConfig->getApps($this->id_mod);
         foreach ($a_apps as $id_app) {
-            $nom_app = array_search($id_app, $a_todasApps);
-            $this->dropTablesApp($nom_app);
+            $nom_app = array_search($id_app, $a_todasApps, true);
+            if ($nom_app === false) {
+                continue;
+            }
+            $this->dropTablesApp((string) $nom_app);
         }
-
     }
 
-    private function dropTablesApp(string $nom_app)
+    private function dropTablesApp(string $nom_app): void
     {
-        $clase_esquema = "$nom_app\\db\\DBEsquema";
-        if (class_exists($clase_esquema)) {
-            $ClaseEsquema = new $clase_esquema();
-            $ClaseEsquema->dropAll();
-        }
+        $legacyClass = "$nom_app\\db\\DBEsquema";
+        $srcClass = 'src\\' . "$nom_app\\db\\DBEsquema";
+        ModuleDbClassInvoker::invokeMethod($legacyClass, $srcClass, 'dropAll');
     }
-
-
 }

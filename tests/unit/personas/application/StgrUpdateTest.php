@@ -6,35 +6,23 @@ namespace Tests\unit\personas\application;
 
 use PHPUnit\Framework\TestCase;
 use src\personas\application\StgrUpdate;
+use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\PersonaN;
 use src\personas\infrastructure\persistence\postgresql\PgPersonaNRepository;
 
 final class StgrUpdateTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_id_tabla_desconocido(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([]);
+        $useCase = new StgrUpdate($this->makeResolver());
 
-        $this->assertNotSame('', StgrUpdate::execute(1, 'bad', 1));
+        $this->assertNotSame('', $useCase->execute(1, 'bad', 1));
     }
 
     public function test_persona_no_encontrada(): void
@@ -42,11 +30,11 @@ final class StgrUpdateTest extends TestCase
         $repo = $this->createMock(PersonaNRepositoryInterface::class);
         $repo->method('findById')->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
+        $useCase = new StgrUpdate($this->makeResolver([
             PersonaNRepositoryInterface::class => $repo,
-        ]);
+        ]));
 
-        $this->assertNotSame('', StgrUpdate::execute(2, 'n', 1));
+        $this->assertNotSame('', $useCase->execute(2, 'n', 1));
     }
 
     public function test_exito(): void
@@ -58,11 +46,11 @@ final class StgrUpdateTest extends TestCase
         $repo->method('findById')->willReturn($p);
         $repo->expects($this->once())->method('Guardar')->with($p)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerFromMap([
+        $useCase = new StgrUpdate($this->makeResolver([
             PersonaNRepositoryInterface::class => $repo,
-        ]);
+        ]));
 
-        $this->assertSame('', StgrUpdate::execute(1, 'n', 3));
+        $this->assertSame('', $useCase->execute(1, 'n', 3));
     }
 
     public function test_falla_guardar(): void
@@ -77,28 +65,25 @@ final class StgrUpdateTest extends TestCase
         $repo->method('Guardar')->willReturn(false);
         $repo->method('getErrorTxt')->willReturn('stgr-db');
 
-        $GLOBALS['container'] = $this->containerFromMap([
+        $useCase = new StgrUpdate($this->makeResolver([
             PersonaNRepositoryInterface::class => $repo,
-        ]);
+        ]));
 
-        $this->assertStringContainsString('stgr-db', StgrUpdate::execute(1, 'n', 0));
+        $this->assertStringContainsString('stgr-db', $useCase->execute(1, 'n', 0));
     }
 
     /**
-     * @param array<class-string, object> $services
+     * @param array<class-string, object> $overrides
      */
-    private function containerFromMap(array $services): object
+    private function makeResolver(array $overrides = []): PersonaRepositoryResolver
     {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        return new PersonaRepositoryResolver(
+            $overrides[PersonaNRepositoryInterface::class] ?? $this->createMock(PersonaNRepositoryInterface::class),
+            $overrides[PersonaAgdRepositoryInterface::class] ?? $this->createMock(PersonaAgdRepositoryInterface::class),
+            $overrides[PersonaNaxRepositoryInterface::class] ?? $this->createMock(PersonaNaxRepositoryInterface::class),
+            $overrides[PersonaSRepositoryInterface::class] ?? $this->createMock(PersonaSRepositoryInterface::class),
+            $overrides[PersonaSSSCRepositoryInterface::class] ?? $this->createMock(PersonaSSSCRepositoryInterface::class),
+            $overrides[PersonaExRepositoryInterface::class] ?? $this->createMock(PersonaExRepositoryInterface::class),
+        );
     }
 }

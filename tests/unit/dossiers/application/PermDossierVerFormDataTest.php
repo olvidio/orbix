@@ -13,12 +13,9 @@ use src\dossiers\domain\value_objects\TipoDossierCodigo;
 
 /**
  * Cubre la composición del payload JSON del formulario de permisos por tipo de dossier.
- * Un fallo aquí (p. ej. llamar a un getter inexistente en {@see TipoDossier}) antes producía
- * HTML de error en lugar de JSON en el endpoint `perm_dossier_ver_data`.
  */
 final class PermDossierVerFormDataTest extends TestCase
 {
-    private mixed $previousContainer = null;
     private mixed $previousOPerm = null;
     private bool $hadSessionSfsv = false;
     private mixed $previousSessionSfsv = null;
@@ -26,7 +23,6 @@ final class PermDossierVerFormDataTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousOPerm = $_SESSION['oPerm'] ?? null;
         if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
             $_SESSION['session_auth'] = [];
@@ -54,20 +50,15 @@ final class PermDossierVerFormDataTest extends TestCase
         } else {
             $_SESSION['oPerm'] = $this->previousOPerm;
         }
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
     public function test_build_incluye_codigo_vacio_si_no_hay_slug(): void
     {
         $tipo = $this->tipoDossierMinimo();
-        $GLOBALS['container'] = $this->containerConTipoDossier($tipo);
+        $useCase = new PermDossierVerFormData($this->repoConTipo($tipo));
 
-        $data = PermDossierVerFormData::build($tipo->getId_tipo_dossier(), 'td_test');
+        $data = $useCase->build($tipo->getId_tipo_dossier(), 'td_test');
 
         $this->assertArrayHasKey('codigo', $data);
         $this->assertSame('', $data['codigo']);
@@ -77,9 +68,9 @@ final class PermDossierVerFormDataTest extends TestCase
     {
         $tipo = $this->tipoDossierMinimo();
         $tipo->setCodigoVo(new TipoDossierCodigo('mi_slug'));
-        $GLOBALS['container'] = $this->containerConTipoDossier($tipo);
+        $useCase = new PermDossierVerFormData($this->repoConTipo($tipo));
 
-        $data = PermDossierVerFormData::build($tipo->getId_tipo_dossier(), 'td_test');
+        $data = $useCase->build($tipo->getId_tipo_dossier(), 'td_test');
 
         $this->assertSame('mi_slug', $data['codigo']);
     }
@@ -93,11 +84,11 @@ final class PermDossierVerFormDataTest extends TestCase
         $tipo->setId_tipo_dossier_rel(5);
         $tipo->setApp('app1');
         $tipo->setClass('cls');
-        $GLOBALS['container'] = $this->containerConTipoDossier($tipo);
+        $useCase = new PermDossierVerFormData($this->repoConTipo($tipo));
 
         $id = $tipo->getId_tipo_dossier();
         $qTipo = 'td_contract';
-        $data = PermDossierVerFormData::build($id, $qTipo);
+        $data = $useCase->build($id, $qTipo);
 
         $expectedKeys = [
             'hash_config',
@@ -176,24 +167,59 @@ final class PermDossierVerFormDataTest extends TestCase
         return $o;
     }
 
-    private function containerConTipoDossier(TipoDossier $tipo): object
+    private function repoConTipo(TipoDossier $tipo): TipoDossierRepositoryInterface
     {
-        return new class($tipo) {
+        return new class($tipo) implements TipoDossierRepositoryInterface {
             public function __construct(private readonly TipoDossier $tipo) {}
 
-            public function get(string $key): object
+            public function findById(int $id_tipo_dossier): ?TipoDossier
             {
-                if ($key !== TipoDossierRepositoryInterface::class) {
-                    throw new \RuntimeException("Clave inesperada: $key");
-                }
-                return new class($this->tipo) {
-                    public function __construct(private readonly TipoDossier $tipo) {}
+                return $this->tipo->getId_tipo_dossier() === $id_tipo_dossier ? $this->tipo : null;
+            }
 
-                    public function findById(int $id): ?TipoDossier
-                    {
-                        return $this->tipo->getId_tipo_dossier() === $id ? $this->tipo : null;
-                    }
-                };
+            public function findByIdVo(\src\dossiers\domain\value_objects\TipoDossierId $id): ?TipoDossier
+            {
+                return $this->findById($id->value());
+            }
+
+            public function datosByIdVo(\src\dossiers\domain\value_objects\TipoDossierId $id): array|false
+            {
+                return false;
+            }
+
+            public function getTiposDossiers(array $aWhere = [], array $aOperators = []): array
+            {
+                return [];
+            }
+
+            public function Eliminar(TipoDossier $TipoDossier): bool
+            {
+                return false;
+            }
+
+            public function Guardar(TipoDossier $TipoDossier): bool
+            {
+                return false;
+            }
+
+            public function getErrorTxt(): string
+            {
+                return '';
+            }
+
+            public function getNomTabla(): string
+            {
+                return '';
+            }
+
+            public function datosById(int $id_tipo_dossier): array|false
+            {
+                return false;
+            }
+
+            public function findByCodigo(string $codigo): ?TipoDossier
+            {
+                return null;
             }
         };
     }

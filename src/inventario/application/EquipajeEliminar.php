@@ -9,19 +9,23 @@ use src\inventario\domain\contracts\EquipajeRepositoryInterface;
  */
 final class EquipajeEliminar
 {
-    public static function execute(int $id_equipaje): string
+    public function __construct(
+        private EquipajeRepositoryInterface $equipajeRepository,
+    ) {
+    }
+
+    public function execute(int $id_equipaje): string
     {
         if ($id_equipaje <= 0) {
             return (string)_('falta id_equipaje');
         }
 
-        $repo = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
-        $oEquipaje = $repo->findById($id_equipaje);
+        $oEquipaje = $this->equipajeRepository->findById($id_equipaje);
         if ($oEquipaje === null) {
             return (string)sprintf(_('No se encuentra el equipaje %d'), $id_equipaje);
         }
-        if ($repo->Eliminar($oEquipaje) === false) {
-            return (string)_('hay un error, no se ha eliminado') . "\n" . $repo->getErrorTxt();
+        if ($this->equipajeRepository->Eliminar($oEquipaje) === false) {
+            return (string)_('hay un error, no se ha eliminado') . "\n" . $this->equipajeRepository->getErrorTxt();
         }
 
         return '';

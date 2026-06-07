@@ -2,41 +2,39 @@
 
 namespace src\actividadessacd\application\services;
 
-use src\shared\config\ConfigGlobal;
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 /**
- * Helpers para la comunicacion a los sacd:
- *  - `getTraduccion(clave, idioma)` devuelve el texto asociado, con
- *    fallback al idioma `es` si no existe, y texto de error si tampoco.
- *  - `getLugar_dl()` devuelve la poblacion de la delegacion del schema
- *    actual (para la firma "lugar, fecha" en el mail/impresion).
- *
- * Sucesor de `actividadessacd\model\ActividadesSacdFunciones`.
+ * Helpers para la comunicacion a los sacd.
  */
 final class ActividadesSacdHelper
 {
-    /** @var array<string, array<string,string>> cache idioma => clave => texto */
+    /** @var array<string, array<string, string>> */
     private array $a_txt = [];
 
+    public function __construct(
+        private ActividadSacdTextoRepositoryInterface $actividadSacdTextoRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+    ) {
+    }
+
     /**
-     * @return array<string,string>|false
+     * @return array<string, string>|false
      */
-    public function getArrayTraducciones(string $idioma): array|bool
+    public function getArrayTraducciones(string $idioma): array|false
     {
         $idioma = $idioma === '' ? 'es' : $idioma;
         if (empty($this->a_txt[$idioma])) {
-            $ActividadSacdTextoRepository = $GLOBALS['container']->get(ActividadSacdTextoRepositoryInterface::class);
-            $cTextos = $ActividadSacdTextoRepository->getActividadSacdTextos([]);
+            $cTextos = $this->actividadSacdTextoRepository->getActividadSacdTextos([]);
             foreach ($cTextos as $oTexto) {
                 $clave = $oTexto->getClave();
                 $lang = $oTexto->getIdioma();
-                $this->a_txt[$lang][$clave] = $oTexto->getTexto();
+                $this->a_txt[$lang][$clave] = (string)($oTexto->getTexto() ?? '');
             }
         }
         if (empty($this->a_txt[$idioma])) {
-            // No forzamos salida; el caller decide si mostrar aviso al usuario.
             return false;
         }
         return $this->a_txt[$idioma];
@@ -49,7 +47,6 @@ final class ActividadesSacdHelper
         if (is_array($a_traduccion) && !empty($a_traduccion[$clave])) {
             return $a_traduccion[$clave];
         }
-        // fallback al idioma por defecto
         $a_traduccion = $this->getArrayTraducciones('es');
         if (is_array($a_traduccion) && !empty($a_traduccion[$clave])) {
             return $a_traduccion[$clave];
@@ -57,23 +54,17 @@ final class ActividadesSacdHelper
         return sprintf(_("falta definir el texto %s en este idioma: %s"), $clave, $idioma);
     }
 
-    /**
-     * Poblacion(es) de la delegacion para la firma del mail/impresion.
-     * Devuelve `xxxx` si esta en DMZ. Si hay mas de una direccion, las
-     * separa por `<br>`. Devuelve `'?'` si no hay dl ni cr definido.
-     */
     public function getLugar_dl(): string
     {
         if (ConfigGlobal::is_dmz()) {
             return 'xxxx';
         }
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $cCentros = $CentroDlRepository->getCentros(['tipo_ctr' => 'dl']);
+        $cCentros = $this->centroDlRepository->getCentros(['tipo_ctr' => 'dl']);
         $num_dl = count($cCentros);
         $oCentro = null;
         switch ($num_dl) {
             case 0:
-                $cCentros = $CentroDlRepository->getCentros(['tipo_ctr' => 'cr']);
+                $cCentros = $this->centroDlRepository->getCentros(['tipo_ctr' => 'cr']);
                 if (count($cCentros) > 0) {
                     $oCentro = $cCentros[0];
                 } else {
@@ -84,11 +75,10 @@ final class ActividadesSacdHelper
                 $oCentro = $cCentros[0];
                 break;
             default:
-                // mas de una dl: situacion anomala, se refleja en el texto
                 return _("Más de un centro definido como dl");
         }
         $cDirecciones = $oCentro->getDirecciones();
-        if (!is_array($cDirecciones) || empty($cDirecciones)) {
+        if (count($cDirecciones) === 0) {
             return _("falta poner la dirección a la dl");
         }
         $poblacion = '';

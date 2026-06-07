@@ -241,6 +241,90 @@ ni `infrastructure/ui/http/controllers/`.
   y `src/notas/application/Select_notas_de_una_persona.php`).
 - Borrar `apps/dossiers/` por completo.
 
+## Cierre DI (junio 2026)
+
+Migracion al patron de modulos cerrados (`personas`, `usuarios`, `cambios`, `casas`):
+constructor DI en application, `DependencyResolver::get()` en controllers HTTP,
+`GlobalPdo::get()` en repos `Pg*`, 0 `$GLOBALS['container']` en todo `src/dossiers/`.
+
+### Resultado del cierre DI
+
+| Criterio | Estado |
+|----------|--------|
+| `$GLOBALS['container']` en `src/dossiers/` | **0** (antes **7**) |
+| Controllers HTTP con `DependencyResolver::get()` | **6/6** |
+| `application/` con constructor DI | **8** clases + `DossierFichaSelectRunner` |
+| Casos de uso en `config/dependencies.php` | **12** entradas `autowire()` / factory |
+| Pg repos con `GlobalPdo` | **2** repos (`PgTipoDossierRepository`, `PgDossierRepository`) |
+| Frontend sin `use src\...` en controladores | **0** imports (ya cumplido) |
+| Tests `tests/unit/dossiers/application/` | **17 OK** |
+| Tests `tests/integration/dossiers/` | **12 OK** |
+
+### `src/dossiers/config/dependencies.php`
+
+Registra 2 repositorios del modulo + 8 casos de uso HTTP + `DossierFichaSelectRunner`,
+`DossierTipoFileSuffixResolver` (factory `fromDefaultProjectRoot()`), `PermisoDossier`.
+
+Repos cross-modulo (`ActividadAll*`, `PersonaRepositoryResolver`, `UbiRepositoryResolver`, etc.)
+se resuelven por autowire desde los `dependencies.php` de sus modulos.
+
+### Application layer (constructor DI)
+
+| Clase | Dependencias inyectadas |
+|-------|------------------------|
+| `TipoDossierGuardar` / `TipoDossierEliminar` | `TipoDossierRepositoryInterface` |
+| `PermDossiersListaData` / `PermDossierVerFormData` | `TipoDossierRepositoryInterface` |
+| `DossiersListaFichasData` | `TipoDossierRepositoryInterface`, `DossierRepositoryInterface` |
+| `DossierTipoPublicUrls` | `TipoDossierRepositoryInterface`, `DossierTipoFileSuffixResolver` |
+| `DossiersVerPantallaData` | `TipoDossierRepositoryInterface`, `ActividadAllRepositoryInterface`, `PersonaRepositoryResolver`, `UbiRepositoryResolver`, `DossiersListaFichasData`, `DossierTipoFileSuffixResolver`, `DossierFichaSelectRunner` |
+
+`DossierTipoPublicUrls` mantiene metodos estaticos de compatibilidad para modulos
+consumidores (`actividadestudios`, `actividadcargos`, `asistentes`) delegando en
+`DependencyResolver::get(self::class)`.
+
+`PermDossier` permanece con metodos estaticos/de instancia legacy (permisos de sesion);
+sin acceso a `$GLOBALS['container']`. Helper `havePermOficina()` via `XPermisos`.
+
+### Repositorios `Pg*`
+
+| Clase | PDO |
+|-------|-----|
+| `PgTipoDossierRepository` | `GlobalPdo::get('oDBPC')` / `GlobalPdo::get('oDBPC_Select')` |
+| `PgDossierRepository` | `GlobalPdo::get('oDB')` |
+
+Guards `PDOStatement|false`, normalizacion de filas `array<string, mixed>` en `datosById()`.
+
+### HTTP controllers
+
+Los 6 controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()` (sin `::execute()` / `::build()` estaticos).
+Entrada POST via `input_int` / `input_string`.
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (inicio cierre DI) | `composer phpstan:file -- src/dossiers/` | **228** |
+| 2026-06-06 (cierre DI) | `composer phpstan:file -- src/dossiers/` | **0** |
+
+Areas abordadas:
+
+- **Application:** constructor DI; `DossierFichaSelectRunner` para widgets Select dinamicos;
+  `PersonaRepositoryResolver` / `UbiRepositoryResolver` en lugar de `ProvidesRepositories` + GLOBALS.
+- **Repos `Pg*`:** `GlobalPdo`, guards PDO, PHPDoc retornos `array|false`.
+- **Interfaces / entity / VOs:** tipos en contratos, `Dossier`/`TipoDossier`/`DossierPk`.
+- **HTTP controllers:** `DependencyResolver::get()` + `input_*`.
+- **PermDossier / PermisoDossier:** `XPermisos` para `have_perm_oficina`, tipos en helpers privados.
+
+### Checklist de cierre
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests application pasan (`tests/unit/dossiers/application/`: 17 tests)
+- [x] Tests integracion repos pasan (`tests/integration/dossiers/`: 12 tests)
+- [x] PHPStan `src/dossiers/` en 0 (phpstan-nobaseline.neon)
+
 ## Verificacion post-migracion
 
 - `composer dump-autoload`.

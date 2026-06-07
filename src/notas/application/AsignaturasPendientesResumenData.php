@@ -2,6 +2,7 @@
 
 namespace src\notas\application;
 
+
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -17,9 +18,19 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
  */
 final class AsignaturasPendientesResumenData
 {
-    public static function execute(): array
+
+    public function __construct(
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly PersonaDlRepositoryInterface $personaDlRepository,
+        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(): array
     {
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $AsignaturaRepository = $this->asignaturaRepository;
         $aWhere = [];
         $aOperador = [];
         $aWhere['active'] = 't';
@@ -67,10 +78,10 @@ final class AsignaturasPendientesResumenData
         $aOperador['nivel_stgr'] = 'IN';
         $aWhere['id_tabla'] = '^[na]';
         $aOperador['id_tabla'] = '~';
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $PersonaDlRepository = $this->personaDlRepository;
         $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
 
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        $PersonaNotaDBRepository = $this->personaNotaRepository;
         $arrayNotasSuperadas = NotaSituacion::getArraySuperadas();
         $a_NivelesStgr = [NivelStgrId::B => 'b', NivelStgrId::C1 => 'c1', NivelStgrId::C2 => 'c2'];
 
@@ -78,6 +89,9 @@ final class AsignaturasPendientesResumenData
             $id_nom = $oPersona->getId_nom();
             $id_tabla = $oPersona->getId_tabla();
             $nivel_stgr = $oPersona->getNivel_stgr();
+            if ($nivel_stgr === null || !isset($a_NivelesStgr[$nivel_stgr])) {
+                continue;
+            }
 
             $tipo = $id_tabla . $a_NivelesStgr[$nivel_stgr];
 

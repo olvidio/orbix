@@ -3,6 +3,7 @@
 namespace src\personas\infrastructure\persistence\postgresql;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\entity\PersonaNax;
@@ -25,7 +26,11 @@ class PgPersonaNaxRepository extends PgPersonaDlRepositoryBase implements Person
         // `p_nax` vive en la base `sf` con esquema …f (p. ej. H-dlbf), no en `sv` …v.
         // Con sesión SV, `oDB` apunta a `sv`+esquemav; `oDBF` es la conexión sf+esquemaf.
         // Con sesión SF, `oDBF` es un alias de `oDB` (ambos sf+esquemaf).
-        $oDbl = $GLOBALS['oDBF'] ?? $GLOBALS['oDB'];
+        try {
+            $oDbl = GlobalPdo::get('oDBF');
+        } catch (\RuntimeException) {
+            $oDbl = GlobalPdo::get('oDB');
+        }
         $this->setoDbl($oDbl);
         $this->setNomTabla('p_nax');
     }
@@ -33,6 +38,7 @@ class PgPersonaNaxRepository extends PgPersonaDlRepositoryBase implements Person
     /**
      * Crea una entidad PersonaNax desde un array de datos
      */
+    /** @param array<string, mixed> $aDatos */
     protected function createEntityFromArray(array $aDatos): PersonaNax
     {
         return PersonaNax::fromArray($aDatos);
@@ -104,6 +110,10 @@ class PgPersonaNaxRepository extends PgPersonaDlRepositoryBase implements Person
             $aDatos['id_schema'] = $idSchema;
         }
 
+        if ($stmt === false) {
+            return false;
+        }
+
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -123,23 +133,29 @@ class PgPersonaNaxRepository extends PgPersonaDlRepositoryBase implements Person
     public function findById(int $id_nom): ?PersonaNax
     {
         $aDatos = $this->datosById($id_nom);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return PersonaNax::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('p_numerarios_id_auto_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 
     /**
      * @throws \Exception
      */
-    public function getNewIdNom($id): int
+    public function getNewIdNom(int $id): int
     {
         $miRegionDl = ConfigGlobal::mi_region_dl();
         return GenerateIdGlobal::generateIdGlobal($miRegionDl, $this->getNomTabla(), $id);

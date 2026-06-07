@@ -2,7 +2,7 @@
 
 namespace src\ubis\application\services;
 
-
+use src\shared\infrastructure\DependencyResolver;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
@@ -22,176 +22,156 @@ use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
+use src\ubis\domain\entity\Direccion;
 
 trait UbiContactsTrait
 {
- // Forzamos a que la clase que use este trait tenga este método
-    abstract public function getId_ubi();
+    abstract public function getId_ubi(): int;
+
+    abstract public function getIdUbiVo(): object;
 
     /**
-     * Devuelve las direcciones de un ubi especificados por
-     *
-     * @return array de objetos Direccion
-     *
+     * @return list<Direccion|null>
      */
-    public function getDireccionesGral($ordre = 'principal DESC')
+    public function getDireccionesGral(string $ordre = 'principal DESC'): array
     {
-        $aClassName = explode('\\', get_called_class());
+        $aClassName = explode('\\', static::class);
         $childClassName = end($aClassName);
-        switch ($childClassName) {
-            case 'Centro':
-                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCentroDireccionRepositoryInterface::class);
-                $repoDireccion = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
-                break;
-            case 'CentroDl':
-                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCentroDlDireccionRepositoryInterface::class);
-                $repoDireccion = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
-                break;
-            case 'CentroEx':
-                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCentroExDireccionRepositoryInterface::class);
-                $repoDireccion = $GLOBALS['container']->get(DireccionCentroExRepositoryInterface::class);
-                break;
-            case 'Casa':
-                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCasaDireccionRepositoryInterface::class);
-                $repoDireccion = $GLOBALS['container']->get(DireccionCasaRepositoryInterface::class);
-                break;
-            case 'CasaDl':
-                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCasaDlDireccionRepositoryInterface::class);
-                $repoDireccion = $GLOBALS['container']->get(DireccionCasaDlRepositoryInterface::class);
-                break;
-            case 'CasaEx':
-                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCasaExDireccionRepositoryInterface::class);
-                $repoDireccion = $GLOBALS['container']->get(DireccionCasaExRepositoryInterface::class);
-                break;
+
+        $repoCasaDireccion = match ($childClassName) {
+            'Centro' => DependencyResolver::get(RelacionCentroDireccionRepositoryInterface::class),
+            'CentroDl' => DependencyResolver::get(RelacionCentroDlDireccionRepositoryInterface::class),
+            'CentroEx' => DependencyResolver::get(RelacionCentroExDireccionRepositoryInterface::class),
+            'Casa' => DependencyResolver::get(RelacionCasaDireccionRepositoryInterface::class),
+            'CasaDl' => DependencyResolver::get(RelacionCasaDlDireccionRepositoryInterface::class),
+            'CasaEx' => DependencyResolver::get(RelacionCasaExDireccionRepositoryInterface::class),
+            default => null,
+        };
+
+        $repoDireccion = match ($childClassName) {
+            'Centro' => DependencyResolver::get(DireccionCentroRepositoryInterface::class),
+            'CentroDl' => DependencyResolver::get(DireccionCentroDlRepositoryInterface::class),
+            'CentroEx' => DependencyResolver::get(DireccionCentroExRepositoryInterface::class),
+            'Casa' => DependencyResolver::get(DireccionCasaRepositoryInterface::class),
+            'CasaDl' => DependencyResolver::get(DireccionCasaDlRepositoryInterface::class),
+            'CasaEx' => DependencyResolver::get(DireccionCasaExRepositoryInterface::class),
+            default => null,
+        };
+
+        if ($repoCasaDireccion === null || $repoDireccion === null) {
+            return [];
         }
-        $cUbixDireccion = $repoCasaDireccion->getDireccionesPorUbi($this->getIdUbiVo()->value());
+
+        $idUbiValue = $this->getId_ubi();
+        $cUbixDireccion = $repoCasaDireccion->getDireccionesPorUbi($idUbiValue);
         $dirs = [];
         if ($cUbixDireccion !== false) {
             foreach ($cUbixDireccion as $aUbixDireccion) {
-                $id_direccion = $aUbixDireccion['id_direccion'];
-                $dirs[] =  (new $repoDireccion())->findById($id_direccion);
+                if (!isset($aUbixDireccion['id_direccion'])) {
+                    continue;
+                }
+                $idDireccionRaw = $aUbixDireccion['id_direccion'];
+                if (!is_int($idDireccionRaw) && !is_numeric($idDireccionRaw)) {
+                    continue;
+                }
+                $id_direccion = is_int($idDireccionRaw) ? $idDireccionRaw : (int) $idDireccionRaw;
+                $dirs[] = $repoDireccion->findById($id_direccion);
             }
         }
+
         return $dirs;
     }
 
-    /**
-     * Devuelve el e-mail principal o primero de la lista de teleco de una persona
-     *
-     *    $desc_teleco en la tabla (DB: comun) public.xd_desc_teleco
-     *
-     *       13    e-mail    principal
-     *       20    e-mail    gobierno
-     *       15    e-mail    otros
-     */
-    public function emailPrincipalOPrimero($desc_teleco = 13)
+    public function emailPrincipalOPrimero(int $desc_teleco = 13): string
     {
-        $aClassName = explode('\\', get_called_class());
-        $childClassName = end($aClassName);
-        switch ($childClassName) {
-            case 'Centro':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrRepositoryInterface::class);
-                break;
-            case 'CentroDl':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrDlRepositoryInterface::class);
-                break;
-            case 'CentroEx':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrExRepositoryInterface::class);
-                break;
-            case 'Casa':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoUbiRepositoryInterface::class);
-                break;
-            case 'CasaDl':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcDlRepositoryInterface::class);
-                break;
-            case 'CasaEx':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcExRepositoryInterface::class);
-                break;
+        $TelecoUbiRepository = $this->resolveTelecoRepository();
+        if ($TelecoUbiRepository === null) {
+            return '';
         }
-        $aWhere['id_ubi'] = $this->getId_ubi();
-        //case 'e-mail':
-        $id_tipo_teleco = 3;
-        $aWhere['id_tipo_teleco'] = $id_tipo_teleco;
+
+        /** @var array<string, mixed> $aWhere */
+        $aWhere = [
+            'id_ubi' => $this->getId_ubi(),
+            'id_tipo_teleco' => 3,
+        ];
 
         if ($desc_teleco !== 13) {
             $aWhere['id_desc_teleco'] = $desc_teleco;
         }
 
-        $e_mail = '';
         $cTelecos = $TelecoUbiRepository->getTelecos($aWhere);
-        if (!empty($cTelecos) && count($cTelecos) > 0) {
-            $oTeleco = $cTelecos[0];
-            $e_mail = $oTeleco->getNumTelecoVo()->value();
+        if ($cTelecos === []) {
+            return '';
         }
-        return $e_mail;
+
+        $oTeleco = $cTelecos[0];
+        return $oTeleco->getNumTelecoVo()->value();
+    }
+
+    public function getTeleco(string $tipo_teleco, int|string $desc_teleco, string $separador = ''): string
+    {
+        $TelecoUbiRepository = $this->resolveTelecoRepository();
+        if ($TelecoUbiRepository === null) {
+            return '';
+        }
+
+        $id_tipo_teleco = match ($tipo_teleco) {
+            'telf' => 1,
+            'fax' => 4,
+            'e-mail' => 3,
+            default => 0,
+        };
+
+        /** @var array<string, mixed> $aWhere */
+        $aWhere = [
+            'id_ubi' => $this->getId_ubi(),
+            'id_tipo_teleco' => $id_tipo_teleco,
+        ];
+
+        if ($desc_teleco !== '*' && $desc_teleco !== '' && $desc_teleco !== 0) {
+            $aWhere['id_desc_teleco'] = $desc_teleco;
+        }
+
+        $cTelecos = $TelecoUbiRepository->getTelecos($aWhere);
+        $tels = '';
+        $separador = $separador === '' ? '.-<br>' : $separador;
+
+        $DescTelecoRepository = DependencyResolver::get(DescTelecoRepositoryInterface::class);
+        foreach ($cTelecos as $oTelecoUbi) {
+            $iDescTel = $oTelecoUbi->getId_desc_teleco();
+            $num_teleco = trim($oTelecoUbi->getNumTelecoVo()->value());
+            if ($desc_teleco === '*' && !empty($iDescTel)) {
+                $oDescTel = $DescTelecoRepository->findById((int) $iDescTel);
+                $desc = $oDescTel?->getDescTelecoVo()?->value() ?? '';
+                $tels .= $num_teleco . '(' . $desc . ')' . $separador;
+            } else {
+                $tels .= $num_teleco . $separador;
+            }
+        }
+
+        if ($tels === '') {
+            return '';
+        }
+
+        return substr($tels, 0, -strlen($separador));
     }
 
     /**
-     * Devuelve los teleco de un ubi especificados por
-     *
-     *     parámetros $id_ubi,$tipo_teleco,$desc_teleco,$separador
-     *
-     *    Si $desc_teleco es '*', entonces se añade la descripción entre paréntesis
-     *      al final del número...
+     * @return TelecoCtrRepositoryInterface|TelecoCtrDlRepositoryInterface|TelecoCtrExRepositoryInterface|TelecoUbiRepositoryInterface|TelecoCdcDlRepositoryInterface|TelecoCdcExRepositoryInterface|null
      */
-    function getTeleco($tipo_teleco, $desc_teleco, $separador)
+    private function resolveTelecoRepository(): TelecoCtrRepositoryInterface|TelecoCtrDlRepositoryInterface|TelecoCtrExRepositoryInterface|TelecoUbiRepositoryInterface|TelecoCdcDlRepositoryInterface|TelecoCdcExRepositoryInterface|null
     {
-        $aClassName = explode('\\', get_called_class());
+        $aClassName = explode('\\', static::class);
         $childClassName = end($aClassName);
-        switch ($childClassName) {
-            case 'Centro':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrRepositoryInterface::class);
-                break;
-            case 'CentroDl':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrDlRepositoryInterface::class);
-                break;
-            case 'CentroEx':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrExRepositoryInterface::class);
-                break;
-            case 'Casa':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoUbiRepositoryInterface::class);
-                break;
-            case 'CasaDl':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcDlRepositoryInterface::class);
-                break;
-            case 'CasaEx':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcExRepositoryInterface::class);
-                break;
-        }
-        $aWhere['id_ubi'] = $this->getId_ubi();
-        switch ($tipo_teleco) {
-            case 'telf':
-                $id_tipo_teleco = 1;
-                break;
-            case 'fax':
-                $id_tipo_teleco = 4;
-                break;
-            case 'e-mail':
-                $id_tipo_teleco = 3;
-                break;
-        }
-        $aWhere['id_tipo_teleco'] = $id_tipo_teleco;
-        if ($desc_teleco !== '*' && !empty($desc_teleco)) {
-            $aWhere['id_desc_teleco'] = $desc_teleco;
-        }
-        $cTelecos = $TelecoUbiRepository->getTelecos($aWhere);
-        $tels = '';
-        $separador = empty($separador) ? ".-<br>" : $separador;
-        if ($cTelecos !== false) {
-            $DescTelecoRepository = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
-            foreach ($cTelecos as $oTelecoUbi) {
-                $iDescTel = $oTelecoUbi->getId_desc_teleco();
-                $num_teleco = trim($oTelecoUbi->getNumTelecoVo()->value() ?? '');
-                if ($desc_teleco === "*" && !empty($iDescTel)) {
-                    $oDescTel = $DescTelecoRepository->findById((int)$iDescTel);
-                    $desc = $oDescTel?->getDescTelecoVo()?->value() ?? '';
-                    $tels .= $num_teleco . "(" . $desc . ")" . $separador;
-                } else {
-                    $tels .= $num_teleco . $separador;
-                }
-            }
-        }
-        $tels = substr($tels, 0, -(strlen($separador)));
-        return $tels;
+
+        return match ($childClassName) {
+            'Centro' => DependencyResolver::get(TelecoCtrRepositoryInterface::class),
+            'CentroDl' => DependencyResolver::get(TelecoCtrDlRepositoryInterface::class),
+            'CentroEx' => DependencyResolver::get(TelecoCtrExRepositoryInterface::class),
+            'Casa' => DependencyResolver::get(TelecoUbiRepositoryInterface::class),
+            'CasaDl' => DependencyResolver::get(TelecoCdcDlRepositoryInterface::class),
+            'CasaEx' => DependencyResolver::get(TelecoCdcExRepositoryInterface::class),
+            default => null,
+        };
     }
 }

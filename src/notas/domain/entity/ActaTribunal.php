@@ -42,14 +42,20 @@ class ActaTribunal
      */
     public function setActa(string $acta): void
     {
-        $this->acta = ActaNumero::fromNullableString($acta);
+        $vo = ActaNumero::fromNullableString($acta);
+        if ($vo !== null) {
+            $this->acta = $vo;
+        }
     }
 
     public function setActaVo(ActaNumero|string|null $texto = null): void
     {
-        $this->acta = $texto instanceof ActaNumero
+        $vo = $texto instanceof ActaNumero
             ? $texto
             : ActaNumero::fromNullableString($texto);
+        if ($vo !== null) {
+            $this->acta = $vo;
+        }
     }
 
     public function getExaminadorVo(): ?Examinador
@@ -98,7 +104,8 @@ class ActaTribunal
      */
     public function getOrden(): ?string
     {
-        return $this->orden?->value();
+        $v = $this->orden?->value();
+        return $v !== null ? (string) $v : null;
     }
 
     /**

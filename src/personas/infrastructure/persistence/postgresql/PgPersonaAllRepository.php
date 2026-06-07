@@ -6,6 +6,7 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\config\ConfigGlobal;
 use src\personas\domain\contracts\PersonaAllRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\shared\infrastructure\GlobalPdo;
 
 /**
  * GestorPersonaAll
@@ -17,27 +18,15 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
  */
 class PgPersonaAllRepository extends ClaseRepository implements PersonaAllRepositoryInterface
 {
-    private int $id_nom;
-
-    function __construct()
-    {
-        /*
-            $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database sv
-    $config = $oConfigDB->getEsquema('publicv');
-    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
-    $oDevelPC = $oConexion->getPDO();
-
-        $this->setoDbl($oDevelPC);
-*/
-
-        $oDbl = $GLOBALS['oDBP'];
-        $this->setoDbl($oDbl);
+    public function __construct(
+        private readonly PersonaDlRepositoryInterface $personaDlRepository,
+    ) {
+        $this->setoDbl(GlobalPdo::get('oDBP'));
         $this->setNomTabla('global.personas');
     }
 
-    public function getPersonaByIdNom($id_nom)
+    public function getPersonaByIdNom(int $id_nom): ?\src\personas\domain\entity\PersonaDl
     {
-        $this->id_nom = $id_nom;
 
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -46,16 +35,17 @@ class PgPersonaAllRepository extends ClaseRepository implements PersonaAllReposi
         // buscar los 'A' de mi schema
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND situacion = 'A' AND id_schema = $mi_id_schema ";
         if ($this->ejecutar($sql) !== FALSE) {
-            $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-            return $PersonaDlRepository->findById($id_nom);
+            return $this->personaDlRepository->findById($id_nom);
         }
 
         // sino, los que vienen de otra dl
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND situacion = 'A' ORDER BY f_situacion";
         if ($oDblSt = $this->ejecutar($sql)) {
             $id_schema_persona = null;
-            foreach ($oDblSt as $aDades) {
-                $id_schema_persona = $aDades['id_schema'];
+            foreach ($oDblSt->fetchAll(\PDO::FETCH_ASSOC) as $aDades) {
+                if (is_array($aDades) && isset($aDades['id_schema']) && is_numeric($aDades['id_schema'])) {
+                    $id_schema_persona = (int)$aDades['id_schema'];
+                }
             }
             // Si hay más de uno, me quedo con el que tiene la fecha de cambio situación más reciente.
             // Lo marco como publicado
@@ -69,22 +59,24 @@ class PgPersonaAllRepository extends ClaseRepository implements PersonaAllReposi
         // buscar los distintos de 'A' de mi schema
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND situacion != 'A' AND id_schema = $mi_id_schema ";
         if ($this->ejecutar($sql) !== FALSE) {
-            $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-            return $PersonaDlRepository->findById($id_nom);
+            return $this->personaDlRepository->findById($id_nom);
         }
-        return sprintf(_("no encuentro a nadie con id: %s"), $id_nom);
+        return null;
     }
 
-    private function ejecutar($sql)
+    /** @return \PDOStatement|false */
+    private function ejecutar(string $sql): \PDOStatement|false
     {
         $oDbl = $this->getoDbl();
         if (($oDblSt = $oDbl->query($sql)) === false) {
             $sClauError = 'PersonaAll.select';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return FALSE;
+            if (isset($_SESSION['oGestorErrores']) && is_object($_SESSION['oGestorErrores']) && method_exists($_SESSION['oGestorErrores'], 'addErrorAppLastError')) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            }
+            return false;
         }
         if (empty($oDblSt->rowCount())) {
-            return FALSE;
+            return false;
         }
 
         return $oDblSt;

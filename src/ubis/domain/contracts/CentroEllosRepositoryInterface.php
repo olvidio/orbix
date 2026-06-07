@@ -16,15 +16,18 @@ use src\ubis\domain\entity\CentroEllos;
 interface CentroEllosRepositoryInterface
 {
 
-    public function getArrayCentros($sCondicion = ''): array;
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayCentros(string $sCondicion = ''): array;
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CentroEllos
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo CentroEllos
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<CentroEllos> Una colección de objetos de tipo CentroEllos
      */
     public function getCentros(array $aWhere = [], array $aOperators = []): array;
 
@@ -45,9 +48,21 @@ interface CentroEllosRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_ubi
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_ubi): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_ubi): array|false;
 
     /**
      * Busca la clase con id_ubi en el repositorio.

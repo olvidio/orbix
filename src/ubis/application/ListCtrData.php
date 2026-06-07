@@ -2,6 +2,8 @@
 
 namespace src\ubis\application;
 
+use src\permisos\domain\XPermisos;
+
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\ubis\application\services\UbiTelecoService;
@@ -14,6 +16,17 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 
 class ListCtrData
 {
+    public function __construct(
+        private CentroRepositoryInterface $centroRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroExRepositoryInterface $centroExRepository,
+        private CasaRepositoryInterface $casaRepository,
+        private CasaDlRepositoryInterface $casaDlRepository,
+        private CasaExRepositoryInterface $casaExRepository,
+        private UbiTelecoService $ubiTelecoService,
+    ) {
+    }
+
     /**
      * @return array{
      *     opciones_loc: array<string, string>,
@@ -23,7 +36,10 @@ class ListCtrData
      *     a_botones: list<array{txt: string, click: string}>
      * }
      */
-    public static function execute(
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(
         string $Qloc,
         string $Qque_lista,
         string $idSel = '',
@@ -101,7 +117,7 @@ class ListCtrData
                     $aOperador['tipo_casa'] = '~';
                     switch ($miSfsv) {
                         case 1:
-                            if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+                            if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'))) {
                             } else {
                                 $aWhere['sv'] = 't';
                             }
@@ -117,7 +133,7 @@ class ListCtrData
                     $aOperador['tipo_casa'] = '!~';
                     switch ($miSfsv) {
                         case 1:
-                            if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+                            if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'))) {
                             } else {
                                 $aWhere['sv'] = 't';
                             }
@@ -175,27 +191,27 @@ class ListCtrData
 
         switch ($obj) {
             case 'Centro':
-                $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                $CentroRepository = $this->centroRepository;
                 $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
                 break;
             case 'CentroDl':
-                $CentroRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                $CentroRepository = $this->centroDlRepository;
                 $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
                 break;
             case 'CentroEx':
-                $CentroRepository = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
+                $CentroRepository = $this->centroExRepository;
                 $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
                 break;
             case 'Casa':
-                $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
+                $CasaRepository = $this->casaRepository;
                 $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
                 break;
             case 'CasaDl':
-                $CasaRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
+                $CasaRepository = $this->casaDlRepository;
                 $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
                 break;
             case 'CasaEx':
-                $CasaRepository = $GLOBALS['container']->get(CasaExRepositoryInterface::class);
+                $CasaRepository = $this->casaExRepository;
                 $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
                 break;
             case 'none':
@@ -215,23 +231,24 @@ class ListCtrData
         $a_cabeceras[] = ucfirst(_("teléfono"));
 
         $i = 0;
-        $a_valores = [];
+        $meta = [];
         if ($idSel !== '') {
-            $a_valores['select'] = $idSel;
+            $meta['select'] = $idSel;
         }
         if ($scrollId !== '') {
-            $a_valores['scroll_id'] = $scrollId;
+            $meta['scroll_id'] = $scrollId;
         }
+        $filas = [];
         foreach ($cUbis as $oCentro) {
             $i++;
             $region = $oCentro->getRegion();
             $id_ubi = $oCentro->getId_ubi();
             $ctr = $oCentro->getNombre_ubi();
 
-            if (str_contains($obj, 'Centro')) {
+            $tipo = '';
+            if (str_contains($obj, 'Centro') && method_exists($oCentro, 'getTipo_ctr')) {
                 $tipo = $oCentro->getTipo_ctr();
-            }
-            if (str_contains($obj, 'Casa')) {
+            } elseif (str_contains($obj, 'Casa') && method_exists($oCentro, 'getTipo_casa')) {
                 $tipo = $oCentro->getTipo_casa();
             }
             $cDirecciones = $oCentro->getDirecciones();
@@ -240,7 +257,7 @@ class ListCtrData
             $pais = '';
             $direccion = '';
             $c_p = '';
-            if (is_array($cDirecciones) & !empty($cDirecciones)) {
+            if (!empty($cDirecciones)) {
                 $d = 0;
                 foreach ($cDirecciones as $oDireccion) {
                     $d++;
@@ -257,30 +274,31 @@ class ListCtrData
                 }
             }
 
-            $a_valores[$i]['sel'] = "$id_ubi";
-            $a_valores[$i][1] = [
+            $filas[$i]['sel'] = "$id_ubi";
+            $filas[$i][1] = [
                 'link_spec' => [
                     'path' => 'frontend/ubis/controller/home_ubis.php',
                     'query' => ['pau' => 'u', 'id_ubi' => $id_ubi],
                 ],
                 'valor' => $ctr,
             ];
-            $a_valores[$i][2] = $region;
-            $a_valores[$i][3] = $tipo;
-            $a_valores[$i][4] = $direccion;
-            $a_valores[$i][5] = $c_p;
+            $filas[$i][2] = $region;
+            $filas[$i][3] = $tipo;
+            $filas[$i][4] = $direccion;
+            $filas[$i][5] = $c_p;
 
             if (!str_contains($obj, 'Ex')) {
-                $a_valores[$i][6] = $poblacion;
+                $filas[$i][6] = $poblacion;
             } elseif ($pais === "España") {
-                $a_valores[$i][6] = $poblacion;
+                $filas[$i][6] = $poblacion;
             } else {
-                $a_valores[$i][6] = "$poblacion ($pais)";
+                $filas[$i][6] = "$poblacion ($pais)";
             }
-            $tels = UbiTelecoService::texto($obj, (int)$id_ubi, 'telf', '', ' ');
+            $tels = $this->ubiTelecoService->texto($obj, (int)$id_ubi, 'telf', '', ' ');
 
-            $a_valores[$i][7] = $tels;
+            $filas[$i][7] = $tels;
         }
+        $a_valores = $meta + $filas;
 
         $oDBPropiedades = new DBPropiedades();
         $opciones_loc = $oDBPropiedades->array_posibles_esquemas();
@@ -316,7 +334,8 @@ class ListCtrData
         }
 
         $a_botones = [['txt' => _("modificar"), 'click' => "fnjs_modificar(this.form)"]];
-        if ($_SESSION['oPerm']->have_perm_oficina('admin_sv')) {
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('admin_sv')) {
             $a_botones[] = ['txt' => _("trasladar"), 'click' => "fnjs_ver_dl()"];
         }
 

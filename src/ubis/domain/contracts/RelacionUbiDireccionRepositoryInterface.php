@@ -7,6 +7,12 @@ namespace src\ubis\domain\contracts;
  */
 interface RelacionUbiDireccionRepositoryInterface
 {
+    /**
+     * @return list<array<string, mixed>>
+     */
+    /**
+     * @return list<array<string, mixed>>
+     */
     public function getRelacionesPorUbi(int $id_ubi): array;
     /** Asocia una dirección a una casa */
     public function asociarDireccion(int $id_ubi, int $id_direccion, ?bool $principal = null): bool;
@@ -15,9 +21,24 @@ interface RelacionUbiDireccionRepositoryInterface
     public function desasociarDireccion(int $id_ubi, int $id_direccion): bool;
 
     /** Obtiene todas las direcciones asociadas a una casa */
-    public function getDireccionesPorUbi(int $id_ubi): array;
+    /**
+     * @return list<array<string, mixed>>|false
+     */
+    public function getDireccionesPorUbi(int $id_ubi): array|false;
 
     /** Obtiene todas las casas asociadas a una dirección */
+    /**
+     * @return list<array<string, mixed>>
+     */
+    /**
+     * @return list<array<string, mixed>>
+     */
+    /**
+     * @return list<array<string, mixed>>
+     */
+    /**
+     * @return list<array<string, mixed>>
+     */
     public function getUbisPorDireccion(int $id_direccion): array;
 
     /** Verifica si existe la relación casa-dirección */

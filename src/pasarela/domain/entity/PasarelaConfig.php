@@ -9,30 +9,28 @@ use stdClass;
 
 class PasarelaConfig
 {
-
     use Hydratable;
 
-    /* ATRIBUTOS ----------------------------------------------------------------- */
-
-    private PasarelaParametroCode $nom_parametro;
+    private ?PasarelaParametroCode $nom_parametro = null;
 
     private ?string $json_valor = null;
 
-
     public function getNom_parametro(): string
     {
-        return $this->nom_parametro->value();
+        return $this->nom_parametro?->value() ?? '';
     }
-
 
     public function setNom_parametro(string $nom_parametro): void
     {
         $this->nom_parametro = PasarelaParametroCode::fromNullableString($nom_parametro);
     }
 
-    // Value Object API for parametro
     public function getNomParametroVo(): PasarelaParametroCode
     {
+        if ($this->nom_parametro === null) {
+            throw new \RuntimeException('nom_parametro not set');
+        }
+
         return $this->nom_parametro;
     }
 
@@ -44,27 +42,23 @@ class PasarelaConfig
     }
 
     /**
-     *
-     * @param boolean $returnArray si hay que devolver un array en vez de un objeto.
-     * @return array|stdClass|null
+     * @return array<string, mixed>|stdClass|null
      */
-    public function getJson_valor(bool $returnArray = FALSE): array|stdClass|null
+    public function getJson_valor(bool $returnArray = false): array|stdClass|null
     {
         return (new ConverterJson($this->json_valor, $returnArray))->fromPg();
     }
 
     /**
-     * @param string|array|null $oJSON json_certificados
-     * @param boolean $db =FALSE optional. Para determinar la variable que se le pasa es ya un objeto json,
-     *  o es una variable de php hay que convertirlo. En la base de datos ya es json.
+     * @param string|array<string, mixed>|stdClass|null $oJSON
      */
-    public function setJson_valor(string|array|null $oJSON, bool $db = FALSE): void
+    public function setJson_valor(string|array|stdClass|null $oJSON, bool $db = false): void
     {
-        $a_json_certificados = (new ConverterJson($oJSON, FALSE))->toPg($db);
-        if ($a_json_certificados === "[]" || empty($a_json_certificados)) {
+        $encoded = (new ConverterJson($oJSON, false))->toPg($db);
+        if (!is_string($encoded) || $encoded === '[]' || $encoded === '') {
             $this->json_valor = null;
         } else {
-            $this->json_valor = (new ConverterJson($oJSON, FALSE))->toPg($db);
+            $this->json_valor = $encoded;
         }
     }
 }

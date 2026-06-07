@@ -14,13 +14,20 @@ use src\ubis\domain\CuadrosLaborBits;
  */
 final class CentrosFormData
 {
+    public function __construct(
+        private CentroDlRepositoryInterface $centroDlRepository,
+    ) {
+    }
+
     public const MODO_LABOR = 'labor';
     public const MODO_NUM = 'num';
     public const MODO_PLAZAS = 'plazas';
-
-    public static function execute(int $id_ubi, string $modo): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(int $id_ubi, string $modo): array
     {
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+        $CentroDlRepository = $this->centroDlRepository;
         $oCentro = $CentroDlRepository->findById($id_ubi);
 
         $base = [

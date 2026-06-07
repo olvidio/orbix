@@ -19,26 +19,31 @@ use src\shared\domain\value_objects\TimeLocal;
  */
 final class EncargoSacdHorarioVerData
 {
+
+    public function __construct(
+        private EncargoDominioService $dominioService,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdHorarioRepositoryInterface $encargoSacdHorarioRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository
+    ) {
+    }
+
     /**
      * @return array<string, mixed>
      */
-    public static function cargar(
+    public function cargar(
         int $id_nom,
         int $id_enc,
         int $id_item_post,
         string $desc_enc_post,
     ): array {
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $oPersona = $PersonaDlRepository->findById($id_nom);
+        $oPersona = $this->personaDlRepository->findById($id_nom);
         $ap_nom = $oPersona === null ? '' : $oPersona->getPrefApellidosNombre();
-
-        $hur = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
-        $encRepo = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $encSacdRepo = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
 
         $id_item = $id_item_post > 0 ? $id_item_post : 0;
         if ($id_item === 0) {
-            $cands = $hur->getEncargoSacdHorarios(
+            $cands = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios(
                 [
                     'id_nom' => $id_nom,
                     'id_enc' => $id_enc,
@@ -46,7 +51,7 @@ final class EncargoSacdHorarioVerData
                     '_limit' => '1',
                 ]
             );
-            if (is_array($cands) && count($cands) > 0) {
+            if ($cands !== []) {
                 $id_item = $cands[0]->getId_item();
             }
         }
@@ -61,11 +66,11 @@ final class EncargoSacdHorarioVerData
         ];
 
         if ($id_item > 0) {
-            $h = $hur->findById($id_item);
+            $h = $this->encargoSacdHorarioRepository->findById($id_item);
             if ($h !== null) {
-                $enc = $encRepo->findById($id_enc);
+                $enc = $this->encargoRepository->findById($id_enc);
                 $desc_enc = $enc !== null ? (string)($enc->getDesc_enc() ?? '') : $desc_enc_post;
-                $tiene = $hur->countExcepcionesByHorarioId($id_item) > 0;
+                $tiene = $this->encargoSacdHorarioRepository->countExcepcionesByHorarioId($id_item) > 0;
 
                 return self::conOpciones(array_merge(
                     [
@@ -82,18 +87,18 @@ final class EncargoSacdHorarioVerData
             }
         }
 
-        $cSacd = $encSacdRepo->getEncargosSacd(
+        $cSacd = $this->encargoSacdRepository->getEncargosSacd(
             ['id_nom' => $id_nom, 'id_enc' => $id_enc, '_limit' => '1']
         );
         $f_ini = '';
         $f_fin = '';
-        if (is_array($cSacd) && count($cSacd) > 0) {
+        if ($cSacd !== []) {
             $dos = $cSacd[0];
             $f_ini = self::fmtDate($dos->getF_ini());
             $f_fin = self::fmtDate($dos->getF_fin());
         }
 
-        $enc = $encRepo->findById($id_enc);
+        $enc = $this->encargoRepository->findById($id_enc);
         $desc_default = $enc !== null ? (string)($enc->getDesc_enc() ?? '') : '';
 
         return self::conOpciones(array_merge(
@@ -119,13 +124,13 @@ final class EncargoSacdHorarioVerData
      * @param array<string, mixed> $base
      * @return array<string, mixed>
      */
-    private static function conOpciones(array $base): array
+    private function conOpciones(array $base): array
     {
-        $oDominio = new EncargoDominioService();
+        $oDominio = $this->dominioService;
         $dia = $oDominio->calcular_dia(
-            (string)($base['mas_menos'] ?? ''),
-            (string)($base['dia_ref'] ?? ''),
-            (string)($base['dia_inc'] ?? ''),
+            is_scalar($base['mas_menos'] ?? null) ? (string) $base['mas_menos'] : '',
+            is_scalar($base['dia_ref'] ?? null) ? (string) $base['dia_ref'] : '',
+            is_scalar($base['dia_inc'] ?? null) ? (string) $base['dia_inc'] : '',
         );
 
         return array_merge($base, [
@@ -139,7 +144,7 @@ final class EncargoSacdHorarioVerData
     /**
      * @return array<string, string>
      */
-    private static function serializeHorarioCampos(EncargoSacdHorario $h): array
+    private function serializeHorarioCampos(EncargoSacdHorario $h): array
     {
         return [
             'dia_ref' => (string)($h->getDia_ref() ?? ''),
@@ -151,7 +156,7 @@ final class EncargoSacdHorarioVerData
         ];
     }
 
-    private static function fmtDate(mixed $d): string
+    private function fmtDate(mixed $d): string
     {
         if ($d === null) {
             return '';
@@ -166,7 +171,7 @@ final class EncargoSacdHorarioVerData
         return '';
     }
 
-    private static function fmtTime(mixed $t): string
+    private function fmtTime(mixed $t): string
     {
         if ($t === null) {
             return '';

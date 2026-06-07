@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\entity\Role;
@@ -16,23 +17,24 @@ $Qdmz = (integer)filter_input(INPUT_POST, 'dmz');
 $error_txt = '';
 
 if ($Qrole) {
-    $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
+    $RoleRepository = DependencyResolver::get(RoleRepositoryInterface::class);
     if (!empty($Qid_role)) {
         $oRole = $RoleRepository->findById($Qid_role);
+        if ($oRole === null) {
+            ContestarJson::enviar(_('Rol no encontrado'), 'none');
+            return;
+        }
     } else {
         $id_role_new = $RoleRepository->getNewId();
         $oRole = new Role();
         $oRole->setId_role($id_role_new);
     }
     $oRole->setRoleVo(new RoleName($Qrole));
-    $sf = !empty($Qsf) ? '1' : 0;
-    $oRole->setSf($sf);
-    $sv = !empty($Qsv) ? '1' : 0;
-    $oRole->setSv($sv);
-    $pauStr = ($Qpau === null || $Qpau === '') ? PauType::PAU_NONE : $Qpau;
+    $oRole->setSf(!empty($Qsf));
+    $oRole->setSv(!empty($Qsv));
+    $pauStr = $Qpau === '' ? PauType::PAU_NONE : $Qpau;
     $oRole->setPauVo(new PauType($pauStr));
-    $dmz = !empty($Qdmz) ? '1' : 0;
-    $oRole->setDmz($dmz);
+    $oRole->setDmz(!empty($Qdmz));
     if ($RoleRepository->Guardar($oRole) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $RoleRepository->getErrorTxt();

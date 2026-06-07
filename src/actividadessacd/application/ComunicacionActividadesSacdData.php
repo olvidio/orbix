@@ -7,42 +7,37 @@ use src\actividadessacd\application\services\ActividadesSacdHelper;
 use src\actividadessacd\application\services\ComunicarActividadesSacdService;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\entity\PersonaSacd;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use frontend\shared\web\Periodo;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Data builder para la pantalla "comunicacion de actividades a los sacd".
- *
- * Engloba toda la logica que el legacy `com_sacd_activ.php` hacia antes
- * de pintar el HTML: resolver `que`, aplicar regla `p-sacd`, calcular el
- * periodo ISO, cargar las personas, construir el listado principal y (si
- * procede) la lista de "sacd de paso".
- *
- * Sucesor de la rama `Qmail === 'no'` del dispatcher legacy.
  */
 final class ComunicacionActividadesSacdData
 {
+    public function __construct(
+        private UsuarioRepositoryInterface $usuarioRepository,
+        private RoleRepositoryInterface $roleRepository,
+        private PersonaSacdRepositoryInterface $personaSacdRepository,
+        private PersonaExRepositoryInterface $personaExRepository,
+        private ComunicarActividadesSacdService $comunicarActividadesSacdService,
+        private ActividadesSacdHelper $actividadesSacdHelper,
+    ) {
+    }
+
     /**
-     * @param array $input campos POST del form (que, id_nom, propuesta,
-     *   periodo, year, empiezamin, empiezamax, sel[]).
-     *
-     * @return array{
-     *   que: string,
-     *   propuesta: string,
-     *   mi_dele: string,
-     *   lugar_fecha: string,
-     *   periodo_txt: string,
-     *   sacds: array<int, array<string, mixed>>,
-     *   sacds_paso: array<int, array<string, mixed>>
-     * }
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $context = self::resolverContexto($input);
+        $context = $this->resolverContexto($input);
         $que = $context['que'];
-        $id_nom = $context['id_nom'];
         $propuesta = $context['propuesta'];
         $inicioIso = $context['inicioIso'];
         $finIso = $context['finIso'];
@@ -51,10 +46,9 @@ final class ComunicacionActividadesSacdData
         $mi_dele = (string)ConfigGlobal::mi_delef();
         $oDateLocal = new DateTimeLocal();
         $hoy_local = $oDateLocal->getFromLocal('.');
-        $poblacion = (new ActividadesSacdHelper())->getLugar_dl();
+        $poblacion = $this->actividadesSacdHelper->getLugar_dl();
         $lugar_fecha = "$poblacion, $hoy_local";
 
-        // Sin periodo valido no podemos seguir.
         if ($inicioIso === '' || $finIso === '') {
             return [
                 'que' => $que,
@@ -68,27 +62,25 @@ final class ComunicacionActividadesSacdData
             ];
         }
 
-        $cPersonas = self::cargarPersonas($que, $id_nom, $mi_dele);
+        $cPersonas = $this->cargarPersonas($que, $context['id_nom'], $mi_dele);
 
-        $service = new ComunicarActividadesSacdService();
+        $service = clone $this->comunicarActividadesSacdService;
         $service->setInicioIso($inicioIso);
         $service->setFinIso($finIso);
         $service->setPropuesta($propuesta);
         $service->setPersonas($cPersonas);
         $sacds = $service->getArrayComunicacion();
 
-        // "Sacd de paso" solo cuando hay varios sacds (no un_sacd).
         $sacds_paso = [];
         if ($que !== 'un_sacd') {
-            $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-            $cPersonasPaso = $PersonaExRepository->getPersonas([
+            $cPersonasPaso = $this->personaExRepository->getPersonas([
                 'situacion' => 'A',
                 'sacd' => 't',
                 'dl' => $mi_dele,
                 '_ordre' => 'apellido1,apellido2,nom',
             ]);
 
-            $servicePaso = new ComunicarActividadesSacdService();
+            $servicePaso = clone $this->comunicarActividadesSacdService;
             $servicePaso->setInicioIso($inicioIso);
             $servicePaso->setFinIso($finIso);
             $servicePaso->setPropuesta($propuesta);
@@ -104,44 +96,40 @@ final class ComunicacionActividadesSacdData
             'mi_dele' => $mi_dele,
             'lugar_fecha' => $lugar_fecha,
             'periodo_txt' => $periodo_txt,
-            'sacds' => self::normalizarSacds($sacds),
-            'sacds_paso' => self::normalizarSacds($sacds_paso),
+            'sacds' => $this->normalizarSacds($sacds),
+            'sacds_paso' => $this->normalizarSacds($sacds_paso),
         ];
     }
 
     /**
-     * Resuelve `que`, `id_nom`, `propuesta` y periodo ISO a partir del input.
-     *
-     * @return array{que:string, id_nom:int, propuesta:string, inicioIso:string, finIso:string, periodo_txt:string}
+     * @param array<string, mixed> $input
+     * @return array{que: string, id_nom: int, propuesta: string, inicioIso: string, finIso: string, periodo_txt: string}
      */
-    public static function resolverContexto(array $input): array
+    public function resolverContexto(array $input): array
     {
-        $que = (string)($input['que'] ?? '');
-        $id_nom = (int)($input['id_nom'] ?? 0);
-        $propuesta = (string)($input['propuesta'] ?? '');
+        $que = input_string($input, 'que');
+        $id_nom = input_int($input, 'id_nom');
+        $propuesta = input_string($input, 'propuesta');
 
-        $periodo = (string)($input['periodo'] ?? '');
-        $year = (string)($input['year'] ?? '');
-        $empiezamin = (string)($input['empiezamin'] ?? '');
-        $empiezamax = (string)($input['empiezamax'] ?? '');
+        $periodo = input_string($input, 'periodo');
+        $year = input_string($input, 'year');
+        $empiezamin = input_string($input, 'empiezamin');
+        $empiezamax = input_string($input, 'empiezamax');
 
-        // Si un usuario con rol 'p-sacd' entra, solo puede verse a si mismo.
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         if ($oMiUsuario !== null) {
             $id_role = $oMiUsuario->getId_role();
-            $aRoles = $RoleRepository->getArrayRoles();
+            $aRoles = $this->roleRepository->getArrayRoles();
             if (!empty($aRoles[$id_role]) && $aRoles[$id_role] === 'p-sacd') {
-                $id_nom = (int)$oMiUsuario->getCsvIdPauAsString();
+                $csvId = $oMiUsuario->getCsvIdPauAsString();
+                $id_nom = is_numeric($csvId) ? (int)$csvId : 0;
                 $que = 'un_sacd';
             }
         }
 
-        // `sel[]` viene de personas_select; `id_nom#id_tabla`.
         $a_sel = $input['sel'] ?? [];
-        if (is_array($a_sel) && !empty($a_sel)) {
-            $id_nom = (int)strtok((string)$a_sel[0], '#');
+        if (is_array($a_sel) && !empty($a_sel) && is_string($a_sel[0] ?? null)) {
+            $id_nom = (int)strtok($a_sel[0], '#');
             if ($que === '') {
                 $que = 'un_sacd';
             }
@@ -161,8 +149,6 @@ final class ComunicacionActividadesSacdData
         $finIso = (string)$oPeriodo->getF_fin_iso();
         $periodo_txt = sprintf(_("atención actividades para el periodo %s"), $oPeriodo->getTxt_cusro());
 
-        // Para `un_sacd` el legacy aplica un periodo por defecto (curso
-        // cruzado: 01-07 del any-1 al 30-06 del any+1).
         if ($que === 'un_sacd') {
             $y = (int)$year;
             if ($y === 0) {
@@ -184,15 +170,14 @@ final class ComunicacionActividadesSacdData
     }
 
     /**
-     * @return array<int, mixed>
+     * @return list<PersonaSacd>
      */
-    private static function cargarPersonas(string $que, int $id_nom, string $mi_dele): array
+    private function cargarPersonas(string $que, int $id_nom, string $mi_dele): array
     {
-        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
-
         switch ($que) {
             case 'nagd':
-                return $PersonaSacdRepository->getPersonas(
+                /** @var list<PersonaSacd> $personas */
+                $personas = $this->personaSacdRepository->getPersonas(
                     [
                         'id_tabla' => "'n','a'",
                         'situacion' => 'A',
@@ -202,39 +187,53 @@ final class ComunicacionActividadesSacdData
                     ],
                     ['id_tabla' => 'IN']
                 );
+                return $personas;
             case 'sssc':
-                return $PersonaSacdRepository->getPersonas([
+                /** @var list<PersonaSacd> $personas */
+                $personas = $this->personaSacdRepository->getPersonas([
                     'id_tabla' => 'sssc',
                     'situacion' => 'A',
                     'sacd' => 't',
                     'dl' => $mi_dele,
                     '_ordre' => 'apellido1,apellido2,nom',
                 ]);
+                return $personas;
             case 'un_sacd':
-                $oPersona = $PersonaSacdRepository->findById($id_nom);
+                $oPersona = $this->personaSacdRepository->findById($id_nom);
                 return $oPersona === null ? [] : [$oPersona];
         }
         return [];
     }
 
     /**
-     * Convierte el array indexado por id_nom a una lista plana adecuada
-     * para JSON, incluyendo `id_nom` explicitamente en cada entrada.
-     *
      * @param array<int, array<string, mixed>> $sacds
      * @return array<int, array<string, mixed>>
      */
-    private static function normalizarSacds(array $sacds): array
+    private function normalizarSacds(array $sacds): array
     {
         $out = [];
         foreach ($sacds as $id_nom => $vector) {
             $out[] = [
                 'id_nom' => (int)$id_nom,
-                'nom_ap' => (string)($vector['nom_ap'] ?? ''),
+                'nom_ap' => $this->mixedToString($vector['nom_ap'] ?? ''),
                 'txt' => (array)($vector['txt'] ?? []),
                 'actividades' => (array)($vector['actividades'] ?? []),
             ];
         }
         return $out;
+    }
+
+    private function mixedToString(mixed $value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_int($value) || is_float($value)) {
+            return (string)$value;
+        }
+        if (is_bool($value)) {
+            return $value ? 't' : 'f';
+        }
+        return '';
     }
 }

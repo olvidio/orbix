@@ -10,13 +10,18 @@ use src\pasarela\domain\ContribucionReserva;
  */
 final class ContribucionReservaExcepcionEliminar
 {
-    public static function execute(string $id_tipo_activ): string
+    public function __construct(
+        private readonly ContribucionReserva $contribucionReserva,
+    ) {
+    }
+
+    public function execute(string $id_tipo_activ): string
     {
         if ($id_tipo_activ === '') {
             return _('Falta id_tipo_activ');
         }
-        $oContribucionReserva = new ContribucionReserva();
-        $oContribucionReserva->delContribucionReserva($id_tipo_activ);
+        
+        $this->contribucionReserva->delContribucionReserva($id_tipo_activ);
         return '';
     }
 }

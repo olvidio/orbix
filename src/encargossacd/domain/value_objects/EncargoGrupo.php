@@ -15,6 +15,7 @@ class EncargoGrupo
     public const ZONAS_MISAS = 8;
 
 
+    /** @return array<int, string> */
     public static function getArrayGrupos(): array
     {
         $a_status = [

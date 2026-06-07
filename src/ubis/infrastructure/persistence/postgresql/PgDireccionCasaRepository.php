@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
 use src\ubis\domain\contracts\PlanoOperationsTrait;
@@ -21,14 +22,17 @@ class PgDireccionCasaRepository extends PgDireccionRepository implements Direcci
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDBPC'];
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl = GlobalPdo::get('oDBPC');
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl($oDbl);
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('u_dir_cdc');
     }
 
     // Wrapper methods para mantener la interfaz simple
+    /**
+     * @return array<string, mixed>
+     */
     public function downloadPlano(int $id_direccion): array
     {
         return $this->planoDownload($id_direccion);

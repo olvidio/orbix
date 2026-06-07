@@ -6,15 +6,19 @@ use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 class ZonaSacdDatosPut
 {
+
+    public function __construct(
+        private readonly ZonaSacdRepositoryInterface $zonaSacdRepository,
+    ) {
+    }
     /**
      * @param array{dw1?:string,dw2?:string,dw3?:string,dw4?:string,dw5?:string,dw6?:string,dw7?:string} $dw
      * @return array{error: string}
      */
-    public static function execute(int $id_zona, int $id_sacd, array $dw): array
+    public function execute(int $id_zona, int $id_sacd, array $dw): array
     {
         $aWhere = ['id_zona' => $id_zona, 'id_nom' => $id_sacd];
-        $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
-        $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere);
+        $cZonaSacd = $this->zonaSacdRepository->getZonasSacds($aWhere);
         if (empty($cZonaSacd)) {
             return ['error' => _('No existe')];
         }
@@ -31,8 +35,8 @@ class ZonaSacdDatosPut
         $oZonaSacd->setDw6($b($dw['dw6'] ?? false));
         $oZonaSacd->setDw7($b($dw['dw7'] ?? false));
 
-        if ($ZonaSacdRepository->Guardar($oZonaSacd) === false) {
-            return ['error' => $ZonaSacdRepository->getErrorTxt()];
+        if ($this->zonaSacdRepository->Guardar($oZonaSacd) === false) {
+            return ['error' => $this->zonaSacdRepository->getErrorTxt()];
         }
 
         return ['error' => ''];

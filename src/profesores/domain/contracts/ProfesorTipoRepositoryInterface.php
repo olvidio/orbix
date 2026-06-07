@@ -16,6 +16,9 @@ use src\profesores\domain\entity\ProfesorTipo;
 interface ProfesorTipoRepositoryInterface
 {
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayProfesorTipos(): array;
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -23,9 +26,9 @@ interface ProfesorTipoRepositoryInterface
 	/**
 	 * devuelve una colección (array) de objetos de tipo ProfesorTipo
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo ProfesorTipo
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<ProfesorTipo> Una colección de objetos de tipo ProfesorTipo
 	
 	 */
 	public function getProfesorTipos(array $aWhere=[], array $aOperators=[]): array;
@@ -47,10 +50,10 @@ interface ProfesorTipoRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param int $id_tipo_profesor
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(int $id_tipo_profesor): array|bool;
+    public function datosById(int $id_tipo_profesor): array|false;
 	
     /**
      * Busca la clase con id_tipo_profesor en el repositorio.
@@ -58,5 +61,5 @@ interface ProfesorTipoRepositoryInterface
      */
     public function findById(int $id_tipo_profesor): ?ProfesorTipo;
 	
-    public function getNewId();
+    public function getNewId(): int;
 }

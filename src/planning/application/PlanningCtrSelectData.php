@@ -3,26 +3,34 @@
 namespace src\planning\application;
 
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\planning\application\ActividadesDePersonaService;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Personas + actividades agrupadas por centro para `planning_ctr_select`.
  */
 final class PlanningCtrSelectData
 {
+    public function __construct(
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private ActividadesDePersonaService $actividadesDePersonaService,
+    ) {
+    }
+
     /**
-     * @param array<string, mixed> $post
-     * @return array{msg_txt: string, cabecera_title: string, a_actividades2: array}
+     * @param array<string, mixed> $input
+     * @return array{msg_txt: string, cabecera_title: string, a_actividades2: array<int|string, mixed>}
      */
-    public static function execute(array $post, DateTimeLocal $oIniPlanning, string $inicio_local, string $fin_iso, string $inicio_iso): array
+    public function execute(array $input, DateTimeLocal $oIniPlanning, string $inicio_local, string $fin_iso, string $inicio_iso): array
     {
-        $Qsacd = (string)($post['sacd'] ?? '');
-        $Qctr = (string)($post['ctr'] ?? '');
-        $Qtodos_n = (string)($post['todos_n'] ?? '');
-        $Qtodos_agd = (string)($post['todos_agd'] ?? '');
-        $Qtodos_s = (string)($post['todos_s'] ?? '');
+        $Qsacd = input_string($input, 'sacd');
+        $Qctr = input_string($input, 'ctr');
+        $Qtodos_n = input_string($input, 'todos_n');
+        $Qtodos_agd = input_string($input, 'todos_agd');
+        $Qtodos_s = input_string($input, 'todos_s');
 
         $aWhereP = ['situacion' => 'A'];
         if ($Qsacd === '') {
@@ -31,14 +39,12 @@ final class PlanningCtrSelectData
 
         $msg_txt = '';
         $cabecera_title = '';
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         $cPersonas = [];
         if ($Qctr !== '') {
             $nom_ubi = str_replace('+', '\\+', $Qctr);
             $aWhere = ['nombre_ubi' => '^' . $nom_ubi];
             $aOperador = ['nombre_ubi' => 'sin_acentos'];
-            $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-            $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
+            $cCentros = $this->centroDlRepository->getCentros($aWhere, $aOperador);
             if (!empty($cCentros)) {
                 foreach ($cCentros as $oCentro) {
                     $id_ubi = $oCentro->getId_ubi();
@@ -46,8 +52,8 @@ final class PlanningCtrSelectData
                     $cabecera_title = ucfirst(sprintf(_("personas de: %s"), $nombre_ubi));
                     $aWhereP['id_ctr'] = $id_ubi;
                     $aWhereP['_ordre'] = 'apellido1';
-                    $cPersonas2 = $PersonaDlRepository->getPersonas($aWhereP);
-                    if (is_array($cPersonas2) && count($cPersonas2) >= 1) {
+                    $cPersonas2 = $this->personaDlRepository->getPersonas($aWhereP);
+                    if (count($cPersonas2) >= 1) {
                         $cPersonas = array_merge($cPersonas, $cPersonas2);
                     } else {
                         $msg_txt .= sprintf(_("No encuentro personas para %s"), $nombre_ubi);
@@ -70,10 +76,10 @@ final class PlanningCtrSelectData
                 $aWhereP['id_tabla'] = 's';
             }
             $aWhereP['_ordre'] = 'id_ctr, apellido1';
-            $cPersonas = $PersonaDlRepository->getPersonas($aWhereP);
+            $cPersonas = $this->personaDlRepository->getPersonas($aWhereP);
         }
 
-        $a_actividades2 = ActividadesDePersonaService::actividadesPorPersona(
+        $a_actividades2 = $this->actividadesDePersonaService->actividadesPorPersona(
             $cPersonas,
             $fin_iso,
             $inicio_iso,

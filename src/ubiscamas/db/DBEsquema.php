@@ -13,9 +13,9 @@ use src\utils_database\domain\entity\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ServerConf::DIR . "/src/ubiscamas/db";
+    private string $dir_base = ServerConf::DIR . "/src/ubiscamas/db";
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
         if (empty($esquema_sfsv)) {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
@@ -25,7 +25,7 @@ class DBEsquema extends DBAbstract
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
             $this->eliminar_du_camas_dl();
@@ -33,7 +33,7 @@ class DBEsquema extends DBAbstract
         });
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->ejecutarCreateAllGlobal(function (): void {
             $this->create_du_habitaciones_dl();
@@ -41,10 +41,15 @@ class DBEsquema extends DBAbstract
         });
     }
 
-    protected function infoTable($tabla)
+    /**
+     * @return array{tabla: string, nom_tabla: string, campo_seq: string, filename: string}
+     */
+    protected function infoTable(string $tabla): array
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
+        $nom_tabla = '';
+        $campo_seq = '';
         switch ($tabla) {
             case "du_habitaciones_dl":
                 $nom_tabla = $this->getNomTabla($tabla);
@@ -64,7 +69,7 @@ class DBEsquema extends DBAbstract
     /**
      * En la BD Comun (esquema).
      */
-    public function create_du_habitaciones_dl()
+    public function create_du_habitaciones_dl(): void
     {
         $permiso = $this->permisoGlobalEffective('comun');
         $this->addPermisoGlobal($permiso);
@@ -80,7 +85,7 @@ class DBEsquema extends DBAbstract
         // tablas ya se hayan creado como sv (o al revés).
         if ($this->tableExists($tabla)) {
             $this->delPermisoGlobal($permiso);
-            return TRUE;
+            return;
         }
 
         $nompkey = $tabla . '_pkey';
@@ -101,10 +106,9 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal($permiso);
-        return TRUE;
     }
 
-    public function eliminar_du_habitaciones_dl()
+    public function eliminar_du_habitaciones_dl(): void
     {
         $datosTabla = $this->infoTable("du_habitaciones_dl");
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -115,7 +119,7 @@ class DBEsquema extends DBAbstract
     /**
      * En la BD Comun (esquema).
      */
-    public function create_du_camas_dl()
+    public function create_du_camas_dl(): void
     {
         $permiso = $this->permisoGlobalEffective('comun');
         $this->addPermisoGlobal($permiso);
@@ -132,7 +136,7 @@ class DBEsquema extends DBAbstract
         // tablas ya se hayan creado como sv (o al revés).
         if ($this->tableExists($tabla)) {
             $this->delPermisoGlobal($permiso);
-            return TRUE;
+            return;
         }
 
         $tabla_inherits = $this->tablaPadreInherits($tabla_padre);
@@ -151,10 +155,9 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal($permiso);
-        return true;
     }
 
-    public function eliminar_du_camas_dl()
+    public function eliminar_du_camas_dl(): void
     {
         $datosTabla = $this->infoTable("du_camas_dl");
         $nom_tabla = $datosTabla['nom_tabla'];

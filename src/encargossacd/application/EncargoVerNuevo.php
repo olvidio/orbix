@@ -2,6 +2,9 @@
 
 namespace src\encargossacd\application;
 
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\entity\Encargo;
@@ -12,33 +15,37 @@ use src\encargossacd\domain\value_objects\EncargoGrupo;
  */
 final class EncargoVerNuevo
 {
+
+    public function __construct(
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoTipoRepositoryInterface $encargoTipoRepository
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array{error: string}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $Qfiltro_ctr = (int)($input['filtro_ctr'] ?? 0);
+        $Qfiltro_ctr = input_int($input, 'filtro_ctr');
         $Qsf_sv = empty($Qfiltro_ctr) ? EncargoGrupo::CENTRO_SV : $Qfiltro_ctr;
 
-        $Qid_ubi = (int)($input['lst_ctrs'] ?? 0);
-        $Qid_zona = (int)($input['id_zona'] ?? 0);
-        $Qdesc_enc = (string)($input['desc_enc'] ?? '');
-        $Qidioma_enc = (string)($input['idioma_enc'] ?? '');
-        $Qdesc_lugar = (string)($input['desc_lugar'] ?? '');
-        $Qobserv = (string)($input['observ'] ?? '');
+        $Qid_ubi = input_int($input, 'lst_ctrs');
+        $Qid_zona = input_int($input, 'id_zona');
+        $Qdesc_enc = input_string($input, 'desc_enc');
+        $Qidioma_enc = input_string($input, 'idioma_enc');
+        $Qdesc_lugar = input_string($input, 'desc_lugar');
+        $Qobserv = input_string($input, 'observ');
 
-        $Qid_tipo_enc = (string)($input['id_tipo_enc'] ?? '');
-        $Qgrupo = (string)($input['grupo'] ?? '');
-        $Qnom_tipo = (string)($input['nom_tipo'] ?? '');
-
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+        $Qid_tipo_enc = input_string($input, 'id_tipo_enc');
+        $Qgrupo = input_string($input, 'grupo');
+        $Qnom_tipo = input_string($input, 'nom_tipo');
 
         if (!empty($Qid_tipo_enc) && !str_contains($Qid_tipo_enc, '.')) {
             $id_tipo_enc = $Qid_tipo_enc;
         } else {
-            $condta = $EncargoTipoRepository->id_tipo_encargo($Qgrupo, $Qnom_tipo);
+            $condta = $this->encargoTipoRepository->id_tipo_encargo($Qgrupo, $Qnom_tipo);
             if (!str_contains((string)$condta, '.')) {
                 $id_tipo_enc = $condta;
             } else {
@@ -54,19 +61,23 @@ final class EncargoVerNuevo
             return ['error' => _('Debe llenar el campo descripción')];
         }
 
-        $newId = $EncargoRepository->getNewId();
+        $newId = $this->encargoRepository->getNewId();
         $oEncargo = new Encargo();
         $oEncargo->setId_enc($newId);
         $oEncargo->setId_tipo_enc((int)$id_tipo_enc);
-        $oEncargo->setGrupoEncargoVo(EncargoGrupo::fromNullableInt($Qsf_sv));
+        $grupo = EncargoGrupo::fromNullableInt($Qsf_sv);
+        if ($grupo === null) {
+            return ['error' => _('grupo de encargo no valido')];
+        }
+        $oEncargo->setGrupoEncargoVo($grupo);
         $oEncargo->setId_ubi($Qid_ubi);
         $oEncargo->setId_zona($Qid_zona);
         $oEncargo->setDesc_enc($Qdesc_enc);
         $oEncargo->setIdioma_enc($Qidioma_enc);
         $oEncargo->setDesc_lugar($Qdesc_lugar);
         $oEncargo->setObserv($Qobserv);
-        if ($EncargoRepository->Guardar($oEncargo) === false) {
-            return ['error' => _('hay un error, no se ha guardado') . "\n" . $EncargoRepository->getErrorTxt()];
+        if ($this->encargoRepository->Guardar($oEncargo) === false) {
+            return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoRepository->getErrorTxt()];
         }
 
         return ['error' => ''];

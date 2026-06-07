@@ -686,3 +686,86 @@ encola los mails en `ColaMail`. Responde `{success, mensaje, data:'ok'}`.
   en el frontend, que detecta y auto-carga el flujo `un_sacd`.
 - El HTML de impresion se reconstruye en cliente a partir del JSON; los
   estilos `print` viven en el `<style>` del phtml.
+
+---
+
+## Cierre DI (2026-06-06)
+
+Los 14 controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()` (sin `::execute()` estático ni `new` de use
+cases). Entrada POST via `input_string` / `input_int` / `input_string_list`.
+
+### Resultado del cierre DI
+
+| Criterio | Estado |
+|----------|--------|
+| `$GLOBALS['container']` en `src/actividadessacd/` | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | **14/14** |
+| `application/` con constructor DI | **16** clases (14 use cases + 2 services) |
+| Pg repos con `GlobalPdo::get()` | **1/1** (`PgActividadSacdTextoRepository`) |
+| Casos de uso en `config/dependencies.php` | **17** entradas `autowire()` (1 repo + 2 services + 14 use cases) |
+| Tests `tests/unit/actividadessacd/` | **74 OK** |
+| Tests `tests/integration/actividadessacd/` | **28 OK** |
+
+### `src/actividadessacd/config/dependencies.php`
+
+Registra el repositorio del módulo (`ActividadSacdTextoRepositoryInterface`),
+`ActividadesSacdHelper`, `ComunicarActividadesSacdService` (con deps
+externas de actividades, cargos, centro, personas, ubis, usuarios, etc.)
+y todos los use cases: `ComSacdActivPeriodoPageData`,
+`ComunicacionActividadesSacdData`, `ComunicacionActividadesSacdEnviar`,
+`ListaActividadesSacdData`, `LocalesDesplegableData`, `SacdAsignar`,
+`SacdAsignarAuto`, `SacdEliminar`, `SacdReordenar`, `SacdsDisponiblesData`,
+`SacdsEncargadosData`, `SolapesSacdData`, `TextoComunicacionData`,
+`TextoComunicacionGuardar`.
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (inicio) | `composer phpstan:file -- src/actividadessacd/` | **155** |
+| 2026-06-06 (cierre) | `composer phpstan:file -- src/actividadessacd/` | **0** |
+
+Áreas abordadas en el cierre (155 → 0):
+
+- Application: constructor DI en los 14 use cases y 2 services; helpers
+  `input_*`; tipos de retorno en payloads JSON; `PermisosActividades`
+  instanceof guards; `clone` de services configurables en Data/Enviar.
+- Domain: entidad `ActividadSacdTexto`, VOs y contrato con PHPDoc
+  acotado; setters nullable en VOs.
+- Repo `PgActividadSacdTextoRepository`: guards PDO, `GlobalPdo::get()`,
+  tipos de retorno `list<>`.
+- HTTP controllers: `DependencyResolver::get()` + helpers `input_*`.
+- Cross-module: PHPDoc en `CargoOAsistenteInterface::getSolapes()` para
+  aceptar `PersonaSacd`; corrección iteración `getArrayIdsWithKeyFini`
+  en `SacdAsignarAuto`.
+
+### Deuda post-refactor
+
+#### Completado
+
+- [x] 0 `$GLOBALS['container']` en todo `src/actividadessacd/`
+- [x] Todos los controllers HTTP via `DependencyResolver`
+- [x] Casos de uso con constructor DI
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests `tests/unit/actividadessacd/`: 74 tests
+- [x] Tests `tests/integration/actividadessacd/`: 28 tests
+- [x] PHPStan `src/actividadessacd/` en 0 (phpstan-nobaseline.neon)
+
+#### Pendiente
+
+- [ ] 2 controladores frontend con comentario «Sin `use src\`» (ver
+  [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md)):
+  `frontend/actividadessacd/controller/activ_sacd.php`,
+  `frontend/actividadessacd/controller/asignar_sacd_auto.php`
+
+### Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests existentes pasan (`tests/unit/actividadessacd/`: 74;
+  `tests/integration/actividadessacd/`: 28)
+- [x] PHPStan `src/actividadessacd/` en 0 (phpstan-nobaseline.neon)

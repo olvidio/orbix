@@ -13,24 +13,36 @@ use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
 
 final class DireccionesResolver
 {
-    public static function direccionRepo(string $obj_dir): object
+    public function __construct(
+        private DireccionCentroDlRepositoryInterface $direccionCentroDlRepository,
+        private DireccionCentroExRepositoryInterface $direccionCentroExRepository,
+        private DireccionCasaDlRepositoryInterface $direccionCasaDlRepository,
+        private DireccionCasaExRepositoryInterface $direccionCasaExRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroExRepositoryInterface $centroExRepository,
+        private CasaDlRepositoryInterface $casaDlRepository,
+        private CasaExRepositoryInterface $casaExRepository,
+    ) {
+    }
+
+    public function direccionRepo(string $obj_dir): DireccionCentroDlRepositoryInterface|DireccionCentroExRepositoryInterface|DireccionCasaDlRepositoryInterface|DireccionCasaExRepositoryInterface
     {
         return match ($obj_dir) {
-            'DireccionCentroDl' => $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class),
-            'DireccionCentroEx' => $GLOBALS['container']->get(DireccionCentroExRepositoryInterface::class),
-            'DireccionCdcDl' => $GLOBALS['container']->get(DireccionCasaDlRepositoryInterface::class),
-            'DireccionCdcEx' => $GLOBALS['container']->get(DireccionCasaExRepositoryInterface::class),
+            'DireccionCentroDl' => $this->direccionCentroDlRepository,
+            'DireccionCentroEx' => $this->direccionCentroExRepository,
+            'DireccionCdcDl' => $this->direccionCasaDlRepository,
+            'DireccionCdcEx' => $this->direccionCasaExRepository,
             default => throw new \InvalidArgumentException("obj_dir desconocido: $obj_dir"),
         };
     }
 
-    public static function ubiRepo(string $obj_dir): object
+    public function ubiRepo(string $obj_dir): CentroDlRepositoryInterface|CentroExRepositoryInterface|CasaDlRepositoryInterface|CasaExRepositoryInterface
     {
         return match ($obj_dir) {
-            'DireccionCentroDl' => $GLOBALS['container']->get(CentroDlRepositoryInterface::class),
-            'DireccionCentroEx' => $GLOBALS['container']->get(CentroExRepositoryInterface::class),
-            'DireccionCdcDl' => $GLOBALS['container']->get(CasaDlRepositoryInterface::class),
-            'DireccionCdcEx' => $GLOBALS['container']->get(CasaExRepositoryInterface::class),
+            'DireccionCentroDl' => $this->centroDlRepository,
+            'DireccionCentroEx' => $this->centroExRepository,
+            'DireccionCdcDl' => $this->casaDlRepository,
+            'DireccionCdcEx' => $this->casaExRepository,
             default => throw new \InvalidArgumentException("obj_dir desconocido: $obj_dir"),
         };
     }

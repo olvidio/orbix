@@ -105,9 +105,15 @@ class Habitacion
 
     public function setIdHabitacionVo(HabitacionId|string|null $id): void
     {
-        $this->id_habitacion = $id instanceof HabitacionId
-            ? $id
-            : HabitacionId::fromNullableString($id);
+        if ($id instanceof HabitacionId) {
+            $this->id_habitacion = $id;
+            return;
+        }
+        $parsed = HabitacionId::fromNullableString($id);
+        if ($parsed === null) {
+            throw new \InvalidArgumentException('id_habitacion cannot be null');
+        }
+        $this->id_habitacion = $parsed;
     }
 
     /**

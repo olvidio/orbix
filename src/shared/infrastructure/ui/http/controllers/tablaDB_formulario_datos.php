@@ -1,6 +1,7 @@
 <?php
 
 use src\shared\domain\DatosFormRepo;
+use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
 
 $Qclase_info_encoded = filter_input(INPUT_POST, 'clase_info');
@@ -9,8 +10,8 @@ $Qobj_pau = filter_input(INPUT_POST, 'obj_pau');
 $Qmod = filter_input(INPUT_POST, 'mod');
 
 // Tiene que ser en dos pasos.
-$obj = urldecode($Qclase_info_encoded);
-$oInfoClase = new $obj();
+$obj = urldecode((string) $Qclase_info_encoded);
+$oInfoClase = DatosInfoRepoResolver::resolve($obj);
 if (method_exists($oInfoClase, 'setObj_pau')) {
     $oInfoClase->setObj_pau($Qobj_pau);
 }

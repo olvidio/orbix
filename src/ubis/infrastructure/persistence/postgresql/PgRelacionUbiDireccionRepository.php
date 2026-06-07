@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use PDO;
@@ -17,9 +18,9 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
     use HandlesPdoErrors;
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('u_cross_cdc_dir');
     }

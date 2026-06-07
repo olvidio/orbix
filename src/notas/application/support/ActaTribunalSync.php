@@ -2,6 +2,7 @@
 
 namespace src\notas\application\support;
 
+
 use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\entity\ActaTribunal;
 
@@ -13,11 +14,19 @@ use src\notas\domain\entity\ActaTribunal;
  */
 final class ActaTribunalSync
 {
-    public static function rebuild(string $acta, array $examinadores): string
+
+    public function __construct(
+        private readonly ActaTribunalDlRepositoryInterface $actaTribunalDlRepository,
+    ) {
+    }
+    /**
+     * @param list<string> $examinadores
+     */
+    public function rebuild(string $acta, array $examinadores): string
     {
         $error = '';
 
-        $repo = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
+        $repo = $this->actaTribunalDlRepository;
         $cActaTribunal = $repo->getActasTribunales(['acta' => $acta]);
         foreach ($cActaTribunal as $oActaTribunal) {
             if ($repo->Eliminar($oActaTribunal) === false) {

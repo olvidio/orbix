@@ -2,13 +2,19 @@
 
 namespace src\personas\infrastructure\persistence\postgresql\traits;
 
+use src\shared\traits\HandlesPdoErrors;
+
 /**
  * Trait con utilidades de listados para personas, extraído de GestorPersonaGlobal.
  * Debe ser usado por repositorios que heredan de src\shared\infrastructure\persistence\ClaseRepository, ya que
  * requiere los métodos `getoDbl()` y `getNomTabla()`.
+ *
+ * @phpstan-require-extends \src\shared\infrastructure\persistence\ClaseRepository
  */
 trait PersonaGlobalListsTrait
 {
+    use HandlesPdoErrors;
+
     /**
      * Expresión SQL para apellidos y nombre formateado.
      *
@@ -26,7 +32,7 @@ trait PersonaGlobalListsTrait
      * Devuelve un array con los id de centros (id_ctr) de personas activas.
      *
      * @param string $sdonde condición extra SQL (debe empezar por AND)
-     * @return array
+     * @return array<int|string, int|string>
      */
     public function getArrayIdCentros(string $sdonde = ''): array
     {
@@ -34,10 +40,20 @@ trait PersonaGlobalListsTrait
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_ctr FROM $nom_tabla WHERE situacion='A' $sdonde GROUP BY id_ctr";
         $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aLista = [];
         foreach ($stmt as $aDades) {
-            $aLista[$aDades['id_ctr']] = $aDades['id_ctr'];
+            if (!is_array($aDades) || !isset($aDades['id_ctr'])) {
+                continue;
+            }
+            $idCtr = $aDades['id_ctr'];
+            if (!is_int($idCtr) && !is_string($idCtr)) {
+                continue;
+            }
+            $aLista[$idCtr] = $idCtr;
         }
         return $aLista;
     }
@@ -46,7 +62,7 @@ trait PersonaGlobalListsTrait
      * Lista de posibles SACD en array [id_nom => ape_nom].
      *
      * @param string $sdonde condición extra SQL (debe empezar por AND)
-     * @return array|bool
+     * @return array<int|string, string>
      */
     public function getArraySacd(string $sdonde = ''): array
     {
@@ -57,10 +73,16 @@ trait PersonaGlobalListsTrait
                         WHERE situacion='A' AND sacd='t' $sdonde
                         ORDER by apellido1,apellido2,nom";
         $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aSacd = [];
         foreach ($stmt as $aDades) {
-            $aSacd[$aDades['id_nom']] = $aDades['ape_nom'];
+            if (!is_array($aDades) || !isset($aDades['id_nom'], $aDades['ape_nom'])) {
+                continue;
+            }
+            $aSacd[$aDades['id_nom']] = (string) $aDades['ape_nom'];
         }
         return $aSacd;
     }
@@ -69,7 +91,7 @@ trait PersonaGlobalListsTrait
      * Lista de personas activas en array [id_nom => ape_nom(centro)].
      *
      * @param string $id_tabla únicamente usado cuando la tabla es p_de_paso_ex
-     * @return array|bool
+     * @return array<int|string, string>
      */
     public function getArrayPersonas(string $id_tabla = ''): array
     {
@@ -88,10 +110,16 @@ trait PersonaGlobalListsTrait
                        ORDER by apellido1,apellido2,nom";
         }
         $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aPersonas = [];
         foreach ($stmt as $aDades) {
-            $aPersonas[$aDades['id_nom']] = $aDades['ape_nom'];
+            if (!is_array($aDades) || !isset($aDades['id_nom'], $aDades['ape_nom'])) {
+                continue;
+            }
+            $aPersonas[$aDades['id_nom']] = (string) $aDades['ape_nom'];
         }
         return $aPersonas;
     }

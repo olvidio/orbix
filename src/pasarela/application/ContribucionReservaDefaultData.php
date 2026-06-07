@@ -10,11 +10,19 @@ use src\pasarela\domain\ContribucionReserva;
  */
 final class ContribucionReservaDefaultData
 {
-    public static function execute(): array
+    public function __construct(
+        private readonly ContribucionReserva $contribucionReserva,
+    ) {
+    }
+
+    /**
+     * @return array{default: string}
+     */
+    public function execute(): array
     {
-        $oContribucionReserva = new ContribucionReserva();
+        
         return [
-            'default' => (string)$oContribucionReserva->getDefault(),
+            'default' => (string)$this->contribucionReserva->getDefault(),
         ];
     }
 }

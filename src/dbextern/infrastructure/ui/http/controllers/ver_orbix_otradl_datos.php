@@ -1,18 +1,24 @@
 <?php
 
-use src\shared\web\ContestarJson;
 use src\dbextern\application\VerOrbixOtraDlData;
-use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
-use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
-$tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
-$ids_traslados_A = (string)filter_input(INPUT_POST, 'ids_traslados_A');
+$tipo_persona = input_string($_POST, 'tipo_persona');
+$ids_traslados_A = input_string($_POST, 'ids_traslados_A');
 
-$a_ids = json_decode(urldecode($ids_traslados_A), true) ?: [];
+$decoded = json_decode(urldecode($ids_traslados_A), true);
+/** @var list<int> $a_ids */
+$a_ids = [];
+if (is_array($decoded)) {
+    foreach ($decoded as $id) {
+        if (is_int($id) || (is_string($id) && is_numeric($id))) {
+            $a_ids[] = (int)$id;
+        }
+    }
+}
 
-$idMatchRepository = $GLOBALS['container']->get(IdMatchPersonaRepositoryInterface::class);
-$personaBDURepository = $GLOBALS['container']->get(PersonaBDURepositoryInterface::class);
-$useCase = new VerOrbixOtraDlData($idMatchRepository, $personaBDURepository);
-$data = $useCase($tipo_persona, $a_ids);
+$data = DependencyResolver::get(VerOrbixOtraDlData::class)($tipo_persona, $a_ids);
 
 ContestarJson::enviar('', $data);

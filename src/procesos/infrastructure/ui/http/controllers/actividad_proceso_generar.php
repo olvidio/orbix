@@ -1,8 +1,10 @@
 <?php
 
 use src\procesos\application\ActividadProcesoGenerar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$useCase = new ActividadProcesoGenerar();
-$error = $useCase->execute($_POST);
-ContestarJson::enviar($error);
+/** @var ActividadProcesoGenerar $useCase */
+$useCase = DependencyResolver::get(ActividadProcesoGenerar::class);
+
+ContestarJson::enviar($useCase->execute($_POST));

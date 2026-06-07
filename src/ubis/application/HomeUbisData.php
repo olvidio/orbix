@@ -4,13 +4,20 @@ namespace src\ubis\application;
 
 use src\shared\config\ConfigGlobal;
 use src\ubis\application\services\UbiTelecoService;
-use src\ubis\domain\entity\Ubi;
 
-class HomeUbisData
+final class HomeUbisData
 {
-    public static function execute(int $id_ubi): array
+    public function __construct(
+        private UbiFactory $ubiFactory,
+        private UbiTelecoService $ubiTelecoService,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(int $id_ubi): array
     {
-        $oUbi = Ubi::NewUbi($id_ubi);
+        $oUbi = $this->ubiFactory->newUbi($id_ubi);
         if ($oUbi === null) {
             return [];
         }
@@ -82,9 +89,9 @@ class HomeUbisData
                 break;
         }
 
-        $telfs = UbiTelecoService::texto($obj_pau, $id_ubi, 'telf', '*', ' / ');
-        $fax = UbiTelecoService::texto($obj_pau, $id_ubi, 'fax', '*', ' / ');
-        $mails = UbiTelecoService::texto($obj_pau, $id_ubi, 'e-mail', '*', ' / ');
+        $telfs = $this->ubiTelecoService->texto($obj_pau, $id_ubi, 'telf', '*', ' / ');
+        $fax = $this->ubiTelecoService->texto($obj_pau, $id_ubi, 'fax', '*', ' / ');
+        $mails = $this->ubiTelecoService->texto($obj_pau, $id_ubi, 'e-mail', '*', ' / ');
 
         return [
             'id_ubi' => $id_ubi,
@@ -106,4 +113,3 @@ class HomeUbisData
         ];
     }
 }
-

@@ -10,24 +10,6 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 final class CentrosGetPlazasDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_mapea_centros_activos(): void
     {
         $c1 = $this->createMock(\src\ubis\domain\entity\CentroDl::class);
@@ -50,11 +32,8 @@ final class CentrosGetPlazasDataTest extends TestCase
             ->with(['active' => 't', '_ordre' => 'nombre_ubi'])
             ->willReturn([$c1, $c2]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CentroDlRepositoryInterface::class => $repo,
-        ]);
-
-        $out = CentrosGetPlazasData::execute();
+        $useCase = new CentrosGetPlazasData($repo);
+        $out = $useCase->execute();
 
         $this->assertCount(4, $out['a_cabeceras']);
         $this->assertSame(
@@ -65,24 +44,5 @@ final class CentrosGetPlazasDataTest extends TestCase
         $this->assertSame(10, $out['a_valores'][1][3]);
         $this->assertSame(_('si'), $out['a_valores'][1][4]);
         $this->assertSame(_('no'), $out['a_valores'][2][4]);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use src\devel_db_admin\infrastructure\ModuleDbClassInvoker;
 use src\shared\config\ReplicaSelectPolicy;
 
 /**
@@ -23,15 +24,17 @@ final class ApptablesUpdate
      */
     public function ejecutar(array $post): array
     {
-        $idApp = (int) ($post['id_app'] ?? 0);
-        $esquema = (string) ($post['esquema'] ?? '');
-        $accion = (string) ($post['accion'] ?? '');
+        $idApp = is_numeric($post['id_app'] ?? null) ? (int) $post['id_app'] : 0;
+        $esquema = is_scalar($post['esquema'] ?? null) ? (string) $post['esquema'] : '';
+        $accion = is_scalar($post['accion'] ?? null) ? (string) $post['accion'] : '';
 
-        $aTodasApps = $_SESSION['config']['a_apps'] ?? [];
-        if (!is_array($aTodasApps)) {
+        $configSession = $_SESSION['config'] ?? null;
+        $sessionApps = is_array($configSession) ? ($configSession['a_apps'] ?? null) : null;
+        if (!is_array($sessionApps)) {
             throw new \RuntimeException(_('No hay aplicaciones configuradas en la sesión.'));
         }
-
+        /** @var array<string, int|string> $aTodasApps */
+        $aTodasApps = $sessionApps;
         $nomApp = array_search($idApp, $aTodasApps, true);
         if ($nomApp === false || $nomApp === '') {
             throw new \RuntimeException(_('Aplicación no válida.'));
@@ -129,20 +132,7 @@ final class ApptablesUpdate
      */
     private function ejecutarGlobal(string $claseLegacy, string $claseSrc, string $metodo): bool
     {
-        $ejecutado = false;
-        foreach ([$claseLegacy, $claseSrc] as $clase) {
-            if (!class_exists($clase)) {
-                continue;
-            }
-            $instancia = new $clase();
-            if (!method_exists($instancia, $metodo)) {
-                continue;
-            }
-            $instancia->{$metodo}();
-            $ejecutado = true;
-        }
-
-        return $ejecutado;
+        return ModuleDbClassInvoker::invokeMethod($claseLegacy, $claseSrc, $metodo);
     }
 
     /**
@@ -150,20 +140,7 @@ final class ApptablesUpdate
      */
     private function ejecutarEsquema(string $claseLegacy, string $claseSrc, string $esquema, string $metodo): bool
     {
-        $ejecutado = false;
-        foreach ([$claseLegacy, $claseSrc] as $clase) {
-            if (!class_exists($clase)) {
-                continue;
-            }
-            $instancia = new $clase($esquema);
-            if (!method_exists($instancia, $metodo)) {
-                continue;
-            }
-            $instancia->{$metodo}();
-            $ejecutado = true;
-        }
-
-        return $ejecutado;
+        return ModuleDbClassInvoker::invokeMethod($claseLegacy, $claseSrc, $metodo, [$esquema]);
     }
 
     private function mensajeExito(string $accion, string $nomApp, string $esquema): string

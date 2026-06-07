@@ -7,6 +7,9 @@ use InvalidArgumentException;
 final class TipoLavabo
 {
 
+    /**
+     * @return array<int, string>
+     */
     public static function getArrayTipoLavabo(): array
     {
         return [

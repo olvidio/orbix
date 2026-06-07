@@ -11,6 +11,15 @@ use src\usuarios\domain\contracts\LocalRepositoryInterface;
 
 class VerEncargosZonaData
 {
+
+    public function __construct(
+        private readonly EncargoTipoRepositoryInterface $encargoTipoRepository,
+        private readonly EncargoRepositoryInterface $encargoRepository,
+        private readonly LocalRepositoryInterface $localRepository,
+        private readonly CentroEllosRepositoryInterface $centroEllosRepository,
+        private readonly CentroEllasRepositoryInterface $centroEllasRepository,
+    ) {
+    }
     /**
      * Devuelve los datos necesarios para pintar el SlickGrid de encargos de
      * una zona + los desplegables del modal de edicion.
@@ -18,8 +27,9 @@ class VerEncargosZonaData
      * Replica la consulta de `apps/misas/controller/ver_encargos_zona.php`:
      * encargos con `id_tipo_enc >= 8100` (grupo `8...`) de la zona indicada,
      * ordenados por `$orden` (`orden`, `prioridad` o `desc_enc`).
+     * @return array<string, mixed>
      */
-    public static function getData(int $id_zona, string $orden): array
+    public function getData(int $id_zona, string $orden): array
     {
         $columns = [
             ['id' => 'encargo', 'name' => 'Encargo', 'field' => 'encargo', 'width' => 250, 'cssClass' => 'cell-title'],
@@ -31,13 +41,9 @@ class VerEncargosZonaData
             ['id' => 'nom_idioma', 'name' => 'Idioma', 'field' => 'nom_idioma', 'width' => 150, 'cssClass' => 'cell-title'],
             ['id' => 'observ', 'name' => 'Observaciones', 'field' => 'observ', 'width' => 150, 'cssClass' => 'cell-title'],
         ];
-
-        $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
-
+        
         // Tipos de encargo del grupo 8... con id_tipo_enc >= 8100.
-        $cEncargoTipos = $EncargoTipoRepository->getEncargoTipos(
+        $cEncargoTipos = $this->encargoTipoRepository->getEncargoTipos(
             ['id_tipo_enc' => '^8...'],
             ['id_tipo_enc' => '~'],
         );
@@ -59,7 +65,7 @@ class VerEncargosZonaData
                 '_ordre' => $orden,
             ];
             $aOperador = ['id_tipo_enc' => 'ANY'];
-            $cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
+            $cEncargos = $this->encargoRepository->getEncargos($aWhere, $aOperador);
 
             foreach ($cEncargos as $oEncargo) {
                 $id_enc = $oEncargo->getId_enc();
@@ -69,13 +75,13 @@ class VerEncargosZonaData
 
                 $nombre_ubi = '';
                 if (!empty($id_ubi)) {
-                    $oUbi = Ubi::newUbi($id_ubi);
-                    $nombre_ubi = $oUbi->getNombre_ubi();
+                    $oUbi = Ubi::NewUbi($id_ubi);
+                    $nombre_ubi = $oUbi !== null ? $oUbi->getNombre_ubi() : '';
                 }
 
                 $tipo_enc = '';
                 if (!empty($id_tipo_enc)) {
-                    $oEncargoTipo = $EncargoTipoRepository->findById($id_tipo_enc);
+                    $oEncargoTipo = $this->encargoTipoRepository->findById($id_tipo_enc);
                     if ($oEncargoTipo !== null) {
                         $tipo_enc = $oEncargoTipo->getTipo_enc();
                     }
@@ -84,13 +90,13 @@ class VerEncargosZonaData
                 $nom_idioma = '';
                 if ($idioma_enc !== null && $idioma_enc !== '') {
                     $idioma_enc_str = (string)$idioma_enc;
-                    $oLocal = $LocalRepository->findById($idioma_enc_str);
+                    $oLocal = $this->localRepository->findById($idioma_enc_str);
                     if ($oLocal !== null) {
                         $nom_idioma = (string)($oLocal->getNomIdiomaAsString() ?? '');
                     }
                     if ($nom_idioma === '') {
-                        $cIdiomas = $LocalRepository->getLocales(['idioma' => $idioma_enc_str]);
-                        if (is_array($cIdiomas) && count($cIdiomas) > 0) {
+                        $cIdiomas = $this->localRepository->getLocales(['idioma' => $idioma_enc_str]);
+                        if (count($cIdiomas) > 0) {
                             $nom_idioma = (string)($cIdiomas[0]->getNomIdiomaAsString() ?? '');
                         }
                     }
@@ -115,12 +121,10 @@ class VerEncargosZonaData
         }
 
         // Desplegable de centros activos de la zona (ellos + ellas), ordenados por nombre_ubi.
-        $GesCentrosSv = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
-        $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $aWhere = ['active' => 't', 'id_zona' => $id_zona, '_ordre' => 'nombre_ubi'];
         $cCentros = array_merge(
-            $GesCentrosSv->getCentros($aWhere),
-            $GesCentrosSf->getCentros($aWhere),
+            $this->centroEllosRepository->getCentros($aWhere),
+            $this->centroEllasRepository->getCentros($aWhere),
         );
         $aCentros = [];
         foreach ($cCentros as $oCentro) {
@@ -134,7 +138,7 @@ class VerEncargosZonaData
             'rows' => $rows,
             'tipos_encargo' => $posibles_encargo_tipo,
             'centros' => $aCentros,
-            'idiomas' => $LocalRepository->getArrayLocales(),
+            'idiomas' => $this->localRepository->getArrayLocales(),
         ];
     }
 }

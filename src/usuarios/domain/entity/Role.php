@@ -1,6 +1,7 @@
 <?php
 
 namespace src\usuarios\domain\entity;
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\domain\traits\Hydratable;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
@@ -29,7 +30,7 @@ class Role
 
     public function isRole(string $nom_role): bool
     {
-        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
+        $RoleRepository = DependencyResolver::get(RoleRepositoryInterface::class);
         $aPau = $RoleRepository->getArrayRoles();
 
         $nom_role = strtolower($nom_role);
@@ -38,7 +39,7 @@ class Role
 
     public function isRolePau(string $nom_pau): bool
     {
-        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
+        $RoleRepository = DependencyResolver::get(RoleRepositoryInterface::class);
         $aPauRoles = $RoleRepository->getArrayRolesPau();
 
         $nom_pau = strtolower($nom_pau);

@@ -1,51 +1,59 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\is_true;
+
 use src\certificados\application\CertificadoEmitidoGuardarMessages;
-use src\shared\config\ConfigGlobal;
-use src\shared\config\ServerConf;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use src\personas\domain\entity\Persona;
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\web\ContestarJson;
 use src\shared\domain\value_objects\LocaleCode;
-use function src\shared\domain\helpers\is_true;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 
-$Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo');
-$Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
-$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-$Qnom = (string)filter_input(INPUT_POST, 'nom');
-$Qidioma = (string)filter_input(INPUT_POST, 'idioma');
-$Qdestino = (string)filter_input(INPUT_POST, 'destino');
-$Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
-$Qfirmado = (string)filter_input(INPUT_POST, 'firmado');
-$Qf_certificado = (string)filter_input(INPUT_POST, 'f_certificado');
-$Qf_enviado = (string)filter_input(INPUT_POST, 'f_enviado');
+/** @var CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository */
+$certificadoEmitidoRepository = DependencyResolver::get(CertificadoEmitidoRepositoryInterface::class);
 
-$Qcertificado_old = (string)filter_input(INPUT_POST, 'certificado_old');
+$Qnuevo = input_int($_POST, 'nuevo');
+$Qid_item = input_int($_POST, 'id_item');
+$Qid_nom = input_int($_POST, 'id_nom');
+$Qnom = input_string($_POST, 'nom');
+$Qidioma = input_string($_POST, 'idioma');
+$Qdestino = input_string($_POST, 'destino');
+$Qcertificado = input_string($_POST, 'certificado');
+$Qfirmado = input_string($_POST, 'firmado');
+$Qf_certificado = input_string($_POST, 'f_certificado');
+$Qf_enviado = input_string($_POST, 'f_enviado');
+$Qcertificado_old = input_string($_POST, 'certificado_old');
 
-/* convertir las fechas a DateTimeLocal */
 $oF_certificado = DateTimeLocal::createFromLocal($Qf_certificado);
 $oF_enviado = DateTimeLocal::createFromLocal($Qf_enviado);
 
 $error_txt = '';
 
-$certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
-
 if (is_true($Qnuevo)) {
-    $Qid_item = $certificadoEmitidoRepository->getNewId_item();
+    $Qid_item = (int) $certificadoEmitidoRepository->getNewId_item();
     $oCertificadoEmitido = new CertificadoEmitido();
     $oCertificadoEmitido->setId_item($Qid_item);
 } else {
     $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
+    if ($oCertificadoEmitido === null) {
+        ContestarJson::enviar(_('No se encuentra el certificado'), 'ok');
+        return;
+    }
 }
+
 $oCertificadoEmitido->setId_nom($Qid_nom);
-if (empty($Qnom)) {
+if ($Qnom === '') {
     $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
-    if (!is_object($oPersona)) {
-        $error_txt .= "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
+    if ($oPersona === null) {
+        $error_txt .= "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ': line ' . __LINE__;
         ContestarJson::enviar($error_txt, 'ok');
-        exit();
+        return;
     }
     $Qnom = $oPersona->getNombreApellidos();
 }
@@ -54,15 +62,10 @@ $oCertificadoEmitido->setNom($Qnom);
 $oCertificadoEmitido->setIdiomaVo(LocaleCode::fromNullableString($Qidioma));
 $oCertificadoEmitido->setDestino($Qdestino);
 $oCertificadoEmitido->setCertificado($Qcertificado);
-if (is_true($Qfirmado)) {
-    $firmado = TRUE;
-} else {
-    $firmado = false;
-}
-$oCertificadoEmitido->setFirmado($firmado);
+$oCertificadoEmitido->setFirmado(is_true($Qfirmado));
 $oCertificadoEmitido->setEsquema_emisor(ConfigGlobal::mi_region_dl());
 $oCertificadoEmitido->setF_certificado($oF_certificado);
-if (!empty($oF_enviado)) {
+if ($oF_enviado instanceof DateTimeLocal) {
     $oCertificadoEmitido->setF_enviado($oF_enviado);
 }
 
@@ -74,11 +77,11 @@ try {
 }
 if ($guardado === false && $error_txt === '') {
     $error_txt .= CertificadoEmitidoGuardarMessages::fromDatabaseError(
-        (string)$certificadoEmitidoRepository->getErrorTxt()
+        $certificadoEmitidoRepository->getErrorTxt(),
     );
 }
-// borrar el pdf en log
-if ($guardado && !empty($Qcertificado_old)) {
+
+if ($guardado && $Qcertificado_old !== '') {
     $filename_sin_barra = str_replace('/', '_', $Qcertificado_old);
     $filename_sin_espacio = str_replace(' ', '_', $filename_sin_barra);
     $filename_pdf = ServerConf::DIR . '/log/tmp/' . $filename_sin_espacio . '.pdf';
@@ -87,7 +90,5 @@ if ($guardado && !empty($Qcertificado_old)) {
     }
 }
 
-$data['mensaje'] = 'ok';
-$data['item'] = $Qid_item;
-
+$data = ['mensaje' => 'ok', 'item' => $Qid_item];
 ContestarJson::enviar($error_txt, $data);

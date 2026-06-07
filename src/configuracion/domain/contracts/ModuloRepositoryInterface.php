@@ -16,6 +16,12 @@ use src\configuracion\domain\entity\Modulo;
 interface ModuloRepositoryInterface
 {
 
+    /**
+     * @return array<int|string, string>
+     */
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayModulos(): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -23,9 +29,9 @@ interface ModuloRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Modulo
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Modulo
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Modulo> Una colección de objetos de tipo Modulo
      */
     public function getModulos(array $aWhere = [], array $aOperators = []): array;
 
@@ -45,14 +51,20 @@ interface ModuloRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_mod
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_mod): array|bool;
+    public function datosById(int $id_mod): array|false;
 
     /**
      * Busca la clase con id_mod en el repositorio.
      */
     public function findById(int $id_mod): ?Modulo;
 
+    /**
+     * @return int|string
+     */
+    /**
+     * @return int|string
+     */
     public function getNewId();
 }

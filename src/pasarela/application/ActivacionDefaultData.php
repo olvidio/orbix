@@ -10,11 +10,19 @@ use src\pasarela\domain\Activacion;
  */
 final class ActivacionDefaultData
 {
-    public static function execute(): array
+    public function __construct(
+        private readonly Activacion $activacion,
+    ) {
+    }
+
+    /**
+     * @return array{default: string}
+     */
+    public function execute(): array
     {
-        $oActivacion = new Activacion();
+        
         return [
-            'default' => (string)$oActivacion->getDefault(),
+            'default' => (string)$this->activacion->getDefault(),
         ];
     }
 }

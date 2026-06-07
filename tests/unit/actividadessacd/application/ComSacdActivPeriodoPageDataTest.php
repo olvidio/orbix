@@ -40,8 +40,7 @@ final class ComSacdActivPeriodoPageDataTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_perm_mod_txt_true_si_usuario_no_es_p_sacd(): void
-    {
+    public function test_perm_mod_txt_true_si_usuario_no_es_p_sacd(): void {
         $oUsuario = new Usuario();
         $oUsuario->setId_usuario(501);
         $oUsuario->setId_role(2);
@@ -52,17 +51,11 @@ final class ComSacdActivPeriodoPageDataTest extends TestCase
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('getArrayRoles')->willReturn([2 => 'admin', 9 => 'p-sacd']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $usuarioRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-        ]);
-
-        $out = ComSacdActivPeriodoPageData::execute();
+        $out = (new \src\actividadessacd\application\ComSacdActivPeriodoPageData($usuarioRepo, $roleRepo))->execute();
         $this->assertSame(['perm_mod_txt' => true], $out);
     }
 
-    public function test_perm_mod_txt_false_si_rol_es_p_sacd(): void
-    {
+    public function test_perm_mod_txt_false_si_rol_es_p_sacd(): void {
         $oUsuario = new Usuario();
         $oUsuario->setId_usuario(501);
         $oUsuario->setId_role(9);
@@ -73,29 +66,18 @@ final class ComSacdActivPeriodoPageDataTest extends TestCase
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('getArrayRoles')->willReturn([9 => 'p-sacd']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $usuarioRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-        ]);
-
-        $out = ComSacdActivPeriodoPageData::execute();
+        $out = (new \src\actividadessacd\application\ComSacdActivPeriodoPageData($usuarioRepo, $roleRepo))->execute();
         $this->assertSame(['perm_mod_txt' => false], $out);
     }
 
-    public function test_perm_mod_txt_true_si_usuario_no_encontrado(): void
-    {
+    public function test_perm_mod_txt_true_si_usuario_no_encontrado(): void {
         $usuarioRepo = $this->createMock(UsuarioRepositoryInterface::class);
         $usuarioRepo->method('findById')->willReturn(null);
 
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->expects($this->never())->method('getArrayRoles');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $usuarioRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-        ]);
-
-        $out = ComSacdActivPeriodoPageData::execute();
+        $out = (new \src\actividadessacd\application\ComSacdActivPeriodoPageData($usuarioRepo, $roleRepo))->execute();
         $this->assertSame(['perm_mod_txt' => true], $out);
     }
 

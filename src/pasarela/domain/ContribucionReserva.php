@@ -4,72 +4,78 @@ namespace src\pasarela\domain;
 
 use src\pasarela\domain\contracts\PasarelaConfigRepositoryInterface;
 use src\pasarela\domain\entity\PasarelaConfig;
-use stdClass;
 
 /**
  * Configuración del parámetro `contribucion_reserva`.
- *
- * Encapsula default + excepciones por id_tipo_activ. Persistencia delegada en
- * {@see PasarelaConfigRepositoryInterface}. No genera HTML ni conoce la UI.
  */
 class ContribucionReserva
 {
     const PARAMETRO = 'contribucion_reserva';
 
-    private $default;
+    private ?int $default = null;
+    /** @var array<int|string, int> */
     private array $a_excepciones = [];
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly PasarelaConfigRepositoryInterface $pasarelaConfigRepository,
+    ) {
         $this->get();
     }
 
-    public function delContribucionReserva($id_tipo_activ): void
+    public function delContribucionReserva(int|string $id_tipo_activ): void
     {
         unset($this->a_excepciones[$id_tipo_activ]);
         $this->guardar();
     }
 
-    public function addContribucionReserva($id_tipo_activ, $contribucion_reserva): void
+    public function addContribucionReserva(int|string $id_tipo_activ, int $contribucion_reserva): void
     {
         $this->a_excepciones[$id_tipo_activ] = $contribucion_reserva;
         $this->guardar();
     }
 
+    /** @param array<int|string, int> $a_excepciones */
     public function setExcepciones(array $a_excepciones): void
     {
         $this->a_excepciones = $a_excepciones;
     }
 
+    /** @return array<int|string, int> */
     public function getExcepciones(): array
     {
         return $this->a_excepciones;
     }
 
-    public function setDefault($default): void
+    public function setDefault(int $default): void
     {
-        $this->default = (int)$default;
+        $this->default = $default;
         $this->guardar();
     }
 
-    public function getDefault()
+    public function getDefault(): ?int
     {
         return $this->default;
     }
 
     private function get(): void
     {
-        $PasarelaConfigRepository = $GLOBALS['container']->get(PasarelaConfigRepositoryInterface::class);
-        $oPasarelaConfig = $PasarelaConfigRepository->findById(self::PARAMETRO);
-        $json_contribucion_reserva = $oPasarelaConfig?->getJson_valor();
-        if (empty((array)$json_contribucion_reserva)) {
+        $oPasarelaConfig = $this->pasarelaConfigRepository->findById(self::PARAMETRO);
+        $jsonData = $oPasarelaConfig?->getJson_valor(returnArray: true);
+        if (!is_array($jsonData) || $jsonData === []) {
             $this->default = 0;
             $this->a_excepciones = [111000 => 45, 111001 => 63];
         } else {
-            $contribucion_reserva = is_string($json_contribucion_reserva) ? json_decode($json_contribucion_reserva) : $json_contribucion_reserva;
-            $aaa = $contribucion_reserva->excepciones ?? [];
-            $this->a_excepciones = (array)$aaa;
-            $this->default = $contribucion_reserva->default ?? null;
+            $raw = $jsonData['excepciones'] ?? [];
+            $this->a_excepciones = [];
+            if (is_array($raw)) {
+                foreach ($raw as $key => $val) {
+                    if (is_numeric($val)) {
+                        $this->a_excepciones[$key] = (int)$val;
+                    }
+                }
+            }
+            $defaultRaw = $jsonData['default'] ?? null;
+            $this->default = is_numeric($defaultRaw) ? (int)$defaultRaw : null;
         }
     }
 
@@ -78,14 +84,13 @@ class ContribucionReserva
         $contribucion_reserva['default'] = $this->default;
         $contribucion_reserva['excepciones'] = $this->a_excepciones;
 
-        $PasarelaConfigRepository = $GLOBALS['container']->get(PasarelaConfigRepositoryInterface::class);
-        $oPasarelaConfig = $PasarelaConfigRepository->findById(self::PARAMETRO);
+        $oPasarelaConfig = $this->pasarelaConfigRepository->findById(self::PARAMETRO);
         if ($oPasarelaConfig === null) {
             $oPasarelaConfig = new PasarelaConfig();
             $oPasarelaConfig->setNom_parametro(self::PARAMETRO);
         }
 
         $oPasarelaConfig->setJson_valor($contribucion_reserva);
-        $PasarelaConfigRepository->Guardar($oPasarelaConfig);
+        $this->pasarelaConfigRepository->Guardar($oPasarelaConfig);
     }
 }

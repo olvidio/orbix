@@ -12,11 +12,19 @@ use src\pasarela\domain\ContribucionReserva;
  */
 final class ContribucionReservaLista
 {
-    public static function execute(): array
-    {
-        $oContribucionReserva = new ContribucionReserva();
+    public function __construct(
+        private readonly ContribucionReserva $contribucionReserva,
+    ) {
+    }
 
-        $a_excepciones_raw = $oContribucionReserva->getExcepciones();
+    /**
+     * @return array{default: string, excepciones: list<array{id_tipo_activ: string, etiqueta: string, valor: string}>}
+     */
+    public function execute(): array
+    {
+        
+
+        $a_excepciones_raw = $this->contribucionReserva->getExcepciones();
         $a_excepciones = [];
         foreach ($a_excepciones_raw as $id_tipo_activ => $valor) {
             $oActividadTipo = new TiposActividades((string)$id_tipo_activ);
@@ -28,7 +36,7 @@ final class ContribucionReservaLista
         }
 
         return [
-            'default' => (string)$oContribucionReserva->getDefault(),
+            'default' => (string)$this->contribucionReserva->getDefault(),
             'excepciones' => $a_excepciones,
         ];
     }

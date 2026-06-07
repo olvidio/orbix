@@ -25,7 +25,7 @@ class PeriodoDateRange
             case 'esta_semana':
                 $dia_week = (int)date('N');
                 $dia_week--;
-                if ($dia_week === -1) {
+                if ($dia_week === 0) {
                     $dia_week = 6;
                 }
                 $empiezamin_dt = new DateTimeLocal(date('Y-m-d'));

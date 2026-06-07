@@ -17,21 +17,27 @@ use function src\shared\domain\helpers\is_true;
 interface DescTelecoRepositoryInterface
 {
 
-    public function getArrayDescTelecoPersonas($sdepende): array;
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayDescTelecoPersonas(string $sdepende): array;
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo DescTeleco
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo DescTeleco
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<DescTeleco> Una colección de objetos de tipo DescTeleco
 	
 	 */
 	public function getDescsTeleco(array $aWhere=[], array $aOperators=[]): array;
 
-    public function getArrayDescTelecoUbis($sdepende): array;
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayDescTelecoUbis(string $sdepende): array;
 
 /* -------------------- ENTIDAD --------------------------------------------- */
 
@@ -50,10 +56,22 @@ interface DescTelecoRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(int $id_item): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_item): array|false;
 	
     /**
      * Busca la clase con id_item en el repositorio.

@@ -20,6 +20,14 @@ interface PersonaNotaRepositoryInterface
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
+    /** @param array<string, mixed> $aWhere */
+
+
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<\src\notas\domain\entity\PersonaNota>
+     */
     public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -34,9 +42,15 @@ interface PersonaNotaRepositoryInterface
 
     public function getNomTabla(): string;
 
-    public function datosById(int $id_nom, int $id_nivel, int $tipo_acta): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_nom, int $id_nivel, int $tipo_acta): array|false;
 
-    public function datosByPk(PersonaNotaPk $pk): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosByPk(PersonaNotaPk $pk): array|false;
 
     /**
      * Busca la clase con id_situacion en el repositorio.

@@ -1,6 +1,7 @@
 <?php
 
 namespace src\notas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\notas\domain\contracts\ActaExRepositoryInterface;
 
@@ -19,7 +20,7 @@ class PgActaExRepository extends PgActaRepository implements ActaExRepositoryInt
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDBR'];
+        $oDbl = GlobalPdo::get('oDBR');
         $this->setoDbl($oDbl);
         $this->setNomTabla('e_actas_ex');
     }

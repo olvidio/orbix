@@ -87,11 +87,25 @@ final class MigracionCsvPuente
         ];
     }
 
+    /**
+     * @param array{
+     *     export_query: string|null,
+     *     export_path: string|null,
+     *     import_path: string|null,
+     *     import_table: string|null,
+     *     import_columns: list<string>|null,
+     *     sql_before_import: string,
+     *     sql_after_import: string
+     * } $plan
+     */
     public function tieneExport(array $plan): bool
     {
         return $plan['export_query'] !== null && $plan['export_path'] !== null;
     }
 
+    /**
+     * @param array<string, mixed> $plan
+     */
     public function tieneImport(array $plan): bool
     {
         return $plan['import_path'] !== null
@@ -100,13 +114,20 @@ final class MigracionCsvPuente
     }
 
     /**
+     * @param array<string, mixed> $plan
      * @return list<string>
      */
     public function export(PDO $pdo, array $plan): array
     {
-        $path = $this->resolveRelativePath((string) $plan['export_path']);
+        $pathValue = $plan['export_path'] ?? null;
+        $queryValue = $plan['export_query'] ?? null;
+        if (!is_scalar($pathValue) || !is_scalar($queryValue)) {
+            throw new RuntimeException('Plan CSV de export no valido');
+        }
+
+        $path = $this->resolveRelativePath((string) $pathValue);
         $this->ensureWritableDirectory($path);
-        $query = (string) $plan['export_query'];
+        $query = (string) $queryValue;
         try {
             $stmt = $pdo->query($query);
         } catch (PDOException $e) {
@@ -128,7 +149,14 @@ final class MigracionCsvPuente
 
         $rows = 0;
         while (($row = $stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
-            fputcsv($handle, array_values($row));
+            if (!is_array($row)) {
+                continue;
+            }
+            $csvRow = [];
+            foreach (array_values($row) as $value) {
+                $csvRow[] = is_scalar($value) ? (string) $value : null;
+            }
+            fputcsv($handle, $csvRow);
             $rows++;
         }
         fclose($handle);
@@ -139,18 +167,33 @@ final class MigracionCsvPuente
     }
 
     /**
+     * @param array<string, mixed> $plan
      * @return list<string>
      */
     public function import(PDO $pdo, array $plan): array
     {
-        $path = $this->resolveRelativePath((string) $plan['import_path']);
+        $pathValue = $plan['import_path'] ?? null;
+        $tableValue = $plan['import_table'] ?? null;
+        $columnsValue = $plan['import_columns'] ?? null;
+        if (!is_scalar($pathValue) || !is_scalar($tableValue) || !is_array($columnsValue)) {
+            throw new RuntimeException('Plan CSV de import no valido');
+        }
+
+        $path = $this->resolveRelativePath((string) $pathValue);
         if (!is_readable($path)) {
             throw new RuntimeException(sprintf('No se encuentra el CSV en el servidor web: %s', $path));
         }
 
-        $table = (string) $plan['import_table'];
-        /** @var list<string> $columns */
-        $columns = $plan['import_columns'];
+        $table = (string) $tableValue;
+        $columns = [];
+        foreach ($columnsValue as $column) {
+            if (is_scalar($column) && (string) $column !== '') {
+                $columns[] = (string) $column;
+            }
+        }
+        if ($columns === []) {
+            throw new RuntimeException('Plan CSV sin columnas de import');
+        }
         $columnList = implode(', ', $columns);
         $placeholders = implode(', ', array_map(static fn (string $c): string => ':' . $c, $columns));
         $sql = sprintf('INSERT INTO %s (%s) VALUES (%s)', $table, $columnList, $placeholders);
@@ -165,8 +208,8 @@ final class MigracionCsvPuente
         }
 
         $rows = 0;
-        while ($data = fgetcsv($handle)) {
-            if ($data === [null] || $data === false) {
+        while (($data = fgetcsv($handle)) !== false) {
+            if ($data === [null]) {
                 continue;
             }
             $params = [];

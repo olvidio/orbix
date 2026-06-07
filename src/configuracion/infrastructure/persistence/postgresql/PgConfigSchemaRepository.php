@@ -1,6 +1,7 @@
 <?php
 
 namespace src\configuracion\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -25,12 +26,12 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'] ?? $GLOBALS['oDBPC'] ?? null;
-        $oDbl_Select = $GLOBALS['oDBC_Select'] ?? $GLOBALS['oDBPC_Select'] ?? null;
-        if (!$oDbl instanceof PDO || !$oDbl_Select instanceof PDO) {
-            throw new \RuntimeException(
-                'PgConfigSchemaRepository: sin conexión PDO en $GLOBALS (oDBC/oDBPC).'
-            );
+        try {
+            $oDbl = GlobalPdo::get('oDBC');
+            $oDbl_Select = GlobalPdo::get('oDBC_Select');
+        } catch (\RuntimeException) {
+            $oDbl = GlobalPdo::get('oDBPC');
+            $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         }
         $this->setoDbl($oDbl);
         $this->setoDbl_select($oDbl_Select);
@@ -42,9 +43,9 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
     /**
      * devuelve una colección (array) de objetos de tipo ConfigSchema
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ConfigSchema
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ConfigSchema> Una colección de objetos de tipo ConfigSchema
      */
     public function getConfigSchemas(array $aWhere = [], array $aOperators = []): array
     {
@@ -81,27 +82,35 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $ConfigSchema = ConfigSchema::fromArray($aDatos);
             $ConfigSchemaSet->add($ConfigSchema);
         }
-        return $ConfigSchemaSet->getTot();
+        return array_values($ConfigSchemaSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -140,6 +149,9 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -149,6 +161,9 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE parametro = '$parametro'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -160,16 +175,27 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $parametro
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $parametro): array|bool
+    public function datosById(string $parametro): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE parametro = '$parametro'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
 
+        return $result;
     }
 
     /**
@@ -178,7 +204,7 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
     public function findById(string $parametro): ?ConfigSchema
     {
         $aDatos = $this->datosById($parametro);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return ConfigSchema::fromArray($aDatos);

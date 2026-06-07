@@ -10,8 +10,9 @@ use src\shared\domain\DatosInfoRepo;
 class InfoProfesorTipo extends DatosInfoRepo
 {
 
-    public function __construct()
-    {
+    public function __construct(
+        private ProfesorTipoRepositoryInterface $profesorTipoRepository,
+    ) {
         $this->setTxtTitulo(_("tipos de profesores"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este tipo de profesor?"));
         $this->setTxtBuscar(_("buscar un tipo de profesor"));
@@ -23,8 +24,13 @@ class InfoProfesorTipo extends DatosInfoRepo
         $this->setRepositoryInterface(ProfesorTipoRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
+        $aWhere = [];
+        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
@@ -34,9 +40,6 @@ class InfoProfesorTipo extends DatosInfoRepo
             $aWhere = array('tipo_profesor' => $this->k_buscar);
             $aOperador = array('tipo_profesor' => 'sin_acentos');
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getProfesorTipos($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->profesorTipoRepository->getProfesorTipos($aWhere, $aOperador);
     }
 }

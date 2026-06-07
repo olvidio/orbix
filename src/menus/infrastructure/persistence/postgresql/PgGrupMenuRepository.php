@@ -2,6 +2,7 @@
 
 namespace src\menus\infrastructure\persistence\postgresql;
 
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
@@ -26,8 +27,8 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBE'];
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $oDbl = GlobalPdo::get('oDBE');
+        $oDbl_Select = GlobalPdo::get('oDBE_Select');
         $this->setoDbl($oDbl);
         $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('aux_grupmenu');
@@ -39,12 +40,21 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_grupmenu,grup_menu FROM $nom_tabla ORDER BY orden,grup_menu";
         $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         foreach ($stmt as $aClave) {
+            if (!is_array($aClave)) {
+                continue;
+            }
             $clave = $aClave[0];
             $val = $aClave[1];
-            $aOpciones[$clave] = $val;
+            if ((!is_int($clave) && !is_string($clave)) || (!is_scalar($val) && $val !== null)) {
+                continue;
+            }
+            $aOpciones[(int) $clave] = (string) $val;
         }
         return $aOpciones;
     }
@@ -54,9 +64,9 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
     /**
      * devuelve una colección (array) de objetos de tipo GrupMenu
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo GrupMenu
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<GrupMenu> Una colección de objetos de tipo GrupMenu
      */
     public function getGrupMenus(array $aWhere = [], array $aOperators = []): array
     {
@@ -93,27 +103,35 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $GrupMenu = GrupMenu::fromArray($aDatos);
             $GrupMenuSet->add($GrupMenu);
         }
-        return $GrupMenuSet->getTot();
+        return array_values($GrupMenuSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -153,9 +171,12 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
             $campos = "(id_grupmenu,grup_menu,orden)";
             $valores = "(:id_grupmenu,:grup_menu,:orden)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
-        $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
-        return true;
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        if ($stmt === false) {
+            return false;
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_grupmenu): bool
@@ -164,6 +185,9 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_grupmenu = $id_grupmenu";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -175,15 +199,26 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_grupmenu
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_grupmenu): array|bool
+    public function datosById(int $id_grupmenu): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_grupmenu = $id_grupmenu";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 
@@ -193,16 +228,22 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
     public function findById(int $id_grupmenu): ?GrupMenu
     {
         $aDatos = $this->datosById($id_grupmenu);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return GrupMenu::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('aux_grupmenu_id_grupmenu_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

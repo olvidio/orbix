@@ -1,8 +1,10 @@
 <?php
 
 use src\procesos\application\ProcesosRegenerar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$useCase = new ProcesosRegenerar();
-$error = $useCase->execute($_POST);
-ContestarJson::enviar($error);
+/** @var ProcesosRegenerar $useCase */
+$useCase = DependencyResolver::get(ProcesosRegenerar::class);
+
+ContestarJson::enviar($useCase->execute($_POST));

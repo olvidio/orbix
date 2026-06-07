@@ -23,6 +23,11 @@ class DB extends DBAbstract
         $this->esquema = 'global';
     }
 
+    protected function nomTabla(string $tabla): string
+    {
+        return (string) $this->getNomTabla($tabla);
+    }
+
     public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
@@ -64,7 +69,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargos_sacd";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_schema integer NOT NULL,
@@ -88,7 +93,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargos_sacd";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
@@ -99,7 +104,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_tipo";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_schema integer NOT NULL,
@@ -120,7 +125,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_tipo";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
@@ -131,7 +136,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargos";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_schema integer NOT NULL,
@@ -159,7 +164,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargos";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
@@ -170,7 +175,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_horario";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_schema integer NOT NULL,
@@ -199,7 +204,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_horario";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
@@ -210,7 +215,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_horario_excepcion";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_schema integer NOT NULL,
@@ -242,7 +247,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_horario_excepcion";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
@@ -253,7 +258,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_sacd_horario";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_schema integer NOT NULL,
@@ -282,7 +287,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_sacd_horario";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
@@ -293,7 +298,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_sacd_horario_excepcion";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_schema integer NOT NULL,
@@ -324,7 +329,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_sacd_horario_excepcion";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
@@ -335,7 +340,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_sacd_observ";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_schema integer NOT NULL,
@@ -355,7 +360,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_sacd_observ";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
@@ -366,7 +371,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_datos_cgi";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_schema integer NOT NULL,
@@ -388,7 +393,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_datos_cgi";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
@@ -399,7 +404,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_textos";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_schema integer NOT NULL,
@@ -419,7 +424,7 @@ class DB extends DBAbstract
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));
 
         $tabla = "encargo_textos";
-        $nom_tabla = $this->getNomTabla($tabla);
+        $nom_tabla = $this->nomTabla($tabla);
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv-e'));

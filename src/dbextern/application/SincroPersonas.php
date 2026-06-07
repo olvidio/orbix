@@ -3,26 +3,19 @@
 namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
-use src\dbextern\domain\SincroDB;
+use src\dbextern\application\support\SincroDBFactory;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 class SincroPersonas
 {
-    private IdMatchPersonaRepositoryInterface $idMatchRepository;
-    private CentroDlRepositoryInterface $centroDlRepository;
-
     public function __construct(
-        IdMatchPersonaRepositoryInterface $idMatchRepository,
-        CentroDlRepositoryInterface       $centroDlRepository
-    )
-    {
-        $this->idMatchRepository = $idMatchRepository;
-        $this->centroDlRepository = $centroDlRepository;
+        private IdMatchPersonaRepositoryInterface $idMatchRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private SincroDBFactory $sincroDBFactory,
+    ) {
     }
 
     /**
-     * Sincroniza todas las personas unidas de una DL.
-     *
      * @return array{count: int, msg: string}
      */
     public function __invoke(string $region, string $dl_listas, string $tipo_persona): array
@@ -34,10 +27,8 @@ class SincroPersonas
             $ctr = $oCentro->getNombre_ubi();
             $a_centros[$ctr] = $id_ubi;
         }
-        // SincroDB::syncro usa $GLOBALS['a_centros']
-        $GLOBALS['a_centros'] = $a_centros;
 
-        $oSincroDB = new SincroDB();
+        $oSincroDB = $this->sincroDBFactory->create();
         $oSincroDB->setTipo_persona($tipo_persona);
         $oSincroDB->setRegion($region);
         $oSincroDB->setDlListas($dl_listas);
@@ -50,13 +41,17 @@ class SincroPersonas
             $id_nom_listas = $oPersonaListas->getIdentif();
 
             $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_listas' => $id_nom_listas]);
-            if (!empty($cIdMatch[0]) && !empty($cIdMatch)) {
+            if ($cIdMatch !== []) {
                 $i++;
                 $id_orbix = $cIdMatch[0]->getId_orbix();
+                if ($id_orbix === null) {
+                    continue;
+                }
                 $rta = $oSincroDB->syncro($oPersonaListas, $id_orbix);
-                if (!empty($rta)) {
-                    $msg .= !empty($msg) ? "\n" : '';
-                    $msg .= $rta;
+                if (is_array($rta)) {
+                    $msg .= ($msg !== '' ? "\n" : '') . $rta['error'];
+                } elseif ($rta !== '') {
+                    $msg .= ($msg !== '' ? "\n" : '') . $rta;
                 }
             }
         }

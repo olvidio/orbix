@@ -8,7 +8,7 @@ class PermAfectados extends XPermisos
 {
     public static string $classname = "CuadrosPermActiv";
 
-    public function __construct($iaccion = 0)
+    public function __construct(int $iaccion = 0)
     {
         $this->iaccion = $iaccion;
         $this->permissions = PermAfectadosBits::map();

@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -8,8 +9,12 @@ $oMiUsuario = ConfigGlobal::MiUsuario();
 $id_usuario = $oMiUsuario->getId_usuario();
 
 // Verificar si el usuario tiene 2FA habilitado
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($id_usuario);
+if ($oUsuario === null) {
+    header('Location: ' . ConfigGlobal::getWeb());
+    exit();
+}
 $has_2fa = $oUsuario->isHas_2fa();
 
 // Si el usuario no tiene 2FA habilitado, redirigir a la página de configuración de 2FA

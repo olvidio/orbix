@@ -7,38 +7,39 @@ use src\pasarela\domain\entity\PasarelaConfig;
 
 /**
  * Configuración del parámetro `nombre`.
- *
- * Encapsula excepciones de nombre por id_tipo_activ. Persistencia delegada en
- * {@see PasarelaConfigRepositoryInterface}. No genera HTML ni conoce la UI.
  */
 class Nombre
 {
     const PARAMETRO = 'nombre';
 
+    /** @var array<int|string, string> */
     private array $a_excepciones = [];
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly PasarelaConfigRepositoryInterface $pasarelaConfigRepository,
+    ) {
         $this->get();
     }
 
-    public function delNombre($id_tipo_activ): void
+    public function delNombre(int|string $id_tipo_activ): void
     {
         unset($this->a_excepciones[$id_tipo_activ]);
         $this->guardar();
     }
 
-    public function addNombre($id_tipo_activ, $nombre_actividad): void
+    public function addNombre(int|string $id_tipo_activ, string $nombre_actividad): void
     {
         $this->a_excepciones[$id_tipo_activ] = $nombre_actividad;
         $this->guardar();
     }
 
+    /** @param array<int|string, string> $a_excepciones */
     public function setExcepciones(array $a_excepciones): void
     {
         $this->a_excepciones = $a_excepciones;
     }
 
+    /** @return array<int|string, string> */
     public function getExcepciones(): array
     {
         return $this->a_excepciones;
@@ -46,15 +47,20 @@ class Nombre
 
     private function get(): void
     {
-        $PasarelaConfigRepository = $GLOBALS['container']->get(PasarelaConfigRepositoryInterface::class);
-        $oPasarelaConfig = $PasarelaConfigRepository->findById(self::PARAMETRO);
-        $json_nombres = $oPasarelaConfig?->getJson_valor();
-        if (empty((array)$json_nombres)) {
+        $oPasarelaConfig = $this->pasarelaConfigRepository->findById(self::PARAMETRO);
+        $jsonData = $oPasarelaConfig?->getJson_valor(returnArray: true);
+        if (!is_array($jsonData) || $jsonData === []) {
             $this->a_excepciones = [111000 => 'prova1', 111001 => 'prova2'];
         } else {
-            $nombres = is_string($json_nombres) ? json_decode($json_nombres) : $json_nombres;
-            $aaa = $nombres->excepciones ?? [];
-            $this->a_excepciones = (array)$aaa;
+            $raw = $jsonData['excepciones'] ?? [];
+            $this->a_excepciones = [];
+            if (is_array($raw)) {
+                foreach ($raw as $key => $val) {
+                    if (is_scalar($val)) {
+                        $this->a_excepciones[$key] = (string)$val;
+                    }
+                }
+            }
         }
     }
 
@@ -62,14 +68,13 @@ class Nombre
     {
         $a_nombres['excepciones'] = $this->a_excepciones;
 
-        $PasarelaConfigRepository = $GLOBALS['container']->get(PasarelaConfigRepositoryInterface::class);
-        $oPasarelaConfig = $PasarelaConfigRepository->findById(self::PARAMETRO);
+        $oPasarelaConfig = $this->pasarelaConfigRepository->findById(self::PARAMETRO);
         if ($oPasarelaConfig === null) {
             $oPasarelaConfig = new PasarelaConfig();
             $oPasarelaConfig->setNom_parametro(self::PARAMETRO);
         }
 
         $oPasarelaConfig->setJson_valor($a_nombres);
-        $PasarelaConfigRepository->Guardar($oPasarelaConfig);
+        $this->pasarelaConfigRepository->Guardar($oPasarelaConfig);
     }
 }

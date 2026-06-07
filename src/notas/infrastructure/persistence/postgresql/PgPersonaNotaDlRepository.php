@@ -1,6 +1,7 @@
 <?php
 
 namespace src\notas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 
@@ -19,7 +20,7 @@ class PgPersonaNotaDlRepository extends PgPersonaNotaRepository implements Perso
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDB'];
+        $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
         $this->setNomTabla('e_notas_dl');
     }

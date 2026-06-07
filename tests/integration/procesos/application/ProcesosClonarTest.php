@@ -4,6 +4,7 @@ namespace Tests\integration\procesos\application;
 
 use src\procesos\application\ProcesosClonar;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 use Tests\factories\procesos\TareaProcesoFactory;
 use Tests\myTest;
 
@@ -89,17 +90,10 @@ class ProcesosClonarTest extends myTest
         $tareasDstAntes = $this->repository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso_dst]);
         $this->assertCount(1, $tareasDstAntes);
 
-        // Clonar. El caso de uso termina llamando a ProcesosGet que requiere
-        // ActividadFase reales para renderizar el árbol; como el objetivo
-        // aquí es validar la clonación, ignoramos el fallo del render HTML.
-        try {
-            (new ProcesosClonar())->execute([
-                'id_tipo_proceso' => $id_tipo_proceso_dst,
-                'id_tipo_proceso_ref' => $id_tipo_proceso_ref,
-            ]);
-        } catch (\Throwable $e) {
-            // ignorar, solo nos interesa el estado del repositorio
-        }
+        DependencyResolver::get(ProcesosClonar::class)->execute([
+            'id_tipo_proceso' => $id_tipo_proceso_dst,
+            'id_tipo_proceso_ref' => $id_tipo_proceso_ref,
+        ]);
 
         // Ahora destino debe tener 2 tareas y la previa (con su id_item viejo) no existir
         $this->assertNull($this->repository->findById($dst_prev->getId_item()));

@@ -11,24 +11,6 @@ use src\personas\domain\entity\PersonaPub;
 
 final class CertificadoEmitidoUploadFirmadoFormDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_usa_nom_del_certificado_si_no_vacio(): void
     {
         $oCert = new CertificadoEmitido();
@@ -45,12 +27,8 @@ final class CertificadoEmitidoUploadFirmadoFormDataTest extends TestCase
         $certRepo = $this->createMock(CertificadoEmitidoRepositoryInterface::class);
         $certRepo->method('findById')->with(3)->willReturn($oCert);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CertificadoEmitidoRepositoryInterface::class => $certRepo,
-            PersonaFinderService::class => $finder,
-        ]);
-
-        $data = CertificadoEmitidoUploadFirmadoFormData::execute(3);
+        $useCase = new CertificadoEmitidoUploadFirmadoFormData($certRepo, $finder);
+        $data = $useCase->execute(3);
         $this->assertSame(9, $data['id_nom']);
         $this->assertSame('Nombre en cert', $data['nom']);
         $this->assertSame('Apellido, Nombre', $data['apellidos_nombre']);
@@ -72,12 +50,8 @@ final class CertificadoEmitidoUploadFirmadoFormDataTest extends TestCase
         $certRepo = $this->createMock(CertificadoEmitidoRepositoryInterface::class);
         $certRepo->method('findById')->willReturn($oCert);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CertificadoEmitidoRepositoryInterface::class => $certRepo,
-            PersonaFinderService::class => $finder,
-        ]);
-
-        $data = CertificadoEmitidoUploadFirmadoFormData::execute(1);
+        $useCase = new CertificadoEmitidoUploadFirmadoFormData($certRepo, $finder);
+        $data = $useCase->execute(1);
         $this->assertSame('Solo apellidos', $data['nom']);
         $this->assertSame('Solo apellidos', $data['apellidos_nombre']);
     }
@@ -95,31 +69,9 @@ final class CertificadoEmitidoUploadFirmadoFormDataTest extends TestCase
         $certRepo = $this->createMock(CertificadoEmitidoRepositoryInterface::class);
         $certRepo->method('findById')->willReturn($oCert);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CertificadoEmitidoRepositoryInterface::class => $certRepo,
-            PersonaFinderService::class => $finder,
-        ]);
-
-        $data = CertificadoEmitidoUploadFirmadoFormData::execute(1);
+        $useCase = new CertificadoEmitidoUploadFirmadoFormData($certRepo, $finder);
+        $data = $useCase->execute(1);
         $this->assertSame('', $data['nom']);
         $this->assertSame('', $data['apellidos_nombre']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

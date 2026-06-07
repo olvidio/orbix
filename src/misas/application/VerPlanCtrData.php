@@ -21,6 +21,18 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
  */
 class VerPlanCtrData
 {
+
+    public function __construct(
+        private readonly UsuarioRepositoryInterface $usuarioRepository,
+        private readonly RoleRepositoryInterface $roleRepository,
+        private readonly ZonaRepositoryInterface $zonaRepository,
+        private readonly EncargoCtrRepositoryInterface $encargoCtrRepository,
+        private readonly EncargoRepositoryInterface $encargoRepository,
+        private readonly EncargoDiaRepositoryInterface $encargoDiaRepository,
+        private readonly InicialesSacdRepositoryInterface $inicialesSacdRepository,
+        private readonly PersonaSacdRepositoryInterface $personaSacdRepository,
+    ) {
+    }
     /**
      * @return array{
      *     columns: array<int, array{letra: string, num_dia: string, num_mes: string, id_dia: string}>,
@@ -28,29 +40,31 @@ class VerPlanCtrData
      *     legend: array<int, array{iniciales: string, nombre: string}>
      * }
      */
-    public static function getData(
+    public function getData(
         int $id_ubi,
         string $periodo,
         string $empiezamin,
         string $empiezamax,
     ): array {
-        $container = $GLOBALS['container'];
+        $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        if ($oMiUsuario === null) {
+            return [
+                'columns' => [],
+                'rows' => [],
+                'legend' => [],
+            ];
+        }
 
-        $UsuarioRepository = $container->get(UsuarioRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         $id_sacd = $oMiUsuario->getCsvIdPauVo()?->value();
         $id_role = $oMiUsuario->getId_role();
-
-        $RoleRepository = $container->get(RoleRepositoryInterface::class);
-        $aRoles = $RoleRepository->getArrayRoles();
+        $aRoles = $this->roleRepository->getArrayRoles();
         $role = '';
         $jefe_zona = false;
 
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
             $role = 'sacd';
-            $ZonaRepository = $container->get(ZonaRepositoryInterface::class);
-            $cZonas = $ZonaRepository->getZonas(['id_nom' => $id_sacd]);
-            $jefe_zona = is_array($cZonas) && count($cZonas) > 0;
+            $cZonas = $this->zonaRepository->getZonas(['id_nom' => $id_sacd]);
+            $jefe_zona = count($cZonas) > 0;
         }
 
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro sv' || $aRoles[$id_role] === 'Centro sf')) {
@@ -78,21 +92,18 @@ class VerPlanCtrData
                 'id_dia' => $date->format('Y-m-d'),
             ];
         }
-
-        $EncargoCtrRepository = $container->get(EncargoCtrRepositoryInterface::class);
-        $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($id_ubi);
-        $EncargoRepository = $container->get(EncargoRepositoryInterface::class);
-        $EncargoDiaRepository = $container->get(EncargoDiaRepositoryInterface::class);
-        $InicialesSacdRepository = $container->get(InicialesSacdRepositoryInterface::class);
-        $PersonaSacdRepository = $container->get(PersonaSacdRepositoryInterface::class);
-
+        $cEncargosCtr = $this->encargoCtrRepository->getEncargosCentro($id_ubi);
+                
         $rows = [];
         $lista_sacd = [];
         $nombre_sacd = [];
 
         foreach ($cEncargosCtr as $oEncargoCtr) {
             $id_enc_row = $oEncargoCtr->getId_enc();
-            $oEncargo = $EncargoRepository->findById($id_enc_row);
+            if ($id_enc_row === null) {
+                continue;
+            }
+            $oEncargo = $this->encargoRepository->findById($id_enc_row);
             if ($oEncargo === null) {
                 continue;
             }
@@ -108,18 +119,21 @@ class VerPlanCtrData
                     '_ordre' => 'tstart',
                 ];
                 $aOperador = ['tstart' => 'BETWEEN'];
-                $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $this->encargoDiaRepository->getEncargoDias($aWhere, $aOperador);
                 foreach ($cEncargosDia as $oEncargoDia) {
                     $id_nom = $oEncargoDia->getId_nom();
+                    if ($id_nom === null) {
+                        continue;
+                    }
                     $status = $oEncargoDia->getStatus();
                     $hora_ini = $oEncargoDia->getTstart()->format('H:i');
                     if ($hora_ini === '00:00') {
                         $hora_ini = '';
                     }
-                    $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
+                    $InicialesSacd = $this->inicialesSacdRepository->findById($id_nom);
                     $iniciales = $InicialesSacd !== null ? $InicialesSacd->getIniciales() : ' -- ';
                     $lista_sacd[$id_nom] = $iniciales;
-                    $PersonaSacd = $PersonaSacdRepository->findById($id_nom);
+                    $PersonaSacd = $this->personaSacdRepository->findById($id_nom);
                     $nombre_sacd[$id_nom] = $PersonaSacd !== null ? $PersonaSacd->getNombreApellidos() : '';
                     $iniciales .= ' ' . $hora_ini;
                     $iniciales .= empty($oEncargoDia->getObserv()) ? '' : '*';

@@ -8,6 +8,7 @@ use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\entity\Situacion;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 
 /**
@@ -25,14 +26,15 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
-        $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
-        $this->setoDbl_select($oDbl_Select);
+        $this->setoDbl(GlobalPdo::get('oDBPC'));
+        $this->setoDbl_select(GlobalPdo::get('oDBPC_Select'));
         $this->setNomTabla('xp_situacion');
     }
 
-    public function getArraySituaciones($traslado = false)
+    /**
+     * @return array<string, string>
+     */
+    public function getArraySituaciones(bool $traslado = false): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -42,12 +44,16 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         }
         $sQuery = "SELECT situacion,nombre_situacion FROM $nom_tabla $Condicion ORDER BY situacion";
         $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
-        foreach ($stmt as $aClave) {
-            $clave = $aClave[0];
-            $val = $aClave[1];
-            $aOpciones[$clave] = $val;
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $aClave) {
+            if (!is_array($aClave) || !isset($aClave['situacion'], $aClave['nombre_situacion'])) {
+                continue;
+            }
+            $aOpciones[(string)$aClave['situacion']] = (string)$aClave['nombre_situacion'];
         }
 
         return $aOpciones;
@@ -58,9 +64,9 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
     /**
      * devuelve una colección (array) de objetos de tipo Situacion
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Situacion
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Situacion> Una colección de objetos de tipo Situacion
      */
     public function getSituaciones(array $aWhere = [], array $aOperators = []): array
     {
@@ -97,27 +103,32 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Situacion = Situacion::fromArray($aDatos);
             $SituacionSet->add($Situacion);
         }
-        return $SituacionSet->getTot();
+        return array_values($SituacionSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -156,6 +167,9 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -165,6 +179,9 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE situacion = '$situacion'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -176,15 +193,26 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $situacion
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $situacion): array|bool
+    public function datosById(string $situacion): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE situacion = '$situacion'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
 
     }
 
@@ -194,7 +222,7 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
     public function findById(string $situacion): ?Situacion
     {
         $aDatos = $this->datosById($situacion);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Situacion::fromArray($aDatos);

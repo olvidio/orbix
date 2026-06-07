@@ -2,6 +2,9 @@
 
 namespace src\personas\application\support;
 
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
 /**
  * Extrae id_nom e id_tabla del POST típico de listados (campo sel o campos sueltos).
  */
@@ -15,7 +18,7 @@ final class PersonaSeleccionInput
     {
         $sel = $input['sel'] ?? null;
         if (is_array($sel) && $sel !== []) {
-            $primero = (string)($sel[0] ?? '');
+            $primero = is_scalar($sel[0] ?? null) ? (string)$sel[0] : '';
             if ($primero !== '') {
                 $id_nom = (int)strtok($primero, '#');
                 $id_tabla = (string)strtok('#');
@@ -31,8 +34,8 @@ final class PersonaSeleccionInput
         }
 
         return [
-            'id_nom' => (int)($input['id_nom'] ?? 0),
-            'id_tabla' => (string)($input['id_tabla'] ?? ''),
+            'id_nom' => input_int($input, 'id_nom'),
+            'id_tabla' => input_string($input, 'id_tabla'),
         ];
     }
 

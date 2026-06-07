@@ -11,6 +11,7 @@ use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\procesos\domain\entity\ActividadFase;
 use src\procesos\domain\entity\ActividadProcesoTarea;
+use src\permisos\domain\XPermisos;
 use src\procesos\domain\value_objects\FaseId;
 use function src\shared\domain\helpers\is_true;
 
@@ -25,11 +26,22 @@ use function src\shared\domain\helpers\is_true;
  */
 class ProcesoActividadService
 {
+    /** @var array<string, array<string, string>> */
     private array $aFasesPrevias = [];
+
+    /** @var array<string, list<array<string, string>>> */
     private array $aFasesPosteriores = [];
+
+    /** @var array<string, bool> */
     private array $aFasesEstado = [];
+
+    /** @var list<string> */
     private array $aFasesTareasEncadenadas = [];
+
+    /** @var array<int|string, string> */
     private array $aOpcionesOficinas = [];
+
+    /** @var list<string> */
     private array $aStack = [];
     private bool $bForce = false;
     private string $errorTxt = '';
@@ -47,7 +59,10 @@ class ProcesoActividadService
         return $this->errorTxt;
     }
 
-    private function abort(string $msg): void
+    /**
+     * @return never
+     */
+    private function abort(string $msg): never
     {
         $this->errorTxt = $msg;
         throw new \RuntimeException($msg);
@@ -70,8 +85,11 @@ class ProcesoActividadService
     {
         $id_tipo_proceso = $ActividadProcesoTarea->getIdTipoProcesoVo()->value();
         $id_activ = $ActividadProcesoTarea->getId_activ();
-        $id_fase = $ActividadProcesoTarea->getIdFaseVo()->value();
-        $id_tarea = $ActividadProcesoTarea->getIdTareaVo()->value();
+        $id_fase = $ActividadProcesoTarea->getId_fase();
+        $id_tarea = $ActividadProcesoTarea->getId_tarea();
+        if ($id_fase === null || $id_tarea === null) {
+            $this->abort(_('Fase o tarea no definida en el proceso'));
+        }
 
         $completado = $ActividadProcesoTarea->isCompletado();
 
@@ -79,15 +97,16 @@ class ProcesoActividadService
         // en caso de completar la fase. Si se quita el 'completado' habría que buscar la fase anterior para saber que status corresponde.
         $permitido = TRUE;
         $oActividad = $this->actividadAllRepository->findById($id_activ);
+        if ($oActividad === null) {
+            $this->abort(sprintf(_('Actividad %s no encontrada'), $id_activ));
+        }
         $statusActividad = $oActividad->getStatusVo()->value();
         $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase, 'id_tarea' => $id_tarea]);
-        // sólo debería haber uno
-        if (!empty($cTareasProceso)) {
-            $oTareaProceso = $cTareasProceso[0];
-        } else {
+        if ($cTareasProceso === []) {
             $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"), $id_tipo_proceso, $id_fase, $id_tarea);
             $this->abort($msg_err);
         }
+        $oTareaProceso = $cTareasProceso[0];
         $fase_tarea = $id_fase . '#' . $id_tarea;
         // comprobar que tengo permiso
         if (!$this->tiene_permiso($id_tipo_proceso, $fase_tarea)) {
@@ -104,16 +123,17 @@ class ProcesoActividadService
         }
         if ($statusProceso !== $statusActividad) { // cambiar el status de la actividad.
             // OJO si la actividad no es de la dl, no puedo cambiarla.
-            $dl_org = $oActividad->getDl_org();
-            $id_tabla = $oActividad->getIdTablaVo()->value();
+            $dl_org = $oActividad->getDl_org() ?? '';
+            $id_tabla = $oActividad->getIdTablaVo()?->value() ?? '';
             // Sólo dre puede aprobar (pasar de proyecto a actual) las actividades
             // ojo marcha atrás tampoco debería poderse.
             if (($statusProceso == StatusId::ACTUAL && $statusActividad < StatusId::ACTUAL)
                 || ($statusActividad == StatusId::ACTUAL && $statusProceso < StatusId::ACTUAL)) {
                 // para dl y dlf:
-                $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
+                $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', (string) $dl_org);
+                $oPerm = $_SESSION['oPerm'] ?? null;
                 if ($dl_org === ConfigGlobal::mi_delef() || $dl_org_no_f === ConfigGlobal::mi_dele()) {
-                    if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                    if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('des')) {
                         $oActividad->setStatusVo($statusProceso);
                         $this->actividadAllRepository->Guardar($oActividad);
                         // además debería marcar como completado la fase correspondiente del proceso de la sf.
@@ -227,6 +247,9 @@ class ProcesoActividadService
     /**
      * Comprueba las dependencias previas de una fase/tarea
      */
+    /**
+     * @return array{marcada: bool, mensaje: string}
+     */
     private function comprobar_dependencia(int $id_activ, int $id_tipo_proceso, string $fase_tarea): array
     {
         $msg = '';
@@ -259,8 +282,12 @@ class ProcesoActividadService
     {
         $id_fase = strtok($fase_tarea, '#');
 
-        $oFase = $this->actividadFaseRepository->findById($id_fase);
-        $descFase = $oFase->getDesc_fase();
+        $idFase = is_numeric($id_fase) ? (int) $id_fase : 0;
+        $oFase = $this->actividadFaseRepository->findById($idFase);
+        if ($oFase === null) {
+            return '';
+        }
+        $descFase = $oFase->getDesc_fase() ?? '';
         switch ($para) {
             case 'marcar':
                 $mensaje = sprintf(_("No tienen completada la fase: %s"), $descFase);
@@ -308,7 +335,8 @@ class ProcesoActividadService
         if (empty($of_responsable_txt)) {
             return true;
         }
-        if ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt)) {
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina($of_responsable_txt)) {
             return true;
         } else {
             return false;
@@ -328,6 +356,9 @@ class ProcesoActividadService
     /**
      * Carga los permisos de oficinas
      */
+    /**
+     * @return array<int|string, string>
+     */
     public function cargar_permisos(): array
     {
         //para crear un desplegable de oficinas. Uso los de los menus
@@ -338,6 +369,9 @@ class ProcesoActividadService
     /**
      * Comprueba las fases/tareas que dependen de la actual
      */
+    /**
+     * @return array{marcada: bool, mensaje: string}
+     */
     private function comprobar_dependientes(int $id_activ, int $id_tipo_proceso, string $fase_tarea): array
     {
         $msg = '';
@@ -345,8 +379,9 @@ class ProcesoActividadService
 
         $this->aFasesTareasEncadenadas = [];
         $this->agregar_dependientes($fase_tarea);
+        $fasesEncadenadas = $this->aFasesTareasEncadenadas;
 
-        foreach ($this->aFasesTareasEncadenadas as $fase_tarea_anterior) {
+        foreach ($fasesEncadenadas as $fase_tarea_anterior) {
             $completado = false;
             if (array_key_exists($fase_tarea_anterior, $this->aFasesEstado)) {
                 $completado = $this->aFasesEstado[$fase_tarea_anterior];
@@ -369,23 +404,25 @@ class ProcesoActividadService
     /**
      * Agrega las fases/tareas dependientes de forma recursiva
      */
-    private function agregar_dependientes(string $fase_tarea_org): array
+    private function agregar_dependientes(string $fase_tarea_org): void
     {
         // buscar id_fase_org en array
         $b = $this->dependientes_de($fase_tarea_org);
         $a = $this->aFasesTareasEncadenadas;
-        $this->aFasesTareasEncadenadas = array_unique(array_merge($a, $b));
+        $this->aFasesTareasEncadenadas = array_values(array_unique(array_merge($a, $b)));
 
-        if (!empty($b)) {
+        if ($b !== []) {
             foreach ($b as $fase_tarea) {
                 $this->agregar_dependientes($fase_tarea);
             }
         }
-        return [];
     }
 
     /**
      * Obtiene las fases/tareas que dependen de la indicada
+     */
+    /**
+     * @return list<string>
      */
     private function dependientes_de(string $fase_tarea_org): array
     {
@@ -419,7 +456,7 @@ class ProcesoActividadService
 
         // Puede ser que el proceso no exista (para sfsv=2):
         if (empty($cActividadProcesoTareas)) {
-            $this->actividadProcesoTareaRepository->generarProceso($id_activ, 2);
+            $this->actividadProcesoTareaRepository->generarProceso((string) $id_activ, 2);
         }
 
         /* Para no andar buscando que fase corresponde a status, finalmente he decidido
@@ -431,7 +468,7 @@ class ProcesoActividadService
             $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
             if (!empty($cActividadProcesoTareas)) {
                 $oActividadProcessorTarea = $cActividadProcesoTareas[0];
-                $oActividadProcessorTarea->setCompletado('t');
+                $oActividadProcessorTarea->setCompletado(true);
                 $this->actividadProcesoTareaRepository->Guardar($oActividadProcessorTarea);
             }
         }
@@ -441,7 +478,7 @@ class ProcesoActividadService
             $cActividadProcesoTareas = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
             if (!empty($cActividadProcesoTareas)) {
                 $oActividadProcessorTarea = $cActividadProcesoTareas[0];
-                $oActividadProcessorTarea->setCompletado('f');
+                $oActividadProcessorTarea->setCompletado(false);
                 $this->actividadProcesoTareaRepository->Guardar($oActividadProcessorTarea);
             }
         }
@@ -460,11 +497,17 @@ class ProcesoActividadService
         $this->bForce = false;
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getOpcionesOficinas(): array
     {
         return $this->aOpcionesOficinas;
     }
 
+    /**
+     * @return array<string, bool>
+     */
     public function getFasesEstado(): array
     {
         return $this->aFasesEstado;

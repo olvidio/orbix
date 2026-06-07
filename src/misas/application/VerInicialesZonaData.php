@@ -8,7 +8,17 @@ use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 class VerInicialesZonaData
 {
-    public static function getData(int $id_zona): array
+
+    public function __construct(
+        private readonly ZonaSacdRepositoryInterface $zonaSacdRepository,
+        private readonly PersonaSacdRepositoryInterface $personaSacdRepository,
+        private readonly InicialesSacdRepositoryInterface $inicialesSacdRepository,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+    public function getData(int $id_zona): array
     {
         $columns = [
             ['id' => 'nombre_sacd', 'name' => 'Nombre sacd', 'field' => 'nombre_sacd', 'width' => 220, 'cssClass' => 'cell-title'],
@@ -16,22 +26,18 @@ class VerInicialesZonaData
             ['id' => 'color', 'name' => 'Color', 'field' => 'color', 'width' => 64, 'cssClass' => 'cell-title'],
         ];
 
-        $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
-        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
-        $InicialesSacdRepository = $GLOBALS['container']->get(InicialesSacdRepositoryInterface::class);
-
-        $a_Id_nom = $ZonaSacdRepository->getIdSacdsDeZona($id_zona);
+        $a_Id_nom = $this->zonaSacdRepository->getIdSacdsDeZona($id_zona);
 
         $rows = [];
         foreach ($a_Id_nom as $id_nom) {
-            $PersonaSacd = $PersonaSacdRepository->findById($id_nom);
+            $PersonaSacd = $this->personaSacdRepository->findById($id_nom);
             if ($PersonaSacd === null) {
                 $sacd = '?';
                 $iniciales = '';
                 $color = '';
             } else {
                 $sacd = $PersonaSacd->getNombreApellidos();
-                $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
+                $InicialesSacd = $this->inicialesSacdRepository->findById($id_nom);
                 if ($InicialesSacd === null) {
                     $iniciales = '';
                     $color = '';

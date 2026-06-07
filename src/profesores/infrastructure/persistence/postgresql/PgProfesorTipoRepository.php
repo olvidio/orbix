@@ -1,6 +1,7 @@
 <?php
 
 namespace src\profesores\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -25,25 +26,37 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('xe_tipo_profesor_stgr');
     }
 
-    public function getArrayProfesorTipos(): array
+    /**
+     * @return array<int|string, string>
+     */
+public function getArrayProfesorTipos(): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_tipo_profesor,tipo_profesor FROM $nom_tabla ORDER BY tipo_profesor";
         $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         foreach ($stmt as $aClave) {
-            $clave = $aClave[0];
-            $val = $aClave[1];
-            $aOpciones[$clave] = $val;
+            if (!is_array($aClave)) {
+                continue;
+            }
+            $clave = $aClave[0] ?? null;
+            $val = $aClave[1] ?? '';
+            if (!is_numeric($clave)) {
+                continue;
+            }
+            $aOpciones[(int) $clave] = is_scalar($val) ? (string) $val : '';
         }
 
         return $aOpciones;
@@ -53,9 +66,9 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
     /**
      * devuelve una colección (array) de objetos de tipo ProfesorTipo
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ProfesorTipo
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ProfesorTipo> Una colección de objetos de tipo ProfesorTipo
      */
     public function getProfesorTipos(array $aWhere = [], array $aOperators = []): array
     {
@@ -92,27 +105,35 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $ProfesorTipo = ProfesorTipo::fromArray($aDatos);
             $ProfesorTipoSet->add($ProfesorTipo);
         }
-        return $ProfesorTipoSet->getTot();
+        return array_values($ProfesorTipoSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -152,6 +173,9 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -161,6 +185,9 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -172,15 +199,26 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_tipo_profesor
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_tipo_profesor): array|bool
+    public function datosById(int $id_tipo_profesor): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
 
     }
 
@@ -191,16 +229,22 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
     public function findById(int $id_tipo_profesor): ?ProfesorTipo
     {
         $aDatos = $this->datosById($id_tipo_profesor);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return ProfesorTipo::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('xe_tipo_profe_id_tipo_profe_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

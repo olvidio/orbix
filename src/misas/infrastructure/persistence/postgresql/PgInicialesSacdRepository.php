@@ -1,6 +1,7 @@
 <?php
 
 namespace src\misas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -26,8 +27,8 @@ class PgInicialesSacdRepository extends ClaseRepository implements InicialesSacd
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl = GlobalPdo::get('oDBC');
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl($oDbl);
         $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('misa_iniciales_dl');
@@ -38,9 +39,9 @@ class PgInicialesSacdRepository extends ClaseRepository implements InicialesSacd
     /**
      * devuelve una colección (array) de objetos de tipo InicialesSacd
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo InicialesSacd
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<InicialesSacd> Una colección de objetos de tipo InicialesSacd
      */
     public function getInicialesSacd(array $aWhere = [], array $aOperators = []): array
     {
@@ -77,27 +78,35 @@ class PgInicialesSacdRepository extends ClaseRepository implements InicialesSacd
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $InicialesSacd = InicialesSacd::fromArray($aDatos);
             $EncargoDiaSet->add($InicialesSacd);
         }
-        return $EncargoDiaSet->getTot();
+        return array_values($EncargoDiaSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -118,6 +127,9 @@ class PgInicialesSacdRepository extends ClaseRepository implements InicialesSacd
     public function Guardar(InicialesSacd $InicialesSacd): bool
     {
         $id_nom = $InicialesSacd->getId_nom();
+        if ($id_nom === null) {
+            return false;
+        }
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_nom);
@@ -138,6 +150,9 @@ class PgInicialesSacdRepository extends ClaseRepository implements InicialesSacd
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -147,6 +162,9 @@ class PgInicialesSacdRepository extends ClaseRepository implements InicialesSacd
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -158,13 +176,24 @@ class PgInicialesSacdRepository extends ClaseRepository implements InicialesSacd
      * Devuelve false si no existe la fila en la base de datos
      *
      */
-    public function datosById(int $id_nom): array|bool
+    public function datosById(int $id_nom): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 
@@ -174,7 +203,7 @@ class PgInicialesSacdRepository extends ClaseRepository implements InicialesSacd
     public function findById(int $id_nom): ?InicialesSacd
     {
         $aDatos = $this->datosById($id_nom);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return InicialesSacd::fromArray($aDatos);

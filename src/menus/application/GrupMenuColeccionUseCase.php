@@ -12,27 +12,25 @@ use src\menus\domain\contracts\MenuDbRepositoryInterface;
  */
 class GrupMenuColeccionUseCase
 {
+    public function __construct(
+        private GrupMenuRoleRepositoryInterface $grupMenuRoleRepository,
+        private GrupMenuRepositoryInterface $grupMenuRepository,
+        private MenuDbRepositoryInterface $menuDbRepository,
+    ) {
+    }
+
     /** @return array<int, \src\menus\domain\entity\GrupMenu> */
     public function __invoke(): array
     {
-        $id_role = (int)($_SESSION['session_auth']['id_role'] ?? 0);
+        $sessionAuth = $_SESSION['session_auth'] ?? null;
+        $id_role = is_array($sessionAuth) && is_numeric($sessionAuth['id_role'] ?? null)
+            ? (int) $sessionAuth['id_role']
+            : 0;
         if ($id_role < 1) {
             return [];
         }
 
-        $container = $GLOBALS['container'];
-
-        /** @var GrupMenuRoleRepositoryInterface $GrupMenuRoleRepository */
-        $GrupMenuRoleRepository = $container->get(GrupMenuRoleRepositoryInterface::class);
-        /** @var GrupMenuRepositoryInterface $GrupMenuRepository */
-        $GrupMenuRepository = $container->get(GrupMenuRepositoryInterface::class);
-        /** @var MenuDbRepositoryInterface $MenusDbRepository */
-        $MenusDbRepository = $container->get(MenuDbRepositoryInterface::class);
-
-        $cGrupMenuRoles = $GrupMenuRoleRepository->getGrupMenuRoles(['id_role' => $id_role]);
-        if ($cGrupMenuRoles === false || !is_iterable($cGrupMenuRoles)) {
-            return [];
-        }
+        $cGrupMenuRoles = $this->grupMenuRoleRepository->getGrupMenuRoles(['id_role' => $id_role]);
 
         $out = [];
         foreach ($cGrupMenuRoles as $oGrupMenuRole) {
@@ -41,12 +39,12 @@ class GrupMenuColeccionUseCase
                 continue;
             }
 
-            $cMenuDbs = $MenusDbRepository->getMenuDbs(['id_grupmenu' => $id_gm]);
-            if (!is_array($cMenuDbs) || count($cMenuDbs) < 1) {
+            $cMenuDbs = $this->menuDbRepository->getMenuDbs(['id_grupmenu' => $id_gm]);
+            if (count($cMenuDbs) < 1) {
                 continue;
             }
 
-            $oGrupMenu = $GrupMenuRepository->findById($id_gm);
+            $oGrupMenu = $this->grupMenuRepository->findById($id_gm);
             if ($oGrupMenu === null) {
                 continue;
             }

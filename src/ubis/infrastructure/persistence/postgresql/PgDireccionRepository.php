@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -28,19 +29,24 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBP'];
-        $oDbl_Select = $GLOBALS['oDBP'];
+        $oDbl = GlobalPdo::get('oDBP');
+        $oDbl_Select = GlobalPdo::get('oDBP');
         $this->setoDbl($oDbl);
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('u_dir_ctr');
     }
 
-    public function getArrayPoblaciones($sCondicion = ''): array
+    /**
+     * @return array<int|string, string>
+     */
+public function getArrayPoblaciones(string $sCondicion = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT DISTINCT initcap(poblacion) AS poblacion, initcap(poblacion) AS poblacion1 FROM $nom_tabla $sCondicion ORDER BY initcap(poblacion)";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $row) {
@@ -53,12 +59,17 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         return $aOpciones;
     }
 
-    public function getArrayPaises($sCondicion = ''): array
+    /**
+     * @return array<int|string, string>
+     */
+public function getArrayPaises(string $sCondicion = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT DISTINCT initcap(pais) AS pais, initcap(pais) AS pais1 FROM $nom_tabla $sCondicion ORDER BY initcap(pais)";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $row) {
@@ -78,9 +89,9 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
     /**
      * devuelve una colección (array) de objetos de tipo Direccion
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Direccion
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Direccion> Una colección de objetos de tipo Direccion
      */
     public function getDirecciones(array $aWhere = [], array $aOperators = []): array
     {
@@ -117,23 +128,31 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para los bytea: (resources)
             $aDatos['plano_doc'] = $this->normalizeBytea($this->readByteaField($aDatos['plano_doc']));
             // para las fechas del postgres (texto iso)
@@ -141,7 +160,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
             $Direccion = Direccion::fromArray($aDatos);
             $DireccionSet->add($Direccion);
         }
-        return $DireccionSet->getTot();
+        return array_values($DireccionSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -199,6 +218,9 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -208,6 +230,9 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_direccion = $id_direccion";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -219,28 +244,36 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_direccion
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_direccion): array|bool
+    public function datosById(int $id_direccion): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_direccion = $id_direccion";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($aDatos === false) {
+        if (!is_array($aDatos)) {
             return false;
         }
 
-
         // para los bytea: (resources)
-        $aDatos['plano_doc'] = $this->normalizeBytea($this->readByteaField($aDatos['plano_doc']));
+        $planoDoc = $aDatos['plano_doc'] ?? null;
+        $aDatos['plano_doc'] = $this->normalizeBytea($this->readByteaField($planoDoc));
 
         // para las fechas del postgres (texto iso)
-        $aDatos['f_direccion'] = (new ConverterDate('date', $aDatos['f_direccion']))->fromPg();
+        $fDireccion = $aDatos['f_direccion'] ?? null;
+        $aDatos['f_direccion'] = (new ConverterDate('date', $fDireccion))->fromPg();
 
-        return $aDatos;
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+
+        return $result;
     }
 
 
@@ -250,7 +283,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
     public function findById(int $id_direccion): ?Direccion
     {
         $aDatos = $this->datosById($id_direccion);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Direccion::fromArray($aDatos);

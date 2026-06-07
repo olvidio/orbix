@@ -17,6 +17,6 @@ use src\personas\domain\entity\TelecoPersona;
 interface TelecoPersonaDlRepositoryInterface extends TelecoPersonaRepositoryInterface
 {
 
-    public function getNewId();
+    public function getNewId(): int;
 
 }

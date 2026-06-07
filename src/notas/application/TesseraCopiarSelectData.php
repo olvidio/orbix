@@ -2,6 +2,7 @@
 
 namespace src\notas\application;
 
+
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 
@@ -15,13 +16,22 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
  */
 final class TesseraCopiarSelectData
 {
-    public static function execute(int $id_nom): array
+
+    public function __construct(
+        private readonly PersonaNRepositoryInterface $personaNRepository,
+        private readonly PersonaAgdRepositoryInterface $personaAgdRepository,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(int $id_nom): array
     {
-        $repoN = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+        $repoN = $this->personaNRepository;
         $oPersona = $repoN->findById($id_nom);
         $repo = $repoN;
         if ($oPersona === null) {
-            $repoAgd = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+            $repoAgd = $this->personaAgdRepository;
             $oPersona = $repoAgd->findById($id_nom);
             $repo = $repoAgd;
             if ($oPersona === null) {

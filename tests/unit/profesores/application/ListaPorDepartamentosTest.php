@@ -19,26 +19,18 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 final class ListaPorDepartamentosTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
     }
 
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -53,11 +45,16 @@ final class ListaPorDepartamentosTest extends TestCase
             ->with(['testreg'])
             ->willReturn(['d1' => 'Dl uno']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DelegacionRepositoryInterface::class => $repoDl,
-        ]);
+        $useCase = new ListaPorDepartamentos(
+            $repoDl,
+            $this->createMock(ProfesorTipoRepositoryInterface::class),
+            $this->createMock(DepartamentoRepositoryInterface::class),
+            $this->createMock(ProfesorDirectorRepositoryInterface::class),
+            $this->createMock(ProfesorStgrRepositoryInterface::class),
+            $this->createMock(PersonaDlRepositoryInterface::class),
+        );
 
-        $out = ListaPorDepartamentos::getData(['d1'], 2);
+        $out = $useCase->getData(['d1'], 2);
 
         $this->assertSame('filtro', $out['modo']);
         $this->assertTrue($out['rstgr']);
@@ -99,15 +96,16 @@ final class ListaPorDepartamentosTest extends TestCase
 
         $oStgrRepo = $this->createMock(ProfesorStgrRepositoryInterface::class);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ProfesorTipoRepositoryInterface::class => $oTipoRepo,
-            DepartamentoRepositoryInterface::class => $oDeptRepo,
-            ProfesorDirectorRepositoryInterface::class => $oDirRepo,
-            ProfesorStgrRepositoryInterface::class => $oStgrRepo,
-            PersonaDlRepositoryInterface::class => $oPersonaRepo,
-        ]);
+        $useCase = new ListaPorDepartamentos(
+            $this->createMock(DelegacionRepositoryInterface::class),
+            $oTipoRepo,
+            $oDeptRepo,
+            $oDirRepo,
+            $oStgrRepo,
+            $oPersonaRepo,
+        );
 
-        $out = ListaPorDepartamentos::getData([], 1);
+        $out = $useCase->getData([], 1);
 
         $this->assertSame('lista', $out['modo']);
         $this->assertFalse($out['rstgr']);
@@ -130,22 +128,4 @@ final class ListaPorDepartamentosTest extends TestCase
         };
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
-    }
 }

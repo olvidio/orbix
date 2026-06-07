@@ -5,6 +5,9 @@ namespace src\configuracion\application;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\ModulosConfig;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 /**
  * Formulario de módulo (`frontend/configuracion/controller/modulos_form.php`).
  *
@@ -12,13 +15,19 @@ use src\configuracion\domain\ModulosConfig;
  */
 final class ModulosFormData
 {
+    public function __construct(
+        private ModuloRepositoryInterface $moduloRepository,
+        private ModulosConfig $modulosConfig,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function execute(array $input): array
     {
-        $Qmod = (string)($input['mod'] ?? '');
+        $Qmod = input_string($input, 'mod');
 
         $Qid_mod = 0;
         $nom = '';
@@ -27,16 +36,17 @@ final class ModulosFormData
         $a_apps_req = [];
 
         if ($Qmod !== 'nuevo') {
-            $a_sel = isset($input['sel']) ? (array)$input['sel'] : [];
+            $a_sel = isset($input['sel']) && is_array($input['sel']) ? $input['sel'] : [];
             if ($a_sel !== []) {
-                $Qid_mod = (int)strtok((string)($a_sel[0] ?? ''), '#');
+                $first = $a_sel[0] ?? '';
+                $selString = is_scalar($first) ? (string)$first : '';
+                $Qid_mod = (int)strtok($selString, '#');
             } else {
-                $Qid_mod = (int)($input['id_mod'] ?? 0);
+                $Qid_mod = input_int($input, 'id_mod');
             }
 
-            $ModuloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
-            $oModulo = $ModuloRepository->findById($Qid_mod);
-            if (!empty($oModulo)) {
+            $oModulo = $this->moduloRepository->findById($Qid_mod);
+            if ($oModulo !== null) {
                 $nom = $oModulo->getNomVo()->value();
                 $descripcion = $oModulo->getDescripcionVo()?->value() ?? '';
                 $a_mods_req = $oModulo->getModsReqVo()?->toArray() ?? [];
@@ -44,19 +54,17 @@ final class ModulosFormData
             }
         }
 
-        $oModulosConfig = new ModulosConfig();
-
-        $a_mods_todos = $oModulosConfig->getModsAll();
-        $a_apps_todas = $oModulosConfig->getAppsAll();
+        $a_mods_todos = $this->modulosConfig->getModsAll();
+        $a_apps_todas = $this->modulosConfig->getAppsAll();
 
         $a_apps_mod = [];
-        if (count($a_mods_req) > 0) {
+        if ($a_mods_req !== []) {
             $all = [];
             foreach ($a_mods_req as $id_mod_req) {
-                $all[] = $oModulosConfig->getAppsMods($id_mod_req);
+                $all[] = $this->modulosConfig->getAppsMods((int)$id_mod_req);
             }
             $a_apps_mod = array_merge(...$all);
-            $a_apps_mod = array_unique($a_apps_mod);
+            $a_apps_mod = array_values(array_unique($a_apps_mod));
         }
 
         $campos_chk = 'sel_mods!sel_apps';

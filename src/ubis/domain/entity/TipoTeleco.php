@@ -130,6 +130,231 @@ class TipoTeleco
         return 'id';
     }
 
+    /**
+
+
+     * @return array<string, mixed>
+
+
+     */
+
+
+    /**
+
+
+
+     * @return array<string, mixed>
+
+
+
+     */
+
+
+
+    /**
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+     */
+
+
+
+
+    /**
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+     */
+
+
+
+
+
+    /**
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+
+
     public function getDatosCampos(): array
     {
         $oAsignaturaSet = new Set();

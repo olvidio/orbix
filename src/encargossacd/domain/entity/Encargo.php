@@ -81,7 +81,7 @@ class Encargo
     {
         $this->id_tipo_enc = $vo instanceof EncargoTipoId
             ? $vo
-            : EncargoTipoId::fromNullableInt($vo);
+            : (EncargoTipoId::fromNullableInt($vo) ?? throw new \InvalidArgumentException('id_tipo_enc cannot be empty'));
     }
 
 
@@ -110,7 +110,7 @@ class Encargo
     {
         $this->grupo_encargo = $vo instanceof EncargoGrupo
             ? $vo
-            : EncargoGrupo::fromNullableInt($vo);
+            : (EncargoGrupo::fromNullableInt($vo) ?? throw new \InvalidArgumentException('grupo_encargo cannot be empty'));
     }
 
 

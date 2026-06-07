@@ -17,12 +17,20 @@ use src\notas\domain\value_objects\PersonaNotaPk;
 interface PersonaNotaOtraRegionStgrRepositoryInterface
 {
 
-    public function addCertificado(int $id_nom, string $certificado, $oF_certificado);
+    public function addCertificado(int $id_nom, string $certificado, \src\shared\domain\value_objects\DateTimeLocal|\src\shared\domain\value_objects\NullDateTimeLocal|null $oF_certificado): void;
 
-    public function deleteCertificado(?string $certificado);
+    public function deleteCertificado(?string $certificado): void;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
+    /** @param array<string, mixed> $aWhere */
+
+
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<\src\notas\domain\entity\PersonaNotaOtraRegionStgr>
+     */
     public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -37,9 +45,15 @@ interface PersonaNotaOtraRegionStgrRepositoryInterface
 
     public function getNomTabla(): string;
 
-    public function datosById(int $id_nom, int $id_nivel, int $tipo_acta): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_nom, int $id_nivel, int $tipo_acta): array|false;
 
-    public function datosByPk(PersonaNotaPk $pk): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosByPk(PersonaNotaPk $pk): array|false;
 
     /**
      * Busca la clase con id_situacion en el repositorio.

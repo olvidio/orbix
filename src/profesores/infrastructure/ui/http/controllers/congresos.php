@@ -1,6 +1,9 @@
 <?php
 
 use src\profesores\application\CongresosLista;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-ContestarJson::enviar('', CongresosLista::getTablaData());
+/** @var CongresosLista $useCase */
+$useCase = DependencyResolver::get(CongresosLista::class);
+ContestarJson::enviar('', $useCase->getTablaData());

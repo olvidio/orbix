@@ -15,15 +15,18 @@ use src\usuarios\domain\entity\Local;
  */
 interface LocalRepositoryInterface
 {
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayLocales(): array;
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Local
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Local
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Local> Una colección de objetos de tipo Local
      */
     public function getLocales(array $aWhere = [], array $aOperators = []): array;
 
@@ -44,9 +47,9 @@ interface LocalRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $id_locale
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $id_locale): array|bool;
+    public function datosById(string $id_locale): array|false;
 
     /**
      * Busca la clase con id_locale en el repositorio.

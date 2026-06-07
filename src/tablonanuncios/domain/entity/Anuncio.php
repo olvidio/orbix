@@ -19,15 +19,15 @@ class Anuncio
     use Hydratable;
 
     private AnuncioId $uuid_item;
-    private UsuarioCreador $usuario_creador;
+    private ?UsuarioCreador $usuario_creador = null;
     private EsquemaEmisor $esquema_emisor;
-    private EsquemaDestino $esquema_destino;
+    private ?EsquemaDestino $esquema_destino = null;
     private TextoAnuncio $texto_anuncio;
     private ?Idioma $idioma;
-    private Tablon $tablon;
+    private ?Tablon $tablon = null;
     private DateTimeLocal|NullDateTimeLocal|null $t_anotado;
     private DateTimeLocal|NullDateTimeLocal|null $t_eliminado;
-    private Categoria $categoria;
+    private ?Categoria $categoria = null;
 
     public function getUuid_item(): AnuncioId
     {
@@ -41,16 +41,18 @@ class Anuncio
             : AnuncioId::fromString($uuid_item);
     }
 
-    public function getUsuarioCreadorVo(): UsuarioCreador
+    public function getUsuarioCreadorVo(): ?UsuarioCreador
     {
         return $this->usuario_creador;
     }
 
     public function setUsuarioCreadorVo(UsuarioCreador|string|null $usuario_creador): void
     {
-        $this->usuario_creador = $usuario_creador instanceof UsuarioCreador
-            ? $usuario_creador
-            : UsuarioCreador::fromNullableString($usuario_creador);
+        if ($usuario_creador instanceof UsuarioCreador) {
+            $this->usuario_creador = $usuario_creador;
+            return;
+        }
+        $this->usuario_creador = UsuarioCreador::fromNullableString($usuario_creador);
     }
 
     public function getEsquemaEmisorVo(): EsquemaEmisor
@@ -60,21 +62,28 @@ class Anuncio
 
     public function setEsquemaEmisorVo(EsquemaEmisor|string|null $esquema_emisor): void
     {
-        $this->esquema_emisor = $esquema_emisor instanceof EsquemaEmisor
-            ? $esquema_emisor
-            : EsquemaEmisor::fromNullableString($esquema_emisor);
+        if ($esquema_emisor instanceof EsquemaEmisor) {
+            $this->esquema_emisor = $esquema_emisor;
+            return;
+        }
+        $vo = EsquemaEmisor::fromNullableString($esquema_emisor);
+        if ($vo !== null) {
+            $this->esquema_emisor = $vo;
+        }
     }
 
-    public function getEsquemaDestinoVo(): EsquemaDestino
+    public function getEsquemaDestinoVo(): ?EsquemaDestino
     {
         return $this->esquema_destino;
     }
 
     public function setEsquemaDestinoVo(EsquemaDestino|string|null $esquema_destino): void
     {
-        $this->esquema_destino = $esquema_destino instanceof EsquemaDestino
-            ? $esquema_destino
-            : EsquemaDestino::fromNullableString($esquema_destino);
+        if ($esquema_destino instanceof EsquemaDestino) {
+            $this->esquema_destino = $esquema_destino;
+            return;
+        }
+        $this->esquema_destino = EsquemaDestino::fromNullableString($esquema_destino);
     }
 
     public function getTextoAnuncioVo(): TextoAnuncio
@@ -84,9 +93,14 @@ class Anuncio
 
     public function setTextoAnuncioVo(TextoAnuncio|string|null $texto_anuncio): void
     {
-        $this->texto_anuncio = $texto_anuncio instanceof TextoAnuncio
-            ? $texto_anuncio
-            : TextoAnuncio::fromNullableString($texto_anuncio);
+        if ($texto_anuncio instanceof TextoAnuncio) {
+            $this->texto_anuncio = $texto_anuncio;
+            return;
+        }
+        $vo = TextoAnuncio::fromNullableString($texto_anuncio);
+        if ($vo !== null) {
+            $this->texto_anuncio = $vo;
+        }
     }
 
     public function getIdiomaVo(): ?Idioma
@@ -101,16 +115,18 @@ class Anuncio
             : Idioma::fromNullableString($idioma);
     }
 
-    public function getTablonVo(): Tablon
+    public function getTablonVo(): ?Tablon
     {
         return $this->tablon;
     }
 
     public function setTablonVo(Tablon|string|null $tablon): void
     {
-        $this->tablon = $tablon instanceof Tablon
-            ? $tablon
-            : Tablon::fromNullableString($tablon);
+        if ($tablon instanceof Tablon) {
+            $this->tablon = $tablon;
+            return;
+        }
+        $this->tablon = Tablon::fromNullableString($tablon);
     }
 
     public function getT_anotado(): DateTimeLocal|NullDateTimeLocal
@@ -133,16 +149,18 @@ class Anuncio
         $this->t_eliminado = $t_eliminado;
     }
 
-    public function getCategoriaVo(): Categoria
+    public function getCategoriaVo(): ?Categoria
     {
         return $this->categoria;
     }
 
     public function setCategoriaVo(Categoria|int|null $categoria): void
     {
-        $this->categoria = $categoria instanceof Categoria
-            ? $categoria
-            : Categoria::fromNullableInt($categoria);
+        if ($categoria instanceof Categoria) {
+            $this->categoria = $categoria;
+            return;
+        }
+        $this->categoria = Categoria::fromNullableInt($categoria);
     }
 
 

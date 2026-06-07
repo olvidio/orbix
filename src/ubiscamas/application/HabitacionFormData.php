@@ -6,6 +6,8 @@ use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\HabitacionId;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Datos para `frontend/ubiscamas/controller/habitacion_form.php`.
@@ -13,14 +15,20 @@ use src\ubiscamas\domain\value_objects\TipoLavabo;
  */
 final class HabitacionFormData
 {
+    public function __construct(
+        private HabitacionDlRepositoryInterface $habitacionRepository,
+        private CamaDlRepositoryInterface $camaRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function execute(array $input): array
     {
-        $Qnuevo = (string)($input['nuevo'] ?? '');
-        $Qid_ubi = (int)($input['id_ubi'] ?? 0);
+        $Qnuevo = input_string($input, 'nuevo');
+        $Qid_ubi = input_int($input, 'id_ubi');
         $orden = '';
         $nombre = '';
         $numero_camas = '';
@@ -34,20 +42,22 @@ final class HabitacionFormData
         $a_camas_rows = [];
         $Qid_habitacion = '';
 
-        if (empty($Qnuevo)) {
-            $a_sel = isset($input['sel']) ? (array)$input['sel'] : [];
+        if ($Qnuevo === '') {
+            $a_sel = isset($input['sel']) && is_array($input['sel']) ? $input['sel'] : [];
             if ($a_sel !== []) {
-                $Qid_habitacion = strtok((string)($a_sel[0] ?? ''), '#');
+                $firstSel = $a_sel[0];
+                $Qid_habitacion = strtok(is_scalar($firstSel) ? (string) $firstSel : '', '#') ?: '';
             } else {
-                $Qid_habitacion = (string)($input['id_habitacion'] ?? '');
+                $Qid_habitacion = input_string($input, 'id_habitacion');
             }
 
-            $HabitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
             $uuid_habitacion = HabitacionId::fromNullableString($Qid_habitacion);
-            $oHabitacion = $uuid_habitacion !== null ? $HabitacionRepository->findById($uuid_habitacion->value()) : null;
-            if (!empty($oHabitacion)) {
+            $oHabitacion = $uuid_habitacion !== null
+                ? $this->habitacionRepository->findById($uuid_habitacion->value())
+                : null;
+            if ($oHabitacion !== null) {
                 $Qid_ubi = $oHabitacion->getIdUbiVo();
-                $orden = $oHabitacion->getOrdenVo()?->value() ?? 0;
+                $orden = $oHabitacion->getOrdenVo()->value();
                 $nombre = $oHabitacion->getNombreVo()?->value() ?? '';
                 $numero_camas = $oHabitacion->getNumeroCamasVo()?->value();
                 $numero_camas_vip = $oHabitacion->getNumeroCamasVipVo()?->value();
@@ -58,8 +68,7 @@ final class HabitacionFormData
                 $despacho = $oHabitacion->isDespacho() ?? false;
                 $tipoLavabo = $oHabitacion->getTipoLavaboVo()?->value();
 
-                $CamaRepository = $GLOBALS['container']->get(CamaDlRepositoryInterface::class);
-                $a_camas = $CamaRepository->getCamasByHabitacion($uuid_habitacion);
+                $a_camas = $this->camaRepository->getCamasByHabitacion($uuid_habitacion);
                 foreach ($a_camas as $oCama) {
                     $a_camas_rows[] = [
                         'id_cama' => $oCama->getIdCama(),
@@ -75,11 +84,14 @@ final class HabitacionFormData
             $numero_camas = 1;
             $numero_camas_vip = 1;
 
-            $HabitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
-            $aLastHabitacion = $HabitacionRepository->getHabitaciones(['id_ubi' => $Qid_ubi, '_ordre' => 'orden DESC', '_limit' => 1]);
-            if (!empty($aLastHabitacion)) {
+            $aLastHabitacion = $this->habitacionRepository->getHabitaciones([
+                'id_ubi' => $Qid_ubi,
+                '_ordre' => 'orden DESC',
+                '_limit' => 1,
+            ]);
+            if ($aLastHabitacion !== []) {
                 $oLastHabitacion = current($aLastHabitacion);
-                $orden = (int)($oLastHabitacion->getOrdenVo()?->value() ?? 0) + 10;
+                $orden = $oLastHabitacion->getOrdenVo()->value() + 10;
             } else {
                 $orden = 10;
             }

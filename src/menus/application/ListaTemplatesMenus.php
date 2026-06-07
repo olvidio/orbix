@@ -2,15 +2,19 @@
 
 namespace src\menus\application;
 
-
 use src\menus\domain\contracts\TemplateMenuRepositoryInterface;
 
 class ListaTemplatesMenus
 {
-    public function __invoke()
+    public function __construct(
+        private TemplateMenuRepositoryInterface $templateMenuRepository,
+    ) {
+    }
+
+    /** @return array{a_opciones: array<int|string, string>} */
+    public function __invoke(): array
     {
-        $TemplateMenuRepository = $GLOBALS['container']->get(TemplateMenuRepositoryInterface::class);
-        $a_opciones = $TemplateMenuRepository->getArrayTemplates();
+        $a_opciones = $this->templateMenuRepository->getArrayTemplates();
 
         $data = [
             'a_opciones' => $a_opciones,

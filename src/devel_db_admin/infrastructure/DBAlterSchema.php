@@ -1,30 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace src\devel_db_admin\infrastructure;
 
+use PDO;
+use PDOException;
+use PDOStatement;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
-use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 
 class DBAlterSchema
 {
-    /**
-     * oDbl
-     *
-     * @var object
-     */
-    protected $pdoDB;
-    /**
-     *
-     * @var string
-     */
-    protected $schema;
-
-    /**
-     *
-     * @var string
-     */
-    protected $schema_del;
+    protected ?PDO $pdoDB = null;
+    protected string $schema = '';
+    protected string $schema_del = '';
 
     /** @var list<string> */
     private array $errores = [];
@@ -36,34 +28,37 @@ class DBAlterSchema
     /**
      * Constructor de la clase.
      */
-    function __construct()
-    {
+    public function __construct(
+        private readonly ?CargoRepositoryInterface $cargoRepository = null,
+    ) {
     }
 
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
-    public function setDbConexion($pdoDB)
+    public function setDbConexion(PDO $pdoDB): void
     {
         $this->pdoDB = $pdoDB;
     }
 
     /**
      * Recupera el atributo oDbl de DBAlterSchema
-     *
-     * @return object oDbl
      */
-    protected function getPdoDB()
+    protected function getPdoDB(): PDO
     {
+        if ($this->pdoDB === null) {
+            throw new \RuntimeException('DBAlterSchema: conexión PDO no configurada.');
+        }
+
         return $this->pdoDB;
     }
 
-    public function setSchema($schema)
+    public function setSchema(string $schema): void
     {
         $this->schema = $schema;
     }
 
-    public function setSchemaDel($schema)
+    public function setSchemaDel(string $schema): void
     {
         $this->schema_del = $schema;
     }
@@ -84,15 +79,23 @@ class DBAlterSchema
         return $errores;
     }
 
-    private function handleSqlError(string $contexto, \PDO|\PDOStatement $oDbl): bool
+    private function gestorErrores(): ?GestorErrores
+    {
+        $gestor = $_SESSION['oGestorErrores'] ?? null;
+
+        return $gestor instanceof GestorErrores ? $gestor : null;
+    }
+
+    private function handleSqlError(string $contexto, \PDO|\PDOStatement $oDbl): void
     {
         $err = $oDbl->errorInfo();
         $mensaje = is_string($err[2] ?? null) ? $err[2] : 'Error SQL desconocido';
 
         if ($this->continuarEnError) {
             $this->errores[] = $contexto . ': ' . $mensaje;
-            if (isset($_SESSION['oGestorErrores'])) {
-                $_SESSION['oGestorErrores']->addErrorAppLastErrorNoThrowText(
+            $gestor = $this->gestorErrores();
+            if ($gestor !== null) {
+                $gestor->addErrorAppLastErrorNoThrowText(
                     $mensaje,
                     $contexto,
                     (string) __LINE__,
@@ -100,20 +103,23 @@ class DBAlterSchema
                 );
             }
 
-            return false;
+            return;
         }
 
-        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $contexto, (string) __LINE__, __FILE__);
+        $gestor = $this->gestorErrores();
+        if ($gestor !== null) {
+            $gestor->addErrorAppLastError($oDbl, $contexto, (string) __LINE__, __FILE__);
+        }
 
-        return false;
     }
 
     private function handlePdoException(string $contexto, \PDOException $e): bool
     {
         if ($this->continuarEnError) {
             $this->errores[] = $contexto . ': ' . $e->getMessage();
-            if (isset($_SESSION['oGestorErrores'])) {
-                $_SESSION['oGestorErrores']->addErrorAppLastErrorNoThrowText(
+            $gestor = $this->gestorErrores();
+            if ($gestor !== null) {
+                $gestor->addErrorAppLastErrorNoThrowText(
                     $e->getMessage(),
                     $contexto,
                     (string) __LINE__,
@@ -134,10 +140,14 @@ class DBAlterSchema
         try {
             $oDblSt = $oDbl->prepare($sql);
             if ($oDblSt === false) {
-                return $this->handleSqlError($contexto . '.prepare', $oDbl);
+                $this->handleSqlError($contexto . '.prepare', $oDbl);
+
+                return false;
             }
             if ($oDblSt->execute() === false) {
-                return $this->handleSqlError($contexto . '.execute', $oDblSt);
+                $this->handleSqlError($contexto . '.execute', $oDblSt);
+
+                return false;
             }
 
             return true;
@@ -146,25 +156,6 @@ class DBAlterSchema
         }
     }
 
-    private function querySql(string $sql, string $contexto): \PDOStatement|false
-    {
-        $oDbl = $this->getPdoDB();
-
-        try {
-            $stmt = $oDbl->query($sql);
-            if ($stmt === false) {
-                $this->handleSqlError($contexto, $oDbl);
-
-                return false;
-            }
-
-            return $stmt;
-        } catch (\PDOException $e) {
-            $this->handlePdoException($contexto, $e);
-
-            return false;
-        }
-    }
 
     /**
      * @return list<array{type: string, conname: string, columns: list<string>}>
@@ -190,15 +181,35 @@ class DBAlterSchema
 
         $constraints = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $name = $row['conname'];
+            if (!is_array($row)) {
+                continue;
+            }
+            $nameRaw = $row['conname'] ?? null;
+            if (!is_string($nameRaw) || $nameRaw === '') {
+                continue;
+            }
+            $name = $nameRaw;
+            $typeRaw = $row['contype'] ?? null;
+            $attnameRaw = $row['attname'] ?? null;
+            $ordRaw = $row['ord'] ?? null;
+            if (!is_string($attnameRaw) || $attnameRaw === '') {
+                continue;
+            }
+            if (is_int($ordRaw)) {
+                $ord = $ordRaw;
+            } elseif (is_string($ordRaw) && is_numeric($ordRaw)) {
+                $ord = (int) $ordRaw;
+            } else {
+                continue;
+            }
             if (!isset($constraints[$name])) {
                 $constraints[$name] = [
-                    'type' => $row['contype'],
+                    'type' => is_string($typeRaw) ? $typeRaw : '',
                     'conname' => $name,
                     'columns' => [],
                 ];
             }
-            $constraints[$name]['columns'][(int) $row['ord']] = $row['attname'];
+            $constraints[$name]['columns'][$ord] = $attnameRaw;
         }
 
         $result = [];
@@ -276,7 +287,7 @@ class DBAlterSchema
         return "INSERT INTO $fullName ($campos) SELECT $campos FROM $fullNameDel $onConflict";
     }
 
-    private function buildUpsertSql(string $fullName, string $campos, string $fullNameDel, string $conflictTarget, array $pkColumns): string
+    /** @param list<string> $pkColumns */ private function buildUpsertSql(string $fullName, string $campos, string $fullNameDel, string $conflictTarget, array $pkColumns): string
     {
         $update = $this->buildUpdateSetFromCampos($campos, $pkColumns);
         $onConflict = $this->buildOnConflictClause($conflictTarget, $update);
@@ -290,7 +301,7 @@ class DBAlterSchema
      * @param array $aDefaults
      *       ['tabla' => '.u_dir_cdc_dl', 'campos' => '...'],
      */
-    public function setInserts($aInserts)
+    /** @param list<array{tabla: string, campos: string}> $aInserts */ public function setInserts(array $aInserts): void
     {
         foreach ($aInserts as $cambio) {
             $tabla = $cambio['tabla'];
@@ -305,7 +316,7 @@ class DBAlterSchema
 
     }
 
-    private function executeInsert($tabla, $campos)
+    private function executeInsert(string $tabla, string $campos): void
     {
         $full_name = "\"$this->schema\".$tabla";
         $full_name_del = "\"$this->schema_del\".$tabla";
@@ -405,27 +416,32 @@ class DBAlterSchema
                 break;
         }
 
-        return $this->prepareAndExecute($sql, 'DBAlterSchema.executeInsert.' . $tabla);
+        $this->prepareAndExecute($sql, 'DBAlterSchema.executeInsert.' . $tabla);
     }
 
     /**
      * Comprobar si existe la tabla, para evitar errores.
      *
-     * @param string $tabla
+     * @param string $full_name
      * @return boolean
      */
-    public function existeTabla($full_name)
+    public function existeTabla(string $full_name): bool
     {
 
         $oDbl = $this->getPdoDB();
         $sql = "SELECT to_regclass('$full_name'); ";
 
-        foreach ($oDbl->query($sql) as $row) {
-            if (!empty($row[0])) {
-                return TRUE;
+        $stmt = $oDbl->query($sql);
+        if ($stmt === false) {
+            return false;
+        }
+        foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $row) {
+            $valor = $row[0] ?? null;
+            if (is_string($valor) && $valor !== '') {
+                return true;
             }
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -433,7 +449,7 @@ class DBAlterSchema
      * @param array $aDefaults
      *       ['tabla' => 'a_actividad_proceso_sf', 'campo' => 'id_schema', 'valor' => "idschema('H-dlx'::text)"],
      */
-    public function setDefaults(array $aDefaults)
+    /** @param list<array{tabla: string, campo: string, valor: string}> $aDefaults */ public function setDefaults(array $aDefaults): void
     {
         foreach ($aDefaults as $cambio) {
             $tabla = $cambio['tabla'];
@@ -448,7 +464,7 @@ class DBAlterSchema
 
     }
 
-    public function setColumnDefault($nom_tabla, $nom_column, $default)
+    public function setColumnDefault(string $nom_tabla, string $nom_column, string $default): void
     {
         $oDbl = $this->getPdoDB();
         $sql = "ALTER TABLE $nom_tabla ALTER COLUMN $nom_column SET DEFAULT $default";
@@ -456,11 +472,11 @@ class DBAlterSchema
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            return $this->handleSqlError($sClauError, $oDbl);
+            $this->handleSqlError($sClauError, $oDbl);
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBAlterSchema.crearSchema.execute';
-                return $this->handleSqlError($sClauError, $oDblSt);
+                $this->handleSqlError($sClauError, $oDblSt);
             }
         }
     }
@@ -470,7 +486,7 @@ class DBAlterSchema
      * @param array $aDatos
      *   ['tabla' => 'u_centros_dl', 'campo' => 'id_zona'],
      */
-    public function setNullDatos(array $aDatos)
+    /** @param list<array{tabla: string, campo: string}> $aDatos */ public function setNullDatos(array $aDatos): void
     {
         $oDbl = $this->getPdoDB();
         foreach ($aDatos as $cambio) {
@@ -485,13 +501,14 @@ class DBAlterSchema
                     $sClauError = 'DBAlterSchema.crearSchema.prepare';
                     $sClauError .= ' ' . $sql;
 
-                    return $this->handleSqlError($sClauError, $oDbl);
+                    $this->handleSqlError($sClauError, $oDbl);
+                    continue;
                 }
 
                 if ($oDblSt->execute() === false) {
                     $sClauError = 'DBAlterSchema.crearSchema.execute';
 
-                    return $this->handleSqlError($sClauError, $oDblSt);
+                    $this->handleSqlError($sClauError, $oDblSt);
                 }
             }
         }
@@ -503,7 +520,7 @@ class DBAlterSchema
      * @param array $aDatos
      *      ['tabla' => 'da_plazas_dl', 'campo' => 'id_dl', 'old' => "$id_dl_old", 'new' => "$id_dl_new"],
      */
-    public function updateDatos(array $aDatos)
+    /** @param list<array{tabla: string, campo: string, old: string, new: string}> $aDatos */ public function updateDatos(array $aDatos): void
     {
         foreach ($aDatos as $cambio) {
             $tabla = $cambio['tabla'];
@@ -518,7 +535,7 @@ class DBAlterSchema
         }
     }
 
-    public function updateColumn($full_name, $campo, $old, $new)
+    public function updateColumn(string $full_name, string $campo, string $old, string $new): void
     {
         $oDbl = $this->getPdoDB();
         $sql = "UPDATE $full_name SET $campo = '$new' WHERE $campo = '$old' ";
@@ -526,11 +543,11 @@ class DBAlterSchema
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            return $this->handleSqlError($sClauError, $oDbl);
+            $this->handleSqlError($sClauError, $oDbl);
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBAlterSchema.crearSchema.execute';
-                return $this->handleSqlError($sClauError, $oDblSt);
+                $this->handleSqlError($sClauError, $oDblSt);
             }
         }
     }
@@ -540,7 +557,7 @@ class DBAlterSchema
      * @param array $aDatos
      *     ['tabla' => 'a_actividades_dl', 'campo' => 'dl_org', 'pattern' => "$dl_old(.*)", 'replacement' => "$DlNew\1"]
      */
-    public function updateDatosRegexp(array $aDatos)
+    /** @param list<array{tabla: string, campo: string, pattern: string, replacement: string}> $aDatos */ public function updateDatosRegexp(array $aDatos): void
     {
         foreach ($aDatos as $cambio) {
             $tabla = $cambio['tabla'];
@@ -555,7 +572,7 @@ class DBAlterSchema
         }
     }
 
-    public function updateColumnRegexp($full_name, $campo, $pattern, $replacement)
+    public function updateColumnRegexp(string $full_name, string $campo, string $pattern, string $replacement): void
     {
         $oDbl = $this->getPdoDB();
         $sql = "UPDATE $full_name SET $campo = regexp_replace($campo, '$pattern', '$replacement' ,'g') ";
@@ -563,16 +580,16 @@ class DBAlterSchema
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            return $this->handleSqlError($sClauError, $oDbl);
+            $this->handleSqlError($sClauError, $oDbl);
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBAlterSchema.crearSchema.execute';
-                return $this->handleSqlError($sClauError, $oDblSt);
+                $this->handleSqlError($sClauError, $oDblSt);
             }
         }
     }
 
-    public function updateCedidasAll($old, $new)
+    public function updateCedidasAll(string $old, string $new): void
     {
         $oDbl = $this->getPdoDB();
         $sql = "UPDATE publicv.da_plazas set cedidas =  regexp_replace(cedidas::text, '\m$old\M', '$new', 'g')::jsonb where cedidas is not null;";
@@ -580,16 +597,16 @@ class DBAlterSchema
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            return $this->handleSqlError($sClauError, $oDbl);
+            $this->handleSqlError($sClauError, $oDbl);
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBAlterSchema.crearSchema.execute';
-                return $this->handleSqlError($sClauError, $oDblSt);
+                $this->handleSqlError($sClauError, $oDblSt);
             }
         }
     }
 
-    public function updatePropietarioAll($old, $new)
+    public function updatePropietarioAll(string $old, string $new): void
     {
         // conectar con DB sv-e:
         $oConfigDB = new ConfigDB('importar'); //de la database comun
@@ -603,13 +620,14 @@ class DBAlterSchema
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
 
-            return $this->handleSqlError($sClauError, $oDbSve);
+            $this->handleSqlError($sClauError, $oDbSve);
+            return;
         }
 
         if ($oDblSt->execute() === false) {
             $sClauError = 'DBAlterSchema.crearSchema.execute';
 
-            return $this->handleSqlError($sClauError, $oDblSt);
+            $this->handleSqlError($sClauError, $oDblSt);
         }
         $sql = "UPDATE publicv.d_asistentes_de_paso set propietario = regexp_replace(propietario::text, '\m$old\M', '$new', 'g')::text where propietario is not null;";
 
@@ -617,13 +635,14 @@ class DBAlterSchema
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
 
-            return $this->handleSqlError($sClauError, $oDbSve);
+            $this->handleSqlError($sClauError, $oDbSve);
+            return;
         }
 
         if ($oDblSt->execute() === false) {
             $sClauError = 'DBAlterSchema.crearSchema.execute';
 
-            return $this->handleSqlError($sClauError, $oDblSt);
+            $this->handleSqlError($sClauError, $oDblSt);
         }
     }
 
@@ -632,7 +651,7 @@ class DBAlterSchema
      * @param array $aDatos
      *     ['tabla' => 'a_actividades_dl', 'campo' => 'dl_org', 'pattern' => "$dl_old(.*)", 'replacement' => "$DlNew\1"]
      */
-    public function updateDatosRegexpTodos(array $aDatos)
+    /** @param list<array{tabla: string, campo: string, pattern: string, replacement: string}> $aDatos */ public function updateDatosRegexpTodos(array $aDatos): void
     {
         foreach ($aDatos as $cambio) {
             $tabla = $cambio['tabla'];
@@ -652,7 +671,7 @@ class DBAlterSchema
      *
      * @param string $dl_new (dl_org)
      */
-    public function asistentesOut2Dl(string $dl_new)
+    public function asistentesOut2Dl(string $dl_new): void
     {
         // conectar con DB comun:
         $oConfigDB = new ConfigDB('importar'); //de la database comun
@@ -669,16 +688,32 @@ class DBAlterSchema
         // sv-e
         $sQuery = "SELECT DISTINCT id_activ FROM $full_asistentes_out";
 
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+        $oDblSt = $oDbl->query($sQuery);
+        if ($oDblSt === false) {
             $sClauError = 'AlterSchemna.asistenteOut';
-            return $this->handleSqlError($sClauError, $oDbl);
+            $this->handleSqlError($sClauError, $oDbl);
+            return;
         }
         $aId_activ = [];
-        foreach ($oDbl->query($sQuery) as $aDades) {
-            $id_activ = $aDades['id_activ'];
+        while (($aDades = $oDblSt->fetch(PDO::FETCH_ASSOC)) !== false) {
+            if (!is_array($aDades)) {
+                continue;
+            }
+            $idActivRaw = $aDades['id_activ'] ?? null;
+            if (is_int($idActivRaw)) {
+                $id_activ = $idActivRaw;
+            } elseif (is_string($idActivRaw) && is_numeric($idActivRaw)) {
+                $id_activ = (int) $idActivRaw;
+            } else {
+                continue;
+            }
             // buscar la dl_org
             $sql = "SELECT dl_org FROM a_actividades_all WHERE id_activ = $id_activ ";
-            $dl_org = $oDbComun->query($sql)->fetchColumn();
+            $stmtDlOrg = $oDbComun->query($sql);
+            if ($stmtDlOrg === false) {
+                continue;
+            }
+            $dl_org = $stmtDlOrg->fetchColumn();
             if ($dl_org == $dl_new) {
                 $aId_activ[] = $id_activ;
             }
@@ -686,7 +721,7 @@ class DBAlterSchema
 
         if (!empty($aId_activ)) {
             // mover las asistencias_out de $aId_activ a asistencias_dl
-            $txt_ids = implode(',', $aId_activ);
+            $txt_ids = implode(',', array_map(static fn (int $id): string => (string) $id, $aId_activ));
             $condicion = "id_activ IN ($txt_ids)";
             $campos = 'id_activ, id_nom, propio, est_ok, cfi, cfi_con, falta, encargo, dl_responsable, observ, id_tabla, plaza, propietario, observ_est';
             $update = $this->buildUpdateSetFromCampos($campos, ['id_activ', 'id_nom']);
@@ -698,14 +733,14 @@ class DBAlterSchema
             if (($oDblSt = $oDbl->query($insert)) === false) {
                 $sClauError = 'AlterSchemna.asistenteOut';
 
-                return $this->handleSqlError($sClauError, $oDbl);
+                $this->handleSqlError($sClauError, $oDbl);
             }
             // las borro de d_asistencias_out
             $delete = "DELETE FROM $full_asistentes_out WHERE $condicion";
             if (($oDblSt = $oDbl->query($delete)) === false) {
                 $sClauError = 'AlterSchemna.asistenteOut';
 
-                return $this->handleSqlError($sClauError, $oDbl);
+                $this->handleSqlError($sClauError, $oDbl);
             }
         }
     }
@@ -716,7 +751,7 @@ class DBAlterSchema
      *  la tabla de a_importadas.
      *
      */
-    public function asistentesOut2DlPropia()
+    public function asistentesOut2DlPropia(): void
     {
         // conectar con DB comun:
         $oConfigDB = new ConfigDB('importar'); //de la database comun
@@ -733,26 +768,44 @@ class DBAlterSchema
         // sv-e
         $sQuery = "SELECT DISTINCT id_activ FROM $full_asistentes_out";
 
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+        $oDblSt = $oDbl->query($sQuery);
+        if ($oDblSt === false) {
             $sClauError = 'AlterSchemna.asistenteOut';
-            return $this->handleSqlError($sClauError, $oDbl);
+            $this->handleSqlError($sClauError, $oDbl);
+            return;
         }
         $esquema_comun = substr($this->schema, 0, -1); // quito la v o la f.
         $full_actividades_dl = "\"$esquema_comun\".a_actividades_dl";
         $aId_activ = [];
-        foreach ($oDbl->query($sQuery) as $aDades) {
-            $id_activ = $aDades['id_activ'];
+        while (($aDades = $oDblSt->fetch(PDO::FETCH_ASSOC)) !== false) {
+            if (!is_array($aDades)) {
+                continue;
+            }
+            $idActivRaw = $aDades['id_activ'] ?? null;
+            if (is_int($idActivRaw)) {
+                $id_activ = $idActivRaw;
+            } elseif (is_string($idActivRaw) && is_numeric($idActivRaw)) {
+                $id_activ = (int) $idActivRaw;
+            } else {
+                continue;
+            }
             // buscar si están en la dl
             $sql = "SELECT id_activ FROM $full_actividades_dl WHERE id_activ = $id_activ ";
-            $id_activ_dl = $oDbComun->query($sql)->fetchColumn();
-            if (!empty($id_activ_dl)) {
-                $aId_activ[] = $id_activ_dl;
+            $stmtIdActiv = $oDbComun->query($sql);
+            if ($stmtIdActiv === false) {
+                continue;
+            }
+            $idActivDlRaw = $stmtIdActiv->fetchColumn();
+            if (is_int($idActivDlRaw)) {
+                $aId_activ[] = $idActivDlRaw;
+            } elseif (is_string($idActivDlRaw) && is_numeric($idActivDlRaw)) {
+                $aId_activ[] = (int) $idActivDlRaw;
             }
         }
 
         if (!empty($aId_activ)) {
             // mover las asistencias_out de $aId_activ a asistencias_dl
-            $txt_ids = implode(',', $aId_activ);
+            $txt_ids = implode(',', array_map(static fn (int $id): string => (string) $id, $aId_activ));
             $condicion = "id_activ IN ($txt_ids)";
             $campos = 'id_activ, id_nom, propio, est_ok, cfi, cfi_con, falta, encargo, dl_responsable, observ, id_tabla, plaza, propietario, observ_est';
             $update = $this->buildUpdateSetFromCampos($campos, ['id_activ', 'id_nom']);
@@ -762,14 +815,14 @@ class DBAlterSchema
             if (($oDblSt = $oDbl->query($insert)) === false) {
                 $sClauError = 'AlterSchemna.asistenteOut';
 
-                return $this->handleSqlError($sClauError, $oDbl);
+                $this->handleSqlError($sClauError, $oDbl);
             }
             // borrar de asistentes_out
             $delete = "DELETE FROM $full_asistentes_dl WHERE $condicion";
             if (($oDblSt = $oDbl->query($delete)) === false) {
                 $sClauError = 'AlterSchemna.asistenteOut';
 
-                return $this->handleSqlError($sClauError, $oDbl);
+                $this->handleSqlError($sClauError, $oDbl);
             }
             // borrar de a_importadas
             $full_importadas = "\"$esquema_comun\".a_importadas";
@@ -777,7 +830,7 @@ class DBAlterSchema
             if (($oDblSt = $oDbComun->query($delete)) === false) {
                 $sClauError = 'AlterSchemna.asistenteOut';
 
-                return $this->handleSqlError($sClauError, $oDbComun);
+                $this->handleSqlError($sClauError, $oDbComun);
             }
         }
     }
@@ -787,7 +840,7 @@ class DBAlterSchema
      * Es para borrar si queda alguna de la propia dl.
      *
      */
-    public function comprobarImportadas()
+    public function comprobarImportadas(): void
     {
         // conectar con DB comun:
         $oConfigDB = new ConfigDB('importar'); //de la database comun
@@ -810,7 +863,7 @@ class DBAlterSchema
      * por ejemplo los sacd: puede haber dos sacd en la actividad, uno en cada dl con
      * id_cargo=35. Se añade el segundo con id_cargo=36.
      */
-    public function insertarCargos()
+    public function insertarCargos(): void
     {
         $oDbl = $this->getPdoDB();
         $tabla = 'd_cargos_activ_dl';
@@ -825,21 +878,51 @@ class DBAlterSchema
         if ($oDbl->query($sql) === false) {
             $sClauError = 'DBAlterSchema.insertarCargos.select';
 
-            return $this->handleSqlError($sClauError, $oDbl);
+            $this->handleSqlError($sClauError, $oDbl);
         }
         // tipos de cargo:
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        foreach ($oDbl->query($sql) as $aDades) {
-            $id_activ = $aDades['id_activ'];
-            $id_cargo = $aDades['id_cargo'];
+        $CargoRepository = $this->cargoRepository;
+        if ($CargoRepository === null) {
+            $this->errores[] = 'DBAlterSchema.insertarCargos: CargoRepository no configurado.';
+
+            return;
+        }
+        $stmtCargos = $oDbl->query($sql);
+        if ($stmtCargos === false) {
+            return;
+        }
+        while (($aDades = $stmtCargos->fetch(PDO::FETCH_ASSOC)) !== false) {
+            if (!is_array($aDades)) {
+                continue;
+            }
+            $idActivRaw = $aDades['id_activ'] ?? null;
+            $idCargoRaw = $aDades['id_cargo'] ?? null;
+            $idNomMatrizRaw = $aDades['id_nom_matriz'] ?? null;
+            $idNomDelRaw = $aDades['id_nom_del'] ?? null;
+            if (
+                !((is_int($idActivRaw) || (is_string($idActivRaw) && is_numeric($idActivRaw)))
+                    && (is_int($idCargoRaw) || (is_string($idCargoRaw) && is_numeric($idCargoRaw)))
+                    && (is_int($idNomMatrizRaw) || (is_string($idNomMatrizRaw) && is_numeric($idNomMatrizRaw)))
+                    && (is_int($idNomDelRaw) || (is_string($idNomDelRaw) && is_numeric($idNomDelRaw))))
+            ) {
+                continue;
+            }
+            $id_activ = (int) $idActivRaw;
+            $id_cargo = (int) $idCargoRaw;
             // comprobar que no sea el mismo id_nom...
-            $id_nom_matriz = $aDades['id_nom_matriz'];
-            $id_nom_del = $aDades['id_nom_del'];
+            $id_nom_matriz = (int) $idNomMatrizRaw;
+            $id_nom_del = (int) $idNomDelRaw;
             if ($id_nom_matriz == $id_nom_del) {
                 continue;
             }
             $oCargo = $CargoRepository->findById($id_cargo);
-            $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
+            if ($oCargo === null) {
+                continue;
+            }
+            $tipo_cargo = $oCargo->getTipoCargoVo()?->value() ?? '';
+            if ($tipo_cargo === '') {
+                continue;
+            }
             $cargos_de_tipo = $CargoRepository->getArrayCargos($tipo_cargo);
             $txt_ids = implode(',', array_keys($cargos_de_tipo));
             $condicion_cargo = " AND id_cargo IN ($txt_ids)";
@@ -847,7 +930,18 @@ class DBAlterSchema
             $sql1 = "SELECT id_cargo FROM $full_name WHERE id_activ = $id_activ $condicion_cargo ";
             $sql2 = "SELECT id_cargo FROM $full_name WHERE id_activ = $id_activ $condicion_cargo ";
             $sql = "$sql1 UNION $sql2 ORDER BY 1 DESC";
-            $id_cargo_max = $oDbl->query($sql)->fetchColumn();
+            $stmtMax = $oDbl->query($sql);
+            if ($stmtMax === false) {
+                continue;
+            }
+            $idCargoMaxRaw = $stmtMax->fetchColumn();
+            if (is_int($idCargoMaxRaw)) {
+                $id_cargo_max = $idCargoMaxRaw;
+            } elseif (is_string($idCargoMaxRaw) && is_numeric($idCargoMaxRaw)) {
+                $id_cargo_max = (int) $idCargoMaxRaw;
+            } else {
+                $id_cargo_max = 0;
+            }
             $id_cargo_max++;
             // compruebo que está en el rango del tipo cargo, sino lo desprecio.
             if (!empty($cargos_de_tipo[$id_cargo_max])) {
@@ -870,11 +964,11 @@ class DBAlterSchema
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBAlterSchema.crearSchema.prepare';
             $sClauError .= ' ' . $sql;
-            return $this->handleSqlError($sClauError, $oDbl);
+            $this->handleSqlError($sClauError, $oDbl);
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBAlterSchema.crearSchema.execute';
-                return $this->handleSqlError($sClauError, $oDblSt);
+                $this->handleSqlError($sClauError, $oDblSt);
             }
         }
     }
@@ -894,16 +988,24 @@ class DBAlterSchema
                     JOIN pg_class as p ON (inhparent=p.oid), pg_namespace n, pg_namespace n1 
                 WHERE c.relnamespace = n.oid AND n.nspname='$esquema' AND p.relnamespace = n1.oid;";
 
-        if (($conexionDB->query($sql)) === false) {
+        $stmt = $conexionDB->query($sql);
+        if ($stmt === false) {
             $sClauError = 'AlterSchemna.asistenteOut';
 
-            return $this->handleSqlError($sClauError, $conexionDB);
+            $this->handleSqlError($sClauError, $conexionDB);
+            return false;
         }
-        foreach ($conexionDB->query($sql) as $aDades) {
-            $child = $aDades['child'];
-            $schema_child = $aDades['schema_child'];
-            $parent = $aDades['parent'];
-            $schema_parent = $aDades['schema_parent'];
+        while (($aDades = $stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
+            if (!is_array($aDades)) {
+                continue;
+            }
+            $child = $aDades['child'] ?? null;
+            $schema_child = $aDades['schema_child'] ?? null;
+            $parent = $aDades['parent'] ?? null;
+            $schema_parent = $aDades['schema_parent'] ?? null;
+            if (!is_string($child) || !is_string($schema_child) || !is_string($parent) || !is_string($schema_parent)) {
+                continue;
+            }
 
             $full_child = "\"$schema_child\".$child";
             $full_parent = "\"$schema_parent\".$parent";

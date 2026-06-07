@@ -13,28 +13,13 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
  */
 final class CentrosGetNumDataTest extends TestCase
 {
-    private mixed $previousContainer = null;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_execute_cumple_contrato_de_claves(): void
     {
-        $GLOBALS['container'] = $this->containerConCentros([]);
-        $data = CentrosGetNumData::execute();
+        $repo = $this->createMock(CentroDlRepositoryInterface::class);
+        $repo->method('getCentros')->willReturn([]);
+
+        $useCase = new CentrosGetNumData($repo);
+        $data = $useCase->execute();
 
         $this->assertSame(['a_cabeceras', 'a_valores'], array_keys($data));
         $this->assertCount(4, $data['a_cabeceras']);
@@ -65,9 +50,12 @@ final class CentrosGetNumDataTest extends TestCase
                 return null;
             }
         };
-        $GLOBALS['container'] = $this->containerConCentros([$centro]);
 
-        $data = CentrosGetNumData::execute();
+        $repo = $this->createMock(CentroDlRepositoryInterface::class);
+        $repo->method('getCentros')->willReturn([$centro]);
+
+        $useCase = new CentrosGetNumData($repo);
+        $data = $useCase->execute();
 
         $this->assertSame([
             1 => [
@@ -77,30 +65,5 @@ final class CentrosGetNumDataTest extends TestCase
                 4 => '0',
             ],
         ], $data['a_valores']);
-    }
-
-    /**
-     * @param list<object> $centros
-     */
-    private function containerConCentros(array $centros): object
-    {
-        return new class($centros) {
-            public function __construct(private readonly array $centros) {}
-
-            public function get(string $key): object
-            {
-                if ($key !== CentroDlRepositoryInterface::class) {
-                    throw new \RuntimeException("Clave inesperada: $key");
-                }
-                return new class($this->centros) {
-                    public function __construct(private readonly array $centros) {}
-
-                    public function getCentros(array $_where = [], array $_operators = []): array
-                    {
-                        return $this->centros;
-                    }
-                };
-            }
-        };
     }
 }

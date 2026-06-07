@@ -25,13 +25,13 @@ class Dossier
 
     private ?DateTimeLocal $f_camb_dossier = null;
 
-    private ?bool $active;
+    private bool $active = false;
 
     private ?DateTimeLocal $f_active = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getDossierPk()
+    public function getDossierPk(): DossierPk
     {
         return DossierPk::fromArray(['id_tipo_dossier' => $this->id_tipo_dossier,
             'id_pau' => $this->id_pau,
@@ -43,14 +43,14 @@ class Dossier
     {
         $oHoy = new DateTimeLocal();
         $this->setF_active($oHoy);
-        $this->setActive('t');
+        $this->setActive(true);
     }
 
     public function cerrar(): void
     {
         $oHoy = new DateTimeLocal();
         $this->setF_active($oHoy);
-        $this->setActive('f');
+        $this->setActive(false);
     }
 
     /**
@@ -71,14 +71,18 @@ class Dossier
      */
     public function setTabla(string $tabla): void
     {
-        $this->tabla = DossierTabla::fromNullableString($tabla);
+        $vo = DossierTabla::fromNullableString($tabla);
+        if ($vo === null) {
+            throw new \InvalidArgumentException('tabla cannot be empty');
+        }
+        $this->tabla = $vo;
     }
 
     public function setTablaVo(DossierTabla|string|null $vo): void
     {
         $this->tabla = $vo instanceof DossierTabla
             ? $vo
-            : DossierTabla::fromNullableString($vo);
+            : (DossierTabla::fromNullableString(is_string($vo) ? $vo : null) ?? throw new \InvalidArgumentException('tabla cannot be empty'));
     }
 
 

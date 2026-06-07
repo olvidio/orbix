@@ -1,77 +1,63 @@
 <?php
-/**
- * Subida AJAX del PDF (certificado recibido, FormData multipart).
- */
+
+use function frontend\shared\helpers\is_true;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 use src\certificados\domain\CertificadoRecibidoUpload;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\ui\http\MultipartUploadGuard;
-
-use function frontend\shared\helpers\is_true;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 header('Content-Type: application/json; charset=UTF-8');
+
+/** @var CertificadoRecibidoUpload $certificadoUpload */
+$certificadoUpload = DependencyResolver::get(CertificadoRecibidoUpload::class);
 
 $uploaded = MultipartUploadGuard::requireUploadedFileOrExit('certificado_pdf');
 $tmpFilePath = $uploaded['tmp_name'];
 $fileName = $uploaded['name'];
 
 $error_txt = '';
+$jsondata = ['success' => true];
 
-if ($tmpFilePath !== '') {
+if ($tmpFilePath === '') {
+    $error_txt = sprintf(_('No se puede subir el archivo %s'), $fileName);
+} else {
     $fp = fopen($tmpFilePath, 'rb');
     if ($fp === false) {
-        $error_txt = sprintf(_("No se puede abrir el archivo %s"), $fileName);
+        $error_txt = sprintf(_('No se puede abrir el archivo %s'), $fileName);
     } else {
-        $contenido_doc = fread($fp, filesize($tmpFilePath));
+        $fileSize = filesize($tmpFilePath);
+        $contenido_doc = $fileSize > 0 ? fread($fp, $fileSize) : '';
         fclose($fp);
         if ($contenido_doc === false) {
-            $error_txt = sprintf(_("No se puede leer el archivo %s"), $fileName);
+            $error_txt = sprintf(_('No se puede leer el archivo %s'), $fileName);
         } else {
-            $Qid_item = (integer) filter_input(INPUT_POST, 'id_item');
-            $Qid_nom = (integer) filter_input(INPUT_POST, 'id_nom');
-            $Qcertificado = (string) filter_input(INPUT_POST, 'certificado');
-            $Qfirmado = (string) filter_input(INPUT_POST, 'firmado');
-            $Qf_certificado = (string) filter_input(INPUT_POST, 'f_certificado');
-            $Qidioma = (string) filter_input(INPUT_POST, 'idioma');
-            $Qdestino = (string) filter_input(INPUT_POST, 'destino');
-            $Qf_recibido = (string) filter_input(INPUT_POST, 'f_recibido');
-            /* convertir las fechas a DateTimeLocal */
-            $oF_certificado = DateTimeLocal::createFromLocal($Qf_certificado);
-            $oF_recibido = DateTimeLocal::createFromLocal($Qf_recibido);
-
-            if (is_true($Qfirmado)) {
-                $firmado = true;
-            } else {
-                $firmado = false;
-            }
-
-            $oCertificadoRecibido = (new CertificadoRecibidoUpload())->uploadNew(
-                $Qid_item,
-                $Qid_nom,
-                $contenido_doc,
-                $Qidioma,
-                $Qcertificado,
-                $firmado,
+            $oF_certificado = DateTimeLocal::createFromLocal(input_string($_POST, 'f_certificado'));
+            $oF_recibido = DateTimeLocal::createFromLocal(input_string($_POST, 'f_recibido'));
+            $oCertificadoRecibido = $certificadoUpload->uploadNew(
+                input_int($_POST, 'id_item'),
+                input_int($_POST, 'id_nom'),
+                (string) $contenido_doc,
+                input_string($_POST, 'idioma'),
+                input_string($_POST, 'certificado'),
+                is_true(input_string($_POST, 'firmado')),
                 $oF_certificado,
                 $oF_recibido,
-                $Qdestino
+                input_string($_POST, 'destino') ?: null,
             );
             if (!is_object($oCertificadoRecibido)) {
-                $error_txt .= $oCertificadoRecibido;
+                $error_txt .= (string) $oCertificadoRecibido;
             }
         }
     }
-} else {
-    $error_txt .= sprintf(_("No se puede subir el archivo %s"), $fileName);
 }
 
-if (!empty($error_txt)) {
-    $jsondata['success'] = false;
-    $jsondata['mensaje'] = $error_txt;
-} else {
-    $jsondata['success'] = true;
+if ($error_txt !== '') {
+    $jsondata = ['success' => false, 'mensaje' => $error_txt];
 }
 
 echo json_encode($jsondata, JSON_THROW_ON_ERROR);

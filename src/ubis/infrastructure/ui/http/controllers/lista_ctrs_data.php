@@ -1,11 +1,16 @@
 <?php
 
+use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\CentrosSListaData;
 use src\shared\web\ContestarJson;
 
-$data = CentrosSListaData::execute();
-if (isset($data['error'])) {
-    ContestarJson::enviar((string)$data['error'], []);
+use function src\shared\domain\helpers\input_string;
+
+/** @var CentrosSListaData $useCase */
+$useCase = DependencyResolver::get(CentrosSListaData::class);
+$data = $useCase->execute();
+if (array_key_exists('error', $data)) {
+    ContestarJson::enviar(input_string($data, 'error'), []);
     return;
 }
 ContestarJson::enviar('', [

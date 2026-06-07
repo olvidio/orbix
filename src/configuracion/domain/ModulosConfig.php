@@ -2,10 +2,12 @@
 
 namespace src\configuracion\domain;
 
-
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\contracts\ModuloInstaladoRepositoryInterface;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
+use src\configuracion\domain\entity\App;
+use src\configuracion\domain\entity\Modulo;
+use src\configuracion\domain\entity\ModuloInstalado;
 
 /**
  * Description of modulosconfig
@@ -14,37 +16,56 @@ use src\configuracion\domain\contracts\ModuloRepositoryInterface;
  */
 class ModulosConfig
 {
+    /** @var array<int, array{nom: string, mods_req: list<int>, apps_req: list<int>}> */
+    private array $a_mods_todos = [];
 
-    private $a_mods_todos = [];
-    private $a_apps_todas = [];
-    private $cMods;
-    private $cApps;
+    /** @var array<int, string> */
+    private array $a_apps_todas = [];
 
-    private $a_mods_installed = [];
-    private array|bool $cModsInstalados;
+    /** @var list<Modulo> */
+    private array $cMods = [];
 
-    public function __construct()
-    {
-        $MooduloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
-        $this->cMods = $MooduloRepository->getModulos();
+    /** @var list<App> */
+    private array $cApps = [];
 
-        $AppRepository = $GLOBALS['container']->get(AppRepositoryInterface::class);
-        $this->cApps = $AppRepository->getApps();
+    /** @var array<int, string> */
+    private array $a_mods_installed = [];
+
+    /** @var list<ModuloInstalado> */
+    private array $cModsInstalados = [];
+
+    public function __construct(
+        private ModuloRepositoryInterface $moduloRepository,
+        private AppRepositoryInterface $appRepository,
+        private ModuloInstaladoRepositoryInterface $moduloInstaladoRepository,
+    ) {
+        $this->cMods = $this->moduloRepository->getModulos();
+        $this->cApps = $this->appRepository->getApps();
     }
 
-    public function getModsAll()
+    /**
+     * @return array<int, array{nom: string, mods_req: list<int>, apps_req: list<int>}>
+     */
+    public function getModsAll(): array
     {
         foreach ($this->cMods as $oMod) {
             $id_mod = $oMod->getId_mod();
             $nom_mod = $oMod->getNomVo()->value();
-            $mods_req = $oMod->getMods_req();
-            $apps_req = $oMod->getApps_req();
-            $this->a_mods_todos[$id_mod] = array('nom' => $nom_mod, 'mods_req' => $mods_req, 'apps_req' => $apps_req);
+            $mods_req = array_values(array_map(intval(...), $oMod->getMods_req() ?? []));
+            $apps_req = array_values(array_map(intval(...), $oMod->getApps_req() ?? []));
+            $this->a_mods_todos[$id_mod] = [
+                'nom' => $nom_mod,
+                'mods_req' => $mods_req,
+                'apps_req' => $apps_req,
+            ];
         }
         return $this->a_mods_todos;
     }
 
-    public function getAppsAll()
+    /**
+     * @return array<int, string>
+     */
+    public function getAppsAll(): array
     {
         foreach ($this->cApps as $oApp) {
             $id_app = $oApp->getIdAppVo()->value();
@@ -54,54 +75,61 @@ class ModulosConfig
         return $this->a_apps_todas;
     }
 
-    // APLICACIONES INSTALADAS EN LA DL
-    public function getModsInstalados()
+    /**
+     * @return array<int, string>
+     */
+    public function getModsInstalados(): array
     {
-        $ModuloInstaladoRepository = $GLOBALS['container']->get(ModuloInstaladoRepositoryInterface::class);
-        $this->cModsInstalados = $ModuloInstaladoRepository->getModulosInstalados();
+        $this->cModsInstalados = $this->moduloInstaladoRepository->getModuloInstalados();
+        $a_mods = $this->getModsAll();
         foreach ($this->cModsInstalados as $oMod) {
             $id_mod = $oMod->getId_mod();
-            $nom_mod = $oMod->getNomVo()->value();
+            $nom_mod = $a_mods[$id_mod]['nom'] ?? (string)$id_mod;
             $this->a_mods_installed[$id_mod] = $nom_mod;
         }
         return $this->a_mods_installed;
     }
 
-    public function getAppsMods($id_mod)
+    /**
+     * @return list<int>
+     */
+    public function getAppsMods(int $id_mod): array
     {
-        $apps = [];
-        if (empty($id_mod)) {
-            return $apps;
+        if ($id_mod === 0) {
+            return [];
         }
         $a_mods = $this->getModsAll();
-        $mods_req = $a_mods[$id_mod]['mods_req']?? [];
+        $mods_req = $a_mods[$id_mod]['mods_req'] ?? [];
         $all = [];
         foreach ($mods_req as $mod) {
             $all[] = $this->getApps($mod);
         }
-        $apps = array_merge(...$all);
+        if ($all === []) {
+            return $this->getApps($id_mod);
+        }
+        $apps = array_merge([], ...$all);
+        $apps = array_merge($apps, $this->getApps($id_mod));
 
-        $apps_propias = $this->getApps($id_mod);
-        $apps = array_merge($apps, $apps_propias);
-
-        $apps = array_unique($apps);
-
-        return $apps;
+        return array_values(array_unique($apps));
     }
 
-    public function getApps($id_mod)
+    /**
+     * @return list<int>
+     */
+    public function getApps(int $id_mod): array
     {
-        $apps = [];
-        if (empty($id_mod)) {
-            return $apps;
+        if ($id_mod === 0) {
+            return [];
         }
         $a_mods = $this->getModsAll();
-        return $a_mods[$id_mod]['apps_req'];
+        return $a_mods[$id_mod]['apps_req'] ?? [];
     }
 
-    public function getAppsInstaladas()
+    /**
+     * @return list<int>
+     */
+    public function getAppsInstaladas(): array
     {
-        //$a_apps = $this->getAppsAll();
         $app_installed = [];
 
         $a_mods_installed = $this->getModsInstalados();
@@ -110,8 +138,7 @@ class ModulosConfig
             $ap2 = $this->getApps($id_mod);
             array_push($app_installed, ...$ap1, ...$ap2);
         }
-        $app_installed = array_unique($app_installed);
-        return $app_installed;
-    }
 
+        return array_values(array_unique($app_installed));
+    }
 }

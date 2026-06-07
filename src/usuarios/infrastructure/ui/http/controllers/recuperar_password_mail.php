@@ -5,8 +5,10 @@
  * y envía la nueva contraseña por correo electrónico.
  */
 
+use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\PgColaMailRepository;
 use src\shared\domain\entity\ColaMail;
 use src\shared\domain\value_objects\ColaMailId;
 use src\shared\domain\value_objects\Uuid;
@@ -22,6 +24,7 @@ $Qurl_index = (string)filter_input(INPUT_POST, 'url_index');
 $error_txt = '';
 $aWhere = array('usuario' => $Qusername);
 $esquema = empty($Qesquema) ? $Qesquema_web : $Qesquema;
+$oDB = null;
 if (substr($esquema, -1) === 'v') {
     $sfsv = 1;
     $oConfigDB = new ConfigDB('sv-e');
@@ -38,26 +41,37 @@ if (substr($esquema, -1) === 'f') {
     $oDB = $oConexion->getPDO();
 }
 
+if (!($oDB instanceof \PDO)) {
+    ContestarJson::enviar(_("Esquema no válido"), ['error_txt' => _("Esquema no válido"), 'success' => false, 'email' => '????']);
+    return;
+}
+
 // Buscar el usuario en la base de datos
 $query = "SELECT * FROM aux_usuarios WHERE usuario = :usuario";
-if (($oDBSt = $oDB->prepare($query)) === false) {
+$oDBSt = $oDB->prepare($query);
+if ($oDBSt === false) {
     $sClauError = 'recuperar_password.prepare';
-    $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
+    if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+        $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, (string)__LINE__, __FILE__);
+    }
     $error_txt .= _("Error al preparar la consulta");
 }
 
-if (($oDBSt->execute($aWhere)) === false) {
+if ($oDBSt !== false && $oDBSt->execute($aWhere) === false) {
     $sClauError = 'recuperar_password.execute';
-    $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
+    if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+        $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, (string)__LINE__, __FILE__);
+    }
     $error_txt .= _("Error al ejecutar la consulta");
 }
 
 $success = false;
 $email = '????';
 
-if (empty($error_txt) && ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC))) {
+$row = $oDBSt !== false ? $oDBSt->fetch(\PDO::FETCH_ASSOC) : false;
+if (empty($error_txt) && is_array($row)) {
     $id_usuario = $row['id_usuario'];
-    $email = $row['email'];
+    $email = is_string($row['email'] ?? null) ? $row['email'] : '????';
 
     if (empty($email)) {
         $error_txt = _("No hay email asociado a este usuario");
@@ -102,7 +116,7 @@ if (empty($error_txt) && ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC))) {
             $oConexion = new DBConnection($config);
             $oDBPC = $oConexion->getPDO();
 
-            $oColaMailRepository = $GLOBALS['container']->get(ColaMailRepositoryInterface::class);
+            $oColaMailRepository = new PgColaMailRepository();
             $oColaMailRepository->setoDbl($oDBPC);
             if ($oColaMailRepository->Guardar($oColaMail)) {
                 $success = true;
@@ -113,12 +127,12 @@ if (empty($error_txt) && ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC))) {
             $error_txt = _("Error al actualizar la contraseña");
         }
     }
-} else {
+} elseif (empty($error_txt)) {
     $error_txt = _("No se encontró ningún usuario con ese nombre");
 }
 
 // Función para generar una contraseña aleatoria
-function generateRandomPassword($length = 10)
+function generateRandomPassword(int $length = 10): string
 {
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
     $password = '';

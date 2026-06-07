@@ -2,6 +2,7 @@
 
 namespace src\actividadessacd\infrastructure\persistence\postgresql;
 
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
@@ -17,9 +18,9 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBE'];
+        $oDbl = GlobalPdo::get('oDBE');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBE_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('a_sacd_textos');
     }
@@ -27,11 +28,9 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
-     * devuelve una colección (array) de objetos de tipo ActividadSacdTexto
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActividadSacdTexto
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<ActividadSacdTexto>
      */
     public function getActividadSacdTextos(array $aWhere = [], array $aOperators = []): array
     {
@@ -68,13 +67,13 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+        if (isset($aWhere['_ordre']) && is_string($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
             $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+        if (isset($aWhere['_limit']) && is_string($aWhere['_limit']) && $aWhere['_limit'] !== '') {
             $sLimit = ' LIMIT ' . $aWhere['_limit'];
         }
         if (isset($aWhere['_limit'])) {
@@ -82,13 +81,19 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $ActividadSacdTexto = ActividadSacdTexto::fromArray($aDatos);
             $ActividadSacdTextoSet->add($ActividadSacdTexto);
         }
-        return $ActividadSacdTextoSet->getTot();
+        return array_values($ActividadSacdTextoSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -131,6 +136,9 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -140,28 +148,37 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array |bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string)$key] = $value;
+        }
+        return $result;
     }
 
 
@@ -171,16 +188,24 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
     public function findById(int $id_item): ?ActividadSacdTexto
     {
         $aDatos = $this->datosById($id_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return ActividadSacdTexto::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int|string
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('a_sacd_textos_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+        if ($id === false) {
+            return 0;
+        }
+        return is_numeric($id) ? (int)$id : (string)$id;
     }
 }

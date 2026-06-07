@@ -14,27 +14,46 @@ use src\usuarios\domain\contracts\LocalRepositoryInterface;
  */
 final class ListasComTxtData
 {
+
+    public function __construct(
+        private EncargoTextoRepositoryInterface $encargoTextoRepository,
+        private LocalRepositoryInterface $localRepository
+    ) {
+    }
+
     /**
      * @return array{ a_locales: array<string, string>, texto_inicial: string }
      */
-    public static function execute(): array
+    public function execute(): array
     {
-        $LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
-        $a_locales = $LocalRepository->getArrayLocales();
+        $a_locales = self::normalizeStringKeys($this->localRepository->getArrayLocales());
 
-        $EncargoTextoRepository = $GLOBALS['container']->get(EncargoTextoRepositoryInterface::class);
-        $cEncargoTextos = $EncargoTextoRepository->getEncargoTextos([
+        $cEncargoTextos = $this->encargoTextoRepository->getEncargoTextos([
             'clave' => 'com_sacd',
             'idioma' => 'es',
         ]);
         $texto_inicial = '';
-        if (is_array($cEncargoTextos) && count($cEncargoTextos) > 0) {
-            $texto_inicial = (string)$cEncargoTextos[0]->getTexto();
+        if ($cEncargoTextos !== []) {
+            $texto_inicial = (string) $cEncargoTextos[0]->getTexto();
         }
 
         return [
             'a_locales' => $a_locales,
             'texto_inicial' => $texto_inicial,
         ];
+    }
+
+    /**
+     * @param array<int|string, string> $opciones
+     * @return array<string, string>
+     */
+    private static function normalizeStringKeys(array $opciones): array
+    {
+        $out = [];
+        foreach ($opciones as $k => $v) {
+            $out[(string) $k] = $v;
+        }
+
+        return $out;
     }
 }

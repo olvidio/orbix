@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
 
@@ -18,17 +19,23 @@ class PgTelecoCdcDlRepository extends PgTelecoUbiRepository implements TelecoCdc
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('d_teleco_cdc_dl');
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('d_teleco_cdc_dl_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

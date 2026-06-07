@@ -4,6 +4,7 @@ namespace src\cambios\application\legacy;
 
 use src\shared\config\ConfigGlobal;
 use src\permisos\domain\PermisosActividades;
+use src\shared\infrastructure\DependencyResolver;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
@@ -377,7 +378,10 @@ class Avisos
                     $id_cargoRaw = $aAsistente['id_cargo'] ?? null;
 
                     if ($id_cargoRaw !== null && $id_cargoRaw !== '' && is_numeric($id_cargoRaw)) {
-                        $oPermActividades = new PermisosActividades($this->id_usuario);
+                        $oPermActividades = DependencyResolver::make(
+                            PermisosActividades::class,
+                            ['idUsuario' => $this->id_usuario]
+                        );
                         $oPermActividades->setActividad($id_activ);
                         $permiso_ver = $oPermActividades->havePermisoSacd((int) $id_cargoRaw, $propio);
                     }
@@ -401,7 +405,10 @@ class Avisos
 
     private function permCargo(int $id_activ): bool
     {
-        $oPermActividades = new PermisosActividades($this->id_usuario);
+        $oPermActividades = DependencyResolver::make(
+            PermisosActividades::class,
+            ['idUsuario' => $this->id_usuario]
+        );
         $oPermActividades->setActividad($id_activ);
         $oPermActividades->setFasesCompletadas($this->aFases_cmb);
         $oPermSacd = $oPermActividades->getPermisoOn('cargos');
@@ -410,7 +417,10 @@ class Avisos
 
     private function permCargoSacd(int $id_activ): bool
     {
-        $oPermActividades = new PermisosActividades($this->id_usuario);
+        $oPermActividades = DependencyResolver::make(
+            PermisosActividades::class,
+            ['idUsuario' => $this->id_usuario]
+        );
         $oPermActividades->setActividad($id_activ);
         $oPermActividades->setFasesCompletadas($this->aFases_cmb);
         $oPermSacd = $oPermActividades->getPermisoOn('sacd');
@@ -419,7 +429,10 @@ class Avisos
 
     private function permAsiste(int $id_activ): bool
     {
-        $oPermActividades = new PermisosActividades($this->id_usuario);
+        $oPermActividades = DependencyResolver::make(
+            PermisosActividades::class,
+            ['idUsuario' => $this->id_usuario]
+        );
         $oPermActividades->setActividad($id_activ);
         $oPermActividades->setFasesCompletadas($this->aFases_cmb);
         $oPermAsisSacd = $oPermActividades->getPermisoOn('asistentesSacd');

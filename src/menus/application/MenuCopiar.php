@@ -7,12 +7,16 @@ use src\menus\domain\entity\MenuDb;
 
 class MenuCopiar
 {
+    public function __construct(
+        private MenuDbRepositoryInterface $menuDbRepository,
+    ) {
+    }
+
     public function __invoke(int $id_menu, string $gm_new): string
     {
         $error_txt = '';
 
-        $MenuDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
-        $oMenuDb = $MenuDbRepository->findById($id_menu);
+        $oMenuDb = $this->menuDbRepository->findById($id_menu);
 
         if (empty($oMenuDb)) {
             $error_txt = _("No encuentro el menu");
@@ -26,7 +30,7 @@ class MenuCopiar
             $id_metamenu = $oMenuDb->getId_metamenu();
             $perm_menu = $oMenuDb->getMenu_perm();
 
-            $id_menu_new = $MenuDbRepository->getNewId();
+            $id_menu_new = $this->menuDbRepository->getNewId();
             $oNewMenuDb = new MenuDb();
             $oNewMenuDb->setId_menu($id_menu_new);
             $oNewMenuDb->setOk($ok);
@@ -37,9 +41,9 @@ class MenuCopiar
             $oNewMenuDb->setId_metamenu($id_metamenu);
             $oNewMenuDb->setMenu_perm($perm_menu);
             $oNewMenuDb->setId_grupmenu((int)$gm_new);
-            if ($MenuDbRepository->Guardar($oNewMenuDb) === false) {
+            if ($this->menuDbRepository->Guardar($oNewMenuDb) === false) {
                 $error_txt .= _("hay un error, no se ha guardado");
-                $error_txt .= "\n" . $MenuDbRepository->getErrorTxt();
+                $error_txt .= "\n" . $this->menuDbRepository->getErrorTxt();
             }
         }
         return $error_txt;

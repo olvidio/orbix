@@ -6,12 +6,20 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 class ModificarInicialesSacdZonaData
 {
-    public static function getData(): array
+
+    public function __construct(
+        private readonly ZonaRepositoryInterface $zonaRepository,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+
+    public function getData(): array
     {
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
 
         return [
-            'a_opciones' => $ZonaRepository->getArrayZonas(),
+            'a_opciones' => $this->zonaRepository->getArrayZonas(),
         ];
     }
 }

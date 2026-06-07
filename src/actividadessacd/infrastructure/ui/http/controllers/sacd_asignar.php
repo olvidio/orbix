@@ -6,7 +6,15 @@
  */
 
 use src\actividadessacd\application\SacdAsignar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
 
-$error_txt = SacdAsignar::execute($_POST);
-ContestarJson::enviar($error_txt, 'ok');
+$input = [
+    'id_activ' => input_int($_POST, 'id_activ'),
+    'id_nom' => input_int($_POST, 'id_nom'),
+];
+
+/** @var SacdAsignar $useCase */
+$useCase = DependencyResolver::get(SacdAsignar::class);
+ContestarJson::enviar($useCase->execute($input), 'ok');

@@ -2,35 +2,44 @@
 
 namespace src\planning\application;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\web\Desplegable;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\value_objects\StatusId;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\permisos\domain\PermisosActividades;
+use src\permisos\domain\PermisosActividadesTrue;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\planning\domain\value_objects\PlanningStyle;
+use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
-use frontend\shared\web\Desplegable;
-use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\is_true;
 
 /**
  * Devuelve las actividades agrupadas por zona sacd en un periodo dado.
- *
- * Migrado desde `apps/planning/controller/planning_zones_select.php`
- * (slice 3 de la migracion del modulo planning). El controlador HTTP
- * orquesta la llamada; la vista solo recorre el resultado y dibuja el
- * calendario via `PlanningRenderer`.
  */
 class ActividadesPorZonasService
 {
+    public function __construct(
+        private CargoRepositoryInterface $cargoRepository,
+        private ZonaRepositoryInterface $zonaRepository,
+        private ZonaSacdRepositoryInterface $zonaSacdRepository,
+        private ActividadRepositoryInterface $actividadRepository,
+        private PersonaSacdRepositoryInterface $personaSacdRepository,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdHorarioRepositoryInterface $encargoSacdHorarioRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+    ) {
+    }
+
     /**
      * @return array{
-     *     actividades_por_zona: array<int, array>,
+     *     actividades_por_zona: array<int, array<int|string, mixed>>,
      *     cabeceras_por_zona: array<int, string>,
      *     zonas: int,
      *     titulo: string,
@@ -38,7 +47,7 @@ class ActividadesPorZonasService
      *     oFinPlanning: DateTimeLocal,
      * }
      */
-    public static function execute(
+    public function execute(
         string $Qid_zona,
         int $Qtrimestre,
         int $Qyear,
@@ -46,43 +55,39 @@ class ActividadesPorZonasService
         string $Qpropuesta,
         ?int $id_nom_jefe = null
     ): array {
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $CargoRepository->getArrayCargos('sacd');
+        $this->cargoRepository->getArrayCargos('sacd');
 
         $year = empty($Qyear) ? (int)date('Y') + 1 : $Qyear;
-        [$ini_trim, $fin_trim] = self::rangoTrimestre($Qtrimestre);
+        [$ini_trim, $fin_trim] = $this->rangoTrimestre($Qtrimestre);
 
         $inicio_iso = $year . "/" . $ini_trim;
         $fin_iso = ($Qtrimestre === 5 ? $year + 1 : $year) . "/" . $fin_trim;
 
         $oIniPlanning = DateTimeLocal::createFromFormat('Y/m/d', $inicio_iso);
         $oFinPlanning = DateTimeLocal::createFromFormat('Y/m/d', $fin_iso);
+        if ($oIniPlanning === false || $oFinPlanning === false) {
+            throw new \RuntimeException(_('Rango de fechas de planning no válido'));
+        }
         $inicio_local = $oIniPlanning->getFromLocal();
 
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-        $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
-        $aa_zonas = self::zonasAIterar($Qid_zona, $ZonaRepository, $ZonaSacdRepository, $id_nom_jefe);
+        $aa_zonas = $this->zonasAIterar($Qid_zona, $id_nom_jefe);
 
         $z = 0;
         $actividades_por_zona = [];
         $cabeceras_por_zona = [];
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
 
         foreach ($aa_zonas as $a_zonas) {
             $z++;
             $id_zona = $a_zonas['id_zona'];
             $nombre_zona = $a_zonas['nombre_zona'];
-            $cZonasSacd = $ZonaSacdRepository->getZonasSacds(['id_zona' => $id_zona]);
+            $cZonasSacd = $this->zonaSacdRepository->getZonasSacds(['id_zona' => $id_zona]);
             $p = 0;
             $actividades = [];
             $persona = [];
             foreach ($cZonasSacd as $oZonaSacd) {
                 $aActivPersona = [];
                 $id_nom = $oZonaSacd->getId_nom();
-                $oSacd = $PersonaSacdRepository->findById($id_nom);
+                $oSacd = $this->personaSacdRepository->findById($id_nom);
                 if ($oSacd === null || $oSacd->getSituacion() !== 'A') {
                     continue;
                 }
@@ -93,26 +98,23 @@ class ActividadesPorZonasService
                 if ($Qactividad === 'si') {
                     $aActivPersona = array_merge(
                         $aActivPersona,
-                        self::actividadesDeSacd(
+                        $this->actividadesDeSacd(
                             $id_nom,
                             $fin_iso,
                             $inicio_iso,
                             $inicio_local,
                             $oIniPlanning,
-                            $Qpropuesta,
-                            $ActividadRepository
+                            $Qpropuesta
                         )
                     );
                     $aActivPersona = array_merge(
                         $aActivPersona,
-                        self::ausenciasDeSacd(
+                        $this->ausenciasDeSacd(
                             $id_nom,
                             $fin_iso,
                             $inicio_iso,
                             $inicio_local,
-                            $oIniPlanning,
-                            $EncargoRepository,
-                            $EncargoSacdHorarioRepository
+                            $oIniPlanning
                         )
                     );
                     $actividades[$ap_nom] = [$persona[$p] => $aActivPersona];
@@ -123,7 +125,6 @@ class ActividadesPorZonasService
                 }
             }
             uksort($actividades, "strnatcasecmp");
-            // Linea en blanco al final para que se vean las 3 divisiones.
             $actividades[] = ['###' => []];
 
             $actividades_por_zona[$z] = $actividades;
@@ -143,7 +144,7 @@ class ActividadesPorZonasService
     }
 
     /** @return array{0:string,1:string} */
-    private static function rangoTrimestre(int $Qtrimestre): array
+    private function rangoTrimestre(int $Qtrimestre): array
     {
         return match ($Qtrimestre) {
             1 => ["1/1", "3/31"],
@@ -169,14 +170,10 @@ class ActividadesPorZonasService
     }
 
     /** @return array<int,array{id_zona:int|string, nombre_zona:string}> */
-    private static function zonasAIterar(
-        string $Qid_zona,
-        ZonaRepositoryInterface $ZonaRepository,
-        ZonaSacdRepositoryInterface $ZonaSacdRepository,
-        ?int $id_nom_jefe
-    ): array {
+    private function zonasAIterar(string $Qid_zona, ?int $id_nom_jefe): array
+    {
         if ($Qid_zona === 'todo_propias') {
-            $cZonasSacd = $ZonaSacdRepository->getZonasSacds(['propia' => 't']);
+            $cZonasSacd = $this->zonaSacdRepository->getZonasSacds(['propia' => 't']);
             $a_zonas = [];
             $a_zonas_o = [];
             foreach ($cZonasSacd as $oZonaSacd) {
@@ -184,7 +181,10 @@ class ActividadesPorZonasService
                 if (array_key_exists($id_zona, $a_zonas)) {
                     continue;
                 }
-                $oZona = $ZonaRepository->findById($id_zona);
+                $oZona = $this->zonaRepository->findById((int)$id_zona);
+                if ($oZona === null) {
+                    continue;
+                }
                 $a_zonas[$id_zona] = $oZona->getNombre_zona();
                 $a_zonas_o[$id_zona] = $oZona->getOrden();
             }
@@ -197,14 +197,17 @@ class ActividadesPorZonasService
         }
 
         if ($Qid_zona === 'todo') {
-            $aOpciones = $ZonaRepository->getArrayZonas($id_nom_jefe);
+            $aOpciones = $this->zonaRepository->getArrayZonas($id_nom_jefe);
             $oDesplZonas = new Desplegable();
             $oDesplZonas->setOpciones($aOpciones);
             $oDesplZonas->setBlanco(false);
             return $oDesplZonas->getOpciones()->fetchAll(\PDO::FETCH_ASSOC);
         }
 
-        $oZona = $ZonaRepository->findById($Qid_zona);
+        $oZona = $this->zonaRepository->findById((int)$Qid_zona);
+        if ($oZona === null) {
+            return [];
+        }
         return [[
             'id_zona' => $Qid_zona,
             'nombre_zona' => $oZona->getNombre_zona(),
@@ -212,16 +215,15 @@ class ActividadesPorZonasService
     }
 
     /**
-     * @return array<int,array>
+     * @return array<int,array<string, mixed>>
      */
-    private static function actividadesDeSacd(
+    private function actividadesDeSacd(
         int|string $id_nom,
         string $fin_iso,
         string $inicio_iso,
         string $inicio_local,
         DateTimeLocal $oIniPlanning,
-        string $Qpropuesta,
-        ActividadRepositoryInterface $ActividadRepository
+        string $Qpropuesta
     ): array {
         $aActivPersona = [];
         $aWhereAct = [
@@ -239,8 +241,7 @@ class ActividadesPorZonasService
             $aOperadorAct['status'] = '!=';
         }
 
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-        $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad(
+        $cAsistentes = $this->actividadCargoRepository->getAsistenteCargoDeActividad(
             ['id_nom' => $id_nom],
             [],
             $aWhereAct,
@@ -248,14 +249,17 @@ class ActividadesPorZonasService
         );
 
         foreach ($cAsistentes as $aAsistente) {
-            $id_activ = $aAsistente['id_activ'];
-            $propio = $aAsistente['propio'];
-            $plaza = $aAsistente['plaza'];
-            $id_cargo = empty($aAsistente['id_cargo']) ? '' : $aAsistente['id_cargo'];
+            $id_activRaw = $aAsistente['id_activ'] ?? null;
+            $id_activ = is_numeric($id_activRaw) ? (int)$id_activRaw : 0;
+            $propio = is_bool($aAsistente['propio']) ? $aAsistente['propio'] : is_true($aAsistente['propio']);
+            $plazaRaw = $aAsistente['plaza'] ?? null;
+            $plaza = is_int($plazaRaw) || is_string($plazaRaw) ? $plazaRaw : null;
+            $idCargoRaw = $aAsistente['id_cargo'] ?? null;
+            $id_cargo = is_scalar($idCargoRaw) && $idCargoRaw !== '' ? (string)$idCargoRaw : '';
 
             $aWhereAct['id_activ'] = $id_activ;
-            $cActividades = $ActividadRepository->getActividades($aWhereAct, $aOperadorAct);
-            if (is_array($cActividades) && count($cActividades) === 0) {
+            $cActividades = $this->actividadRepository->getActividades($aWhereAct, $aOperadorAct);
+            if (count($cActividades) === 0) {
                 continue;
             }
 
@@ -263,7 +267,6 @@ class ActividadesPorZonasService
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $oF_ini = $oActividad->getF_ini();
             $oF_fin = $oActividad->getF_fin();
-            // `TimeLocal` no implementa `__toString`; formateamos explicitamente.
             $h_ini = $oActividad->getH_ini()?->format('H:i');
             $h_fin = $oActividad->getH_fin()?->format('H:i');
             $dl_org = $oActividad->getDl_org();
@@ -272,14 +275,14 @@ class ActividadesPorZonasService
             $oTipoActividad = new TiposActividades($id_tipo_activ);
             $ssfsv = $oTipoActividad->getSfsvText();
 
-            if ($oIniPlanning > $oF_ini) {
+            if ($oF_ini !== null && $oIniPlanning > $oF_ini) {
                 $ini = $inicio_local;
                 $hini = "1:16";
             } else {
-                $ini = (string)$oF_ini->getFromLocal();
+                $ini = (string)($oF_ini?->getFromLocal() ?? $inicio_local);
                 $hini = (string)$h_ini;
             }
-            $fi = (string)$oF_fin->getFromLocal();
+            $fi = (string)($oF_fin?->getFromLocal() ?? '');
             $hfi = (string)$h_fin;
 
             if (is_true($Qpropuesta)) {
@@ -287,8 +290,16 @@ class ActividadesPorZonasService
                 $nom_llarg = $nom_activ;
             } else {
                 if (ConfigGlobal::is_app_installed('procesos')) {
-                    $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-                    $permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
+                    $oPermSesion = $_SESSION['oPermActividades'] ?? null;
+                    if ($oPermSesion instanceof PermisosActividades) {
+                        $oPermSesion->setActividad($id_activ, (string)$id_tipo_activ, $dl_org);
+                        $permiso_ver = $oPermSesion->havePermisoSacd(
+                            $id_cargo === '' ? null : (int)$id_cargo,
+                            $propio
+                        );
+                    } else {
+                        $permiso_ver = true;
+                    }
                 } else {
                     $permiso_ver = true;
                 }
@@ -297,14 +308,27 @@ class ActividadesPorZonasService
                     continue;
                 }
 
-                $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-                $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-                if ($oPermActiv->have_perm_activ('ver') === false) {
-                    $nom_curt = $ssfsv;
-                    $nom_llarg = "$ssfsv ($ini-$fi)";
+                $oPermSesion = $_SESSION['oPermActividades'] ?? null;
+                if ($oPermSesion instanceof PermisosActividades) {
+                    $oPermSesion->setActividad($id_activ, (string)$id_tipo_activ, $dl_org);
+                    $oPermActiv = $oPermSesion->getPermisoActual('datos');
+                    if ($oPermActiv->have_perm_activ('ver') === false) {
+                        $nom_curt = $ssfsv;
+                        $nom_llarg = "$ssfsv ($ini-$fi)";
+                    } else {
+                        $nom_curt = $oTipoActividad->getAsistentesText() . " " . $oTipoActividad->getActividadText();
+                        $nom_llarg = $nom_activ;
+                    }
                 } else {
-                    $nom_curt = $oTipoActividad->getAsistentesText() . " " . $oTipoActividad->getActividadText();
-                    $nom_llarg = $nom_activ;
+                    $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
+                    $oPermActiv = $oPermActividades->getPermisoActual('datos');
+                    if ($oPermActiv->have_perm_activ('ver') === false) {
+                        $nom_curt = $ssfsv;
+                        $nom_llarg = "$ssfsv ($ini-$fi)";
+                    } else {
+                        $nom_curt = $oTipoActividad->getAsistentesText() . " " . $oTipoActividad->getActividadText();
+                        $nom_llarg = $nom_activ;
+                    }
                 }
             }
 
@@ -329,16 +353,14 @@ class ActividadesPorZonasService
     }
 
     /**
-     * @return array<int,array>
+     * @return array<int,array<string, mixed>>
      */
-    private static function ausenciasDeSacd(
+    private function ausenciasDeSacd(
         int|string $id_nom,
         string $fin_iso,
         string $inicio_iso,
         string $inicio_local,
-        DateTimeLocal $oIniPlanning,
-        EncargoRepositoryInterface $EncargoRepository,
-        EncargoSacdHorarioRepositoryInterface $EncargoSacdHorarioRepository
+        DateTimeLocal $oIniPlanning
     ): array {
         $aActivPersona = [];
         $aWhereE = [
@@ -350,18 +372,15 @@ class ActividadesPorZonasService
             'f_ini' => '<=',
             'f_fin' => '>=',
         ];
-        $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
+        $cAusencias = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc = $oTareaHorarioSacd->getId_enc();
             $oF_ini = $oTareaHorarioSacd->getF_ini();
             $oF_fin = $oTareaHorarioSacd->getF_fin();
-            $h_ini = '';
-            $h_fin = '';
 
             try {
-                $oEncargo = $EncargoRepository->findById($id_enc);
+                $oEncargo = $this->encargoRepository->findById($id_enc);
             } catch (\InvalidArgumentException) {
-                // `encargos.grupo_encargo` fuera de 1,2,3,4,5,8: no se puede hidratar Encargo.
                 continue;
             }
             if ($oEncargo === null) {
@@ -373,15 +392,15 @@ class ActividadesPorZonasService
                 continue;
             }
 
-            if ($oIniPlanning > $oF_ini) {
+            if ($oF_ini !== null && $oIniPlanning > $oF_ini) {
                 $ini = $inicio_local;
                 $hini = '5:00';
             } else {
-                $ini = (string)$oF_ini->getFromLocal();
-                $hini = empty($h_ini) ? '5:00' : (string)$h_ini;
+                $ini = (string)($oF_ini?->getFromLocal() ?? $inicio_local);
+                $hini = '5:00';
             }
-            $fi = (string)$oF_fin->getFromLocal();
-            $hfi = empty($h_fin) ? '22:00' : (string)$h_fin;
+            $fi = (string)($oF_fin?->getFromLocal() ?? '');
+            $hfi = '22:00';
 
             $propio = "p";
             $nom_llarg = (string)($oEncargo->getDesc_enc() ?? '');

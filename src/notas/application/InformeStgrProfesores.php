@@ -2,7 +2,7 @@
 
 namespace src\notas\application;
 
-use src\notas\application\legacy\Resumen;
+use src\notas\application\support\ResumenFactory;
 
 /**
  * Calcula el informe anual STGR de "profesores" (puntos 36..47).
@@ -22,6 +22,11 @@ use src\notas\application\legacy\Resumen;
  */
 final class InformeStgrProfesores
 {
+    public function __construct(
+        private readonly ResumenFactory $resumenFactory,
+    ) {
+    }
+
     private const TIPO_ORDINARIO = 1;
     private const TIPO_EXTRAORDINARIO = 2;
     private const TIPO_ADJUNTO = 3;
@@ -41,7 +46,7 @@ final class InformeStgrProfesores
     {
         [$any_ini_curs, $curso_txt] = $this->cursoActual();
 
-        $Resumen = new Resumen('profesores');
+        $Resumen = $this->resumenFactory->create('profesores');
         $Resumen->setAnyIniCurs($any_ini_curs);
         $Resumen->setLista($lista);
         $Resumen->nuevaTablaProfe();

@@ -1,9 +1,15 @@
 <?php
 
 use src\procesos\application\ProcesosVerData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
-$Qmod = (string)filter_input(INPUT_POST, 'mod');
-$Qid_item = (int)filter_input(INPUT_POST, 'id_item');
+/** @var ProcesosVerData $useCase */
+$useCase = DependencyResolver::get(ProcesosVerData::class);
 
-ContestarJson::enviar('', ProcesosVerData::execute($Qmod, $Qid_item));
+$Qmod = input_string($_POST, 'mod');
+$Qid_item = input_int($_POST, 'id_item');
+
+ContestarJson::enviar('', $useCase->execute($Qmod, $Qid_item));

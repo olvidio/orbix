@@ -2,6 +2,8 @@
 
 namespace src\notas\application;
 
+use function src\shared\domain\helpers\input_string;
+
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -19,9 +21,21 @@ use src\notas\domain\value_objects\NotaEpoca;
  */
 final class BuscarActaData
 {
-    public static function execute(array $input): array
+
+    public function __construct(
+        private readonly ActaRepositoryInterface $actaRepository,
+        private readonly ActividadAllRepositoryInterface $actividadAllRepository,
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
+     */
+    public function execute(array $input): array
     {
-        $acta = (string)($input['acta'] ?? '');
+        $acta = input_string($input, 'acta');
 
         $matches = [];
         preg_match("/^(\d*)(\/)?(\d*)/", $acta, $matches);
@@ -32,7 +46,7 @@ final class BuscarActaData
                 : "$mi_dele $acta";
         }
 
-        $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+        $ActaRepository = $this->actaRepository;
         $cActas = $ActaRepository->getActas(['acta' => $acta]);
 
         if (count($cActas) !== 1) {
@@ -41,10 +55,13 @@ final class BuscarActaData
 
         $oActa = $cActas[0];
         $id_asignatura = $oActa->getId_asignatura();
+        if ($id_asignatura === null) {
+            return ['id_asignatura' => 'no'];
+        }
         $id_activ = $oActa->getId_activ();
 
         if (!empty($id_activ)) {
-            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+            $ActividadAllRepository = $this->actividadAllRepository;
             $oActividad = $ActividadAllRepository->findById($id_activ);
             $nom_activ = $oActividad?->getNom_activ() ?? '';
             $id_tipo_actividad = $oActividad?->getId_tipo_activ();
@@ -54,7 +71,7 @@ final class BuscarActaData
             $epoca = NotaEpoca::EPOCA_OTRO;
         }
 
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $AsignaturaRepository = $this->asignaturaRepository;
         $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
         if ($oAsignatura === null) {
             throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));

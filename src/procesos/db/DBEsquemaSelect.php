@@ -41,18 +41,17 @@ class DBEsquemaSelect extends DBEsquema
     /**
      * En la BD Comun (esquema).
      */
-    public function create_a_actividad_proceso_selected($seccion): void
+    public function create_a_actividad_proceso_selected(string $seccion): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
 
         $tabla_padre = "a_actividad_proceso";
-        if ($seccion === 'sv') {
-            $tabla = "a_actividad_proceso_sv";
-        }
-        if ($seccion === 'sf') {
-            $tabla = "a_actividad_proceso_sf";
-        }
+        $tabla = match ($seccion) {
+            'sv' => 'a_actividad_proceso_sv',
+            'sf' => 'a_actividad_proceso_sf',
+            default => throw new \InvalidArgumentException('Invalid seccion: ' . $seccion),
+        };
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -75,17 +74,16 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function eliminar_a_actividad_proceso_selected($seccion): void
+    public function eliminar_a_actividad_proceso_selected(string $seccion): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
 
-        if ($seccion === 'sv') {
-            $tabla = "a_actividad_proceso_sv";
-        }
-        if ($seccion === 'sf') {
-            $tabla = "a_actividad_proceso_sf";
-        }
+        $tabla = match ($seccion) {
+            'sv' => 'a_actividad_proceso_sv',
+            'sf' => 'a_actividad_proceso_sf',
+            default => throw new \InvalidArgumentException('Invalid seccion: ' . $seccion),
+        };
         $datosTabla = $this->infoTable($tabla);
         $nom_tabla = $datosTabla['nom_tabla'];
 

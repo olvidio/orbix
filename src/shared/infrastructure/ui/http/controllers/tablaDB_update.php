@@ -1,6 +1,7 @@
 <?php
 
 use src\shared\domain\DatosUpdateRepo;
+use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
 
 $Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
@@ -24,7 +25,7 @@ $a_pkey = json_decode(src\shared\domain\helpers\urlsafe_b64decode($Qs_pkey));
 
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info_encoded);
-$oInfoClase = new $obj();
+$oInfoClase = DatosInfoRepoResolver::resolve($obj);
 $oInfoClase->setMod($Qmod);
 $oInfoClase->setA_pkey($a_pkey); //Para eliminar y editar
 $oInfoClase->setId_pau($Qid_pau); //Para nuevo

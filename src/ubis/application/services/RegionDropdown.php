@@ -9,17 +9,26 @@ use src\ubis\domain\contracts\RegionRepositoryInterface;
  */
 final class RegionDropdown
 {
+    public function __construct(
+        private RegionRepositoryInterface $regionRepository,
+    ) {
+    }
+
     /**
      * @return array<string, string>
      */
-    public static function activasOrdenNombre(): array
+    public function activasOrdenNombre(): array
     {
-        $repo = $GLOBALS['container']->get(RegionRepositoryInterface::class);
-        $regiones = $repo->getRegiones(['active' => true, '_ordre' => 'nombre_region']);
+        $regiones = $this->regionRepository->getRegiones(['active' => true, '_ordre' => 'nombre_region']);
 
         $opciones = [];
         foreach ($regiones as $region) {
-            $opciones[$region->getRegionVo()?->value() ?? ''] = $region->getNombreRegionVo()->value();
+            $regionVo = $region->getRegionVo();
+            $nombreVo = $region->getNombreRegionVo();
+            if ($regionVo === null || $nombreVo === null) {
+                continue;
+            }
+            $opciones[$regionVo->value()] = $nombreVo->value();
         }
 
         return $opciones;

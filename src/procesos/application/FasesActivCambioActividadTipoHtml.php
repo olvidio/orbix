@@ -5,15 +5,11 @@ namespace src\procesos\application;
 use frontend\actividades\helpers\ActividadTipo;
 
 /**
- * HTML del selector de tipo de actividad (Plantilla procesos/actividad_tipo_que_perm.html.twig)
- * para {@see FasesActivCambioTipoActividadHtmlData} / la pantalla fases cambio de fases.
+ * HTML del selector de tipo de actividad para fases_activ_cambio.
  */
 final class FasesActivCambioActividadTipoHtml
 {
-    /**
-     * @see ActividadTipo mismo criterio que antes en el controlador procesos (para='procesos').
-     */
-    public static function render(
+    public function render(
         bool $permiso_des,
         string $ssfsv,
         bool $extendida,

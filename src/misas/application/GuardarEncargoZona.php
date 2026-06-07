@@ -5,10 +5,16 @@ namespace src\misas\application;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\entity\Encargo;
 use src\encargossacd\domain\value_objects\EncargoGrupo;
+use src\misas\application\support\MisasBuildInput;
 use src\ubis\domain\entity\Ubi;
 
 class GuardarEncargoZona
 {
+
+    public function __construct(
+        private readonly EncargoRepositoryInterface $encargoRepository,
+    ) {
+    }
     /**
      * Inserta o actualiza un `Encargo` del grupo `ZONAS_MISAS`.
      *
@@ -20,27 +26,29 @@ class GuardarEncargoZona
      *   - `data` : payload para el frontend con `id_enc`, `lugar` y el nombre
      *             del centro si se resolvio.
      */
-    public static function execute(array $input): array
+    /**
+     * @param array<string, mixed> $input
+     * @return array{error: string, data: array{id_enc: int, lugar: string}}
+     */
+    public function execute(array $input): array
     {
-        $id_enc = (int)($input['id_enc'] ?? 0);
-        $id_tipo_enc = (int)($input['id_tipo_enc'] ?? 0);
-        $id_ubi = (int)($input['id_ubi'] ?? 0);
-        $orden = (int)($input['orden'] ?? 0);
-        $prioridad = (int)($input['prioridad'] ?? 0);
-        $id_zona = (int)($input['id_zona'] ?? 0);
-        $descripcion_lugar = (string)($input['descripcion_lugar'] ?? '');
-        $encargo = (string)($input['encargo'] ?? '');
-        $idioma_enc = (string)($input['idioma_enc'] ?? '');
-        $observ = (string)($input['observ'] ?? '');
-
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+        $id_enc = MisasBuildInput::int($input, 'id_enc');
+        $id_tipo_enc = MisasBuildInput::int($input, 'id_tipo_enc');
+        $id_ubi = MisasBuildInput::int($input, 'id_ubi');
+        $orden = MisasBuildInput::int($input, 'orden');
+        $prioridad = MisasBuildInput::int($input, 'prioridad');
+        $id_zona = MisasBuildInput::int($input, 'id_zona');
+        $descripcion_lugar = MisasBuildInput::string($input, 'descripcion_lugar');
+        $encargo = MisasBuildInput::string($input, 'encargo');
+        $idioma_enc = MisasBuildInput::string($input, 'idioma_enc');
+        $observ = MisasBuildInput::string($input, 'observ');
 
         if (empty($id_enc)) {
-            $newIdItem = $EncargoRepository->getNewId();
+            $newIdItem = $this->encargoRepository->getNewId();
             $oEncargo = new Encargo();
             $oEncargo->setId_enc($newIdItem);
         } else {
-            $oEncargo = $EncargoRepository->findById($id_enc);
+            $oEncargo = $this->encargoRepository->findById($id_enc);
             if ($oEncargo === null) {
                 return [
                     'error' => sprintf(_('No se encuentra el encargo %d'), $id_enc),
@@ -62,13 +70,13 @@ class GuardarEncargoZona
 
         $nombre_ubi = '';
         if (!empty($id_ubi)) {
-            $oUbi = Ubi::newUbi($id_ubi);
-            $nombre_ubi = $oUbi->getNombre_ubi();
+            $oUbi = Ubi::NewUbi($id_ubi);
+            $nombre_ubi = $oUbi !== null ? $oUbi->getNombre_ubi() : '';
         }
 
-        if ($EncargoRepository->Guardar($oEncargo) === false) {
+        if ($this->encargoRepository->Guardar($oEncargo) === false) {
             return [
-                'error' => $EncargoRepository->getErrorTxt(),
+                'error' => $this->encargoRepository->getErrorTxt(),
                 'data' => ['id_enc' => (int)$oEncargo->getId_enc(), 'lugar' => $nombre_ubi],
             ];
         }

@@ -10,7 +10,12 @@ use src\pasarela\domain\ContribucionReserva;
  */
 final class ContribucionReservaExcepcionGuardar
 {
-    public static function execute(string $id_tipo_activ, string $valor): string
+    public function __construct(
+        private readonly ContribucionReserva $contribucionReserva,
+    ) {
+    }
+
+    public function execute(string $id_tipo_activ, string $valor): string
     {
         if ($id_tipo_activ === '') {
             return _('Falta id_tipo_activ');
@@ -21,8 +26,8 @@ final class ContribucionReservaExcepcionGuardar
         if (!is_numeric($valor) || (int)$valor < 0 || (int)$valor > 100) {
             return _('Debe ser un numero entero del 1 al 100');
         }
-        $oContribucionReserva = new ContribucionReserva();
-        $oContribucionReserva->addContribucionReserva($id_tipo_activ, (int)$valor);
+        
+        $this->contribucionReserva->addContribucionReserva($id_tipo_activ, (int)$valor);
         return '';
     }
 }

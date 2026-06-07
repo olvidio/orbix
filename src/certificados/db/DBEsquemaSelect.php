@@ -3,6 +3,7 @@
 namespace src\certificados\db;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\persistence\postgresql\DBRefresh;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
@@ -13,11 +14,12 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 class DBEsquemaSelect extends DBEsquema
 {
 
-    public function dropAllSelect()
+    public function dropAllSelect(): void
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
-        $gesDelegeacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        /** @var DelegacionRepositoryInterface $gesDelegeacion */
+        $gesDelegeacion = DependencyResolver::get(DelegacionRepositoryInterface::class);
         if ($gesDelegeacion->soy_region_stgr($dl)) {
             $this->eliminar_e_certificados_emitidos_select();
         }
@@ -31,11 +33,12 @@ class DBEsquemaSelect extends DBEsquema
         }
     }
 
-    public function createAllSelect()
+    public function createAllSelect(): void
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
-        $gesDelegeacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        /** @var DelegacionRepositoryInterface $gesDelegeacion */
+        $gesDelegeacion = DependencyResolver::get(DelegacionRepositoryInterface::class);
         if ($gesDelegeacion->soy_region_stgr($dl)) {
             $this->create_e_certificados_emitidos_select();
         }
@@ -55,7 +58,7 @@ class DBEsquemaSelect extends DBEsquema
     /**
      * En la BD sv-e (esquema).
      */
-    public function create_e_certificados_emitidos_select()
+    public function create_e_certificados_emitidos_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -99,7 +102,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function create_e_certificados_recibidos_select()
+    public function create_e_certificados_recibidos_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -142,13 +145,13 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_e_certificados_emitidos_select()
+    public function eliminar_e_certificados_emitidos_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("e_certificados_emitidos");
     }
 
-    public function eliminar_e_certificados_recibidos_select()
+    public function eliminar_e_certificados_recibidos_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("e_certificados_recibidos");

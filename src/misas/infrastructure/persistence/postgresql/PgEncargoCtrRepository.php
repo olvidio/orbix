@@ -1,6 +1,7 @@
 <?php
 
 namespace src\misas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -26,8 +27,8 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl = GlobalPdo::get('oDBC');
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl($oDbl);
         $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('misa_rel_encargo_ctr');
@@ -43,13 +44,19 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
         $aWhere = ['id_ubi' => $id_ubi];
         $sQry = "SELECT * FROM $nom_tabla WHERE id_ubi = :id_ubi ";
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $EncargoCtr = EncargoCtr::fromArray($aDatos);
             $EncargoCtrSet->add($EncargoCtr);
         }
-        return $EncargoCtrSet->getTot();
+        return array_values($EncargoCtrSet->getTot());
     }
 
     public function getCentrosEncargo(int $id_enc): array
@@ -61,22 +68,28 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
         $aWhere = ['id_enc' => $id_enc];
         $sQry = "SELECT * FROM $nom_tabla WHERE id_enc = :id_enc ";
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $EncargoCtr = EncargoCtr::fromArray($aDatos);
             $EncargoCtrSet->add($EncargoCtr);
         }
-        return $EncargoCtrSet->getTot();
+        return array_values($EncargoCtrSet->getTot());
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
     /**
      * devuelve una colección (array) de objetos de tipo EncargoCtr
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo EncargoCtr
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<EncargoCtr> Una colección de objetos de tipo EncargoCtr
      */
     public function getEncargosCentros(array $aWhere = [], array $aOperators = []): array
     {
@@ -113,27 +126,35 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $EncargoCtr = EncargoCtr::fromArray($aDatos);
             $EncargoCtrSet->add($EncargoCtr);
         }
-        return $EncargoCtrSet->getTot();
+        return array_values($EncargoCtrSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -174,6 +195,9 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -184,6 +208,9 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
         $uuid_item = $vo->value();
         $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return true;
         }
@@ -195,14 +222,25 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
      * Devuelve false si no existe la fila en la base de datos
      *
      */
-    public function datosById(EncargoCtrId $uuid_item): array|bool
+    public function datosById(EncargoCtrId $uuid_item): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $uuid_item = $uuid_item->value();
         $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 
@@ -212,7 +250,7 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
     public function findById(EncargoCtrId $uuid_item): ?EncargoCtr
     {
         $aDatos = $this->datosById($uuid_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return EncargoCtr::fromArray($aDatos);

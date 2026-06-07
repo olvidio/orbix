@@ -8,6 +8,9 @@ final class TipoTelecoId
 
     public function __construct(?int $value)
     {
+        if ($value === null) {
+            $value = 0;
+        }
         $this->validate($value);
         $this->value = $value;
     }

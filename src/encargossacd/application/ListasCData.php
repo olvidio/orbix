@@ -2,6 +2,8 @@
 
 namespace src\encargossacd\application;
 
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
@@ -21,6 +23,19 @@ use function src\shared\domain\helpers\strtoupper_dlb;
  */
 final class ListasCData
 {
+
+    public function __construct(
+        private EncargoAplicacionService $aplicacionService,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private ZonaGrupoRepositoryInterface $zonaGrupoRepository,
+        private ZonaRepositoryInterface $zonaRepository
+    ) {
+    }
+
     /**
      * @return array{
      *     cabecera_left: string,
@@ -29,11 +44,17 @@ final class ListasCData
      *     Html: string
      * }
      */
-    public static function execute(): array
+    public function execute(): array
     {
-        $oService = new EncargoAplicacionService();
+        $oService = $this->aplicacionService;
 
-        $any = $_SESSION['oConfig']->any_final_curs('crt');
+        /** @var ConfigSnapshot $oConfig */
+
+
+        $oConfig = $_SESSION['oConfig'];
+
+
+        $any = $oConfig->any_final_curs('crt');
         $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->getFromLocal();
         $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->getFromLocal();
 
@@ -42,17 +63,14 @@ final class ListasCData
         $cabecera_right_2 = _('ref. cr 1/14, 10, d)');
 
         $permiso_sf = '';
-        if (isset($_SESSION['oPerm'])
-            && (
-                $_SESSION['oPerm']->have_perm_oficina('vcsd')
-                || $_SESSION['oPerm']->have_perm_oficina('des')
-            )
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        if (is_object($oPerm) && method_exists($oPerm, 'have_perm_oficina')
+            && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'))
         ) {
             $permiso_sf = 'si';
         }
 
-        $ZonaGrupoRepository = $GLOBALS['container']->get(ZonaGrupoRepositoryInterface::class);
-        $cZonasGrupos = $ZonaGrupoRepository->getZonasGrupo(['_ordre' => 'orden']) ?: [];
+        $cZonasGrupos = $this->zonaGrupoRepository->getZonasGrupo(['_ordre' => 'orden']) ?: [];
         $array_grupos = [];
         foreach ($cZonasGrupos as $oZonaGrupo) {
             $array_grupos[$oZonaGrupo->getId_grupo()] = $oZonaGrupo->getNombre_grupo();
@@ -60,24 +78,17 @@ final class ListasCData
 
         $Html_all = '<div class=salta_pag><table>';
 
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-        $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-
         foreach ($cZonasGrupos as $oZonaGrupo) {
             $id_grupo = $oZonaGrupo->getId_grupo();
-            $cZonas = $ZonaRepository->getZonas(['id_grupo' => $id_grupo]) ?: [];
+            $cZonas = $this->zonaRepository->getZonas(['id_grupo' => $id_grupo]) ?: [];
             $a_sacd = [];
 
             foreach ($cZonas as $oZona) {
                 $id_zona = $oZona->getId_zona();
-                $cCentrosDl = $GesCentrosDl->getCentros(['id_zona' => $id_zona]) ?: [];
+                $cCentrosDl = $this->centroDlRepository->getCentros(['id_zona' => $id_zona]) ?: [];
                 foreach ($cCentrosDl as $oCentroDl) {
                     $id_ubi = $oCentroDl->getId_ubi();
-                    $cPersonas = $PersonaDlRepository->getPersonas([
+                    $cPersonas = $this->personaDlRepository->getPersonas([
                         'id_ctr' => $id_ubi,
                         'situacion' => 'A',
                         'sacd' => 't',
@@ -99,11 +110,11 @@ final class ListasCData
                             '_ordre' => 'modo',
                         ];
                         $aOperadorT = ['f_fin' => 'IS NULL'];
-                        $cTareasSacd = $EncargoSacdRepository->getEncargosSacd($aWhereT, $aOperadorT) ?: [];
+                        $cTareasSacd = $this->encargoSacdRepository->getEncargosSacd($aWhereT, $aOperadorT) ?: [];
                         foreach ($cTareasSacd as $oTareaSacd) {
                             $modo = (int)$oTareaSacd->getModo();
                             $id_enc = $oTareaSacd->getId_enc();
-                            $oEncargo = $EncargoRepository->findById($id_enc);
+                            $oEncargo = $this->encargoRepository->findById($id_enc);
                             if ($oEncargo === null) {
                                 continue;
                             }
@@ -114,9 +125,9 @@ final class ListasCData
                             } else {
                                 $iid = (string)$id_ubi_enc;
                                 if ((int)$iid[0] === 2) {
-                                    $oCentroEnc = $CentroEllasRepository->findById($id_ubi_enc);
+                                    $oCentroEnc = $this->centroEllasRepository->findById($id_ubi_enc);
                                 } else {
-                                    $oCentroEnc = $GesCentrosDl->findById($id_ubi_enc);
+                                    $oCentroEnc = $this->centroDlRepository->findById($id_ubi_enc);
                                 }
                                 $nombre_ubi = $oCentroEnc?->getNombre_ubi() ?? '';
                             }

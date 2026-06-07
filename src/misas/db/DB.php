@@ -24,7 +24,7 @@ class DB extends DBAbstract
         $this->esquema = 'global';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
             $this->eliminar_cuadricula();
@@ -33,10 +33,9 @@ class DB extends DBAbstract
         });
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->ejecutarCreateAllGlobal(function (): void {
-            //$this->create_plantillas();
             $this->create_cuadricula();
             $this->create_iniciales();
             $this->create_rel_encargo_ctr();
@@ -46,7 +45,7 @@ class DB extends DBAbstract
     /**
      * En el esquema comun
      */
-    public function create_iniciales()
+    public function create_iniciales(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_iniciales";
@@ -67,7 +66,7 @@ class DB extends DBAbstract
     }
 
 
-    public function eliminar_iniciales()
+    public function eliminar_iniciales(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_iniciales";
@@ -81,7 +80,7 @@ class DB extends DBAbstract
     /**
      * En el esquema comun
      */
-    public function create_cuadricula()
+    public function create_cuadricula(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_cuadricula";
@@ -106,7 +105,7 @@ class DB extends DBAbstract
     }
 
 
-    public function eliminar_cuadricula()
+    public function eliminar_cuadricula(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_cuadricula";
@@ -120,7 +119,7 @@ class DB extends DBAbstract
     /**
      * En el esquema comun
      */
-    public function create_rel_encargo_ctr()
+    public function create_rel_encargo_ctr(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_rel_encargo_ctr";
@@ -141,7 +140,7 @@ class DB extends DBAbstract
     }
 
 
-    public function eliminar_rel_encargo_ctr()
+    public function eliminar_rel_encargo_ctr(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
         $tabla = "misa_rel_encargo_ctr";

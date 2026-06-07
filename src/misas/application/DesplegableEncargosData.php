@@ -7,6 +7,12 @@ use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 
 class DesplegableEncargosData
 {
+
+    public function __construct(
+        private readonly EncargoTipoRepositoryInterface $encargoTipoRepository,
+        private readonly EncargoRepositoryInterface $encargoRepository,
+    ) {
+    }
     /**
      * Payload JSON para el desplegable dinamico de encargos de una zona.
      *
@@ -24,13 +30,12 @@ class DesplegableEncargosData
      *                                no aparece entre las opciones de la
      *                                zona, se anade igualmente para que el
      *                                valor se pueda mantener en la UI.
+     * @return array<string, mixed>
      */
-    public static function getData(int $id_zona, ?int $id_enc_sel = null): array
+    public function getData(int $id_zona, ?int $id_enc_sel = null): array
     {
-        $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-
-        $cEncargoTipos = $EncargoTipoRepository->getEncargoTipos(
+        
+        $cEncargoTipos = $this->encargoTipoRepository->getEncargoTipos(
             ['id_tipo_enc' => '^8...'],
             ['id_tipo_enc' => '~'],
         );
@@ -46,7 +51,7 @@ class DesplegableEncargosData
         // Si hay encargo preseleccionado lo anadimos siempre (aunque no sea
         // de la zona), para no perder el valor al recargar el desplegable.
         if (!empty($id_enc_sel)) {
-            $oEncSel = $EncargoRepository->findById($id_enc_sel);
+            $oEncSel = $this->encargoRepository->findById($id_enc_sel);
             if ($oEncSel !== null) {
                 $opciones[(string)$id_enc_sel] = $oEncSel->getDesc_enc();
             }
@@ -54,7 +59,7 @@ class DesplegableEncargosData
 
         if (!empty($a_tipo_enc)) {
             $cond_tipo_enc = '{' . implode(', ', $a_tipo_enc) . '}';
-            $cEncargos = $EncargoRepository->getEncargos(
+            $cEncargos = $this->encargoRepository->getEncargos(
                 [
                     'id_tipo_enc' => $cond_tipo_enc,
                     'id_zona' => $id_zona,

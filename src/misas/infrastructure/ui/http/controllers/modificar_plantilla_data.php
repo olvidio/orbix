@@ -1,8 +1,11 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\PlanDeMisasPantallaData;
 use src\shared\web\ContestarJson;
 
-$base = PlanDeMisasPantallaData::getData('modificar_plantilla');
+/** @var PlanDeMisasPantallaData $useCase */
+$useCase = DependencyResolver::get(PlanDeMisasPantallaData::class);
+$result = $useCase->getData('modificar_plantilla');
 
-ContestarJson::enviar('', $base);
+ContestarJson::enviar('', $result);

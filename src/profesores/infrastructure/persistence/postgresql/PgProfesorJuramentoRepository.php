@@ -1,6 +1,7 @@
 <?php
 
 namespace src\profesores\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -27,7 +28,7 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
+        $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
         $this->setNomTabla('d_profesor_juramento');
     }
@@ -37,9 +38,9 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
     /**
      * devuelve una colección (array) de objetos de tipo ProfesorJuramento
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ProfesorJuramento
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ProfesorJuramento> Una colección de objetos de tipo ProfesorJuramento
      */
     public function getProfesorJuramentos(array $aWhere = [], array $aOperators = []): array
     {
@@ -76,29 +77,37 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para las fechas del postgres (texto iso)
             $aDatos['f_juramento'] = (new ConverterDate('date', $aDatos['f_juramento']))->fromPg();
             $ProfesorJuramento = ProfesorJuramento::fromArray($aDatos);
             $ProfesorJuramentoSet->add($ProfesorJuramento);
         }
-        return $ProfesorJuramentoSet->getTot();
+        return array_values($ProfesorJuramentoSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -142,6 +151,9 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -151,6 +163,9 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -162,20 +177,27 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_juramento'] = (new ConverterDate('date', $aDatos['f_juramento']))->fromPg();
+        if ($stmt === false) {
+            return false;
         }
-        return $aDatos;
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $aDatos['f_juramento'] = (new ConverterDate('date', $aDatos['f_juramento']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 
@@ -185,7 +207,7 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
     public function findById(int $id_item): ?ProfesorJuramento
     {
         $aDatos = $this->datosById($id_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return ProfesorJuramento::fromArray($aDatos);
@@ -195,6 +217,12 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('d_profesor_juramento_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

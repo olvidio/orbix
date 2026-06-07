@@ -1,11 +1,13 @@
 <?php
 
-use src\asistentes\application\services\AsistenteActividadService;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
-use src\ubiscamas\domain\value_objects\CamaId;
+use src\ubiscamas\application\UpdateCamaAsistente;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
-$ctxRaw = (string)filter_input(INPUT_POST, 'ctx');
+$ctxRaw = input_string($_POST, 'ctx');
 try {
     $opened = HashB::open($ctxRaw, 'update_cama_asistente');
 } catch (HashBInvalidException $e) {
@@ -14,44 +16,19 @@ try {
     exit;
 }
 
-$Qid_activ = (int)($opened['id_activ'] ?? 0);
+$Qid_activ = input_int($opened, 'id_activ');
 if ($Qid_activ <= 0) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'mensaje' => _('Operación no autorizada')]);
     exit;
 }
 
-$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-$Qid_cama = (string)filter_input(INPUT_POST, 'id_cama'); // can be string (uuid)
+$Qid_nom = input_int($_POST, 'id_nom');
+$Qid_cama = input_string($_POST, 'id_cama');
 
-$jsondata = [];
-
-try {
-    $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
-
-    // find the specified attendance instance
-    $oAsistente = $AsistenteActividadService->buscarAsistencia($Qid_nom, $Qid_activ);
-    if ($oAsistente === FALSE) {
-        throw new \Exception("Asistencia no encontrada para id_nom $Qid_nom e id_activ $Qid_activ.");
-    }
-
-    $repoName = $AsistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ);
-    $AsistenteRepository = $GLOBALS['container']->get($repoName);
-
-    // Assign bed or unassign if empty
-    $uuid_cama = CamaId::fromNullableString($Qid_cama);
-    $oAsistente->setCamaVo($uuid_cama ?: null);
-
-    if ($AsistenteRepository->Guardar($oAsistente) === FALSE) {
-        throw new \Exception("Error al guardar la asignación de la cama.");
-    }
-
-    $jsondata['success'] = true;
-    $jsondata['mensaje'] = 'ok';
-} catch (\Exception $e) {
-    $jsondata['success'] = false;
-    $jsondata['mensaje'] = $e->getMessage();
-}
+/** @var UpdateCamaAsistente $useCase */
+$useCase = DependencyResolver::get(UpdateCamaAsistente::class);
+$jsondata = $useCase->execute($Qid_nom, $Qid_activ, $Qid_cama);
 
 header('Content-Type: application/json');
 echo json_encode($jsondata);

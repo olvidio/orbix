@@ -36,8 +36,8 @@ class CertificadoRecibidoTest extends myTest
 
     public function test_set_and_get_idioma()
     {
-        $this->CertificadoRecibido->setIdioma('test');
-        $this->assertEquals('test', $this->CertificadoRecibido->getIdioma());
+        $this->CertificadoRecibido->setIdiomaVo('es_ES.UTF-8');
+        $this->assertEquals('es_ES.UTF-8', $this->CertificadoRecibido->getIdiomaVo()?->value());
     }
 
     public function test_set_and_get_destino()
@@ -77,7 +77,7 @@ class CertificadoRecibidoTest extends myTest
             'id_item' => 1,
             'id_nom' => 1,
             'nom' => 'test',
-            'idioma' => 'test',
+            'idioma' => 'es_ES.UTF-8',
             'destino' => 'test',
             'certificado' => 'test',
             'esquema_emisor' => 'test',
@@ -89,7 +89,7 @@ class CertificadoRecibidoTest extends myTest
         $this->assertEquals(1, $certificadoRecibido->getId_item());
         $this->assertEquals(1, $certificadoRecibido->getId_nom());
         $this->assertEquals('test', $certificadoRecibido->getNom());
-        $this->assertEquals('test', $certificadoRecibido->getIdioma());
+        $this->assertEquals('es_ES.UTF-8', $certificadoRecibido->getIdiomaVo()?->value());
         $this->assertEquals('test', $certificadoRecibido->getDestino());
         $this->assertEquals('test', $certificadoRecibido->getCertificado());
         $this->assertEquals('test', $certificadoRecibido->getEsquema_emisor());
@@ -104,7 +104,7 @@ class CertificadoRecibidoTest extends myTest
             'id_item' => 1,
             'id_nom' => 1,
             'nom' => 'test',
-            'idioma' => 'test',
+            'idioma' => 'es_ES.UTF-8',
             'destino' => 'test',
             'certificado' => 'test',
             'esquema_emisor' => 'test',
@@ -116,7 +116,7 @@ class CertificadoRecibidoTest extends myTest
         $this->assertEquals(1, $certificadoRecibido->getId_item());
         $this->assertEquals(1, $certificadoRecibido->getId_nom());
         $this->assertEquals('test', $certificadoRecibido->getNom());
-        $this->assertEquals('test', $certificadoRecibido->getIdioma());
+        $this->assertEquals('es_ES.UTF-8', $certificadoRecibido->getIdiomaVo()?->value());
         $this->assertEquals('test', $certificadoRecibido->getDestino());
         $this->assertEquals('test', $certificadoRecibido->getCertificado());
         $this->assertEquals('test', $certificadoRecibido->getEsquema_emisor());

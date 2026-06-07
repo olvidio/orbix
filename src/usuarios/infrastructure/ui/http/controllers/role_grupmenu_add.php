@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\entity\GrupMenuRole;
@@ -9,11 +10,15 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 $error_txt = '';
 
 if (!empty($a_sel)) { //vengo de un checkbox
-    $GrupMenuRoleRepository = $GLOBALS['container']->get(GrupMenuRoleRepositoryInterface::class);
+    $GrupMenuRoleRepository = DependencyResolver::get(GrupMenuRoleRepositoryInterface::class);
     foreach ($a_sel as $sel) {
-        //$id_nom=$sel[0];
-        $id_role = strtok($sel, "#");
-        $id_grupmenu = strtok("#");
+        if (!is_string($sel)) {
+            continue;
+        }
+        $tokRole = strtok($sel, "#");
+        $tokGrupmenu = strtok("#");
+        $id_role = is_string($tokRole) ? (int)$tokRole : 0;
+        $id_grupmenu = is_string($tokGrupmenu) ? (int)$tokGrupmenu : 0;
         $cGrupMenuRoles = $GrupMenuRoleRepository->getGrupMenuRoles(['id_role' => $id_role, 'id_grupmenu' => $id_grupmenu]);
         if (empty($cGrupMenuRoles)) {
             $id_item = $GrupMenuRoleRepository->getNewId();

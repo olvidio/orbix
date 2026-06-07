@@ -1,25 +1,32 @@
 <?php
 
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\CamaId;
-use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
-$Qid_cama = (string)filter_input(INPUT_POST, 'id_cama');
+$Qid_cama = input_string($_POST, 'id_cama');
 
-$CamaRepository = $GLOBALS['container']->get(CamaDlRepositoryInterface::class);
+/** @var CamaDlRepositoryInterface $camaRepository */
+$camaRepository = DependencyResolver::get(CamaDlRepositoryInterface::class);
 
 $error_txt = '';
 try {
-    if (!empty($Qid_cama)) {
+    if ($Qid_cama !== '') {
         $uuid_cama = CamaId::fromNullableString($Qid_cama);
-        $oCama = $CamaRepository->findById($uuid_cama);
-        if (!empty($oCama)) {
-            if ($CamaRepository->Eliminar($oCama) === false) {
-                $error_txt = _("hay un error, no se ha eliminado la cama");
-                $error_txt .= "\n" . $CamaRepository->getErrorTxt();
-            }
-        } else {
+        if ($uuid_cama === null) {
             $error_txt = _("No se encontró la cama a eliminar");
+        } else {
+            $oCama = $camaRepository->findById($uuid_cama->value());
+            if ($oCama !== null) {
+                if ($camaRepository->Eliminar($oCama) === false) {
+                    $error_txt = _("hay un error, no se ha eliminado la cama");
+                    $error_txt .= "\n" . $camaRepository->getErrorTxt();
+                }
+            } else {
+                $error_txt = _("No se encontró la cama a eliminar");
+            }
         }
     } else {
         $error_txt = _("ID de cama no proporcionado");

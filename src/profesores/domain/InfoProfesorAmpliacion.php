@@ -9,8 +9,9 @@ use src\shared\domain\DatosInfoRepo;
 class InfoProfesorAmpliacion extends DatosInfoRepo
 {
 
-    public function __construct()
-    {
+    public function __construct(
+        private ProfesorAmpliacionRepositoryInterface $profesorAmpliacionRepository,
+    ) {
         $this->setTxtTitulo(_("dossier de ampliación de docencia del studium generale"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta fila?"));
         $this->setTxtBuscar(_("todos"));
@@ -23,13 +24,18 @@ class InfoProfesorAmpliacion extends DatosInfoRepo
         $this->setRepositoryInterface(ProfesorAmpliacionRepositoryInterface::class);
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return 1019;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
+        $aWhere = [];
+        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->id_pau)) {
@@ -42,9 +48,6 @@ class InfoProfesorAmpliacion extends DatosInfoRepo
             //$aWhere['congreso'] = $this->k_buscar;
             //$aOperador['congreso'] ='sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getProfesorAmpliaciones($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->profesorAmpliacionRepository->getProfesorAmpliaciones($aWhere, $aOperador);
     }
 }

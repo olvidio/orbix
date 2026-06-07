@@ -12,7 +12,7 @@ final class InventarioCssInlineData
     /**
      * @return array{css: string}
      */
-    public static function build(): array
+    public function execute(): array
     {
         $path = ConfigGlobal::$dir_estilos . '/inventario.css.php';
         $css = is_readable($path) ? (string)file_get_contents($path) : '';

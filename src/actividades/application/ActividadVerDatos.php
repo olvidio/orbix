@@ -36,6 +36,7 @@ final class ActividadVerDatos
         private LocalRepositoryInterface $localRepository,
         private RepeticionRepositoryInterface $repeticionRepository,
         private RelacionTarifaTipoActividadRepositoryInterface $relacionTarifaTipoActividadRepository,
+        private DelegacionDropdown $delegacionDropdown,
     ) {
     }
 
@@ -131,7 +132,7 @@ final class ActividadVerDatos
         $bdlBool = ($Bdl === 't');
 
         $oDesplDl = Desplegable::desdeOpciones(
-            DelegacionDropdown::delegacionesURegiones($isfsv, $bdlBool),
+            $this->delegacionDropdown->delegacionesURegiones($isfsv, $bdlBool),
             'dl_org'
         );
         $oDesplDl->setOpcion_sel($dl_org);

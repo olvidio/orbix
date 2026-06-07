@@ -1,9 +1,13 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ContribucionNoDuermeDefaultGuardar;
 
 $default = (string)filter_input(INPUT_POST, 'default');
 
-$error_txt = ContribucionNoDuermeDefaultGuardar::execute($default);
+/** @var ContribucionNoDuermeDefaultGuardar $useCase */
+$useCase = DependencyResolver::get(ContribucionNoDuermeDefaultGuardar::class);
+
+$error_txt = $useCase->execute($default);
 ContestarJson::enviar($error_txt, 'ok');

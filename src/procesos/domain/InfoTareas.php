@@ -9,9 +9,9 @@ use src\shared\domain\DatosInfoRepo;
 
 class InfoTareas extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ActividadTareaRepositoryInterface $actividadTareaRepository,
+    ) {
         $this->setTxtTitulo(_("Tipos de tareas que se pueden realizar en una actividad"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta tarea?"));
         $this->setTxtBuscar(_("tarea a buscar"));
@@ -20,24 +20,22 @@ class InfoTareas extends DatosInfoRepo
         $this->setClase('src\\procesos\\domain\\entity\\ActividadTarea');
         $this->setMetodoGestor('getActividadTareas');
 
-
         $this->setRepositoryInterface(ActividadTareaRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'desc_tarea');
+            $aWhere = ['_ordre' => 'desc_tarea'];
             $aOperador = [];
         } else {
-            $aWhere = array('nom' => $this->k_buscar);
-            $aOperador = array('nom' => 'sin_acentos');
+            $aWhere = ['nom' => $this->k_buscar];
+            $aOperador = ['nom' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->getRepositoryInterface());
-        $Coleccion = $oLista->getActividadTareas($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->actividadTareaRepository->getActividadTareas($aWhere, $aOperador);
     }
 }

@@ -9,6 +9,9 @@ final class CongresoTipo
     public const REUNION = 3;
     public const CLAUSTRO = 4;
 
+    /**
+     * @return array<int|string, string>
+     */
     public static function getArrayTiposCongreso(): array
     {
         $tipos_congreso = [

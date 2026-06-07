@@ -15,26 +15,18 @@ use src\profesores\domain\services\ProfesorAsignaturaService;
 
 final class ProfesoresAsignaturaListaTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
     }
 
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -62,15 +54,15 @@ final class ProfesoresAsignaturaListaTest extends TestCase
         $telecoSvc = $this->createMock(TelecoPersonaService::class);
         $telecoSvc->method('getTelecosPorTipo')->willReturn('');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ProfesorAsignaturaService::class => $asigSvc,
-            PersonaDlRepositoryInterface::class => $oPersonaRepo,
-            ProfesorDocenciaStgrRepositoryInterface::class => $oDocRepo,
-            TelecoPersonaDlRepositoryInterface::class => $oTelecoRepo,
-            TelecoPersonaService::class => $telecoSvc,
-        ]);
+        $useCase = new ProfesoresAsignaturaLista(
+            $asigSvc,
+            $oPersonaRepo,
+            $oDocRepo,
+            $oTelecoRepo,
+            $telecoSvc,
+        );
 
-        $out = ProfesoresAsignaturaLista::getTablaData(1001);
+        $out = $useCase->getTablaData(1001);
 
         $this->assertSame('list_profe_asig', $out['id_tabla']);
         $this->assertCount(1, $out['a_valores']);
@@ -92,22 +84,4 @@ final class ProfesoresAsignaturaListaTest extends TestCase
         };
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
-    }
 }

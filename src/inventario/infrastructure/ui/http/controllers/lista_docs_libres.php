@@ -1,5 +1,9 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
@@ -7,29 +11,40 @@ use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
-$Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');
+$Qid_equipaje = input_int($_POST, 'id_equipaje');
+$Qid_tipo_doc = input_int($_POST, 'id_tipo_doc');
 
 $error_txt = '';
 
-$EquipajeRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
+/** @var EquipajeRepositoryInterface $EquipajeRepository */
+$EquipajeRepository = DependencyResolver::get(EquipajeRepositoryInterface::class);
 $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
-$f_ini_iso = $oEquipaje->getF_ini()->getIso();
-$f_fin_iso = $oEquipaje->getF_fin()->getIso();
+if ($oEquipaje === null) {
+    ContestarJson::enviar($error_txt, []);
+    return;
+}
+$fIni = $oEquipaje->getF_ini();
+$fFin = $oEquipaje->getF_fin();
+$f_ini_iso = $fIni !== null ? $fIni->getIso() : '';
+$f_fin_iso = $fFin !== null ? $fFin->getIso() : '';
 
 $aEquipajes = $EquipajeRepository->getEquipajesCoincidentes($f_ini_iso, $f_fin_iso);
 
-$EgmRepository = $GLOBALS['container']->get(EgmRepositoryInterface::class);
+/** @var EgmRepositoryInterface $EgmRepository */
+$EgmRepository = DependencyResolver::get(EgmRepositoryInterface::class);
 $aEgms = $EgmRepository->getArrayIdFromIdEquipajes($aEquipajes);
 
-$WhereisRepository = $GLOBALS['container']->get(WhereisRepositoryInterface::class);
+/** @var WhereisRepositoryInterface $WhereisRepository */
+$WhereisRepository = DependencyResolver::get(WhereisRepositoryInterface::class);
 $aWhereis = $WhereisRepository->getArrayIdFromIdEgms($aEgms);
 
 // selecciono todos y quito los ocupados
 // dlb-Magatzem-->id_ubi=40
 $id_ubi = 40;
-$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
-$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+/** @var LugarRepositoryInterface $LugarRepository */
+$LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
+/** @var DocumentoRepositoryInterface $DocumentoRepository */
+$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
 $cDocumentos = $DocumentoRepository->getDocumentos(['id_tipo_doc' => $Qid_tipo_doc, 'id_ubi' => $id_ubi]);
 $d = 0;
 $a_valores = [];
@@ -41,7 +56,10 @@ foreach ($cDocumentos as $oDocumento) {
     $num_reg = $oDocumento->getNum_reg();
     $id_lugar = $oDocumento->getId_lugar();
 
-    $oLugar = $LugarRepository->findById($id_lugar);
+    $oLugar = $LugarRepository->findById((int) $id_lugar);
+    if ($oLugar === null) {
+        continue;
+    }
     $lugar = $oLugar->getNom_lugar();
 
     $a_valores[$d][0] = $id_doc;

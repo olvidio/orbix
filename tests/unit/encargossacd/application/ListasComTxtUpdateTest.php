@@ -9,24 +9,6 @@ use src\encargossacd\domain\entity\EncargoTexto;
 
 final class ListasComTxtUpdateTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_actualiza_fila_existente(): void
     {
         $existing = new EncargoTexto();
@@ -40,11 +22,8 @@ final class ListasComTxtUpdateTest extends TestCase
         $repo->expects($this->once())->method('Guardar')->with($existing)->willReturn(true);
         $repo->expects($this->never())->method('Eliminar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            EncargoTextoRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertSame(['ok' => true], ListasComTxtUpdate::execute('clave_a', 'es_ES.UTF-8', 'nuevo'));
+        $useCase = new ListasComTxtUpdate($repo);
+        $this->assertSame(['ok' => true], $useCase->execute('clave_a', 'es_ES.UTF-8', 'nuevo'));
         $this->assertSame('nuevo', $existing->getTexto());
     }
 
@@ -61,11 +40,8 @@ final class ListasComTxtUpdateTest extends TestCase
         $repo->expects($this->once())->method('Eliminar')->with($existing)->willReturn(true);
         $repo->expects($this->never())->method('Guardar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            EncargoTextoRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertSame(['ok' => true], ListasComTxtUpdate::execute('k', 'es_ES.UTF-8', ''));
+        $useCase = new ListasComTxtUpdate($repo);
+        $this->assertSame(['ok' => true], $useCase->execute('k', 'es_ES.UTF-8', ''));
     }
 
     public function test_inserta_si_no_hay_filas(): void
@@ -81,28 +57,7 @@ final class ListasComTxtUpdateTest extends TestCase
             return true;
         });
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            EncargoTextoRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertSame(['ok' => true], ListasComTxtUpdate::execute('c', 'es_ES.UTF-8', 'body'));
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        $useCase = new ListasComTxtUpdate($repo);
+        $this->assertSame(['ok' => true], $useCase->execute('c', 'es_ES.UTF-8', 'body'));
     }
 }

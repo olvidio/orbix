@@ -2,13 +2,19 @@
 
 namespace src\permisos\domain;
 
-use src\shared\config\ConfigGlobal;
+use PDO;
+use PDOStatement;
+use RuntimeException;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\procesos\domain\PermAccion;
 use src\procesos\domain\value_objects\FaseId;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\infrastructure\GlobalPdo;
+use src\shared\infrastructure\logging\GestorErrores;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use function src\shared\domain\helpers\is_true;
 
@@ -23,7 +29,7 @@ use function src\shared\domain\helpers\is_true;
  *
  * Instanciación (sesión):
  *
- *    $_SESSION['oPermActividades'] = new PermisosActividades(ConfigGlobal::id_usuario());
+ *    DependencyResolver::make(PermisosActividades::class, ['idUsuario' => ConfigGlobal::mi_id_usuario()]);
  *
  * Estructura de l'array:
  *    - aAfecta: el nom i corresponent integer de les propietats a les que afecta.
@@ -53,7 +59,9 @@ class PermisosActividades
      *
      * @var array
      */
-    public const AFECTA = ['datos' => 1,
+    /** @var array<string, int> */
+    public const AFECTA = [
+        'datos' => 1,
         'economic' => 2,
         'sacd' => 4,
         'ctr' => 8,
@@ -62,75 +70,75 @@ class PermisosActividades
         'asistentes' => 64,
         'asistentesSacd' => 128,
     ];
-    /**
-     * Array amb els permisos.
-     *
-     * @var array
-     */
+
+    /** @var array<string, XResto> */
     private array $aPermDl = [];
+
+    /** @var array<string, XResto> */
     private array $aPermOtras = [];
     /**
      * Per saber a quina activitat fa referència.
-     *
-     * @var string
      */
-    private string $sid_tipo_activ;
+    private string $sid_tipo_activ = '';
 
     /**
      * Id_activ de PermisoActividad
-     *
-     * @var integer
      */
     private int $iid_activ = 0;
     /**
      * Id_tipo_proceso de PermisoActividad
-     *
-     * @var integer
      */
-    private int $iid_tipo_proceso;
+    private int $iid_tipo_proceso = 0;
     /**
      * propia de PermisoActividad
-     *
-     * @var boolean
      */
-    private bool $bpropia;
+    private bool $bpropia = false;
     /**
      * número de orden de la fase actual
-     *
-     * @var integer
      */
-    private int $iid_fase;
+    private int $iid_fase = 0;
     /**
      * si ha llegado al final.
-     *
-     * @var boolean
      */
-    private bool $btop;
+    private bool $btop = false;
 
-    /**
-     * fases de la actividad completadas.
-     *
-     * @var array
-     */
+    /** @var list<int> */
     private array $aFasesCompletadas = [];
 
     /**
      * Contexto de tipo y delegación ya resuelto (p. ej. pasado por el caller o
-     * tras cargar por id) para no depender de $GLOBALS['container'] en requests
-     * frontend que solo incluyen global_header_front.inc.
+     * tras cargar por id) para reutilizar sin nueva consulta a repositorio.
      */
     private ?string $setActividadContextTipo = null;
 
     private ?string $setActividadContextDlOrg = null;
 
+    private int $idUsuario = 0;
+
+    /** Repositorios no serializables (PDO); se reinyectan tras deserializar sesión. */
+    private ?UsuarioGrupoRepositoryInterface $usuarioGrupoRepository = null;
+    private ?ActividadAllRepositoryInterface $actividadAllRepository = null;
+    private ?ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository = null;
+    private ?TipoDeActividadRepositoryInterface $tipoDeActividadRepository = null;
+    private ?TareaProcesoRepositoryInterface $tareaProcesoRepository = null;
+
     /* METODES ----------------------------------------------------------------- */
-    public function __construct($iid_usuario)
-    {
-        // permiso para el usuario
-        $sCondicion_usuario = "u.id_usuario=$iid_usuario";
-        // miro en els grups als que pertany
-        $UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
-        $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $iid_usuario));
+    public function __construct(
+        UsuarioGrupoRepositoryInterface $usuarioGrupoRepository,
+        ActividadAllRepositoryInterface $actividadAllRepository,
+        ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+        TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        TareaProcesoRepositoryInterface $tareaProcesoRepository,
+        int $idUsuario,
+    ) {
+        $this->usuarioGrupoRepository = $usuarioGrupoRepository;
+        $this->actividadAllRepository = $actividadAllRepository;
+        $this->actividadProcesoTareaRepository = $actividadProcesoTareaRepository;
+        $this->tipoDeActividadRepository = $tipoDeActividadRepository;
+        $this->tareaProcesoRepository = $tareaProcesoRepository;
+        $this->idUsuario = $idUsuario;
+        $sCondicion_usuario = "u.id_usuario=$idUsuario";
+        $cGrupos = $this->getUsuarioGrupoRepository()->getUsuariosGrupos(['id_usuario' => $idUsuario]);
         if (count($cGrupos) > 0) {
             foreach ($cGrupos as $oUsuarioGrupo) {
                 $id = $oUsuarioGrupo->getId_grupo();
@@ -138,15 +146,114 @@ class PermisosActividades
             }
             $sCondicion_usuario = "($sCondicion_usuario)";
         }
-        // cargo dos veces, para la dl_propia i el resto.
         $this->carregar($sCondicion_usuario, 't');
         $this->carregar($sCondicion_usuario, 'f');
-
     }
 
-    private function carregar($sCondicion_usuario, $dl_propia)
+    /**
+     * Solo estado de permisos en sesión; los repositorios (con PDO) se excluyen.
+     *
+     * @return array<string, mixed>
+     */
+    public function __serialize(): array
     {
-        $oDbl = $GLOBALS['oDBE'];
+        return [
+            'idUsuario' => $this->idUsuario,
+            'aPermDl' => $this->aPermDl,
+            'aPermOtras' => $this->aPermOtras,
+            'sid_tipo_activ' => $this->sid_tipo_activ,
+            'iid_activ' => $this->iid_activ,
+            'iid_tipo_proceso' => $this->iid_tipo_proceso,
+            'bpropia' => $this->bpropia,
+            'iid_fase' => $this->iid_fase,
+            'btop' => $this->btop,
+            'aFasesCompletadas' => $this->aFasesCompletadas,
+            'setActividadContextTipo' => $this->setActividadContextTipo,
+            'setActividadContextDlOrg' => $this->setActividadContextDlOrg,
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->idUsuario = self::dbRowInt($data['idUsuario'] ?? 0);
+        $this->aPermDl = self::restoreXRestoMap($data['aPermDl'] ?? null);
+        $this->aPermOtras = self::restoreXRestoMap($data['aPermOtras'] ?? null);
+        $this->sid_tipo_activ = self::dbRowString($data['sid_tipo_activ'] ?? '');
+        $this->iid_activ = self::dbRowInt($data['iid_activ'] ?? 0);
+        $this->iid_tipo_proceso = self::dbRowInt($data['iid_tipo_proceso'] ?? 0);
+        $this->bpropia = (bool) ($data['bpropia'] ?? false);
+        $this->iid_fase = self::dbRowInt($data['iid_fase'] ?? 0);
+        $this->btop = (bool) ($data['btop'] ?? false);
+        $this->aFasesCompletadas = self::restoreIntList($data['aFasesCompletadas'] ?? null);
+        $this->setActividadContextTipo = self::optionalString($data['setActividadContextTipo'] ?? null);
+        $this->setActividadContextDlOrg = self::optionalString($data['setActividadContextDlOrg'] ?? null);
+        $this->usuarioGrupoRepository = null;
+        $this->actividadAllRepository = null;
+        $this->actividadProcesoTareaRepository = null;
+        $this->tipoDeActividadRepository = null;
+        $this->tareaProcesoRepository = null;
+    }
+
+    private function ensureRepositories(): void
+    {
+        if ($this->actividadAllRepository !== null) {
+            return;
+        }
+        $this->usuarioGrupoRepository = DependencyResolver::get(UsuarioGrupoRepositoryInterface::class);
+        $this->actividadAllRepository = DependencyResolver::get(ActividadAllRepositoryInterface::class);
+        $this->actividadProcesoTareaRepository = DependencyResolver::get(
+            ActividadProcesoTareaRepositoryInterface::class
+        );
+        $this->tipoDeActividadRepository = DependencyResolver::get(TipoDeActividadRepositoryInterface::class);
+        $this->tareaProcesoRepository = DependencyResolver::get(TareaProcesoRepositoryInterface::class);
+    }
+
+    private function getUsuarioGrupoRepository(): UsuarioGrupoRepositoryInterface
+    {
+        $this->ensureRepositories();
+
+        return $this->usuarioGrupoRepository
+            ?? throw new RuntimeException('PermisosActividades: UsuarioGrupoRepository no disponible.');
+    }
+
+    private function getActividadAllRepository(): ActividadAllRepositoryInterface
+    {
+        $this->ensureRepositories();
+
+        return $this->actividadAllRepository
+            ?? throw new RuntimeException('PermisosActividades: ActividadAllRepository no disponible.');
+    }
+
+    private function getActividadProcesoTareaRepository(): ActividadProcesoTareaRepositoryInterface
+    {
+        $this->ensureRepositories();
+
+        return $this->actividadProcesoTareaRepository
+            ?? throw new RuntimeException('PermisosActividades: ActividadProcesoTareaRepository no disponible.');
+    }
+
+    private function getTipoDeActividadRepository(): TipoDeActividadRepositoryInterface
+    {
+        $this->ensureRepositories();
+
+        return $this->tipoDeActividadRepository
+            ?? throw new RuntimeException('PermisosActividades: TipoDeActividadRepository no disponible.');
+    }
+
+    private function getTareaProcesoRepository(): TareaProcesoRepositoryInterface
+    {
+        $this->ensureRepositories();
+
+        return $this->tareaProcesoRepository
+            ?? throw new RuntimeException('PermisosActividades: TareaProcesoRepository no disponible.');
+    }
+
+    private function carregar(string $sCondicion_usuario, string $dl_propia): bool
+    {
+        $oDbl = GlobalPdo::get('oDBE');
         // Orden: los usuarios empiezan por 4, los grupos por 5.
         // Al ordenar, el usuario (queda el último) sobreescribe al grupo.
         // Los grupos, como puede haber más de uno los ordeno por orden alfabético DESC (prioridad A-Z).
@@ -155,21 +262,26 @@ class PermisosActividades
 			WHERE $sCondicion_usuario AND dl_propia='$dl_propia' 
 			ORDER BY orden DESC, usuario DESC
 			";
-        //echo "<br>permActiv: $Qry<br>";
-        if (($oDbl->query($Qry)) === false) {
+        $stmt = $oDbl->query($Qry);
+        if (!$stmt instanceof PDOStatement) {
             $sClauError = 'PermisosActividades.carregar';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+            }
             return false;
         }
-        // per cada fila genero els permisos
-        $f = 0;
-        foreach ($oDbl->query($Qry) as $row) {
-            $f++;
-            $id_tipo_activ_txt = $row['id_tipo_activ_txt'];
-            $fase_ref = $row['fase_ref'];
-            $iAfecta = $row['afecta_a'];
-            $perm_on = $row['perm_on'];
-            $perm_off = $row['perm_off'];
+        foreach ($stmt as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $id_tipo_activ_txt = self::dbRowString($row['id_tipo_activ_txt'] ?? '');
+            $fase_refRaw = $row['fase_ref'] ?? 0;
+            $fase_ref = is_int($fase_refRaw) || is_string($fase_refRaw)
+                ? $fase_refRaw
+                : self::dbRowInt($fase_refRaw);
+            $iAfecta = self::dbRowInt($row['afecta_a'] ?? 0);
+            $perm_on = self::dbRowInt($row['perm_on'] ?? 0);
+            $perm_off = self::dbRowInt($row['perm_off'] ?? 0);
 
             if (is_true($dl_propia)) {
                 if (array_key_exists($id_tipo_activ_txt, $this->aPermDl)) {
@@ -199,15 +311,17 @@ class PermisosActividades
                 }
             }
         }
+
+        return true;
     }
 
     /**
      * fija las propiedades de dl_propia y id_tipo_activ.
      *
      * Si se pasan $id_tipo_activ y $dl_org (como en controladores frontend que
-     * ya cargaron la entidad), no se usa el contenedor DI. Si solo se pasa
-     * $id_activ, hace falta $GLOBALS['container'] o contexto cacheado de una
-     * llamada previa con los tres datos.
+     * ya cargaron la entidad), no se consulta el repositorio. Si solo se pasa
+     * $id_activ, se resuelve vía {@see ActividadAllRepositoryInterface} o
+     * contexto cacheado de una llamada previa con los tres datos.
      *
      * @param int $id_activ
      */
@@ -241,14 +355,12 @@ class PermisosActividades
 
         $this->iid_activ = $id_activ;
 
-        if (!isset($GLOBALS['container'])) {
-            throw new \RuntimeException(
-                'PermisosActividades::setActividad: sin contenedor DI, indique id_tipo_activ y dl_org.'
+        $oActividad = $this->getActividadAllRepository()->findById($id_activ);
+        if ($oActividad === null) {
+            throw new RuntimeException(
+                sprintf('PermisosActividades::setActividad: actividad %d no encontrada.', $id_activ)
             );
         }
-
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($id_activ);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
 
@@ -270,34 +382,36 @@ class PermisosActividades
         }
     }
 
-    public function setId_fase($iid_fase)
+    public function setId_fase(int $iid_fase): void
     {
         $this->iid_fase = $iid_fase;
     }
 
+    public function getId_fase(): int
+    {
+        return $this->iid_fase;
+    }
+
     /**
      * Resuelve fases completadas: o bien ya vienen en sesión (setFasesCompletadas),
-     * o bien se cargan una sola vez con el repositorio si hay contenedor DI.
-     * En controladores solo-frontend debe haberse llamado antes a
-     * actividad_fases_completadas_datos + setFasesCompletadas.
+     * o bien se cargan una sola vez con el repositorio inyectado.
      */
     private function ensureFasesCompletadasLoaded(): void
     {
         if (!empty($this->aFasesCompletadas)) {
             return;
         }
-        if (!isset($GLOBALS['container'])) {
-            throw new \RuntimeException(
-                'PermisosActividades: sin fases en caché ni contenedor. '
+        if ($this->iid_activ === 0) {
+            throw new RuntimeException(
+                'PermisosActividades: sin fases en caché ni id_activ. '
                 . 'En frontend use PostRequest a /src/actividades/actividad_fases_completadas_datos y setFasesCompletadas.'
             );
         }
-        $repo = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
-        $fases = $repo->getFasesCompletadas($this->iid_activ);
-        $this->aFasesCompletadas = array_map(static fn ($id) => (int)$id, $fases);
+        $fases = $this->getActividadProcesoTareaRepository()->getFasesCompletadas($this->iid_activ);
+        $this->aFasesCompletadas = array_map(static fn ($id) => (int) $id, $fases);
     }
 
-    private function isCompletada($id_fase): bool
+    private function isCompletada(int|string $id_fase): bool
     {
         if (empty($id_fase)) {
             exit (_("Hay que indicar para que fase"));
@@ -310,44 +424,35 @@ class PermisosActividades
         return \in_array($idFase, $fasesNorm, true);
     }
 
-    public function setFasesCompletadas($aFases = [])
+    /**
+     * @param list<int> $aFases
+     */
+    public function setFasesCompletadas(array $aFases = []): void
     {
-        $this->aFasesCompletadas = $aFases;
+        $this->aFasesCompletadas = array_map(static fn ($id) => (int) $id, $aFases);
     }
 
     /**
-     * Para saber si puedo crear una actividad del tipo
-     * para dl, ex
+     * Para saber si puedo crear una actividad del tipo para dl.
      *
-     * @param bool $dl_propia dl organizadora
-     * @return array|bool
+     * @return array{of_responsable_txt: string, status: int}|false
      */
-    public function getPermisoCrear(bool $dl_propia)
+    public function getPermisoCrear(bool $dl_propia): array|false
     {
-        if (!isset($GLOBALS['container'])) {
-            throw new \RuntimeException(
-                'PermisosActividades::getPermisoCrear requiere contenedor DI en este proceso. '
-                . 'Desde controladores solo-frontend use PostRequest a /src/actividades/actividad_permiso_crear_datos.'
-            );
-        }
         $this->bpropia = $dl_propia;
         $id_tipo_activ = $this->sid_tipo_activ;
-        // si vengo de una búsqueda, el id_tipo_actividad puede ser con '...'
-        // pongo el tipo básico (sin especificar)
-        //$id_tipo_activ = str_replace('.', '0', $id_tipo_activ);
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-        $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
+        $aTiposDeProcesos = $this->getTipoDeActividadRepository()->getTiposDeProcesos($id_tipo_activ, $dl_propia);
 
         if (empty($aTiposDeProcesos)) {
             echo _("debería crear un proceso para este tipo de actividad");
-            return FALSE;
+            return false;
         }
-        // Cojo el primero
-        $oPerm = FALSE;
-        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+        $oPerm = false;
+        $of_responsable_txt = '';
+        $status = 0;
         foreach ($aTiposDeProcesos as $id_tipo_proceso) {
             // Buscar la primera fase (no depende de fases previas)
-            $aTareaProceso = $TareaProcesoRepository->getFaseIndependiente($id_tipo_proceso);
+            $aTareaProceso = $this->getTareaProcesoRepository()->getFaseIndependiente($id_tipo_proceso);
             $oTareaProceso = $aTareaProceso[0];
             $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
             $status = $oTareaProceso->getStatus();
@@ -357,24 +462,25 @@ class PermisosActividades
             $id_fase_ref = FaseId::FASE_APROBADA;
             $on_off = 'off';
 
-            if (($oP = $this->getPermisos($iAfecta)) === false) {
-                return FALSE;
-            } else {
-                $iperm = $oP->getPerm($iAfecta, $id_fase_ref, $on_off);
-                if ($iperm !== false) {
-                    $oPerm = new PermAccion($iperm);
-                    break;
-                }
+            $oP = $this->getPermisos($iAfecta);
+            if ($oP === false) {
+                return false;
+            }
+            $iperm = $oP->getPerm($iAfecta, $id_fase_ref, $on_off);
+            if ($iperm !== 0) {
+                $oPerm = new PermAccion($iperm);
+                break;
             }
         }
 
-        if ($oPerm !== FALSE && $oPerm->have_perm_activ('crear')) {
-            return ['of_responsable_txt' => $of_responsable_txt,
+        if ($oPerm !== false && $oPerm->have_perm_activ('crear')) {
+            return [
+                'of_responsable_txt' => $of_responsable_txt,
                 'status' => $status,
             ];
-        } else {
-            return FALSE;
         }
+
+        return false;
     }
 
     /**
@@ -384,7 +490,7 @@ class PermisosActividades
      * @param string $sAfecta
      * @return PermAccion
      */
-    public function getPermisoActual(string $sAfecta)
+    public function getPermisoActual(string $sAfecta): PermAccion
     {
         // hay que poner a cero el id_tipo_activ, sino
         // aprovecha el que se ha buscado con el anterior iAfecta.
@@ -396,28 +502,19 @@ class PermisosActividades
 
         // buscar fase_ref para iAfecta
         $id_fase_ref = $this->getFaseRef($iAfecta);
-        if ($this->btop === TRUE) {
+        if ($this->btop || $id_fase_ref === false) {
             return new PermAccion(0);
         }
-        // buscar estado de la fase ref
         $completada = $this->isCompletada($id_fase_ref);
-        if (is_true($completada)) {
-            $on_off = 'on';
-        } else {
-            $on_off = 'off';
-        }
+        $on_off = is_true($completada) ? 'on' : 'off';
 
-        if ($this->bpropia === true) {
-            $oPerm = $this->aPermDl[$this->sid_tipo_activ];
-        } else {
-            $oPerm = $this->aPermOtras[$this->sid_tipo_activ];
+        $oPerm = $this->resolveXRestoForTipoActividad();
+        if ($oPerm === null) {
+            return new PermAccion(0);
         }
         $perm = $oPerm->getPerm($iAfecta, $id_fase_ref, $on_off);
-        if ($perm === FALSE) {
-            return new PermAccion(0);
-        } else {
-            return new PermAccion($perm);
-        }
+
+        return new PermAccion($perm !== 0 ? $perm : 0);
     }
 
     /**
@@ -428,7 +525,7 @@ class PermisosActividades
      * @param integer|string $iAfecta
      * @return PermAccion
      */
-    public function getPermisoOn(int|string $iAfecta)
+    public function getPermisoOn(int|string $iAfecta): PermAccion
     {
         // hay que poner a cero el id_tipo_activ, sino
         // aprovecha el que se ha buscado con el anterior iAfecta.
@@ -442,32 +539,37 @@ class PermisosActividades
 
         // buscar fase_ref para iAfecta
         $id_fase_ref = $this->getFaseRef($iAfecta);
-        if ($this->btop === TRUE) {
+        if ($this->btop || $id_fase_ref === false) {
             return new PermAccion(0);
         }
-        // buscar estado de la fase ref
         $completada = $this->isCompletada($id_fase_ref);
         if (!is_true($completada)) {
             return new PermAccion(0);
         }
 
-        if ($this->bpropia === true) {
-            $oPerm = $this->aPermDl[$this->sid_tipo_activ];
-        } else {
-            $oPerm = $this->aPermOtras[$this->sid_tipo_activ];
-        }
-
-        $on_off = 'on';
-        $perm = $oPerm->getPerm($iAfecta, $id_fase_ref, $on_off);
-
-        if ($perm === FALSE) {
+        $oPerm = $this->resolveXRestoForTipoActividad();
+        if ($oPerm === null) {
             return new PermAccion(0);
-        } else {
-            return new PermAccion($perm);
         }
+
+        $perm = $oPerm->getPerm($iAfecta, $id_fase_ref, 'on');
+
+        return new PermAccion($perm !== 0 ? $perm : 0);
     }
 
-    private function getFaseRef($iAfecta, $id_tipo_activ_txt = '')
+    private function resolveXRestoForTipoActividad(): ?XResto
+    {
+        if ($this->bpropia) {
+            return $this->aPermDl[$this->sid_tipo_activ] ?? null;
+        }
+
+        return $this->aPermOtras[$this->sid_tipo_activ] ?? null;
+    }
+
+    /**
+     * @return int|string|false
+     */
+    private function getFaseRef(int $iAfecta, string $id_tipo_activ_txt = ''): int|string|false
     {
         if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->sid_tipo_activ;
         $id_tipo_activ_txt = $this->completarId($id_tipo_activ_txt);
@@ -476,7 +578,7 @@ class PermisosActividades
                 $PermIdTipo = $this->aPermDl[$id_tipo_activ_txt];
                 // a ver si existe el iAfecta para este id_tipo_activ:
                 if ($PermIdTipo->hasAfecta($iAfecta)) {
-                    return $PermIdTipo->getFaseRef($iAfecta);
+                    return $PermIdTipo->getFaseRef($iAfecta) ?? false;
                 } else {
                     return $this->getFaseRefPrev($iAfecta, $id_tipo_activ_txt);
                 }
@@ -488,7 +590,7 @@ class PermisosActividades
                 $PermIdTipo = $this->aPermOtras[$id_tipo_activ_txt];
                 // a ver si existe el iAfecta para este id_tipo_activ:
                 if ($PermIdTipo->hasAfecta($iAfecta)) {
-                    return $PermIdTipo->getFaseRef($iAfecta);
+                    return $PermIdTipo->getFaseRef($iAfecta) ?? false;
                 } else {
                     return $this->getFaseRefPrev($iAfecta, $id_tipo_activ_txt);
                 }
@@ -498,7 +600,10 @@ class PermisosActividades
         }
     }
 
-    private function getFaseRefPrev($iAfecta, $id_tipo_activ_txt = '')
+    /**
+     * @return int|string|false
+     */
+    private function getFaseRefPrev(int $iAfecta, string $id_tipo_activ_txt = ''): int|string|false
     {
         if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->sid_tipo_activ;
         if (($prev_id_tipo = $this->getIdTipoPrev($id_tipo_activ_txt)) === false) {
@@ -549,7 +654,7 @@ class PermisosActividades
         return $permiso_ver;
     }
 
-    public function getPermisos($iAfecta, $id_tipo_activ_txt = '')
+    public function getPermisos(int $iAfecta, string $id_tipo_activ_txt = ''): XResto|false
     {
         if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->sid_tipo_activ;
         $id_tipo_activ_txt = $this->completarId($id_tipo_activ_txt);
@@ -574,7 +679,7 @@ class PermisosActividades
         }
     }
 
-    public function getPermisosPrev($iAfecta, $id_tipo_activ_txt = '')
+    public function getPermisosPrev(int $iAfecta, string $id_tipo_activ_txt = ''): XResto|false
     {
         if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->sid_tipo_activ;
         if (($prev_id_tipo = $this->getIdTipoPrev($id_tipo_activ_txt)) === false) {
@@ -583,12 +688,15 @@ class PermisosActividades
         return $this->getPermisos($iAfecta, $prev_id_tipo);
     }
 
-    public function getAfecta()
+    /**
+     * @return array<string, int>
+     */
+    public function getAfecta(): array
     {
         return self::AFECTA;
     }
 
-    public function setId_tipo_activ($id_tipo_activ_txt)
+    public function setId_tipo_activ(string $id_tipo_activ_txt): void
     {
         if ($id_tipo_activ_txt === '......') {
             $this->btop = true;
@@ -599,19 +707,22 @@ class PermisosActividades
         $this->sid_tipo_activ = $id_tipo_activ_txt;
     }
 
-    public function setId_activ($id_activ)
+    public function setId_activ(int $id_activ): void
     {
-        // actualitza el id_tipo_activ
         $this->iid_activ = $id_activ;
     }
 
-    public function setId_tipo_proceso($id_tipo_proceso)
+    public function setId_tipo_proceso(int $id_tipo_proceso): void
     {
-        // actualitza el id_tipo_proceso
         $this->iid_tipo_proceso = $id_tipo_proceso;
     }
 
-    public function setPropia($bpropia)
+    public function getId_tipo_proceso(): int
+    {
+        return $this->iid_tipo_proceso;
+    }
+
+    public function setPropia(bool|string $bpropia): void
     {
         // actualitza el bpropia
         if (is_true($bpropia)) {
@@ -623,7 +734,10 @@ class PermisosActividades
 
     /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
 
-    private function getIdTipoPrev($id_tipo_activ_txt = '')
+    /**
+     * @return string|false
+     */
+    private function getIdTipoPrev(string $id_tipo_activ_txt = ''): string|false
     {
         if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->sid_tipo_activ;
         $match = [];
@@ -649,19 +763,7 @@ class PermisosActividades
         return $prev_id_tipo;
     }
 
-    private function getId_tipo_activ()
-    {
-        // buscar el id_tipo_activ
-        return $this->sid_tipo_activ;
-    }
-
-    private function getId_tipo_proceso()
-    {
-        // buscar el id_tipo_proceso
-        return $this->iid_tipo_proceso;
-    }
-
-    private function completarId($id_tipo_activ_txt)
+    private function completarId(string $id_tipo_activ_txt): string
     {
         $len = strlen($id_tipo_activ_txt);
         if ($len < 6) {
@@ -671,5 +773,68 @@ class PermisosActividades
             }
         }
         return $id_tipo_activ_txt;
+    }
+
+    private static function dbRowString(mixed $value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_numeric($value)) {
+            return (string) $value;
+        }
+
+        return '';
+    }
+
+    private static function dbRowInt(mixed $value): int
+    {
+        if (is_int($value)) {
+            return $value;
+        }
+        if (is_numeric($value)) {
+            return (int) $value;
+        }
+
+        return 0;
+    }
+
+    /**
+     * @return array<string, XResto>
+     */
+    private static function restoreXRestoMap(mixed $value): array
+    {
+        if (!is_array($value)) {
+            return [];
+        }
+        $out = [];
+        foreach ($value as $key => $item) {
+            if (is_string($key) && $item instanceof XResto) {
+                $out[$key] = $item;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * @return list<int>
+     */
+    private static function restoreIntList(mixed $value): array
+    {
+        if (!is_array($value)) {
+            return [];
+        }
+
+        return array_values(array_map(static fn ($id) => self::dbRowInt($id), $value));
+    }
+
+    private static function optionalString(mixed $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return self::dbRowString($value);
     }
 }

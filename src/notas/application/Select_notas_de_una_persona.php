@@ -17,6 +17,11 @@ namespace src\notas\application;
  */
 class Select_notas_de_una_persona
 {
+    public function __construct(
+        private readonly NotasDeUnaPersonaData $notasDeUnaPersonaData,
+    ) {
+    }
+
     /** @var array<int|string, mixed> */
     private array $a_valores = [];
 
@@ -74,7 +79,7 @@ class Select_notas_de_una_persona
         if (!empty($this->a_valores)) {
             return;
         }
-        $datos = NotasDeUnaPersonaData::getTabla($this->id_pau, $this->permiso);
+        $datos = $this->notasDeUnaPersonaData->getTabla($this->id_pau, $this->permiso);
         $a_valores = $datos['aValores'];
         $this->aviso = $datos['aviso'];
 
@@ -146,13 +151,13 @@ class Select_notas_de_una_persona
         ];
     }
 
-    public function setId_dossier($id_dossier): void { $this->id_dossier = $id_dossier; }
-    public function setPau($pau): void { $this->pau = (string)$pau; }
-    public function setObj_pau($obj_pau): void { $this->obj_pau = (string)$obj_pau; }
-    public function setId_pau($id_pau): void { $this->id_pau = (int)$id_pau; }
-    public function setPermiso($permiso): void { $this->permiso = (int)$permiso; }
-    public function setQid_sel($Qid_sel): void { $this->Qid_sel = $Qid_sel; }
-    public function setQscroll_id($Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
-    public function setBloque($bloque): void { $this->bloque = (string)$bloque; }
-    public function setQueSel($queSel): void { $this->queSel = (string)$queSel; }
+    public function setId_dossier(int|string $id_dossier): void { $this->id_dossier = $id_dossier; }
+    public function setPau(string $pau): void { $this->pau = $pau; }
+    public function setObj_pau(string $obj_pau): void { $this->obj_pau = $obj_pau; }
+    public function setId_pau(int|string $id_pau): void { $this->id_pau = (int) $id_pau; }
+    public function setPermiso(int|string $permiso): void { $this->permiso = (int) $permiso; }
+    public function setQid_sel(int|string|null $Qid_sel): void { $this->Qid_sel = $Qid_sel; }
+    public function setQscroll_id(int|string|null $Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
+    public function setBloque(string $bloque): void { $this->bloque = $bloque; }
+    public function setQueSel(string $queSel): void { $this->queSel = $queSel; }
 }

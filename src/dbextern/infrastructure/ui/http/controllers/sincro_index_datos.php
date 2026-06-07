@@ -1,20 +1,16 @@
 <?php
 
-use src\shared\web\ContestarJson;
 use src\dbextern\application\SincroIndexData;
-use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
-use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
-$tipo_persona = (string)filter_input(INPUT_POST, 'tipo');
+$tipo_persona = input_string($_POST, 'tipo');
 
-$idMatchRepository = $GLOBALS['container']->get(IdMatchPersonaRepositoryInterface::class);
-$personaBDURepository = $GLOBALS['container']->get(PersonaBDURepositoryInterface::class);
+$data = DependencyResolver::get(SincroIndexData::class)($tipo_persona);
 
-$useCase = new SincroIndexData($idMatchRepository, $personaBDURepository);
-$data = $useCase($tipo_persona);
-
-$error_txt = $data['error'] ?? '';
-if (!empty($error_txt)) {
+$error_txt = is_string($data['error'] ?? null) ? $data['error'] : '';
+if ($error_txt !== '') {
     unset($data['error']);
 }
 

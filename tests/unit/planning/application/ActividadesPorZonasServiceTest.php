@@ -33,7 +33,6 @@ use src\zonassacd\domain\entity\Zona;
  */
 final class ActividadesPorZonasServiceTest extends TestCase
 {
-    private mixed $previousContainer;
     private array $previousSession;
 
     public static function setUpBeforeClass(): void
@@ -47,7 +46,6 @@ final class ActividadesPorZonasServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         // Evita que `ConfigGlobal::is_app_installed('procesos')` sea true y
         // dispare la cascada de permisos dentro de `actividadesDeSacd`.
@@ -59,11 +57,6 @@ final class ActividadesPorZonasServiceTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_SESSION = $this->previousSession;
         parent::tearDown();
     }
@@ -73,17 +66,15 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $oZona = $this->zona('Zona Alfa');
 
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
-        $zonaRepo->method('findById')->with('55')->willReturn($oZona);
+        $zonaRepo->method('findById')->with(55)->willReturn($oZona);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->method('getZonasSacds')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
-        ]));
-
-        $out = ActividadesPorZonasService::execute('55', 1, 2030, 'si', 'no');
+        ])->execute('55', 1, 2030, 'si', 'no');
 
         $this->assertSame(1, $out['zonas']);
         $this->assertSame('Zona Alfa', $out['titulo']);
@@ -102,12 +93,10 @@ final class ActividadesPorZonasServiceTest extends TestCase
             ->with(['propia' => 't'])
             ->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
-        ]));
-
-        $out = ActividadesPorZonasService::execute('todo_propias', 1, 2030, 'si', 'no');
+        ])->execute('todo_propias', 1, 2030, 'si', 'no');
 
         $this->assertSame(0, $out['zonas']);
         $this->assertSame([], $out['actividades_por_zona']);
@@ -123,12 +112,10 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->method('getZonasSacds')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
-        ]));
-
-        $out = ActividadesPorZonasService::execute('99', 1, 2030, 'no', 'no');
+        ])->execute('99', 1, 2030, 'no', 'no');
 
         $this->assertSame('2030-01-01', $out['oIniPlanning']->format('Y-m-d'));
         $this->assertSame('2030-03-31', $out['oFinPlanning']->format('Y-m-d'));
@@ -144,12 +131,10 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->method('getZonasSacds')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
-        ]));
-
-        $out = ActividadesPorZonasService::execute('99', 5, 2030, 'no', 'no');
+        ])->execute('99', 5, 2030, 'no', 'no');
 
         $this->assertSame('2030-12-01', $out['oIniPlanning']->format('Y-m-d'));
         $this->assertSame('2031-01-31', $out['oFinPlanning']->format('Y-m-d'));
@@ -165,12 +150,10 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->method('getZonasSacds')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
-        ]));
-
-        $out = ActividadesPorZonasService::execute('99', 101, 2030, 'no', 'no');
+        ])->execute('99', 101, 2030, 'no', 'no');
 
         $this->assertSame('2030-01-01', $out['oIniPlanning']->format('Y-m-d'));
         $this->assertSame('2030-01-31', $out['oFinPlanning']->format('Y-m-d'));
@@ -193,13 +176,11 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $sacdRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
         $sacdRepo->method('findById')->with(9999)->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
             PersonaSacdRepositoryInterface::class => $sacdRepo,
-        ]));
-
-        $out = ActividadesPorZonasService::execute('99', 1, 2030, 'si', 'no');
+        ])->execute('99', 1, 2030, 'si', 'no');
 
         $this->assertCount(1, $out['actividades_por_zona'][1]);
     }
@@ -224,13 +205,11 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $sacdRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
         $sacdRepo->method('findById')->willReturn($oSacd);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
             PersonaSacdRepositoryInterface::class => $sacdRepo,
-        ]));
-
-        $out = ActividadesPorZonasService::execute('99', 1, 2030, 'si', 'no');
+        ])->execute('99', 1, 2030, 'si', 'no');
 
         // Debe quedar unicamente la fila en blanco "###".
         $this->assertCount(1, $out['actividades_por_zona'][1]);
@@ -257,13 +236,11 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $sacdRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
         $sacdRepo->method('findById')->with(123)->willReturn($oSacd);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
             PersonaSacdRepositoryInterface::class => $sacdRepo,
-        ]));
-
-        $out = ActividadesPorZonasService::execute('99', 1, 2030, 'no', 'no');
+        ])->execute('99', 1, 2030, 'no', 'no');
 
         $actividades = $out['actividades_por_zona'][1];
         // uksort alfabetico: Sacd Uno antes que ###.
@@ -316,15 +293,13 @@ final class ActividadesPorZonasServiceTest extends TestCase
             new \InvalidArgumentException('EncargoGrupo solo admite: 1, 2, 3, 4, 5, 8')
         );
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
             PersonaSacdRepositoryInterface::class => $sacdRepo,
             EncargoSacdHorarioRepositoryInterface::class => $encargoSacdRepo,
             EncargoRepositoryInterface::class => $encargoRepo,
-        ]));
-
-        $out = ActividadesPorZonasService::execute('99', 1, 2030, 'si', 'no');
+        ])->execute('99', 1, 2030, 'si', 'no');
 
         $this->assertSame([], $out['actividades_por_zona'][1]['Sacd Uno']['p#123#Sacd Uno'] ?? []);
     }
@@ -372,19 +347,16 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $encargoSacdRepo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
         $encargoSacdRepo->method('getEncargoSacdHorarios')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        // `Qpropuesta = 'true'` (reconocido por `is_true`) desvia a la rama
+        // que no toca `$_SESSION['oPermActividades']`.
+        $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
             PersonaSacdRepositoryInterface::class => $sacdRepo,
             ActividadRepositoryInterface::class => $activRepo,
             ActividadCargoRepositoryInterface::class => $actCargoRepo,
             EncargoSacdHorarioRepositoryInterface::class => $encargoSacdRepo,
-            TipoDeActividadRepositoryInterface::class => $this->createStub(TipoDeActividadRepositoryInterface::class),
-        ]));
-
-        // `Qpropuesta = 'true'` (reconocido por `is_true`) desvia a la rama
-        // que no toca `$_SESSION['oPermActividades']`.
-        $out = ActividadesPorZonasService::execute('99', 1, 2030, 'si', 'true');
+        ])->execute('99', 1, 2030, 'si', 'true');
 
         $actividades = $out['actividades_por_zona'][1]['Sacd Uno']['p#123#Sacd Uno'];
         $this->assertCount(1, $actividades);
@@ -402,12 +374,10 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->method('getZonasSacds')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $out = $this->createService([
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
-        ]));
-
-        $out = ActividadesPorZonasService::execute('99', 1, 0, 'no', 'no');
+        ])->execute('99', 1, 0, 'no', 'no');
 
         $this->assertSame(
             (int)date('Y') + 1,
@@ -417,9 +387,8 @@ final class ActividadesPorZonasServiceTest extends TestCase
 
     /**
      * @param array<class-string, object> $overrides
-     * @return array<class-string, object>
      */
-    private function defaultServices(array $overrides = []): array
+    private function createService(array $overrides = []): ActividadesPorZonasService
     {
         $defaults = [
             CargoRepositoryInterface::class => $this->createStub(CargoRepositoryInterface::class),
@@ -431,7 +400,18 @@ final class ActividadesPorZonasServiceTest extends TestCase
             ZonaRepositoryInterface::class => $this->createStub(ZonaRepositoryInterface::class),
             ZonaSacdRepositoryInterface::class => $this->createStub(ZonaSacdRepositoryInterface::class),
         ];
-        return array_merge($defaults, $overrides);
+        $services = array_merge($defaults, $overrides);
+
+        return new ActividadesPorZonasService(
+            $services[CargoRepositoryInterface::class],
+            $services[ZonaRepositoryInterface::class],
+            $services[ZonaSacdRepositoryInterface::class],
+            $services[ActividadRepositoryInterface::class],
+            $services[PersonaSacdRepositoryInterface::class],
+            $services[EncargoRepositoryInterface::class],
+            $services[EncargoSacdHorarioRepositoryInterface::class],
+            $services[ActividadCargoRepositoryInterface::class],
+        );
     }
 
     private function zona(string $nombre): Zona
@@ -442,21 +422,4 @@ final class ActividadesPorZonasServiceTest extends TestCase
         return $stub;
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
-    }
 }

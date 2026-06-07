@@ -2,16 +2,17 @@
 
 namespace src\ubis\domain;
 
-/* No vale el underscore en el nombre */
-
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
+use src\ubis\domain\entity\TipoTeleco;
+
+/* No vale el underscore en el nombre */
 
 class InfoTipoTeleco extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private TipoTelecoRepositoryInterface $tipoTelecoRepository,
+    ) {
         $this->setTxtTitulo(_("tipos de teleco"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este tipo de teleco?"));
         $this->setTxtBuscar(_("buscar un tipo de teleco"));
@@ -23,20 +24,19 @@ class InfoTipoTeleco extends DatosInfoRepo
         $this->setRepositoryInterface(TipoTelecoRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<TipoTeleco>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'nombre_teleco');
+            $aWhere = ['_ordre' => 'nombre_teleco'];
             $aOperador = [];
         } else {
-            $aWhere = array('nombre_teleco' => $this->k_buscar);
-            $aOperador = array('nombre_teleco' => 'sin_acentos');
+            $aWhere = ['nombre_teleco' => $this->k_buscar];
+            $aOperador = ['nombre_teleco' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getTiposTeleco($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->tipoTelecoRepository->getTiposTeleco($aWhere, $aOperador);
     }
 }

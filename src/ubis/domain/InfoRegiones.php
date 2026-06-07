@@ -2,15 +2,17 @@
 
 namespace src\ubis\domain;
 
-/* No vale el underscore en el nombre */
-
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\RegionRepositoryInterface;
+use src\ubis\domain\entity\Region;
+
+/* No vale el underscore en el nombre */
 
 class InfoRegiones extends DatosInfoRepo
 {
-    public function __construct()
-    {
+    public function __construct(
+        private RegionRepositoryInterface $regionRepository,
+    ) {
         $this->setTxtTitulo(_("regiones"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta región?"));
         $this->setTxtBuscar(_("buscar una región (sigla)"));
@@ -22,10 +24,11 @@ class InfoRegiones extends DatosInfoRepo
         $this->setRepositoryInterface(RegionRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<Region>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = ['_ordre' => 'region'];
             $aOperador = [];
@@ -33,10 +36,7 @@ class InfoRegiones extends DatosInfoRepo
             $aWhere = ['region' => $this->k_buscar];
             $aOperador = ['region' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
 
-        $Coleccion = $oLista->getRegiones($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->regionRepository->getRegiones($aWhere, $aOperador);
     }
 }

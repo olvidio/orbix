@@ -14,5 +14,5 @@ namespace src\notas\domain\contracts;
 interface ActaTribunalDlRepositoryInterface extends ActaTribunalRepositoryInterface
 {
 
-    public function getNewId();
+    public function getNewId(): int;
 }

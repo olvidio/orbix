@@ -17,13 +17,23 @@ use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
  */
 class DesplegableSacdData
 {
-    public static function getData(int $id_zona, int $id_sacd, int $seleccion, string $dia): array
-    {
-        $container = $GLOBALS['container'];
-        $InicialesSacdService = $container->get(InicialesSacdService::class);
 
-        $sacd = $InicialesSacdService->obtenerNombreConIniciales($id_sacd);
-        $iniciales = $InicialesSacdService->obtenerIniciales($id_sacd);
+    public function __construct(
+        private readonly InicialesSacdService $inicialesSacdService,
+        private readonly ZonaSacdRepositoryInterface $zonaSacdRepository,
+        private readonly EncargoRepositoryInterface $encargoRepository,
+        private readonly EncargoDiaRepositoryInterface $encargoDiaRepository,
+        private readonly PersonaSacdRepositoryInterface $personaSacdRepository,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+    public function getData(int $id_zona, int $id_sacd, int $seleccion, string $dia): array
+    {
+
+        $sacd = $this->inicialesSacdService->obtenerNombreConIniciales($id_sacd);
+        $iniciales = $this->inicialesSacdService->obtenerIniciales($id_sacd);
         $firstKey = $iniciales . '#' . $id_sacd;
 
         $rows = [];
@@ -35,11 +45,8 @@ class DesplegableSacdData
         $lista_sacd = [];
 
         if ($seleccion & 1) {
-            $ZonaSacdRepository = $container->get(ZonaSacdRepositoryInterface::class);
-            $a_Id_nom = $ZonaSacdRepository->getIdSacdsDeZona($id_zona);
-            $EncargoRepository = $container->get(EncargoRepositoryInterface::class);
-            $EncargoDiaRepository = $container->get(EncargoDiaRepositoryInterface::class);
-
+            $a_Id_nom = $this->zonaSacdRepository->getIdSacdsDeZona($id_zona);
+            
             foreach ($a_Id_nom as $id_nom) {
                 $libre = true;
                 $inicio_dia = $dia . ' 00:00:00';
@@ -51,13 +58,13 @@ class DesplegableSacdData
                 $aOperador = [
                     'tstart' => 'BETWEEN',
                 ];
-                $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+                $cEncargosDia = $this->encargoDiaRepository->getEncargoDias($aWhere, $aOperador);
                 foreach ($cEncargosDia as $oEncargoDia) {
                     $id_enc = $oEncargoDia->getId_enc();
                     $aWhere = [];
                     $aOperador = [];
                     $aWhere['id_enc'] = $id_enc;
-                    $cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
+                    $cEncargos = $this->encargoRepository->getEncargos($aWhere, $aOperador);
                     foreach ($cEncargos as $oEncargo) {
                         $id_tipo_enc = $oEncargo->getId_tipo_enc();
                         if ((int)substr((string)$id_tipo_enc, 1, 1) === 1) {
@@ -69,9 +76,9 @@ class DesplegableSacdData
                     $aWhere = [];
                     $aWhere['id_zona'] = $id_zona;
                     $aWhere['id_nom'] = $id_nom;
-                    $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere);
+                    $cZonaSacd = $this->zonaSacdRepository->getZonasSacds($aWhere);
                     $dia_ts = strtotime($dia);
-                    $n_dia_semana = date('N', $dia_ts);
+                    $n_dia_semana = $dia_ts !== false ? (int) date('N', $dia_ts) : 1;
                     $oZonaSacd = $cZonaSacd[0];
                     switch ($n_dia_semana) {
                         case 1:
@@ -98,8 +105,8 @@ class DesplegableSacdData
                     }
                 }
                 if ($libre) {
-                    $sacd_nom = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
-                    $iniciales_nom = $InicialesSacdService->obtenerIniciales($id_nom);
+                    $sacd_nom = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom);
+                    $iniciales_nom = $this->inicialesSacdService->obtenerIniciales($id_nom);
                     $key = $iniciales_nom . '#' . $id_nom;
                     $lista_sacd[$key] = $sacd_nom;
                 }
@@ -107,11 +114,10 @@ class DesplegableSacdData
         }
 
         if ($seleccion & 2) {
-            $ZonaSacdRepository = $container->get(ZonaSacdRepositoryInterface::class);
-            $a_Id_nom = $ZonaSacdRepository->getIdSacdsDeZona($id_zona);
+            $a_Id_nom = $this->zonaSacdRepository->getIdSacdsDeZona($id_zona);
             foreach ($a_Id_nom as $id_nom) {
-                $sacd_nom = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
-                $iniciales_nom = $InicialesSacdService->obtenerIniciales($id_nom);
+                $sacd_nom = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom);
+                $iniciales_nom = $this->inicialesSacdService->obtenerIniciales($id_nom);
                 $key = $iniciales_nom . '#' . $id_nom;
                 $lista_sacd[$key] = $sacd_nom;
             }
@@ -125,12 +131,11 @@ class DesplegableSacdData
             $aWhere['id_tabla'] = "'n','a'";
             $aOperador['id_tabla'] = 'IN';
             $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-            $PersonaSacdRepository = $container->get(PersonaSacdRepositoryInterface::class);
-            $cPersonas = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
+            $cPersonas = $this->personaSacdRepository->getPersonas($aWhere, $aOperador);
             foreach ($cPersonas as $oPersona) {
                 $id_nom = $oPersona->getId_nom();
-                $sacd_nom = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
-                $iniciales_nom = $InicialesSacdService->obtenerIniciales($id_nom);
+                $sacd_nom = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom);
+                $iniciales_nom = $this->inicialesSacdService->obtenerIniciales($id_nom);
                 $key = $iniciales_nom . '#' . $id_nom;
                 $lista_sacd[$key] = $sacd_nom;
             }
@@ -142,12 +147,11 @@ class DesplegableSacdData
             $aWhere['sacd'] = 't';
             $aWhere['situacion'] = 'A';
             $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-            $PersonaSacdRepository = $container->get(PersonaSacdRepositoryInterface::class);
-            $cPersonas = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
+            $cPersonas = $this->personaSacdRepository->getPersonas($aWhere, $aOperador);
             foreach ($cPersonas as $oPersona) {
                 $id_nom = $oPersona->getId_nom();
-                $sacd_nom = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
-                $iniciales_nom = $InicialesSacdService->obtenerIniciales($id_nom);
+                $sacd_nom = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom);
+                $iniciales_nom = $this->inicialesSacdService->obtenerIniciales($id_nom);
                 $key = $iniciales_nom . '#' . $id_nom;
                 $lista_sacd[$key] = $sacd_nom;
             }
@@ -171,13 +175,25 @@ class DesplegableSacdData
         ];
     }
 
-    /** Misma forma que el JSON servido antes de la migración (`<SELECT ID="id_sacd">`). */
-    public static function legacySelectHtml(array $payload): string
+    /**
+     * @param array<string, mixed> $payload
+     */
+    public function legacySelectHtml(array $payload): string
     {
         $html = '<SELECT ID="id_sacd">';
+        if (!isset($payload['rows']) || !is_array($payload['rows'])) {
+            return $html . '</SELECT>';
+        }
         foreach ($payload['rows'] as $row) {
-            $v = htmlspecialchars((string)$row['value'], ENT_QUOTES, 'UTF-8');
-            $l = htmlspecialchars((string)$row['label'], ENT_QUOTES, 'UTF-8');
+            if (!is_array($row)) {
+                continue;
+            }
+            $value = $row['value'] ?? '';
+            $label = $row['label'] ?? '';
+            $valueStr = is_string($value) ? $value : (is_int($value) ? (string) $value : '');
+            $labelStr = is_string($label) ? $label : (is_int($label) ? (string) $label : '');
+            $v = htmlspecialchars($valueStr, ENT_QUOTES, 'UTF-8');
+            $l = htmlspecialchars($labelStr, ENT_QUOTES, 'UTF-8');
             $html .= '<OPTION VALUE="' . $v . '">' . $l . '</OPTION>';
         }
         $html .= '</SELECT>';

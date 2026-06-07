@@ -1,16 +1,17 @@
 <?php
 
-use src\shared\web\ContestarJson;
 use src\dbextern\application\VerOrbixData;
-use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
-$region = (string)filter_input(INPUT_POST, 'region');
-$dl = (string)filter_input(INPUT_POST, 'dl');
-$tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
-$id_nom_orbix = (int)filter_input(INPUT_POST, 'id_nom_orbix');
+$region = input_string($_POST, 'region');
+$dl = input_string($_POST, 'dl');
+$tipo_persona = input_string($_POST, 'tipo_persona');
+$id_nom_orbix = input_int($_POST, 'id_nom_orbix');
 
-$idMatchRepository = $GLOBALS['container']->get(IdMatchPersonaRepositoryInterface::class);
-$useCase = new VerOrbixData($idMatchRepository);
+$useCase = DependencyResolver::get(VerOrbixData::class);
 
 if ($id_nom_orbix > 0) {
     $data = $useCase->getPosiblesMatches($tipo_persona, $region, $dl, $id_nom_orbix);

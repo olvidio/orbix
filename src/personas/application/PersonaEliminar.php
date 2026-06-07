@@ -2,8 +2,8 @@
 
 namespace src\personas\application;
 
-use src\shared\config\ConfigGlobal;
 use src\personas\application\support\PersonaRepositoryResolver;
+use src\shared\config\ConfigGlobal;
 
 /**
  * Elimina una persona si pertenece a la dl del usuario actual.
@@ -13,18 +13,22 @@ use src\personas\application\support\PersonaRepositoryResolver;
  */
 final class PersonaEliminar
 {
+    public function __construct(
+        private PersonaRepositoryResolver $personaRepositoryResolver,
+    ) {
+    }
+
     /**
      * @return string cadena vacia si ok, mensaje de error si falla o no tiene permiso.
      */
-    public static function execute(int $id_nom, string $obj_pau): string
+    public function execute(int $id_nom, string $obj_pau): string
     {
         if (empty($id_nom)) {
             return _("No se ha pasado el id_nom");
         }
 
-        $resolver = new PersonaRepositoryResolver();
         try {
-            $repoPersona = $resolver->repositorio($obj_pau);
+            $repoPersona = $this->personaRepositoryResolver->repositorio($obj_pau);
         } catch (\InvalidArgumentException) {
             return _("No existe la clase de la persona");
         }

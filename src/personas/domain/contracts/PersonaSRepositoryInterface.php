@@ -16,6 +16,8 @@ use src\personas\domain\entity\PersonaS;
  */
 interface PersonaSRepositoryInterface extends PersonaDlRepositoryInterface
 {
+    public function getErrorTxt(): string;
+
     public function Guardar(PersonaS $PersonaS): bool;
 
     public function Eliminar(PersonaS $PersonaS): bool;
@@ -25,7 +27,7 @@ interface PersonaSRepositoryInterface extends PersonaDlRepositoryInterface
      */
     public function findById(int $id_nom): ?PersonaS;
 
-    public function getNewId();
+    public function getNewId(): int;
 
-    public function getNewIdNom($id): int;
+    public function getNewIdNom(int $id): int;
 }

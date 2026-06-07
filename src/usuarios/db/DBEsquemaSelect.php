@@ -12,12 +12,12 @@ use src\shared\infrastructure\persistence\postgresql\DBRefresh;
 class DBEsquemaSelect extends DBEsquema
 {
 
-    public function dropAllSelect()
+    public function dropAllSelect(): void
     {
         $this->eliminar_aux_usuarios_ctr_perm_select();
     }
 
-    public function createAllSelect()
+    public function createAllSelect(): void
     {
         $this->create_aux_usuarios_ctr_perm_select();
         // renovar subscripciones
@@ -28,7 +28,7 @@ class DBEsquemaSelect extends DBEsquema
     /**
      * En la BD sv-e (esquema).
      */
-    public function create_aux_usuarios_ctr_perm_select()
+    public function create_aux_usuarios_ctr_perm_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -41,8 +41,8 @@ class DBEsquemaSelect extends DBEsquema
         $tabla = "aux_usuarios_ctr_perm";
         $datosTabla = $this->infoTable($tabla);
 
-        $nom_tabla = $datosTabla['nom_tabla'];
-        $campo_seq = $datosTabla['campo_seq'];
+        $nom_tabla = (string) $datosTabla['nom_tabla'];
+        $campo_seq = (string) $datosTabla['campo_seq'];
         $nompkey = $tabla . '_pkey';
         /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
          *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
@@ -66,7 +66,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_aux_usuarios_ctr_perm_select()
+    public function eliminar_aux_usuarios_ctr_perm_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("aux_usuarios_ctr_perm");

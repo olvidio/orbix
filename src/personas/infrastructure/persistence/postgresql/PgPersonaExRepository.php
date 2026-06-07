@@ -12,7 +12,7 @@ use PDO;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalListsTrait;
-use src\shared\traits\HandlesPdoErrors;
+use src\shared\infrastructure\GlobalPdo;
 use src\utils_database\domain\GenerateIdGlobal;
 
 
@@ -27,13 +27,11 @@ use src\utils_database\domain\GenerateIdGlobal;
  */
 class PgPersonaExRepository extends ClaseRepository implements PersonaExRepositoryInterface
 {
-    use HandlesPdoErrors;
     use PersonaGlobalListsTrait;
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBR'];
-        $this->setoDbl($oDbl);
+        $this->setoDbl(GlobalPdo::get('oDBR'));
         $this->setNomTabla('p_de_paso_ex');
     }
 
@@ -42,9 +40,9 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
     /**
      * devuelve una colección (array) de objetos de tipo PersonaDl
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo PersonaDl
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<PersonaEx> Una colección de objetos de tipo PersonaEx
      */
     public function getPersonas(array $aWhere = [], array $aOperators = []): array
     {
@@ -81,23 +79,31 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para las fechas del postgres (texto iso)
             $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
@@ -105,7 +111,7 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
             $Persona = PersonaEx::fromArray($aDatos);
             $PersonaDlSet->add($Persona);
         }
-        return $PersonaDlSet->getTot();
+        return array_values($PersonaDlSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -172,6 +178,9 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -181,6 +190,9 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -192,23 +204,30 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_nom
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_nom): array|bool
+    public function datosById(int $id_nom): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
             $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
         }
-        return $aDatos;
+        return $result;
     }
 
     /**
@@ -217,23 +236,29 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
     public function findById(int $id_nom): ?PersonaEx
     {
         $aDatos = $this->datosById($id_nom);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return PersonaEx::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('p_de_paso_ex_id_auto_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 
     /**
      * @throws Exception
      */
-    public function getNewIdNom($id): int
+    public function getNewIdNom(int $id): int
     {
         $miRegionDl = ConfigGlobal::mi_region_dl();
         return GenerateIdGlobal::generateIdGlobal($miRegionDl, $this->getNomTabla(), $id);

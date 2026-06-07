@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Endpoint JSON: datos para el formulario `traslado_form.phtml`.
- *
- * Ruta: /src/personas/traslado_form_data
- *
- * Respuesta: `ContestarJson::enviar($error, $data)`.
+ * Endpoint JSON: datos para el formulario de traslado.
  */
 
-use src\shared\web\ContestarJson;
 use src\personas\application\TrasladoFormData;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 
-$result = TrasladoFormData::build($_POST);
+/** @var TrasladoFormData $useCase */
+$useCase = DependencyResolver::get(TrasladoFormData::class);
+$result = $useCase->execute($_POST);
 
-if (!empty($result['error'])) {
-    ContestarJson::enviar((string)$result['error']);
+$errorVal = $result['error'] ?? '';
+if (is_string($errorVal) && $errorVal !== '') {
+    ContestarJson::enviar($errorVal);
     return;
 }
 

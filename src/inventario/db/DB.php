@@ -24,7 +24,7 @@ class DB extends DBAbstract
         $this->esquema = 'global';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
             $this->eliminar_whereis();
@@ -38,7 +38,7 @@ class DB extends DBAbstract
         });
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->ejecutarCreateAllGlobal(function (): void {
             $this->create_colecciones();
@@ -56,7 +56,7 @@ class DB extends DBAbstract
      * En el esquema sv
      *   OJO Corresponde al esquema sf/sv, no al comun.
      */
-    public function create_colecciones()
+    public function create_colecciones(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_colecciones";
@@ -76,7 +76,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
-    public function eliminar_colecciones()
+    public function eliminar_colecciones(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_colecciones";
@@ -90,7 +90,7 @@ class DB extends DBAbstract
     /**
      * En el esquema sfsv
      */
-    public function create_documentos()
+    public function create_documentos(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_documentos";
@@ -126,7 +126,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
-    public function eliminar_documentos()
+    public function eliminar_documentos(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_documentos";
@@ -141,7 +141,7 @@ class DB extends DBAbstract
      * En el esquema sv
      *   OJO Corresponde al esquema sf/sv, no al comun.
      */
-    public function create_egm()
+    public function create_egm(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_egm";
@@ -163,7 +163,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
-    public function eliminar_egm()
+    public function eliminar_egm(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_egm";
@@ -178,7 +178,7 @@ class DB extends DBAbstract
      * En el esquema sv
      *   OJO Corresponde al esquema sf/sv, no al comun.
      */
-    public function create_equipajes()
+    public function create_equipajes(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_equipajes";
@@ -205,7 +205,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
-    public function eliminar_equipajes()
+    public function eliminar_equipajes(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_equipajes";
@@ -220,7 +220,7 @@ class DB extends DBAbstract
      * En el esquema sv
      *   OJO Corresponde al esquema sf/sv, no al comun.
      */
-    public function create_lugares()
+    public function create_lugares(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_lugares";
@@ -240,7 +240,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
-    public function eliminar_lugares()
+    public function eliminar_lugares(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_lugares";
@@ -255,7 +255,7 @@ class DB extends DBAbstract
      * En el esquema sv
      *   OJO Corresponde al esquema sf/sv, no al comun.
      */
-    public function create_tipo_documento()
+    public function create_tipo_documento(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_tipo_documento";
@@ -280,7 +280,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
-    public function eliminar_tipo_documento()
+    public function eliminar_tipo_documento(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_tipo_documento";
@@ -295,7 +295,7 @@ class DB extends DBAbstract
      * En el esquema sv
      *   OJO Corresponde al esquema sf/sv, no al comun.
      */
-    public function create_ubis()
+    public function create_ubis(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_ubis";
@@ -315,7 +315,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
-    public function eliminar_ubis()
+    public function eliminar_ubis(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_ubis";
@@ -330,7 +330,7 @@ class DB extends DBAbstract
      * En el esquema sv
      *   OJO Corresponde al esquema sf/sv, no al comun.
      */
-    public function create_whereis()
+    public function create_whereis(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_whereis";
@@ -350,7 +350,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
-    public function eliminar_whereis()
+    public function eliminar_whereis(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
         $tabla = "i_whereis";

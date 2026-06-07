@@ -33,12 +33,32 @@ use src\profesores\domain\InfoProfesorStgr;
 use src\profesores\domain\InfoProfesorTituloEst;
 use function src\shared\domain\helpers\is_true;
 
-class FichaProfesorStgr
+final class FichaProfesorStgr
 {
+    public function __construct(
+        private TipoDossierRepositoryInterface $tipoDossierRepository,
+        private ProfesorLatinRepositoryInterface $profesorLatinRepository,
+        private DepartamentoRepositoryInterface $departamentoRepository,
+        private ProfesorTipoRepositoryInterface $profesorTipoRepository,
+        private ProfesorStgrRepositoryInterface $profesorStgrRepository,
+        private ProfesorTituloEstRepositoryInterface $profesorTituloEstRepository,
+        private ProfesorAmpliacionRepositoryInterface $profesorAmpliacionRepository,
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private ProfesorCongresoRepositoryInterface $profesorCongresoRepository,
+        private ProfesorDocenciaStgrRepositoryInterface $profesorDocenciaStgrRepository,
+        private ProfesorDirectorRepositoryInterface $profesorDirectorRepository,
+        private ProfesorJuramentoRepositoryInterface $profesorJuramentoRepository,
+        private ProfesorPublicacionRepositoryInterface $profesorPublicacionRepository,
+        private CentroRepositoryInterface $centroRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+    ) {
+    }
+
     /**
      * @param string $obj_pau p.ej. clase Persona*; se usa en enlaces a tablaDB_lista_ver
+     * @return array<string, mixed>
      */
-    public static function getFichaData(
+    public function getFichaData(
         int $id_nom,
         string $id_tabla,
         bool $print = false,
@@ -58,12 +78,14 @@ class FichaProfesorStgr
             1025 => 'docencia',
         ];
 
-        $TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
         $aPerm = [];
         foreach ($a_tipos_dossier as $id_tipo_dossier => $nom_dossier) {
-            $oTipoDossier = $TipoDossierRepository->findById($id_tipo_dossier);
+            $oTipoDossier = $this->tipoDossierRepository->findById($id_tipo_dossier);
+            if ($oTipoDossier === null) {
+                continue;
+            }
             $permiso_lectura = $oTipoDossier->getPermiso_lectura();
-            $permiso_escritura = $oTipoDossier->getPermiso_escritura();
+            $permiso_escritura = (int) $oTipoDossier->getPermiso_escritura();
             $depende_modificar = $oTipoDossier->isDepende_modificar();
 
             $oPermDossier = new PermDossier();
@@ -102,27 +124,28 @@ class FichaProfesorStgr
         $nom_ap = $oPersona->getNombreApellidosCrSin();
         $sacd_txt = is_true($oPersona->isSacd()) ? 'si' : '';
         $id_ctr = $oPersona->getId_ctr();
-        $nombre_ubi = self::resolveNombreCentro($id_ctr);
+        $nombre_ubi = $this->resolveNombreCentro($id_ctr);
 
-        $latin = $GLOBALS['container']->get(ProfesorLatinRepositoryInterface::class)->findById($id_nom)?->isLatin();
+        $latin = $this->profesorLatinRepository->findById($id_nom)?->isLatin();
         $latin_txt = is_true($latin) ? 'si' : '';
 
-        $DepartamentoRepository = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
-        $ProfesorTipoRepository = $GLOBALS['container']->get(ProfesorTipoRepositoryInterface::class);
-        $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-        $cProfesores = $ProfesorRepository->getProfesoresStgr($aWhere, $aOperador);
+        $cProfesores = $this->profesorStgrRepository->getProfesoresStgr($aWhere, $aOperador);
 
         $a_nombramientos = [];
         $dep = '';
         foreach ($cProfesores as $oProfesor) {
             $id_departamento = $oProfesor->getId_departamento();
             $f_cese = $oProfesor->getF_cese()?->getFromLocal();
-            $departamento = $DepartamentoRepository->findById($id_departamento)->getNombreDepartamentoVo()->value();
-            $oProfesorTipo = $ProfesorTipoRepository->findById($oProfesor->getId_tipo_profesor());
+            $oDepartamento = $this->departamentoRepository->findById($id_departamento);
+            $departamento = $oDepartamento?->getNombreDepartamentoVo()->value() ?? '';
+            $id_tipo_profesor = $oProfesor->getId_tipo_profesor();
+            $oProfesorTipo = $id_tipo_profesor !== null
+                ? $this->profesorTipoRepository->findById($id_tipo_profesor)
+                : null;
 
             $a_nombramientos[] = [
                 'departamento' => $departamento,
-                'tipo_profesor' => $oProfesorTipo->getTipo_profesor(),
+                'tipo_profesor' => $oProfesorTipo?->getTipo_profesor() ?? '',
                 'f_nombramiento' => $oProfesor->getF_nombramiento()?->getFromLocal(),
                 'escrito_nombramiento' => $oProfesor->getEscrito_nombramiento(),
                 'f_cese' => $f_cese,
@@ -134,8 +157,7 @@ class FichaProfesorStgr
             }
         }
 
-        $ProfesorTituloEstRepository = $GLOBALS['container']->get(ProfesorTituloEstRepositoryInterface::class);
-        $cTitulosEst = $ProfesorTituloEstRepository->getProfesorTitulosEst(['id_nom' => $id_nom, '_ordre' => 'year']);
+        $cTitulosEst = $this->profesorTituloEstRepository->getProfesorTitulosEst(['id_nom' => $id_nom, '_ordre' => 'year']);
         $a_curriculum = [];
         foreach ($cTitulosEst as $oProfesorTituloEst) {
             $a_curriculum[] = [
@@ -146,13 +168,11 @@ class FichaProfesorStgr
             ];
         }
 
-        $ProfesorAmpliacionRepository = $GLOBALS['container']->get(ProfesorAmpliacionRepositoryInterface::class);
-        $cProfesorAmpliaciones = $ProfesorAmpliacionRepository->getProfesorAmpliaciones($aWhere, $aOperador);
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $cProfesorAmpliaciones = $this->profesorAmpliacionRepository->getProfesorAmpliaciones($aWhere, $aOperador);
         $a_ampliacion = [];
         foreach ($cProfesorAmpliaciones as $oProfesorAmpliacion) {
             $id_asignatura = $oProfesorAmpliacion->getId_asignatura();
-            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
+            $oAsignatura = $this->asignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
@@ -165,8 +185,7 @@ class FichaProfesorStgr
             ];
         }
 
-        $ProfesorCongresoRepository = $GLOBALS['container']->get(ProfesorCongresoRepositoryInterface::class);
-        $cProfesorCongresos = $ProfesorCongresoRepository->getProfesorCongresos(['id_nom' => $id_nom, '_ordre' => 'f_ini']);
+        $cProfesorCongresos = $this->profesorCongresoRepository->getProfesorCongresos(['id_nom' => $id_nom, '_ordre' => 'f_ini']);
         $a_tipos_congreso = CongresoTipo::getArrayTiposCongreso();
         $a_congresos = [];
         foreach ($cProfesorCongresos as $oProfesorCongreso) {
@@ -181,13 +200,12 @@ class FichaProfesorStgr
             ];
         }
 
-        $ProfesorDocenciaStgrRepository = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
-        $cDocencias = $ProfesorDocenciaStgrRepository->getProfesorDocenciasStgr(['id_nom' => $id_nom, '_ordre' => 'curso_inicio,id_asignatura']);
+        $cDocencias = $this->profesorDocenciaStgrRepository->getProfesorDocenciasStgr(['id_nom' => $id_nom, '_ordre' => 'curso_inicio,id_asignatura']);
         $a_tipos_docencia = TipoActividadAsignatura::getTiposActividad();
         $a_docencias = [];
         foreach ($cDocencias as $oDocencia) {
             $id_asignatura = $oDocencia->getId_asignatura();
-            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
+            $oAsignatura = $this->asignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
@@ -206,12 +224,12 @@ class FichaProfesorStgr
         $a_director = [];
         $a_publicaciones = [];
         if (!$print) {
-            $ProfesorDirectorRepository = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);
-            $cDirectores = $ProfesorDirectorRepository->getProfesoresDirectores($aWhere, $aOperador);
+            $cDirectores = $this->profesorDirectorRepository->getProfesoresDirectores($aWhere, $aOperador);
             foreach ($cDirectores as $oProfesorDirector) {
                 $id_departamento = $oProfesorDirector->getId_departamento();
+                $oDepDirector = $this->departamentoRepository->findById($id_departamento);
                 $a_director[] = [
-                    'departamento' => $DepartamentoRepository->findById($id_departamento)->getNombreDepartamentoVo()->value(),
+                    'departamento' => $oDepDirector?->getNombreDepartamentoVo()->value() ?? '',
                     'f_nombramiento' => $oProfesorDirector->getF_nombramiento()?->getFromLocal(),
                     'escrito_nombramiento' => $oProfesorDirector->getEscrito_nombramiento(),
                     'f_cese' => $oProfesorDirector->getF_cese()?->getFromLocal(),
@@ -219,14 +237,12 @@ class FichaProfesorStgr
                 ];
             }
 
-            $JuramentoRepository = $GLOBALS['container']->get(ProfesorJuramentoRepositoryInterface::class);
-            $cJuramento = $JuramentoRepository->getProfesorJuramentos(['id_nom' => $id_nom]);
+            $cJuramento = $this->profesorJuramentoRepository->getProfesorJuramentos(['id_nom' => $id_nom]);
             if (!empty($cJuramento[0])) {
-                $f_juramento = $cJuramento[0]->getF_juramento()?->getFromLocal();
+                $f_juramento = $cJuramento[0]->getF_juramento()->getFromLocal();
             }
 
-            $ProfesorPublicacionRepository = $GLOBALS['container']->get(ProfesorPublicacionRepositoryInterface::class);
-            $cProfesorPublicaciones = $ProfesorPublicacionRepository->getProfesorPublicaciones(['id_nom' => $id_nom, '_ordre' => 'f_publicacion']);
+            $cProfesorPublicaciones = $this->profesorPublicacionRepository->getProfesorPublicaciones(['id_nom' => $id_nom, '_ordre' => 'f_publicacion']);
             foreach ($cProfesorPublicaciones as $oProfesorPublicacion) {
                 $a_publicaciones[] = [
                     'pendiente' => $oProfesorPublicacion->isPendiente(),
@@ -311,16 +327,16 @@ class FichaProfesorStgr
         ];
     }
 
-    private static function resolveNombreCentro(?int $id_ctr): string
+    private function resolveNombreCentro(?int $id_ctr): string
     {
         if ($id_ctr === null) {
             return '';
         }
 
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $oCentro = $GLOBALS['container']->get(CentroRepositoryInterface::class)->findById($id_ctr);
+            $oCentro = $this->centroRepository->findById($id_ctr);
         } else {
-            $oCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class)->findById($id_ctr);
+            $oCentro = $this->centroDlRepository->findById($id_ctr);
         }
 
         return (string)($oCentro?->getNombre_ubi() ?? '');

@@ -16,16 +16,23 @@ use src\notas\domain\entity\Acta;
  */
 interface ActaRepositoryInterface
 {
-    public function getUltimaActa($any, $sRegion = '?'): int;
+    public function getUltimaActa(int|string $any, string $sRegion = '?'): int;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActaDl
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActaDl
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<\src\notas\domain\entity\Acta> Una colección de objetos de tipo Acta
+     */
+    /** @param array<string, mixed> $aWhere */
+
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<\src\notas\domain\entity\Acta>
      */
     public function getActas(array $aWhere = [], array $aOperators = []): array;
 
@@ -46,9 +53,9 @@ interface ActaRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $acta
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $acta): array|bool;
+    public function datosById(string $acta): array|false;
 
     /**
      * Busca la clase con acta en el repositorio.

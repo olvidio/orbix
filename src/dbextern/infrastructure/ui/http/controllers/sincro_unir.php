@@ -1,23 +1,25 @@
 <?php
 
-use src\shared\web\ContestarJson;
 use src\dbextern\application\UnirPersonaUseCase;
-use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
-$id_nom_listas = (int)filter_input(INPUT_POST, 'id_nom_listas');
-$id_orbix = (int)filter_input(INPUT_POST, 'id_orbix');
-$tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
+$id_nom_listas = input_int($_POST, 'id_nom_listas');
+$id_orbix = input_int($_POST, 'id_orbix');
+$tipo_persona = input_string($_POST, 'tipo_persona');
 
-$idMatchRepository = $GLOBALS['container']->get(IdMatchPersonaRepositoryInterface::class);
-$useCase = new UnirPersonaUseCase($idMatchRepository);
-$error_txt = $useCase($id_nom_listas, $id_orbix, $tipo_persona);
+$error_txt = DependencyResolver::get(UnirPersonaUseCase::class)($id_nom_listas, $id_orbix, $tipo_persona);
 
-// Actualizar sesión: eliminar la persona de la lista de navegación
-$id = (int)filter_input(INPUT_POST, 'id');
-if ($id > 0 && isset($_SESSION['DBListas'][$id])) {
+$id = input_int($_POST, 'id');
+$dbListas = $_SESSION['DBListas'] ?? null;
+if ($id > 0 && is_array($dbListas) && isset($dbListas[$id])) {
     session_start();
-    unset($_SESSION['DBListas'][$id]);
-    $_SESSION['DBListas'] = array_values(array_filter($_SESSION['DBListas']));
+    /** @var array<int, mixed> $sessionListas */
+    $sessionListas = $_SESSION['DBListas'];
+    unset($sessionListas[$id]);
+    $_SESSION['DBListas'] = array_values(array_filter($sessionListas));
     session_write_close();
 }
 

@@ -1,26 +1,32 @@
 <?php
 
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\DependencyResolver;
 use src\usuarios\application\GruposLista;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-// Se usa al buscar:
-$Qusername = (string)filter_input(INPUT_POST, 'username');
+use function src\shared\domain\helpers\input_string;
+
+$Qusername = input_string($_POST, 'username');
 
 $error_txt = '';
 
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+/** @var UsuarioRepositoryInterface $usuarioRepository */
+$usuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
+$oMiUsuario = $usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+if ($oMiUsuario === null) {
+    ContestarJson::enviar(_('Usuario no encontrado'), []);
+    return;
+}
 $miRole = $oMiUsuario->getId_role();
 
 if ($miRole > 3) {
-    // no es administrador
-    $error_txt = _("no tiene permisos para ver esto");
+    $error_txt = _('no tiene permisos para ver esto');
 }
 
-$GruposLista = new GruposLista();
-$data = $GruposLista($Qusername);
+/** @var GruposLista $useCase */
+$useCase = DependencyResolver::get(GruposLista::class);
+$data = $useCase->execute($Qusername);
 
-// envía una Response
 ContestarJson::enviar($error_txt, $data);

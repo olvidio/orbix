@@ -19,6 +19,8 @@ final class CartasPresentacionBuscarOpcionesData
 {
     public function __construct(
         private DireccionCentroRepositoryInterface $direccionCentroRepository,
+        private DelegacionDropdown $delegacionDropdown,
+        private RegionDropdown $regionDropdown,
     ) {
     }
 
@@ -34,9 +36,9 @@ final class CartasPresentacionBuscarOpcionesData
     public function execute(): array
     {
         return [
-            'opciones_region' => RegionDropdown::activasOrdenNombre(),
+            'opciones_region' => $this->regionDropdown->activasOrdenNombre(),
             'opciones_pais' => (array)$this->direccionCentroRepository->getArrayPaises(),
-            'opciones_delegacion' => DelegacionDropdown::byRegiones(['H']),
+            'opciones_delegacion' => $this->delegacionDropdown->byRegiones(['H']),
             'paths' => [
                 'lista' => 'frontend/cartaspresentacion/controller/cartas_presentacion_lista.php',
             ],

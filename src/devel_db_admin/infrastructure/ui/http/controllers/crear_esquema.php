@@ -9,8 +9,12 @@ declare(strict_types=1);
 use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\CrearEsquema;
 use src\devel_db_admin\application\CrearEsquemaPrecondicionException;
+use src\shared\infrastructure\DependencyResolver;
 
 require_once 'frontend/shared/global_header_front.inc';
+
+/** @var CrearEsquema $useCase */
+$useCase = DependencyResolver::get(CrearEsquema::class);
 
 $QEsquemaRef = (string) filter_input(INPUT_POST, 'esquema');
 $Qregion = (string) filter_input(INPUT_POST, 'region');
@@ -20,7 +24,7 @@ $Qsv = (int) filter_input(INPUT_POST, 'sv');
 $Qsf = (int) filter_input(INPUT_POST, 'sf');
 
 try {
-    $avisos = (new CrearEsquema($GLOBALS['container']))->ejecutar(
+    $avisos = $useCase->ejecutar(
         $QEsquemaRef,
         $Qregion,
         $Qdl,

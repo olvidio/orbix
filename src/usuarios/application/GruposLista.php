@@ -6,12 +6,19 @@ use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 
 class GruposLista
 {
+    public function __construct(
+        private GrupoRepositoryInterface $grupoRepository,
+    ) {
+    }
 
-    public function __invoke($username): array
+    /**
+     * @return array{a_cabeceras: list<mixed>, a_botones: list<array<string, string>>, a_valores: array<int, array<int|string, mixed>>}
+     */
+    public function execute(string $username): array
     {
         $aWhere = [];
         $aOperador = [];
-        if (!empty($username)) {
+        if ($username !== '') {
             $aWhere['usuario'] = $username;
             $aOperador['usuario'] = 'sin_acentos';
         } else {
@@ -20,14 +27,14 @@ class GruposLista
         }
         $aWhere['_ordre'] = 'usuario';
 
-        $GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
-        $cGrupos = $GrupoRepository->getGrupos($aWhere, $aOperador);
+        $cGrupos = $this->grupoRepository->getGrupos($aWhere, $aOperador);
 
-        $a_cabeceras = [_("grupo"),
-            ['name' => 'accion', 'formatter' => 'clickFormatter']
+        $a_cabeceras = [
+            _('grupo'),
+            ['name' => 'accion', 'formatter' => 'clickFormatter'],
         ];
 
-        $a_botones[] = ['txt' => _("borrar"), 'click' => "fnjs_eliminar(this.form)"];
+        $a_botones[] = ['txt' => _('borrar'), 'click' => 'fnjs_eliminar(this.form)'];
 
         $a_valores = [];
         $i = 0;
@@ -36,7 +43,6 @@ class GruposLista
             $id_usuario = $oGrupo->getId_usuario();
             $usuario = $oGrupo->getUsuarioAsString();
 
-            // Enlace hacia frontend: solo datos; la firma HashF se hace en grupo_lista.php (capa UI).
             $a_valores[$i]['sel'] = "$id_usuario#";
             $a_valores[$i][1] = $usuario;
             $a_valores[$i][2] = [
@@ -48,11 +54,10 @@ class GruposLista
             ];
         }
 
-        $data = ['a_cabeceras' => $a_cabeceras,
+        return [
+            'a_cabeceras' => $a_cabeceras,
             'a_botones' => $a_botones,
             'a_valores' => $a_valores,
         ];
-
-        return $data;
     }
 }

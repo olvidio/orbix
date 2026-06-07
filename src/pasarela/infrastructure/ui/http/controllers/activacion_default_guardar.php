@@ -1,9 +1,13 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ActivacionDefaultGuardar;
 
 $default = (string)filter_input(INPUT_POST, 'default');
 
-$error_txt = ActivacionDefaultGuardar::execute($default);
+/** @var ActivacionDefaultGuardar $useCase */
+$useCase = DependencyResolver::get(ActivacionDefaultGuardar::class);
+
+$error_txt = $useCase->execute($default);
 ContestarJson::enviar($error_txt, 'ok');

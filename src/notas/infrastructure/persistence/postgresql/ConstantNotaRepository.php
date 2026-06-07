@@ -1,14 +1,13 @@
 <?php
 
 namespace src\notas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use PDO;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
-use src\notas\domain\value_objects\NotaSituacion;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla e_notas_situacion a la interfaz del repositorio
@@ -25,9 +24,9 @@ class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryIn
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('e_notas_situacion');
     }
@@ -65,13 +64,15 @@ class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryIn
 					breve                    = :breve";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_situacion = $id_situacion";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
         } else {
             //INSERT
             $campos = "(id_situacion,descripcion,superada,breve)";
             $valores = "(:id_situacion,:descripcion,:superada,:breve)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        if ($stmt === false) {
+            return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -82,6 +83,9 @@ class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryIn
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_situacion = $id_situacion";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -92,17 +96,26 @@ class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryIn
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_situacion
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_situacion): array|bool
+    public function datosById(int $id_situacion): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_situacion = $id_situacion";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
     /**
@@ -111,7 +124,7 @@ class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryIn
     public function findById(int $id_situacion): ?Nota
     {
         $aDatos = $this->datosById($id_situacion);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Nota::fromArray($aDatos);

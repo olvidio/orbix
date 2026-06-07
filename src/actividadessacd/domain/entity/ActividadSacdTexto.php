@@ -43,7 +43,10 @@ class ActividadSacdTexto
      */
     public function setIdioma(string $idioma): void
     {
-        $this->idioma = LocaleCode::fromNullableString($idioma);
+        $vo = LocaleCode::fromNullableString($idioma);
+        if ($vo !== null) {
+            $this->idioma = $vo;
+        }
     }
 
     /**
@@ -56,9 +59,14 @@ class ActividadSacdTexto
 
     public function setIdiomaVo(LocaleCode|string $texto): void
     {
-        $this->idioma = $texto instanceof LocaleCode
-            ? $texto
-            : LocaleCode::fromNullableString($texto);
+        if ($texto instanceof LocaleCode) {
+            $this->idioma = $texto;
+            return;
+        }
+        $vo = LocaleCode::fromNullableString($texto);
+        if ($vo !== null) {
+            $this->idioma = $vo;
+        }
     }
 
     /**
@@ -74,7 +82,10 @@ class ActividadSacdTexto
      */
     public function setClave(string $clave): void
     {
-        $this->clave = SacdTextoClave::fromNullableString($clave);
+        $vo = SacdTextoClave::fromNullableString($clave);
+        if ($vo !== null) {
+            $this->clave = $vo;
+        }
     }
 
     /**
@@ -88,9 +99,14 @@ class ActividadSacdTexto
 
     public function setClaveVo(SacdTextoClave|string $texto): void
     {
-        $this->clave = $texto instanceof SacdTextoClave
-            ? $texto
-            : SacdTextoClave::fromNullableString($texto);
+        if ($texto instanceof SacdTextoClave) {
+            $this->clave = $texto;
+            return;
+        }
+        $vo = SacdTextoClave::fromNullableString($texto);
+        if ($vo !== null) {
+            $this->clave = $vo;
+        }
     }
 
     /**
@@ -98,7 +114,7 @@ class ActividadSacdTexto
      */
     public function getTexto(): ?string
     {
-        return $this->texto;
+        return $this->texto?->value();
     }
 
     /**

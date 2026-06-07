@@ -9,12 +9,16 @@
  * Respuesta: mismo envelope que ContestarJson; data incluye códigos de app (need_2fa, etc.).
  */
 
+use src\shared\infrastructure\DependencyResolver;
 use src\usuarios\application\AppMobileLogin;
 use src\shared\web\ContestarJson;
+
+use function src\shared\domain\helpers\input_string;
 
 header('Content-Type: application/json; charset=UTF-8');
 
 $raw = file_get_contents('php://input');
+/** @var array<string, mixed> $json */
 $json = [];
 if (is_string($raw) && $raw !== '') {
     $decoded = json_decode($raw, true);
@@ -23,17 +27,19 @@ if (is_string($raw) && $raw !== '') {
     }
 }
 
-$input = array_merge(
-    [
-        'username' => (string)filter_input(INPUT_POST, 'username'),
-        'password' => (string)filter_input(INPUT_POST, 'password'),
-        'esquema' => (string)filter_input(INPUT_POST, 'esquema'),
-        'verification_code' => (string)filter_input(INPUT_POST, 'verification_code'),
-    ],
-    $json
-);
+$merged = array_merge($_POST, $json);
 
-$result = AppMobileLogin::attempt($input);
+/** @var array{username?: string, password?: string, esquema?: string, verification_code?: string} $input */
+$input = [
+    'username' => input_string($merged, 'username'),
+    'password' => input_string($merged, 'password'),
+    'esquema' => input_string($merged, 'esquema'),
+    'verification_code' => input_string($merged, 'verification_code'),
+];
+
+/** @var AppMobileLogin $useCase */
+$useCase = DependencyResolver::get(AppMobileLogin::class);
+$result = $useCase->execute($input);
 
 if ($result['ok']) {
     ContestarJson::enviar('', $result['data'] ?? []);

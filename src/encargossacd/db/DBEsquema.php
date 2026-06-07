@@ -13,11 +13,11 @@ use src\utils_database\domain\entity\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ServerConf::DIR . "/src/encargossacd/db";
+    private string $dir_base = ServerConf::DIR . "/src/encargossacd/db";
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
-        if (empty($esquema_sfsv)) {
+        if ($esquema_sfsv === null || $esquema_sfsv === '') {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
         }
         $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
@@ -69,10 +69,16 @@ class DBEsquema extends DBAbstract
         $this->llenar_encargo_textos();
     }
 
-    protected function infoTable($tabla): array
+    /**
+     * @return array{tabla: string, nom_tabla: string, campo_seq: string, id_seq: string, filename: string}
+     */
+    protected function infoTable(string $tabla): array
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
+        $nom_tabla = '';
+        $campo_seq = '';
+        $id_seq = '';
         switch ($tabla) {
             case "encargo_tipo":
                 $nom_tabla = $this->getNomTabla($tabla);

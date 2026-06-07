@@ -1,5 +1,8 @@
 <?php
 
+use src\misas\application\support\EncargoDiaTimeHelper;
+use src\misas\application\support\MisasBuildInput;
+
 /**
  * Funcion global que construye la cuadricula de "ver misas zona".
  *
@@ -18,20 +21,23 @@ use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 /**
  * @see \src\misas\application\VerMisasZonaData::build()
+ * @param array<string, mixed> $in
+ * @return array<string, mixed>
  */
-function misas_ver_misas_zona_build(array $in): array
+function misas_ver_misas_zona_build(array $in, \src\misas\application\VerMisasZonaData $self): array
 {
-    $Qid_zona = (int)($in['id_zona'] ?? 0);
-    $QEmpiezaMin = (string)($in['empiezamin'] ?? '');
-    $QEmpiezaMax = (string)($in['empiezamax'] ?? '');
-    $Qseleccion = (int)($in['seleccion'] ?? 0);
+    $Qid_zona = MisasBuildInput::int($in, 'id_zona');
+    $QEmpiezaMin = MisasBuildInput::string($in, 'empiezamin');
+    $QEmpiezaMax = MisasBuildInput::string($in, 'empiezamax');
+    $Qseleccion = MisasBuildInput::int($in, 'seleccion');
 
     try {
         [$columns_cuadricula, $data_cuadricula] = _misas_ver_misas_zona_grid(
             $Qid_zona,
             $QEmpiezaMin,
             $QEmpiezaMax,
-            $Qseleccion
+            $Qseleccion,
+            $self
         );
     } catch (\RuntimeException $e) {
         return [
@@ -59,7 +65,7 @@ function misas_ver_misas_zona_build(array $in): array
 /**
  * @return array{0: array<int, array<string, mixed>>, 1: array<int, array<string, mixed>>}
  */
-function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $QEmpiezaMax, int $Qseleccion): array
+function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $QEmpiezaMax, int $Qseleccion, \src\misas\application\VerMisasZonaData $self): array
 {
     $dmYtoIso = static function (string $dmY): string {
         $partes = explode('/', $dmY);
@@ -76,13 +82,13 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
     $a_iniciales = [];
     $a_sacd = [];
 
-    $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+    $PersonaSacdRepository = $self->getPersonaSacdRepository();
 
     if ($Qseleccion & 2) {
         // `getIdSacdsDeZona` vive en `ZonaSacdRepositoryInterface`, no en
         // `ZonaRepositoryInterface`; usar el repo equivocado revienta con
         // "Call to undefined method" al ejecutar esta rama.
-        $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
+        $ZonaSacdRepository = $self->getZonaSacdRepository();
         $a_Id_nom = $ZonaSacdRepository->getIdSacdsDeZona($Qid_zona);
 
         foreach ($a_Id_nom as $id_nom) {
@@ -92,7 +98,7 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
             }
             $sacd = $PersonaSacd->getNombreApellidos();
             $nom = mb_substr($PersonaSacd->getNom() ?? '', 0, 1);
-            $ap1 = mb_substr($PersonaSacd->getApellido1() ?? '', 0, 1);
+            $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
             $ap2 = mb_substr($PersonaSacd->getApellido2() ?? '', 0, 1);
             $iniciales = strtoupper($nom . $ap1 . $ap2);
 
@@ -100,7 +106,7 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
 
             $key = $id_nom . '#' . $iniciales;
 
-            $a_sacd[$key] = $sacd ?? '?';
+            $a_sacd[$key] = $sacd;
         }
     }
     if ($Qseleccion & 4) {
@@ -116,7 +122,7 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
             $id_nom = $oPersonaSacd->getId_nom();
             $sacd = $oPersonaSacd->getNombreApellidos();
             $nom = mb_substr($oPersonaSacd->getNom() ?? '', 0, 1);
-            $ap1 = mb_substr($oPersonaSacd->getApellido1() ?? '', 0, 1);
+            $ap1 = mb_substr($oPersonaSacd->getApellido1(), 0, 1);
             $ap2 = mb_substr($oPersonaSacd->getApellido2() ?? '', 0, 1);
             $iniciales = strtoupper($nom . $ap1 . $ap2);
 
@@ -124,7 +130,7 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
 
             $key = $id_nom . '#' . $iniciales;
 
-            $a_sacd[$key] = $sacd ?? '?';
+            $a_sacd[$key] = $sacd;
         }
     }
     if ($Qseleccion & 8) {
@@ -139,7 +145,7 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
             $id_nom = $oPersonaSacd->getId_nom();
             $sacd = $oPersonaSacd->getNombreApellidos();
             $nom = mb_substr($oPersonaSacd->getNom() ?? '', 0, 1);
-            $ap1 = mb_substr($oPersonaSacd->getApellido1() ?? '', 0, 1);
+            $ap1 = mb_substr($oPersonaSacd->getApellido1(), 0, 1);
             $ap2 = mb_substr($oPersonaSacd->getApellido2() ?? '', 0, 1);
             $iniciales = strtoupper($nom . $ap1 . $ap2);
 
@@ -147,7 +153,7 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
 
             $key = $id_nom . '#' . $iniciales;
 
-            $a_sacd[$key] = $sacd ?? '?';
+            $a_sacd[$key] = $sacd;
         }
     }
 
@@ -165,7 +171,7 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
     foreach ($a_dates as $date) {
         $num_dia = $date->format('Y-m-d');
         $dia_week = $date->format('N');
-        $nom_dia = $a_dias_semana[$dia_week] ?? $date->format('D');
+        $nom_dia = $a_dias_semana[$dia_week];
 
         $columns_cuadricula[] =
             ['id' => $num_dia, 'name' => $nom_dia, 'field' => $num_dia, 'width' => 80, 'cssClass' => 'cell-title'];
@@ -173,11 +179,11 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
 
     $data_cuadricula = [];
     $a_tipo_enc = [8010, 8011];
-    $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin);
+    $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $self->getEncargoHorarioRepository(), $self->getEncargoRepository());
     $EncargosZona->setATipoEnc($a_tipo_enc);
     $cEncargosZona = $EncargosZona->getEncargos();
 
-    $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+    $EncargoDiaRepository = $self->getEncargoDiaRepository();
 
     foreach ($cEncargosZona as $oEncargo) {
         $id_enc = $oEncargo->getId_enc();
@@ -220,7 +226,7 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
             if (count($cEncargosDia) === 1) {
                 $oEncargoDia = $cEncargosDia[0];
                 $id_nom = $oEncargoDia->getId_nom();
-                $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+                $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
                 if ($hora_ini === '00:00') {
                     $hora_ini = '';
                 }
@@ -231,8 +237,8 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
                     'uuid_item' => $oEncargoDia->getUuidItemVo()->value(),
                     'color' => $color,
                     'key' => "$id_nom#$iniciales",
-                    'tstart' => $oEncargoDia->getTstart()->getHora(),
-                    'tend' => $oEncargoDia->getTend()->getHora(),
+                    'tstart' => EncargoDiaTimeHelper::hora($oEncargoDia->getTstart()),
+                    'tend' => EncargoDiaTimeHelper::hora($oEncargoDia->getTend()),
                     'observ' => $oEncargoDia->getObserv(),
                     'id_enc' => $id_enc,
                     'dia' => $num_dia,

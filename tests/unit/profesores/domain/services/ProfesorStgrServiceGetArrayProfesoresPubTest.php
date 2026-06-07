@@ -14,24 +14,6 @@ use src\profesores\domain\services\ProfesorStgrService;
 
 final class ProfesorStgrServiceGetArrayProfesoresPubTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_ordena_sin_acentos_alvarez_con_las_a(): void
     {
         $personas = [
@@ -43,21 +25,10 @@ final class ProfesorStgrServiceGetArrayProfesoresPubTest extends TestCase
         $personaPubRepo = $this->createMock(PersonaPubRepositoryInterface::class);
         $personaPubRepo->method('getPersonas')->willReturn($personas);
 
-        $GLOBALS['container'] = new class($personaPubRepo) {
-            public function __construct(private readonly PersonaPubRepositoryInterface $personaPubRepo) {}
-
-            public function get(string $id): object
-            {
-                if ($id === PersonaPubRepositoryInterface::class) {
-                    return $this->personaPubRepo;
-                }
-                throw new \RuntimeException('Unexpected DI key: ' . $id);
-            }
-        };
-
         $service = new ProfesorStgrService(
             $this->createMock(ProfesorStgrRepositoryInterface::class),
             $this->createMock(\src\personas\domain\contracts\PersonaDlRepositoryInterface::class),
+            $personaPubRepo,
         );
 
         $opciones = $service->getArrayProfesoresPub();

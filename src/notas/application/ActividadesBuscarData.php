@@ -2,6 +2,9 @@
 
 namespace src\notas\application;
 
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -20,11 +23,22 @@ use src\ubis\application\services\DelegacionDropdown;
  */
 final class ActividadesBuscarData
 {
-    public static function execute(array $input): array
+
+    public function __construct(
+        private readonly ActividadRepositoryInterface $actividadRepository,
+        private readonly DelegacionDropdown $delegacionDropdown,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
+     */
+    public function execute(array $input): array
     {
-        $dl_org = (string)($input['dl_org'] ?? '');
-        $f_acta_iso = (string)($input['f_acta_iso'] ?? '');
-        $id_activ_sel = (int)($input['id_activ'] ?? 0);
+        $dl_org = input_string($input, 'dl_org');
+        $f_acta_iso = input_string($input, 'f_acta_iso');
+        $id_activ_sel = input_int($input, 'id_activ');
 
         if (empty($dl_org)) {
             $dl_org = ConfigGlobal::mi_delef();
@@ -46,7 +60,7 @@ final class ActividadesBuscarData
             $f_ini_iso = $oHoyIni->format('Y-m-d');
         }
 
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+        $ActividadRepository = $this->actividadRepository;
         $cActividades = $ActividadRepository->getActividades(
             [
                 'f_ini' => "'$f_ini_iso','$f_fin_iso'",
@@ -66,7 +80,7 @@ final class ActividadesBuscarData
         }
 
         return [
-            'delegaciones' => DelegacionDropdown::delegacionesURegiones(),
+            'delegaciones' => $this->delegacionDropdown->delegacionesURegiones(),
             'actividades' => $aActividades,
             'dl_org_sel' => $dl_org,
             'id_activ_sel' => $id_activ_sel,

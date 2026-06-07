@@ -13,11 +13,19 @@ use src\pasarela\domain\Nombre;
  */
 final class NombreLista
 {
-    public static function execute(): array
-    {
-        $oNombre = new Nombre();
+    public function __construct(
+        private readonly Nombre $nombre,
+    ) {
+    }
 
-        $a_excepciones_raw = $oNombre->getExcepciones();
+    /**
+     * @return array{excepciones: list<array{id_tipo_activ: string, etiqueta: string, valor: string}>}
+     */
+    public function execute(): array
+    {
+        
+
+        $a_excepciones_raw = $this->nombre->getExcepciones();
         $a_excepciones = [];
         foreach ($a_excepciones_raw as $id_tipo_activ => $valor) {
             $oActividadTipo = new TiposActividades((string)$id_tipo_activ);

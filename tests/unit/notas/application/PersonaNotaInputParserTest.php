@@ -12,29 +12,11 @@ use src\notas\domain\value_objects\TipoActa;
 
 final class PersonaNotaInputParserTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_eliminar_no_pide_asignatura_repository(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([]);
+        $parser = new PersonaNotaInputParser($this->createMock(AsignaturaRepositoryInterface::class));
 
-        $pn = PersonaNotaInputParser::parse(
+        $pn = $parser->parse(
             [
                 'id_pau' => 9,
                 'id_asignatura' => 1002,
@@ -55,12 +37,10 @@ final class PersonaNotaInputParserTest extends TestCase
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
         $repo->method('getAsignaturas')->with(['id_nivel' => 3100])->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            AsignaturaRepositoryInterface::class => $repo,
-        ]);
+        $parser = new PersonaNotaInputParser($repo);
 
         $this->expectException(\RuntimeException::class);
-        PersonaNotaInputParser::parse([
+        $parser->parse([
             'id_pau' => 1,
             'id_asignatura' => 1,
             'id_nivel' => 3100,
@@ -76,11 +56,9 @@ final class PersonaNotaInputParserTest extends TestCase
         $repo = $this->createMock(AsignaturaRepositoryInterface::class);
         $repo->method('getAsignaturas')->willReturn([$asig]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            AsignaturaRepositoryInterface::class => $repo,
-        ]);
+        $parser = new PersonaNotaInputParser($repo);
 
-        $pn = PersonaNotaInputParser::parse([
+        $pn = $parser->parse([
             'id_pau' => 3,
             'id_asignatura' => 1,
             'id_nivel' => 2100,
@@ -92,9 +70,9 @@ final class PersonaNotaInputParserTest extends TestCase
 
     public function test_tipo_acta_cero_se_normaliza_a_formato_acta(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([]);
+        $parser = new PersonaNotaInputParser($this->createMock(AsignaturaRepositoryInterface::class));
 
-        $pn = PersonaNotaInputParser::parse([
+        $pn = $parser->parse([
             'id_pau' => 1,
             'id_asignatura' => 1002,
             'id_nivel' => 2100,
@@ -105,23 +83,5 @@ final class PersonaNotaInputParserTest extends TestCase
 
         $this->assertSame(TipoActa::FORMATO_ACTA, $pn->getTipo_acta());
         $this->assertSame(NotaEpoca::EPOCA_OTRO, $pn->getEpocaVo()?->value());
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

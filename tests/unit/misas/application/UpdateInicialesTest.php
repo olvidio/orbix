@@ -11,24 +11,6 @@ use src\misas\domain\entity\InicialesSacd;
 
 final class UpdateInicialesTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_execute_creates_row_when_missing_and_normalizes_color(): void
     {
         $captured = null;
@@ -42,11 +24,7 @@ final class UpdateInicialesTest extends TestCase
             }
         );
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            InicialesSacdRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertSame('', UpdateIniciales::execute(42, 'XYZ', '#ABC'));
+        $this->assertSame('', (new UpdateIniciales($repo))->execute(42, 'XYZ', '#ABC'));
         $this->assertNotNull($captured);
         $this->assertSame(42, $captured->getId_nom());
         $this->assertSame('XYZ', $captured->getIniciales());
@@ -71,11 +49,7 @@ final class UpdateInicialesTest extends TestCase
             }
         );
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            InicialesSacdRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertSame('', UpdateIniciales::execute(7, 'NEW', ''));
+        $this->assertSame('', (new UpdateIniciales($repo))->execute(7, 'NEW', ''));
         $this->assertSame($existing, $captured);
         $this->assertSame('NEW', $existing->getIniciales());
         $this->assertSame('', $existing->getColor());
@@ -88,28 +62,6 @@ final class UpdateInicialesTest extends TestCase
         $repo->method('Guardar')->willReturn(false);
         $repo->method('getErrorTxt')->willReturn('fallo al guardar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            InicialesSacdRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertSame('fallo al guardar', UpdateIniciales::execute(1, 'A', '#000000'));
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        $this->assertSame('fallo al guardar', (new UpdateIniciales($repo))->execute(1, 'A', '#000000'));
     }
 }

@@ -11,34 +11,12 @@ use src\menus\domain\entity\MenuDb;
 
 final class MenuCopiarTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_menu_no_encontrado(): void
     {
         $repo = $this->createMock(MenuDbRepositoryInterface::class);
         $repo->method('findById')->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            MenuDbRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertNotSame('', (new MenuCopiar())(1, '3'));
+        $this->assertNotSame('', (new MenuCopiar($repo))(1, '3'));
     }
 
     public function test_falla_guardar(): void
@@ -55,11 +33,7 @@ final class MenuCopiarTest extends TestCase
         $repo->method('Guardar')->willReturn(false);
         $repo->method('getErrorTxt')->willReturn('save-fail');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            MenuDbRepositoryInterface::class => $repo,
-        ]);
-
-        $msg = (new MenuCopiar())(10, '2');
+        $msg = (new MenuCopiar($repo))(10, '2');
         $this->assertNotSame('', $msg);
         $this->assertStringContainsString('save-fail', $msg);
     }
@@ -91,28 +65,6 @@ final class MenuCopiarTest extends TestCase
             return true;
         });
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            MenuDbRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertSame('', (new MenuCopiar())(10, '77'));
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        $this->assertSame('', (new MenuCopiar($repo))(10, '77'));
     }
 }

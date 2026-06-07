@@ -1,12 +1,13 @@
 <?php
 
-use src\shared\web\ContestarJson;
 use src\dossiers\application\DossiersVerPantallaData;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 
-$result = DossiersVerPantallaData::build($_POST);
-$error = (string)($result['error'] ?? '');
+/** @var DossiersVerPantallaData $useCase */
+$useCase = DependencyResolver::get(DossiersVerPantallaData::class);
+$result = $useCase->build($_POST);
+$error = is_string($result['error'] ?? null) ? $result['error'] : '';
 unset($result['error']);
 
-// El backend devuelve sólo datos/link_specs. La firma de URLs con HashFront se hace
-// en el frontend (ver frontend/dossiers/controller/dossiers_ver.php).
 ContestarJson::enviar($error, $result);

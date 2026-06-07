@@ -33,24 +33,17 @@ use src\zonassacd\domain\entity\Zona;
  */
 final class SacdAusenciasJefeZonaDataTest extends TestCase
 {
-    private mixed $previousContainer;
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['session_auth']['id_usuario'] = 443;
     }
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_SESSION = $this->previousSession;
         parent::tearDown();
     }
@@ -60,11 +53,11 @@ final class SacdAusenciasJefeZonaDataTest extends TestCase
         $usuarioRepo = $this->createMock(UsuarioRepositoryInterface::class);
         $usuarioRepo->method('findById')->with(443)->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $useCase = $this->makeUseCase([
             UsuarioRepositoryInterface::class => $usuarioRepo,
-        ]));
+        ]);
 
-        $this->assertSame(['a_sacd' => []], SacdAusenciasJefeZonaData::execute());
+        $this->assertSame(['a_sacd' => []], $useCase->execute());
     }
 
     public function test_jefe_con_zonas_pide_sacds_por_zona_al_repositorio(): void
@@ -115,16 +108,16 @@ final class SacdAusenciasJefeZonaDataTest extends TestCase
             [502, $oIniciales2],
         ]);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $useCase = $this->makeUseCase([
             UsuarioRepositoryInterface::class => $usuarioRepo,
             RoleRepositoryInterface::class => $roleRepo,
             ZonaRepositoryInterface::class => $zonaRepo,
             ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
             PersonaSacdRepositoryInterface::class => $personaRepo,
             InicialesSacdRepositoryInterface::class => $inicialesRepo,
-        ]));
+        ]);
 
-        $out = SacdAusenciasJefeZonaData::execute();
+        $out = $useCase->execute();
 
         // `ksort` ordena: "LA#502" antes que "PJ#501".
         $this->assertSame([
@@ -156,15 +149,15 @@ final class SacdAusenciasJefeZonaDataTest extends TestCase
         $inicialesRepo = $this->createMock(InicialesSacdRepositoryInterface::class);
         $inicialesRepo->method('findById')->willReturn($oIniciales);
 
-        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+        $useCase = $this->makeUseCase([
             UsuarioRepositoryInterface::class => $usuarioRepo,
             RoleRepositoryInterface::class => $roleRepo,
             ZonaRepositoryInterface::class => $zonaRepo,
             PersonaSacdRepositoryInterface::class => $personaRepo,
             InicialesSacdRepositoryInterface::class => $inicialesRepo,
-        ]));
+        ]);
 
-        $out = SacdAusenciasJefeZonaData::execute();
+        $out = $useCase->execute();
 
         $this->assertSame(['RM#999' => 'Ruiz, Maria'], $out['a_sacd']);
     }
@@ -189,40 +182,26 @@ final class SacdAusenciasJefeZonaDataTest extends TestCase
     }
 
     /**
-     * Stubs por defecto para los repos que el servicio resuelve del
-     * contenedor aunque no entren en la rama del test.
-     *
      * @param array<class-string, object> $overrides
-     * @return array<class-string, object>
      */
-    private function defaultServices(array $overrides = []): array
+    private function makeUseCase(array $overrides = []): SacdAusenciasJefeZonaData
     {
-        $defaults = [
+        $services = array_merge([
             UsuarioRepositoryInterface::class => $this->createStub(UsuarioRepositoryInterface::class),
             RoleRepositoryInterface::class => $this->createStub(RoleRepositoryInterface::class),
             ZonaRepositoryInterface::class => $this->createStub(ZonaRepositoryInterface::class),
             ZonaSacdRepositoryInterface::class => $this->createStub(ZonaSacdRepositoryInterface::class),
             PersonaSacdRepositoryInterface::class => $this->createStub(PersonaSacdRepositoryInterface::class),
             InicialesSacdRepositoryInterface::class => $this->createStub(InicialesSacdRepositoryInterface::class),
-        ];
-        return array_merge($defaults, $overrides);
-    }
+        ], $overrides);
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        return new SacdAusenciasJefeZonaData(
+            $services[InicialesSacdRepositoryInterface::class],
+            $services[PersonaSacdRepositoryInterface::class],
+            $services[RoleRepositoryInterface::class],
+            $services[UsuarioRepositoryInterface::class],
+            $services[ZonaRepositoryInterface::class],
+            $services[ZonaSacdRepositoryInterface::class],
+        );
     }
 }

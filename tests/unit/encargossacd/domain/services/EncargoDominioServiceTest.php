@@ -21,23 +21,13 @@ use src\encargossacd\domain\value_objects\DiaRefCode;
 final class EncargoDominioServiceTest extends TestCase
 {
     private EncargoDominioService $service;
-    private mixed $previousContainer;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new EncargoDominioService();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
+        $this->service = new EncargoDominioService(
+            $this->createMock(EncargoSacdHorarioRepositoryInterface::class)
+        );
     }
 
     // ============================================================
@@ -178,11 +168,8 @@ final class EncargoDominioServiceTest extends TestCase
         $repo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
         $repo->method('getEncargoSacdHorarios')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            EncargoSacdHorarioRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertFalse($this->service->dedicacion_horas(123, 45));
+        $service = new EncargoDominioService($repo);
+        $this->assertFalse($service->dedicacion_horas(123, 45));
     }
 
     public function test_dedicacion_horas_suma_segun_tipo_de_horario(): void
@@ -195,33 +182,23 @@ final class EncargoDominioServiceTest extends TestCase
             $this->horarioStub('v', 4),
         ]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            EncargoSacdHorarioRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertSame(28, $this->service->dedicacion_horas(1, 1));
+        $service = new EncargoDominioService($repo);
+        $this->assertSame(28, $service->dedicacion_horas(1, 1));
     }
 
     public function test_dedicacion_horas_ignora_tipos_desconocidos(): void
     {
-        // "x" no matchea ningun case -> 0 horas, pero la coleccion no es vacia
-        // (asi que no devuelve false sino 0).
         $repo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
         $repo->method('getEncargoSacdHorarios')->willReturn([
             $this->horarioStub('x', 10),
         ]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            EncargoSacdHorarioRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertSame(0, $this->service->dedicacion_horas(1, 1));
+        $service = new EncargoDominioService($repo);
+        $this->assertSame(0, $service->dedicacion_horas(1, 1));
     }
 
     public function test_dedicacion_horas_con_dia_ref_nulo_no_suma(): void
     {
-        // Si `getDiaRefVo()` devuelve null, `?->value()` es null y ningun case
-        // del switch entra.
         $horario = new class {
             public function getDia_inc(): int { return 5; }
             public function getDiaRefVo(): ?DiaRefCode { return null; }
@@ -229,11 +206,8 @@ final class EncargoDominioServiceTest extends TestCase
         $repo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
         $repo->method('getEncargoSacdHorarios')->willReturn([$horario]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            EncargoSacdHorarioRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertSame(0, $this->service->dedicacion_horas(1, 1));
+        $service = new EncargoDominioService($repo);
+        $this->assertSame(0, $service->dedicacion_horas(1, 1));
     }
 
     // ============================================================
@@ -246,24 +220,6 @@ final class EncargoDominioServiceTest extends TestCase
             public function __construct(private readonly string $diaRef, private readonly int $diaInc) {}
             public function getDia_inc(): int { return $this->diaInc; }
             public function getDiaRefVo(): DiaRefCode { return new DiaRefCode($this->diaRef); }
-        };
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
         };
     }
 }

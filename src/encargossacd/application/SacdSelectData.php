@@ -10,6 +10,12 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
  */
 final class SacdSelectData
 {
+
+    public function __construct(
+        private PersonaDlRepositoryInterface $personaDlRepository
+    ) {
+    }
+
     /**
      * @return array{
      *     opciones: array<string, string>,
@@ -17,17 +23,15 @@ final class SacdSelectData
      *     label_prefix: string
      * }
      */
-    public static function execute(string $filtro_sacd, int $id_nom): array
+    public function execute(string $filtro_sacd, int $id_nom): array
     {
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-
         $filtro_sacd = trim($filtro_sacd);
         $sdonde = '';
         if ($filtro_sacd !== '') {
             $sdonde = sprintf("AND id_tabla='%s' ", addslashes($filtro_sacd));
         }
 
-        $opciones = $PersonaDlRepository->getArraySacd($sdonde);
+        $opciones = $this->personaDlRepository->getArraySacd($sdonde);
 
         $out = [];
         foreach ($opciones as $k => $v) {

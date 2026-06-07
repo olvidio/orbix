@@ -1,12 +1,19 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
+use function src\shared\domain\helpers\input_int;
 
-$GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
+$Qid_usuario = input_int($_POST, 'id_usuario');
+
+$GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 $oGrupo = $GrupoRepository->findById($Qid_usuario);
+if ($oGrupo === null) {
+    ContestarJson::enviar(_('Grupo no encontrado'), []);
+    return;
+}
 $nombre = $oGrupo->getUsuarioAsString();
 
 $error_txt = '';

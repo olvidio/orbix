@@ -1,13 +1,13 @@
 <?php
 /**
  * Endpoint backend: construye el listado de atencion de actividades a
- * comunicar a los sacd (incluidas las de los "sacd de paso" cuando
- * procede). Responde JSON `{success, mensaje, data}` via
- * `ContestarJson::enviar`.
+ * comunicar a los sacd.
  */
 
 use src\actividadessacd\application\ComunicacionActividadesSacdData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$data = ComunicacionActividadesSacdData::execute($_POST);
-ContestarJson::enviar('', $data);
+/** @var ComunicacionActividadesSacdData $useCase */
+$useCase = DependencyResolver::get(ComunicacionActividadesSacdData::class);
+ContestarJson::enviar('', $useCase->execute($_POST));

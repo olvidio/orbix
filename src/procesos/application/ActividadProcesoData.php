@@ -5,15 +5,21 @@ namespace src\procesos\application;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 
 /**
- * Caso de uso: datos para la pantalla `actividad_proceso` (vista de
- * las fases del proceso de una actividad concreta).
+ * Caso de uso: datos para la pantalla `actividad_proceso`.
  */
 class ActividadProcesoData
 {
-    public static function execute(int $id_activ): array
+    public function __construct(
+        private readonly ActividadAllRepositoryInterface $actividadAllRepository,
+    ) {
+    }
+
+    /**
+     * @return array{id_activ: int, nom_activ: string}
+     */
+    public function execute(int $id_activ): array
     {
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($id_activ);
+        $oActividad = $this->actividadAllRepository->findById($id_activ);
 
         return [
             'id_activ' => $id_activ,

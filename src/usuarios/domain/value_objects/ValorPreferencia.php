@@ -31,7 +31,6 @@ final class ValorPreferencia
      * Validate the preference value
      *
      * @param string $valorPreferencia
-     * @throws \InvalidArgumentException If the preference value is invalid
      */
     private function validate(string $valorPreferencia): void
     {

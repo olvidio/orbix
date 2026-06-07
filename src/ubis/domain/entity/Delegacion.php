@@ -69,11 +69,9 @@ class Delegacion
         return $this->dl;
     }
 
-    public function setDlVo(DelegacionCode|string|null $dl): void
+    public function setDlVo(DelegacionCode|string $vo): void
     {
-        $this->dl = $dl instanceof DelegacionCode
-            ? $dl
-            : DelegacionCode::fromNullableString($dl);
+        $this->dl = $vo instanceof DelegacionCode ? $vo : new DelegacionCode($vo);
     }
 
     /**
@@ -81,7 +79,7 @@ class Delegacion
      */
     public function getDl(): string
     {
-        return $this->dl->value();
+        return $this->dl->value() ?? '';
     }
 
     /**
@@ -97,11 +95,9 @@ class Delegacion
         return $this->region;
     }
 
-    public function setRegionVo(RegionCode|string|null $region): void
+    public function setRegionVo(RegionCode|string $vo): void
     {
-        $this->region = $region instanceof RegionCode
-            ? $region
-            : RegionCode::fromNullableString($region);
+        $this->region = $vo instanceof RegionCode ? $vo : new RegionCode($vo);
     }
 
     /**
@@ -220,6 +216,195 @@ class Delegacion
     {
         return 'id_dl';
     }
+
+    /**
+
+
+     * @return array<string, mixed>
+
+
+     */
+
+
+    /**
+
+
+
+     * @return array<string, mixed>
+
+
+
+     */
+
+
+
+    /**
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+     */
+
+
+
+
+    /**
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+     */
+
+
+
+
+
+    /**
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
 
     public function getDatosCampos(): array
     {

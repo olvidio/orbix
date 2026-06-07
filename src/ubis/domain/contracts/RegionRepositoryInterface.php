@@ -22,9 +22,9 @@ interface RegionRepositoryInterface
 	/**
 	 * devuelve una colección (array) de objetos de tipo Region
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo Region
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<Region> Una colección de objetos de tipo Region
 	
 	 */
 	public function getRegiones(array $aWhere=[], array $aOperators=[]): array;
@@ -41,9 +41,21 @@ interface RegionRepositoryInterface
 
 	public function getNomTabla(): string;
 	
-    public function datosById(int $id_region): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_region): array|false;
 	
     public function findById(int $id_region): ?Region;
 	
-    public function getNewId();
+    public function getNewId(): int;
 }

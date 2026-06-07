@@ -214,3 +214,83 @@ Cambios centrados en **coherencia con `refactor.md` y reduccion de duplicacion**
 - Menus `fnjs_update_div(...)` siguen pintando el mismo contenido.
 - `php -l` sin errores en ficheros tocados.
 - Caso con datos y caso vacio probados cuando aplica.
+
+## Cierre DI (junio 2026)
+
+Migracion al patron de modulos cerrados (`certificados`, `dossiers`, `planning`):
+constructor DI en application, `DependencyResolver::get()` en controllers HTTP,
+`GlobalPdo::get()` en repos `Pg*`, 0 `$GLOBALS['container']` en todo `src/misas/`.
+
+### Resultado del cierre DI
+
+| Criterio | Estado |
+|----------|--------|
+| `$GLOBALS['container']` en `src/misas/` | **0** (antes **~80** en **~33** ficheros) |
+| Controllers HTTP con `DependencyResolver::get()` | **33/33** |
+| `application/` con constructor DI | **31** casos de uso + **4** wrappers `*_data_build` |
+| Casos de uso en `config/dependencies.php` | **37** entradas `autowire()` (4 repos + 2 helpers + 31 use cases) |
+| Pg repos con `GlobalPdo` | **4** repos (`oDBC`/`oDBC_Select`; Plantilla usa `oDBE`/`oDBE_Select`) |
+| Tests `tests/unit/misas/` | **92 OK** |
+| Tests `tests/integration/misas/` | **124 OK** |
+
+### `src/misas/config/dependencies.php`
+
+Registra 4 repositorios del modulo (`PgEncargoDia`, `PgEncargoCtr`, `PgInicialesSacd`,
+`PgPlantilla`), `IdNomJefeResolver`, `InicialesSacdService` y los 31 casos de uso HTTP.
+Repos cross-modulo (`Encargo*`, `ZonaSacd`, `PersonaSacd`, `Actividad*`, etc.) se resuelven
+por autowire desde los `dependencies.php` de sus modulos.
+
+### Application layer (constructor DI)
+
+- Casos de uso de datos/mutacion con metodos de instancia `execute()` / `getData()` / `build()`.
+- `IdNomJefeResolver`: instancia con `UsuarioRepository` + `RoleRepository` inyectados.
+- `EncargosZona` (domain): constructor con `EncargoHorarioRepositoryInterface` +
+  `EncargoRepositoryInterface`.
+- Wrappers build (`CuadriculaZonaGridData`, `CrearNuevoPeriodoData`, `ImportarPlantillaData`,
+  `VerMisasZonaData`): constructor DI + getters publicos; funciones `*_data_build.php` reciben
+  el wrapper como 2.º parametro (`$self`).
+
+### Repositorios `Pg*`
+
+| Clase | PDO |
+|-------|-----|
+| `PgEncargoDiaRepository`, `PgEncargoCtrRepository`, `PgInicialesSacdRepository` | `GlobalPdo::get('oDBC')` / `GlobalPdo::get('oDBC_Select')` |
+| `PgPlantillaRepository` | `GlobalPdo::get('oDBE')` / `GlobalPdo::get('oDBE_Select')` |
+
+Guards `PDOStatement|false`, PHPDoc `list<Entity>` en colecciones, normalizacion de filas en
+`datosById()`. `PgPlantillaRepository`: namespaces `src\shared\infrastructure\persistence\`.
+
+### HTTP controllers
+
+Los 33 controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()` (sin `::execute()` / `::getData()` / `::build()` estaticos).
+Entrada POST via `input_int` / `input_string` / `input_string_list`.
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (inicio cierre DI) | `composer phpstan:file -- src/misas/` | **354** |
+| 2026-06-06 (cierre DI) | `composer phpstan:file -- src/misas/` | **295** |
+| 2026-06-06 (cierre PHPStan) | `composer phpstan:file -- src/misas/` | **0** |
+
+Areas abordadas:
+
+- **DI:** 0 `$GLOBALS['container']`; controllers con `DependencyResolver`; application con
+  constructor DI; `dependencies.php` completo.
+- **Repos `Pg*`:** `GlobalPdo`, guards PDO, PHPDoc retornos, `$stmt === false` antes de execute.
+- **Wrappers build:** `MisasBuildInput`, `EncargoDiaTimeHelper`, getters corregidos; `$self`
+  propagado a funciones internas; null guards en `DateTimeLocal`/`NullDateTimeLocal`.
+- **Domain:** `EncargosZona`, entities (`EncargoCtr`, `EncargoDia`), VOs (`EncargoDiaStatus`).
+- **Application:** `MisasBuildInput` en execute/getData; contratos `list<>` / `array<string,mixed>`;
+  `Ubi::NewUbi()` con null check; `DBEsquema`/`DBEsquemaSelect` retornos `void`.
+- **Controllers:** `MisasBuildInput` para POST; sin `@var` rotos en asignaciones de use case.
+
+### Checklist de cierre
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests application pasan (`tests/unit/misas/`: 92 tests)
+- [x] Tests integracion repos pasan (`tests/integration/misas/`: 124 tests)
+- [x] PHPStan `src/misas/` en 0 (phpstan-nobaseline.neon)

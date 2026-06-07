@@ -6,48 +6,44 @@ namespace Tests\unit\personas\application;
 
 use PHPUnit\Framework\TestCase;
 use src\personas\application\PersonaEliminar;
+use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\PersonaN;
 
 final class PersonaEliminarTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
     }
 
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
     public function test_sin_id_nom(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([
-            PersonaNRepositoryInterface::class => $this->createMock(PersonaNRepositoryInterface::class),
-        ]);
+        $useCase = new PersonaEliminar($this->makeResolver());
 
-        $this->assertNotSame('', PersonaEliminar::execute(0, 'PersonaN'));
+        $this->assertNotSame('', $useCase->execute(0, 'PersonaN'));
     }
 
     public function test_obj_pau_desconocido(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([]);
+        $useCase = new PersonaEliminar($this->makeResolver());
 
-        $this->assertNotSame('', PersonaEliminar::execute(1, 'PersonaX'));
+        $this->assertNotSame('', $useCase->execute(1, 'PersonaX'));
     }
 
     public function test_persona_no_encontrada(): void
@@ -55,11 +51,11 @@ final class PersonaEliminarTest extends TestCase
         $repo = $this->createMock(PersonaNRepositoryInterface::class);
         $repo->method('findById')->with(9)->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
+        $useCase = new PersonaEliminar($this->makeResolver([
             PersonaNRepositoryInterface::class => $repo,
-        ]);
+        ]));
 
-        $this->assertNotSame('', PersonaEliminar::execute(9, 'PersonaN'));
+        $this->assertNotSame('', $useCase->execute(9, 'PersonaN'));
     }
 
     public function test_exito_cuando_dl_coincide(): void
@@ -71,33 +67,30 @@ final class PersonaEliminarTest extends TestCase
         $repo->method('findById')->willReturn($persona);
         $repo->expects($this->once())->method('Eliminar')->with($persona)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            PersonaNRepositoryInterface::class => $repo,
-        ]);
-
         $_SESSION['session_auth'] = array_merge($_SESSION['session_auth'] ?? [], [
             'esquema' => 'R-dlbv',
             'sfsv' => 1,
         ]);
 
-        $this->assertSame('', PersonaEliminar::execute(3, 'PersonaN'));
+        $useCase = new PersonaEliminar($this->makeResolver([
+            PersonaNRepositoryInterface::class => $repo,
+        ]));
+
+        $this->assertSame('', $useCase->execute(3, 'PersonaN'));
     }
 
     /**
-     * @param array<class-string, object> $services
+     * @param array<class-string, object> $overrides
      */
-    private function containerFromMap(array $services): object
+    private function makeResolver(array $overrides = []): PersonaRepositoryResolver
     {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        return new PersonaRepositoryResolver(
+            $overrides[PersonaNRepositoryInterface::class] ?? $this->createMock(PersonaNRepositoryInterface::class),
+            $overrides[PersonaAgdRepositoryInterface::class] ?? $this->createMock(PersonaAgdRepositoryInterface::class),
+            $overrides[PersonaNaxRepositoryInterface::class] ?? $this->createMock(PersonaNaxRepositoryInterface::class),
+            $overrides[PersonaSRepositoryInterface::class] ?? $this->createMock(PersonaSRepositoryInterface::class),
+            $overrides[PersonaSSSCRepositoryInterface::class] ?? $this->createMock(PersonaSSSCRepositoryInterface::class),
+            $overrides[PersonaExRepositoryInterface::class] ?? $this->createMock(PersonaExRepositoryInterface::class),
+        );
     }
 }

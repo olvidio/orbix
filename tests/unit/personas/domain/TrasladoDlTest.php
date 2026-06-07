@@ -5,9 +5,16 @@ namespace Tests\unit\personas\domain;
 use PHPUnit\Framework\TestCase;
 use src\personas\domain\Trasladar;
 use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\entity\PersonaN;
 use src\personas\domain\value_objects\SituacionCode;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 class TrasladoDlTest extends TestCase
@@ -18,6 +25,9 @@ class TrasladoDlTest extends TestCase
     {
         parent::setUp();
         $this->originalContainer = $GLOBALS['container'] ?? null;
+        if (!isset($GLOBALS['oDBR']) || !$GLOBALS['oDBR'] instanceof \PDO) {
+            $GLOBALS['oDBR'] = $this->createMock(\PDO::class);
+        }
     }
 
     protected function tearDown(): void
@@ -32,8 +42,7 @@ class TrasladoDlTest extends TestCase
 
     public function test_set_reg_dl_extrae_dl_sin_sufijo_vf(): void
     {
-        $this->replaceContainerWithDelegaciones(['dlb', 'crGalbel']);
-        $traslado = new TrasladarSpy();
+        $traslado = $this->makeTrasladarSpy(['dlb', 'crGalbel']);
 
         $traslado->setDl_persona('crGalbel');
         $traslado->setReg_dl_org('H-dlbv');
@@ -47,8 +56,7 @@ class TrasladoDlTest extends TestCase
 
     public function test_trasladar_ejecuta_flujo_completo_si_comprobar_es_ok(): void
     {
-        $this->replaceContainerWithDelegaciones(['dlOrigen', 'dlDestino']);
-        $traslado = new TrasladarSpy();
+        $traslado = $this->makeTrasladarSpy(['dlOrigen', 'dlDestino']);
 
         $traslado->setId_nom(123);
         $traslado->setDl_persona('dlOrigen');
@@ -76,8 +84,7 @@ class TrasladoDlTest extends TestCase
 
     public function test_trasladar_si_no_existe_dl_destino_solo_toca_ficha_y_falla(): void
     {
-        $this->replaceContainerWithDelegaciones(['dlOrigen']);
-        $traslado = new TrasladarSpy();
+        $traslado = $this->makeTrasladarSpy(['dlOrigen']);
 
         $traslado->setId_nom(123);
         $traslado->setDl_persona('dlOrigen');
@@ -94,8 +101,7 @@ class TrasladoDlTest extends TestCase
 
     public function test_trasladar_si_ya_esta_trasladado_no_hace_mas_operaciones(): void
     {
-        $this->replaceContainerWithDelegaciones(['dlOrigen', 'dlDestino']);
-        $traslado = new TrasladarSpy();
+        $traslado = $this->makeTrasladarSpy(['dlOrigen', 'dlDestino']);
 
         $traslado->setId_nom(123);
         $traslado->setDl_persona('dlDestino');
@@ -129,9 +135,20 @@ class TrasladoDlTest extends TestCase
         ]);
         $personaN->setId_auto(1);
 
-        $personaDlRepo = new FakePersonaDlRepo($personaDl);
-        $personaNOrgRepo = new FakePersonaNRepo($personaN);
-        $personaNDstRepo = new FakePersonaNDestinationRepo();
+        $personaDlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
+        $personaDlRepo->method('findById')->willReturn($personaDl);
+
+        $personaNOrgRepo = $this->createMock(PersonaNRepositoryInterface::class);
+        $personaNOrgRepo->method('findById')->willReturn($personaN);
+
+        $saved = null;
+        $personaNDstRepo = $this->createMock(PersonaNRepositoryInterface::class);
+        $personaNDstRepo->expects($this->once())->method('Guardar')->willReturnCallback(
+            function (PersonaN $persona) use (&$saved): bool {
+                $saved = $persona;
+                return true;
+            }
+        );
         $orgConn = $this->createMock(\PDO::class);
         $dstConn = $this->createMock(\PDO::class);
 
@@ -140,7 +157,13 @@ class TrasladoDlTest extends TestCase
             $personaNOrgRepo,
             $personaNDstRepo,
             $orgConn,
-            $dstConn
+            $dstConn,
+            $this->makeDelegacionRepositoryMock(),
+            $this->createMock(AsignaturaRepositoryInterface::class),
+            $this->createMock(ActividadAllRepositoryInterface::class),
+            $this->createMock(TipoDossierRepositoryInterface::class),
+            $this->createMock(CertificadoEmitidoRepositoryInterface::class),
+            $this->createMock(ConnectionRepositoryFactoryInterface::class),
         );
         $traslado->setId_nom($idNom);
         $traslado->setReg_dl_org('H-dlOrigenv');
@@ -150,16 +173,43 @@ class TrasladoDlTest extends TestCase
         $result = $traslado->copiarPersona();
 
         $this->assertTrue($result, $traslado->getError() ?? '');
-        $this->assertInstanceOf(PersonaN::class, $personaNDstRepo->saved);
-        $this->assertSame($idNom, $personaNDstRepo->saved->getId_nom());
-        $this->assertSame('crGalbel', $personaNDstRepo->saved->getDl());
-        $this->assertSame('A', $personaNDstRepo->saved->getSituacion());
+        $this->assertInstanceOf(PersonaN::class, $saved);
+        $this->assertSame($idNom, $saved->getId_nom());
+        $this->assertSame('crGalbel', $saved->getDl());
+        $this->assertSame('A', $saved->getSituacion());
     }
 
-    private function replaceContainerWithDelegaciones(array $delegaciones): void
+    private function makeTrasladarSpy(array $delegaciones = []): TrasladarSpy
     {
-        $repo = new FakeDelegacionRepository($delegaciones);
-        $GLOBALS['container'] = new FakeContainer([DelegacionRepositoryInterface::class => $repo]);
+        $delegacionRepository = $this->createMock(DelegacionRepositoryInterface::class);
+        $delegacionRepository->method('getDelegaciones')->willReturn(
+            array_map(
+                static fn(string $dl): FakeDelegacion => new FakeDelegacion($dl),
+                $delegaciones
+            )
+        );
+
+        return new TrasladarSpy(
+            $delegacionRepository,
+            $this->createMock(AsignaturaRepositoryInterface::class),
+            $this->createMock(ActividadAllRepositoryInterface::class),
+            $this->createMock(TipoDossierRepositoryInterface::class),
+            $this->createMock(CertificadoEmitidoRepositoryInterface::class),
+            $this->createMock(ConnectionRepositoryFactoryInterface::class),
+        );
+    }
+
+    private function makeDelegacionRepositoryMock(array $delegaciones = []): DelegacionRepositoryInterface
+    {
+        $delegacionRepository = $this->createMock(DelegacionRepositoryInterface::class);
+        $delegacionRepository->method('getDelegaciones')->willReturn(
+            array_map(
+                static fn(string $dl): FakeDelegacion => new FakeDelegacion($dl),
+                $delegaciones
+            )
+        );
+
+        return $delegacionRepository;
     }
 }
 
@@ -167,49 +217,67 @@ class TrasladarSpy extends Trasladar
 {
     public array $calls = [];
 
-    public function comprobarNotas()
+    public function __construct(
+        DelegacionRepositoryInterface $delegacionRepository,
+        AsignaturaRepositoryInterface $asignaturaRepository,
+        ActividadAllRepositoryInterface $actividadAllRepository,
+        TipoDossierRepositoryInterface $tipoDossierRepository,
+        CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository,
+        ConnectionRepositoryFactoryInterface $connectionRepositoryFactory,
+    ) {
+        parent::__construct(
+            $delegacionRepository,
+            $asignaturaRepository,
+            $actividadAllRepository,
+            $tipoDossierRepository,
+            $certificadoEmitidoRepository,
+            $connectionRepositoryFactory,
+        );
+    }
+
+    public function comprobarNotas(): bool
     {
         $this->calls[] = __FUNCTION__;
         return true;
     }
 
-    public function cambiarFichaPersona()
+    public function cambiarFichaPersona(): bool
     {
         $this->calls[] = __FUNCTION__;
         return true;
     }
 
-    public function copiarPersona()
+    public function copiarPersona(): bool
     {
         $this->calls[] = __FUNCTION__;
         return true;
     }
 
-    public function copiarNotas()
+    public function copiarNotas(): bool
     {
         $this->calls[] = __FUNCTION__;
         return true;
     }
 
-    public function apuntar()
+    public function apuntar(): bool
     {
         $this->calls[] = __FUNCTION__;
         return true;
     }
 
-    public function trasladarDossiers()
+    public function trasladarDossiers(): bool
     {
         $this->calls[] = __FUNCTION__;
         return true;
     }
 
-    public function trasladarDossierCertificados()
+    public function trasladarDossierCertificados(): bool
     {
         $this->calls[] = __FUNCTION__;
         return true;
     }
 
-    public function copiarAsistencias()
+    public function copiarAsistencias(): bool
     {
         $this->calls[] = __FUNCTION__;
         return true;
@@ -224,7 +292,22 @@ class TrasladarCopyPersonaSpy extends Trasladar
         private object $personaDstRepo,
         private \PDO $fakeOrgConnection,
         private \PDO $fakeDstConnection,
-    ) {}
+        DelegacionRepositoryInterface $delegacionRepository,
+        AsignaturaRepositoryInterface $asignaturaRepository,
+        ActividadAllRepositoryInterface $actividadAllRepository,
+        TipoDossierRepositoryInterface $tipoDossierRepository,
+        CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository,
+        ConnectionRepositoryFactoryInterface $connectionRepositoryFactory,
+    ) {
+        parent::__construct(
+            $delegacionRepository,
+            $asignaturaRepository,
+            $actividadAllRepository,
+            $tipoDossierRepository,
+            $certificadoEmitidoRepository,
+            $connectionRepositoryFactory,
+        );
+    }
 
     protected function getOrgConnectionForCopyPersona(): \PDO
     {
@@ -243,7 +326,7 @@ class TrasladarCopyPersonaSpy extends Trasladar
 
     protected function repositoryWithConnection(string $repositoryId, \PDO $oDbl, ?\PDO $oDblSelect = null): object
     {
-        if (str_contains($repositoryId, 'PersonaNRepositoryInterface')) {
+        if ($repositoryId === PersonaNRepositoryInterface::class) {
             if ($oDbl === $this->fakeOrgConnection) {
                 return $this->personaOrgRepo;
             }

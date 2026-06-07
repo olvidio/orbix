@@ -2,16 +2,17 @@
 
 namespace src\ubis\domain;
 
-/* No vale el underscore en el nombre */
-
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\TipoCentroRepositoryInterface;
+use src\ubis\domain\entity\TipoCentro;
+
+/* No vale el underscore en el nombre */
 
 class InfoTipoCtr extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private TipoCentroRepositoryInterface $tipoCentroRepository,
+    ) {
         $this->setTxtTitulo(_("tipos de centro"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este tipo de centro?"));
         $this->setTxtBuscar(_("buscar un tipo de centro"));
@@ -23,20 +24,19 @@ class InfoTipoCtr extends DatosInfoRepo
         $this->setRepositoryInterface(TipoCentroRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<TipoCentro>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'nombre_tipo_ctr');
+            $aWhere = ['_ordre' => 'nombre_tipo_ctr'];
             $aOperador = [];
         } else {
-            $aWhere = array('nombre_tipo_ctr' => $this->k_buscar);
-            $aOperador = array('nombre_tipo_ctr' => 'sin_acentos');
+            $aWhere = ['nombre_tipo_ctr' => $this->k_buscar];
+            $aOperador = ['nombre_tipo_ctr' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getTiposCentro($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->tipoCentroRepository->getTiposCentro($aWhere, $aOperador);
     }
 }

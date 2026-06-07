@@ -13,6 +13,11 @@ use function src\shared\domain\helpers\input_string;
  */
 class ActividadTipoGetFiltroLugar
 {
+    public function __construct(
+        private DelegacionDropdown $delegacionDropdown,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array{id: string, opciones: array<int|string,string>, blanco: bool, action: string}
@@ -24,7 +29,7 @@ class ActividadTipoGetFiltroLugar
 
         return [
             'id' => 'filtro_lugar',
-            'opciones' => DelegacionDropdown::dlURegionesFiltro($sfsvInt),
+            'opciones' => $this->delegacionDropdown->dlURegionesFiltro($sfsvInt),
             'blanco' => true,
             'action' => 'fnjs_lugar()',
         ];

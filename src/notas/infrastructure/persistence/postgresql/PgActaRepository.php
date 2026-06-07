@@ -1,6 +1,7 @@
 <?php
 
 namespace src\notas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -29,7 +30,7 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBP'];
+        $oDbl = GlobalPdo::get('oDBP');
         $this->setoDbl($oDbl);
         $this->setNomTabla('e_actas');
     }
@@ -37,10 +38,10 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
     /**
      * retorna l'última acta d'una regió.
      *
-     * @param string regió/dl/? en el que buscar la últim número d'acta.
+     * @param string $sRegion regió/dl/? en el que buscar la últim número d'acta.
      * @return integer
      */
-    public function getUltimaActa($any, $sRegion = '?'): int
+    public function getUltimaActa(string|int $any, string $sRegion = '?'): int
     {
         $sRegion = ($sRegion === '?') ? "\\" . $sRegion : $sRegion;
         $oDbl = $this->getoDbl();
@@ -52,13 +53,17 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         //echo "ss: $sQuery<br>";
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorActa.UltimaActa';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+                    $gestor = $_SESSION['oGestorErrores'] ?? null;
+        if (is_object($gestor) && method_exists($gestor, 'addErrorAppLastError')) {
+            $gestor->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+        }
+            return 0;
         }
         $num = $oDblSt->fetchColumn();
-        if ($num != false) {
-            // Quitar los {}.
-            $num = (int)trim($num, '{}');
+        if (is_string($num)) {
+            $num = (int) trim($num, '{}');
+        } elseif (is_numeric($num)) {
+            $num = (int) $num;
         } else {
             $num = 0;
         }
@@ -68,10 +73,10 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
     /**
      * retorna l'última linea del llibre.
      *
-     * @param integer iLibro libro en el que buscar la últmia linea.
+     * @param int $iLibro libro en el que buscar la últmia linea.
      * @return integer
      */
-    function getUltimaLinea($iLibro = 1)
+    function getUltimaLinea(int $iLibro = 1): int
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -79,29 +84,37 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         $sQuery = "SELECT max(linea) FROM $nom_tabla WHERE libro='$iLibro' AND pagina='$ult_pag' GROUP BY COALESCE(linea,0) ";
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorActa.UltimoLibro';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+                    $gestor = $_SESSION['oGestorErrores'] ?? null;
+        if (is_object($gestor) && method_exists($gestor, 'addErrorAppLastError')) {
+            $gestor->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
         }
-        return $oDblSt->fetchColumn();
+            return 0;
+        }
+        $val = $oDblSt->fetchColumn();
+        return is_numeric($val) ? (int) $val : 0;
     }
 
     /**
      * retorna l'última pàgina del llibre.
      *
-     * @param integer iLibro libro en el que buscar la últmia pàgina.
+     * @param int $iLibro libro en el que buscar la últmia pàgina.
      * @return integer
      */
-    function getUltimaPagina($iLibro = 1)
+    function getUltimaPagina(int $iLibro = 1): int
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT max(pagina) FROM $nom_tabla WHERE libro=$iLibro GROUP BY libro";
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorActa.UltimoLibro';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+                    $gestor = $_SESSION['oGestorErrores'] ?? null;
+        if (is_object($gestor) && method_exists($gestor, 'addErrorAppLastError')) {
+            $gestor->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
         }
-        return $oDblSt->fetchColumn();
+            return 0;
+        }
+        $val = $oDblSt->fetchColumn();
+        return is_numeric($val) ? (int) $val : 0;
     }
 
     /**
@@ -109,26 +122,30 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
      *
      * @return integer
      */
-    function getUltimoLibro()
+    function getUltimoLibro(): int
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT max(libro) FROM $nom_tabla";
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorActa.UltimoLibro';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+                    $gestor = $_SESSION['oGestorErrores'] ?? null;
+        if (is_object($gestor) && method_exists($gestor, 'addErrorAppLastError')) {
+            $gestor->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
         }
-        return $oDblSt->fetchColumn();
+            return 0;
+        }
+        $val = $oDblSt->fetchColumn();
+        return is_numeric($val) ? (int) $val : 0;
     }
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActaDl
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActaDl
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<\src\notas\domain\entity\Acta> Una colección de objetos de tipo ActaDl
      */
     public function getActas(array $aWhere = [], array $aOperators = []): array
     {
@@ -165,31 +182,39 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para los bytea: (resources)
-            $aDatos['pdf'] = $this->normalizeBytea($this->readByteaField($aDatos['pdf']));
+            $aDatos['pdf'] = $this->normalizeBytea($this->readByteaField($aDatos['pdf'] ?? null));
             // para las fechas del postgres (texto iso)
             $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
             $ActaDl = Acta::fromArray($aDatos);
             $ActaDlSet->add($ActaDl);
         }
-        return $ActaDlSet->getTot();
+        return array_values($ActaDlSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -241,6 +266,9 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -250,6 +278,9 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE acta = '$acta'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -261,29 +292,32 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $acta
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $acta): array|bool
+    public function datosById(string $acta): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE acta = '$acta'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($aDatos === false) {
+        if (!is_array($aDatos)) {
             return false;
         }
 
         // para los bytea: (resources)
-        $aDatos['pdf'] = $this->normalizeBytea($this->readByteaField($aDatos['pdf']));
+        $aDatos['pdf'] = $this->normalizeBytea($this->readByteaField($aDatos['pdf'] ?? null));
 
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
+        $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta'] ?? null))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
         }
-
-        return $aDatos;
+        return $result;
     }
 
 
@@ -293,7 +327,7 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
     public function findById(string $acta): ?Acta
     {
         $aDatos = $this->datosById($acta);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Acta::fromArray($aDatos);

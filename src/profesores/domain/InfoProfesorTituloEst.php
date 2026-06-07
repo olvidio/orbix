@@ -11,8 +11,9 @@ use src\shared\domain\DatosInfoRepo;
 class InfoProfesorTituloEst extends DatosInfoRepo
 {
 
-    public function __construct()
-    {
+    public function __construct(
+        private ProfesorTituloEstRepositoryInterface $profesorTituloEstRepository,
+    ) {
         $this->setTxtTitulo(_("dossier de títulos de postgrado"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este título?"));
         $this->setTxtBuscar();
@@ -25,13 +26,18 @@ class InfoProfesorTituloEst extends DatosInfoRepo
         $this->setRepositoryInterface(ProfesorTituloEstRepositoryInterface::class);
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return 1017;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
+        $aWhere = [];
+        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->id_pau)) {
@@ -44,9 +50,6 @@ class InfoProfesorTituloEst extends DatosInfoRepo
             $aWhere['titulo'] = $this->k_buscar;
             $aOperador['titulo'] = 'sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getProfesorTitulosEst($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->profesorTituloEstRepository->getProfesorTitulosEst($aWhere, $aOperador);
     }
 }

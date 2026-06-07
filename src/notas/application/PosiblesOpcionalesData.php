@@ -2,6 +2,7 @@
 
 namespace src\notas\application;
 
+use function src\shared\domain\helpers\input_int;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
@@ -14,11 +15,22 @@ use src\notas\domain\value_objects\NotaSituacion;
  */
 final class PosiblesOpcionalesData
 {
-    public static function execute(array $input): array
-    {
-        $id_nom = (int)($input['id_nom'] ?? 0);
 
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+    public function __construct(
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array<int, string>
+     */
+    public function execute(array $input): array
+    {
+        $id_nom = input_int($input, 'id_nom');
+
+        $AsignaturaRepository = $this->asignaturaRepository;
         $cOpcionales = $AsignaturaRepository->getAsignaturas(
             [
                 'active' => 't',
@@ -29,7 +41,7 @@ final class PosiblesOpcionalesData
         );
 
         $aSuperadas = NotaSituacion::getArraySuperadas();
-        $PersonaNotaRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        $PersonaNotaRepository = $this->personaNotaRepository;
         $cOpSuperadas = $PersonaNotaRepository->getPersonaNotas(
             [
                 'id_situacion' => implode(',', $aSuperadas),
@@ -53,7 +65,11 @@ final class PosiblesOpcionalesData
             if (array_key_exists($id_asignatura, $aOpSuperadas)) {
                 continue;
             }
-            $aFaltan[$id_asignatura] = $oAsignatura->getNombre_corto();
+            $nombreCorto = $oAsignatura->getNombre_corto();
+            if ($nombreCorto === null || $nombreCorto === '') {
+                continue;
+            }
+            $aFaltan[$id_asignatura] = $nombreCorto;
         }
 
         return $aFaltan;

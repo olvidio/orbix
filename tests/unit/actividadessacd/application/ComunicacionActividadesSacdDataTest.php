@@ -4,6 +4,20 @@ namespace Tests\unit\actividadessacd\application;
 
 use PHPUnit\Framework\TestCase;
 use src\actividadessacd\application\ComunicacionActividadesSacdData;
+use src\actividadessacd\application\services\ActividadesSacdHelper;
+use src\actividadessacd\application\services\ComunicarActividadesSacdService;
+use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\services\TelecoPersonaService;
+use src\shared\domain\contracts\ColaMailRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
@@ -17,13 +31,11 @@ use src\usuarios\domain\entity\Usuario;
  */
 final class ComunicacionActividadesSacdDataTest extends TestCase
 {
-    private mixed $previousContainer;
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['session_auth'] = [
             'id_usuario' => 443,
@@ -35,11 +47,6 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_SESSION = $this->previousSession;
         parent::tearDown();
     }
@@ -57,12 +64,7 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('getArrayRoles')->willReturn([77 => 'p-sacd']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $usuarioRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-        ]);
-
-        $ctx = ComunicacionActividadesSacdData::resolverContexto([
+        $ctx = $this->makeUseCase($usuarioRepo, $roleRepo)->resolverContexto([
             'que' => '',
             'id_nom' => 0,
             'propuesta' => '',
@@ -90,12 +92,7 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('getArrayRoles')->willReturn([1 => 'admin', 77 => 'p-sacd']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $usuarioRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-        ]);
-
-        $ctx = ComunicacionActividadesSacdData::resolverContexto([
+        $ctx = $this->makeUseCase($usuarioRepo, $roleRepo)->resolverContexto([
             'que' => 'nagd',
             'id_nom' => 0,
             'propuesta' => '',
@@ -117,12 +114,7 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->expects($this->never())->method('getArrayRoles');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $usuarioRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-        ]);
-
-        $ctx = ComunicacionActividadesSacdData::resolverContexto([
+        $ctx = $this->makeUseCase($usuarioRepo, $roleRepo)->resolverContexto([
             'que' => 'sssc',
             'id_nom' => 0,
             'propuesta' => '',
@@ -135,21 +127,35 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
         $this->assertSame('sssc', $ctx['que']);
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
+    private function makeUseCase(
+        UsuarioRepositoryInterface $usuarioRepo,
+        RoleRepositoryInterface $roleRepo,
+    ): ComunicacionActividadesSacdData {
+        $helper = new ActividadesSacdHelper(
+            $this->createMock(ActividadSacdTextoRepositoryInterface::class),
+            $this->createMock(CentroDlRepositoryInterface::class),
+        );
+        $service = new ComunicarActividadesSacdService(
+            $this->createMock(CargoRepositoryInterface::class),
+            $this->createMock(ActividadAllRepositoryInterface::class),
+            $this->createMock(CentroEncargadoRepositoryInterface::class),
+            $this->createMock(ActividadCargoRepositoryInterface::class),
+            $helper,
+            $this->createMock(ConfigSchemaRepositoryInterface::class),
+            $usuarioRepo,
+            $this->createMock(PersonaDlRepositoryInterface::class),
+            $this->createMock(CentroDlRepositoryInterface::class),
+            $this->createMock(TelecoPersonaService::class),
+            $this->createMock(ColaMailRepositoryInterface::class),
+        );
 
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        return new ComunicacionActividadesSacdData(
+            $usuarioRepo,
+            $roleRepo,
+            $this->createMock(PersonaSacdRepositoryInterface::class),
+            $this->createMock(PersonaExRepositoryInterface::class),
+            $service,
+            $helper,
+        );
     }
 }

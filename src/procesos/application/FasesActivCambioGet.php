@@ -4,38 +4,32 @@ namespace src\procesos\application;
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\is_true;
 
 /**
- * Caso de uso: devuelve las fases posibles para el `id_tipo_activ` y la
- * `dl_propia` actual, incluyendo la opcion seleccionada por
- * `id_fase_sel`.
- *
- * Respuesta conforme al contrato de `refactor.md` para desplegables
- * (payload JSON con `id`, `opciones`, `selected`, `blanco`, `action`).
- * El frontend construye el `<select>` con el helper JS estandar.
+ * Caso de uso: fases posibles para id_tipo_activ y dl_propia (desplegable JSON).
  */
 class FasesActivCambioGet
 {
+    public function __construct(
+        private readonly TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        private readonly ActividadFaseRepositoryInterface $actividadFaseRepository,
+    ) {
+    }
+
     /**
-     * @return array{
-     *     id:string,
-     *     opciones:array<string,string>,
-     *     selected:string,
-     *     blanco:bool,
-     *     action:string
-     * }
+     * @param array<string, mixed> $input
+     * @return array{id: string, opciones: array<int|string, string>, selected: string, blanco: bool, action: string}
      */
     public function execute(array $input): array
     {
-        $Qid_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
-        $Qdl_propia = (string)($input['dl_propia'] ?? '');
-        $Qid_fase_sel = (string)($input['id_fase_sel'] ?? '');
+        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
+        $Qdl_propia = input_string($input, 'dl_propia');
+        $Qid_fase_sel = input_string($input, 'id_fase_sel');
 
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-        $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $Qdl_propia);
-
-        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-        $aOpciones = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos, true);
+        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, is_true($Qdl_propia));
+        $aOpciones = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos, true);
 
         return [
             'id' => 'id_fase_nueva',

@@ -1,5 +1,9 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
@@ -7,17 +11,22 @@ use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
-$Qid_lugar = (integer)filter_input(INPUT_POST, 'id_lugar');
+$Qid_ubi = input_int($_POST, 'id_ubi');
+$Qid_lugar = input_int($_POST, 'id_lugar');
 $error_txt = '';
 
 $colTipoDoc = [];
 
-$UbiInventarioRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
-$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
-$TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
-$ColeccionRepository = $GLOBALS['container']->get(ColeccionRepositoryInterface::class);
-$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+/** @var UbiInventarioRepositoryInterface $UbiInventarioRepository */
+$UbiInventarioRepository = DependencyResolver::get(UbiInventarioRepositoryInterface::class);
+/** @var DocumentoRepositoryInterface $DocumentoRepository */
+$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
+/** @var TipoDocRepositoryInterface $TipoDocRepository */
+$TipoDocRepository = DependencyResolver::get(TipoDocRepositoryInterface::class);
+/** @var ColeccionRepositoryInterface $ColeccionRepository */
+$ColeccionRepository = DependencyResolver::get(ColeccionRepositoryInterface::class);
+/** @var LugarRepositoryInterface $LugarRepository */
+$LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
 
 $aWhere = [];
 if (!empty($Qid_ubi)) {
@@ -27,7 +36,8 @@ if (!empty($Qid_lugar)) {
     $aWhere['id_lugar'] = $Qid_lugar;
 }
 
-$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+/** @var DocumentoRepositoryInterface $DocumentoRepository */
+$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
 $cDocumentos = $DocumentoRepository->getDocumentos($aWhere);
 
 $d = 0;
@@ -49,10 +59,16 @@ foreach ($cDocumentos as $oDocumento) {
         $oTipoDoc = $aTipoDoc['object_tipo'];
         $nom_coleccion = $aTipoDoc['nom_coleccion'];
     } else {
-        $oTipoDoc = $TipoDocRepository->findById($id_tipo_doc);
+        $oTipoDoc = $TipoDocRepository->findById((int) $id_tipo_doc);
+        if ($oTipoDoc === null) {
+            continue;
+        }
         $id_coleccion = $oTipoDoc->getId_coleccion();
         if (!empty($id_coleccion)) {
-            $oColeccion = $ColeccionRepository->findById($id_coleccion);
+            $oColeccion = $ColeccionRepository->findById((int) $id_coleccion);
+            if ($oColeccion === null) {
+                continue;
+            }
             $nom_coleccion = $oColeccion->getNom_coleccion();
 
             $colTipoDoc[$id_tipo_doc] = ['object_tipo' => $oTipoDoc, 'nom_coleccion' => $nom_coleccion];
@@ -63,7 +79,10 @@ foreach ($cDocumentos as $oDocumento) {
 
     $lugar = '';
     if (!empty($id_lugar)) {
-        $oLugar = $LugarRepository->findById($id_lugar);
+        $oLugar = $LugarRepository->findById((int) $id_lugar);
+        if ($oLugar === null) {
+            continue;
+        }
         $lugar = $oLugar->getNom_lugar();
     }
 

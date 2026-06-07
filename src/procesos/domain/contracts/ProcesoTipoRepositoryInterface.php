@@ -17,6 +17,9 @@ use src\procesos\domain\entity\ProcesoTipo;
 interface ProcesoTipoRepositoryInterface
 {
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayProcesoTipos(): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -24,9 +27,9 @@ interface ProcesoTipoRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo ProcesoTipo
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ProcesoTipo
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ProcesoTipo> Una colección de objetos de tipo ProcesoTipo
      */
     public function getProcesoTipos(array $aWhere = [], array $aOperators = []): array;
 
@@ -47,14 +50,14 @@ interface ProcesoTipoRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_tipo_proceso
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_tipo_proceso): array|bool;
+    public function datosById(int $id_tipo_proceso): array|false;
 
     /**
      * Busca la clase con id_tipo_proceso en el repositorio.
      */
     public function findById(int $id_tipo_proceso): ?ProcesoTipo;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

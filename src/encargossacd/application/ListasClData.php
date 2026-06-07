@@ -1,6 +1,7 @@
 <?php
 
 namespace src\encargossacd\application;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\config\ConfigGlobal;
 use PDO;
@@ -17,22 +18,24 @@ use src\shared\domain\value_objects\DateTimeLocal;
  */
 final class ListasClData
 {
+
+    public function __construct(
+        private EncargoAplicacionService $aplicacionService
+    ) {
+    }
+
     /**
      * @return array{ Html: string }
      */
-    public static function execute(): array
+    public function execute(): array
     {
-        $oDB = $GLOBALS['oDB'] ?? null;
-        if ($oDB === null) {
-            return ['Html' => ''];
-        }
-
-        $any = (int)date('Y');
+        $oDB = GlobalPdo::get('oDB');
+        $any = (int) date('Y');
         $cabecera_left = sprintf(_('Curso %s'), '');
         $cabecera_right = (string)ConfigGlobal::mi_delef();
         $cabecera_right_2 = _('ref. cr 1/14, 10,c)');
 
-        $oService = new EncargoAplicacionService();
+        $oService = $this->aplicacionService;
         $poblacion = $oService->getLugar_dl();
         $oDateLocal = new DateTimeLocal();
         $hoy_local = $oDateLocal->getFromLocal('.');
@@ -80,20 +83,23 @@ final class ListasClData
                 . 'WHERE p.id_nom = :id_nom';
             $stmtNom = $oDB->prepare($sql_nom);
             $stmtNom->execute([':id_nom' => $id_nom]);
-            $noms_p = $stmtNom->fetch(PDO::FETCH_ASSOC) ?: [];
-            $n_agd = (string)($noms_p['id_tabla'] ?? '');
+            $noms_p = $stmtNom->fetch(PDO::FETCH_ASSOC);
+            if (!is_array($noms_p)) {
+                $noms_p = [];
+            }
+            $n_agd = isset($noms_p['id_tabla']) && is_scalar($noms_p['id_tabla']) ? (string) $noms_p['id_tabla'] : '';
             switch ($n_agd) {
                 case 'a':
                     $agd = ' (agd)';
                     break;
                 case 'sssc':
-                    $socio = (string)($noms_p['socio'] ?? '');
+                    $socio = isset($noms_p['socio']) && is_scalar($noms_p['socio']) ? (string) $noms_p['socio'] : '';
                     $agd = " ($socio sss+)";
                     break;
                 default:
                     $agd = '';
             }
-            $cognom = (string)($noms_p['nom'] ?? '') . $agd;
+            $cognom = (isset($noms_p['nom']) && is_scalar($noms_p['nom']) ? (string) $noms_p['nom'] : '') . $agd;
 
             $ini = (int)mktime(0, 0, 0, 11, 1, $any - 1);
             $fi = (int)mktime(0, 0, 0, 10, 31, $any);

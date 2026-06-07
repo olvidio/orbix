@@ -1,11 +1,13 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$UbiInventarioRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
+/** @var UbiInventarioRepositoryInterface $UbiInventarioRepository */
+$UbiInventarioRepository = DependencyResolver::get(UbiInventarioRepositoryInterface::class);
 $a_opciones = $UbiInventarioRepository->getArrayUbisInventario();
 
 $data = [

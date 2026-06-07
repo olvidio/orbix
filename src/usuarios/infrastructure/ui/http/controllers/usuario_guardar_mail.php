@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\Email;
@@ -9,11 +10,15 @@ $error_txt = '';
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qemail = (string)filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);
+if ($oUsuario === null) {
+    ContestarJson::enviar(_('Usuario no encontrado'), 'none');
+    return;
+}
 
 $email = new Email($Qemail);
-$oUsuario->setEmail($email);
+$oUsuario->setEmailVo($email);
 if ($UsuarioRepository->Guardar($oUsuario) === false) {
     $error_txt .= _("hay un error, no se ha guardado");
     $error_txt .= "\n" . $UsuarioRepository->getErrorTxt();

@@ -1,12 +1,13 @@
 <?php
 
 use src\menus\application\GrupMenuListaUseCase;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$ListaGrupMenus = new GrupMenuListaUseCase();
-$data = $ListaGrupMenus();
+/** @var GrupMenuListaUseCase $listaGrupMenus */
+$listaGrupMenus = DependencyResolver::get(GrupMenuListaUseCase::class);
+$data = $listaGrupMenus();
 
-// envía una Response
 ContestarJson::enviar($error_txt, $data);

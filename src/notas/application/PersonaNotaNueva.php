@@ -2,7 +2,12 @@
 
 namespace src\notas\application;
 
+use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\notas\application\support\PersonaNotaInputParser;
+use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 /**
  * Crea una nueva `PersonaNota` (con replicacion DL / certificado segun
@@ -11,12 +16,33 @@ use src\notas\application\support\PersonaNotaInputParser;
  */
 final class PersonaNotaNueva
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private readonly PersonaNotaInputParser $personaNotaInputParser,
+        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+        private readonly DelegacionRepositoryInterface $delegacionRepository,
+        private readonly DbSchemaRepositoryInterface $dbSchemaRepository,
+        private readonly DossierRepositoryInterface $dossierRepository,
+        private readonly PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
         try {
-            $oPersonaNota = PersonaNotaInputParser::parse($input);
-            $oEditar = new EditarPersonaNota($oPersonaNota);
+            $oPersonaNota = $this->personaNotaInputParser->parse($input);
+            $oEditar = new EditarPersonaNota(
+                $oPersonaNota,
+                $this->personaNotaRepository,
+                $this->delegacionRepository,
+                $this->dbSchemaRepository,
+                $this->dossierRepository,
+                $this->personaNotaDlRepository,
+            );
             $oEditar->nuevo();
+
             return '';
         } catch (\RuntimeException $e) {
             return $e->getMessage();

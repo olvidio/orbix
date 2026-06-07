@@ -1,5 +1,7 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
@@ -8,13 +10,20 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use src\shared\web\ContestarJson;
 
-$Qid_role = (string)filter_input(INPUT_POST, 'id_role');
+$Qid_role = (int)filter_input(INPUT_POST, 'id_role');
 
 $error_txt = '';
 
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+if ($oMiUsuario === null) {
+    ContestarJson::enviar(_('Usuario no encontrado'), 'none');
+    return;
+}
 $miRole = $oMiUsuario->getId_role();
+$ambito = ($_SESSION['oConfig'] ?? null) instanceof ConfigSnapshot
+    ? $_SESSION['oConfig']->getAmbito()
+    : '';
 // Sólo puede manipular los roles el superadmin (id_role=1).
 $permiso = 0;
 if ($miRole === 1) {
@@ -28,8 +37,12 @@ if ($miRole === 2) {
 
 $txt_sfsv = '';
 if (!empty($Qid_role)) {
-    $RoleRepository =  $GLOBALS['container']->get(RoleRepositoryInterface::class);
+    $RoleRepository =  DependencyResolver::get(RoleRepositoryInterface::class);
     $oRole = $RoleRepository->findById($Qid_role);
+    if ($oRole === null) {
+        ContestarJson::enviar(_('Rol no encontrado'), 'none');
+        return;
+    }
     $role = $oRole->getRoleAsString();
     $sf = $oRole->isSf();
     if (!empty($sf)) {
@@ -50,7 +63,7 @@ if (!empty($Qid_role)) {
     $chk_dmz = !empty($dmz) ? 'checked' : '';
     $txt_sfsv = empty($txt_sfsv) ? '' : "($txt_sfsv)";
     //////////////////// grupmenu de role ////////////////////////////////
-    $GrupMenuRoleRepository = $GLOBALS['container']->get(GrupMenuRoleRepositoryInterface::class);
+    $GrupMenuRoleRepository = DependencyResolver::get(GrupMenuRoleRepositoryInterface::class);
     $cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $Qid_role));
 
     $i = 0;
@@ -59,14 +72,17 @@ if (!empty($Qid_role)) {
         ['txt' => _("quitar"), 'click' => "fnjs_del_grupmenu(\"#form_grup_menu\")"],
     ];
     $a_valores = [];
-    $GrupMenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
+    $GrupMenuRepository = DependencyResolver::get(GrupMenuRepositoryInterface::class);
     foreach ($cGMR as $oGrupMenuRole) {
         $i++;
         $id_item = $oGrupMenuRole->getId_item();
         $id_grupmenu = $oGrupMenuRole->getId_grupmenu();
         $oGrupMenu = $GrupMenuRepository->findById($id_grupmenu);
+        if ($oGrupMenu === null) {
+            continue;
+        }
 
-        $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
+        $grup_menu = $oGrupMenu->getGrup_menu($ambito);
 
         $a_valores[$i]['sel'] = "$id_item";
         $a_valores[$i][1] = $grup_menu;

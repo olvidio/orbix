@@ -36,25 +36,25 @@ class Documento
 
     private ?LugarId $id_lugar = null;
 
-    private DateTimeLocal|NullDateTimeLocal|null $f_recibido = null;
+    private DateTimeLocal|null $f_recibido = null;
 
-    private DateTimeLocal|NullDateTimeLocal|null $f_asignado = null;
+    private DateTimeLocal|null $f_asignado = null;
 
     private ?DocumentoObserv $observ = null;
 
     private ?DocumentoObservCtr $observ_ctr = null;
 
-    private DateTimeLocal|NullDateTimeLocal|null $f_ult_comprobacion = null;
+    private DateTimeLocal|null $f_ult_comprobacion = null;
 
     private ?bool $en_busqueda = null;
 
     private ?bool $perdido = null;
 
-    private DateTimeLocal|NullDateTimeLocal|null $f_perdido = null;
+    private DateTimeLocal|null $f_perdido = null;
 
     private ?bool $eliminado = null;
 
-    private DateTimeLocal|NullDateTimeLocal|null $f_eliminado = null;
+    private DateTimeLocal|null $f_eliminado = null;
 
     private ?DocumentoNumReg $num_reg = null;
 
@@ -76,7 +76,7 @@ class Documento
 
     public function setId_doc(int $id_doc): void
     {
-        $this->id_doc = DocumentoId::fromNullableInt($id_doc);
+        $this->id_doc = new DocumentoId($id_doc);
     }
 
 
@@ -88,7 +88,7 @@ class Documento
 
     public function setId_tipo_doc(int $id_tipo_doc): void
     {
-        $this->id_tipo_doc = TipoDocId::fromNullableInt($id_tipo_doc);
+        $this->id_tipo_doc = new TipoDocId($id_tipo_doc);
     }
 
 
@@ -100,11 +100,11 @@ class Documento
 
     public function setId_ubi(int $id_ubi): void
     {
-        $this->id_ubi = UbiInventarioId::fromNullableInt($id_ubi);
+        $this->id_ubi = new UbiInventarioId($id_ubi);
     }
 
 
-    public function getId_lugar(): ?string
+    public function getId_lugar(): ?int
     {
         return $this->id_lugar?->value();
     }
@@ -115,26 +115,26 @@ class Documento
         $this->id_lugar = LugarId::fromNullableInt($id_lugar);
     }
 
-    public function getF_recibido(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_recibido(): ?DateTimeLocal
     {
-        return $this->f_recibido ?? new NullDateTimeLocal;
+        return $this->f_recibido;
     }
 
 
-    public function setF_recibido(DateTimeLocal|NullDateTimeLocal|null $f_recibido = null): void
+    public function setF_recibido(?DateTimeLocal $f_recibido = null): void
     {
-        $this->f_recibido = $f_recibido instanceof NullDateTimeLocal ? null : $f_recibido;
+        $this->f_recibido = $f_recibido;
     }
 
-    public function getF_asignado(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_asignado(): ?DateTimeLocal
     {
-        return $this->f_asignado ?? new NullDateTimeLocal;
+        return $this->f_asignado;
     }
 
 
-    public function setF_asignado(DateTimeLocal|NullDateTimeLocal|null $f_asignado = null): void
+    public function setF_asignado(?DateTimeLocal $f_asignado = null): void
     {
-        $this->f_asignado = $f_asignado instanceof NullDateTimeLocal ? null : $f_asignado;
+        $this->f_asignado = $f_asignado;
     }
 
 
@@ -162,15 +162,15 @@ class Documento
     }
 
 
-    public function getF_ult_comprobacion(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_ult_comprobacion(): ?DateTimeLocal
     {
-        return $this->f_ult_comprobacion ?? new NullDateTimeLocal;
+        return $this->f_ult_comprobacion;
     }
 
 
-    public function setF_ult_comprobacion(DateTimeLocal|NullDateTimeLocal|null $f_ult_comprobacion = null): void
+    public function setF_ult_comprobacion(?DateTimeLocal $f_ult_comprobacion = null): void
     {
-        $this->f_ult_comprobacion = $f_ult_comprobacion instanceof NullDateTimeLocal ? null : $f_ult_comprobacion;
+        $this->f_ult_comprobacion = $f_ult_comprobacion;
     }
 
     /**
@@ -213,15 +213,15 @@ class Documento
     }
 
 
-    public function getF_perdido(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_perdido(): ?DateTimeLocal
     {
-        return $this->f_perdido ?? new NullDateTimeLocal;
+        return $this->f_perdido;
     }
 
 
-    public function setF_perdido(DateTimeLocal|NullDateTimeLocal|null $f_perdido = null): void
+    public function setF_perdido(?DateTimeLocal $f_perdido = null): void
     {
-        $this->f_perdido = $f_perdido instanceof NullDateTimeLocal ? null : $f_perdido;
+        $this->f_perdido = $f_perdido;
     }
 
 
@@ -237,19 +237,19 @@ class Documento
     }
 
 
-    public function getF_eliminado(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_eliminado(): ?DateTimeLocal
     {
-        return $this->f_eliminado ?? new NullDateTimeLocal;
+        return $this->f_eliminado;
     }
 
 
-    public function setF_eliminado(DateTimeLocal|NullDateTimeLocal|null $f_eliminado = null): void
+    public function setF_eliminado(?DateTimeLocal $f_eliminado = null): void
     {
-        $this->f_eliminado = $f_eliminado instanceof NullDateTimeLocal ? null : $f_eliminado;
+        $this->f_eliminado = $f_eliminado;
     }
 
 
-    public function getNum_reg(): ?string
+    public function getNum_reg(): ?int
     {
         return $this->num_reg?->value();
     }
@@ -261,7 +261,7 @@ class Documento
     }
 
 
-    public function getNum_ini(): ?string
+    public function getNum_ini(): ?int
     {
         return $this->num_ini?->value();
     }
@@ -273,7 +273,7 @@ class Documento
     }
 
 
-    public function getNum_fin(): ?string
+    public function getNum_fin(): ?int
     {
         return $this->num_fin?->value();
     }
@@ -297,7 +297,7 @@ class Documento
     }
 
 
-    public function getNum_ejemplares(): ?string
+    public function getNum_ejemplares(): ?int
     {
         return $this->num_ejemplares?->value();
     }
@@ -318,7 +318,7 @@ class Documento
     {
         $this->id_doc = $id instanceof DocumentoId
             ? $id
-            : DocumentoId::fromNullableInt($id);
+            : (DocumentoId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     public function getIdTipoDocVo(): TipoDocId
@@ -330,7 +330,7 @@ class Documento
     {
         $this->id_tipo_doc = $id instanceof TipoDocId
             ? $id
-            : TipoDocId::fromNullableInt($id);
+            : (TipoDocId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     public function getIdUbiVo(): UbiInventarioId
@@ -342,7 +342,7 @@ class Documento
     {
         $this->id_ubi = $id instanceof UbiInventarioId
             ? $id
-            : UbiInventarioId::fromNullableInt($id);
+            : (UbiInventarioId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     public function getIdLugarVo(): ?LugarId
@@ -472,10 +472,13 @@ class Documento
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_doc';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

@@ -2,8 +2,9 @@
 
 namespace src\notas\application;
 
+
 use src\shared\config\ConfigGlobal;
-use src\notas\application\legacy\Resumen;
+use src\notas\application\support\ResumenFactory;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
@@ -15,6 +16,12 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
  */
 final class InformeStgrAgregados
 {
+
+    public function __construct(
+        private readonly DelegacionRepositoryInterface $delegacionRepository,
+        private readonly ResumenFactory $resumenFactory,
+    ) {
+    }
     /**
      * @param array<int,int|string> $a_dl   ids de delegacion seleccionadas (filtro STGR).
      * @param bool                  $lista  si `true`, cada metrica incluye el
@@ -28,7 +35,7 @@ final class InformeStgrAgregados
     {
         [$any_ini_curs, $curso_txt] = $this->cursoActual();
 
-        $Resumen = new Resumen('agregados');
+        $Resumen = $this->resumenFactory->create('agregados');
         $Resumen->setArrayDl($this->mapearDelegaciones($a_dl));
         $Resumen->setAnyIniCurs($any_ini_curs);
         $Resumen->setLista($lista);
@@ -43,8 +50,8 @@ final class InformeStgrAgregados
 
         $a_aprobadas_bienio = $Resumen->aprobadasBienio();
         $res[22] = [
-            'num' => $this->media((int)$res[21]['num'], (int)$a_aprobadas_bienio['num']),
-            'lista' => $a_aprobadas_bienio['lista'] ?? '',
+            'num' => $this->media((int) $res[21]['num'], (int) $a_aprobadas_bienio['num']),
+            'lista' => $a_aprobadas_bienio['lista'],
         ];
         $textos[22] = ucfirst(_("media de asignaturas superadas por alumno en bienio"));
 
@@ -58,11 +65,12 @@ final class InformeStgrAgregados
         $res[24] = $Resumen->enCuadrienio('all');
         $textos[24] = ucfirst(_("número de agregados Cuadrienio"));
 
+        /** @var array{num: int|float|string, lista: string, error?: bool} $a_aprobadas */
         $a_aprobadas = $Resumen->aprobadasCuadrienio();
-        if (!isset($a_aprobadas['error'])) {
+        if (!array_key_exists('error', $a_aprobadas)) {
             $res[25] = [
-                'num' => $this->media((int)$res[24]['num'], (int)$a_aprobadas['num']),
-                'lista' => $a_aprobadas['lista'] ?? '',
+                'num' => $this->media((int) $res[24]['num'], (int) $a_aprobadas['num']),
+                'lista' => $a_aprobadas['lista'],
             ];
             $textos[25] = ucfirst(_("media de asignaturas superadas por alumno en cuadrienio"));
         } else {
@@ -86,7 +94,7 @@ final class InformeStgrAgregados
         $res[31] = $Resumen->terminadoCuadrienio();
         $textos[31] = ucfirst(_("número de agregados que han terminado el cuadrienio este curso"));
 
-        $res[32]['num'] = $res[21]['num'] + $res[24]['num'];
+        $res[32]['num'] = (int) $res[21]['num'] + (int) $res[24]['num'];
         $textos[32] = ucfirst(_("número total de alumnos agregados"));
 
         // ---- Repaso -------------------------------------------------------
@@ -118,7 +126,7 @@ final class InformeStgrAgregados
             return [];
         }
         $region_stgr = ConfigGlobal::mi_dele();
-        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        $repoDelegacion = $this->delegacionRepository;
         $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
         $a_dl = [];
         foreach ($Qdl as $id_dl) {

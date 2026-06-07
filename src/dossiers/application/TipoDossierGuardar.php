@@ -3,6 +3,8 @@
 namespace src\dossiers\application;
 
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -13,30 +15,41 @@ use function src\shared\domain\helpers\is_true;
  */
 final class TipoDossierGuardar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private TipoDossierRepositoryInterface $tipoDossierRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $Qid_tipo_dossier = (int) ($input['id_tipo_dossier'] ?? 0);
+        $Qid_tipo_dossier = input_int($input, 'id_tipo_dossier');
         if ($Qid_tipo_dossier <= 0) {
-            return _("falta id_tipo_dossier");
+            return _('falta id_tipo_dossier');
         }
 
-        $TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
-        $oTipoDossier = $TipoDossierRepository->findById($Qid_tipo_dossier);
+        $oTipoDossier = $this->tipoDossierRepository->findById($Qid_tipo_dossier);
         if ($oTipoDossier === null) {
-            return sprintf(_("No se encuentra el dossier: %s"), $Qid_tipo_dossier);
+            return sprintf(_('No se encuentra el dossier: %s'), $Qid_tipo_dossier);
         }
 
-        $Qdescripcion = (string) ($input['descripcion'] ?? '');
-        $Qtabla_from = (string) ($input['tabla_from'] ?? '');
-        $Qtabla_to = (string) ($input['tabla_to'] ?? '');
-        $Qcampo_to = (string) ($input['campo_to'] ?? '');
-        $Qid_tipo_dossier_rel = (int) ($input['id_tipo_dossier_rel'] ?? 0);
-        $Qdepende_modificar = (string) ($input['depende_modificar'] ?? '');
-        $Qapp = (string) ($input['app'] ?? '');
-        $Qclass = (string) ($input['class'] ?? '');
-        $Qcodigo = (string) ($input['codigo'] ?? '');
-        $aPermiso_lectura = (array) ($input['Permiso_lectura'] ?? []);
-        $aPermiso_escritura = (array) ($input['Permiso_escritura'] ?? []);
+        $Qdescripcion = input_string($input, 'descripcion');
+        $Qtabla_from = input_string($input, 'tabla_from');
+        $Qtabla_to = input_string($input, 'tabla_to');
+        $Qcampo_to = input_string($input, 'campo_to');
+        $Qid_tipo_dossier_rel = input_int($input, 'id_tipo_dossier_rel');
+        $Qdepende_modificar = input_string($input, 'depende_modificar');
+        $Qapp = input_string($input, 'app');
+        $Qclass = input_string($input, 'class');
+        $Qcodigo = input_string($input, 'codigo');
+        $aPermiso_lectura = isset($input['Permiso_lectura']) && is_array($input['Permiso_lectura'])
+            ? $input['Permiso_lectura']
+            : [];
+        $aPermiso_escritura = isset($input['Permiso_escritura']) && is_array($input['Permiso_escritura'])
+            ? $input['Permiso_escritura']
+            : [];
 
         $oTipoDossier->setDescripcion($Qdescripcion);
         $oTipoDossier->setTabla_from($Qtabla_from);
@@ -49,23 +62,23 @@ final class TipoDossierGuardar
         $oTipoDossier->setCodigo(trim($Qcodigo) !== '' ? trim($Qcodigo) : null);
         $oTipoDossier->setDb(1);
 
-        if (!empty($aPermiso_lectura) && count($aPermiso_lectura) > 0) {
+        if ($aPermiso_lectura !== []) {
             $byte = 0;
             foreach ($aPermiso_lectura as $bit) {
-                $byte += (int) $bit;
+                $byte += is_numeric($bit) ? (int) $bit : 0;
             }
             $oTipoDossier->setPermiso_lectura($byte);
         }
-        if (!empty($aPermiso_escritura) && count($aPermiso_escritura) > 0) {
+        if ($aPermiso_escritura !== []) {
             $byte = 0;
             foreach ($aPermiso_escritura as $bit) {
-                $byte += (int) $bit;
+                $byte += is_numeric($bit) ? (int) $bit : 0;
             }
             $oTipoDossier->setPermiso_escritura($byte);
         }
 
-        if ($TipoDossierRepository->Guardar($oTipoDossier) === false) {
-            return _("Hay un error, no se ha guardado.");
+        if ($this->tipoDossierRepository->Guardar($oTipoDossier) === false) {
+            return _('Hay un error, no se ha guardado.');
         }
         return '';
     }

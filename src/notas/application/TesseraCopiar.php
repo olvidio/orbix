@@ -2,6 +2,7 @@
 
 namespace src\notas\application;
 
+use function src\shared\domain\helpers\input_int;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 
 /**
@@ -14,23 +15,32 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
  */
 final class TesseraCopiar
 {
-    public static function execute(array $input): string
+
+    public function __construct(
+        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $id_nom_org = (int)($input['id_nom_org'] ?? 0);
-        $id_nom_dst = (int)($input['id_nom_dst'] ?? 0);
+        $id_nom_org = input_int($input, 'id_nom_org');
+        $id_nom_dst = input_int($input, 'id_nom_dst');
 
         if ($id_nom_org === 0 || $id_nom_dst === 0) {
             return _("No se han recibido las personas de origen y destino");
         }
 
-        $PersonaNotaRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        $PersonaNotaRepository = $this->personaNotaRepository;
         $cPersonaOrgNotas = $PersonaNotaRepository->getPersonaNotas(['id_nom' => $id_nom_org]);
 
         $error = '';
         foreach ($cPersonaOrgNotas as $oPersonaNota) {
             $oNueva = clone $oPersonaNota;
             $oNueva->setId_nom($id_nom_dst);
-            if ($oNueva->DBGuardar() === false) {
+            if ($PersonaNotaRepository->Guardar($oNueva) === false) {
                 $error .= '<br>' . _("no se ha guardado la nota");
             }
         }

@@ -49,7 +49,7 @@ class ProfesorDocenciaStgr
     {
         $this->id_asignatura = $valor instanceof AsignaturaId
             ? $valor
-            : AsignaturaId::fromNullableInt($valor);
+            : (AsignaturaId::fromNullableInt($valor) ?? throw new \InvalidArgumentException('id_asignatura cannot be null'));
     }
 
     /**
@@ -65,7 +65,7 @@ class ProfesorDocenciaStgr
      */
     public function setId_asignatura(?int $valor = null): void
     {
-        $this->id_asignatura = AsignaturaId::fromNullableInt($valor);
+        $this->id_asignatura = (AsignaturaId::fromNullableInt($valor) ?? throw new \InvalidArgumentException('id_asignatura cannot be null'));
     }
 
     public function getIdActivVo(): ?ActividadId
@@ -187,6 +187,9 @@ class ProfesorDocenciaStgr
     {
         return 'id_item';
     }
+
+  /** @return array<string, mixed> */
+
 
   public function getDatosCampos(): array
     {

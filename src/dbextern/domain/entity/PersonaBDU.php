@@ -11,6 +11,11 @@ class PersonaBDU
 {
     use Hydratable;
 
+    public function __construct()
+    {
+        $this->dfecha_c_fic = new NullDateTimeLocal();
+    }
+
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /*
@@ -37,129 +42,99 @@ class PersonaBDU
      */
 
     /**
-     * aPrimary_key de Listas
-     *
-     * @var array
-     */
-    private $aPrimary_key;
-
-    /**
-     * aDades de Listas
-     *
-     * @var array
-     */
-    private $aDades;
-
-    /**
-     * bLoaded
-     *
-     * @var boolean
-     */
-    private $bLoaded = FALSE;
-
-    /**
      * identif de Listas
      *
      * @var integer
      */
-    private $iIdentif;
+    private int $iIdentif = 0;
     /**
      * apenom de Listas
      *
      * @var string
      */
-    private $sApenom;
+    private string $sApenom = '';
     /**
      * dl de Listas
      *
      * @var string
      */
-    private $sdl;
+    private string $sdl = '';
     /**
      * ctr de Listas
      *
      * @var string
      */
-    private $sctr;
+    private string $sctr = '';
     /**
      * lugar_naci de Listas
      *
      * @var string
      */
-    private $sLugar_Naci;
-    /**
-     * fecha_naci de Listas
-     *
-     * @var DateTimeLocal
-     */
-    private $dFecha_Naci;
+    private string $sLugar_Naci = '';
+    private string $dFecha_Naci = '';
     /**
      * email de Listas
      *
      * @var string
      */
-    private $sEmail;
+    private string $sEmail = '';
     /**
      * tfno_movil de Listas
      *
      * @var string
      */
-    private $sTfno_Movil;
+    private string $sTfno_Movil = '';
     /**
      * ce de Listas
      *
      * @var string
      */
-    private $sCe;
+    private string $sCe = '';
     /**
      * prof_carg de Listas
      *
      * @var string
      */
-    private $sProfesion_cargo;
+    private string $sProfesion_cargo = '';
     /**
      * titu_estu de Listas
      *
      * @var string
      */
-    private $sTitulo_Estudios;
+    private string $sTitulo_Estudios = '';
     /**
      * encargos de Listas
      *
      * @var string
      */
-    private $sEncargos;
+    private string $sEncargos = '';
     /**
      * incorp de Listas
      *
      * @var string
      */
-    private $sIncorporacion;
+    private string $sIncorporacion = '';
     /**
      * Pertenece_r de Listas
      *
      * @var string
      */
-    private $spertenece_r;
+    private string $spertenece_r = '';
 
     /**
      * Camb_fic de Listas
      *
      * @var string
      */
-    private $scamb_fic;
-    /**
-     * Fecha_c_fic de Listas
-     *
-     * @var DateTimeLocal
-     */
-    private $dfecha_c_fic;
+    private string $scamb_fic = '';
+    private DateTimeLocal|NullDateTimeLocal $dfecha_c_fic;
+
     /**
      * compartida_con_r de Listas
      *
      * @var string
      */
-    private $scompartida_con_r;
+    private string $scompartida_con_r = '';
 
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
     /**
@@ -167,71 +142,71 @@ class PersonaBDU
      *
      * @var string
      */
-    private $snombre;
+    private ?string $snombre = null;
     /**
      * apellido1 de Listas
      *
      * @var string
      */
-    private $sapellido1;
+    private ?string $sapellido1 = null;
     /**
      * apellido2 de Listas
      *
      * @var string
      */
-    private $sapellido2;
+    private ?string $sapellido2 = null;
     /**
      * Nx1 de Listas
      *
      * @var string
      */
-    private $snx1;
+    private ?string $snx1 = null;
     /**
      * Nx2 de Listas
      *
      * @var string
      */
-    private $snx2;
+    private ?string $snx2 = null;
     /**
      * ce_num de Listas
      *
-     * @var integer
+     * @var string|null
      */
-    private $ice_num;
+    private ?string $ice_num = null;
     /**
      * ce_ini de Listas
      *
      * @var integer
      */
-    private $ice_ini;
+    private string|int|null $ice_ini = null;
     /**
      * ce_fin de Listas
      *
      * @var integer
      */
-    private $ice_fin;
+    private string|int|null $ice_fin = null;
     /**
      * ce_lugar de Listas
      *
      * @var string
      */
-    private $sce_lugar;
+    private ?string $sce_lugar = null;
     /**
      * inc de Listas
      *
      * @var string
      */
-    private $sinc;
+    private ?string $sinc = null;
     /**
      * f_inc de Listas
      *
      * @var string date
      */
-    private $df_inc;
+    private ?string $df_inc = null;
 
 
     /* OTROS MÉTODOS  ----------------------------------------------------------*/
-    public function dividirIncorporacion()
+    public function dividirIncorporacion(): void
     {
         $matches = [];
         $subject = $this->getIncorporacion();
@@ -252,7 +227,7 @@ class PersonaBDU
         }
     }
 
-    public function dividirCe()
+    public function dividirCe(): void
     {
         $matches = [];
         $this->ice_num = '';
@@ -279,7 +254,7 @@ class PersonaBDU
         }
     }
 
-    public function sinPrep($apellido)
+    public function sinPrep(string $apellido): string
     {
         /* separar el apellidos completo en espacios */
         $tokens = explode(' ', trim($apellido));
@@ -292,7 +267,7 @@ class PersonaBDU
         $i = 0;
         foreach ($tokens as $token) {
             if ($i == 0) {
-                $_token = strtolower($token ?? '');
+                $_token = strtolower($token);
                 if (in_array($_token, $special_tokens)) {
                     continue;
                 }
@@ -303,7 +278,7 @@ class PersonaBDU
         return trim($names);
     }
 
-    public function dividirNombreCompleto()
+    /** @return array{nombre: string, apellido1: string, apellido2: string} */ public function dividirNombreCompleto(): array
     {
         $Apenom = $this->getApenom();
 
@@ -328,7 +303,7 @@ class PersonaBDU
 
         $prev = "";
         foreach ($tokens as $token) {
-            $_token = strtolower($token ?? '');
+            $_token = strtolower($token);
             if (in_array($_token, $special_tokens)) {
                 $prev .= "$token ";
             }
@@ -392,61 +367,9 @@ class PersonaBDU
 
     /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     */
-    public function setAllAttributes(array $aDatos): static
+    function setNullAllAtributes(): void
     {
-        if (!is_array($aDatos)) {
-            return $this;
-        }
-        if (array_key_exists('identif', $aDatos))
-            $this->setIdentif($aDatos['identif']);
-        if (array_key_exists('apenom', $aDatos))
-            $this->setApenom($aDatos['apenom']);
-        if (array_key_exists('dl', $aDatos))
-            $this->setDl($aDatos['dl']);
-        if (array_key_exists('ctr', $aDatos))
-            $this->setCtr($aDatos['ctr']);
-        if (array_key_exists('lugar_naci', $aDatos))
-            $this->setLugar_Naci($aDatos['lugar_naci']);
-        if (array_key_exists('fecha_naci', $aDatos))
-            $this->setFecha_Naci($aDatos['fecha_naci']);
-        if (array_key_exists('email', $aDatos))
-            $this->setEmail($aDatos['email'] ?? '');
-        if (array_key_exists('tfno_movil', $aDatos))
-            $this->setTfno_Movil($aDatos['tfno_movil'] ?? '');
-        if (array_key_exists('ce', $aDatos))
-            $this->setCe($aDatos['ce'] ?? '');
-        if (array_key_exists('prof_carg', $aDatos))
-            $this->setProfesion_cargo($aDatos['prof_carg'] ?? '');
-        if (array_key_exists('titu_estu', $aDatos))
-            $this->setTitulo_Estudios($aDatos['titu_estu'] ?? '');
-        if (array_key_exists('encargos', $aDatos))
-            $this->setEncargos($aDatos['encargos'] ?? '');
-        if (array_key_exists('incorp', $aDatos))
-            $this->setIncorporacion($aDatos['incorp'] ?? '');
-        if (array_key_exists('pertenece_r', $aDatos))
-            $this->setPertenece_r($aDatos['pertenece_r'] ?? '');
-        if (array_key_exists('camb_fic', $aDatos))
-            $this->setCamb_fic($aDatos['camb_fic'] ?? '');
-        if (array_key_exists('fecha_c_fic', $aDatos))
-            $this->setFecha_c_fic($aDatos['fecha_c_fic']);
-        if (array_key_exists('compartida_con_r', $aDatos))
-            $this->setCompartida_con_r($aDatos['compartida_con_r'] ?? '');
-
-        return $this;
-    }
-
-    /**
-     * Establece a 'empty' el valor de todos los atributos
-     *
-     */
-    function setNullAllAtributes()
-    {
-        $this->setIdentif('');
+        $this->setIdentif(0);
         $this->setApenom('');
         $this->setDl('');
         $this->setCtr('');
@@ -468,124 +391,72 @@ class PersonaBDU
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
-    /**
-     * Recupera el atributo iIdentif de Listas
-     *
-     * @return integer iIdentif
-     */
-    function getIdentif()
+    function getIdentif(): int
     {
         return $this->iIdentif;
     }
 
-    /**
-     * Establece el valor del atributo iIdentif de Listas
-     *
-     * @param integer iIdentif
-     */
-    function setIdentif($iIdentif)
+    function setIdentif(int|string $iIdentif): void
     {
-        $this->iIdentif = $iIdentif;
+        $this->iIdentif = (int)$iIdentif;
     }
 
-    /**
-     * Recupera el atributo sApenom de Listas
-     *
-     * @return string sApenom
-     */
-    function getApenom()
+    function getApenom(): string
     {
         return $this->sApenom;
     }
 
-    /**
-     * Establece el valor del atributo sApenom de Listas
-     *
-     * @param string sApenom
-     */
-    function setApenom($sApenom)
+    function setApenom(string $sApenom): void
     {
         $this->sApenom = $sApenom;
     }
 
-    /**
-     * Recupera el atributo sdl de Listas
-     *
-     * @return string sdl
-     */
-    function getDl()
+    function getDl(): string
     {
         return $this->sdl;
     }
 
-    /**
-     * Establece el valor del atributo sdl de Listas
-     *
-     * @param string sdl
-     */
-    function setDl($sdl)
+    function setDl(string $sdl): void
     {
         $this->sdl = $sdl;
     }
 
-    /**
-     * Recupera el atributo sctr de Listas
-     *
-     * @return string sctr
-     */
-    function getCtr()
+    function getCtr(): string
     {
         return $this->sctr;
     }
 
-    /**
-     * Establece el valor del atributo sdl de Listas
-     *
-     * @param string sctr
-     */
-    function setCtr($sctr)
+    function setCtr(string $sctr): void
     {
         $this->sctr = $sctr;
     }
 
-    /**
-     * Recupera el atributo sLugar_Naci de Listas
-     *
-     * @return string sLugar_Naci
-     */
-    function getLugar_Naci()
+    function getLugar_Naci(): string
     {
         return $this->sLugar_Naci;
     }
 
-    /**
-     * Establece el valor del atributo sLugar_Naci de Listas
-     *
-     * @param string sLugar_Naci
-     */
-    function setLugar_Naci($sLugar_Naci)
+    function setLugar_Naci(string $sLugar_Naci): void
     {
         $this->sLugar_Naci = $sLugar_Naci;
     }
 
-    /**
-     * Recupera el atributo dFecha_Naci de Listas
-     *
-     * @return string|DateTimeLocal
-     */
-    function getFecha_Naci()
+    function getFecha_Naci(): string
     {
         return $this->dFecha_Naci;
     }
 
-    /**
-     * Establece el valor del atributo dFecha_Naci de Listas
-     *
-     * @param null|string|DateTimeLocal dFecha_Naci
-     */
-    function setFecha_Naci($dFecha_Naci)
+    function setFecha_Naci(mixed $dFecha_Naci): void
     {
         if ($dFecha_Naci === null || $dFecha_Naci === '') {
+            $this->dFecha_Naci = '';
+            return;
+        }
+        if ($dFecha_Naci instanceof DateTimeLocal) {
+            $this->dFecha_Naci = $dFecha_Naci->getFromLocal();
+            return;
+        }
+        if (!is_string($dFecha_Naci)) {
             $this->dFecha_Naci = '';
             return;
         }
@@ -594,199 +465,127 @@ class PersonaBDU
         $this->dFecha_Naci = $new_fecha;
     }
 
-    /**
-     * Recupera el atributo sEmail de Listas
-     *
-     * @return string sEmail
-     */
-    function getEmail()
+    function getEmail(): string
     {
         return $this->sEmail;
     }
 
-    /**
-     * Establece el valor del atributo sEmail de Listas
-     *
-     * @param string sEmail
-     */
-    function setEmail($sEmail)
+    function setEmail(string $sEmail): void
     {
         $this->sEmail = $sEmail;
     }
 
-    /**
-     * Recupera el atributo sTfno_Movil de Listas
-     *
-     * @return string sTfno_Movil
-     */
-    function getTfno_Movil()
+    function getTfno_Movil(): string
     {
         return $this->sTfno_Movil;
     }
 
-    /**
-     * Establece el valor del atributo sTfno_Movil de Listas
-     *
-     * @param string sTfno_Movil
-     */
-    function setTfno_Movil($sTfno_Movil)
+    function setTfno_Movil(string $sTfno_Movil): void
     {
         $this->sTfno_Movil = $sTfno_Movil;
     }
 
-    /**
-     * Recupera el atributo sCe de Listas
-     *
-     * @return string sCe
-     */
-    function getCe()
+    function getCe(): string
     {
         return $this->sCe;
     }
 
-    /**
-     * Establece el valor del atributo sCe de Listas
-     *
-     * @param string sCe
-     */
-    function setCe($sCe)
+    function setCe(string $sCe): void
     {
         $this->sCe = $sCe;
     }
 
-    /**
-     * @return string
-     */
-    public function getProfesion_cargo()
+    public function getProfesion_cargo(): string
     {
         return $this->sProfesion_cargo;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitulo_Estudios()
+    public function getTitulo_Estudios(): string
     {
         return $this->sTitulo_Estudios;
     }
 
-    /**
-     * @return string
-     */
-    public function getEncargos()
+    public function getEncargos(): string
     {
         return $this->sEncargos;
     }
 
-    /**
-     * @return string
-     */
-    public function getIncorporacion()
+    public function getIncorporacion(): string
     {
         return $this->sIncorporacion;
     }
 
 
-    /**
-     * @param string $sProfesion_cargo
-     */
-    public function setProfesion_cargo(string $sProfesion_cargo)
+    public function setProfesion_cargo(string $sProfesion_cargo): void
     {
         $this->sProfesion_cargo = $sProfesion_cargo;
     }
 
-    /**
-     * @param string $sTitulo_Estudios
-     */
-    public function setTitulo_Estudios(string $sTitulo_Estudios)
+    public function setTitulo_Estudios(string $sTitulo_Estudios): void
     {
         $this->sTitulo_Estudios = $sTitulo_Estudios;
     }
 
-    /**
-     * @param string $sEncargos
-     */
-    public function setEncargos(string $sEncargos)
+    public function setEncargos(string $sEncargos): void
     {
         $this->sEncargos = $sEncargos;
     }
 
-    /**
-     * @param string $sIncorporacion
-     */
-    public function setIncorporacion(string $sIncorporacion)
+    public function setIncorporacion(string $sIncorporacion): void
     {
         $this->sIncorporacion = $sIncorporacion;
     }
 
 
-    /**
-     * @return string
-     */
-    public function getPertenece_r()
+    public function getPertenece_r(): string
     {
         return $this->spertenece_r;
     }
 
-    /**
-     * @return string
-     */
-    public function getCamb_fic()
+    public function getCamb_fic(): string
     {
         return $this->scamb_fic;
     }
 
-    /**
-     * @return DateTimeLocal
-     */
-    public function getFecha_c_fic()
+    public function getFecha_c_fic(): DateTimeLocal|NullDateTimeLocal|string
     {
         return $this->dfecha_c_fic;
     }
 
-    /**
-     * @param string $spertenece_r
-     */
-    public function setPertenece_r(string $spertenece_r)
+    public function setPertenece_r(string $spertenece_r): void
     {
         $this->spertenece_r = $spertenece_r;
     }
 
-    /**
-     * @param string $scamb_fic
-     */
-    public function setCamb_fic(string $scamb_fic)
+    public function setCamb_fic(string $scamb_fic): void
     {
         $this->scamb_fic = $scamb_fic;
     }
 
-    /**
-     * @param null|string|DateTimeLocal $dfecha_c_fic
-     */
-    public function setFecha_c_fic($dfecha_c_fic)
+    public function setFecha_c_fic(mixed $dfecha_c_fic): void
     {
-        if (empty($dfecha_c_fic)) {
+        if ($dfecha_c_fic === null || $dfecha_c_fic === '') {
             $this->dfecha_c_fic = new NullDateTimeLocal();
+            return;
         }
-        else {
-            $oFecha = new DateTime($dfecha_c_fic);
-            $new_fecha = date_format($oFecha, 'j/m/Y');
-            $this->dfecha_c_fic = $new_fecha;
+        if ($dfecha_c_fic instanceof DateTimeLocal) {
+            $this->dfecha_c_fic = $dfecha_c_fic;
+            return;
         }
+        if (!is_string($dfecha_c_fic)) {
+            $this->dfecha_c_fic = new NullDateTimeLocal();
+            return;
+        }
+        $vo = DateTimeLocal::createFromLocal($dfecha_c_fic);
+        $this->dfecha_c_fic = $vo instanceof DateTimeLocal ? $vo : new NullDateTimeLocal();
     }
 
-    /**
-     * @return string
-     */
-    public function getCompartida_con_r()
+    public function getCompartida_con_r(): string
     {
         return $this->scompartida_con_r;
     }
 
-    /**
-     * @param string $spertenece_r
-     */
-    public function setCompartida_con_r($scompartida_con_r)
+    public function setCompartida_con_r(string $scompartida_con_r): void
     {
         $this->scompartida_con_r = $scompartida_con_r;
     }
@@ -794,132 +593,118 @@ class PersonaBDU
 
     /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 
-    public function getNombre()
+    public function getNombre(): string
     {
-        if (!isset($this->snombre)) {
+        if ($this->snombre === null) {
             $this->dividirNombreCompleto();
         }
-        return $this->snombre;
+        return $this->snombre ?? '';
     }
 
-    public function getApellido1_sinprep()
+    public function getApellido1_sinprep(): string
     {
         return $this->sinPrep($this->getApellido1());
     }
 
-    public function getApellido1()
+    public function getApellido1(): string
     {
-        if (!isset($this->sapellido1)) {
+        if ($this->sapellido1 === null) {
             $this->dividirNombreCompleto();
         }
-        return $this->sapellido1;
+        return $this->sapellido1 ?? '';
     }
 
-    public function getApellido2()
+    public function getApellido2(): string
     {
-        if (!isset($this->sapellido2)) {
+        if ($this->sapellido2 === null) {
             $this->dividirNombreCompleto();
         }
-        return $this->sapellido2;
+        return $this->sapellido2 ?? '';
     }
 
-    public function getApellido2_sinprep()
+    public function getApellido2_sinprep(): string
     {
         return $this->sinPrep($this->getApellido2());
     }
 
-    public function getCe_num()
+    public function getCe_num(): string|int
     {
-        if (!isset($this->ice_num)) {
+        if ($this->ice_num === null) {
             $this->dividirCe();
         }
-        return $this->ice_num;
+        return $this->ice_num ?? '';
     }
 
-    public function getCe_lugar()
+    public function getCe_lugar(): string
     {
-        if (!isset($this->sce_lugar)) {
+        if ($this->sce_lugar === null) {
             $this->dividirCe();
         }
-        return $this->sce_lugar;
+        return $this->sce_lugar ?? '';
     }
 
-    public function getCe_ini()
+    public function getCe_ini(): int|string
     {
-        if (!isset($this->ice_ini)) {
+        if ($this->ice_ini === null) {
             $this->dividirCe();
         }
-        if (!empty($this->ice_ini)) {
-            if ($this->ice_ini > 30) {
-                $this->ice_ini = $this->ice_ini + 1900;
-            }
-            else {
-                $this->ice_ini = $this->ice_ini + 2000;
+        if ($this->ice_ini !== null && $this->ice_ini !== '') {
+            $val = is_numeric($this->ice_ini) ? (int)$this->ice_ini : 0;
+            if ($val > 30) {
+                $this->ice_ini = $val + 1900;
+            } else {
+                $this->ice_ini = $val + 2000;
             }
         }
-        return $this->ice_ini;
+        return $this->ice_ini ?? '';
     }
 
-    public function getCe_fin()
+    public function getCe_fin(): int|string
     {
-        if (!isset($this->ice_fin)) {
+        if ($this->ice_fin === null) {
             $this->dividirCe();
         }
-        if (!empty($this->ice_fin)) {
-            if ($this->ice_fin > 60) {
-                $this->ice_fin = $this->ice_fin + 1900;
-            }
-            else {
-                $this->ice_fin = $this->ice_fin + 2000;
+        if ($this->ice_fin !== null && $this->ice_fin !== '') {
+            $val = is_numeric($this->ice_fin) ? (int)$this->ice_fin : 0;
+            if ($val > 60) {
+                $this->ice_fin = $val + 1900;
+            } else {
+                $this->ice_fin = $val + 2000;
             }
         }
-        return $this->ice_fin;
+        return $this->ice_fin ?? '';
     }
 
-    public function getInc()
+    public function getInc(): string
     {
-        if (!isset($this->sinc)) {
+        if ($this->sinc === null) {
             $this->dividirIncorporacion();
         }
-        return $this->sinc;
+        return $this->sinc ?? '';
     }
 
-    /**
-     *
-     * @return string fecha iso
-     */
-    public function getF_inc()
+    public function getF_inc(): string
     {
-        if (!isset($this->df_inc)) {
+        if ($this->df_inc === null) {
             $this->dividirIncorporacion();
         }
-        return $this->df_inc;
+        return $this->df_inc ?? '';
     }
 
-    /**
-     * Recupera el atributo snx1 de PersonaListas
-     *
-     * @return string snx1
-     */
-    function getNx1()
+    function getNx1(): string
     {
-        if (!isset($this->snx1)) {
+        if ($this->snx1 === null) {
             $this->dividirNombreCompleto();
         }
-        return $this->snx1;
+        return $this->snx1 ?? '';
     }
 
-    /**
-     * Recupera el atributo snx2 de PersonaListas
-     *
-     * @return string snx2
-     */
-    function getNx2()
+    function getNx2(): string
     {
-        if (!isset($this->snx2)) {
+        if ($this->snx2 === null) {
             $this->dividirNombreCompleto();
         }
-        return $this->snx2;
+        return $this->snx2 ?? '';
     }
 
 }

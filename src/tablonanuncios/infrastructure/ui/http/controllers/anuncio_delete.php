@@ -1,40 +1,22 @@
 <?php
 
-use Illuminate\Http\JsonResponse;
-use src\shared\domain\value_objects\DateTimeLocal;
-use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
-use src\tablonanuncios\domain\value_objects\AnuncioId;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
 
-// El delete es via POST!!!";
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
+use src\tablonanuncios\application\AnuncioDelete;
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+/** @var AnuncioDelete $useCase */
+$useCase = DependencyResolver::get(AnuncioDelete::class);
 
-if (!empty($a_sel)) { //vengo de un checkbox
-    $Quuid_item = (string)strtok($a_sel[0], "#");
+$a_sel = input_string_list($_POST, 'sel');
+if ($a_sel !== []) {
+    $Quuid_item = (string) strtok($a_sel[0], '#');
 } else {
-    $Quuid_item = (string)filter_input(INPUT_POST, 'uuid_item');
+    $Quuid_item = input_string($_POST, 'uuid_item');
 }
 
-$error_txt = '';
-if (!empty($Quuid_item)) {
-    $uuid_item = new AnuncioId($Quuid_item);
-    $AnuncioRepository = $GLOBALS['container']->get(AnuncioRepositoryInterface::class);
-    $oAnuncio = $AnuncioRepository->findById($uuid_item);
-    if (!empty($oAnuncio)) {
-        $oAnuncio->setT_eliminado(new DateTimeLocal());
-        if ($AnuncioRepository->Guardar($oAnuncio) === FALSE) {
-            $error_txt .= _("error al borrar el anuncio");
-        }
-    }
-} else {
-    $error_txt = _("No se encuentra el anuncio");
-}
+$error_txt = $useCase->execute($Quuid_item);
 
-if (!empty($error_txt)) {
-    $jsondata['success'] = FALSE;
-    $jsondata['mensaje'] = $error_txt;
-} else {
-    $jsondata['success'] = TRUE;
-}
-(new JsonResponse($jsondata))->send();
-exit();
+ContestarJson::enviar($error_txt, 'ok');

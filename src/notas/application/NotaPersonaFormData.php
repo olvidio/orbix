@@ -2,6 +2,9 @@
 
 namespace src\notas\application;
 
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -10,6 +13,7 @@ use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
  * Prepara los datos que necesita `form_notas_de_una_persona.phtml` para pintar el form
@@ -23,51 +27,70 @@ use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
  */
 final class NotaPersonaFormData
 {
-    /**
-     * @param array $input  claves: id_pau, id_asignatura_real, sel
-     * @return array Datos listos para `form_notas_de_una_persona.phtml`.
-     */
-    public static function execute(array $input): array
-    {
-        $id_pau = (int)($input['id_pau'] ?? 0);
-        $id_asignatura_real = self::resolveAsignaturaReal($input);
 
-        if (!empty($id_asignatura_real)) {
-            return self::prepareEditar($id_pau, (int)$id_asignatura_real);
-        }
-
-        return self::prepareNuevo($id_pau);
+    public function __construct(
+        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly ActividadAllRepositoryInterface $actividadAllRepository,
+        private readonly ProfesorStgrRepositoryInterface $rofesorStgrRepository,
+    ) {
     }
 
-    private static function resolveAsignaturaReal(array $input): string
+    /**
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
+     */
+    public function execute(array $input): array
+    {
+        $id_pau = input_int($input, 'id_pau');
+        $id_asignatura_real = $this->resolveAsignaturaReal($input);
+
+        if ($id_asignatura_real !== '') {
+            return $this->prepareEditar($id_pau, (int) $id_asignatura_real);
+        }
+
+        return $this->prepareNuevo($id_pau);
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    private function resolveAsignaturaReal(array $input): string
     {
         $sel = (array)($input['sel'] ?? []);
-        $pau = (string)($input['pau'] ?? '');
-        if (!empty($sel) && $pau === 'p') {
-            strtok($sel[0], '#'); // id_nivel_real (descartado)
-            return (string)strtok('#');
+        $pau = input_string($input, 'pau');
+        if ($sel !== [] && $pau === 'p') {
+            $sel0 = $sel[0];
+            if (is_string($sel0)) {
+                strtok($sel0, '#');
+                $part = strtok('#');
+                return is_string($part) ? $part : '';
+            }
         }
-        $mod = (string)($input['mod'] ?? '');
-        if (!empty($mod) && $mod !== 'nuevo') {
-            return (string)($input['id_asignatura_real'] ?? '');
+        $mod = input_string($input, 'mod');
+        if ($mod !== '' && $mod !== 'nuevo') {
+            return input_string($input, 'id_asignatura_real');
         }
         return '';
     }
 
-    private static function prepareEditar(int $id_pau, int $id_asignatura_real): array
+    /**
+     * @return array<string, mixed>
+     */
+    private function prepareEditar(int $id_pau, int $id_asignatura_real): array
     {
-        $PersonaNotaRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        $PersonaNotaRepository = $this->personaNotaRepository;
         $cPersonaNotas = $PersonaNotaRepository->getPersonaNotas([
             '_ordre' => 'tipo_acta DESC',
             'id_nom' => $id_pau,
             'id_asignatura' => $id_asignatura_real,
         ]);
-        if (empty($cPersonaNotas)) {
+        if ($cPersonaNotas === []) {
             throw new \RuntimeException(_("No se encuentra la nota a editar"));
         }
         $oPersonaNota = $cPersonaNotas[0];
 
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $AsignaturaRepository = $this->asignaturaRepository;
         $oAsignatura = $AsignaturaRepository->findById($id_asignatura_real);
         if ($oAsignatura === null) {
             throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura_real));
@@ -81,7 +104,7 @@ final class NotaPersonaFormData
 
         return [
             'mod' => 'editar',
-            'id_asignatura_real' => (string)$id_asignatura_real,
+            'id_asignatura_real' => (string) $id_asignatura_real,
             'id_nivel' => $id_nivel,
             'nombre_corto' => $oAsignatura->getNombre_corto(),
             'id_situacion' => $oPersonaNota->getId_situacion(),
@@ -89,29 +112,32 @@ final class NotaPersonaFormData
             'nota_max' => $oPersonaNota->getNota_max(),
             'acta' => $oPersonaNota->getActa(),
             'tipo_acta' => $oPersonaNota->getTipo_acta(),
-            'f_acta' => $oF_acta->getFromLocal(),
-            'f_acta_iso' => $oF_acta->format('Y-m-d'),
+            'f_acta' => $oF_acta instanceof DateTimeLocal ? $oF_acta->getFromLocal() : '',
+            'f_acta_iso' => $oF_acta instanceof DateTimeLocal ? $oF_acta->format('Y-m-d') : '',
             'preceptor' => $oPersonaNota->isPreceptor(),
             'id_preceptor' => $oPersonaNota->getId_preceptor(),
             'detalle' => $oPersonaNota->getDetalle(),
             'epoca' => $oPersonaNota->getEpoca(),
             'id_activ' => $id_activ,
-            'nom_activ' => self::resolveNomActiv($id_activ),
-            'profesores' => self::getProfesoresDl(),
+            'nom_activ' => $this->resolveNomActiv($id_activ),
+            'profesores' => $this->getProfesoresDl(),
             'asignaturas_faltan' => [],
         ];
     }
 
-    private static function prepareNuevo(int $id_pau): array
+    /**
+     * @return array<string, mixed>
+     */
+    private function prepareNuevo(int $id_pau): array
     {
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $AsignaturaRepository = $this->asignaturaRepository;
 
         $cAsignaturas = $AsignaturaRepository->getAsignaturas(
             ['active' => 't', 'id_nivel' => 3000, '_ordre' => 'id_nivel'],
             ['id_nivel' => '<']
         );
 
-        $PersonaNotaRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        $PersonaNotaRepository = $this->personaNotaRepository;
         $aSuperadas = NotaSituacion::getArraySuperadas();
         $cSuperadas = $PersonaNotaRepository->getPersonaNotas(
             [
@@ -163,19 +189,22 @@ final class NotaPersonaFormData
         ];
     }
 
-    private static function resolveNomActiv(?int $id_activ): string
+    private function resolveNomActiv(?int $id_activ): string
     {
-        if (empty($id_activ)) {
+        if ($id_activ === null || $id_activ === 0) {
             return '';
         }
-        $repo = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $repo = $this->actividadAllRepository;
         $oActividad = $repo->findById($id_activ);
         return $oActividad?->getNom_activ() ?? '';
     }
 
-    private static function getProfesoresDl(): array
+    /**
+     * @return array<int, string>
+     */
+    private function getProfesoresDl(): array
     {
-        $repo = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+        $repo = $this->rofesorStgrRepository;
         $cProfesores = $repo->getProfesoresStgr();
         $aProfesores = [];
         foreach ($cProfesores as $oProfesor) {
@@ -247,11 +276,12 @@ final class NotaPersonaFormData
     /**
      * Devuelve los niveles de las opcionales genericas (id_sector = 1)
      * para la condicion JS `fnjs_cmb_opcional`.
+     *
      * @return array{condicion_js:string, op_genericas_json:string}
      */
-    public static function opcionalesGenericasHelpers(): array
+    public function opcionalesGenericasHelpers(): array
     {
-        $repo = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $repo = $this->asignaturaRepository;
         $cGenericas = $repo->getAsignaturas(
             ['active' => 't', 'id_sector' => 1, 'id_nivel' => 3000, '_ordre' => 'nombre_corto'],
             ['id_nivel' => '<']

@@ -1,21 +1,26 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use src\certificados\application\CertificadoEmitidoGuardarMessages;
+use src\certificados\application\support\CertificadosSession;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
-$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-$Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
-$Qpdf = $_POST['pdf'];
+/** @var CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository */
+$certificadoEmitidoRepository = DependencyResolver::get(CertificadoEmitidoRepositoryInterface::class);
 
-$pdf_content = base64_decode($Qpdf);
-$certificado = base64_decode($Qcertificado);
+$Qid_item = input_int($_POST, 'id_item');
+$Qid_nom = input_int($_POST, 'id_nom');
+$Qcertificado = input_string($_POST, 'certificado');
+$Qpdf = input_string($_POST, 'pdf');
 
+$pdf_content = base64_decode($Qpdf, true);
+$certificado = base64_decode($Qcertificado, true);
 $error_txt = '';
-
-$certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
 
 $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
 if ($oCertificadoEmitido === null) {
@@ -25,11 +30,11 @@ if ($oCertificadoEmitido === null) {
 }
 
 $oCertificadoEmitido->setId_nom($Qid_nom);
-$oCertificadoEmitido->setDocumento($pdf_content);
+$oCertificadoEmitido->setDocumento(is_string($pdf_content) ? $pdf_content : null);
 try {
     if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === false) {
         $error_txt .= CertificadoEmitidoGuardarMessages::fromDatabaseError(
-            (string)$certificadoEmitidoRepository->getErrorTxt()
+            $certificadoEmitidoRepository->getErrorTxt(),
         );
     }
 } catch (\Throwable $e) {
@@ -37,20 +42,19 @@ try {
 }
 
 if ($error_txt === '') {
-    // también hay que guardarlo en las notas afectadas
     $oF_certificado = $oCertificadoEmitido->getF_certificado();
-    $esquema_region_stgr = $_SESSION['session_auth']['esquema'] ?? '';
+    $esquema_region_stgr = CertificadosSession::esquemaRegionStgr();
     try {
-        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(
+        /** @var PersonaNotaOtraRegionStgrRepositoryInterface $personaNotaRepo */
+        $personaNotaRepo = DependencyResolver::make(
             PersonaNotaOtraRegionStgrRepositoryInterface::class,
-            ['esquema_region_stgr' => $esquema_region_stgr]
+            ['esquema_region_stgr' => $esquema_region_stgr],
         );
-        $PersonaNotaOtraRegionStgrRepository->addCertificado($Qid_nom, $certificado, $oF_certificado);
+        $personaNotaRepo->addCertificado($Qid_nom, is_string($certificado) ? $certificado : '', $oF_certificado);
     } catch (\Throwable $e) {
         $error_txt .= $e->getMessage();
     }
 }
 
 $data = ['mensaje' => 'ok', 'item' => $Qid_item];
-
 ContestarJson::enviar($error_txt, $data);

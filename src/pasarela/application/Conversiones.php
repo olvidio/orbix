@@ -3,6 +3,7 @@
 namespace src\pasarela\application;
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\entity\TipoDeActividad;
 use src\actividades\domain\entity\TiposActividades;
 use src\pasarela\domain\Activacion;
 use src\pasarela\domain\ContribucionNoDuerme;
@@ -13,206 +14,231 @@ use src\pasarela\domain\Nombre;
  * Compone, para cada `id_tipo_activ`, los valores derivados de los parámetros de
  * pasarela (activacion, contribuciones, nombre, perfil, tipo): mezcla los defaults
  * con las excepciones declaradas en `pasarela_dl`.
- *
- * Es código de orquestación entre domain de pasarela y el repositorio de tipos
- * de actividades; vive en `application/` para que `domain/` siga sin conocer
- * otras partes de la aplicación.
  */
 class Conversiones
 {
-
-    /**
-     * colección de objetos TipoActividad
-     */
+    /** @var list<TipoDeActividad> */
     private array $c_tipos_activ = [];
 
-    /**
-     * array con los nombres (cuadrienio, bienio...) para cada id_tipo actividad
-     */
+    /** @var array<int|string, string> */
     private array $a_tipos_nom = [];
 
-    /**
-     * array con los nombres tipo actividad (crt, ca, cv...) para cada id_tipo actividad
-     * (1 digito)
-     */
+    /** @var array<int|string, string> */
     private array $a_tipos_activ1 = [];
 
+    /** @var array<int|string, string> */
     private array $a_tipos_asistentes = [];
+
+    /** @var array<int|string, int|string> */
     private array $a_tipos_activacion = [];
+
+    /** @var array<int|string, int> */
     private array $a_tipos_contribucion_no_duerme = [];
+
+    /** @var array<int|string, int> */
     private array $a_tipos_contribucion_reserva = [];
 
+    public function __construct(
+        private readonly TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        private readonly Activacion $activacion,
+        private readonly ContribucionNoDuerme $contribucionNoDuerme,
+        private readonly ContribucionReserva $contribucionReserva,
+        private readonly Nombre $nombre,
+    ) {
+    }
+
+    /** @return array<int|string, int> */
     public function getArrayContribucionReserva(): array
     {
-        $oContribucionReserva = new ContribucionReserva();
-        $default = $oContribucionReserva->getDefault();
-        $a_excepciones = $oContribucionReserva->getExcepciones();
+        $default = $this->contribucionReserva->getDefault();
+        $a_excepciones = $this->contribucionReserva->getExcepciones();
         $a_tipos = $this->getArrayTipos_contribucion_reserva($default);
 
         return array_replace($a_tipos, $a_excepciones);
     }
 
+    /** @return array<int|string, int> */
     public function getArrayContribucionNoDuerme(): array
     {
-        $oContribucionNoDuerme = new ContribucionNoDuerme();
-        $default = $oContribucionNoDuerme->getDefault();
-        $a_excepciones = $oContribucionNoDuerme->getExcepciones();
+        $default = $this->contribucionNoDuerme->getDefault();
+        $a_excepciones = $this->contribucionNoDuerme->getExcepciones();
         $a_tipos = $this->getArrayTipos_contribucion_no_duerme($default);
 
         return array_replace($a_tipos, $a_excepciones);
     }
 
+    /** @return array<int|string, int|string> */
     public function getArrayActivacion(): array
     {
-        $oActivacion = new Activacion();
-        $default = $oActivacion->getDefault();
-        $a_excepciones = $oActivacion->getExcepciones();
+        $default = $this->activacion->getDefault();
+        $a_excepciones = $this->activacion->getExcepciones();
         $a_tipos = $this->getArrayTipos_activacion($default);
 
         return array_replace($a_tipos, $a_excepciones);
     }
 
+    /** @return array<int|string, string> */
     public function getArrayPerfil(): array
     {
         return $this->getArrayTipos_asistentes();
     }
 
+    /** @return array<int|string, string> */
     public function getArrayNombre(): array
     {
         $a_tipos = $this->getArrayTipos_nombre();
-        $oNombre = new Nombre();
-        $a_excepciones = $oNombre->getExcepciones();
+        $a_excepciones = $this->nombre->getExcepciones();
 
         return array_replace($a_tipos, $a_excepciones);
     }
 
+    /** @return array<int|string, string> */
     public function getArrayTipo(): array
     {
         return $this->getArrayTipos_actividad();
     }
 
-    private function getArrayTipos_contribucion_reserva($default): array
+    /**
+     * @param int|null $default
+     * @return array<int|string, int>
+     */
+    private function getArrayTipos_contribucion_reserva(?int $default): array
     {
         $this->getcTiposDeActividades();
-        if (empty($this->a_tipos_contribucion_reserva)) {
+        if ($this->a_tipos_contribucion_reserva === []) {
             $a_tipos = [];
             foreach ($this->c_tipos_activ as $oTipo) {
                 $id_tipo_activ = $oTipo->getId_tipo_activ();
-                $a_tipos[$id_tipo_activ] = $default;
+                $a_tipos[$id_tipo_activ] = $default ?? 0;
             }
             $this->a_tipos_contribucion_reserva = $a_tipos;
         }
+
         return $this->a_tipos_contribucion_reserva;
     }
 
-    private function getArrayTipos_contribucion_no_duerme($default): array
+    /**
+     * @param int|null $default
+     * @return array<int|string, int>
+     */
+    private function getArrayTipos_contribucion_no_duerme(?int $default): array
     {
         $this->getcTiposDeActividades();
-        if (empty($this->a_tipos_contribucion_no_duerme)) {
+        if ($this->a_tipos_contribucion_no_duerme === []) {
             $a_tipos = [];
             foreach ($this->c_tipos_activ as $oTipo) {
                 $id_tipo_activ = $oTipo->getId_tipo_activ();
-                $a_tipos[$id_tipo_activ] = $default;
+                $a_tipos[$id_tipo_activ] = $default ?? 0;
             }
             $this->a_tipos_contribucion_no_duerme = $a_tipos;
         }
+
         return $this->a_tipos_contribucion_no_duerme;
     }
 
-    private function getArrayTipos_activacion($default): array
+    /**
+     * @param int|string|null $default
+     * @return array<int|string, int|string>
+     */
+    private function getArrayTipos_activacion(int|string|null $default): array
     {
         $this->getcTiposDeActividades();
-        if (empty($this->a_tipos_activacion)) {
+        if ($this->a_tipos_activacion === []) {
             $a_tipos = [];
             foreach ($this->c_tipos_activ as $oTipo) {
                 $id_tipo_activ = $oTipo->getId_tipo_activ();
-                $a_tipos[$id_tipo_activ] = $default;
+                $a_tipos[$id_tipo_activ] = $default ?? '';
             }
             $this->a_tipos_activacion = $a_tipos;
         }
+
         return $this->a_tipos_activacion;
     }
 
-
+    /** @return array<int|string, string> */
     private function getArrayTipos_asistentes(): array
     {
         $this->getcTiposDeActividades();
-        if (empty($this->a_tipos_asistentes)) {
+        if ($this->a_tipos_asistentes === []) {
             $a_tipos = [];
             foreach ($this->c_tipos_activ as $oTipo) {
                 $id_tipo_activ = $oTipo->getId_tipo_activ();
-                $oTiposActividades = new TiposActividades($id_tipo_activ, TRUE);
+                $oTiposActividades = new TiposActividades($id_tipo_activ, true);
                 switch ($oTiposActividades->getAsistentesText()) {
-                    case 'sg';
-                        $a_tipos[$id_tipo_activ] = _("CP/AMIG");
+                    case 'sg':
+                        $a_tipos[$id_tipo_activ] = _('CP/AMIG');
                         break;
-                    case 'sss+';
-                        $a_tipos[$id_tipo_activ] = _("SACD");
+                    case 'sss+':
+                        $a_tipos[$id_tipo_activ] = _('SACD');
                         break;
-                    case 'sr';
-                    case 'sr-nax';
-                    case 'sr-agd';
-                        $a_tipos[$id_tipo_activ] = _("SR");
+                    case 'sr':
+                    case 'sr-nax':
+                    case 'sr-agd':
+                        $a_tipos[$id_tipo_activ] = _('SR');
                         $nom_asistentes = $oTiposActividades->getActividad2DigitosText();
-                        if (strpos($nom_asistentes, 'univ') !== FALSE) {
-                            $a_tipos[$id_tipo_activ] = _("SR-UNIV");
+                        if (strpos($nom_asistentes, 'univ') !== false) {
+                            $a_tipos[$id_tipo_activ] = _('SR-UNIV');
                         }
-                        if (strpos($nom_asistentes, 'bach') !== FALSE) {
-                            $a_tipos[$id_tipo_activ] = _("SR-BACH");
+                        if (strpos($nom_asistentes, 'bach') !== false) {
+                            $a_tipos[$id_tipo_activ] = _('SR-BACH');
                         }
                         break;
                     default:
-                        $a_tipos[$id_tipo_activ] = strtoupper($oTiposActividades->getAsistentesText() ?? '');
+                        $a_tipos[$id_tipo_activ] = strtoupper($oTiposActividades->getAsistentesText());
                 }
             }
             $this->a_tipos_asistentes = $a_tipos;
         }
+
         return $this->a_tipos_asistentes;
     }
 
+    /** @return array<int|string, string> */
     private function getArrayTipos_actividad(): array
     {
         $this->getcTiposDeActividades();
-        if (empty($this->a_tipos_activ1)) {
+        if ($this->a_tipos_activ1 === []) {
             $a_tipos = [];
             foreach ($this->c_tipos_activ as $oTipo) {
                 $id_tipo_activ = $oTipo->getId_tipo_activ();
                 $oTiposActividades = new TiposActividades($id_tipo_activ);
                 if ($oTiposActividades->getActividadText() === 'crt') {
-                    $a_tipos[$id_tipo_activ] = _("curso retiro");
+                    $a_tipos[$id_tipo_activ] = _('curso retiro');
                 } else {
-                    $a_tipos[$id_tipo_activ] = _("convivencia");
+                    $a_tipos[$id_tipo_activ] = _('convivencia');
                 }
             }
             $this->a_tipos_activ1 = $a_tipos;
         }
+
         return $this->a_tipos_activ1;
     }
 
+    /** @return array<int|string, string> */
     private function getArrayTipos_nombre(): array
     {
         $this->getcTiposDeActividades();
-        if (empty($this->a_tipos_nom)) {
+        if ($this->a_tipos_nom === []) {
             $a_tipos = [];
             foreach ($this->c_tipos_activ as $oTipo) {
                 $id_tipo_activ = $oTipo->getId_tipo_activ();
                 $oTiposActividades = new TiposActividades($id_tipo_activ);
-
                 $a_tipos[$id_tipo_activ] = $oTiposActividades->getNomPasarela();
             }
             $this->a_tipos_nom = $a_tipos;
         }
+
         return $this->a_tipos_nom;
     }
 
+    /** @return list<TipoDeActividad> */
     private function getcTiposDeActividades(): array
     {
-        if (empty($this->c_tipos_activ)) {
+        if ($this->c_tipos_activ === []) {
             $aWhere = ['_ordre' => 'id_tipo_activ'];
-            $TipoDeActividadRepository =  $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-            $cTiposDeActividades = $TipoDeActividadRepository->getTiposDeActividades($aWhere);
-            $this->c_tipos_activ = $cTiposDeActividades;
+            $this->c_tipos_activ = $this->tipoDeActividadRepository->getTiposDeActividades($aWhere);
         }
+
         return $this->c_tipos_activ;
     }
 }

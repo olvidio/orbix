@@ -4,32 +4,28 @@ namespace src\dbextern\domain;
 
 use DateTimeInterface;
 use PDO;
+use RuntimeException;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\GlobalPdo;
 
 class CopiarBDU
 {
-    private object $oDbU;
-    private string $tabla_bdu;
+    private PDO $oDbU;
+    private PDO $oDbl;
 
-    private object $oDbl;
-
-    function __construct()
+    public function __construct()
     {
-        if (!empty($GLOBALS['oDBListas']) && $GLOBALS['oDBListas'] === 'error') {
+        try {
+            $this->oDbU = GlobalPdo::get('oDBListas');
+        } catch (RuntimeException) {
             exit(_("no se puede conectar con la base de datos de la BDU"));
         }
-        $this->oDbU = $GLOBALS['oDBListas'];
-        $this->oDbl = $GLOBALS['oDBP'];
-
-        $this->tabla_bdu = 'dbo.q_Aux_Dl';
+        $this->oDbl = GlobalPdo::get('oDBP');
     }
 
-    public function crearTablaTmp()
+    public function crearTablaTmp(): bool
     {
-        $dl = ConfigGlobal::mi_dele();
-        $usuario = ConfigGlobal::mi_usuario();
-        //$tabla = 'tmp_bdu_' . $dl . '_' . $usuario;
         $tabla = 'tmp_bdu';
 
         $sqlDelete = "TRUNCATE TABLE $tabla";
@@ -63,42 +59,52 @@ class CopiarBDU
         $nom_campos_select = implode(",", $campos);
         $nom_campos = "(" . $nom_campos_select . ")";
         $valores = "(:" . implode(",:", $campos) . ")";
-        if (($oDblSt = $this->oDbl->prepare("INSERT INTO $tabla $nom_campos VALUES $valores")) === false) {
-            $sClauError = 'ActividadDl.insertar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($this->oDbl, $sClauError, __LINE__, __FILE__);
+        $oDblSt = $this->oDbl->prepare("INSERT INTO $tabla $nom_campos VALUES $valores");
+        if ($oDblSt === false) {
             return false;
         }
-        // llenar:
         $fecha = new DateTimeLocal();
         $sQuery = "SELECT $nom_campos_select FROM dbo.q_dl_Estudios_b";
         $stmt = $this->oDbU->query($sQuery);
+        if ($stmt === false) {
+            return false;
+        }
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         foreach ($stmt as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
             $oDblSt->execute($aDatos);
         }
 
-        // añadir la fecha en que se ha realizado:
         $fecha_iso = $fecha->format(DateTimeInterface::ATOM);
         $sqlTime = "INSERT INTO $tabla (identif, apenom) VALUES ('1111' , '$fecha_iso');";
         $this->oDbl->query($sqlTime);
+
+        return true;
     }
 
-    public function ultimaActualizacion()
+    public function ultimaActualizacion(): string
     {
         $tabla = 'tmp_bdu';
 
         $sqlTime = "SELECT apenom FROM $tabla WHERE identif = '1111';";
         $sth = $this->oDbl->prepare($sqlTime);
+        if ($sth === false) {
+            return (int)date('Y') - 5 . '-01-01T00:00:00+00:00';
+        }
         $sth->execute();
         $fecha_iso = $sth->fetchColumn();
         if ($fecha_iso === false) {
-            $fecha_iso = (int)date('Y') - 5 . '-01-01T00:00:00+00:00'; // algo (5años para obligar a ejecutar la actualización)
+            $fecha_iso = (int)date('Y') - 5 . '-01-01T00:00:00+00:00';
         }
 
-        $Fecha = DateTimeLocal::createFromFormat(DateTimeInterface::ATOM, $fecha_iso);
+        $Fecha = DateTimeLocal::createFromFormat(DateTimeInterface::ATOM, (string)$fecha_iso);
+        if ($Fecha === false) {
+            return (int)date('Y') - 5 . '-01-01T00:00:00+00:00';
+        }
 
         return $Fecha->getFromLocalHora();
     }
-
 }

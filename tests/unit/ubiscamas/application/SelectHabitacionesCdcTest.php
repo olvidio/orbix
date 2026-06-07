@@ -9,17 +9,15 @@ use Ramsey\Uuid\Uuid;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\entity\Habitacion;
 use src\ubiscamas\domain\Select_habitaciones_cdc;
+
 final class SelectHabitacionesCdcTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['oConfig'] = new class {
             public function getAmbito(): string
@@ -32,11 +30,6 @@ final class SelectHabitacionesCdcTest extends TestCase
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -64,11 +57,7 @@ final class SelectHabitacionesCdcTest extends TestCase
             ->with(['id_ubi' => 12, '_ordre' => 'orden, planta'])
             ->willReturn([$hab]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            HabitacionDlRepositoryInterface::class => $repo,
-        ]);
-
-        $sel = new Select_habitaciones_cdc();
+        $sel = new Select_habitaciones_cdc($repo);
         $sel->setId_pau(12);
         $sel->setPau('cdc');
         $sel->setObj_pau('CasaDl');
@@ -84,24 +73,5 @@ final class SelectHabitacionesCdcTest extends TestCase
         $this->assertSame('Norte', $data['tabla']['valores'][1][1]);
         $this->assertSame(_('NO'), $data['tabla']['valores'][1][7]);
         $this->assertSame(['nuevo' => 1, 'id_ubi' => 12], $data['url_nuevo_spec']['query']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
     }
 }

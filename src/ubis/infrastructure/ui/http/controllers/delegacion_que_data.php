@@ -1,6 +1,7 @@
 <?php
 
+use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\DelegacionQueData;
 use src\shared\web\ContestarJson;
 
-ContestarJson::enviar('', DelegacionQueData::execute());
+ContestarJson::enviar('', DependencyResolver::get(DelegacionQueData::class)->execute());

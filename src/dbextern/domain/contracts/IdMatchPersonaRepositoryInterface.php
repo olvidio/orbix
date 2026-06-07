@@ -4,23 +4,14 @@ namespace src\dbextern\domain\contracts;
 
 use src\dbextern\domain\entity\IdMatchPersona;
 
-/**
- * Interfaz del repositorio de IdMatchPersona
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 7/5/2026
- */
 interface IdMatchPersonaRepositoryInterface
 {
-
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<IdMatchPersona>
+     */
     public function getIdMatchPersonas(array $aWhere = [], array $aOperators = []): array;
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(IdMatchPersona $IdMatchPersona): bool;
 
@@ -30,7 +21,10 @@ interface IdMatchPersonaRepositoryInterface
 
     public function getNomTabla(): string;
 
-    public function datosById(int $id_listas): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_listas): array|false;
 
     public function findById(int $id_listas): ?IdMatchPersona;
 }

@@ -9,13 +9,18 @@ use src\pasarela\domain\Nombre;
  */
 final class NombreExcepcionEliminar
 {
-    public static function execute(string $id_tipo_activ): string
+    public function __construct(
+        private readonly Nombre $nombre,
+    ) {
+    }
+
+    public function execute(string $id_tipo_activ): string
     {
         if ($id_tipo_activ === '') {
             return _('Falta id_tipo_activ');
         }
-        $oNombre = new Nombre();
-        $oNombre->delNombre($id_tipo_activ);
+        
+        $this->nombre->delNombre($id_tipo_activ);
         return '';
     }
 }

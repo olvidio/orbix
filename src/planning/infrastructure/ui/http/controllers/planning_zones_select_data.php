@@ -4,8 +4,9 @@
  * Dataset para {@see frontend/planning/controller/planning_zones_select.php}.
  */
 
-use src\shared\web\ContestarJson;
 use src\planning\application\PlanningZonesSelectData;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -13,7 +14,9 @@ $error = '';
 $data = [];
 
 try {
-    $data = PlanningZonesSelectData::execute($_POST);
+    /** @var PlanningZonesSelectData $useCase */
+    $useCase = DependencyResolver::get(PlanningZonesSelectData::class);
+    $data = $useCase->execute($_POST);
 } catch (\Throwable $e) {
     $error = $e->getMessage();
 }

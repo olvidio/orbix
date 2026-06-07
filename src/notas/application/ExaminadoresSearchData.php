@@ -2,6 +2,8 @@
 
 namespace src\notas\application;
 
+use function src\shared\domain\helpers\input_string;
+
 use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 
 /**
@@ -10,10 +12,19 @@ use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
  */
 final class ExaminadoresSearchData
 {
-    public static function execute(array $input): string
+
+    public function __construct(
+        private readonly ActaTribunalDlRepositoryInterface $actaTribunalDlRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $search = (string)($input['search'] ?? '');
-        $repo = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
+        $search = input_string($input, 'search');
+        $repo = $this->actaTribunalDlRepository;
         return (string)$repo->getJsonExaminadores($search);
     }
 }

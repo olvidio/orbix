@@ -2,7 +2,10 @@
 
 namespace src\ubis\application\services;
 
+use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\ubis\domain\entity\Casa;
+use src\ubis\domain\entity\CentroDl;
 
 /**
  * Reglas de permisos comunes para operar sobre un ubi (centro/casa) según su objeto.
@@ -19,7 +22,10 @@ final class UbiPermisos
             return false;
         }
         if (str_contains($objPau, 'Dl')) {
-            return $oUbi !== null && $oUbi->getDl() === ConfigGlobal::mi_delef();
+            if ($oUbi instanceof Casa || $oUbi instanceof CentroDl) {
+                return $oUbi->getDl() === ConfigGlobal::mi_delef();
+            }
+            return false;
         }
         if (str_contains($objPau, 'Ex')) {
             return true;
@@ -32,6 +38,11 @@ final class UbiPermisos
         if (!isset($_SESSION['oPerm'])) {
             return false;
         }
-        return (bool)$_SESSION['oPerm']->have_perm_oficina('scdl');
+        $oPerm = $_SESSION['oPerm'];
+        if (!$oPerm instanceof XPermisos) {
+            return false;
+        }
+
+        return (bool) $oPerm->have_perm_oficina('scdl');
     }
 }

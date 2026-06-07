@@ -3,7 +3,9 @@
 namespace src\actividadessacd\application;
 
 use src\shared\config\ConfigGlobal;
+use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
+use src\permisos\domain\XPermisos;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
@@ -12,37 +14,38 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\procesos\domain\PermAccion;
 use src\procesos\domain\value_objects\FaseId;
 use frontend\shared\web\Periodo;
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
 /**
- * Caso de uso: construye la tabla principal de la pantalla
- * `actividadessacd/activ_sacd` — actividades del tipo elegido en el
- * periodo + los sacd encargados de cada una, con el centro encargado
- * (si procede) y los flags de permiso (ver / modificar / crear) para
- * que el frontend decida como renderizar cada celda.
- *
- * Soporta:
- *  - Tipos sv / na / sg / sr / sssc / sf / sf_na / sf_sg / sf_sr.
- *  - Tipo `falta_sacd`: todas las actividades, pero filtra para dejar
- *    solo las que no tienen sacd, o que teniendolo no tienen la fase
- *    `FASE_OK_SACD`.
- *
- * Sucesor de la rama `lista_activ` del dispatcher legacy
- * `apps/actividadessacd/controller/activ_sacd_ajax.php`. La rama
- * secundaria `solape` (mismo switch en el legacy) vive en
- * `SolapesSacdData`.
+ * Caso de uso: construye la tabla principal de la pantalla activ_sacd.
  */
 final class ListaActividadesSacdData
 {
-    public static function execute(array $input): array
+    public function __construct(
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private CargoRepositoryInterface $cargoRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private ActividadFaseRepositoryInterface $actividadFaseRepository,
+        private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
+     */
+    public function execute(array $input): array
     {
-        $tipo = (string)($input['tipo'] ?? '');
-        $year = (string)($input['year'] ?? '');
-        $periodo = (string)($input['periodo'] ?? '');
-        $empiezamin = (string)($input['empiezamin'] ?? '');
-        $empiezamax = (string)($input['empiezamax'] ?? '');
+        $tipo = input_string($input, 'tipo');
+        $year = input_string($input, 'year');
+        $periodo = input_string($input, 'periodo');
+        $empiezamin = input_string($input, 'empiezamin');
+        $empiezamax = input_string($input, 'empiezamax');
 
         $oPeriodo = new Periodo();
         $oPeriodo->setDefaultAny('next');
@@ -65,8 +68,7 @@ final class ListaActividadesSacdData
 
         $txt_fase_ok_sacd = '';
         if ($tipo === 'falta_sacd') {
-            $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-            $oActividadFase = $ActividadFaseRepository->findById(FaseId::FASE_OK_SACD);
+            $oActividadFase = $this->actividadFaseRepository->findById(FaseId::FASE_OK_SACD);
             if ($oActividadFase !== null) {
                 $txt_fase_ok_sacd = (string)$oActividadFase->getDesc_fase();
             }
@@ -78,19 +80,12 @@ final class ListaActividadesSacdData
             }
         }
 
-        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-        $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
 
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
+        $aIdCargos_sacd = $this->cargoRepository->getArrayCargos('sacd');
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
         $tieneProcesos = ConfigGlobal::is_app_installed('procesos');
-        $ActividadProcesoTareaRepository = $tieneProcesos
-            ? $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class)
-            : null;
 
         $filas = [];
         foreach ($cActividades as $oActividad) {
@@ -102,7 +97,7 @@ final class ListaActividadesSacdData
             $f_ini = $oActividad->getF_ini()?->getFromLocal();
             $f_fin = $oActividad->getF_fin()?->getFromLocal();
 
-            [$oPermActiv, $oPermCtr, $oPermSacd] = self::resolverPermisos(
+            [$oPermActiv, $oPermCtr, $oPermSacd] = $this->resolverPermisos(
                 $id_activ, $id_tipo_activ, $dl_org, $tieneProcesos
             );
             if ($oPermActiv->have_perm_activ('ocupado') === false) {
@@ -113,21 +108,18 @@ final class ListaActividadesSacdData
             }
 
             $sacd_aprobado = $tieneProcesos
-                ? $ActividadProcesoTareaRepository->getSacdAprobado($id_activ)
+                ? $this->actividadProcesoTareaRepository->getSacdAprobado($id_activ)
                 : true;
             $clase = is_true($sacd_aprobado) ? 'plaza4' : '';
             if ($status === StatusId::PROYECTO) {
                 $clase = 'wrong-soft';
             }
 
-            // Centro encargado: se concatena al nom_activ como "[ctr1, ctr2]".
             if ($oPermCtr->have_perm_activ('ver') === true) {
                 $ctrs = '';
-                $cCtrs = $CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ);
-                if (is_array($cCtrs)) {
-                    foreach ($cCtrs as $oUbi) {
-                        $ctrs .= $oUbi->getNombre_ubi() . ', ';
-                    }
+                $cCtrs = $this->centroEncargadoRepository->getCentrosEncargadosActividad($id_activ);
+                foreach ($cCtrs as $oUbi) {
+                    $ctrs .= $oUbi->getNombre_ubi() . ', ';
                 }
                 $ctrs = substr($ctrs, 0, -2);
                 if ($ctrs !== '') {
@@ -137,7 +129,7 @@ final class ListaActividadesSacdData
 
             $sacds = [];
             if ($oPermSacd->have_perm_activ('ver') === true) {
-                $cCargosActividad = $ActividadCargoRepository->getActividadCargos(
+                $cCargosActividad = $this->actividadCargoRepository->getActividadCargos(
                     [
                         'id_activ' => $id_activ,
                         'id_cargo' => $txt_where_cargos,
@@ -145,27 +137,21 @@ final class ListaActividadesSacdData
                     ],
                     ['id_cargo' => 'IN']
                 );
-                if (is_array($cCargosActividad)) {
-                    foreach ($cCargosActividad as $oCargo) {
-                        $id_nom = (int)$oCargo->getId_nom();
-                        $oPersona = Persona::findPersonaEnGlobal($id_nom);
-                        $ap_nom = is_object($oPersona)
-                            ? (string)$oPersona->getPrefApellidosNombre()
-                            : (string)$oPersona;
-                        $sacds[] = [
-                            'id_nom' => $id_nom,
-                            'id_cargo' => (int)$oCargo->getId_cargo(),
-                            'ap_nom' => $ap_nom,
-                        ];
-                    }
+                foreach ($cCargosActividad as $oCargo) {
+                    $id_nom = (int)$oCargo->getId_nom();
+                    $oPersona = Persona::findPersonaEnGlobal($id_nom);
+                    $ap_nom = is_object($oPersona)
+                        ? (string)$oPersona->getPrefApellidosNombre()
+                        : (string)$oPersona;
+                    $sacds[] = [
+                        'id_nom' => $id_nom,
+                        'id_cargo' => (int)$oCargo->getId_cargo(),
+                        'ap_nom' => $ap_nom,
+                    ];
                 }
             }
 
-            // Filtro especifico para falta_sacd: quedarse solo con las
-            // actividades sin sacd, o con sacd pero sin fase ok_sacd.
-            if ($tipo === 'falta_sacd'
-                && !(!(is_true($sacd_aprobado) && !empty($sacds)) || empty($sacds))
-            ) {
+            if ($tipo === 'falta_sacd' && (is_true($sacd_aprobado) || count($sacds) === 0)) {
                 continue;
             }
 
@@ -181,8 +167,8 @@ final class ListaActividadesSacdData
             ];
         }
 
-        $perm_des = isset($_SESSION['oPerm'])
-            && $_SESSION['oPerm']->have_perm_oficina('des');
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        $perm_des = $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('des');
 
         return [
             'titulo' => ucfirst(_("listado de actividades")),
@@ -198,44 +184,41 @@ final class ListaActividadesSacdData
 
     private static function regexPorTipo(string $tipo): ?string
     {
-        switch ($tipo) {
-            case 'sv':
-                return '^1';
-            case 'na':
-                return '^1[13]';
-            case 'sg':
-                return '^1[45]';
-            case 'sr':
-                return '^17';
-            case 'sssc':
-                return '^16';
-            case 'sf':
-                return '^2';
-            case 'sf_na':
-                return '^2[123]';
-            case 'sf_sg':
-                return '^2[45]';
-            case 'sf_sr':
-                return '^27';
-        }
-        return null;
+        return match ($tipo) {
+            'sv' => '^1',
+            'na' => '^1[13]',
+            'sg' => '^1[45]',
+            'sr' => '^17',
+            'sssc' => '^16',
+            'sf' => '^2',
+            'sf_na' => '^2[123]',
+            'sf_sg' => '^2[45]',
+            'sf_sr' => '^27',
+            default => null,
+        };
     }
 
     /**
-     * @return array{0: object, 1: object, 2: object}  [oPermActiv, oPermCtr, oPermSacd]
+     * @return array{0: PermAccion, 1: PermAccion, 2: PermAccion}
      */
-    private static function resolverPermisos(
+    private function resolverPermisos(
         int $id_activ,
         string $id_tipo_activ,
         string $dl_org,
         bool $tieneProcesos
     ): array {
-        if ($tieneProcesos && isset($_SESSION['oPermActividades'])) {
-            $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-            $oPerm = $_SESSION['oPermActividades'];
-        } else {
-            $oPerm = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
+        if ($tieneProcesos) {
+            $oPermSesion = $_SESSION['oPermActividades'] ?? null;
+            if ($oPermSesion instanceof PermisosActividades) {
+                $oPermSesion->setActividad($id_activ, $id_tipo_activ, $dl_org);
+                return [
+                    $oPermSesion->getPermisoActual('datos'),
+                    $oPermSesion->getPermisoActual('ctr'),
+                    $oPermSesion->getPermisoActual('sacd'),
+                ];
+            }
         }
+        $oPerm = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
         return [
             $oPerm->getPermisoActual('datos'),
             $oPerm->getPermisoActual('ctr'),

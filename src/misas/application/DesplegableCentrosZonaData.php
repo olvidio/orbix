@@ -4,9 +4,17 @@ namespace src\misas\application;
 
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
+use src\ubis\domain\entity\CentroEllas;
+use src\ubis\domain\entity\CentroEllos;
 
 class DesplegableCentrosZonaData
 {
+
+    public function __construct(
+        private readonly CentroEllasRepositoryInterface $centroEllasRepository,
+        private readonly CentroEllosRepositoryInterface $centroEllosRepository,
+    ) {
+    }
     /**
      * Payload JSON para el desplegable de centros activos de una zona.
      *
@@ -14,8 +22,9 @@ class DesplegableCentrosZonaData
      *
      * @param int      $id_zona    Zona de la que sacar los centros.
      * @param int|null $id_ubi_sel Centro preseleccionado (opcional).
+     * @return array<string, mixed>
      */
-    public static function getData(int $id_zona, ?int $id_ubi_sel = null): array
+    public function getData(int $id_zona, ?int $id_ubi_sel = null): array
     {
         $opciones_sf = [];
         $opciones_sv = [];
@@ -26,11 +35,9 @@ class DesplegableCentrosZonaData
                 'id_zona' => $id_zona,
                 '_ordre' => 'nombre_ubi',
             ];
-            $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-            $CentroEllosRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
 
-            $opciones_sf = self::mapaCentrosOrdenados($CentroEllasRepository->getCentros($aWhere));
-            $opciones_sv = self::mapaCentrosOrdenados($CentroEllosRepository->getCentros($aWhere));
+            $opciones_sf = self::mapaCentrosOrdenados($this->centroEllasRepository->getCentros($aWhere));
+            $opciones_sv = self::mapaCentrosOrdenados($this->centroEllosRepository->getCentros($aWhere));
         }
 
         return [
@@ -45,21 +52,20 @@ class DesplegableCentrosZonaData
     }
 
     /**
-     * @param array<int, object>|bool $cCentros
+     * @param list<CentroEllas|CentroEllos> $cCentros
      * @return array<string, string>
      */
-    private static function mapaCentrosOrdenados(array|bool $cCentros): array
+    private static function mapaCentrosOrdenados(array $cCentros): array
     {
-        if (!is_array($cCentros)) {
-            return [];
-        }
-
         $opciones = [];
         foreach ($cCentros as $oCentro) {
-            $opciones[(string)$oCentro->getId_ubi()] = (string)$oCentro->getNombre_ubi();
+            $opciones[(string) $oCentro->getId_ubi()] = $oCentro->getNombre_ubi();
         }
         asort($opciones, SORT_LOCALE_STRING);
 
-        return $opciones;
+        return array_combine(
+            array_map(static fn (int|string $key): string => (string) $key, array_keys($opciones)),
+            array_values($opciones),
+        ) ?: [];
     }
 }

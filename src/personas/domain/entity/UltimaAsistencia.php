@@ -55,7 +55,7 @@ class UltimaAsistencia
 
     public function getId_tipo_activ(): ?string
     {
-        return $this->id_tipo_activ?->value();
+        return $this->id_tipo_activ !== null ? (string)$this->id_tipo_activ->value() : null;
     }
 
     public function setId_tipo_activ(?int $id_tipo_activ = null): void
@@ -127,10 +127,14 @@ class UltimaAsistencia
 
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    /** @return array<string, string> */
+    public function getPrimary_key(): array
     {
-        return 'id_item';
+        return ['id_item' => (string)$this->id_item];
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {
@@ -141,16 +145,6 @@ class UltimaAsistencia
         $oSet->add($this->getDatosDescripcion());
         $oSet->add($this->getDatosCdr());
         return $oSet->getTot();
-    }
-
-    private function getDatosId_nom(): DatosCampo
-    {
-        $oDatosCampo = new DatosCampo();
-        $oDatosCampo->setNom_camp('id_nom');
-        $oDatosCampo->setMetodoGet('getId_nom');
-        $oDatosCampo->setMetodoSet('setId_nom');
-        $oDatosCampo->setEtiqueta(_("id_nom"));
-        return $oDatosCampo;
     }
 
     private function getDatosId_tipo_activ(): DatosCampo

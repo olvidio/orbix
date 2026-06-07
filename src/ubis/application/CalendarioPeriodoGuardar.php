@@ -8,11 +8,20 @@ use src\ubis\domain\entity\CasaPeriodo;
 
 final class CalendarioPeriodoGuardar
 {
-    public static function execute(int $idItem, int $idUbi, string $fIni, string $fFin, int $sfsv): string
+    public function __construct(
+        private CasaPeriodoRepositoryInterface $casaPeriodoRepository,
+    ) {
+    }
+
+    public function execute(int $idItem, int $idUbi, string $fIni, string $fFin, int $sfsv): string
     {
-        $repo = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
+        $repo = $this->casaPeriodoRepository;
         if ($idItem > 0) {
             $oCasaPeriodo = $repo->findById($idItem);
+            if ($oCasaPeriodo === null) {
+                $oCasaPeriodo = new CasaPeriodo();
+                $oCasaPeriodo->setId_item($repo->getNewId());
+            }
         } else {
             $oCasaPeriodo = new CasaPeriodo();
             $oCasaPeriodo->setId_item($repo->getNewId());
@@ -32,6 +41,7 @@ final class CalendarioPeriodoGuardar
         if ($repo->Guardar($oCasaPeriodo) === false) {
             return _("hay un error, no se ha guardado") . "\n" . $repo->getErrorTxt();
         }
+
         return '';
     }
 }

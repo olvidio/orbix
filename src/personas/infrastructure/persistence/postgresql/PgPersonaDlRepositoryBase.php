@@ -10,7 +10,6 @@ use PDO;
 use src\personas\domain\entity\PersonaAgd;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaN;
-use src\shared\traits\HandlesPdoErrors;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalListsTrait;
 
 /**
@@ -24,11 +23,12 @@ use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalLists
  */
 abstract class PgPersonaDlRepositoryBase extends ClaseRepository
 {
-    use HandlesPdoErrors;
     use PersonaGlobalListsTrait;
 
     /**
      * Método abstracto que cada hijo debe implementar para crear su tipo específico de entidad
+     *
+     * @param array<string, mixed> $aDatos
      */
     abstract protected function createEntityFromArray(array $aDatos): PersonaDl;
 
@@ -37,9 +37,9 @@ abstract class PgPersonaDlRepositoryBase extends ClaseRepository
     /**
      * devuelve una colección (array) de objetos de tipo PersonaDl (o subtipos)
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo PersonaDl o subtipos
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<PersonaDl> Una colección de objetos de tipo PersonaDl o subtipos
      */
     public function getPersonas(array $aWhere = [], array $aOperators = []): array
     {
@@ -76,23 +76,32 @@ abstract class PgPersonaDlRepositoryBase extends ClaseRepository
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
@@ -102,7 +111,23 @@ abstract class PgPersonaDlRepositoryBase extends ClaseRepository
             $Persona = $this->createEntityFromArray($aDatos);
             $PersonaDlSet->add($Persona);
         }
-        return $PersonaDlSet->getTot();
+        return array_values($PersonaDlSet->getTot());
+    }
+
+    /**
+     * @param array<mixed, mixed> $row
+     * @return array<string, mixed>
+     */
+    private function normalizeAssocRow(array $row): array
+    {
+        $result = [];
+        foreach ($row as $key => $value) {
+            if (is_string($key)) {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -113,6 +138,9 @@ abstract class PgPersonaDlRepositoryBase extends ClaseRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -124,23 +152,30 @@ abstract class PgPersonaDlRepositoryBase extends ClaseRepository
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_nom
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_nom): array|bool
+    public function datosById(int $id_nom): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
             $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
         }
-        return $aDatos;
+        return $result;
     }
 
     /**

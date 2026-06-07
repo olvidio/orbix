@@ -7,6 +7,7 @@ use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
 use src\encargossacd\domain\entity\Encargo;
 use src\encargossacd\domain\value_objects\DiaRefCode;
@@ -30,24 +31,17 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 final class EncargoAplicacionServiceTest extends TestCase
 {
     private EncargoAplicacionService $service;
-    private mixed $previousContainer;
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new EncargoAplicacionService();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
+        $this->service = $this->makeService();
         $this->previousSession = $_SESSION ?? [];
     }
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_SESSION = $this->previousSession;
         parent::tearDown();
     }
@@ -65,7 +59,7 @@ final class EncargoAplicacionServiceTest extends TestCase
         ];
         $repo = $this->createMock(EncargoTextoRepositoryInterface::class);
         $repo->expects($this->once())->method('getEncargoTextos')->willReturn($textos);
-        $GLOBALS['container'] = $this->containerFromMap([EncargoTextoRepositoryInterface::class => $repo]);
+        $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         $rta = $this->service->getArrayTraducciones('en_US.UTF-8');
 
@@ -78,7 +72,7 @@ final class EncargoAplicacionServiceTest extends TestCase
         $repo->expects($this->once())->method('getEncargoTextos')->willReturn([
             $this->textoStub('k', 'es_ES.UTF-8', 'v'),
         ]);
-        $GLOBALS['container'] = $this->containerFromMap([EncargoTextoRepositoryInterface::class => $repo]);
+        $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         $this->service->getArrayTraducciones('es_ES.UTF-8');
         $this->service->getArrayTraducciones('es_ES.UTF-8');
@@ -91,7 +85,7 @@ final class EncargoAplicacionServiceTest extends TestCase
         $repo->method('getEncargoTextos')->willReturn([
             $this->textoStub('k', 'es_ES.UTF-8', 'v'),
         ]);
-        $GLOBALS['container'] = $this->containerFromMap([EncargoTextoRepositoryInterface::class => $repo]);
+        $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         $this->assertSame(['k' => 'v'], $this->service->getArrayTraducciones(''));
     }
@@ -102,7 +96,7 @@ final class EncargoAplicacionServiceTest extends TestCase
         $repo->method('getEncargoTextos')->willReturn([
             $this->textoStub('k', 'es_ES.UTF-8', 'v'),
         ]);
-        $GLOBALS['container'] = $this->containerFromMap([EncargoTextoRepositoryInterface::class => $repo]);
+        $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         $rta = $this->service->getArrayTraducciones('fr_FR.UTF-8');
 
@@ -120,7 +114,7 @@ final class EncargoAplicacionServiceTest extends TestCase
             $this->textoStub('hola', 'es_ES.UTF-8', 'hola'),
             $this->textoStub('hola', 'en_US.UTF-8', 'hello'),
         ]);
-        $GLOBALS['container'] = $this->containerFromMap([EncargoTextoRepositoryInterface::class => $repo]);
+        $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         $this->assertSame('hello', $this->service->getTraduccion('hola', 'en_US.UTF-8'));
     }
@@ -132,7 +126,7 @@ final class EncargoAplicacionServiceTest extends TestCase
             $this->textoStub('hola', 'es_ES.UTF-8', 'hola-es'),
             $this->textoStub('otra', 'en_US.UTF-8', 'other'),
         ]);
-        $GLOBALS['container'] = $this->containerFromMap([EncargoTextoRepositoryInterface::class => $repo]);
+        $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         // `hola` no existe en en_US -> fallback a es_ES.UTF-8.
         $this->assertSame('hola-es', $this->service->getTraduccion('hola', 'en_US.UTF-8'));
@@ -144,7 +138,7 @@ final class EncargoAplicacionServiceTest extends TestCase
         $repo->method('getEncargoTextos')->willReturn([
             $this->textoStub('otra', 'es_ES.UTF-8', 'v'),
         ]);
-        $GLOBALS['container'] = $this->containerFromMap([EncargoTextoRepositoryInterface::class => $repo]);
+        $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         ob_start();
         $rta = $this->service->getTraduccion('inexistente', 'en_US.UTF-8');
@@ -203,7 +197,7 @@ final class EncargoAplicacionServiceTest extends TestCase
         $repo->method('getEncargoTextos')->willReturn([
             $this->textoStub('t_mañana', 'es_ES.UTF-8', 'mañanas'),
         ]);
-        $GLOBALS['container'] = $this->containerFromMap([EncargoTextoRepositoryInterface::class => $repo]);
+        $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         // `dia_inc > 1` -> rama `t_mañana` (texto "mañanas" en el fixture).
         $txt = $this->service->getTxtDedicacion([$this->horarioStub('m', 3)]);
@@ -216,7 +210,7 @@ final class EncargoAplicacionServiceTest extends TestCase
         $repo->method('getEncargoTextos')->willReturn([
             $this->textoStub('t_mañanas', 'es_ES.UTF-8', 'mañana'),
         ]);
-        $GLOBALS['container'] = $this->containerFromMap([EncargoTextoRepositoryInterface::class => $repo]);
+        $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         // `dia_inc === 1` -> rama `t_mañanas` (texto "mañana" en el fixture).
         $txt = $this->service->getTxtDedicacion([$this->horarioStub('m', 1)]);
@@ -231,7 +225,7 @@ final class EncargoAplicacionServiceTest extends TestCase
             $this->textoStub('t_tarde1', 'es_ES.UTF-8', 'tardes'),
             $this->textoStub('t_tarde2', 'es_ES.UTF-8', 'noches'),
         ]);
-        $GLOBALS['container'] = $this->containerFromMap([EncargoTextoRepositoryInterface::class => $repo]);
+        $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         $txt = $this->service->getTxtDedicacion([
             $this->horarioStub('m', 2),
@@ -247,7 +241,7 @@ final class EncargoAplicacionServiceTest extends TestCase
         $repo->method('getEncargoTextos')->willReturn([
             $this->textoStub('t_tarde1', 'es_ES.UTF-8', 'tardes'),
         ]);
-        $GLOBALS['container'] = $this->containerFromMap([EncargoTextoRepositoryInterface::class => $repo]);
+        $this->service = $this->makeService([EncargoTextoRepositoryInterface::class => $repo]);
 
         // Solo `t` -> las sustituciones de comas deben colapsar "(, 3 tardes, )"
         // hasta "(3 tardes)".
@@ -263,7 +257,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     {
         $horarioRepo = $this->createMock(EncargoHorarioRepositoryInterface::class);
         $horarioRepo->method('getEncargoHorarios')->willReturn([]);
-        $GLOBALS['container'] = $this->containerFromMap([
+        $this->service = $this->makeService([
             EncargoHorarioRepositoryInterface::class => $horarioRepo,
         ]);
 
@@ -274,7 +268,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     {
         $sacdHorarioRepo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
         $sacdHorarioRepo->method('getEncargoSacdHorarios')->willReturn([]);
-        $GLOBALS['container'] = $this->containerFromMap([
+        $this->service = $this->makeService([
             EncargoSacdHorarioRepositoryInterface::class => $sacdHorarioRepo,
         ]);
 
@@ -289,7 +283,7 @@ final class EncargoAplicacionServiceTest extends TestCase
     {
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
         $centroRepo->method('getCentros')->willReturn([]);
-        $GLOBALS['container'] = $this->containerFromMap([
+        $this->service = $this->makeService([
             CentroDlRepositoryInterface::class => $centroRepo,
         ]);
 
@@ -308,7 +302,7 @@ final class EncargoAplicacionServiceTest extends TestCase
 
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
         $centroRepo->method('getCentros')->with(['tipo_ctr' => 'dl'])->willReturn([$oCentro]);
-        $GLOBALS['container'] = $this->containerFromMap([
+        $this->service = $this->makeService([
             CentroDlRepositoryInterface::class => $centroRepo,
         ]);
 
@@ -329,7 +323,7 @@ final class EncargoAplicacionServiceTest extends TestCase
 
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
         $centroRepo->method('getCentros')->willReturn([$oCentro]);
-        $GLOBALS['container'] = $this->containerFromMap([
+        $this->service = $this->makeService([
             CentroDlRepositoryInterface::class => $centroRepo,
         ]);
 
@@ -353,7 +347,7 @@ final class EncargoAplicacionServiceTest extends TestCase
                 default => [],
             };
         });
-        $GLOBALS['container'] = $this->containerFromMap([
+        $this->service = $this->makeService([
             CentroDlRepositoryInterface::class => $centroRepo,
         ]);
 
@@ -377,7 +371,7 @@ final class EncargoAplicacionServiceTest extends TestCase
                 return true;
             });
 
-        $GLOBALS['container'] = $this->containerFromMap([
+        $this->service = $this->makeService([
             EncargoRepositoryInterface::class => $repo,
         ]);
 
@@ -433,20 +427,26 @@ final class EncargoAplicacionServiceTest extends TestCase
     }
 
     /**
-     * @param array<class-string, object> $services
+     * @param array<class-string, object> $overrides
      */
-    private function containerFromMap(array $services): object
+    private function makeService(array $overrides = []): EncargoAplicacionService
     {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
+        $services = array_merge([
+            EncargoTextoRepositoryInterface::class => $this->createStub(EncargoTextoRepositoryInterface::class),
+            CentroDlRepositoryInterface::class => $this->createStub(CentroDlRepositoryInterface::class),
+            EncargoHorarioRepositoryInterface::class => $this->createStub(EncargoHorarioRepositoryInterface::class),
+            EncargoSacdHorarioRepositoryInterface::class => $this->createStub(EncargoSacdHorarioRepositoryInterface::class),
+            EncargoSacdRepositoryInterface::class => $this->createStub(EncargoSacdRepositoryInterface::class),
+            EncargoRepositoryInterface::class => $this->createStub(EncargoRepositoryInterface::class),
+        ], $overrides);
 
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        return new EncargoAplicacionService(
+            $services[EncargoTextoRepositoryInterface::class],
+            $services[CentroDlRepositoryInterface::class],
+            $services[EncargoHorarioRepositoryInterface::class],
+            $services[EncargoSacdHorarioRepositoryInterface::class],
+            $services[EncargoSacdRepositoryInterface::class],
+            $services[EncargoRepositoryInterface::class],
+        );
     }
 }

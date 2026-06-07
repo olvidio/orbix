@@ -32,7 +32,7 @@ class Whereis
     }
 
 
-    public function getId_item_egm(): ?string
+    public function getId_item_egm(): ?int
     {
         return $this->id_item_egm?->value();
     }
@@ -44,7 +44,7 @@ class Whereis
     }
 
 
-    public function getId_doc(): ?string
+    public function getId_doc(): ?int
     {
         return $this->id_doc?->value();
     }
@@ -64,7 +64,7 @@ class Whereis
     {
         $this->id_item_egm = $id instanceof WhereisItemEgmId
             ? $id
-            : WhereisItemEgmId::fromNullableInt($id);
+            : (WhereisItemEgmId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     public function getIdDocVo(): ?WhereisDocId
@@ -76,11 +76,11 @@ class Whereis
     {
         $this->id_doc = $id instanceof WhereisDocId
             ? $id
-            : WhereisDocId::fromNullableInt($id);
+            : (WhereisDocId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_item_whereis';
     }

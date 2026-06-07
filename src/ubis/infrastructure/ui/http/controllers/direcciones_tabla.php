@@ -1,12 +1,16 @@
 <?php
 
+use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\DireccionesTablaData;
 use src\shared\web\ContestarJson;
 
-ContestarJson::enviar('', DireccionesTablaData::execute(
-    (int)filter_input(INPUT_POST, 'id_ubi'),
-    (string)filter_input(INPUT_POST, 'obj_dir'),
-    (string)filter_input(INPUT_POST, 'c_p'),
-    (string)filter_input(INPUT_POST, 'ciudad'),
-    (string)filter_input(INPUT_POST, 'pais')
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
+ContestarJson::enviar('', DependencyResolver::get(DireccionesTablaData::class)->execute(
+    input_int($_POST, 'id_ubi'),
+    input_string($_POST, 'obj_dir'),
+    input_string($_POST, 'c_p'),
+    input_string($_POST, 'ciudad'),
+    input_string($_POST, 'pais')
 ));

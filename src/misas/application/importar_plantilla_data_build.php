@@ -1,5 +1,7 @@
 <?php
 
+use src\misas\application\support\MisasBuildInput;
+
 /**
  * Funcion global que importa una plantilla a otra. Vive fuera de cualquier
  * `namespace` para que el fragmento procedural herede el espacio global y los
@@ -19,16 +21,31 @@ use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
  * @see \src\misas\application\ImportarPlantillaData::build()
+ * @param array<string, mixed> $in
+ * @return array<string, mixed>
  */
-function misas_importar_plantilla_build(array $in): array
+function misas_importar_plantilla_build(array $in, \src\misas\application\ImportarPlantillaData $self): array
 {
-    $Qid_zona = (int)($in['id_zona'] ?? 0);
-    $QTipoPlantillaOrigen = (string)($in['tipo_plantilla_origen'] ?? '');
-    $QTipoPlantillaDestino = (string)($in['tipo_plantilla_destino'] ?? '');
+    $Qid_zona = MisasBuildInput::int($in, 'id_zona');
+    $QTipoPlantillaOrigen = MisasBuildInput::string($in, 'tipo_plantilla_origen');
+    $QTipoPlantillaDestino = MisasBuildInput::string($in, 'tipo_plantilla_destino');
 
     $error_txt = '';
 
     try {
+    $oDiaOrigen = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_UNO);
+    $oDiaOrigen2 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_DOS);
+    $oDiaOrigen3 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_TRES);
+    $oFinOrigen = new DateTimeLocal(PlantillaConfig::FIN_SEMANAL_UNO);
+    $oDiaDestino = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_UNO);
+    $oDiaDestino2 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_DOS);
+    $oDiaDestino3 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_TRES);
+    $oFinDestino = new DateTimeLocal(PlantillaConfig::FIN_SEMANAL_UNO);
+    $ndias = 7;
+    $iOrigen = 0;
+    $num_dia2 = '';
+    $num_dia3 = '';
+
             $un_dia = new DateInterval('P1D');
 
     if (($QTipoPlantillaOrigen === PlantillaConfig::PLANTILLA_SEMANAL_UNO) || ($QTipoPlantillaOrigen === PlantillaConfig::PLANTILLA_SEMANAL_TRES)) {
@@ -95,7 +112,7 @@ function misas_importar_plantilla_build(array $in): array
         $oFinDestino = new DateTimeLocal(PlantillaConfig::FIN_MENSUAL_TRES);
     }
 
-    $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+    $EncargoTipoRepository = $self->getEncargoTipoRepository();
 
     $grupo = '8...';
     $aWhere = [];
@@ -115,10 +132,10 @@ function misas_importar_plantilla_build(array $in): array
     $sFin_iso = $oFinDestino->getIso();
     $orden = 'prioridad';
 
-    $EncargosZona = new EncargosZona($Qid_zona, $oDiaDestino, $oFinDestino, $orden);
+    $EncargosZona = new EncargosZona($Qid_zona, $oDiaDestino, $oFinDestino, $self->getEncargoHorarioRepository(), $self->getEncargoRepository());
     $EncargosZona->setATipoEnc($a_tipo_enc);
     $cEncargosZona = $EncargosZona->getEncargos();
-    $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+    $EncargoDiaRepository = $self->getEncargoDiaRepository();
     foreach ($cEncargosZona as $oEncargo) {
         $id_enc = $oEncargo->getId_enc();
 
@@ -199,7 +216,7 @@ function misas_importar_plantilla_build(array $in): array
         }
 
 
-        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+        $EncargoDiaRepository = $self->getEncargoDiaRepository();
         foreach ($cEncargosZona as $oEncargo) {
             $inicio_dia_plantilla = $oDiaOrigen->format('Y-m-d') . ' 00:00:00';
             $fin_dia_plantilla = $oDiaOrigen->format('Y-m-d') . ' 23:59:59';

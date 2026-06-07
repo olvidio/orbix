@@ -14,5 +14,5 @@ namespace src\ubis\domain\contracts;
 interface DireccionCentroExRepositoryInterface extends DireccionRepositoryInterface
 {
     public function getNewId(): int;
-    public function getNewIdDireccion($id): int;
+    public function getNewIdDireccion(int $id): int;
 }

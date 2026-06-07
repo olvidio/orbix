@@ -23,9 +23,9 @@ interface ProfesorStgrRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo ProfesorStgr
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ProfesorStgr
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ProfesorStgr> Una colección de objetos de tipo ProfesorStgr
      */
     public function getProfesoresStgr(array $aWhere = [], array $aOperators = []): array;
 
@@ -46,14 +46,14 @@ interface ProfesorStgrRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool;
+    public function datosById(int $id_item): array|false;
 
     /**
      * Busca la clase con id_item en el repositorio.
      */
     public function findById(int $id_item): ?ProfesorStgr;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

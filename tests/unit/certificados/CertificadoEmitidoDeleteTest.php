@@ -11,6 +11,7 @@ use src\certificados\domain\CertificadoEmitidoDelete;
 use src\certificados\domain\CertificadoEmitidoUpload;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
+use src\shared\infrastructure\DependencyResolver;
 use Tests\factories\certificados\CertificadosFactory;
 use Tests\myTest;
 
@@ -49,16 +50,16 @@ class CertificadoEmitidoDeleteTest extends myTest
     {
         $oDBdst = $this->setConexion('H-Hv');
         foreach ($this->cCertificados as $Certificado) {
-            $CertificadoUpload = new CertificadoEmitidoUpload();
+            $CertificadoUpload = DependencyResolver::get(CertificadoEmitidoUpload::class);
             $CertificadoUpload->setoDbl($oDBdst);
-            $CertificadoDelete = new CertificadoEmitidoDelete();
+            $CertificadoDelete = DependencyResolver::get(CertificadoEmitidoDelete::class);
             $CertificadoDelete->setoDbl($oDBdst);
 
             $contenido_doc = $Certificado->getDocumento();
             $id_nom = $Certificado->getId_nom();
             $certificado = $Certificado->getCertificado();
             $firmado = $Certificado->isFirmado();
-            $idioma = $Certificado->getIdioma();
+            $idioma = (string) ($Certificado->getIdiomaVo()?->value() ?? '');
             $oF_certificado = $Certificado->getF_certificado();
             $oF_recibido = $Certificado->getF_enviado();
             $destino = $Certificado->getDestino();

@@ -1,10 +1,13 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\EliminarEncargoZona;
 use src\shared\web\ContestarJson;
 
-$Qid_enc = (int)filter_input(INPUT_POST, 'id_enc');
+$Qid_enc = (int)filter_input(INPUT_POST, 'id_enc', FILTER_VALIDATE_INT);
 
-$error = EliminarEncargoZona::execute($Qid_enc);
+/** @var EliminarEncargoZona $useCase */
+$useCase = DependencyResolver::get(EliminarEncargoZona::class);
+$result = $useCase->execute($Qid_enc);
 
-ContestarJson::enviar($error, ['id_enc' => $Qid_enc]);
+ContestarJson::enviar($result, ['id_enc' => $Qid_enc]);

@@ -2,15 +2,18 @@
 
 namespace src\ubis\application;
 
-use src\shared\infrastructure\ProvidesRepositories;
+use src\ubis\application\services\UbiRepositoryResolver;
 
 final class UbisEliminar
 {
-    use ProvidesRepositories;
+    public function __construct(
+        private UbiRepositoryResolver $ubiRepositoryResolver,
+    ) {
+    }
 
     public function execute(string $objPau, int $idUbi): string
     {
-        $repo = $this->getRepository($objPau);
+        $repo = $this->ubiRepositoryResolver->getRepository($objPau);
         $oUbi = $repo->findById($idUbi);
         if ($oUbi === null) {
             return _("no se encuentra el ubi a borrar");

@@ -2,16 +2,27 @@
 
 namespace src\ubis\application;
 
+use src\permisos\domain\XPermisos;
+
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 
 class UbisListaData
 {
+    public function __construct(
+        private CasaRepositoryInterface $casaRepository,
+        private CentroRepositoryInterface $centroRepository,
+    ) {
+    }
+
     /**
      * @return array{a_cabeceras: list<string>, a_valores: list<array<string|int>>}
      */
-    public static function execute(string $nombre_ubi): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(string $nombre_ubi): array
     {
         $miSfsv = ConfigGlobal::mi_sfsv();
 
@@ -30,7 +41,10 @@ class UbisListaData
 
         switch ($miSfsv) {
             case 1:
-                if (!($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des'))) {
+                $oPerm = $_SESSION['oPerm'] ?? null;
+                $puedeVerSf = $oPerm instanceof XPermisos
+                    && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'));
+                if (!$puedeVerSf) {
                     $aWhereCasa['sv'] = 't';
                 }
                 break;
@@ -51,14 +65,14 @@ class UbisListaData
         $aWhereCtr['cdc'] = 't';
 
         $a_ubis = [];
-        $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
+        $CasaRepository = $this->casaRepository;
         $cCasas = $CasaRepository->getCasas($aWhereCasa, $aOperadorCasa);
         foreach ($cCasas as $oCasa) {
             $nom = $oCasa->getNombre_ubi();
             $a_ubis[$nom] = $oCasa;
         }
 
-        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+        $CentroRepository = $this->centroRepository;
         $cCtr = $CentroRepository->getCentros($aWhereCtr, $aOperadorCtr);
         foreach ($cCtr as $oCentro) {
             $nom = $oCentro->getNombre_ubi();

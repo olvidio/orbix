@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -18,7 +19,7 @@ class PgRelacionCentroDireccionRepository extends PgRelacionUbiDireccionReposito
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDBP'];
+        $oDbl = GlobalPdo::get('oDBP');
         $this->setoDbl($oDbl);
         $this->setoDbl_select($oDbl);
         $this->setNomTabla('u_cross_ctr_dir');

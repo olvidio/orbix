@@ -13,11 +13,19 @@ use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$tabla = (string) filter_input(INPUT_POST, 'tabla');
+$tablaRaw = filter_input(INPUT_POST, 'tabla');
+$tabla = is_scalar($tablaRaw) ? (string) $tablaRaw : '';
 
 $dbp = new DBPropiedades();
 $raw = $dbp->array_esquemas_con_tabla($tabla);
-$a_esquemas = is_array($raw) ? array_values($raw) : [];
+$a_esquemas = [];
+if (is_array($raw)) {
+    foreach (array_values($raw) as $esquema) {
+        if (is_scalar($esquema) && (string) $esquema !== '') {
+            $a_esquemas[] = (string) $esquema;
+        }
+    }
+}
 
 $result = (new MoverTabla())->ejecutar($tabla, $a_esquemas);
 

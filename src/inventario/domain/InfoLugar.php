@@ -3,17 +3,18 @@
 namespace src\inventario\domain;
 
 use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\entity\Lugar;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
 
 class InfoLugar extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
-        $this->setTxtTitulo(_("centro o casa"));
-        $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta casa/centro?"));
+    public function __construct(
+        private LugarRepositoryInterface $lugarRepository,
+    ) {
+        $this->setTxtTitulo(_('centro o casa'));
+        $this->setTxtEliminar(_('¿Está seguro que desea eliminar esta casa/centro?'));
         $this->setTxtBuscar();
         $this->setTxtExplicacion();
 
@@ -24,21 +25,19 @@ class InfoLugar extends DatosInfoRepo
         $this->setRepositoryInterface(LugarRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<Lugar>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere['_ordre'] = 'nom_lugar';
+            $aWhere = ['_ordre' => 'nom_lugar'];
             $aOperador = [];
         } else {
-            $aWhere['nom_lugar'] = $this->k_buscar;
-            $aOperador['nom_lugar'] = 'sin_acentos';
+            $aWhere = ['nom_lugar' => $this->k_buscar];
+            $aOperador = ['nom_lugar' => 'sin_acentos'];
         }
 
-        $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $ColeccionRepository->getLugares($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->lugarRepository->getLugares($aWhere, $aOperador);
     }
 }

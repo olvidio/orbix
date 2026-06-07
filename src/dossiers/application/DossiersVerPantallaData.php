@@ -3,100 +3,117 @@
 namespace src\dossiers\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\dossiers\application\support\DossierFichaSelectRunner;
+use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\DatosInfoRepo;
+use src\shared\domain\DatosTablaRepo;
+use src\shared\infrastructure\DatosInfoRepoResolver;
+use src\ubis\application\services\UbiRepositoryResolver;
 use src\ubis\domain\RegionStgrAviso;
 use src\ubis\domain\RegionStgrConfigException;
-use src\shared\domain\DatosTablaRepo;
-use src\shared\infrastructure\ProvidesRepositories;
-use src\personas\domain\entity\Persona;
-use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
-use src\shared\infrastructure\DependencyResolver;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Cuerpo de dossiers_ver: datos de cabecera + lista o ficha.
- * El backend NO firma URLs: devuelve `*_link_spec` ({path, query}) que firma el frontend.
- *
- * En modo ficha, `ficha_segmentos` mezcla:
- *  - Segmentos `html` ya generados por los `Select_*` (TODO: refactorizar para que tampoco
- *    lleven HTML/HashFront desde `src/`).
- *  - Segmentos `datos_tabla` con datos puros (`action_tabla_link_spec`, `ins_traslado_link_spec`,
- *    `script_ctx`, `hash`, `tabla`, `permiso`) que el frontend compone con HashFront, Lista y
- *    el script JS de `DatosTablaRepo`.
- *
- * @return array{
- *     error?: string,
- *     top_data: array{web_icons: string, alt_dossiers: string, txt_dossiers: string, nom_cabecera: string, go_dossiers_link_spec: array{path: string, query: array<string, mixed>}, go_home_link_spec?: array{path: string, query: array<string, mixed>}},
- *     modo: 'lista'|'ficha',
- *     lista_a_filas?: list<array<string, mixed>>,
- *     ficha_segmentos?: list<array<string, mixed>>,
- *     aviso?: string
- * }
  */
 class DossiersVerPantallaData
 {
-    public static function build(array $post): array
+    public function __construct(
+        private TipoDossierRepositoryInterface $tipoDossierRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private PersonaRepositoryResolver $personaRepositoryResolver,
+        private UbiRepositoryResolver $ubiRepositoryResolver,
+        private DossiersListaFichasData $dossiersListaFichasData,
+        private DossierTipoFileSuffixResolver $suffixResolver,
+        private DossierFichaSelectRunner $fichaSelectRunner,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $post
+     * @return array<string, mixed>
+     */
+    public function build(array $post): array
     {
         try {
-            return self::buildInternal($post);
+            return $this->buildInternal($post);
         } catch (RegionStgrConfigException $e) {
-            return self::respuestaSoloAvisoRegionStgr($e, $post);
+            return $this->respuestaSoloAvisoRegionStgr($e, $post);
         }
     }
 
-    private static function buildInternal(array $post): array
+    /**
+     * @param array<string, mixed> $post
+     * @return array<string, mixed>
+     */
+    private function buildInternal(array $post): array
     {
         $problemasRegionStgr = [];
-        $Qrefresh = (int)($post['refresh'] ?? 0);
-        $a_sel = isset($post['sel']) ? (array)$post['sel'] : [];
+        $Qrefresh = input_int($post, 'refresh');
+        $a_sel = isset($post['sel']) && is_array($post['sel']) ? $post['sel'] : [];
         if ($a_sel === []) {
-            $a_sel = null;
+            $a_sel = [];
         }
-        $Qmod = (string)($post['mod'] ?? '');
-        if (isset($a_sel) && ($Qmod === 'eliminar' || $Qmod === 'nuevo')) {
-            $a_sel = null;
+        $Qmod = input_string($post, 'mod');
+        if ($a_sel !== [] && ($Qmod === 'eliminar' || $Qmod === 'nuevo')) {
+            $a_sel = [];
         }
 
         $Qid_sel = '';
-        $Qscroll_id = (int)($post['scroll_id'] ?? 0);
+        $Qscroll_id = input_int($post, 'scroll_id');
         $stack = '';
-        if (isset($post['stack']) && (string)$post['stack'] !== '') {
-            $stack = (string)filter_var($post['stack'], FILTER_SANITIZE_NUMBER_INT);
-            if ($stack !== 0) {
-                // Parámetros restaurados por el controller frontend vía $oPosicion.
+        if (isset($post['stack']) && input_string($post, 'stack') !== '') {
+            $stack = (string) filter_var(input_string($post, 'stack'), FILTER_SANITIZE_NUMBER_INT);
+            if ($stack !== '' && $stack !== '0') {
                 if (array_key_exists('restored_id_sel', $post)) {
-                    $Qid_sel = $post['restored_id_sel'];
+                    $restored = $post['restored_id_sel'];
+                    $Qid_sel = is_scalar($restored) ? (string) $restored : '';
                 }
                 if (array_key_exists('restored_scroll_id', $post)) {
-                    $Qscroll_id = (int) $post['restored_scroll_id'];
+                    $Qscroll_id = input_int($post, 'restored_scroll_id');
                 }
             }
-        } elseif (!empty($a_sel)) {
-            $Qid_sel = $a_sel;
+        } elseif ($a_sel !== []) {
+            $first = $a_sel[0] ?? '';
+            $Qid_sel = is_scalar($first) ? (string) $first : '';
         }
 
-        $Qid_pau = (int)($post['id_pau'] ?? 0);
-        $pau = (string)($post['pau'] ?? '');
-        $Qobj_pau = (string)($post['obj_pau'] ?? '');
-        $Qid_dossier = (string)($post['id_dossier'] ?? '');
-        $Qpermiso = (string)($post['permiso'] ?? '');
-        // `personas_select` y otras vistas legacy envían `que`; otras pantallas usan `queSel`.
-        $QqueSel = (string)($post['queSel'] ?? $post['que'] ?? '');
-        $Qclase_info_encoded = (string)($post['clase_info'] ?? '');
+        $Qid_pau = input_int($post, 'id_pau');
+        $pau = input_string($post, 'pau');
+        $Qobj_pau = input_string($post, 'obj_pau');
+        $Qid_dossier = input_string($post, 'id_dossier');
+        $Qpermiso = input_string($post, 'permiso');
+        $QqueSel = input_string($post, 'queSel') !== ''
+            ? input_string($post, 'queSel')
+            : input_string($post, 'que');
+        $Qclase_info_encoded = input_string($post, 'clase_info');
 
-        if (empty($Qid_dossier) && !empty($Qclase_info_encoded)) {
+        if ($Qid_dossier === '' && $Qclase_info_encoded !== '') {
             $obj = urldecode($Qclase_info_encoded);
-            $oInfoClase = new $obj();
+            if (!class_exists($obj)) {
+                return ['error' => 'clase_info invalida', 'ficha_segmentos' => []];
+            }
+            $oInfoClase = DatosInfoRepoResolver::resolve($obj);
             if (method_exists($oInfoClase, 'setObj_pau')) {
                 $oInfoClase->setObj_pau($Qobj_pau);
             }
-            $Qid_dossier = (string)$oInfoClase->getId_dossier();
-            $pau = $oInfoClase->getPau();
+            if (method_exists($oInfoClase, 'getId_dossier')) {
+                $Qid_dossier = (string) $oInfoClase->getId_dossier();
+            }
+            if (method_exists($oInfoClase, 'getPau')) {
+                $pau = (string) $oInfoClase->getPau();
+            }
         }
 
-        if (!empty($Qrefresh)) {
+        if ($Qrefresh > 0) {
             $id_pau = $Qid_pau;
-        } elseif (!empty($a_sel)) {
-            $id_pau = (int)strtok($a_sel[0], "#");
+        } elseif ($a_sel !== []) {
+            $firstSel = $a_sel[0] ?? '';
+            $id_pau = (int) strtok(is_scalar($firstSel) ? (string) $firstSel : '', '#');
         } else {
             $id_pau = $Qid_pau;
         }
@@ -105,48 +122,37 @@ class DossiersVerPantallaData
         $Qmodo_curso = 0;
 
         switch ($QqueSel) {
-            case "activ":
-                $pau = "p";
-                $Qpermiso = "3";
+            case 'activ':
+                $pau = 'p';
+                $Qpermiso = '3';
                 break;
-            case "matriculas":
-                $Qid_activ = (int)($post['id_activ'] ?? 0);
-                $pau = "p";
-                $Qpermiso = "3";
-                if ($Qmod === "sel_es_asistente" && !empty($a_sel)) {
-                    $id_pau = (int)strtok($a_sel[0], "#");
+            case 'matriculas':
+                $Qid_activ = input_int($post, 'id_activ');
+                $pau = 'p';
+                $Qpermiso = '3';
+                if ($Qmod === 'sel_es_asistente' && $a_sel !== []) {
+                    $firstSel = $a_sel[0] ?? '';
+                    $id_pau = (int) strtok(is_scalar($firstSel) ? (string) $firstSel : '', '#');
                 }
                 break;
-            case "asis":
-                $pau = "a";
-                $Qpermiso = "3";
-                $Qid_dossier = "3101";
+            case 'asis':
+                $pau = 'a';
+                $Qpermiso = '3';
+                $Qid_dossier = '3101';
                 break;
-            case "asig":
-                $pau = "a";
-                $Qpermiso = "3";
-                $Qid_dossier = "3005";
+            case 'asig':
+                $pau = 'a';
+                $Qpermiso = '3';
+                $Qid_dossier = '3005';
                 break;
-            case "carg":
-                $pau = "a";
-                $Qpermiso = "3";
-                $Qid_dossier = "3102";
+            case 'carg':
+                $pau = 'a';
+                $Qpermiso = '3';
+                $Qid_dossier = '3102';
                 break;
             default:
                 break;
         }
-
-        $repositoryProvider = new class {
-            use ProvidesRepositories;
-
-            public function get(string $entityType): object
-            {
-                return $this->getRepository($entityType);
-            }
-        };
-        $getRepository = function (string $obj_pau) use ($repositoryProvider) {
-            return $repositoryProvider->get($obj_pau);
-        };
 
         $goDossiersLinkSpec = [
             'path' => 'frontend/dossiers/controller/dossiers_ver.php',
@@ -154,9 +160,10 @@ class DossiersVerPantallaData
         ];
 
         $goHomeLinkSpec = null;
+        $nom_cabecera = '';
         switch ($pau) {
             case 'p':
-                if (empty($Qobj_pau) || $Qobj_pau === 'Persona') {
+                if ($Qobj_pau === '' || $Qobj_pau === 'Persona') {
                     $oPersona = Persona::findPersonaEnGlobal($id_pau, $problemasRegionStgr);
                     if (!is_object($oPersona)) {
                         return [
@@ -167,8 +174,14 @@ class DossiersVerPantallaData
                     $clase = get_class($oPersona);
                     $Qobj_pau = implode('', array_slice(explode('\\', $clase), -1));
                 } else {
-                    $repo = $getRepository($Qobj_pau);
+                    $repo = $this->personaRepositoryResolver->repositorio($Qobj_pau);
                     $oPersona = $repo->findById($id_pau);
+                    if ($oPersona === null) {
+                        return [
+                            'error' => "<br>No encuentro a nadie con id_nom: $id_pau en  " . __FILE__ . ': line (Persona lookup)',
+                            'ficha_segmentos' => [],
+                        ];
+                    }
                 }
                 $nom_cabecera = $oPersona->getNombreApellidos();
                 $goHomeLinkSpec = [
@@ -177,8 +190,11 @@ class DossiersVerPantallaData
                 ];
                 break;
             case 'u':
-                $repo = $getRepository($Qobj_pau);
+                $repo = $this->ubiRepositoryResolver->getRepository($Qobj_pau);
                 $oUbi = $repo->findById($id_pau);
+                if ($oUbi === null) {
+                    return ['error' => 'ubi no encontrada', 'ficha_segmentos' => []];
+                }
                 $nom_cabecera = $oUbi->getNombre_ubi();
                 $goHomeLinkSpec = [
                     'path' => 'frontend/ubis/controller/home_ubis.php',
@@ -186,8 +202,10 @@ class DossiersVerPantallaData
                 ];
                 break;
             case 'a':
-                $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-                $oActividad = $ActividadAllRepository->findById($id_pau);
+                $oActividad = $this->actividadAllRepository->findById($id_pau);
+                if ($oActividad === null) {
+                    return ['error' => 'actividad no encontrada', 'ficha_segmentos' => []];
+                }
                 $nom_cabecera = $oActividad->getNom_activ();
                 $goHomeLinkSpec = [
                     'path' => 'frontend/actividades/controller/actividad_ver.php',
@@ -200,16 +218,16 @@ class DossiersVerPantallaData
 
         $top_data = [
             'web_icons' => ConfigGlobal::getWeb_icons(),
-            'alt_dossiers' => _("ver dossiers"),
-            'txt_dossiers' => _("dossiers"),
+            'alt_dossiers' => _('ver dossiers'),
+            'txt_dossiers' => _('dossiers'),
             'nom_cabecera' => $nom_cabecera,
             'go_dossiers_link_spec' => $goDossiersLinkSpec,
             'go_home_link_spec' => $goHomeLinkSpec,
         ];
 
-        if (empty($Qid_dossier)) {
-            $lista = DossiersListaFichasData::build($pau, $id_pau, $Qobj_pau);
-            return self::withAvisoRegionStgr([
+        if ($Qid_dossier === '') {
+            $lista = $this->dossiersListaFichasData->build($pau, $id_pau, $Qobj_pau);
+            return $this->withAvisoRegionStgr([
                 'top_data' => $top_data,
                 'modo' => 'lista',
                 'lista_a_filas' => $lista['a_filas'],
@@ -218,80 +236,50 @@ class DossiersVerPantallaData
         }
 
         $fichaSegmentos = [];
-        $id_dossier = strtok($Qid_dossier, "y");
-        $TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
-        while ($id_dossier) {
+        $id_dossier = strtok($Qid_dossier, 'y');
+        while ($id_dossier !== false) {
             $nom_bloque = 'ficha' . $id_dossier;
             $bloque = '#ficha' . $id_dossier;
-            $oTipoDossier = $TipoDossierRepository->findById($id_dossier);
-            $oResSelect = DossierTipoFileSuffixResolver::fromDefaultProjectRoot();
-            $nameClaseSelect = $oResSelect->resolveSelectClassFqcn($oTipoDossier) ?? '';
+            $oTipoDossier = $this->tipoDossierRepository->findById((int) $id_dossier);
+            if ($oTipoDossier === null) {
+                $id_dossier = strtok('y');
+                continue;
+            }
+            $nameClaseSelect = $this->suffixResolver->resolveSelectClassFqcn($oTipoDossier);
 
-            if (!empty($nameClaseSelect)) {
-                $claseSelect = DependencyResolver::get($nameClaseSelect);
-                $claseSelect->setId_dossier($id_dossier);
-                $claseSelect->setPau($pau);
-                $claseSelect->setObj_pau($Qobj_pau);
-                $claseSelect->setId_pau($id_pau);
-                $claseSelect->setPermiso($Qpermiso);
-                $claseSelect->setBloque($bloque);
-                $claseSelect->setQueSel($QqueSel);
-                if (method_exists($claseSelect, 'setStackActual')) {
-                    $claseSelect->setStackActual((int)($post['stack_actual'] ?? 0));
-                }
-
-                if (isset($post['stack']) && (string)$stack !== 0) {
-                    $claseSelect->setQId_sel($Qid_sel);
-                    $claseSelect->setQScroll_id($Qscroll_id);
-                }
-
-                switch ((int)$id_dossier) {
-                    case 1301:
-                    case 1302:
-                        $Qmodo_curso = (int)($post['modo_curso'] ?? 0);
-                        $claseSelect->setModo_curso($Qmodo_curso);
-                        break;
-                    case 1303:
-                        if (!empty($Qid_activ)) {
-                            $claseSelect->setQId_activ($Qid_activ);
-                        }
-                        if (method_exists($claseSelect, 'setTodos')) {
-                            $claseSelect->setTodos($post['todos'] ?? null);
-                        }
-                        break;
-                }
-                if (method_exists($claseSelect, 'getSegmentData')) {
-                    $segmentPayload = $claseSelect->getSegmentData();
-                    $payload = is_array($segmentPayload) ? $segmentPayload : [];
-                    $segmentTipo = (string)($payload['segment_tipo'] ?? 'select_habitaciones_cdc');
-                    unset($payload['segment_tipo']);
-                    $fichaSegmentos[] = array_merge(
-                        [
-                            'tipo' => $segmentTipo,
-                            'id' => $nom_bloque,
-                        ],
-                        $payload
-                    );
-                } else {
-                    $fichaSegmentos[] = [
-                        'tipo' => 'html',
-                        'id' => $nom_bloque,
-                        'html' => $claseSelect->getHtml(),
-                    ];
+            if ($nameClaseSelect !== null && class_exists($nameClaseSelect)) {
+                $segment = $this->fichaSelectRunner->buildSelectSegment(
+                    $nameClaseSelect,
+                    $nom_bloque,
+                    $id_dossier,
+                    $pau,
+                    $Qobj_pau,
+                    $id_pau,
+                    $Qpermiso,
+                    $bloque,
+                    $QqueSel,
+                    $stack,
+                    $Qid_sel,
+                    $Qscroll_id,
+                    $Qid_activ,
+                    $Qmodo_curso,
+                    $post,
+                );
+                if ($segment !== null) {
+                    $fichaSegmentos[] = $segment;
                 }
             } else {
                 $clase_info = DossierVerDatosTablaInfoClassResolver::resolveFullyQualifiedClassName($oTipoDossier);
-                $Qclase_info_enc = urlencode($clase_info);
-                $oInfoClase = DependencyResolver::get($clase_info);
-                $oInfoClase->setId_pau($id_pau);
-                if (method_exists($oInfoClase, 'setObj_pau')) {
-                    $oInfoClase->setObj_pau($Qobj_pau);
-                }
+                $resolved = $this->fichaSelectRunner->resolveDatosInfo($clase_info, $id_pau, $Qobj_pau);
+                $oInfoClase = $resolved['info'];
+                $Qclase_info_enc = $resolved['clase_info_encoded'];
                 $oDatosTabla = new DatosTablaRepo();
                 $oDatosTabla->setBloque($bloque);
                 $oDatosTabla->setExplicacion_txt($oInfoClase->getTxtExplicacion());
                 $oDatosTabla->setEliminar_txt($oInfoClase->getTxtEliminar());
-                $oDatosTabla->setColeccion($oInfoClase->getColeccion());
+                if (method_exists($oInfoClase, 'getColeccion')) {
+                    $oDatosTabla->setColeccion($oInfoClase->getColeccion());
+                }
                 $oDatosTabla->setId_sel($Qid_sel);
                 $oDatosTabla->setScroll_id($Qscroll_id);
 
@@ -316,7 +304,7 @@ class DossiersVerPantallaData
                 ];
 
                 $insTrasladoLinkSpec = null;
-                if ((int)$id_dossier === 1004) {
+                if ((int) $id_dossier === 1004) {
                     $insTrasladoLinkSpec = [
                         'path' => 'frontend/personas/controller/traslado_form.php',
                         'query' => [
@@ -332,8 +320,6 @@ class DossiersVerPantallaData
                     'tipo' => 'datos_tabla',
                     'id' => $nom_bloque,
                     'titulo' => $oInfoClase->getTxtTitulo(),
-                    // Datos puros para que el frontend genere el <script> con HashFront::link
-                    // aplicado a `action_tabla_link_spec`.
                     'script_ctx' => [
                         'bloque' => $bloque,
                         'action_form' => $oDatosTabla->getAction_form(),
@@ -356,10 +342,10 @@ class DossiersVerPantallaData
                     'ins_traslado_link_spec' => $insTrasladoLinkSpec,
                 ];
             }
-            $id_dossier = strtok("y");
+            $id_dossier = strtok('y');
         }
 
-        return self::withAvisoRegionStgr([
+        return $this->withAvisoRegionStgr([
             'top_data' => $top_data,
             'modo' => 'ficha',
             'ficha_segmentos' => $fichaSegmentos,
@@ -371,7 +357,7 @@ class DossiersVerPantallaData
      * @param array<string, array<string, string>> $problemasRegionStgr
      * @return array<string, mixed>
      */
-    private static function withAvisoRegionStgr(array $result, array $problemasRegionStgr): array
+    private function withAvisoRegionStgr(array $result, array $problemasRegionStgr): array
     {
         $aviso = RegionStgrAviso::formatear($problemasRegionStgr);
         if ($aviso !== '') {
@@ -385,11 +371,11 @@ class DossiersVerPantallaData
      * @param array<string, mixed> $post
      * @return array<string, mixed>
      */
-    private static function respuestaSoloAvisoRegionStgr(RegionStgrConfigException $e, array $post): array
+    private function respuestaSoloAvisoRegionStgr(RegionStgrConfigException $e, array $post): array
     {
-        $pau = (string)($post['pau'] ?? '');
-        $id_pau = (int)($post['id_pau'] ?? 0);
-        $Qobj_pau = (string)($post['obj_pau'] ?? '');
+        $pau = input_string($post, 'pau');
+        $id_pau = input_int($post, 'id_pau');
+        $Qobj_pau = input_string($post, 'obj_pau');
 
         $problemasRegionStgr = [];
         RegionStgrAviso::registrar($problemasRegionStgr, $e);

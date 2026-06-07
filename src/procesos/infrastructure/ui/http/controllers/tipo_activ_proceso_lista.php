@@ -1,6 +1,10 @@
 <?php
 
 use src\procesos\application\TipoActivProcesoLista;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-ContestarJson::enviar('', TipoActivProcesoLista::execute());
+/** @var TipoActivProcesoLista $useCase */
+$useCase = DependencyResolver::get(TipoActivProcesoLista::class);
+
+ContestarJson::enviar('', $useCase->execute());

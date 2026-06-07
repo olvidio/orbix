@@ -14,5 +14,9 @@ namespace src\asistentes\domain\contracts;
  */
 interface AsistentePubRepositoryInterface extends AsistenteRepositoryInterface
 {
-
+    /**
+     * @param list<int> $aId_activ
+     * @return list<int>|false
+     */
+    public function getListaAsistentesDistintos(array $aId_activ = []): array|false;
 }

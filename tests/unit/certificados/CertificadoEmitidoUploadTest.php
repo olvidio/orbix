@@ -10,6 +10,7 @@ use Faker\Factory;
 use src\certificados\domain\CertificadoEmitidoUpload;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
+use src\shared\infrastructure\DependencyResolver;
 use Tests\factories\certificados\CertificadosFactory;
 use Tests\myTest;
 
@@ -47,14 +48,14 @@ class CertificadoEmitidoUploadTest extends myTest
         $faker = Factory::create();
         $oDBdst = $this->setConexion('H-Hv');
         foreach ($this->cCertificados as $Certificado) {
-            $CertificadoUpload = new CertificadoEmitidoUpload();
+            $CertificadoUpload = DependencyResolver::get(CertificadoEmitidoUpload::class);
             $CertificadoUpload->setoDbl($oDBdst);
             // guardar uno nuevo
             $contenido_doc = $Certificado->getDocumento();
             $id_nom = $Certificado->getId_nom();
             $certificado = $Certificado->getCertificado();
             $firmado = $Certificado->isFirmado();
-            $idioma = $Certificado->getIdioma();
+            $idioma = (string) ($Certificado->getIdiomaVo()?->value() ?? '');
             $oF_certificado = $Certificado->getF_certificado();
             $oF_enviado = $Certificado->getF_enviado();
             $destino = $Certificado->getDestino();
@@ -81,7 +82,7 @@ class CertificadoEmitidoUploadTest extends myTest
             $this->assertEquals($CertificadoDB3->getF_certificado(), $Certificado->getF_certificado());
             $this->assertEquals($CertificadoDB3->getDestino(), $Certificado->getDestino());
             $this->assertEquals($CertificadoDB3->getId_nom(), $Certificado->getId_nom());
-            $this->assertEquals($CertificadoDB3->getIdioma(), $Certificado->getIdioma());
+            $this->assertEquals($CertificadoDB3->getIdiomaVo()?->value(), $Certificado->getIdiomaVo()?->value());
 
             // borrar las pruebas
             $certificadoEmitidoRepository->eliminar($CertificadoDB3);
@@ -92,14 +93,14 @@ class CertificadoEmitidoUploadTest extends myTest
     {
         $oDBdst = $this->setConexion('H-Hv');
         foreach ($this->cCertificados as $Certificado) {
-            $CertificadoUpload = new CertificadoEmitidoUpload();
+            $CertificadoUpload = DependencyResolver::get(CertificadoEmitidoUpload::class);
             $CertificadoUpload->setoDbl($oDBdst);
 
             $contenido_doc = $Certificado->getDocumento();
             $id_nom = $Certificado->getId_nom();
             $certificado = $Certificado->getCertificado();
             $firmado = $Certificado->isFirmado();
-            $idioma = $Certificado->getIdioma();
+            $idioma = (string) ($Certificado->getIdiomaVo()?->value() ?? '');
             $oF_certificado = $Certificado->getF_certificado();
             $oF_enviado = $Certificado->getF_enviado();
             $destino = $Certificado->getDestino();
@@ -120,7 +121,7 @@ class CertificadoEmitidoUploadTest extends myTest
             $this->assertEquals($CertificadoDB->getDestino(), $CertificadoDB2->getDestino());
             $this->assertEquals($CertificadoDB->getDocumento(), $CertificadoDB2->getDocumento());
             $this->assertEquals($CertificadoDB->getId_nom(), $CertificadoDB2->getId_nom());
-            $this->assertEquals($CertificadoDB->getIdioma(), $CertificadoDB2->getIdioma());
+            $this->assertEquals($CertificadoDB->getIdiomaVo()?->value(), $CertificadoDB2->getIdiomaVo()?->value());
             $this->assertEquals($CertificadoDB->isFirmado(), $CertificadoDB2->isFirmado());
 
             // borrar las pruebas

@@ -45,7 +45,7 @@ class ProfesorCongreso
     {
         $this->congreso = $valor instanceof CongresoName
             ? $valor
-            : CongresoName::fromNullableString($valor);
+            : (CongresoName::fromNullableString($valor) ?? throw new \InvalidArgumentException('congreso cannot be null'));
     }
 
     /**
@@ -61,7 +61,7 @@ class ProfesorCongreso
      */
     public function setCongreso(?string $valor = null): void
     {
-        $this->congreso = CongresoName::fromNullableString($valor);
+        $this->congreso = (CongresoName::fromNullableString($valor) ?? throw new \InvalidArgumentException('congreso cannot be null'));
     }
 
     public function getLugarVo(): ?LugarName
@@ -135,7 +135,7 @@ class ProfesorCongreso
     /**
      * @deprecated use getTipoCongresoVo()
      */
-    public function getTipo(): ?string
+    public function getTipo(): int|string|null
     {
         return $this->tipo?->value();
     }
@@ -193,6 +193,9 @@ class ProfesorCongreso
     {
         return 'id_item';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

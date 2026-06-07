@@ -30,7 +30,7 @@ class TipoDoc
 
     private ?bool $vigente = null;
 
-    private ?bool $numerado;
+    private bool $numerado = false;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -41,7 +41,7 @@ class TipoDoc
 
     public function setId_tipo_doc(int $id_tipo_doc): void
     {
-        $this->id_tipo_doc =TipoDocId::fromNullableInt($id_tipo_doc);
+        $this->id_tipo_doc = new TipoDocId($id_tipo_doc);
     }
 
     public function getNom_doc(): ?string
@@ -61,7 +61,7 @@ class TipoDoc
 
     public function setSigla(string $sigla): void
     {
-        $this->sigla = TipoDocSigla::fromNullableString($sigla);
+        $this->sigla = new TipoDocSigla($sigla);
     }
 
     public function getObserv(): ?string
@@ -74,7 +74,7 @@ class TipoDoc
         $this->observ = TipoDocObserv::fromNullableString($observ);
     }
 
-    public function getId_coleccion(): ?string
+    public function getId_coleccion(): ?int
     {
         return $this->id_coleccion?->value();
     }
@@ -112,7 +112,7 @@ class TipoDoc
 
     public function setNumerado(?bool $numerado): void
     {
-        $this->numerado = $numerado?? False;
+        $this->numerado = $numerado ?? false;
     }
 
     // Value Object API (duplicada con legacy)
@@ -125,7 +125,7 @@ class TipoDoc
     {
         $this->id_tipo_doc = $id instanceof TipoDocId
             ? $id
-            : TipoDocId::fromNullableInt($id);
+            : (TipoDocId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     public function getNomDocVo(): ?TipoDocName
@@ -137,7 +137,7 @@ class TipoDoc
     {
         $this->nom_doc = $name instanceof TipoDocName
             ? $name
-            : TipoDocName::fromNullableString($name);
+            : (TipoDocName::fromNullableString($name) ?? throw new \InvalidArgumentException('name cannot be null'));
     }
 
     public function getSiglaVo(): ?TipoDocSigla
@@ -149,7 +149,7 @@ class TipoDoc
     {
         $this->sigla = $sigla instanceof TipoDocSigla
             ? $sigla
-            : TipoDocSigla::fromNullableString($sigla);
+            : (TipoDocSigla::fromNullableString($sigla) ?? throw new \InvalidArgumentException('sigla cannot be null'));
     }
 
     public function getObservVo(): ?TipoDocObserv
@@ -173,14 +173,17 @@ class TipoDoc
     {
         $this->id_coleccion = $id instanceof ColeccionId
             ? $id
-            : ColeccionId::fromNullableInt($id);
+            : (ColeccionId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_tipo_doc';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

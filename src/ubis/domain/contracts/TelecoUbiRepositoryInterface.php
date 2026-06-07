@@ -18,6 +18,19 @@ interface TelecoUbiRepositoryInterface
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<TelecoUbi>
+     */
+    /**
+     * @return list<TelecoUbi>
+     */
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<TelecoUbi>
+     */
     public function getTelecos(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -37,14 +50,26 @@ interface TelecoUbiRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_item): array|false;
 
     /**
      * Busca la clase con id_item en el repositorio.
      */
     public function findById(int $id_item): ?TelecoUbi;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

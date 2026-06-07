@@ -20,34 +20,28 @@ use function src\shared\domain\helpers\is_true;
  */
 class Select_certificados_de_una_persona
 {
-    /* @var $a_valores array */
+    public function __construct(
+        private readonly CertificadoRecibidoRepositoryInterface $certificadoRecibidoRepository,
+    ) {
+    }
+
+    /** @var array<int|string, mixed> */
     private array $a_valores = [];
-    /* @var $bloque string  necesario para el script */
-    private string $bloque;
-
-    // ---------- Variables requeridas
-    private string $queSel;
-    /* @var $id_dossier integer */
-    private int $id_dossier;
-    /* @var $pau string */
-    private string $pau;
-    /* @var $obj_pau string */
-    private string $obj_pau;
-    /* @var $id_pau integer */
-    private int $id_pau;
-    /**
-     * 3: para todo, 2, 1:solo lectura
-     * @var integer $permiso
-     */
-    private $permiso;
-
-    // ------ Variables para mantener la selección de la grid al volver atras
-    private $Qid_sel;
-    private $Qscroll_id;
-    private mixed $status;
-    // Clave actual de la pila de navegación, inyectada desde el controller frontend.
+    private string $bloque = '';
+    private string $queSel = '';
+    private int $id_dossier = 0;
+    private string $pau = '';
+    private string $obj_pau = '';
+    private int $id_pau = 0;
+    private int $permiso = 0;
+    private int|string|null $Qid_sel = null;
+    private int|string|null $Qscroll_id = null;
+    private mixed $status = null;
     private int $stackActual = 0;
 
+    /**
+     * @return list<array{txt: string, click: string}>
+     */
     private function getBotones(): array
     {
         $a_botones[] = ['txt' => _("descargar pdf"), 'click' => "fnjs_descargar_pdf(\"#seleccionados\")"];
@@ -56,6 +50,9 @@ class Select_certificados_de_una_persona
         return $a_botones;
     }
 
+    /**
+     * @return list<string>
+     */
     private function getCabeceras(): array
     {
         return [
@@ -67,6 +64,9 @@ class Select_certificados_de_una_persona
         ];
     }
 
+    /**
+     * @return array<int|string, mixed>
+     */
     private function getValores(): array
     {
         if (empty($this->a_valores)) {
@@ -89,8 +89,7 @@ class Select_certificados_de_una_persona
             '_ordre' => 'f_certificado'
         ];
 
-        $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
-        $cCertificados = $certificadoRecibidoRepository->getCertificados($aWhere);
+        $cCertificados = $this->certificadoRecibidoRepository->getCertificados($aWhere);
 
         $i = 0;
         $a_valores = [];
@@ -100,8 +99,8 @@ class Select_certificados_de_una_persona
             $id_item = $oCertificado->getId_item();
             $certificado = $oCertificado->getCertificado();
             $firmado = $oCertificado->isFirmado();
-            $f_certificado = $oCertificado->getF_certificado()?->getFromLocal();
-            $f_recibido = $oCertificado->getF_recibido()?->getFromLocal();
+            $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
+            $f_recibido = $oCertificado->getF_recibido()->getFromLocal();
             $pdf = $oCertificado->getDocumento();
 
             $a_valores[$i]['sel'] = $id_item;
@@ -155,6 +154,7 @@ class Select_certificados_de_una_persona
             ],
             'paths' => [
                 'certificado_recibido_delete' => 'src/certificados/certificado_recibido_delete',
+                'bloque' => $this->bloque,
             ],
             'url_nuevo_spec' => [
                 'path' => 'frontend/certificados/controller/certificado_recibido_adjuntar.php',
@@ -188,57 +188,57 @@ class Select_certificados_de_una_persona
         return $this->permiso;
     }
 
-    public function getStatus()
+    public function getStatus(): mixed
     {
         return $this->status;
     }
 
-    public function setId_dossier($Qid_dossier): void
+    public function setId_dossier(int|string $Qid_dossier): void
     {
-        $this->id_dossier = $Qid_dossier;
+        $this->id_dossier = (int) $Qid_dossier;
     }
 
-    public function setPau($Qpau): void
+    public function setPau(string $Qpau): void
     {
         $this->pau = $Qpau;
     }
 
-    public function setObj_pau($Qobj_pau): void
+    public function setObj_pau(string $Qobj_pau): void
     {
         $this->obj_pau = $Qobj_pau;
     }
 
-    public function setId_pau($Qid_pau): void
+    public function setId_pau(int|string $Qid_pau): void
     {
-        $this->id_pau = $Qid_pau;
+        $this->id_pau = (int) $Qid_pau;
     }
 
-    public function setPermiso($Qpermiso): void
+    public function setPermiso(int|string $Qpermiso): void
     {
-        $this->permiso = $Qpermiso;
+        $this->permiso = (int) $Qpermiso;
     }
 
-    public function setStatus($Qstatus): void
+    public function setStatus(mixed $Qstatus): void
     {
         $this->status = $Qstatus;
     }
 
-    public function setQid_sel($Qid_sel): void
+    public function setQid_sel(int|string|null $Qid_sel): void
     {
         $this->Qid_sel = $Qid_sel;
     }
 
-    public function setQscroll_id($Qscroll_id): void
+    public function setQscroll_id(int|string|null $Qscroll_id): void
     {
         $this->Qscroll_id = $Qscroll_id;
     }
 
-    public function setBloque($bloque): void
+    public function setBloque(string $bloque): void
     {
         $this->bloque = $bloque;
     }
 
-    public function setQueSel($queSel): void
+    public function setQueSel(string $queSel): void
     {
         $this->queSel = $queSel;
     }

@@ -13,9 +13,9 @@ use src\utils_database\domain\entity\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ServerConf::DIR . "/src/config/db";
+    private string $dir_base = ServerConf::DIR . "/src/config/db";
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
         if (empty($esquema_sfsv)) {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
@@ -25,7 +25,7 @@ class DBEsquema extends DBAbstract
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->eliminar_x_config_schema();
         // eliminar las tablas en la DBSelect para la sincronización.
@@ -35,7 +35,7 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->create_x_config_schema();
         // crear las tablas en la DBSelect para la sincronización.
@@ -45,20 +45,24 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function llenarAll()
+    public function llenarAll(): void
     {
         $this->llenar_x_config_schema();
     }
 
-    protected function infoTable($tabla)
+    /**
+     * @return array<string, string>
+     */
+    protected function infoTable(string $tabla): array
     {
+        $nom_tabla = '';
+        $campo_seq = '';
+        $id_seq = '';
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
         switch ($tabla) {
             case "x_config_schema":
                 $nom_tabla = $this->getNomTabla($tabla);
-                $campo_seq = '';
-                $id_seq = '';
                 break;
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
@@ -71,7 +75,7 @@ class DBEsquema extends DBAbstract
     /**
      * En la BD Comun.
      */
-    public function create_x_config_schema()
+    public function create_x_config_schema(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -104,7 +108,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_x_config_schema()
+    public function eliminar_x_config_schema(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -120,7 +124,7 @@ class DBEsquema extends DBAbstract
 
     /* ###################### LLENAR TABLAS ################################ */
 
-    public function llenar_x_config_schema()
+    public function llenar_x_config_schema(): void
     {
         $this->addPermisoGlobal('comun');
         $datosTabla = $this->infoTable("x_config_schema");

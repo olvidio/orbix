@@ -2,28 +2,36 @@
 
 namespace src\encargossacd\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoSacd;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
  * Guarda/modifica las ausencias de un SACD
  * (`frontend/encargossacd/controller/sacd_ausencias_update.php`).
- *
- * Devuelve ['error' => bool, 'mensajes' => string] donde `mensajes`
- * acumula los errores de guardado/eliminacion para mostrar al usuario.
  */
 final class SacdAusenciasUpdate
 {
+
+    public function __construct(
+        private EncargoSacdHorarioRepositoryInterface $encargoSacdHorarioRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $data
      * @return array{error: bool, mensajes: string}
      */
-    public static function execute(array $data): array
+    public function execute(array $data): array
     {
-        $enc_num = (int)($data['enc_num'] ?? 0);
-        $id_nom = (int)($data['id_nom'] ?? 0);
+        $enc_num = input_int($data, 'enc_num');
+        $id_nom = input_int($data, 'id_nom');
 
         $a_inicio = is_array($data['inicio'] ?? null) ? $data['inicio'] : [];
         $a_fin = is_array($data['fin'] ?? null) ? $data['fin'] : [];
@@ -32,18 +40,18 @@ final class SacdAusenciasUpdate
 
         $mensajes = '';
         for ($i = 0; $i < $enc_num; $i++) {
-            $f_ini = (string)($a_inicio[$i] ?? '');
-            $f_fin = (string)($a_fin[$i] ?? '');
+            $f_ini = $this->arrayStringAt($a_inicio, $i);
+            $f_fin = $this->arrayStringAt($a_fin, $i);
             if ($f_fin === '') {
                 $f_fin = $f_ini;
             }
-            $id_enc = (int)($a_id_enc[$i] ?? 0);
-            $id_item = (int)($a_id_item[$i] ?? 0);
+            $id_enc = $this->arrayIntAt($a_id_enc, $i);
+            $id_item = $this->arrayIntAt($a_id_item, $i);
 
             if ($id_item === 0) {
-                $mensajes .= self::insertar($id_enc, $id_nom, 2, $f_ini, $f_fin);
+                $mensajes .= $this->insertar($id_enc, $id_nom, 2, $f_ini, $f_fin);
             } else {
-                $mensajes .= self::modificar($id_item, $id_enc, $id_nom, $f_ini, $f_fin);
+                $mensajes .= $this->modificar($id_item, $id_enc, $id_nom, $f_ini, $f_fin);
             }
         }
 
@@ -53,86 +61,110 @@ final class SacdAusenciasUpdate
         ];
     }
 
-    private static function modificar(int $id_item, int $id_enc, int $id_nom, string $f_ini, string $f_fin): string
+    private function modificar(int $id_item, int $id_enc, int $id_nom, string $f_ini, string $f_fin): string
     {
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-        $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
-
         $mensajes = '';
-        $oEncargoSacd = $EncargoSacdRepository->findById($id_item);
+        $oEncargoSacd = $this->encargoSacdRepository->findById($id_item);
         if ($oEncargoSacd === null) {
             return _('no se ha encontrado el encargo del sacd') . "\n";
         }
 
         if ($f_ini === '' && $f_fin === '') {
-            if ($EncargoSacdRepository->Eliminar($oEncargoSacd) === false) {
+            if ($this->encargoSacdRepository->Eliminar($oEncargoSacd) === false) {
                 $mensajes .= _('hay un error, no se ha eliminado') . "\n"
-                    . $EncargoSacdRepository->getErrorTxt() . "\n";
+                    . $this->encargoSacdRepository->getErrorTxt() . "\n";
             }
+
             return $mensajes;
         }
 
-        $oEncargoSacd->setF_ini($f_ini);
-        $oEncargoSacd->setF_fin($f_fin);
-        if ($EncargoSacdRepository->Guardar($oEncargoSacd) === false) {
+        $oEncargoSacd->setF_ini($this->toDate($f_ini));
+        $oEncargoSacd->setF_fin($this->toDate($f_fin));
+        if ($this->encargoSacdRepository->Guardar($oEncargoSacd) === false) {
             $mensajes .= _('hay un error, no se ha guardado') . "\n"
-                . $EncargoSacdRepository->getErrorTxt() . "\n";
+                . $this->encargoSacdRepository->getErrorTxt() . "\n";
         }
 
-        $cHorario = $EncargoSacdHorarioRepository->getEncargoSacdHorarios([
+        $cHorario = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios([
             'id_enc' => $id_enc,
             'id_nom' => $id_nom,
             'id_item_tarea_sacd' => $id_item,
-        ]) ?: [];
+        ]);
         foreach ($cHorario as $oHorario) {
-            $oHorario->setF_ini($f_ini);
-            $oHorario->setF_fin($f_fin);
-            if ($EncargoSacdHorarioRepository->Guardar($oHorario) === false) {
+            $oHorario->setF_ini($this->toDate($f_ini));
+            $oHorario->setF_fin($this->toDate($f_fin));
+            if ($this->encargoSacdHorarioRepository->Guardar($oHorario) === false) {
                 $mensajes .= _('hay un error, no se ha guardado') . "\n"
-                    . $oHorario->getErrorTxt() . "\n";
+                    . $this->encargoSacdHorarioRepository->getErrorTxt() . "\n";
             }
         }
 
         return $mensajes;
     }
 
-    private static function insertar(int $id_enc, int $id_nom, int $modo, string $f_ini, string $f_fin): string
+    private function insertar(int $id_enc, int $id_nom, int $modo, string $f_ini, string $f_fin): string
     {
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-        $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
-
         $mensajes = '';
 
-        $newId = $EncargoSacdRepository->getNewId();
+        $newId = $this->encargoSacdRepository->getNewId();
         $oEncargoSacd = new EncargoSacd();
         $oEncargoSacd->setId_item($newId);
         $oEncargoSacd->setId_enc($id_enc);
         $oEncargoSacd->setId_nom($id_nom);
         $oEncargoSacd->setModo($modo);
-        $oEncargoSacd->setF_ini($f_ini);
-        $oEncargoSacd->setF_fin($f_fin);
-        if ($EncargoSacdRepository->Guardar($oEncargoSacd) === false) {
+        $oEncargoSacd->setF_ini($this->toDate($f_ini));
+        $oEncargoSacd->setF_fin($this->toDate($f_fin));
+        if ($this->encargoSacdRepository->Guardar($oEncargoSacd) === false) {
             $mensajes .= _('hay un error, no se ha guardado') . "\n"
-                . $EncargoSacdRepository->getErrorTxt() . "\n";
+                . $this->encargoSacdRepository->getErrorTxt() . "\n";
         }
-        $id_item_tarea_sacd = (int)$oEncargoSacd->getId_item();
+        $id_item_tarea_sacd = (int) $oEncargoSacd->getId_item();
 
-        $oHorario = $EncargoSacdHorarioRepository->findById($id_item_tarea_sacd);
+        $oHorario = $this->encargoSacdHorarioRepository->findById($id_item_tarea_sacd);
         if ($oHorario === null) {
-            $newIdH = $EncargoSacdHorarioRepository->getNewId();
+            $newIdH = $this->encargoSacdHorarioRepository->getNewId();
             $oHorario = new EncargoSacdHorario();
             $oHorario->setId_item($newIdH);
         }
         $oHorario->setId_item_tarea_sacd($id_item_tarea_sacd);
         $oHorario->setId_enc($id_enc);
         $oHorario->setId_nom($id_nom);
-        $oHorario->setF_ini($f_ini);
-        $oHorario->setF_fin($f_fin);
-        if ($EncargoSacdHorarioRepository->Guardar($oHorario) === false) {
+        $oHorario->setF_ini($this->toDate($f_ini));
+        $oHorario->setF_fin($this->toDate($f_fin));
+        if ($this->encargoSacdHorarioRepository->Guardar($oHorario) === false) {
             $mensajes .= _('hay un error, no se ha guardado') . "\n"
-                . $EncargoSacdHorarioRepository->getErrorTxt() . "\n";
+                . $this->encargoSacdHorarioRepository->getErrorTxt() . "\n";
         }
 
         return $mensajes;
+    }
+
+    private function toDate(string $value): ?DateTimeLocal
+    {
+        return $value === '' ? null : new DateTimeLocal($value);
+    }
+
+    /**
+     * @param array<int|string, mixed> $values
+     */
+    private function arrayStringAt(array $values, int $index): string
+    {
+        if (!isset($values[$index]) || !is_scalar($values[$index])) {
+            return '';
+        }
+
+        return (string) $values[$index];
+    }
+
+    /**
+     * @param array<int|string, mixed> $values
+     */
+    private function arrayIntAt(array $values, int $index): int
+    {
+        if (!isset($values[$index]) || !is_numeric($values[$index])) {
+            return 0;
+        }
+
+        return (int) $values[$index];
     }
 }

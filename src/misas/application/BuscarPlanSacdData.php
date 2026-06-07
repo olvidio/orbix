@@ -15,49 +15,66 @@ use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
  */
 class BuscarPlanSacdData
 {
+    public function __construct(
+        private readonly UsuarioRepositoryInterface $usuarioRepository,
+        private readonly RoleRepositoryInterface $roleRepository,
+        private readonly ZonaRepositoryInterface $zonaRepository,
+        private readonly InicialesSacdService $inicialesSacdService,
+        private readonly ZonaSacdRepositoryInterface $zonaSacdRepository,
+        private readonly PersonaSacdRepositoryInterface $personaSacdRepository,
+    ) {
+    }
+
     /**
      * @return array{sacd_opciones: array<string, string>, sacd_selected: string}
      */
-    public static function getData(): array
-    {
-        $container = $GLOBALS['container'];
+    /**
+     * @return array<string, mixed>
+     */
 
-        $UsuarioRepository = $container->get(UsuarioRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+    public function getData(): array
+    {
+        $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        if ($oMiUsuario === null) {
+            return [
+                'sacd_opciones' => [],
+                'sacd_selected' => '',
+            ];
+        }
+
         $id_role = $oMiUsuario->getId_role();
         $id_sacd = $oMiUsuario->getCsvIdPauAsString();
 
+        /** @var array<string, string> $a_sacd */
         $a_sacd = [];
+        $aRoles = $this->roleRepository->getArrayRoles();
+        $cZonas = $this->zonaRepository->getZonas(['id_nom' => $id_sacd]);
 
-        $RoleRepository = $container->get(RoleRepositoryInterface::class);
-        $aRoles = $RoleRepository->getArrayRoles();
-
-        $ZonaRepository = $container->get(ZonaRepositoryInterface::class);
-        $cZonas = $ZonaRepository->getZonas(['id_nom' => $id_sacd]);
-        $InicialesSacdService = $container->get(InicialesSacdService::class);
-
-        if (is_array($cZonas) && count($cZonas) > 0) {
-            $ZonaSacdRepository = $container->get(ZonaSacdRepositoryInterface::class);
+        if (count($cZonas) > 0) {
             foreach ($cZonas as $oZona) {
                 $id_zona = $oZona->getId_zona();
-                $a_id_nom = $ZonaSacdRepository->getIdSacdsDeZona($id_zona);
+                $a_id_nom = $this->zonaSacdRepository->getIdSacdsDeZona($id_zona);
                 foreach ($a_id_nom as $id_nom) {
-                    $sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
-                    $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
+                    $sacd = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom);
+                    $iniciales = $this->inicialesSacdService->obtenerIniciales($id_nom);
                     $key = $id_nom . '#' . $iniciales;
-                    $a_sacd[$key] = $sacd ?? '?';
+                    $a_sacd[$key] = $sacd !== '' ? $sacd : '?';
                 }
             }
-        } else {
-            if (!is_null($id_sacd)) {
-                $sacd = $InicialesSacdService->obtenerNombreConIniciales($id_sacd);
-                $iniciales = $InicialesSacdService->obtenerIniciales($id_sacd);
-                $key = $id_sacd . '#' . $iniciales;
-                $a_sacd[$key] = $sacd ?? '?';
-            }
+        } elseif ($id_sacd !== null && $id_sacd !== '' && is_numeric($id_sacd)) {
+            $id_sacd_int = (int) $id_sacd;
+            $sacd = $this->inicialesSacdService->obtenerNombreConIniciales($id_sacd_int);
+            $iniciales = $this->inicialesSacdService->obtenerIniciales($id_sacd_int);
+            $key = $id_sacd_int . '#' . $iniciales;
+            $a_sacd[$key] = $sacd !== '' ? $sacd : '?';
         }
 
-        if ((($aRoles[$id_role] ?? '') === 'Oficial_dl') || ($_SESSION['oConfig']->is_jefeCalendario())) {
+        $oConfig = $_SESSION['oConfig'] ?? null;
+        $esJefeCalendario = is_object($oConfig)
+            && method_exists($oConfig, 'is_jefeCalendario')
+            && $oConfig->is_jefeCalendario();
+
+        if ((($aRoles[$id_role] ?? '') === 'Oficial_dl') || $esJefeCalendario) {
             $aWhere = [];
             $aOperador = [];
             $aWhere['sacd'] = 't';
@@ -65,21 +82,20 @@ class BuscarPlanSacdData
             $aWhere['id_tabla'] = "'n','a'";
             $aOperador['id_tabla'] = 'IN';
             $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-            $PersonaSacdRepository = $container->get(PersonaSacdRepositoryInterface::class);
-            $cPersonas = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
+            $cPersonas = $this->personaSacdRepository->getPersonas($aWhere, $aOperador);
             foreach ($cPersonas as $oPersona) {
                 $id_nom = $oPersona->getId_nom();
-                $sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
-                $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
+                $sacd = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom);
+                $iniciales = $this->inicialesSacdService->obtenerIniciales($id_nom);
                 $key = $id_nom . '#' . $iniciales;
-                $a_sacd[$key] = $sacd ?? '?';
+                $a_sacd[$key] = $sacd !== '' ? $sacd : '?';
             }
         }
 
         $selected = '';
         if ($a_sacd !== []) {
             reset($a_sacd);
-            $selected = (string)key($a_sacd);
+            $selected = (string) key($a_sacd);
         }
 
         return [

@@ -3,6 +3,7 @@
 namespace src\notas\application;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\GlobalPdo;
 use PDO;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\value_objects\CursoStgr;
@@ -51,8 +52,8 @@ final class AsignaturasPendientes
      */
     public function __construct(?string $tablaPersonas = null, ?string $ambito = null)
     {
-        $this->pdo = $GLOBALS['oDB'];
-        $this->asignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $this->pdo = GlobalPdo::get('oDB');
+        $this->asignaturaRepository = $this->asignaturaRepository;
         $this->tablaPersonas = $tablaPersonas;
         $ambito ??= ConfigGlobal::mi_ambito();
         $this->tablaNotas = $ambito === 'rstgr' ? 'publicv.e_notas' : 'e_notas_dl';
@@ -131,7 +132,10 @@ final class AsignaturasPendientes
 
         $result = [];
         foreach ($stmt as $row) {
-            $result[(int)$row['id_nom']] = 1;
+            if (!is_array($row) || !array_key_exists('id_nom', $row)) {
+                continue;
+            }
+            $result[(int) $row['id_nom']] = 1;
         }
         return $result;
     }
@@ -187,7 +191,10 @@ final class AsignaturasPendientes
 
         $result = [];
         foreach ($stmt as $row) {
-            $result[] = (string)$row['nombre_corto'];
+            if (!is_array($row) || !isset($row['nombre_corto']) || !is_scalar($row['nombre_corto'])) {
+                continue;
+            }
+            $result[] = (string) $row['nombre_corto'];
         }
         return $result;
     }

@@ -2,6 +2,8 @@
 
 namespace src\notas\application;
 
+use function src\shared\domain\helpers\input_string;
+
 use src\shared\config\ConfigGlobal;
 use src\notas\application\support\ActaDlGuard;
 use src\notas\application\support\ActaTribunalSync;
@@ -9,12 +11,26 @@ use src\notas\domain\contracts\ActaDlRepositoryInterface;
 
 final class ActaEliminar
 {
-    public static function execute(array $input): string
+
+    public function __construct(
+        private readonly ActaDlRepositoryInterface $actaDlRepository,
+        private readonly ActaTribunalSync $actaTribunalSync,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $acta = (string)($input['acta'] ?? '');
+        $acta = input_string($input, 'acta');
         $aSel = (array)($input['sel'] ?? []);
-        if (!empty($aSel)) {
-            $acta = urldecode(strtok($aSel[0], "#"));
+        if ($aSel !== []) {
+            $sel0 = $aSel[0];
+            if (is_string($sel0)) {
+                $part = strtok($sel0, '#');
+                $acta = urldecode(is_string($part) ? $part : '');
+            }
         }
 
         $miDele = ConfigGlobal::mi_delef();
@@ -23,7 +39,7 @@ final class ActaEliminar
             return $err;
         }
 
-        $repo = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
+        $repo = $this->actaDlRepository;
         $oActa = $repo->findById($acta);
         if ($oActa === null) {
             return _("No se encuentra el acta");
@@ -36,7 +52,7 @@ final class ActaEliminar
         }
 
         // Cascade: eliminar tambien los tribunales asociados.
-        $error .= ActaTribunalSync::rebuild($acta, []);
+        $error .= $this->actaTribunalSync->rebuild($acta, []);
 
         return $error;
     }

@@ -2,6 +2,7 @@
 namespace core;
 
 use frontend\shared\security\HashFront;use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 use src\tablonanuncios\domain\TablonAnunciosParaGM;
 use frontend\shared\web\Lista;
 
@@ -41,8 +42,9 @@ if (!empty($id_grupmenu)) {
 // Utilizo las siglas para la dl
     $grup_menu = $oGrupMenu->getGrup_menu('dl');
 
-    $tablonAnuncios = new TablonAnunciosParaGM($grup_menu);
-    $oTabla = $tablonAnuncios->getTabla();
+    /** @var TablonAnunciosParaGM $tablonAnuncios */
+    $tablonAnuncios = DependencyResolver::get(TablonAnunciosParaGM::class);
+    $oTabla = $tablonAnuncios->getTabla($grup_menu);
 } else {
     $oTabla = new Lista();
 }

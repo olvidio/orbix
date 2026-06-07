@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\domain\entity;
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -27,8 +28,8 @@ class Casa
     // Esto inyecta los métodos getDirecciones, emailPrincipalOPrimero y getTeleco aquí
     use UbiContactsTrait;
 
-    protected $repoCasaDireccion;
-    protected $repoDireccion;
+    protected RelacionCasaDireccionRepositoryInterface $repoCasaDireccion;
+    protected DireccionCasaRepositoryInterface $repoDireccion;
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
@@ -76,8 +77,8 @@ class Casa
      */
     public function __construct()
     {
-        $this->repoCasaDireccion = $GLOBALS['container']->get(RelacionCasaDireccionRepositoryInterface::class);
-        $this->repoDireccion = $GLOBALS['container']->get(DireccionCasaRepositoryInterface::class);
+        $this->repoCasaDireccion = DependencyResolver::get(RelacionCasaDireccionRepositoryInterface::class);
+        $this->repoDireccion = DependencyResolver::get(DireccionCasaRepositoryInterface::class);
     }
 
     /**
@@ -156,9 +157,11 @@ class Casa
 
     public function setNombreUbiVo(UbiNombreText|string $texto): void
     {
-        $this->nombre_ubi = $texto instanceof UbiNombreText
-            ? $texto
-            : new UbiNombreText($texto);
+        if ($texto instanceof UbiNombreText) {
+            $this->nombre_ubi = $texto;
+        } elseif ($texto !== '') {
+            $this->nombre_ubi = new UbiNombreText($texto);
+        }
     }
 
 
@@ -176,7 +179,7 @@ class Casa
      */
     public function setDl(?string $dl = null): void
     {
-        $this->dl = DelegacionCode::fromNullableString($dl);
+        $this->dl = new DelegacionCode($dl);
     }
 
     public function getDlVo(): ?DelegacionCode
@@ -254,7 +257,7 @@ class Casa
 
     public function isActive(): bool
     {
-        return $this->active;
+        return (bool) $this->active;
     }
 
 
@@ -382,9 +385,13 @@ class Casa
 
     public function setPlazasMinVo(PlazasMin|string|null $texto = null): void
     {
-        $this->plazas_min = $texto instanceof PlazasMin
-            ? $texto
-            : PlazasMin::fromNullableInt($texto);
+        if ($texto instanceof PlazasMin) {
+            $this->plazas_min = $texto;
+        } elseif ($texto === null || $texto === '') {
+            $this->plazas_min = null;
+        } else {
+            $this->plazas_min = is_numeric($texto) ? PlazasMin::fromNullableInt((int) $texto) : null;
+        }
     }
 
 
@@ -492,18 +499,22 @@ class Casa
     /**
      * Obtiene Una direccione con sus metadatos (principal, propietario)
      *
-     * @return array<DireccionDetalle>
+     * @return DireccionDetalle|null
      */
     public function getUnaDireccionDetallada(int $id_direccion): ?DireccionDetalle
     {
         $relaciones = $this->repoCasaDireccion->getRelacionesPorUbi($this->getId_ubi());
-        $direcciDetallada = null;
+        $direccionDetallada = null;
 
         foreach ($relaciones as $row) {
-            if ($id_direccion !== $row['id_direccion']) {
+            if (!isset($row['id_direccion']) || !is_numeric($row['id_direccion'])) {
                 continue;
             }
-            $direccion = $this->repoDireccion->findById($row['id_direccion']);
+            $rowIdDireccion = (int) $row['id_direccion'];
+            if ($id_direccion !== $rowIdDireccion) {
+                continue;
+            }
+            $direccion = $this->repoDireccion->findById($rowIdDireccion);
             if ($direccion !== null) {
                 // Creamos el objeto intermedio con los booleanos de la DB
                 // Aseguramos conversión a bool explícita
@@ -524,7 +535,7 @@ class Casa
     /**
      * Obtiene las direcciones con sus metadatos (principal, propietario)
      *
-     * @return array<DireccionDetalle>
+     * @return list<DireccionDetalle>
      */
     public function getDireccionesDetalladas(): array
     {
@@ -533,7 +544,14 @@ class Casa
         $direccionesDetalladas = [];
 
         foreach ($relaciones as $row) {
-            $direccion = $this->repoDireccion->findById($row['id_direccion']);
+            if (!isset($row['id_direccion'])) {
+                continue;
+            }
+            $idDireccionRaw = $row['id_direccion'];
+            if (!is_int($idDireccionRaw) && !is_string($idDireccionRaw)) {
+                continue;
+            }
+            $direccion = $this->repoDireccion->findById((int) $idDireccionRaw);
             if ($direccion !== null) {
                 // Creamos el objeto intermedio con los booleanos de la DB
                 // Aseguramos conversión a bool explícita
@@ -554,12 +572,12 @@ class Casa
     /**
      * Obtiene todas las direcciones asociadas a esta casa
      *
-     * @return array<Direccion>
+     * @return list<Direccion>
      */
     public function getDirecciones(): array
     {
         $detalles = $this->getDireccionesDetalladas();
-        return array_map(fn(DireccionDetalle $d) => $d->getDireccionVo(), $detalles);
+        return array_values(array_filter(array_map(static fn (DireccionDetalle $d) => $d->getDireccionVo(), $detalles)));
     }
 
     /**
@@ -570,9 +588,11 @@ class Casa
         $this->repoCasaDireccion->asociarDireccion(
             $this->getId_ubi(),
             $id_direccion,
-            $principal,
-            $propietario
+            $principal
         );
+        if ($propietario) {
+            $this->repoCasaDireccion->updatePropietario($this->getId_ubi(), $id_direccion, true);
+        }
     }
 
     /**

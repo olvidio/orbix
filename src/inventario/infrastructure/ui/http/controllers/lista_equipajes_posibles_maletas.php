@@ -1,11 +1,15 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_equipaje = (string)filter_input(INPUT_POST, 'id_equipaje');
+$Qid_equipaje = input_int($_POST, 'id_equipaje');
 
 $error_txt = '';
 
@@ -15,18 +19,27 @@ $error_txt = '';
 $id_ubi = 40;
 // quitar las ya asignadas
 // equipajes coincidentes
-$EquipajeRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
+/** @var EquipajeRepositoryInterface $EquipajeRepository */
+$EquipajeRepository = DependencyResolver::get(EquipajeRepositoryInterface::class);
 $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
-$f_ini_iso = $oEquipaje->getF_ini()->getIso();
-$f_fin_iso = $oEquipaje->getF_fin()->getIso();
+if ($oEquipaje === null) {
+    ContestarJson::enviar($error_txt, []);
+    return;
+}
+$fIni = $oEquipaje->getF_ini();
+$fFin = $oEquipaje->getF_fin();
+$f_ini_iso = $fIni !== null ? $fIni->getIso() : '';
+$f_fin_iso = $fFin !== null ? $fFin->getIso() : '';
 $aEquipajes = $EquipajeRepository->getEquipajesCoincidentes($f_ini_iso, $f_fin_iso);
-$EgmRepository = $GLOBALS['container']->get(EgmRepositoryInterface::class);
+/** @var EgmRepositoryInterface $EgmRepository */
+$EgmRepository = DependencyResolver::get(EgmRepositoryInterface::class);
 $aEgms = $EgmRepository->getArrayIdFromIdEquipajes($aEquipajes, 'lugar');
 
 // último id_grupo:
 $new_id_grupo = $EgmRepository->getUltimoGrupo($Qid_equipaje) + 1;
 
-$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+/** @var LugarRepositoryInterface $LugarRepository */
+$LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
 $cLugares = $LugarRepository->getLugares(['id_ubi' => $id_ubi]);
 $aOpciones = [];
 foreach ($cLugares as $oLugar) {

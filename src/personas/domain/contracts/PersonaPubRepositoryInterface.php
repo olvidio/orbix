@@ -21,6 +21,7 @@ interface PersonaPubRepositoryInterface
      * Devuelve un array con los id de centros (id_ctr) de personas activas.
      *
      * @param string $sdonde condición extra SQL (debe empezar por AND)
+     * @return array<int|string, int|string>
      */
     public function getArrayIdCentros(string $sdonde = ''): array;
 
@@ -28,12 +29,14 @@ interface PersonaPubRepositoryInterface
      * Lista de posibles SACD en array [id_nom => ape_nom].
      *
      * @param string $sdonde condición extra SQL (debe empezar por AND)
+     * @return array<int|string, string>
      */
     public function getArraySacd(string $sdonde = ''): array;
 
     /**
      * Lista de personas activas en array [id_nom => ape_nom(centro)].
      *
+     * @return array<int|string, string>
      */
     public function getArrayPersonas(string $id_tabla = ''): array;
 
@@ -43,9 +46,9 @@ interface PersonaPubRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo PersonaDl
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo PersonaDl
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<PersonaPub> Una colección de objetos de tipo PersonaPub
      */
     public function getPersonas(array $aWhere = [], array $aOperators = []): array;
 
@@ -53,9 +56,13 @@ interface PersonaPubRepositoryInterface
      * Como getPersonas: incluye todas las filas aunque falte región stgr de la dl;
      * acumula problemas en $problemasRegionStgr (usar RegionStgrAviso::formatear al mostrar).
      *
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param array<int, true> $sinRegionStgrPorIdNom
+     * @return list<PersonaPub>
      * @param-out array<string, array<string, string>> $problemasRegionStgr
      * @param-out array<int, true> $sinRegionStgrPorIdNom id_nom marcados sin región stgr en la dl
-     * @return array<int, PersonaPub>
      */
     public function getPersonasParaListado(
         array $aWhere,
@@ -69,6 +76,7 @@ interface PersonaPubRepositoryInterface
      *
      * @param-out array<string, array<string, string>> $problemasRegionStgr
      * @param-out bool $marcaAvisoRegionStgr true si la fila se cargó sin región stgr
+     * @param array<string, array<string, string>> $problemasRegionStgr
      */
     public function findByIdParaListado(int $id_nom, array &$problemasRegionStgr, bool &$marcaAvisoRegionStgr): ?PersonaPub;
 
@@ -83,9 +91,9 @@ interface PersonaPubRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_nom
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_nom): array|bool;
+    public function datosById(int $id_nom): array|false;
 
     /**
      * Busca la clase con id_nom en el repositorio.

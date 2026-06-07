@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -26,9 +27,9 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('du_tarifas');
     }
@@ -38,9 +39,9 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
     /**
      * devuelve una colección (array) de objetos de tipo TarifaUbi
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo TarifaUbi
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<TarifaUbi> Una colección de objetos de tipo TarifaUbi
      */
     public function getTarifaUbis(array $aWhere = [], array $aOperators = []): array
     {
@@ -77,27 +78,35 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $TarifaUbi = TarifaUbi::fromArray($aDatos);
             $TarifaUbiSet->add($TarifaUbi);
         }
-        return $TarifaUbiSet->getTot();
+        return array_values($TarifaUbiSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -143,6 +152,9 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -152,6 +164,9 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -163,17 +178,26 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array |bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 
@@ -183,16 +207,22 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
     public function findById(int $id_item): ?TarifaUbi
     {
         $aDatos = $this->datosById($id_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return TarifaUbi::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('du_tarifas_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

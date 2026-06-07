@@ -12,7 +12,7 @@ final class ActaDlGuard
     public static function ensureOwnership(string $acta, string $miDele, string $accion): string
     {
         $dlActa = strtok($acta, ' ');
-        if ($dlActa === false || $dlActa === '') {
+        if ($dlActa === false) {
             return '';
         }
         if ($dlActa === $miDele || $dlActa === '?') {

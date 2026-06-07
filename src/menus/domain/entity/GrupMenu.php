@@ -26,9 +26,9 @@ class GrupMenu
     /**
      * Equivalencias de nomenclatura entre la dl => cr
      *
-     * @var array
+     * @var array<string, string>
      */
-    private $aEquivalencias = [
+    private array $aEquivalencias = [
         'dre' => 'der',
         'vest' => 'dle',
         'scdl' => 'scr',
@@ -49,7 +49,7 @@ class GrupMenu
     }
 
 
-    public function getGrup_menu($dl_r = 'dl'): string
+    public function getGrup_menu(string $dl_r = 'dl'): string
     {
         $sgrupmenu = $this->grup_menu->value();
         if ($dl_r === 'r' || $dl_r === 'rstgr') {
@@ -62,7 +62,7 @@ class GrupMenu
 
     public function setGrup_menu(string $grup_menu): void
     {
-        $this->grup_menu = GrupMenuName::fromNullableString($grup_menu);
+        $this->grup_menu = GrupMenuName::fromNullableString($grup_menu) ?? throw new \InvalidArgumentException('value cannot be null');
     }
 
     public function getGrupMenuVo(): GrupMenuName
@@ -74,7 +74,7 @@ class GrupMenu
     {
         $this->grup_menu = $texto instanceof GrupMenuName
             ? $texto
-            : GrupMenuName::fromNullableString($texto);
+            : (GrupMenuName::fromNullableString($texto) ?? throw new \InvalidArgumentException('value cannot be null'));
     }
 
 
@@ -90,11 +90,12 @@ class GrupMenu
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_grupmenu';
     }
 
+    /** @return array<string, mixed> */
     public function getDatosCampos(): array
     {
         $oMetamenuSet = new Set();

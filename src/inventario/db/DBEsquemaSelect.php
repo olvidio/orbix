@@ -12,7 +12,7 @@ use src\shared\infrastructure\persistence\postgresql\DBRefresh;
 class DBEsquemaSelect extends DBEsquema
 {
 
-    public function dropAllSelect()
+    public function dropAllSelect(): void
     {
         $this->eliminar_whereis_select();
         $this->eliminar_ubis_select();
@@ -24,7 +24,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->eliminar_colecciones_select();
     }
 
-    public function createAllSelect()
+    public function createAllSelect(): void
     {
         $this->create_colecciones_select();
         $this->create_documentos_select();
@@ -42,7 +42,7 @@ class DBEsquemaSelect extends DBEsquema
     /**
      * En la BD sv-e (esquema).
      */
-    public function create_colecciones_select()
+    public function create_colecciones_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -78,13 +78,13 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_colecciones_select()
+    public function eliminar_colecciones_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("i_colecciones");
     }
 
-    public function create_documentos_select()
+    public function create_documentos_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -123,13 +123,13 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_documentos_select()
+    public function eliminar_documentos_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("i_documentos");
     }
 
-    public function create_egm_select()
+    public function create_egm_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -166,13 +166,13 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_egm_select()
+    public function eliminar_egm_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("i_egm");
     }
 
-    public function create_equipajes_select()
+    public function create_equipajes_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -208,13 +208,13 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_equipajes_select()
+    public function eliminar_equipajes_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("i_equipajes");
     }
 
-    public function create_lugares_select()
+    public function create_lugares_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -250,13 +250,13 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_lugares_select()
+    public function eliminar_lugares_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("i_lugares");
     }
 
-    public function create_tipo_documento_select()
+    public function create_tipo_documento_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -292,13 +292,13 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_tipo_documento_select()
+    public function eliminar_tipo_documento_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("i_tipo_documento");
     }
 
-    public function create_ubis_select()
+    public function create_ubis_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -334,13 +334,13 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_ubis_select()
+    public function eliminar_ubis_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("i_ubis");
     }
 
-    public function create_whereis_select()
+    public function create_whereis_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -376,7 +376,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_whereis_select()
+    public function eliminar_whereis_select(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("i_whereis");

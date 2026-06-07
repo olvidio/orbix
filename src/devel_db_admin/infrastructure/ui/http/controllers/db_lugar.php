@@ -9,15 +9,18 @@ declare(strict_types=1);
 use frontend\shared\web\Desplegable;
 use src\devel_db_admin\application\DbLugarDropdown;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 
 require_once 'frontend/shared/global_header_front.inc';
+
+/** @var DelegacionRepositoryInterface $repoDl */
+$repoDl = DependencyResolver::get(DelegacionRepositoryInterface::class);
 
 $region = (string) filter_input(INPUT_POST, 'region');
 if ($region === '') {
     exit;
 }
 
-$repoDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $aOpciones = DbLugarDropdown::opcionesPorRegion($region, $repoDl);
 
 $oDesplDelegaciones = new Desplegable();

@@ -4,34 +4,38 @@ namespace src\actividadessacd\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividadessacd\application\services\ComunicarActividadesSacdService;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Mutacion: encola los mails de comunicacion de actividades a los sacd.
- *
- * Reutiliza `ComunicacionActividadesSacdData::resolverContexto()` para
- * interpretar los mismos campos de entrada que el endpoint de lectura
- * (`que`, `id_nom`, `propuesta`, `periodo`, ...). Luego reconstruye el
- * listado por sacd y llama a `ComunicarActividadesSacdService::enviarMails`.
- *
- * Sucesor de la rama `Qmail === 'si'` del dispatcher legacy.
  */
 final class ComunicacionActividadesSacdEnviar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private ComunicacionActividadesSacdData $comunicacionActividadesSacdData,
+        private ComunicarActividadesSacdService $comunicarActividadesSacdService,
+        private PersonaSacdRepositoryInterface $personaSacdRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $ctx = ComunicacionActividadesSacdData::resolverContexto($input);
+        $ctx = $this->comunicacionActividadesSacdData->resolverContexto($input);
         if ($ctx['inicioIso'] === '' || $ctx['finIso'] === '') {
             return _("falta determinar un periodo");
         }
 
         $mi_dele = (string)ConfigGlobal::mi_delef();
+        $que = $ctx['que'];
 
-        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
-        switch ($ctx['que']) {
+        switch ($que) {
             case 'nagd':
-                $cPersonas = $PersonaSacdRepository->getPersonas(
+                $cPersonas = $this->personaSacdRepository->getPersonas(
                     [
                         'id_tabla' => "'n','a'",
                         'situacion' => 'A',
@@ -43,7 +47,7 @@ final class ComunicacionActividadesSacdEnviar
                 );
                 break;
             case 'sssc':
-                $cPersonas = $PersonaSacdRepository->getPersonas([
+                $cPersonas = $this->personaSacdRepository->getPersonas([
                     'id_tabla' => 'sssc',
                     'situacion' => 'A',
                     'sacd' => 't',
@@ -52,14 +56,14 @@ final class ComunicacionActividadesSacdEnviar
                 ]);
                 break;
             case 'un_sacd':
-                $oPersona = $PersonaSacdRepository->findById($ctx['id_nom']);
+                $oPersona = $this->personaSacdRepository->findById($ctx['id_nom']);
                 $cPersonas = $oPersona === null ? [] : [$oPersona];
                 break;
             default:
                 $cPersonas = [];
         }
 
-        $service = new ComunicarActividadesSacdService();
+        $service = clone $this->comunicarActividadesSacdService;
         $service->setInicioIso($ctx['inicioIso']);
         $service->setFinIso($ctx['finIso']);
         $service->setPropuesta($ctx['propuesta']);
@@ -70,10 +74,6 @@ final class ComunicacionActividadesSacdEnviar
             return $error;
         }
 
-        // "Sacd de paso": se incluyen tambien cuando el flujo no es un_sacd,
-        // igual que hacia el legacy al ir a `Qmail=si` con `Qque !== un_sacd`.
-        // Nota: el legacy solo invocaba `envairMails($array_actividades)`
-        // (el array principal), no los de paso. Se mantiene ese contrato.
         return '';
     }
 }

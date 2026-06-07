@@ -6,25 +6,24 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 
 /**
- * Caso de uso: devuelve la lista de fases aplicables al tipo de actividad
- * indicado (estructura pura) para construir los checkboxes de `fases_on`
- * o `fases_off` del filtro de busqueda de actividades.
+ * Caso de uso: fases aplicables al tipo de actividad para checkboxes fases_on/fases_off.
  */
 final class ActividadQueFasesCuadro
 {
+    public function __construct(
+        private readonly TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        private readonly ActividadFaseRepositoryInterface $actividadFaseRepository,
+    ) {
+    }
+
     /**
-     * @param string $id_tipo_activ patron del tipo de actividad (p.e. "1...." / "1a..").
-     * @param bool $dl_propia true si el filtro se hace contra la propia delegacion.
-     * @param int[] $selected ids de fase que deben salir con checked.
-     * @return array{a_fases: array<array{id:int,nom:string,checked:bool}>}
+     * @param int[] $selected
+     * @return array{a_fases: list<array{id: int, nom: string, checked: bool}>}
      */
     public function ejecutar(string $id_tipo_activ, bool $dl_propia, array $selected): array
     {
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-        $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
-
-        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-        $aFases = $ActividadFaseRepository->getArrayFasesProcesos($aTiposDeProcesos);
+        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
+        $aFases = $this->actividadFaseRepository->getArrayFasesProcesos($aTiposDeProcesos);
 
         $aOut = [];
         foreach ($aFases as $descripcion => $id_fase) {

@@ -21,6 +21,7 @@ final class ProfesoresDesplegableData
         private ProfesorAsignaturaService $profesorAsignaturaService,
         private ProfesorStgrService $profesorStgrService,
         private PersonaDlRepositoryInterface $personaDlRepository,
+        private ProfesorActividad $profesorActividad,
     ) {
     }
 
@@ -40,8 +41,7 @@ final class ProfesoresDesplegableData
                 $aOpciones = $this->profesorAsignaturaService->getArrayTodosProfesoresAsignatura(new AsignaturaId($id_asignatura));
                 break;
             case 'dl':
-                $ProfesorActividad = new ProfesorActividad();
-                $aOpciones = $ProfesorActividad->getArrayProfesoresActividad([$id_activ]);
+                $aOpciones = $this->profesorActividad->getArrayProfesoresActividad([$id_activ]);
                 break;
             case 'todos':
                 $aOpciones = $this->profesorStgrService->getArrayProfesoresPub();

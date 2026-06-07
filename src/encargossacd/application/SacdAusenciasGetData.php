@@ -5,6 +5,7 @@ namespace src\encargossacd\application;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\encargossacd\domain\entity\EncargoSacdHorario;
 
 /**
  * Datos para la ficha de ausencias de un SACD
@@ -16,6 +17,14 @@ use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
  */
 final class SacdAusenciasGetData
 {
+
+    public function __construct(
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdHorarioRepositoryInterface $encargoSacdHorarioRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository
+    ) {
+    }
+
     /**
      * @return array{
      *     array_tipo_ausencias: array<int, string>,
@@ -32,20 +41,16 @@ final class SacdAusenciasGetData
      *     }>
      * }
      */
-    public static function execute(int $id_nom, int $historial): array
+    public function execute(int $id_nom, int $historial): array
     {
         $hoy = date('Y-m-d');
 
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-        $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
-
-        $cEncargos = $EncargoRepository->getEncargos(
+        $cEncargos = $this->encargoRepository->getEncargos(
             ['id_tipo_enc' => '(7|4)...', '_ordre' => 'id_tipo_enc'],
             ['id_tipo_enc' => '~'],
         );
         $array_tipo_ausencias = [];
-        if (is_array($cEncargos)) {
+        if ($cEncargos !== []) {
             foreach ($cEncargos as $oEncargo) {
                 $array_tipo_ausencias[(int)$oEncargo->getId_enc()] = (string)$oEncargo->getDesc_enc();
             }
@@ -58,12 +63,12 @@ final class SacdAusenciasGetData
             $aWhereP = ['id_nom' => $id_nom, 'f_ini' => $hoy, '_ordre' => 'f_ini'];
             $aOperadorP = ['f_ini' => '>='];
         }
-        $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhereP, $aOperadorP) ?: [];
+        $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd($aWhereP, $aOperadorP) ?: [];
 
         $filas = [];
         foreach ($cEncargosSacd as $oEncargoSacd) {
             $id_enc = (int)$oEncargoSacd->getId_enc();
-            $oEncargo = $EncargoRepository->findById($id_enc);
+            $oEncargo = $this->encargoRepository->findById($id_enc);
             if ($oEncargo === null) {
                 continue;
             }
@@ -72,8 +77,8 @@ final class SacdAusenciasGetData
                 continue;
             }
 
-            $cHorarios = self::cargarHorarios(
-                $EncargoSacdHorarioRepository,
+            $cHorarios = $this->cargarHorarios(
+                $this->encargoSacdHorarioRepository,
                 $id_enc,
                 $id_nom,
                 $historial,
@@ -119,9 +124,9 @@ final class SacdAusenciasGetData
     }
 
     /**
-     * @return list<mixed>
+     * @return list<EncargoSacdHorario>
      */
-    private static function cargarHorarios(
+    private function cargarHorarios(
         EncargoSacdHorarioRepositoryInterface $repo,
         int $id_enc,
         int $id_nom,

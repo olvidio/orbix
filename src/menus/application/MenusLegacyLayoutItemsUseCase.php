@@ -16,10 +16,15 @@ use src\shared\config\ConfigGlobal;
  */
 final class MenusLegacyLayoutItemsUseCase
 {
+    public function __construct(
+        private MenuDbRepositoryInterface $menuDbRepository,
+        private MetaMenuRepositoryInterface $metaMenuRepository,
+    ) {
+    }
+
+    /** @return list<array{indice:int,menu:?string,url:string,full_url:string,parametros:?string,menu_perm:int|null}> */
     public function __invoke(string $id_grupmenu): array
     {
-        $MenusDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
-        $MetaMenuRepository = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
         $oPermisoMenu = new PermisoMenu();
 
         $aWhere = [
@@ -27,10 +32,7 @@ final class MenusLegacyLayoutItemsUseCase
             '_ordre' => 'orden',
         ];
         $aOperador = ['id_grupmenu' => '~'];
-        $cMenuDbs = $MenusDbRepository->getMenuDbs($aWhere, $aOperador);
-        if ($cMenuDbs === false || !is_iterable($cMenuDbs)) {
-            return [];
-        }
+        $cMenuDbs = $this->menuDbRepository->getMenuDbs($aWhere, $aOperador);
 
         $num_menu_1 = 0;
         $raiz_pral = '';
@@ -48,7 +50,7 @@ final class MenusLegacyLayoutItemsUseCase
             $menu_perm = $oMenuDb->getMenu_perm();
 
             if (!empty($id_metamenu)) {
-                $oMetamenu = $MetaMenuRepository->findById($id_metamenu);
+                $oMetamenu = $this->metaMenuRepository->findById($id_metamenu);
                 if ($oMetamenu === null) {
                     continue;
                 }
@@ -91,13 +93,13 @@ final class MenusLegacyLayoutItemsUseCase
             $parametros = HashFront::add_hash($parametros, $full_url);
             $indice = count($orden);
 
-            if ($indice == 1 && !$oPermisoMenu->visible($menu_perm)) {
+            if ($indice == 1 && !$oPermisoMenu->visible($menu_perm ?? 0)) {
                 $num_menu_1 = $orden[0];
                 continue;
             }
 
             $num_menu_1 = 0;
-            if (!$oPermisoMenu->visible($menu_perm)) {
+            if (!$oPermisoMenu->visible($menu_perm ?? 0)) {
                 continue;
             }
 

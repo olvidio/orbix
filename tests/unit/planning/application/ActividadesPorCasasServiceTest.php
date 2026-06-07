@@ -20,23 +20,16 @@ use src\ubis\domain\entity\Casa;
  */
 final class ActividadesPorCasasServiceTest extends TestCase
 {
-    private mixed $previousContainer;
     private array $previousPost;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousPost = $_POST;
     }
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_POST = $this->previousPost;
         parent::tearDown();
     }
@@ -49,12 +42,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
         $actividadRepo->expects($this->never())->method('actividadesDeUnaCasa');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CasaDlRepositoryInterface::class => $casaRepo,
-            ActividadRepositoryInterface::class => $actividadRepo,
-        ]);
-
-        [$sCdc, $aActividades] = ActividadesPorCasasService::actividadesPorCasas(
+        [$sCdc, $aActividades] = $this->createService($casaRepo, $actividadRepo)->actividadesPorCasas(
             1,
             $this->fecha('2030/1/1'),
             $this->fecha('2030/3/31'),
@@ -82,12 +70,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
 
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CasaDlRepositoryInterface::class => $casaRepo,
-            ActividadRepositoryInterface::class => $actividadRepo,
-        ]);
-
-        ActividadesPorCasasService::actividadesPorCasas(
+        $this->createService($casaRepo, $actividadRepo)->actividadesPorCasas(
             1,
             $this->fecha('2030/1/1'),
             $this->fecha('2030/3/31'),
@@ -113,12 +96,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
 
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CasaDlRepositoryInterface::class => $casaRepo,
-            ActividadRepositoryInterface::class => $actividadRepo,
-        ]);
-
-        ActividadesPorCasasService::actividadesPorCasas(
+        $this->createService($casaRepo, $actividadRepo)->actividadesPorCasas(
             3,
             $this->fecha('2030/1/1'),
             $this->fecha('2030/3/31'),
@@ -146,13 +124,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
         $actividadRepo->method('actividadesDeUnaCasa')->willReturn([['nom_curt' => 'A']]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CasaDlRepositoryInterface::class => $casaRepo,
-            CentroEllasRepositoryInterface::class => $centroRepo,
-            ActividadRepositoryInterface::class => $actividadRepo,
-        ]);
-
-        [, $aActividades] = ActividadesPorCasasService::actividadesPorCasas(
+        [, $aActividades] = $this->createService($casaRepo, $actividadRepo, $centroRepo)->actividadesPorCasas(
             6,
             $this->fecha('2030/1/1'),
             $this->fecha('2030/3/31'),
@@ -177,12 +149,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
 
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CasaDlRepositoryInterface::class => $casaRepo,
-            ActividadRepositoryInterface::class => $actividadRepo,
-        ]);
-
-        [$sCdc, ] = ActividadesPorCasasService::actividadesPorCasas(
+        [$sCdc, ] = $this->createService($casaRepo, $actividadRepo)->actividadesPorCasas(
             9,
             $this->fecha('2030/1/1'),
             $this->fecha('2030/3/31'),
@@ -210,12 +177,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
 
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CasaDlRepositoryInterface::class => $casaRepo,
-            ActividadRepositoryInterface::class => $actividadRepo,
-        ]);
-
-        [$sCdc, ] = ActividadesPorCasasService::actividadesPorCasas(
+        [$sCdc, ] = $this->createService($casaRepo, $actividadRepo)->actividadesPorCasas(
             9,
             $this->fecha('2030/1/1'),
             $this->fecha('2030/3/31'),
@@ -242,12 +204,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
         $actividadRepo->method('actividadesDeUnaCasa')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CasaDlRepositoryInterface::class => $casaRepo,
-            ActividadRepositoryInterface::class => $actividadRepo,
-        ]);
-
-        [, $aActividades] = ActividadesPorCasasService::actividadesPorCasas(
+        [, $aActividades] = $this->createService($casaRepo, $actividadRepo)->actividadesPorCasas(
             1,
             $this->fecha('2030/1/1'),
             $this->fecha('2030/3/31'),
@@ -276,12 +233,7 @@ final class ActividadesPorCasasServiceTest extends TestCase
                 return [['id_ubi' => $id_ubi, 'dummy' => 'x']];
             });
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CasaDlRepositoryInterface::class => $casaRepo,
-            ActividadRepositoryInterface::class => $actividadRepo,
-        ]);
-
-        [, $aActividades] = ActividadesPorCasasService::actividadesPorCasas(
+        [, $aActividades] = $this->createService($casaRepo, $actividadRepo)->actividadesPorCasas(
             1,
             $this->fecha('2030/1/1'),
             $this->fecha('2030/3/31'),
@@ -311,21 +263,15 @@ final class ActividadesPorCasasServiceTest extends TestCase
         return DateTimeLocal::createFromFormat('Y/m/d', $iso);
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+    private function createService(
+        CasaDlRepositoryInterface $casaDl,
+        ActividadRepositoryInterface $actividad,
+        ?CentroEllasRepositoryInterface $centroEllas = null,
+    ): ActividadesPorCasasService {
+        return new ActividadesPorCasasService(
+            $actividad,
+            $casaDl,
+            $centroEllas ?? $this->createStub(CentroEllasRepositoryInterface::class),
+        );
     }
 }

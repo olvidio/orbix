@@ -1,23 +1,17 @@
 <?php
 
-use src\shared\web\ContestarJson;
 use src\dbextern\application\CrearTodosDesdeListasUseCase;
-use src\dbextern\application\CrearPersonaDesdeListasUseCase;
-use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
-use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
-$region = (string)filter_input(INPUT_POST, 'region');
-$dl = (string)filter_input(INPUT_POST, 'dl');
-$tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
+$region = input_string($_POST, 'region');
+$dl = input_string($_POST, 'dl');
+$tipo_persona = input_string($_POST, 'tipo_persona');
 
-$personaBDURepository = $GLOBALS['container']->get(PersonaBDURepositoryInterface::class);
-$idMatchRepository = $GLOBALS['container']->get(IdMatchPersonaRepositoryInterface::class);
+$result = DependencyResolver::get(CrearTodosDesdeListasUseCase::class)($region, $dl, $tipo_persona);
 
-$crearPersona = new CrearPersonaDesdeListasUseCase($personaBDURepository, $idMatchRepository);
-$useCase = new CrearTodosDesdeListasUseCase($idMatchRepository, $crearPersona);
-$result = $useCase($region, $dl, $tipo_persona);
-
-$error_txt = !empty($result['errors']) ? implode("\n", $result['errors']) : '';
+$error_txt = $result['errors'] !== [] ? implode("\n", $result['errors']) : '';
 $data = ['count' => $result['count']];
 
 ContestarJson::enviar($error_txt, $data);

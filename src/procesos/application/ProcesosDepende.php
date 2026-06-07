@@ -3,30 +3,32 @@
 namespace src\procesos\application;
 
 use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
- * Caso de uso: devuelve las opciones disponibles para el desplegable de
- * tareas dependientes de la fase indicada (usado al cambiar de fase o
- * fase_previa en el formulario procesos_ver).
- *
- * Respuesta JSON con `opciones` (value => label). El frontend inyecta
- * los `<option>` en el `<select>` destino indicado por `acc`.
+ * Caso de uso: opciones del desplegable de tareas dependientes de una fase.
  */
 class ProcesosDepende
 {
+    public function __construct(
+        private readonly ActividadTareaRepositoryInterface $actividadTareaRepository,
+    ) {
+    }
+
     /**
-     * @return array{opciones:array<string,string>,blanco:bool}
+     * @param array<string, mixed> $input
+     * @return array{opciones: array<int|string, string>, blanco: bool}
      */
     public function execute(array $input): array
     {
-        $Qacc = (string)($input['acc'] ?? '');
-        $Qvalor_depende = (string)($input['valor_depende'] ?? '');
+        $Qacc = input_string($input, 'acc');
+        $Qvalor_depende = input_string($input, 'valor_depende');
         if ($Qacc !== '#id_tarea' && $Qacc !== '#id_tarea_previa') {
             return ['opciones' => [], 'blanco' => true];
         }
 
-        $ActividadTareaRepository = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
-        $aOpciones = $ActividadTareaRepository->getArrayActividadTareas((int)$Qvalor_depende);
+        $aOpciones = $this->actividadTareaRepository->getArrayActividadTareas(input_int($input, 'valor_depende'));
 
         return [
             'opciones' => $aOpciones,

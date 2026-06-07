@@ -1,23 +1,27 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\CuadriculaZonaGridData;
+use src\misas\application\support\MisasBuildInput;
 use src\shared\web\ContestarJson;
 
 $in = [
-    'id_zona' => (int)filter_input(INPUT_POST, 'id_zona'),
-    'tipo_plantilla' => (string)filter_input(INPUT_POST, 'tipo_plantilla'),
-    'periodo' => (string)filter_input(INPUT_POST, 'periodo'),
-    'orden' => (string)filter_input(INPUT_POST, 'orden'),
-    'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
-    'fila' => (int)filter_input(INPUT_POST, 'fila'),
-    'columna' => (int)filter_input(INPUT_POST, 'columna'),
-    'seleccion' => (int)filter_input(INPUT_POST, 'seleccion'),
+    'id_zona' => filter_input(INPUT_POST, 'id_zona'),
+    'tipo_plantilla' => filter_input(INPUT_POST, 'tipo_plantilla'),
+    'periodo' => filter_input(INPUT_POST, 'periodo'),
+    'orden' => filter_input(INPUT_POST, 'orden'),
+    'empiezamin' => filter_input(INPUT_POST, 'empiezamin'),
+    'empiezamax' => filter_input(INPUT_POST, 'empiezamax'),
+    'fila' => filter_input(INPUT_POST, 'fila'),
+    'columna' => filter_input(INPUT_POST, 'columna'),
+    'seleccion' => filter_input(INPUT_POST, 'seleccion'),
 ];
 
-$result = CuadriculaZonaGridData::build($in);
+/** @var CuadriculaZonaGridData $useCase */
+$useCase = DependencyResolver::get(CuadriculaZonaGridData::class);
+$result = $useCase->build($in);
 
-$error = (string)($result['error'] ?? '');
+$error = MisasBuildInput::string($result, 'error');
 unset($result['error']);
 
 ContestarJson::enviar($error, $result);

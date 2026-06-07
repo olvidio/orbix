@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
 
@@ -13,9 +14,9 @@ class PgRelacionCentroExDireccionRepository extends PgRelacionUbiDireccionReposi
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDBR'];
+        $oDbl = GlobalPdo::get('oDBR');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBR'];
+        $oDbl_Select = GlobalPdo::get('oDBR');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('u_cross_ctr_ex_dir');
     }

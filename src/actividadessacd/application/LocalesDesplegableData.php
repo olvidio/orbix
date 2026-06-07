@@ -6,13 +6,16 @@ use src\usuarios\domain\contracts\LocalRepositoryInterface;
 
 final class LocalesDesplegableData
 {
-    /**
-     * @return array{a_locales: array}
-     */
-    public static function execute(): array
-    {
-        $LocaleRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
+    public function __construct(
+        private LocalRepositoryInterface $localRepository,
+    ) {
+    }
 
-        return ['a_locales' => $LocaleRepository->getArrayLocales()];
+    /**
+     * @return array{a_locales: array<int|string, mixed>}
+     */
+    public function execute(): array
+    {
+        return ['a_locales' => $this->localRepository->getArrayLocales()];
     }
 }

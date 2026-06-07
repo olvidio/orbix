@@ -2,21 +2,24 @@
 
 namespace src\inventario\domain;
 
-use src\shared\config\ConfigGlobal;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\entity\Documento;
+use src\shared\config\ConfigGlobal;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
 
 class InfoDocsxSigla extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
-        $this->setTxtTitulo(_("documentos"));
-        $this->setTxtEliminar(_("¿Está seguro que desea eliminar este documento?"));
+    public function __construct(
+        private DocumentoRepositoryInterface $documentoRepository,
+        private TipoDocRepositoryInterface $tipoDocRepository,
+        private LugarRepositoryInterface $lugarRepository,
+    ) {
+        $this->setTxtTitulo(_('documentos'));
+        $this->setTxtEliminar(_('¿Está seguro que desea eliminar este documento?'));
         $this->setTxtBuscar();
         $this->setTxtExplicacion();
 
@@ -27,82 +30,77 @@ class InfoDocsxSigla extends DatosInfoRepo
         $this->setRepositoryInterface(DocumentoRepositoryInterface::class);
     }
 
-    public function getBuscar_view()
+    public function getBuscar_view(): string
     {
         return '../view/buscarDocsxSigla.phtml';
     }
 
-    public function getBuscar_namespace()
+    public function getBuscar_namespace(): string
     {
         return __NAMESPACE__;
     }
 
-    public function addCamposFormBuscar()
+    public function addCamposFormBuscar(): string
     {
         return '';
     }
 
-    public function addCampos($a_campos = [])
+    /**
+     * @param array<string, mixed> $a_campos
+     * @return array<string, mixed>
+     */
+    public function addCampos(array $a_campos = []): array
     {
-        $Repository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
-        $aOpciones = $Repository->getArrayTipoDoc();
-        $a_campos['aOpcionesTiposDoc'] = $aOpciones;
+        $a_campos['aOpcionesTiposDoc'] = $this->tipoDocRepository->getArrayTipoDoc();
 
         $url_bloque = ConfigGlobal::getWeb() . '/frontend/inventario/controller/documentos_form.php';
         $a_campos['url_bloque'] = $url_bloque;
-        // `h1` lo firma {@see frontend\shared\controller\tablaDB_lista_ver} (sin HashFront en `src/`).
         $a_campos['documentos_form_hash_meta'] = [
             'url' => $url_bloque,
             'campos_form' => 'id_tipo_doc!documentos',
         ];
 
-        // para los campos de comprobar fecha
-        $locale_us = ConfigGlobal::is_locale_us();
-        $a_campos['locale_us'] = $locale_us;
+        $a_campos['locale_us'] = ConfigGlobal::is_locale_us();
 
         return $a_campos;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<Documento>
+     */
+    public function getColeccion(): array
     {
-        // Si se quiere listar una selección, $_POST['k_buscar']
         if (empty($this->k_buscar)) {
-            // para evitar que salgan todos
             $aWhere = ['id_tipo_doc' => 0];
             $aOperador = [];
         } else {
-            $id_tipo_doc = $this->k_buscar;
-            $aWhere = ['id_tipo_doc' => $id_tipo_doc, '_ordre' => 'id_ubi,id_lugar'];
+            $aWhere = ['id_tipo_doc' => $this->k_buscar, '_ordre' => 'id_ubi,id_lugar'];
             $aOperador = [];
         }
 
-        $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $ColeccionRepository->getDocumentos($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->documentoRepository->getDocumentos($aWhere, $aOperador);
     }
 
-    public function getOpcionesParaCondicion($pKeyRepository,$valor_depende, $opcion_sel=null)
+    public function getOpcionesParaCondicion(mixed $pKeyRepository, mixed $valor_depende, mixed $opcion_sel = null): string
     {
-        $valor_depende = empty($valor_depende) ? 0 : $valor_depende;
-        //caso de actualizar el campo depende
-        $LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
-        $aOpciones = $LugarRepository->getArrayLugares($valor_depende);
+        $idUbi = is_numeric($valor_depende) ? (int) $valor_depende : 0;
+        $aOpciones = $this->lugarRepository->getArrayLugares($idUbi);
 
         $opciones_txt = '<option></option>';
         foreach ($aOpciones as $key => $val) {
-            $sel = ((string)$key === (string)$opcion_sel) ? 'selected' : '';
+            $opcionSelStr = is_scalar($opcion_sel) ? (string) $opcion_sel : '';
+            $sel = ((string) $key === $opcionSelStr) ? 'selected' : '';
             $opciones_txt .= "<option value=\"$key\" $sel>$val</option>";
         }
 
         return $opciones_txt;
     }
 
-    public function getArrayCamposDepende()
+    /**
+     * @return array<string, string>
+     */
+    public function getArrayCamposDepende(): array
     {
-        // key -> campo pKeyRepository (campo llave del repository)
-        // value -> campo que se debe llenar con valores del repository
-        return ['id_ubi' =>'id_lugar'];
+        return ['id_ubi' => 'id_lugar'];
     }
-
 }

@@ -1,6 +1,7 @@
 <?php
 
 use src\notas\application\PosiblesOpcionalesData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 /**
@@ -12,7 +13,7 @@ use src\shared\web\ContestarJson;
  * - `frontend/notas/view/form_notas_de_una_persona.phtml`
  * - `apps/actividadestudios/view/form_1303.phtml`
  */
-$aOpciones = PosiblesOpcionalesData::execute($_POST);
+$aOpciones = (DependencyResolver::get(PosiblesOpcionalesData::class))->execute($_POST);
 
 $payload = [
     'id' => 'id_asignatura',

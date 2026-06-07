@@ -22,9 +22,9 @@ interface EncargoRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Encargo
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Encargo
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Encargo> Una colección de objetos de tipo Encargo
      */
     public function getEncargos(array $aWhere = [], array $aOperators = []): array;
 
@@ -45,14 +45,14 @@ interface EncargoRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_enc
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_enc): array|bool;
+    public function datosById(int $id_enc): array|false;
 
     /**
      * Busca la clase con id_enc en el repositorio.
      */
     public function findById(int $id_enc): ?Encargo;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

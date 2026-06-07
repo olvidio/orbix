@@ -21,16 +21,19 @@ use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 final class CorregirEstadoRenombrarEsquema
 {
     public function __construct(
-        private readonly object $container,
+        private readonly DbSchemaRepositoryInterface $dbSchemaRepository,
+        private readonly RenombrarEsquema $renombrarEsquema,
     ) {
     }
 
     /**
-     * @return array{acciones: list<string>, avisos: list<string>, verificacion: array}
+     * @return array{acciones: list<string>, avisos: list<string>, verificacion: array<string, mixed>}
      */
     public function ejecutar(string $esquemaOrigen, string $region, string $dl, int $comun, int $sv, int $sf): array
     {
+        /** @var list<string> $acciones */
         $acciones = [];
+        /** @var list<string> $avisos */
         $avisos = [];
 
         $campoOrigen = trim($esquemaOrigen);
@@ -55,7 +58,7 @@ final class CorregirEstadoRenombrarEsquema
 
         if (!$ctx->sinRenombreEfectivo && !$ctx->soloDestinoComprobacion) {
             try {
-                foreach ((new RenombrarEsquema($this->container))->reanudarRenombrePostgreSQL($ctx) as $av) {
+                foreach ($this->renombrarEsquema->reanudarRenombrePostgreSQL($ctx) as $av) {
                     $avisos[] = $av;
                 }
                 $acciones[] = _('Renombre PostgreSQL reanudado donde faltaba (esquemas/roles/.inc).');
@@ -100,6 +103,9 @@ final class CorregirEstadoRenombrarEsquema
         ];
     }
 
+    /**
+     * @param list<string> $acciones
+     */
     private function aplicarDefaultsAlter(RenombrarEsquemaVerificacionContexto $ctx, array &$acciones): void
     {
         $oImportar = new ConfigDB('importar');
@@ -165,6 +171,10 @@ final class CorregirEstadoRenombrarEsquema
         }
     }
 
+    /**
+     * @param list<string> $acciones
+     * @param list<string> $avisos
+     */
     private function alinearPropietariosEsquema(RenombrarEsquemaVerificacionContexto $ctx, array &$acciones, array &$avisos): void
     {
         $oImportar = new ConfigDB('importar');
@@ -215,13 +225,17 @@ final class CorregirEstadoRenombrarEsquema
         return (bool) $st->fetchColumn();
     }
 
+    /**
+     * @param list<string> $acciones
+     * @param list<string> $avisos
+     */
     private function sincronizarIncYDbIdschemaTrasRenamePg(
         RenombrarEsquemaVerificacionContexto $ctx,
         array &$acciones,
         array &$avisos,
     ): void {
         $oImportar = new ConfigDB('importar');
-        $repo = $this->container->get(DbSchemaRepositoryInterface::class);
+        $repo = $this->dbSchemaRepository;
 
         $pdoComun = $this->pdoDesdeImportar($oImportar, 'public');
         if ($this->renamePgHecho($pdoComun, $ctx->esquemaOld, $ctx->esquemaNew)) {
@@ -344,9 +358,11 @@ final class CorregirEstadoRenombrarEsquema
 
     /**
      * @param list<array{tabla: string, campo: string, valor: string}> $defs
+     * @param list<string> $acciones
      */
     private function runSetDefaults(PDO $pdo, string $schema, array $defs, array &$acciones, string $etiqueta): void
     {
+        $defs = $this->normalizarDefs($defs);
         $o = new DBAlterSchema();
         $o->setDbConexion($pdo);
         $o->setSchema($schema);
@@ -372,5 +388,32 @@ final class CorregirEstadoRenombrarEsquema
         $st->execute(['n' => $n]);
 
         return (bool) $st->fetchColumn();
+    }
+
+    /**
+     * @param array<int, mixed> $defs
+     * @return list<array{tabla: string, campo: string, valor: string}>
+     */
+    private function normalizarDefs(array $defs): array
+    {
+        $normalizados = [];
+        foreach ($defs as $def) {
+            if (!is_array($def)) {
+                continue;
+            }
+            $tabla = $def['tabla'] ?? null;
+            $campo = $def['campo'] ?? null;
+            $valor = $def['valor'] ?? null;
+            if (!is_string($tabla) || !is_string($campo) || !is_string($valor)) {
+                continue;
+            }
+            $normalizados[] = [
+                'tabla' => $tabla,
+                'campo' => $campo,
+                'valor' => $valor,
+            ];
+        }
+
+        return $normalizados;
     }
 }

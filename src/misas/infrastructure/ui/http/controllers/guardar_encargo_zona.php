@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\GuardarEncargoZona;
 use src\shared\web\ContestarJson;
@@ -16,6 +17,8 @@ $input = [
     'observ' => filter_input(INPUT_POST, 'observ'),
 ];
 
-$result = GuardarEncargoZona::execute($input);
+/** @var GuardarEncargoZona $useCase */
+$useCase = DependencyResolver::get(GuardarEncargoZona::class);
+$result = $useCase->execute($input);
 
 ContestarJson::enviar($result['error'], $result['data']);

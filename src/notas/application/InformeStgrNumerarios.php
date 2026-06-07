@@ -2,8 +2,9 @@
 
 namespace src\notas\application;
 
+
 use src\shared\config\ConfigGlobal;
-use src\notas\application\legacy\Resumen;
+use src\notas\application\support\ResumenFactory;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
@@ -15,6 +16,13 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
  */
 final class InformeStgrNumerarios
 {
+
+    public function __construct(
+        private readonly DelegacionRepositoryInterface $delegacionRepository,
+        private readonly CentroEstudiosLookup $centroEstudiosLookup,
+        private readonly ResumenFactory $resumenFactory,
+    ) {
+    }
     /**
      * @param array<int,int|string> $a_dl       ids de delegacion seleccionadas (filtro STGR).
      * @param bool                  $lista      si `true`, cada metrica incluye el listado HTML
@@ -29,7 +37,7 @@ final class InformeStgrNumerarios
     {
         [$any_ini_curs, $curso_txt] = $this->cursoActual();
 
-        $Resumen = new Resumen('numerarios');
+        $Resumen = $this->resumenFactory->create('numerarios');
         $Resumen->setArrayDl($this->mapearDelegaciones($a_dl));
         $Resumen->setAnyIniCurs($any_ini_curs);
         $Resumen->setLista($lista);
@@ -46,7 +54,7 @@ final class InformeStgrNumerarios
         $textos[2] = ucfirst(_("numerarios sin haber hecho el ce"));
         $res[3] = $Resumen->ceAcabadoEnBienio();
         $textos[3] = ucfirst(_("numerarios que han terminado el ce (otros años) y con el bienio sin acabar"));
-        $res[4]['num'] = $res[1]['num'] + $res[2]['num'] + $res[3]['num'];
+        $res[4]['num'] = (int) $res[1]['num'] + (int) $res[2]['num'] + (int) $res[3]['num'];
         $res[4]['lista'] = ucfirst(_("es la suma de los puntos: 1+2+3"));
         $textos[4] = ucfirst(_("número de numerarios en Bienio"));
 
@@ -69,10 +77,11 @@ final class InformeStgrNumerarios
         $res[10] = $Resumen->enCuadrienio('all');
         $textos[10] = ucfirst(_("número de numerarios en cuadrienio"));
 
+        /** @var array{num: int|float|string, lista: string, error?: bool} $a_aprobadas */
         $a_aprobadas = $Resumen->aprobadasCuadrienio();
-        if (!isset($a_aprobadas['error'])) {
+        if (!array_key_exists('error', $a_aprobadas)) {
             $res[11]['num'] = $this->media((int)$res[10]['num'], (int)$a_aprobadas['num']);
-            $res[11]['lista'] = $a_aprobadas['lista'] ?? '';
+            $res[11]['lista'] = $a_aprobadas['lista'];
             $textos[11] = ucfirst(_("media de asignaturas superadas por alumno en cuadrienio"));
         } else {
             $res[11] = $a_aprobadas;
@@ -116,22 +125,28 @@ final class InformeStgrNumerarios
      * cae al valor configurado en la sesion. Para las delegaciones especiales
      * H/M se devuelve el `ce_lugar` agregado de todas sus dependientes.
      */
+    /**
+     * @param array<int, int|string> $Qdl
+     */
     public function resolverCeLugar(array $Qdl): string
     {
-        $lookup = new CentroEstudiosLookup();
-
-        if (!empty($Qdl)) {
-            return $lookup->getFromDl($Qdl);
+        if ($Qdl !== []) {
+            return $this->centroEstudiosLookup->getFromDl($Qdl);
         }
 
         $dele = ConfigGlobal::mi_dele();
         if ($dele === 'H' || $dele === 'M') {
-            $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-            $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$dele]);
-            return $lookup->getFromDl(array_keys($a_delegacionesStgr));
+            $a_delegacionesStgr = $this->delegacionRepository->getArrayDlRegionStgr([$dele]);
+            /** @var list<int|string> $ids */
+            $ids = array_keys($a_delegacionesStgr);
+
+            return $this->centroEstudiosLookup->getFromDl($ids);
         }
 
-        return (string)$_SESSION['oConfig']->getCe_lugar();
+        $oConfig = $_SESSION['oConfig'] ?? null;
+        return is_object($oConfig) && method_exists($oConfig, 'getCe_lugar')
+            ? (string) $oConfig->getCe_lugar()
+            : '';
     }
 
     /**
@@ -147,7 +162,7 @@ final class InformeStgrNumerarios
             return [];
         }
         $region_stgr = ConfigGlobal::mi_dele();
-        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        $repoDelegacion = $this->delegacionRepository;
         $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
         $a_dl = [];
         foreach ($Qdl as $id_dl) {

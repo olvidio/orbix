@@ -4,109 +4,88 @@ namespace src\permisos\domain;
 
 class XResto
 {
-    /* ATRIBUTOS ----------------------------------------------------------------- */
     /**
-     * Per saber a quina activitat fa referència.
-     *
-     * @var integer
+     * Campos legacy conservados para deserializar sesiones PHP creadas antes del
+     * cierre PHPStan (2026-06); el runtime actual solo usa $iid_tipo_activ y $aDades.
      */
-    protected $iid_activ = '';
-    protected $iid_tipo_activ = '';
+    protected int|string $iid_activ = 0;
+
+    protected string $iid_tipo_activ;
+
+    /** @var list<int|string> */
+    protected array $aFases = [];
+
+    protected int $iaccion = 0;
+
+    /** @var array<int|string, mixed>|null */
+    protected ?array $aAfecta = null;
+
+    protected int $iGenerador = 0;
 
     /**
-     * fases. array amb les posibles fases.
-     *
-     * @var array
+     * @var array<int, array<int|string, array<string, int>>>
      */
-    protected $aFases = [];
-    /**
-     * permis amb el que es contruyeix la clase. La resta es compara amb aquest.
-     *
-     * @var integer
-     */
-    protected $iaccion;
-    /**
-     * array per posar el permis per cada fase
-     *
-     * @var array
-     */
-    protected $aAfecta;
-    /**
-     * array per posar el permis per cada fase
-     *
-     * @var array  aDades[$iAfecta][$id_tipo_proceso][$iFase]=$iPerm;
-     */
-    protected $aDades = [];
-    /**
-     * id d'usuari o grup que ha generat el permís.
-     *
-     * @var integer
-     */
-    protected $iGenerador;
+    protected array $aDades = [];
 
-    /* METODES ----------------------------------------------------------------- */
-    public function __construct($iid_tipo_activ)
+    public function __construct(string $iid_tipo_activ)
     {
         $this->iid_tipo_activ = $iid_tipo_activ;
     }
 
-    public function setOmplir($iAfecta, $fase_ref, $perm_on, $perm_off)
+    public function setOmplir(int $iAfecta, int|string $fase_ref, int $perm_on, int $perm_off): void
     {
         $this->aDades[$iAfecta][$fase_ref]['on'] = $perm_on;
         $this->aDades[$iAfecta][$fase_ref]['off'] = $perm_off;
     }
 
-    /**
-     * Para mirar si tiene el iAfecta, sino, hay que mirar en el id_tipo_activ
-     * de nivel superior.
-     *
-     * @param integer $iAfecta
-     * @return boolean
-     */
-    public function hasAfecta(int $iAfecta)
+    public function hasAfecta(int $iAfecta): bool
     {
         foreach ($this->aDades as $sumaAfecta => $arr) {
-            // miro la suma de bits
             $has_one = (($sumaAfecta & $iAfecta) != 0);
             if ($has_one) {
-                return TRUE;
+                return true;
             }
         }
-        return FALSE;
+
+        return false;
     }
 
-    public function getFaseRef($iAfecta)
+    public function getFaseRef(int $iAfecta): int|string|null
     {
+        if (!isset($this->aDades[$iAfecta])) {
+            return null;
+        }
         $fase_ref = key($this->aDades[$iAfecta]);
-        return $fase_ref;
+
+        return is_int($fase_ref) || is_string($fase_ref) ? $fase_ref : null;
     }
 
-    public function getPerm($iAfecta, $id_fase_ref, $on_off)
+    public function getPerm(int $iAfecta, int|string $id_fase_ref, string $on_off): int
     {
         if (empty($this->aDades[$iAfecta][$id_fase_ref][$on_off])) {
-            return 0; // No tiene permiso
+            return 0;
         }
-        $perm = $this->aDades[$iAfecta][$id_fase_ref][$on_off];
-        return $perm;
+
+        return (int) $this->aDades[$iAfecta][$id_fase_ref][$on_off];
     }
 
-    public function setOrdenar()
+    public function setOrdenar(): void
     {
-        if (is_array($this->aDades)) ksort($this->aDades);
+        ksort($this->aDades);
     }
 
-    public function getFases()
+    /**
+     * @return list<int|string>
+     */
+    public function getFases(): array
     {
         $aFases = [];
-        foreach ($this->aDades as $iAfecta => $byProceso) {
-            $aa = $byProceso;
-            foreach ($byProceso as $id_tipo_proceso => $byFase) {
-                foreach ($byFase as $id_fase => $perm) {
-                    $aFases[] = $id_fase;
-                }
+        foreach ($this->aDades as $byProceso) {
+            foreach ($byProceso as $id_fase => $perm) {
+                $aFases[] = $id_fase;
             }
         }
-        //[$id_tipo_proceso][$iFase]=$iPerm;
+
         return $aFases;
     }
 }

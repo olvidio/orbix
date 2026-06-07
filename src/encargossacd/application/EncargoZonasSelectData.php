@@ -11,13 +11,18 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
  */
 final class EncargoZonasSelectData
 {
+
+    public function __construct(
+        private ZonaRepositoryInterface $zonaRepository
+    ) {
+    }
+
     /**
      * @return array{label_prefix: string, id: string, name: string, opciones: array<string, string>, selected: string, blanco: bool, val_blanco: string, action: string}
      */
-    public static function execute(int $id_zona_selected): array
+    public function execute(int $id_zona_selected): array
     {
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-        $aOpciones = $ZonaRepository->getArrayZonas();
+        $aOpciones = $this->zonaRepository->getArrayZonas();
         $opciones = [];
         foreach ($aOpciones as $k => $v) {
             $opciones[(string)$k] = (string)$v;

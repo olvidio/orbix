@@ -2,6 +2,7 @@
 
 namespace src\notas\application;
 
+
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
@@ -11,6 +12,12 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
  */
 final class AsignaturasPendientesData
 {
+
+    public function __construct(
+        private readonly DelegacionRepositoryInterface $delegacionRepository,
+        private readonly TablaAlumnosAsignaturas $tablaAlumnosAsignaturas,
+    ) {
+    }
     /**
      * @param array<string, mixed> $post
      * @return array{
@@ -20,28 +27,29 @@ final class AsignaturasPendientesData
      *   ambito_rstgr: bool
      * }
      */
-    public static function execute(array $post = []): array
+    public function execute(array $post = []): array
     {
         if ($post === []) {
             $post = $_POST;
         }
 
-        $service = new TablaAlumnosAsignaturas();
+        $service = $this->tablaAlumnosAsignaturas;
 
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
             $qdl = [];
             if (isset($post['dl']) && is_array($post['dl'])) {
                 foreach ($post['dl'] as $id) {
-                    if ($id === null || $id === '') {
+                    if (!is_scalar($id) || (string) $id === '') {
                         continue;
                     }
-                    $qdl[] = (int)$id;
+                    $qdl[] = (int) $id;
                 }
             }
 
             $regionStgr = ConfigGlobal::mi_dele();
-            $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+            $repoDelegacion = $this->delegacionRepository;
             $aDelegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$regionStgr]);
+            /** @var array<int, string> $aDelegacionesStgr */
 
             if (!empty($qdl)) {
                 $datosTabla = $service->paraRegionStgr($qdl, $aDelegacionesStgr);

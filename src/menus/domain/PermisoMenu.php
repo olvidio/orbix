@@ -16,15 +16,16 @@ use src\permisos\domain\XPermisos;
 class PermisoMenu extends XPermisos
 {
 
-    public $todos;
+    public mixed $todos = null;
 
     public function __construct()
     {
-        $this->iaccion = $_SESSION['iPermMenus']?? 1;
+        $iPermMenus = $_SESSION['iPermMenus'] ?? 1;
+        $this->iaccion = is_numeric($iPermMenus) ? (int) $iPermMenus : 1;
         $this->omplir();
     }
 
-    public function omplir(): array
+    /** @return array<string, mixed> */ /** @return array<string, mixed> */ /** @return array<string, mixed> */ public function omplir(): array
     {
         $this->permissions = PermisoMenuBits::map();
 
@@ -39,7 +40,7 @@ class PermisoMenu extends XPermisos
      * @param integer $perm_menu permiso del menú.
      * @return boolean
      */
-    function visible($perm_menu)
+    function visible(int $perm_menu): bool
     {
         if ($this->have_perm_bit($perm_menu)) {
             return true;

@@ -3,25 +3,22 @@
 namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
-use src\dbextern\domain\SincroDB;
+use src\dbextern\application\support\SincroDBFactory;
 
 class VerListasData
 {
-    private IdMatchPersonaRepositoryInterface $idMatchRepository;
-
-    public function __construct(IdMatchPersonaRepositoryInterface $idMatchRepository)
-    {
-        $this->idMatchRepository = $idMatchRepository;
+    public function __construct(
+        private IdMatchPersonaRepositoryInterface $idMatchRepository,
+        private SincroDBFactory $sincroDBFactory,
+    ) {
     }
 
     /**
-     * Obtiene la lista de personas BDU sin unir y los posibles matches Orbix.
-     *
-     * @return array Datos serializables
+     * @return array<string, mixed>
      */
     public function __invoke(string $region, string $dl, string $tipo_persona, bool $first_load): array
     {
-        $oSincroDB = new SincroDB();
+        $oSincroDB = $this->sincroDBFactory->create();
         $oSincroDB->setTipo_persona($tipo_persona);
         $oSincroDB->setRegion($region);
         $oSincroDB->setDlListas($dl);
@@ -36,10 +33,9 @@ class VerListasData
             $id_nom_bdu = $oPersonaBDU->getIdentif();
 
             $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_listas' => $id_nom_bdu]);
-            if (!empty($cIdMatch[0]) && count($cIdMatch) > 0) {
+            if ($cIdMatch !== []) {
                 continue;
             }
-            // Solo la primera vez: unión automática
             if ($first_load && $oSincroDB->union_automatico($oPersonaBDU)) {
                 $cont_sync++;
                 continue;
@@ -65,18 +61,18 @@ class VerListasData
     }
 
     /**
-     * Obtiene los posibles matches Orbix para una persona BDU.
+     * @return array<string, mixed>
      */
     public function getPosiblesMatches(string $tipo_persona, string $region, string $dl, int $id_nom_bdu): array
     {
-        $oSincroDB = new SincroDB();
+        $oSincroDB = $this->sincroDBFactory->create();
         $oSincroDB->setTipo_persona($tipo_persona);
         $oSincroDB->setRegion($region);
         $oSincroDB->setDlListas($dl);
 
         $a_lista_orbix = $oSincroDB->posiblesOrbix($id_nom_bdu);
         $a_lista_orbix_otradl = [];
-        if (empty($a_lista_orbix)) {
+        if ($a_lista_orbix === []) {
             $a_lista_orbix_otradl = $oSincroDB->posiblesOrbixOtrasDl($id_nom_bdu);
         }
 

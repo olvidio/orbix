@@ -13,9 +13,9 @@ use src\utils_database\domain\entity\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ServerConf::DIR . "/src/inventario/db";
+    private string $dir_base = ServerConf::DIR . "/src/inventario/db";
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
         if (empty($esquema_sfsv)) {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
@@ -27,7 +27,7 @@ class DBEsquema extends DBAbstract
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->eliminar_whereis();
         $this->eliminar_ubis();
@@ -44,7 +44,7 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->create_colecciones();
         $this->create_documentos();
@@ -61,7 +61,7 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function llenarAll()
+    public function llenarAll(): void
     {
         $this->llenar_colecciones();
         $this->llenar_documentos();
@@ -73,9 +73,15 @@ class DBEsquema extends DBAbstract
         $this->llenar_whereis();
     }
 
-    protected function infoTable($tabla)
+    /**
+     * @return array{tabla?: string, nom_tabla: string, campo_seq: string, id_seq: string, filename: string}
+     */
+    protected function infoTable(string $tabla): array
     {
         $datosTabla = [];
+        $nom_tabla = '';
+        $campo_seq = '';
+        $id_seq = '';
         switch ($tabla) {
             case "i_colecciones":
                 $datosTabla['tabla'] = "i_colecciones_dl";
@@ -133,7 +139,7 @@ class DBEsquema extends DBAbstract
         return $datosTabla;
     }
 
-    public function create_colecciones()
+    public function create_colecciones(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -176,7 +182,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function eliminar_colecciones()
+    public function eliminar_colecciones(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -189,7 +195,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function create_documentos()
+    public function create_documentos(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -234,7 +240,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function eliminar_documentos()
+    public function eliminar_documentos(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -247,7 +253,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function create_egm()
+    public function create_egm(): void
     {
         // (debe estar después de crear la de equipajes)
         // (debe estar después de fijar el role)
@@ -296,7 +302,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function eliminar_egm()
+    public function eliminar_egm(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -309,7 +315,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function create_equipajes()
+    public function create_equipajes(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -352,7 +358,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function eliminar_equipajes()
+    public function eliminar_equipajes(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -365,7 +371,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function create_lugares()
+    public function create_lugares(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -408,7 +414,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function eliminar_lugares()
+    public function eliminar_lugares(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -422,7 +428,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function create_tipo_documento()
+    public function create_tipo_documento(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -465,7 +471,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function eliminar_tipo_documento()
+    public function eliminar_tipo_documento(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -479,7 +485,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function create_ubis()
+    public function create_ubis(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -523,7 +529,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function eliminar_ubis()
+    public function eliminar_ubis(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -536,7 +542,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function create_whereis()
+    public function create_whereis(): void
     {
         // (se debe crear después documentos y egm)
         // (debe estar después de fijar el role)
@@ -588,7 +594,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function eliminar_whereis()
+    public function eliminar_whereis(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
@@ -603,7 +609,7 @@ class DBEsquema extends DBAbstract
 
     /* ###################### LLENAR TABLAS ################################ */
 
-    public function llenar_colecciones()
+    public function llenar_colecciones(): void
     {
         $this->addPermisoGlobal('sfsv');
 
@@ -637,7 +643,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function llenar_documentos()
+    public function llenar_documentos(): void
     {
         $this->addPermisoGlobal('sfsv');
 
@@ -672,7 +678,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function llenar_egm()
+    public function llenar_egm(): void
     {
         $this->addPermisoGlobal('sfsv');
 
@@ -706,7 +712,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function llenar_equipajes()
+    public function llenar_equipajes(): void
     {
         $this->addPermisoGlobal('sfsv');
 
@@ -740,7 +746,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function llenar_lugares()
+    public function llenar_lugares(): void
     {
         $this->addPermisoGlobal('sfsv');
 
@@ -774,7 +780,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function llenar_tipo_documento()
+    public function llenar_tipo_documento(): void
     {
         $this->addPermisoGlobal('sfsv');
 
@@ -808,7 +814,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function llenar_ubis()
+    public function llenar_ubis(): void
     {
         $this->addPermisoGlobal('sfsv');
 
@@ -842,7 +848,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function llenar_whereis()
+    public function llenar_whereis(): void
     {
         $this->addPermisoGlobal('sfsv');
 

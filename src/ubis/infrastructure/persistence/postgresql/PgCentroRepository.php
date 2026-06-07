@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -27,12 +28,15 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBP'];
+        $oDbl = GlobalPdo::get('oDBP');
         $this->setoDbl($oDbl);
         $this->setNomTabla('u_centros');
     }
 
-    public function getArrayCentrosCdc(string $condicion = ''): array
+    /**
+     * @return array<int|string, string>
+     */
+public function getArrayCentrosCdc(string $condicion = ''): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -43,10 +47,15 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
             $sWhere .= 'AND ' . $condicion;
         }
         $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $sWhere";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);        if ($stmt === false) {
+            return [];
+        }
 
         $a_ctr = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            if (!is_array($row) || !isset($row['id_ubi'], $row['nombre_ubi'])) {
+                continue;
+            }
             $id_ubi = $row['id_ubi'];
             $nombre_ubi = $row['nombre_ubi'];
 
@@ -56,7 +65,10 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         return $a_ctr;
     }
 
-    public function getArrayCentros(string $condicion = ''): array
+    /**
+     * @return array<int|string, string>
+     */
+public function getArrayCentros(string $condicion = ''): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -64,10 +76,15 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         if (empty($condicion))
             $condicion = "WHERE active = 't'";
         $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $condicion ORDER BY $orden";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);        if ($stmt === false) {
+            return [];
+        }
 
         $aCentros = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            if (!is_array($row) || !isset($row['id_ubi'], $row['nombre_ubi'])) {
+                continue;
+            }
             $id_ubi = $row['id_ubi'];
             $nombre_ubi = $row['nombre_ubi'];
 
@@ -81,9 +98,9 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
     /**
      * devuelve una colección (array) de objetos de tipo Centro
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Centro
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Centro> Una colección de objetos de tipo Centro
      */
     public function getCentros(array $aWhere = [], array $aOperators = []): array
     {
@@ -120,29 +137,37 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para las fechas del postgres (texto iso)
             $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
             $Centro = Centro::fromArray($aDatos);
             $CentroSet->add($Centro);
         }
-        return $CentroSet->getTot();
+        return array_values($CentroSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -199,6 +224,9 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -208,6 +236,9 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -219,20 +250,28 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_ubi
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_ubi): array |bool
+    public function datosById(int $id_ubi): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
+        if (!is_array($aDatos)) {
+            return false;
         }
-        return $aDatos;
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
     /**
@@ -241,7 +280,7 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
     public function findById(int $id_ubi): ?Centro
     {
         $aDatos = $this->datosById($id_ubi);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Centro::fromArray($aDatos);

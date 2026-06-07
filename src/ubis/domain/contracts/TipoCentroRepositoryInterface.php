@@ -16,6 +16,9 @@ use src\ubis\domain\entity\TipoCentro;
 interface TipoCentroRepositoryInterface
 {
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayTiposCentro(): array;
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -23,9 +26,9 @@ interface TipoCentroRepositoryInterface
 	/**
 	 * devuelve una colección (array) de objetos de tipo TipoCentro
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo TipoCentro
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<TipoCentro> Una colección de objetos de tipo TipoCentro
 	
 	 */
 	public function getTiposCentro(array $aWhere=[], array $aOperators=[]): array;
@@ -47,10 +50,22 @@ interface TipoCentroRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param string $tipo_ctr
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(string $tipo_ctr): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(string $tipo_ctr): array|false;
 	
     /**
      * Busca la clase con tipo_ctr en el repositorio.

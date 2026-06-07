@@ -1,6 +1,7 @@
 <?php
 
 namespace src\inventario\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -25,7 +26,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
     use HandlesPdoErrors;
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
+        $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
         $this->setNomTabla('i_egm_dl');
     }
@@ -38,25 +39,34 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         $sQuery = "SELECT MAX(id_grupo) FROM $nom_tabla WHERE id_equipaje = $id_equipaje";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
-        return $stmt->fetchColumn() ?? 0;
+        if ($stmt === false) {
+            return 0;
+        }
+        $value = $stmt->fetchColumn();
+        return is_numeric($value) ? (int) $value : 0;
     }
 
-    public function getArrayIdFromIdEquipajes($aEquipajes, $lugar = ''): array
+    /**
+     * @return list<string>
+     */
+    public function getArrayIdFromIdEquipajes(array $aEquipajes, int|string $lugar = ''): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
 
         $sQuery = "SELECT id_item,id_equipaje,id_lugar FROM $nom_tabla ORDER BY id_equipaje";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         foreach ($stmt as $aClave) {
-            if (in_array($aClave[1], $aEquipajes)) {
-                if (!empty($lugar)) {
-                    $aOpciones[] = $aClave[2];
-                } else {
-                    $aOpciones[] = $aClave[0];
-                }
+            if (!is_array($aClave) || !isset($aClave[0], $aClave[1], $aClave[2])) {
+                continue;
+            }
+            if (in_array($aClave[1], $aEquipajes, true)) {
+                $aOpciones[] = (string) (!empty($lugar) ? $aClave[2] : $aClave[0]);
             }
         }
         return $aOpciones;
@@ -67,9 +77,9 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Egm
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Egm
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Egm> Una colección de objetos de tipo Egm
      */
     public function getEgmes(array $aWhere = [], array $aOperators = []): array
     {
@@ -106,27 +116,35 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $Egm = Egm::fromArray($aDatos);
             $EgmSet->add($Egm);
         }
-        return $EgmSet->getTot();
+        return array_values($EgmSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -168,6 +186,12 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
             $valores = "(:id_item,:id_equipaje,:id_grupo,:id_lugar,:texto)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
+    }
+        if ($stmt === false) {
+            return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -178,6 +202,9 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -188,16 +215,27 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param EgmItemId $id_item
-     * @return array|bool
+     * @param int $id_item
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
 
     }
 
@@ -207,16 +245,22 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
     public function findById(int $id_item): ?Egm
     {
         $aDatos = $this->datosById($id_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Egm::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('i_egm_dl_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

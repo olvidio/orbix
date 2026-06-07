@@ -9,13 +9,16 @@ use src\ubis\domain\contracts\TipoCentroRepositoryInterface;
  */
 final class TipoCentroDropdown
 {
-    /**
-     * @return array<string, string>
-     */
-    public static function listaTiposCentro(): array
-    {
-        $repo = $GLOBALS['container']->get(TipoCentroRepositoryInterface::class);
+    public function __construct(
+        private TipoCentroRepositoryInterface $tipoCentroRepository,
+    ) {
+    }
 
-        return $repo->getArrayTiposCentro();
+    /**
+     * @return array<int|string, string>
+     */
+    public function listaTiposCentro(): array
+    {
+        return $this->tipoCentroRepository->getArrayTiposCentro();
     }
 }

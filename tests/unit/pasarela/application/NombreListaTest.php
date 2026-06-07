@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\pasarela\application\NombreLista;
 use src\pasarela\domain\contracts\PasarelaConfigRepositoryInterface;
+use src\pasarela\domain\Nombre;
 
 final class NombreListaTest extends TestCase
 {
@@ -38,11 +39,10 @@ final class NombreListaTest extends TestCase
         $tipoRepo->method('getNom_tipoPosibles')->willReturn(['tipo_nom' => [], 'nom_tipo' => []]);
 
         $GLOBALS['container'] = $this->containerFromMap([
-            PasarelaConfigRepositoryInterface::class => $pasRepo,
             TipoDeActividadRepositoryInterface::class => $tipoRepo,
         ]);
 
-        $out = NombreLista::execute();
+        $out = (new NombreLista(new Nombre($pasRepo)))->execute();
         $this->assertCount(2, $out['excepciones']);
         $ids = array_column($out['excepciones'], 'id_tipo_activ');
         sort($ids);
@@ -65,6 +65,7 @@ final class NombreListaTest extends TestCase
                 if (!array_key_exists($id, $this->services)) {
                     throw new \RuntimeException('Unexpected DI key: ' . $id);
                 }
+
                 return $this->services[$id];
             }
         };

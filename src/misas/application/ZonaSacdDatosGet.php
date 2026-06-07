@@ -7,22 +7,26 @@ use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 class ZonaSacdDatosGet
 {
+
+    public function __construct(
+        private readonly ZonaSacdRepositoryInterface $zonaSacdRepository,
+        private readonly PersonaSacdRepositoryInterface $personaSacdRepository,
+    ) {
+    }
     /**
      * @return array{error: string, payload: array<string, mixed>}
      */
-    public static function execute(int $id_zona, int $id_sacd): array
+    public function execute(int $id_zona, int $id_sacd): array
     {
         $error_txt = '';
         $payload = [];
 
         $aWhere = ['id_zona' => $id_zona, 'id_nom' => $id_sacd];
-        $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
-        $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere);
+        $cZonaSacd = $this->zonaSacdRepository->getZonasSacds($aWhere);
         if (empty($cZonaSacd)) {
             $error_txt = _('No existe');
         } else {
-            $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
-            $oPersona = $PersonaSacdRepository->findById($id_sacd);
+            $oPersona = $this->personaSacdRepository->findById($id_sacd);
             $nom = ($oPersona === null) ? '' : (string)$oPersona->getNombreApellidos();
             $payload['nombre_sacd'] = ($nom === '') ? '?' : $nom;
 

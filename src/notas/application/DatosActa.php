@@ -16,10 +16,15 @@ use src\notas\domain\value_objects\TipoActa;
  */
 final class DatosActa
 {
+    public function __construct(
+        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+    ) {
+    }
+
     /**
      * @return \src\notas\domain\entity\PersonaNota[]
      */
-    public static function getNotasActa(string $acta): array
+    public function getNotasActa(string $acta): array
     {
         $aIdSuperadas = NotaSituacion::getArraySuperadas();
 
@@ -30,8 +35,6 @@ final class DatosActa
         ];
         $aOperador = ['id_situacion' => 'IN'];
 
-        return $GLOBALS['container']
-            ->get(PersonaNotaRepositoryInterface::class)
-            ->getPersonaNotas($aWhere, $aOperador);
+        return $this->personaNotaRepository->getPersonaNotas($aWhere, $aOperador);
     }
 }

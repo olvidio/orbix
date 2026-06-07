@@ -8,15 +8,12 @@ use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\PersonaDl;
-use src\personas\domain\entity\PersonaGlobal;
+use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
+use src\shared\infrastructure\GlobalPdo;
 
 /**
  * Servicio de aplicación para búsqueda de personas en múltiples esquemas y repositorios.
- *
- * Este servicio orquesta las búsquedas de personas a través de diferentes repositorios
- * (Dl, Pub, Ex) y esquemas de base de datos, encapsulando la lógica compleja de búsqueda
- * que anteriormente estaba en la clase de dominio Persona.
  */
 class PersonaFinderService
 {
@@ -34,62 +31,48 @@ class PersonaFinderService
         $this->personaDlRepositoryFactory = $personaDlRepositoryFactory;
         $this->personaPubRepository = $personaPubRepository;
         $this->personaExRepository = $personaExRepository;
-        $this->oDB = $GLOBALS['oDB'];
-        $this->oDBR = $GLOBALS['oDBR'];
+        $this->oDB = GlobalPdo::get('oDB');
+        $this->oDBR = GlobalPdo::get('oDBR');
+    }
+
+    /**
+     * @param array<string, mixed> $aWhere
+     */
+    private function findFirstPersonaDl(array $aWhere): ?PersonaDl
+    {
+        $personaDlRepository = $this->personaDlRepositoryFactory->create();
+        $cPersonas = $personaDlRepository->getPersonas($aWhere);
+
+        return $cPersonas[0] ?? null;
     }
 
     /**
      * Busca una persona por id_nom en el esquema dl (local).
-     *
-     * Busca primero en PersonaDl
-     *
-     * @param int $id_nom ID de la persona a buscar
-     * @return PersonaDl|null La persona encontrada o null
-     * @phpstan-return PersonaDl|PersonaPub|null
-     * @psalm-return PersonaDl|PersonaPub|null
      */
     public function findPersonaEnDl(int $id_nom): PersonaDl|PersonaPub|null
     {
-        $aWhere = ['id_nom' => $id_nom, 'situacion' => 'A'];
-        $personaDlRepository = $this->personaDlRepositoryFactory->create();
-
-        // Buscar primero en PersonaDl
-        $cPersonas = $personaDlRepository->getPersonas($aWhere);
-        if (count($cPersonas) > 0 && $cPersonas[0] !== null) {
-            return $cPersonas[0];
-        }
-
-        return null;
+        return $this->findFirstPersonaDl(['id_nom' => $id_nom, 'situacion' => 'A']);
     }
 
     /**
      * Busca una persona por id_nom en el esquema global (local).
      *
-     * Busca primero en PersonaDl, luego en PersonaPub.
-     *
-     * @param int $id_nom ID de la persona a buscar
-     * @return PersonaDl|PersonaPub|null La persona encontrada o null
-     * @phpstan-return PersonaDl|PersonaPub|null
-     * @psalm-return PersonaDl|PersonaPub|null
+     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param-out array<string, array<string, string>> $problemasRegionStgr
      */
     public function findPersonaEnGlobal(int $id_nom, array &$problemasRegionStgr = []): PersonaDl|PersonaPub|null
     {
-        $aWhere = ['id_nom' => $id_nom, 'situacion' => 'A'];
-        $personaDlRepository = $this->personaDlRepositoryFactory->create();
-
-        // Buscar primero en PersonaDl
-        $cPersonas = $personaDlRepository->getPersonas($aWhere);
-        if (count($cPersonas) > 0 && $cPersonas[0] !== null) {
-            return $cPersonas[0];
+        $persona = $this->findFirstPersonaDl(['id_nom' => $id_nom, 'situacion' => 'A']);
+        if ($persona !== null) {
+            return $persona;
         }
 
-        // PersonaPub: resolver id_schema sin fatal si la dl no está en xu_dl (aviso al caller).
         $marcaAvisoRegionStgr = false;
         $persona = $this->personaPubRepository->findByIdParaListado($id_nom, $problemasRegionStgr, $marcaAvisoRegionStgr);
         if ($persona === null) {
             return null;
         }
-        if ((string)($persona->getSituacion() ?? '') !== 'A') {
+        if ($persona->getSituacion() !== 'A') {
             return null;
         }
 
@@ -97,19 +80,13 @@ class PersonaFinderService
     }
 
     /**
-     * Busca una persona en todas las regiones/esquemas disponibles.
-     *
-     * Itera por todos los esquemas de base de datos y busca la persona
-     * en cada uno, cambiando temporalmente el search_path de PostgreSQL.
-     *
-     * @param int $id_nom ID de la persona a buscar
-     * @return array<int, array{esquema: string, persona: PersonaDl|PersonaPub}>
+     * @return list<array{esquema: string, persona: PersonaDl|PersonaEx}>
      */
     public function buscarEnTodasRegiones(int $id_nom): array
     {
         $aWhere = [
             'situacion' => 'A',
-            'id_nom' => $id_nom
+            'id_nom' => $id_nom,
         ];
 
         $aResultados = [];
@@ -141,33 +118,33 @@ class PersonaFinderService
     }
 
     /**
-     * Obtiene una lista de esquemas válidos para buscar personas.
-     *
-     * Excluye esquemas como 'global', 'public', y esquemas H-H (misma región-delegación).
-     *
-     * @return array Lista de nombres de esquemas
+     * @return list<string>
      */
     private function getPosiblesEsquemas(): array
     {
         $qRs = $this->oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
+        if ($qRs === false) {
+            return [];
+        }
         $aResultSql = $qRs->fetchAll(PDO::FETCH_ASSOC);
 
         $a_posibles = [];
 
         foreach ($aResultSql as $esquemaName) {
+            if (!is_array($esquemaName) || !isset($esquemaName['schemaname']) || !is_string($esquemaName['schemaname'])) {
+                continue;
+            }
             $esquema = $esquemaName['schemaname'];
 
-            // Eliminar esquemas H-H (misma región-delegación)
             if (strpos($esquema, '-') !== false) {
                 $a_reg = explode('-', $esquema);
                 $reg = $a_reg[0];
-                $dl = substr($a_reg[1], 0, -1); // quitar la 'v' o 'f'
+                $dl = substr($a_reg[1], 0, -1);
                 if ($reg === $dl) {
                     continue;
                 }
             }
 
-            // Eliminar esquemas especiales
             if (in_array($esquema, ['global', 'public', 'publicv'], true)) {
                 continue;
             }
@@ -178,16 +155,8 @@ class PersonaFinderService
         return $a_posibles;
     }
 
-    /**
-     * Cambia el search_path de PostgreSQL al esquema especificado.
-     *
-     * @param string $esquema Nombre del esquema a establecer
-     * @param PDO &$oDB Referencia al objeto PDO que se usará
-     * @return string El search_path original (para restaurarlo después)
-     */
     private function cambiarEsquema(string $esquema, PDO &$oDB): string
     {
-        // Usar oDB para el esquema local, oDBR para otros esquemas
         if (ConfigGlobal::mi_region_dl() === $esquema) {
             $oDB = $this->oDB;
         } else {
@@ -195,20 +164,17 @@ class PersonaFinderService
         }
 
         $qRs = $oDB->query('SHOW search_path');
+        if ($qRs === false) {
+            return '';
+        }
         $aPath = $qRs->fetch(PDO::FETCH_ASSOC);
-        $path_ini = $aPath['search_path'];
+        $path_ini = is_array($aPath) && is_string($aPath['search_path'] ?? null) ? $aPath['search_path'] : '';
 
         $oDB->exec('SET search_path TO public,"' . $esquema . '"');
 
         return $path_ini;
     }
 
-    /**
-     * Restaura el search_path de PostgreSQL a su valor original.
-     *
-     * @param PDO $oDB Objeto PDO a restaurar
-     * @param string $path_ini Path original a restaurar
-     */
     private function restaurarEsquema(PDO $oDB, string $path_ini): void
     {
         $oDB->exec("SET search_path TO $path_ini");

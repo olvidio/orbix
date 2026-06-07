@@ -15,18 +15,24 @@ use src\ubis\domain\entity\Direccion;
  */
 interface DireccionCentroRepositoryInterface
 {
-    public function getArrayPoblaciones($sCondicion = ''): array;
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayPoblaciones(string $sCondicion = ''): array;
 
-    public function getArrayPaises($sCondicion = ''): array;
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayPaises(string $sCondicion = ''): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Direccion
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Direccion
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Direccion> Una colección de objetos de tipo Direccion
      */
     public function getDirecciones(array $aWhere = [], array $aOperators = []): array;
 
@@ -47,14 +53,41 @@ interface DireccionCentroRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_direccion
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_direccion): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_direccion): array|false;
 
     /**
      * Busca la clase con id_direccion en el repositorio.
      */
     public function findById(int $id_direccion): ?Direccion;
 
+    /**
+     * @return array<string, mixed>
+     */
+    /**
+     * @return array<string, mixed>
+     */
+    /**
+     * @return array<string, mixed>
+     */
+    /**
+     * @return array<string, mixed>
+     */
+    /**
+     * @return array<string, mixed>
+     */
     public function downloadPlano(int $id_direccion): array;
 }

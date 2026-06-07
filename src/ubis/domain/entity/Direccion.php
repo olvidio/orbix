@@ -76,20 +76,18 @@ class Direccion
      */
     public function setId_direccion(int $id_direccion): void
     {
-        $this->id_direccion = DireccionId::fromNullableInt($id_direccion);
+        $this->id_direccion = new DireccionId($id_direccion);
     }
 
     // VO API for id_direccion
     public function getIdDireccionVo(): ?DireccionId
     {
-        return $this->id_direccion;
+        return $this->id_direccion ?? null;
     }
 
-    public function setIdDireccionVo(DireccionId|int|null $id = null): void
+    public function setIdDireccionVo(DireccionId|int $id): void
     {
-        $this->id_direccion = $id instanceof DireccionId
-            ? $id
-            : DireccionId::fromNullableInt($id);
+        $this->id_direccion = $id instanceof DireccionId ? $id : new DireccionId($id);
     }
 
     /**
@@ -97,7 +95,7 @@ class Direccion
      */
     public function getDireccion(): ?string
     {
-        return $this->direccion->value();
+        return $this->direccion?->value();
     }
 
 
@@ -165,7 +163,7 @@ class Direccion
      */
     public function setPoblacion(string $poblacion): void
     {
-        $this->poblacion = PoblacionText::fromNullableString($poblacion);
+        $this->poblacion = new PoblacionText($poblacion);
     }
 
     public function getPoblacionVo(): PoblacionText
@@ -173,11 +171,9 @@ class Direccion
         return $this->poblacion;
     }
 
-    public function setPoblacionVo(PoblacionText|string|null $poblacion): void
+    public function setPoblacionVo(PoblacionText|string $vo): void
     {
-        $this->poblacion = $poblacion instanceof PoblacionText
-            ? $poblacion
-            : PoblacionText::fromNullableString($poblacion);
+        $this->poblacion = $vo instanceof PoblacionText ? $vo : new PoblacionText($vo);
     }
 
 
@@ -533,7 +529,7 @@ class Direccion
      * texte amb l'adreça formatejada
      *
      */
-    public function getDireccionPostal($salto_linea = '<br>', $espacio = ' ')
+    public function getDireccionPostal(string $salto_linea = '<br>', string $espacio = ' '): string
     {
         $txt = '';
         $rtn = $salto_linea;

@@ -16,7 +16,11 @@ use src\inventario\domain\entity\Egm;
 interface EgmRepositoryInterface
 {
 
-    public function getArrayIdFromIdEquipajes($aEquipajes, $lugar = ''): array;
+    /**
+     * @param array<int, int|string> $aEquipajes
+     * @return list<string>
+     */
+    public function getArrayIdFromIdEquipajes(array $aEquipajes, int|string $lugar = ''): array;
 
     public function getUltimoGrupo(int $id_equipaje): int;
 
@@ -25,9 +29,9 @@ interface EgmRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Egm
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Egm
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Egm> Una colección de objetos de tipo Egm
      */
     public function getEgmes(array $aWhere = [], array $aOperators = []): array;
 
@@ -48,14 +52,14 @@ interface EgmRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool;
+    public function datosById(int $id_item): array|false;
 
     /**
      * Busca la clase con id_item en el repositorio.
      */
     public function findById(int $id_item): ?Egm;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

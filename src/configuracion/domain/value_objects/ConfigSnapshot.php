@@ -41,8 +41,10 @@ final class ConfigSnapshot
         public readonly ?string $idiomaDefault,
         public readonly ?string $iniContadorCertificados,
         public readonly ?string $jefeCalendario,
-        public readonly ?array  $aCursoStgr,
-        public readonly ?array  $aCursoCrt,
+        /** @var array{ini_dia?: int, ini_mes?: int, fin_dia?: int, fin_mes?: int}|null */
+        public readonly ?array $aCursoStgr,
+        /** @var array{ini_dia?: int, ini_mes?: int, fin_dia?: int, fin_mes?: int}|null */
+        public readonly ?array $aCursoCrt,
     ) {
         $this->msg = _("Debe configurar el esquema en Menu: Sistema > Configuración > config esquema");
     }
@@ -58,13 +60,13 @@ final class ConfigSnapshot
     /**
      * Mensaje HTML con todos los parámetros faltantes (sin abortar el request).
      *
-     * @param array<string|null> $checks mapa valor del parámetro => etiqueta traducible
+     * @param array<int|string, string> $checks mapa valor del parámetro => etiqueta traducible
      */
     public function formatMissingParametersMessage(array $checks): string
     {
         $labels = [];
         foreach ($checks as $value => $label) {
-            if ($value === null || $value === '') {
+            if ((string)$value === '') {
                 $labels[] = $label;
             }
         }
@@ -90,6 +92,9 @@ final class ConfigSnapshot
         return $value;
     }
 
+    /**
+     * @param array<string, mixed>|null $aCurso
+     */
     private function requireCursoField(?array $aCurso, string $key, string $nom_param): int
     {
         if (empty($aCurso) || empty($aCurso[$key])) {
@@ -98,7 +103,7 @@ final class ConfigSnapshot
             $msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
             exit ($msg);
         }
-        return (int) $aCurso[$key];
+        return (int) (is_numeric($aCurso[$key]) ? $aCurso[$key] : 0);
     }
 
     /* ------------------- Básicos ------------------- */
@@ -125,7 +130,7 @@ final class ConfigSnapshot
      */
     public function getCe(): array
     {
-        return explode(',', $this->getCe_lugar() ?? '');
+        return explode(',', $this->getCe_lugar());
     }
 
     public function getNomRegionLatin(): string
@@ -207,7 +212,7 @@ final class ConfigSnapshot
     /* ------------------- Curso (stgr / crt) ------------------- */
 
     /**
-     * @return array{ini_dia:int,ini_mes:int,fin_dia:int,fin_mes:int}|array
+     * @return array{ini_dia?: int, ini_mes?: int, fin_dia?: int, fin_mes?: int}
      */
     public function getCursoStgr(): array
     {
@@ -215,7 +220,7 @@ final class ConfigSnapshot
     }
 
     /**
-     * @return array{ini_dia:int,ini_mes:int,fin_dia:int,fin_mes:int}|array
+     * @return array{ini_dia?: int, ini_mes?: int, fin_dia?: int, fin_mes?: int}
      */
     public function getCursoCrt(): array
     {

@@ -16,16 +16,19 @@ use src\ubis\domain\entity\CentroEx;
 interface CentroExRepositoryInterface
 {
 
-    public function getArrayCentros($sCondicion = ''): array;
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayCentros(string $sCondicion = ''): array;
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo CentroEx
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo CentroEx
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<CentroEx> Una colección de objetos de tipo CentroEx
 	
 	 */
 	public function getCentros(array $aWhere=[], array $aOperators=[]): array;
@@ -47,10 +50,22 @@ interface CentroExRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param int $id_ubi
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(int $id_ubi): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_ubi): array|false;
 	
     /**
      * Busca la clase con id_ubi en el repositorio.
@@ -58,7 +73,7 @@ interface CentroExRepositoryInterface
      */
     public function findById(int $id_ubi): ?CentroEx;
 	
-    public function getNewId();
-    public function getNewIdUbi($id): int;
+    public function getNewId(): int;
+    public function getNewIdUbi(int $id): int;
 
 }

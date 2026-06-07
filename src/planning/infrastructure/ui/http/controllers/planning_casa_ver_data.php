@@ -5,8 +5,9 @@
  * (`ActividadesPorCasasService` + `CasaPeriodosForPlanning`).
  */
 
-use src\shared\web\ContestarJson;
 use src\planning\application\PlanningCasaVerData;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -14,7 +15,9 @@ $error = '';
 $data = [];
 
 try {
-    $data = PlanningCasaVerData::execute($_POST);
+    /** @var PlanningCasaVerData $useCase */
+    $useCase = DependencyResolver::get(PlanningCasaVerData::class);
+    $data = $useCase->execute($_POST);
 } catch (\Throwable $e) {
     $error = $e->getMessage();
 }

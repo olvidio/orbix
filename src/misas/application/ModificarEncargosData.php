@@ -7,6 +7,12 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 class ModificarEncargosData
 {
+
+    public function __construct(
+        private readonly ZonaRepositoryInterface $zonaRepository,
+        private readonly IdNomJefeResolver $idNomJefeResolver,
+    ) {
+    }
     /**
      * Devuelve los datos para pintar la pantalla `modificar_encargos`:
      * el desplegable de zonas (filtrado segun el rol del usuario) y la lista
@@ -22,9 +28,12 @@ class ModificarEncargosData
      *   - `a_opciones_zona`: array id_zona => nombre_zona.
      *   - `a_orden`        : array criterio => label.
      */
-    public static function getData(): array
+    /**
+     * @return array{error: string, a_opciones_zona: array<int|string, string>, a_orden: array<string, string>}
+     */
+    public function getData(): array
     {
-        $jefe = IdNomJefeResolver::resolve();
+        $jefe = $this->idNomJefeResolver->resolve();
         if ($jefe['error'] !== '') {
             return [
                 'error' => $jefe['error'],
@@ -32,9 +41,7 @@ class ModificarEncargosData
                 'a_orden' => [],
             ];
         }
-
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-        $a_opciones_zona = $ZonaRepository->getArrayZonas($jefe['id_nom_jefe']);
+        $a_opciones_zona = $this->zonaRepository->getArrayZonas($jefe['id_nom_jefe']);
 
         $a_orden = [
             'orden' => _('orden'),

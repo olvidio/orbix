@@ -9,19 +9,17 @@ use PHPUnit\Framework\TestCase;
 use src\ubis\application\CentrosFormData;
 use src\ubis\domain\CuadrosLaborBits;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\entity\CentroDl;
 
 final class CentrosFormDataTest extends TestCase
 {
-    private mixed $previousContainer;
     private bool $hadSessionSfsv = false;
     private mixed $previousSessionSfsv = null;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
 
-        // CuadrosLabor (vía CentrosFormData::MODO_LABOR) usa ConfigGlobal::mi_sfsv().
         if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
             $_SESSION['session_auth'] = [];
         }
@@ -37,27 +35,20 @@ final class CentrosFormDataTest extends TestCase
         } else {
             unset($_SESSION['session_auth']['sfsv']);
         }
-
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
     public function test_modo_desconocido_lanza_InvalidArgumentException(): void
     {
-        $GLOBALS['container'] = $this->containerConCentro(null);
+        $useCase = $this->createUseCase(null);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Modo desconocido: foo');
-        CentrosFormData::execute(1, 'foo');
+        $useCase->execute(1, 'foo');
     }
 
     public function test_centro_no_encontrado_devuelve_defaults_en_labor(): void
     {
-        $GLOBALS['container'] = $this->containerConCentro(null);
-        $result = CentrosFormData::execute(123, CentrosFormData::MODO_LABOR);
+        $result = $this->createUseCase(null)->execute(123, CentrosFormData::MODO_LABOR);
 
         $this->assertSame([
             'id_ubi' => 123,
@@ -75,9 +66,8 @@ final class CentrosFormDataTest extends TestCase
             'getTipo_ctr' => 'Z',
             'getTipo_labor' => 42,
         ]);
-        $GLOBALS['container'] = $this->containerConCentro($centro);
 
-        $result = CentrosFormData::execute(7, CentrosFormData::MODO_LABOR);
+        $result = $this->createUseCase($centro)->execute(7, CentrosFormData::MODO_LABOR);
 
         $this->assertSame([
             'id_ubi' => 7,
@@ -92,18 +82,17 @@ final class CentrosFormDataTest extends TestCase
     {
         $centro = $this->centro([
             'getNombre_ubi' => 'Centro Dos',
-            'getN_buzon' => 'B10',
+            'getN_buzon' => 10,
             'getNum_pi' => 5,
             'getNum_cartas' => 3,
         ]);
-        $GLOBALS['container'] = $this->containerConCentro($centro);
 
-        $result = CentrosFormData::execute(8, CentrosFormData::MODO_NUM);
+        $result = $this->createUseCase($centro)->execute(8, CentrosFormData::MODO_NUM);
 
         $this->assertSame([
             'id_ubi' => 8,
             'nombre_ubi' => 'Centro Dos',
-            'n_buzon' => 'B10',
+            'n_buzon' => 10,
             'num_pi' => 5,
             'num_cartas' => 3,
         ], $result);
@@ -117,9 +106,8 @@ final class CentrosFormDataTest extends TestCase
             'getPlazas' => 12,
             'isSede' => true,
         ]);
-        $GLOBALS['container'] = $this->containerConCentro($centro);
 
-        $result = CentrosFormData::execute(9, CentrosFormData::MODO_PLAZAS);
+        $result = $this->createUseCase($centro)->execute(9, CentrosFormData::MODO_PLAZAS);
 
         $this->assertSame([
             'id_ubi' => 9,
@@ -130,37 +118,24 @@ final class CentrosFormDataTest extends TestCase
         ], $result);
     }
 
-    private function containerConCentro(?object $centro): object
+    private function createUseCase(?CentroDl $centro): CentrosFormData
     {
-        return new class($centro) {
-            public function __construct(private readonly ?object $centro) {}
-            public function get(string $key): object
-            {
-                if ($key !== CentroDlRepositoryInterface::class) {
-                    throw new \RuntimeException("Clave inesperada: $key");
-                }
-                return new class($this->centro) {
-                    public function __construct(private readonly ?object $centro) {}
-                    public function findById(int $id): ?object
-                    {
-                        return $this->centro;
-                    }
-                };
-            }
-        };
+        $repo = $this->createMock(CentroDlRepositoryInterface::class);
+        $repo->method('findById')->willReturn($centro);
+
+        return new CentrosFormData($repo);
     }
 
     /**
      * @param array<string, mixed> $props
      */
-    private function centro(array $props): object
+    private function centro(array $props): CentroDl
     {
-        return new class($props) {
-            public function __construct(private readonly array $props) {}
-            public function __call(string $name, array $args): mixed
-            {
-                return $this->props[$name] ?? null;
-            }
-        };
+        $centro = $this->createMock(CentroDl::class);
+        foreach ($props as $method => $value) {
+            $centro->method($method)->willReturn($value);
+        }
+
+        return $centro;
     }
 }

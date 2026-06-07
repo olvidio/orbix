@@ -14,5 +14,5 @@ namespace src\personas\domain\contracts;
  */
 interface PersonaAllRepositoryInterface
 {
-    public function getPersonaByIdNom($id_nom);
+    public function getPersonaByIdNom(int $id_nom): ?\src\personas\domain\entity\PersonaDl;
 }

@@ -3,6 +3,7 @@
 namespace src\personas\domain\entity;
 
 use src\personas\application\services\PersonaFinderService;
+use src\shared\infrastructure\DependencyResolver;
 
 /**
  * @deprecated Esta clase está deprecada. Use PersonaFinderService en su lugar.
@@ -20,11 +21,12 @@ class Persona
      * Este método es un wrapper temporal para mantener compatibilidad.
      *
      * @param int $id_nom ID de la persona a buscar
+     * @param array<string, array<string, string>> $problemasRegionStgr
      * @return PersonaDl|PersonaPub|null
      */
-    public static function findPersonaEnGlobal($id_nom, array &$problemasRegionStgr = []): PersonaDl|PersonaPub|null
+    public static function findPersonaEnGlobal(int $id_nom, array &$problemasRegionStgr = []): PersonaDl|PersonaPub|null
     {
-        $service = $GLOBALS['container']->get(PersonaFinderService::class);
+        $service = DependencyResolver::get(PersonaFinderService::class);
         return $service->findPersonaEnGlobal((int)$id_nom, $problemasRegionStgr);
     }
 
@@ -35,11 +37,11 @@ class Persona
      * Este método es un wrapper temporal para mantener compatibilidad.
      *
      * @param int $id_nom ID de la persona a buscar
-     * @return array<int, array{esquema: string, persona: PersonaDl|PersonaPub}>
+     * @return list<array{esquema: string, persona: PersonaDl|PersonaEx}>
      */
-    public static function buscarEnTodasRegiones($id_nom): array
+    public static function buscarEnTodasRegiones(int $id_nom): array
     {
-        $service = $GLOBALS['container']->get(PersonaFinderService::class);
+        $service = DependencyResolver::get(PersonaFinderService::class);
         return $service->buscarEnTodasRegiones($id_nom);
     }
 }

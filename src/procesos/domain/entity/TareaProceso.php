@@ -29,11 +29,12 @@ class TareaProceso
 
     private ?int $id_of_responsable = null;
 
+    /** @var list<array<string, mixed>>|stdClass|null */
     private array|stdClass|null $json_fases_previas = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getOf_responsable_txt()
+    public function getOf_responsable_txt(): string
     {
         // para crear el array id_oficina => oficina_txt. Uso los de los menus
         $aOpcionesOficinas = PermisoMenuBits::valueToLabel();
@@ -65,7 +66,7 @@ class TareaProceso
     {
         $this->id_tipo_proceso = $id_tipo_proceso instanceof ProcesoTipoId
             ? $id_tipo_proceso
-            : ProcesoTipoId::fromNullableInt($id_tipo_proceso);
+            : (ProcesoTipoId::fromNullableInt($id_tipo_proceso) ?? throw new \InvalidArgumentException('id_tipo_proceso cannot be null'));
     }
 
     /**
@@ -81,7 +82,7 @@ class TareaProceso
      */
     public function setId_tipo_proceso(int $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = ProcesoTipoId::fromNullableInt($id_tipo_proceso);
+        $this->id_tipo_proceso = (ProcesoTipoId::fromNullableInt($id_tipo_proceso) ?? throw new \InvalidArgumentException('id_tipo_proceso cannot be null'));
     }
 
 
@@ -95,7 +96,7 @@ class TareaProceso
     {
         $this->id_fase = $id_fase instanceof FaseId
             ? $id_fase
-            : FaseId::fromNullableInt($id_fase);
+            : (FaseId::fromNullableInt($id_fase) ?? throw new \InvalidArgumentException('id_fase cannot be null'));
     }
 
     /**
@@ -111,7 +112,7 @@ class TareaProceso
      */
     public function setId_fase(int $id_fase): void
     {
-        $this->id_fase = FaseId::fromNullableInt($id_fase);
+        $this->id_fase = (FaseId::fromNullableInt($id_fase) ?? throw new \InvalidArgumentException('id_fase cannot be null'));
     }
 
 
@@ -125,7 +126,7 @@ class TareaProceso
     {
         $this->id_tarea = $id_tarea instanceof TareaId
             ? $id_tarea
-            : TareaId::fromNullableInt($id_tarea);
+            : (TareaId::fromNullableInt($id_tarea) ?? throw new \InvalidArgumentException('id_tarea cannot be null'));
     }
 
     /**
@@ -141,7 +142,7 @@ class TareaProceso
      */
     public function setId_tarea(int $id_tarea): void
     {
-        $this->id_tarea = TareaId::fromNullableInt($id_tarea);
+        $this->id_tarea = (TareaId::fromNullableInt($id_tarea) ?? throw new \InvalidArgumentException('id_tarea cannot be null'));
     }
 
 
@@ -158,7 +159,7 @@ class TareaProceso
      */
     public function setStatus(int $istatus): void
     {
-        $this->status = StatusId::fromNullableInt($istatus);
+        $this->status = (StatusId::fromNullableInt($istatus) ?? throw new \InvalidArgumentException('status cannot be null'));
     }
     public function getStatusVo(): StatusId
     {
@@ -168,7 +169,7 @@ class TareaProceso
     {
         $this->status = $status instanceof StatusId
             ? $status
-            : StatusId::fromNullableInt($status);
+            : (StatusId::fromNullableInt($status) ?? throw new \InvalidArgumentException('status cannot be null'));
     }
 
 
@@ -184,12 +185,41 @@ class TareaProceso
     }
 
 
+    /**
+     * @return list<array<string, mixed>>|stdClass|null
+     */
     public function getJson_fases_previas(): array|stdClass|null
     {
         return $this->json_fases_previas;
     }
 
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function getJsonFasesPreviasAsList(): array
+    {
+        $data = $this->json_fases_previas;
+        if ($data === null) {
+            return [];
+        }
+        if ($data instanceof stdClass) {
+            $data = (array) $data;
+        }
+        $result = [];
+        foreach ($data as $item) {
+            if (is_array($item)) {
+                $result[] = $item;
+            } elseif (is_object($item)) {
+                $result[] = (array) $item;
+            }
+        }
 
+        return $result;
+    }
+
+    /**
+     * @param list<array<string, mixed>>|stdClass|null $json_fases_previas
+     */
     public function setJson_fases_previas(stdClass|array|null $json_fases_previas = null): void
     {
         $this->json_fases_previas = $json_fases_previas;

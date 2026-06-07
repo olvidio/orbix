@@ -2,6 +2,7 @@
 
 namespace src\usuarios\application;
 
+use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\DBConnection;
@@ -18,9 +19,9 @@ final class AppMobileLogin
 {
     /**
      * @param array{username?:string,password?:string,esquema?:string,verification_code?:string} $input
-     * @return array{ok:bool,code?:string,mensaje?:string,data?:array}
+     * @return array{ok: bool, code?: string, mensaje?: string, data?: array<string, mixed>}
      */
-    public static function attempt(array $input): array
+    public function execute(array $input): array
     {
         $esquema_web = getenv('ESQUEMA') ?: '';
         $ubicacion = getenv('UBICACION');
@@ -79,12 +80,12 @@ final class AppMobileLogin
         $query = 'SELECT * FROM aux_usuarios WHERE usuario = :usuario';
         $oDBSt = $oDB_Select->prepare($query);
         if ($oDBSt === false) {
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDB_Select, 'app_login.prepare', __LINE__, __FILE__);
+            self::logPdoError($oDB_Select, 'app_login.prepare');
 
             return ['ok' => false, 'code' => 'server_error', 'mensaje' => _('Error de servidor')];
         }
         if ($oDBSt->execute($aWhere) === false) {
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDB_Select, 'app_login.execute', __LINE__, __FILE__);
+            self::logPdoError($oDB_Select, 'app_login.execute');
 
             return ['ok' => false, 'code' => 'server_error', 'mensaje' => _('Error de servidor')];
         }
@@ -92,7 +93,7 @@ final class AppMobileLogin
         $password_db = null;
         $oDBSt->bindColumn('password', $password_db, \PDO::PARAM_STR);
         $row = $oDBSt->fetch(\PDO::FETCH_ASSOC);
-        if ($row === false) {
+        if (!is_array($row)) {
             return [
                 'ok' => false,
                 'code' => 'invalid_credentials',
@@ -116,7 +117,8 @@ final class AppMobileLogin
             $expire = 1;
         }
 
-        if ($MiUsuario->isHas_2fa() && empty($row['secret_2fa'])) {
+        $secret2fa = is_scalar($row['secret_2fa'] ?? null) ? (string) $row['secret_2fa'] : '';
+        if ($MiUsuario->isHas_2fa() && $secret2fa === '') {
             $url_base = ConfigGlobal::getWeb() . '/';
             $a_params = [
                 'username' => $username,
@@ -134,7 +136,7 @@ final class AppMobileLogin
             ];
         }
 
-        if ($MiUsuario->isHas_2fa() && !empty($row['secret_2fa'])) {
+        if ($MiUsuario->isHas_2fa()) {
             if ($verification_code === '') {
                 return [
                     'ok' => false,
@@ -142,7 +144,7 @@ final class AppMobileLogin
                     'mensaje' => _('Código 2FA requerido'),
                 ];
             }
-            if (!Verify2fa::verify_2fa_code($verification_code, $row['secret_2fa'])) {
+            if (!Verify2fa::verify_2fa_code($verification_code, $secret2fa)) {
                 return [
                     'ok' => false,
                     'code' => 'invalid_2fa',
@@ -151,8 +153,8 @@ final class AppMobileLogin
             }
         }
 
-        $id_usuario = (int)$row['id_usuario'];
-        $id_role = (int)$row['id_role'];
+        $id_usuario = isset($row['id_usuario']) && is_numeric($row['id_usuario']) ? (int) $row['id_usuario'] : 0;
+        $id_role = isset($row['id_role']) && is_numeric($row['id_role']) ? (int) $row['id_role'] : 0;
 
         $oConfigDB = new ConfigDB('comun_select');
         $config = $oConfigDB->getEsquema('public');
@@ -161,15 +163,15 @@ final class AppMobileLogin
         $queryr = 'SELECT * FROM aux_roles WHERE id_role = ' . $id_role;
         $oDBPSt = $oDBCP_Select->query($queryr);
         if ($oDBPSt === false) {
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDBCP_Select, 'app_login.role', __LINE__, __FILE__);
+            self::logPdoError($oDBCP_Select, 'app_login.role');
 
             return ['ok' => false, 'code' => 'server_error', 'mensaje' => _('Error de servidor')];
         }
         $row2 = $oDBPSt->fetch(\PDO::FETCH_ASSOC);
-        if ($row2 === false) {
+        if (!is_array($row2)) {
             return ['ok' => false, 'code' => 'server_error', 'mensaje' => _('Rol no encontrado')];
         }
-        $role_pau = $row2['pau'];
+        $role_pau = is_scalar($row2['pau'] ?? null) ? (string) $row2['pau'] : '';
 
         if (ConfigGlobal::is_dmz()) {
             $role_dmz = $row2['dmz'] ?? null;
@@ -182,18 +184,21 @@ final class AppMobileLogin
             }
         }
 
-        $mail = (string)($row['email'] ?? '');
+        $mail = is_scalar($row['email'] ?? null) ? (string) $row['email'] : '';
 
         $a_mods = self::getModsPosibles();
         $a_apps = self::getAppsPosibles();
         $a_mods_installed = self::getModsInstalados($oDB_Select);
-        $app = [];
+        $app_installed = [];
         foreach ($a_mods_installed as $id_mod => $param) {
-            $app[] = self::getAppsMods($id_mod);
-            $app[] = self::getApps($id_mod);
+            foreach (self::getAppsMods($id_mod) as $appName) {
+                $app_installed[] = $appName;
+            }
+            foreach (self::getApps($id_mod) as $appName) {
+                $app_installed[] = $appName;
+            }
         }
-        $app_installed = $app !== [] ? array_merge(...array_values($app)) : [];
-        $app_installed = array_unique($app_installed);
+        $app_installed = array_values(array_unique($app_installed));
 
         $query_idioma = sprintf(
             "select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ",
@@ -201,8 +206,10 @@ final class AppMobileLogin
             'idioma'
         );
         $oDBStI = $oDB_Select->query($query_idioma);
-        $rowI = $oDBStI ? $oDBStI->fetch(\PDO::FETCH_ASSOC) : false;
-        $idioma = ($rowI === false) ? '' : (string)($rowI['preferencia'] ?? '');
+        $rowI = ($oDBStI !== false) ? $oDBStI->fetch(\PDO::FETCH_ASSOC) : false;
+        $idioma = is_array($rowI) && is_scalar($rowI['preferencia'] ?? null)
+            ? (string) $rowI['preferencia']
+            : '';
 
         $query_ordenApellidos = sprintf(
             "select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ",
@@ -210,8 +217,10 @@ final class AppMobileLogin
             'ordenApellidos'
         );
         $oDBStoA = $oDB_Select->query($query_ordenApellidos);
-        $rowO = $oDBStoA ? $oDBStoA->fetch(\PDO::FETCH_ASSOC) : false;
-        $ordenApellidos = ($rowO === false) ? '' : (string)($rowO['preferencia'] ?? '');
+        $rowO = ($oDBStoA !== false) ? $oDBStoA->fetch(\PDO::FETCH_ASSOC) : false;
+        $ordenApellidos = is_array($rowO) && is_scalar($rowO['preferencia'] ?? null)
+            ? (string) $rowO['preferencia']
+            : '';
 
         $oDBPropiedades = new DBPropiedades();
         $id_schema = $oDBPropiedades->getIdSchema($esquema);
@@ -276,7 +285,7 @@ final class AppMobileLogin
         ];
     }
 
-    private static function pdoForEsquema(string &$esquema, ?int &$sfsv, string $ubicacion): ?\PDO
+    private static function pdoForEsquema(string &$esquema, int &$sfsv, string $ubicacion): ?\PDO
     {
         $sfsv = 0;
         $private = (string) getenv('PRIVATE');
@@ -336,8 +345,15 @@ final class AppMobileLogin
         $oConexion = new DBConnection($config);
         $oDBP_Select = $oConexion->getPDO();
         $a_apps = [];
-        foreach ($oDBP_Select->query('SELECT * FROM m0_apps') as $aDades) {
-            $a_apps[$aDades['nom']] = $aDades['id_app'];
+        $stmt = $oDBP_Select->query('SELECT * FROM m0_apps');
+        if ($stmt === false) {
+            return [];
+        }
+        foreach ($stmt as $aDades) {
+            if (!is_array($aDades) || !isset($aDades['nom'], $aDades['id_app'])) {
+                continue;
+            }
+            $a_apps[(string) $aDades['nom']] = (int) $aDades['id_app'];
         }
 
         return $a_apps;
@@ -351,12 +367,19 @@ final class AppMobileLogin
         $oConexion = new DBConnection($config);
         $oDBP_Select = $oConexion->getPDO();
         $a_mods = [];
-        foreach ($oDBP_Select->query('SELECT * FROM m0_modulos') as $aDades) {
+        $stmt = $oDBP_Select->query('SELECT * FROM m0_modulos');
+        if ($stmt === false) {
+            return [];
+        }
+        foreach ($stmt as $aDades) {
+            if (!is_array($aDades) || !isset($aDades['id_mod'], $aDades['nom'])) {
+                continue;
+            }
             $id_mod = $aDades['id_mod'];
             $a_mods[$id_mod] = [
-                'nom' => $aDades['nom'],
-                'mods_req' => $aDades['mods_req'],
-                'apps_req' => $aDades['apps_req'],
+                'nom' => (string) $aDades['nom'],
+                'mods_req' => $aDades['mods_req'] ?? null,
+                'apps_req' => $aDades['apps_req'] ?? null,
             ];
         }
 
@@ -368,10 +391,19 @@ final class AppMobileLogin
     {
         $a_mods = self::getModsPosibles();
         $a_mods_installed = [];
-        foreach ($oDB_Select->query('SELECT * FROM m0_mods_installed_dl WHERE active = \'t\'') as $aDades) {
-            $id_mod = $aDades['id_mod'];
-            $nom_mod = $a_mods[$id_mod]['nom'];
-            $a_mods_installed[$id_mod] = $nom_mod;
+        $stmt = $oDB_Select->query('SELECT * FROM m0_mods_installed_dl WHERE active = \'t\'');
+        if ($stmt === false) {
+            return [];
+        }
+        foreach ($stmt as $aDades) {
+            if (!is_array($aDades) || !isset($aDades['id_mod'])) {
+                continue;
+            }
+            $id_mod = is_numeric($aDades['id_mod']) ? (int) $aDades['id_mod'] : 0;
+            if ($id_mod === 0 || !isset($a_mods[$id_mod])) {
+                continue;
+            }
+            $a_mods_installed[$id_mod] = $a_mods[$id_mod]['nom'];
         }
 
         return $a_mods_installed;
@@ -382,15 +414,22 @@ final class AppMobileLogin
     {
         $apps = [];
         $a_mods = self::getModsPosibles();
+        if (!isset($a_mods[$id_mod])) {
+            return [];
+        }
         $ajson = $a_mods[$id_mod]['mods_req'];
-        if (preg_match('/^{(.*)}$/', (string)$ajson, $matches)) {
-            if (!empty($matches[1])) {
-                $apps_installed = [];
+        $ajsonStr = is_scalar($ajson) ? (string) $ajson : '';
+        if (preg_match('/^{(.*)}$/', $ajsonStr, $matches)) {
+            if ($matches[1] !== '') {
                 $mod_in = str_getcsv($matches[1]);
                 foreach ($mod_in as $mod) {
-                    $apps_installed[] = self::getApps($mod);
+                    if (!is_string($mod) || $mod === '') {
+                        continue;
+                    }
+                    foreach (self::getApps($mod) as $appName) {
+                        $apps[] = $appName;
+                    }
                 }
-                $apps = array_merge(...array_values($apps_installed));
             }
         }
 
@@ -402,14 +441,27 @@ final class AppMobileLogin
     {
         $apps = [];
         $a_mods = self::getModsPosibles();
+        if (!isset($a_mods[$id_mod])) {
+            return [];
+        }
         $ajson = $a_mods[$id_mod]['apps_req'];
-        if (preg_match('/^{(.*)}$/', (string)$ajson, $matches)) {
+        $ajsonStr = is_scalar($ajson) ? (string) $ajson : '';
+        if (preg_match('/^{(.*)}$/', $ajsonStr, $matches)) {
             $app_in = str_getcsv($matches[1]);
             foreach ($app_in as $app) {
-                $apps[] = $app;
+                if (is_string($app) && $app !== '') {
+                    $apps[] = $app;
+                }
             }
         }
 
         return $apps;
+    }
+
+    private static function logPdoError(\PDO $db, string $key): void
+    {
+        if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+            $_SESSION['oGestorErrores']->addErrorAppLastError($db, $key, (string) __LINE__, __FILE__);
+        }
     }
 }

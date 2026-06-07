@@ -18,10 +18,22 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
  */
 final class EncargoVerData
 {
+
+    public function __construct(
+        private EncargoAplicacionService $aplicacionService,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+        private EncargoRepositoryInterface $encargoRepository,
+        private LocalRepositoryInterface $localRepository,
+        private ZonaRepositoryInterface $zonaRepository,
+        private EncargoTipoRepositoryInterface $encargoTipoRepository,
+    ) {
+    }
+
     /**
      * @return array<string, mixed>
      */
-    public static function execute(
+    public function execute(
         string $que,
         int $id_enc,
         int $id_tipo_enc,
@@ -31,11 +43,7 @@ final class EncargoVerData
         string $desc_lugar,
         int $id_zona,
     ): array {
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-        $LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
-        $oAplicacion = new EncargoAplicacionService();
+        $oAplicacion = $this->aplicacionService;
 
         $idioma_enc = '';
         $id_ubi = 0;
@@ -45,7 +53,7 @@ final class EncargoVerData
         }
 
         if ($que === '' || $que === 'editar') {
-            $oEncargo = $EncargoRepository->findById($id_enc);
+            $oEncargo = $this->encargoRepository->findById($id_enc);
             if ($oEncargo !== null) {
                 $id_ubi = (int)$oEncargo->getId_ubi();
                 $id_zona = (int)$oEncargo->getId_zona();
@@ -54,38 +62,38 @@ final class EncargoVerData
                 $desc_lugar = (string)$oEncargo->getDesc_lugar();
                 $idioma_enc = (string)$oEncargo->getIdioma_enc();
 
-                $sf_sv = (int)$oEncargo->getSf_sv();
-                $filtro_ctr = (string)$sf_sv;
-                if (($filtro_ctr === '' || $filtro_ctr === '0') && $id_ubi !== 0) {
-                    $filtro_ctr = (string)self::calcularFiltroDesdeCentro($id_ubi);
+                $sf_sv = (int)$oEncargo->getGrupo_encargo();
+                $filtro_ctr = (string) $sf_sv;
+                if ($sf_sv === 0 && $id_ubi !== 0) {
+                    $filtro_ctr = (string)$this->calcularFiltroDesdeCentro($id_ubi);
                 }
             }
         }
 
         if ($id_tipo_enc !== 0) {
-            $tipo = $EncargoTipoRepository->encargo_de_tipo($id_tipo_enc);
-            $grupo = (string)($tipo['grupo'] ?? '');
+            $tipo = $this->encargoTipoRepository->encargo_de_tipo($id_tipo_enc);
+            $grupo = is_scalar($tipo['grupo'] ?? null) ? (string) $tipo['grupo'] : '';
         } else {
-            $id_tipo_enc = (int)$EncargoTipoRepository->id_tipo_encargo($grupo, '...');
+            $id_tipo_enc = (int)$this->encargoTipoRepository->id_tipo_encargo($grupo, '...');
         }
 
         $id_tipo_enc_txt = (string)$id_tipo_enc;
-        $ee = $EncargoTipoRepository->encargo_de_tipo($id_tipo_enc_txt);
-        if ($id_tipo_enc_txt !== '' && $id_tipo_enc_txt[0] === '.') {
+        $ee = $this->encargoTipoRepository->encargo_de_tipo($id_tipo_enc_txt);
+        if ($id_tipo_enc !== 0 && str_contains($id_tipo_enc_txt, '.')) {
             $grupo_posibles = is_array($ee['grupo'] ?? null) ? $ee['grupo'] : [];
         } else {
-            $grupo = $id_tipo_enc_txt !== '' ? $id_tipo_enc_txt[0] : $grupo;
-            $ee_grupo = $EncargoTipoRepository->encargo_de_tipo('....');
+            $grupo = $id_tipo_enc !== 0 ? $id_tipo_enc_txt[0] : $grupo;
+            $ee_grupo = $this->encargoTipoRepository->encargo_de_tipo('....');
             $grupo_posibles = is_array($ee_grupo['grupo'] ?? null) ? $ee_grupo['grupo'] : [];
         }
 
         $posibles_encargo_tipo = [];
         if ($grupo !== '') {
-            $cEncargoTipos = $EncargoTipoRepository->getEncargoTipos(
+            $cEncargoTipos = $this->encargoTipoRepository->getEncargoTipos(
                 ['id_tipo_enc' => '^' . $grupo],
                 ['id_tipo_enc' => '~'],
             );
-            if (is_array($cEncargoTipos)) {
+            if ($cEncargoTipos !== []) {
                 foreach ($cEncargoTipos as $oEncargoTipo) {
                     $posibles_encargo_tipo[(string)$oEncargoTipo->getId_tipo_enc()] = (string)$oEncargoTipo->getTipo_enc();
                 }
@@ -93,8 +101,8 @@ final class EncargoVerData
         }
 
         $opciones_seccion = $oAplicacion->getArraySeccion();
-        $aOpciones_zonas = $ZonaRepository->getArrayZonas();
-        $a_locales = $LocalRepository->getArrayLocales();
+        $aOpciones_zonas = $this->zonaRepository->getArrayZonas();
+        $a_locales = $this->localRepository->getArrayLocales();
 
         return [
             'que' => $que,
@@ -107,21 +115,21 @@ final class EncargoVerData
             'idioma_enc' => $idioma_enc,
             'id_ubi' => $id_ubi,
             'id_zona' => $id_zona,
-            'grupo_posibles' => self::arrayStringKeyed($grupo_posibles),
-            'posibles_encargo_tipo' => self::arrayStringKeyed($posibles_encargo_tipo),
-            'opciones_seccion' => self::arrayStringKeyed($opciones_seccion),
-            'opciones_zonas' => self::arrayStringKeyed($aOpciones_zonas),
-            'opciones_locales' => self::arrayStringKeyed($a_locales),
+            'grupo_posibles' => $this->arrayStringKeyed($grupo_posibles),
+            'posibles_encargo_tipo' => $this->arrayStringKeyed($posibles_encargo_tipo),
+            'opciones_seccion' => $this->arrayStringKeyed($opciones_seccion),
+            'opciones_zonas' => $this->arrayStringKeyed($aOpciones_zonas),
+            'opciones_locales' => $this->arrayStringKeyed($a_locales),
         ];
     }
 
-    private static function calcularFiltroDesdeCentro(int $id_ubi): int
+    private function calcularFiltroDesdeCentro(int $id_ubi): int
     {
         $id_ubi_str = (string)$id_ubi;
         if ((int)($id_ubi_str[0] ?? 0) === 2) {
-            $repo = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+            $repo = $this->centroEllasRepository;
         } else {
-            $repo = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+            $repo = $this->centroDlRepository;
         }
 
         $oCentro = $repo->findById($id_ubi);
@@ -149,11 +157,14 @@ final class EncargoVerData
      * @param array<int|string, mixed> $in
      * @return array<string, string>
      */
-    private static function arrayStringKeyed(array $in): array
+    private function arrayStringKeyed(array $in): array
     {
         $out = [];
         foreach ($in as $k => $v) {
-            $out[(string)$k] = (string)$v;
+            if (!is_scalar($v)) {
+                continue;
+            }
+            $out[(string) $k] = (string) $v;
         }
 
         return $out;

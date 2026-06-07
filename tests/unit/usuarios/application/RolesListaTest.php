@@ -17,15 +17,12 @@ use src\usuarios\domain\entity\Usuario;
 
 final class RolesListaTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
             $_SESSION['session_auth'] = [];
@@ -43,11 +40,6 @@ final class RolesListaTest extends TestCase
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -83,14 +75,8 @@ final class RolesListaTest extends TestCase
         $gmRoleRepo = $this->createMock(GrupMenuRoleRepositoryInterface::class);
         $gmRoleRepo->method('getGrupMenuRoles')->with(['id_role' => 3])->willReturn([$gmr]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $userRepo,
-            GrupMenuRepositoryInterface::class => $grupMenuRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-            GrupMenuRoleRepositoryInterface::class => $gmRoleRepo,
-        ]);
-
-        $out = rolesLista::rolesLista();
+        $useCase = new rolesLista($userRepo, $grupMenuRepo, $roleRepo, $gmRoleRepo);
+        $out = $useCase->execute();
 
         $this->assertTrue($out['success']);
         $this->assertSame(1, $out['data']['permiso']);
@@ -128,37 +114,12 @@ final class RolesListaTest extends TestCase
         $gmRoleRepo = $this->createMock(GrupMenuRoleRepositoryInterface::class);
         $gmRoleRepo->method('getGrupMenuRoles')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $userRepo,
-            GrupMenuRepositoryInterface::class => $grupMenuRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-            GrupMenuRoleRepositoryInterface::class => $gmRoleRepo,
-        ]);
-
-        $out = rolesLista::rolesLista();
+        $useCase = new rolesLista($userRepo, $grupMenuRepo, $roleRepo, $gmRoleRepo);
+        $out = $useCase->execute();
 
         $this->assertTrue($out['success']);
         $this->assertSame(0, $out['data']['permiso']);
         $this->assertSame([], $out['data']['a_botones']);
         $this->assertArrayNotHasKey('sel', $out['data']['a_valores'][1]);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
     }
 }

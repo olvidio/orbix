@@ -9,6 +9,7 @@ use src\permisos\domain\PermDl;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\config\ServerConf;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
@@ -438,7 +439,10 @@ include_once(__DIR__ . '/../../src/shared/domain/helpers/func_tablas.php');
 if (empty($_SESSION['oPermActividades'])) {
     if (ConfigGlobal::is_app_installed('procesos')) {
         //$_SESSION['oPermActividades'] = new permisos\PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
-        $_SESSION['oPermActividades'] = new PermisosActividades(ConfigGlobal::mi_id_usuario());
+        $_SESSION['oPermActividades'] = DependencyResolver::make(
+            PermisosActividades::class,
+            ['idUsuario' => ConfigGlobal::mi_id_usuario()]
+        );
     } else {
         $_SESSION['oPermActividades'] = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
     }

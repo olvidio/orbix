@@ -12,7 +12,7 @@ class Verify2fa
      * @param string $secret Clave secreta del usuario
      * @return bool True si el código es válido, False en caso contrario
      */
-    public static function verify_2fa_code($code, $secret) {
+    public static function verify_2fa_code(string $code, string $secret): bool {
         // Eliminar espacios y convertir a mayúsculas
         $code = strtoupper(str_replace(' ', '', $code));
 
@@ -21,7 +21,7 @@ class Verify2fa
 
         // Verificar el código actual y los adyacentes (para compensar desincronización)
         for ($i = -1; $i <= 1; $i++) {
-            $timeSlice = $time + $i;
+            $timeSlice = (int) ($time + $i);
             if (self::calculate_totp($secret, $timeSlice) === $code) {
                 return true;
             }
@@ -57,7 +57,7 @@ class Verify2fa
         // Generar código de 6 dígitos
         $modulo = pow(10, 6);
         $code = $value % $modulo;
-        return str_pad($code, 6, '0', STR_PAD_LEFT);
+        return str_pad((string) $code, 6, '0', STR_PAD_LEFT);
     }
 
     /**

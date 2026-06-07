@@ -22,6 +22,9 @@ class ProfesorAsignaturaService
     ) {
     }
 
+    /**
+     * @return array{departamento: array<int, string>, ampliacion: array<int, string>}
+     */
     public function getArrayProfesoresAsignatura(AsignaturaId $id_asignatura): array
     {
         $oAsignatura = $this->asignaturaRepository->findById($id_asignatura->value());
@@ -29,19 +32,20 @@ class ProfesorAsignaturaService
             throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura->value()));
         }
         $id_sector = $oAsignatura->getId_sector();
-        $id_departamento = $this->sectorRepository->findById($id_sector)?->getIdDepartamentoVo()?->value();
-        
-        // Profesores departamento
-        $aProfesoresDepartamento = $this->getArrayProfesoresDepartamento($id_departamento);
-        // profesor ampliación
-        $aProfesoresAmpliacion = $this->profesorAmpliacionRepository->getArrayProfesoresAsignatura($id_asignatura->value());
+        $id_departamento = null;
+        if ($id_sector !== null) {
+            $id_departamento = $this->sectorRepository->findById($id_sector)?->getIdDepartamentoVo()?->value();
+        }
 
-        $Opciones['departamento'] = $aProfesoresDepartamento;
-        $Opciones['ampliacion'] = $aProfesoresAmpliacion;
-
-        return $Opciones;
+        return [
+            'departamento' => $this->getArrayProfesoresDepartamento($id_departamento),
+            'ampliacion' => $this->profesorAmpliacionRepository->getArrayProfesoresAsignatura($id_asignatura->value()),
+        ];
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayTodosProfesoresAsignatura(AsignaturaId $id_asignatura): array
     {
         $oAsignatura = $this->asignaturaRepository->findById($id_asignatura->value());
@@ -49,29 +53,36 @@ class ProfesorAsignaturaService
             throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura->value()));
         }
         $id_sector = $oAsignatura->getId_sector();
-        $id_departamento = $this->sectorRepository->findById($id_sector)?->getIdDepartamentoVo()?->value();
-        
-        // Profesores departamento
-        $aProfesoresDepartamento = $this->getArrayProfesoresDepartamento($id_departamento);
-        // profesor ampliación
-        $aProfesoresAmpliacion = $this->profesorAmpliacionRepository->getArrayProfesoresAsignatura($id_asignatura->value());
+        $id_departamento = null;
+        if ($id_sector !== null) {
+            $id_departamento = $this->sectorRepository->findById($id_sector)?->getIdDepartamentoVo()?->value();
+        }
 
-        return $aProfesoresDepartamento + array("----------") + $aProfesoresAmpliacion;
+        return $this->getArrayProfesoresDepartamento($id_departamento)
+            + ['----------']
+            + $this->profesorAmpliacionRepository->getArrayProfesoresAsignatura($id_asignatura->value());
     }
 
-    private function getArrayProfesoresDepartamento($id_departamento): array
+    /**
+     * @return array<int, string>
+     */
+    private function getArrayProfesoresDepartamento(?int $id_departamento): array
     {
-        $gesProfesores = $this->profesorStgrRepository->getProfesoresStgr(array('id_departamento' => $id_departamento, 'f_cese' => ''), array('f_cese' => 'IS NULL'));
+        if ($id_departamento === null) {
+            return [];
+        }
+
+        $gesProfesores = $this->profesorStgrRepository->getProfesoresStgr(
+            ['id_departamento' => $id_departamento, 'f_cese' => ''],
+            ['f_cese' => 'IS NULL']
+        );
         $aProfesores = [];
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
-            // Esto es un poco feo, PersonaDl es una entidad del modelo antiguo (fuera de src)
-            // pero es lo que hay en el repositorio original.
             $oPersonaDl = $this->personaDlRepository->findById($id_nom);
             if ($oPersonaDl === null) {
                 continue;
             }
-            // comprobar situación
             $situacion = $oPersonaDl->getSituacionVo()->value();
             if ($situacion !== 'A') {
                 continue;
@@ -81,7 +92,7 @@ class ProfesorAsignaturaService
                 'ap_nom' => $oPersonaDl->getPrefApellidosNombre(),
                 'ap1' => $oPersonaDl->getApellido1Vo()->value(),
                 'ap2' => $oPersonaDl->getApellido2Vo()?->value() ?? '',
-                'nom' => $oPersonaDl->getNomVo()->value(),
+                'nom' => $oPersonaDl->getNomVo()?->value() ?? '',
             ];
         }
         usort_profesores_por_apellidos($aProfesores);

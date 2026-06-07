@@ -2,6 +2,8 @@
 
 namespace src\procesos\infrastructure\persistence\postgresql;
 
+use src\shared\infrastructure\GlobalPdo;
+
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\config\ConfigGlobal;
@@ -30,20 +32,20 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
 {
     use HandlesPdoErrors;
 
-    public function __construct()
-    {
-        $oDbl = $GLOBALS['oDBC'];
+    public function __construct(
+        private readonly UsuarioRepositoryInterface $usuarioRepository,
+        private readonly RoleRepositoryInterface $roleRepository,
+        private readonly TareaProcesoRepositoryInterface $tareaProcesoRepository,
+    ) {
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('a_fases');
     }
-
-     /**
-     * retorna un array
-     *
-     * @param array lista de procesos.
-     * @return array
+    /**
+     * @param list<int> $a_id_tipo_proceso
+     * @return list<int>
      */
     public function getTodasActividadFases(array $a_id_tipo_proceso): array
     {
@@ -70,32 +72,34 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
                     WHERE $cond id_tipo_proceso = $idTipoProceso
                     ";
             $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
             foreach ($stmt as $row) {
-                $aFases[] = $row['id_fase'];
+                if (!is_array($row)) {
+                    continue;
+                }
+                if (isset($row['id_fase']) && is_numeric($row['id_fase'])) {
+                    $aFases[] = (int) $row['id_fase'];
+                }
             }
         }
         return $aFases;
     }
-
-    /**
-     * retorna un array
-     *
-     * @param array optional lista de procesos.
-     * @return array $aFases[$desc_fase] = $id_fase;
+/**
+     * @return array<string, int>
      */
     public function getArrayActividadFasesTodas(array $aProcesos): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
-        $id_role = $oMiUsuario->getId_role();
+        $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        $id_role = $oMiUsuario?->getId_role() ?? 0;
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-        $aRoles = $RoleRepository->getArrayRoles();
+        $aRoles = $this->roleRepository->getArrayRoles();
 
         $cond = '';
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'SuperAdmin')) {
@@ -122,11 +126,21 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
 					$sCondicion
 					";
             $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
             $aFasesProceso = [];
             foreach ($stmt as $row) {
-                $id_fase = $row['id_fase'];
-                $desc_fase = $row['desc_fase'];
+                if (!is_array($row)) {
+                    continue;
+                }
+                if (!isset($row['id_fase']) || !is_numeric($row['id_fase'])) {
+                    continue;
+                }
+                $id_fase = (int) $row['id_fase'];
+                $descRaw = $row['desc_fase'] ?? '';
+                $desc_fase = is_scalar($descRaw) ? (string) $descRaw : '';
                 $aDescFases[$id_fase] = $desc_fase;
 
                 $aFasesProceso[] = $id_fase;
@@ -142,8 +156,10 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
         // poner la descripción de la fase en el array resultante.
         $aFasesComunesOrden = [];
         foreach ($aFasesComunes as $id_fase) {
-            $desc_fase = $aDescFases[$id_fase];
-            $aFasesComunesOrden[$desc_fase] = $id_fase;
+            $desc_fase = (string) ($aDescFases[$id_fase] ?? '');
+            if ($desc_fase !== '') {
+                $aFasesComunesOrden[$desc_fase] = $id_fase;
+            }
         }
 
         return $aFasesComunesOrden;
@@ -153,7 +169,8 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
      * Para ver una cuadricula con todas las fases de un conjunto de procesos y
      * poder marcarlas. para sustituir a la funcion de getArrayActividadFases.
      *
-     * @param array $aProcesos
+     * @param list<int> $aProcesos
+     * @return array<int|string, int>
      */
     public function getArrayFasesProcesos(array $aProcesos = []): array
     {
@@ -184,8 +201,19 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
 					GROUP BY f.id_fase, f.desc_fase
 					ORDER BY desc_fase";
                 $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
                 foreach ($stmt as $aDades) {
-                    $aFasesProcesoDesc[$aDades['desc_fase']] = $aDades['id_fase'];
+                    if (!is_array($aDades)) {
+                        continue;
+                    }
+                    if (!isset($aDades['id_fase']) || !is_numeric($aDades['id_fase'])) {
+                        continue;
+                    }
+                    $descRaw = $aDades['desc_fase'] ?? '';
+                    $desc = is_scalar($descRaw) ? (string) $descRaw : '';
+                    $aFasesProcesoDesc[$desc] = (int) $aDades['id_fase'];
                 }
             }
         } else {
@@ -194,8 +222,22 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
 					WHERE $cond
 					ORDER BY desc_fase";
             $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
             foreach ($stmt as $aDades) {
-                $aFasesProcesoDesc[$aDades['desc_fase']] = $aDades['id_fase'];
+                if (!is_array($aDades)) {
+                    continue;
+                }
+                if (!isset($aDades['id_fase']) || !is_numeric($aDades['id_fase'])) {
+                    continue;
+                }
+                $descRaw = $aDades['desc_fase'] ?? '';
+                $desc = is_scalar($descRaw) ? (string) $descRaw : '';
+                if ($desc === '') {
+                    continue;
+                }
+                $aFasesProcesoDesc[$desc] = (int) $aDades['id_fase'];
             }
         }
         return $aFasesProcesoDesc;
@@ -208,34 +250,29 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
         $id_fase_anterior = null;
         reset($a_fases_proceso);
         while (current($a_fases_proceso) !== $iFase) {
-            $id_fase_anterior = current($a_fases_proceso);
-            if ($id_fase_anterior === FALSE) return FALSE;
+            $current = current($a_fases_proceso);
+            if ($current === false) {
+                return null;
+            }
+            $id_fase_anterior = $current;
             next($a_fases_proceso);
         }
         return $id_fase_anterior;
 
     }
-
-
-    /**
-     * retorna un objecte del tipus Desplegable
-     *
-     * @param array optional lista de procesos.
-     * @param boolean optional només les fases de les que sóc responsable.
-     * @return array
+/**
+     * @return array<int|string, string>
      */
     public function getArrayActividadFases(array $aProcesos = [], bool $bresp = false): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
-        $id_role = $oMiUsuario->getId_role();
+        $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        $id_role = $oMiUsuario?->getId_role() ?? 0;
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-        $aRoles = $RoleRepository->getArrayRoles();
+        $aRoles = $this->roleRepository->getArrayRoles();
 
         if ($bresp) {
             //$miPerm=$oMiUsuario->getPerm_oficinas();
@@ -258,7 +295,7 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
         }
 
         $num_procesos = count($aProcesos);
-        if ($num_procesos !== false && $num_procesos > 0) {
+        if ($num_procesos > 0) {
             $sCondicion = "WHERE $cond AND id_tipo_proceso =";
             $sCondicion .= implode(' OR id_tipo_proceso = ', $aProcesos);
             $sQuery = "SELECT f.id_fase, f.desc_fase
@@ -274,9 +311,19 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
 					ORDER BY desc_fase";
         }
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
         $aFasesComunes = [];
         foreach ($stmt as $aDades) {
-            $aFasesComunes[$aDades['id_fase']] = $aDades['desc_fase'];
+            if (!is_array($aDades)) {
+                continue;
+            }
+            if (!isset($aDades['id_fase']) || !is_numeric($aDades['id_fase'])) {
+                continue;
+            }
+            $descRaw = $aDades['desc_fase'] ?? '';
+            $aFasesComunes[(int) $aDades['id_fase']] = is_scalar($descRaw) ? (string) $descRaw : '';
         }
 
         // Si no hay proceso se muestra todo.
@@ -286,8 +333,7 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
             // Ordenar según el primer proceso (si hay más de uno).
             reset($aProcesos);
             $id_tipo_proceso = current($aProcesos);
-            $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
-            $aFasesProceso = $TareaProcesoRepository->getFasesProceso($id_tipo_proceso);
+            $aFasesProceso = $this->tareaProcesoRepository->getFasesProceso($id_tipo_proceso);
             $aFasesProcesoDesc = [];
             foreach ($aFasesProceso as $id_item => $id_fase) {
                 // compruebo que está en la lista de las fases comunes.
@@ -297,7 +343,10 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
                 $desc_fase = (string)$aFasesComunes[$id_fase];
                 // compruebo si soy el responsable
                 if ($bresp) {
-                    $oTareaProceso = $TareaProcesoRepository->findById($id_item);
+                    $oTareaProceso = $this->tareaProcesoRepository->findById($id_item);
+                    if ($oTareaProceso === null) {
+                        continue;
+                    }
                     $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
 
                     // Si no hay oficina responsable, pueden todos:
@@ -319,9 +368,9 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
     /**
      * devuelve una colección (array) de objetos de tipo ActividadFase
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActividadFase
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ActividadFase> Una colección de objetos de tipo ActividadFase
      */
     public function getActividadFases(array $aWhere = [], array $aOperators = []): array
     {
@@ -358,27 +407,35 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $ActividadFase = ActividadFase::fromArray($aDatos);
             $ActividadFaseSet->add($ActividadFase);
         }
-        return $ActividadFaseSet->getTot();
+        return array_values($ActividadFaseSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -420,6 +477,10 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
+        /** @var \PDOStatement $stmt */
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -429,6 +490,9 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_fase = $id_fase";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -440,17 +504,27 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_fase
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_fase): array|bool
+    public function datosById(int $id_fase): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_fase = $id_fase";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+
+        return $result;
     }
 
 
@@ -460,16 +534,22 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
     public function findById(int $id_fase): ?ActividadFase
     {
         $aDatos = $this->datosById($id_fase);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return ActividadFase::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('a_fases_id_fase_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

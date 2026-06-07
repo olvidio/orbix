@@ -8,15 +8,7 @@ final class MetaMenuDescripcion
 
     public function __construct(string $value)
     {
-        $this->validate($value);
         $this->value = $value;
-    }
-
-    private function validate(string $value): void
-    {
-        if ($value === '') {
-            // allow empty? For description, empty is allowed; do not throw
-        }
     }
 
     public function value(): string

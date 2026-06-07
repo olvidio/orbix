@@ -3,17 +3,18 @@
 namespace src\inventario\domain;
 
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
+use src\inventario\domain\entity\Coleccion;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
 
 class InfoColeccion extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
-        $this->setTxtTitulo(_("colecciones"));
-        $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta colección?"));
+    public function __construct(
+        private ColeccionRepositoryInterface $coleccionRepository,
+    ) {
+        $this->setTxtTitulo(_('colecciones'));
+        $this->setTxtEliminar(_('¿Está seguro que desea eliminar esta colección?'));
         $this->setTxtBuscar(_("buscar en 'nombre colección'"));
         $this->setTxtExplicacion();
 
@@ -24,21 +25,19 @@ class InfoColeccion extends DatosInfoRepo
         $this->setRepositoryInterface(ColeccionRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<Coleccion>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere['_ordre'] = 'nom_coleccion';
+            $aWhere = ['_ordre' => 'nom_coleccion'];
             $aOperador = [];
         } else {
-            $aWhere['nom_coleccion'] = $this->k_buscar;
-            $aOperador['nom_coleccion'] = 'sin_acentos';
+            $aWhere = ['nom_coleccion' => $this->k_buscar];
+            $aOperador = ['nom_coleccion' => 'sin_acentos'];
         }
 
-        $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $ColeccionRepository->getColecciones($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->coleccionRepository->getColecciones($aWhere, $aOperador);
     }
 }

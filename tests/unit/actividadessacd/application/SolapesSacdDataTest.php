@@ -43,8 +43,7 @@ final class SolapesSacdDataTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_sin_solapes_filas_vacias(): void
-    {
+    public function test_sin_solapes_filas_vacias(): void {
         $faseRepo = $this->createMock(ActividadFaseRepositoryInterface::class);
         $faseRepo->method('findById')->willReturn(null);
 
@@ -63,16 +62,7 @@ final class SolapesSacdDataTest extends TestCase
         $tareaRepo = $this->createMock(ActividadProcesoTareaRepositoryInterface::class);
         $tareaRepo->expects($this->never())->method('getSacdAprobado');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadFaseRepositoryInterface::class => $faseRepo,
-            ActividadDlRepositoryInterface::class => $actDlRepo,
-            PersonaSacdRepositoryInterface::class => $personaSacdRepo,
-            CargoOAsistenteInterface::class => $cargoOAsis,
-            ActividadAllRepositoryInterface::class => $actAllRepo,
-            ActividadProcesoTareaRepositoryInterface::class => $tareaRepo,
-        ]);
-
-        $out = SolapesSacdData::execute([
+        $out = (new \src\actividadessacd\application\SolapesSacdData($faseRepo, $actDlRepo, $personaSacdRepo, $cargoOAsis, $actAllRepo, $tareaRepo))->execute([
             'year' => '2030',
             'periodo' => 'tot_any',
             'empiezamin' => '',

@@ -8,6 +8,7 @@ final class TipoTelecoCode
 
     public function __construct(?string $value)
     {
+        $value = $value !== null ? trim($value) : '';
         $this->validate($value);
         $this->value = $value;
     }

@@ -1,133 +1,180 @@
 <?php
 
+use src\shared\infrastructure\GlobalPdo;
+use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
 
-$Qid_template_menu = (integer)filter_input(INPUT_POST, 'id_template_menu');
+$Qid_template_menu = input_int($_POST, 'id_template_menu');
 
-// Copiar de dlb a public roles-grupmenu, grupmenu, menus
-$oDB = $GLOBALS['oDBE'];
-$oDBPC = $GLOBALS['oDBPC'];
+$oDB = GlobalPdo::get('oDBE');
+$oDBPC = GlobalPdo::get('oDBPC');
+$gestorErrores = $_SESSION['oGestorErrores'] ?? null;
 
 $error_txt = '';
-$sec = 'v';
 
 //************ GRUPMENU **************
 $sql_del = 'TRUNCATE TABLE aux_grupmenu RESTART IDENTITY CASCADE';
-if (($oDblSt = $oDB->query($sql_del)) === false) {
+if ($oDB->query($sql_del) === false) {
     $sClauError = 'ExportarMenu.VaciarTabla';
-    $_SESSION['oGestorErrores']->addError('truncate', $sClauError, __LINE__, __FILE__);
+    if ($gestorErrores instanceof GestorErrores) {
+        $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
+    }
     $error_txt .= $sClauError;
 }
 
 $sQry = "SELECT id_grupmenu, grup_menu, orden FROM ref_grupmenu WHERE id_template_menu = $Qid_template_menu ";
-foreach ($oDBPC->query($sQry, PDO::FETCH_ASSOC) as $aDades) {
-    $campos = "(id_grupmenu,grup_menu,orden)";
-    $valores = "(:id_grupmenu,:grup_menu,:orden)";
-    if (($oDblSt = $oDB->prepare("INSERT INTO aux_grupmenu $campos VALUES $valores")) === false) {
-        $sClauError = 'Importar.insertar.prepare';
-        $_SESSION['oGestorErrores']->addError('prepare', $sClauError, __LINE__, __FILE__);
-        $error_txt .= $sClauError;
-    } else {
+$grupMenuRows = $oDBPC->query($sQry, PDO::FETCH_ASSOC);
+if ($grupMenuRows !== false) {
+    foreach ($grupMenuRows as $aDades) {
+        if (!is_array($aDades)) {
+            continue;
+        }
+        $campos = "(id_grupmenu,grup_menu,orden)";
+        $valores = "(:id_grupmenu,:grup_menu,:orden)";
+        $oDblSt = $oDB->prepare("INSERT INTO aux_grupmenu $campos VALUES $valores");
+        if ($oDblSt === false) {
+            $sClauError = 'Importar.insertar.prepare';
+            if ($gestorErrores instanceof GestorErrores) {
+                $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
+            }
+            $error_txt .= $sClauError;
+            continue;
+        }
+
         try {
             $oDblSt->execute($aDades);
         } catch (PDOException $e) {
-            $err_txt = $e->errorInfo[2];
+            $errorInfo = $e->errorInfo;
+            $err_txt = is_array($errorInfo) && isset($errorInfo[2]) ? (string) $errorInfo[2] : $e->getMessage();
             $sClauError = 'Importar.insertar.execute';
-            $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
+            if ($gestorErrores instanceof GestorErrores) {
+                $gestorErrores->addErrorAppLastErrorNoThrowText($err_txt, $sClauError, (string) __LINE__, __FILE__);
+            }
             $error_txt .= $sClauError;
         }
     }
 }
-// Fix sequences
 try {
     $sql_seq = "SELECT setval('aux_grupmenu_id_grupmenu_seq', (SELECT MAX(id_grupmenu) FROM aux_grupmenu))";
     $oDB->query($sql_seq);
 } catch (PDOException $e) {
-    $err_txt = $e->errorInfo[2];
+    $errorInfo = $e->errorInfo;
+    $err_txt = is_array($errorInfo) && isset($errorInfo[2]) ? (string) $errorInfo[2] : $e->getMessage();
     $sClauError = 'Importar.sequence.execute';
-    $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
+    if ($gestorErrores instanceof GestorErrores) {
+        $gestorErrores->addErrorAppLastErrorNoThrowText($err_txt, $sClauError, (string) __LINE__, __FILE__);
+    }
     $error_txt .= $sClauError;
 }
 
 //************ GRUPMENU_ROL**************
-// En el caso de la sf, los grupmenu asociados a los roles son distintos.
-// de momento no los copio. los dejo como están.
-if ($sec === 'v') {
-    $sql_del = 'TRUNCATE TABLE aux_grupmenu_rol RESTART IDENTITY CASCADE';
-    if (($oDblSt = $oDB->query($sql_del)) === false) {
-        $sClauError = 'ExportarMenu.VaciarTabla';
-        $_SESSION['oGestorErrores']->addError('truncate', $sClauError, __LINE__, __FILE__);
-        $error_txt .= $sClauError;
+$sql_del = 'TRUNCATE TABLE aux_grupmenu_rol RESTART IDENTITY CASCADE';
+if ($oDB->query($sql_del) === false) {
+    $sClauError = 'ExportarMenu.VaciarTabla';
+    if ($gestorErrores instanceof GestorErrores) {
+        $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
     }
+    $error_txt .= $sClauError;
+}
 
-    $sQry = "SELECT id_item,id_grupmenu,id_role FROM ref_grupmenu_rol WHERE id_template_menu = $Qid_template_menu ";
-    foreach ($oDBPC->query($sQry, PDO::FETCH_ASSOC) as $aDades) {
-        //print_r($aDades);
+$sQry = "SELECT id_item,id_grupmenu,id_role FROM ref_grupmenu_rol WHERE id_template_menu = $Qid_template_menu ";
+$grupMenuRolRows = $oDBPC->query($sQry, PDO::FETCH_ASSOC);
+if ($grupMenuRolRows !== false) {
+    foreach ($grupMenuRolRows as $aDades) {
+        if (!is_array($aDades)) {
+            continue;
+        }
         $campos = "(id_item,id_grupmenu,id_role)";
         $valores = "(:id_item,:id_grupmenu,:id_role)";
-        if (($oDblSt = $oDB->prepare("INSERT INTO aux_grupmenu_rol $campos VALUES $valores")) === false) {
+        $oDblSt = $oDB->prepare("INSERT INTO aux_grupmenu_rol $campos VALUES $valores");
+        if ($oDblSt === false) {
             $sClauError = 'Importar.insertar.prepare';
-            $_SESSION['oGestorErrores']->addError('prepare', $sClauError, __LINE__, __FILE__);
-            $error_txt .= $sClauError;
-        } else {
-            try {
-                $oDblSt->execute($aDades);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $sClauError = 'Importar.insertar.execute';
-                $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
-                $error_txt .= $sClauError;
+            if ($gestorErrores instanceof GestorErrores) {
+                $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
             }
+            $error_txt .= $sClauError;
+            continue;
+        }
+
+        try {
+            $oDblSt->execute($aDades);
+        } catch (PDOException $e) {
+            $errorInfo = $e->errorInfo;
+            $err_txt = is_array($errorInfo) && isset($errorInfo[2]) ? (string) $errorInfo[2] : $e->getMessage();
+            $sClauError = 'Importar.insertar.execute';
+            if ($gestorErrores instanceof GestorErrores) {
+                $gestorErrores->addErrorAppLastErrorNoThrowText($err_txt, $sClauError, (string) __LINE__, __FILE__);
+            }
+            $error_txt .= $sClauError;
         }
     }
-    // Fix sequences
-    try {
-        $sql_seq = "SELECT setval('aux_grupmenu_rol_id_item_seq', (SELECT MAX(id_item) FROM aux_grupmenu_rol))";
-        $oDB->query($sql_seq);
-    } catch (PDOException $e) {
-        $err_txt = $e->errorInfo[2];
-        $sClauError = 'Importar.sequence.execute';
-        $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
-        $error_txt .= $sClauError;
-    }
-
 }
+try {
+    $sql_seq = "SELECT setval('aux_grupmenu_rol_id_item_seq', (SELECT MAX(id_item) FROM aux_grupmenu_rol))";
+    $oDB->query($sql_seq);
+} catch (PDOException $e) {
+    $errorInfo = $e->errorInfo;
+    $err_txt = is_array($errorInfo) && isset($errorInfo[2]) ? (string) $errorInfo[2] : $e->getMessage();
+    $sClauError = 'Importar.sequence.execute';
+    if ($gestorErrores instanceof GestorErrores) {
+        $gestorErrores->addErrorAppLastErrorNoThrowText($err_txt, $sClauError, (string) __LINE__, __FILE__);
+    }
+    $error_txt .= $sClauError;
+}
+
 //************ MENUS**************
 $sql_del = 'TRUNCATE TABLE aux_menus RESTART IDENTITY CASCADE';
-if (($oDblSt = $oDB->query($sql_del)) === false) {
+if ($oDB->query($sql_del) === false) {
     $sClauError = 'ExportarMenu.VaciarTabla';
-    $_SESSION['oGestorErrores']->addError('truncate', $sClauError, __LINE__, __FILE__);
+    if ($gestorErrores instanceof GestorErrores) {
+        $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
+    }
     $error_txt .= $sClauError;
 }
 
 $sQry = "SELECT id_menu,orden,menu,parametros,id_metamenu,menu_perm,id_grupmenu,ok FROM ref_menus WHERE id_template_menu = $Qid_template_menu ";
-foreach ($oDBPC->query($sQry, PDO::FETCH_ASSOC) as $aDades) {
-    //print_r($aDades);
-    $campos = "(id_menu,orden,menu,parametros,id_metamenu,menu_perm,id_grupmenu,ok)";
-    $valores = "(:id_menu,:orden,:menu,:parametros,:id_metamenu,:menu_perm,:id_grupmenu,:ok)";
-    if (($oDblSt = $oDB->prepare("INSERT INTO aux_menus $campos VALUES $valores")) === false) {
-        $sClauError = 'Importar.insertar.prepare';
-        $_SESSION['oGestorErrores']->addError('prepare', $sClauError, __LINE__, __FILE__);
-        $error_txt .= $sClauError;
-    } else {
+$menuRows = $oDBPC->query($sQry, PDO::FETCH_ASSOC);
+if ($menuRows !== false) {
+    foreach ($menuRows as $aDades) {
+        if (!is_array($aDades)) {
+            continue;
+        }
+        $campos = "(id_menu,orden,menu,parametros,id_metamenu,menu_perm,id_grupmenu,ok)";
+        $valores = "(:id_menu,:orden,:menu,:parametros,:id_metamenu,:menu_perm,:id_grupmenu,:ok)";
+        $oDblSt = $oDB->prepare("INSERT INTO aux_menus $campos VALUES $valores");
+        if ($oDblSt === false) {
+            $sClauError = 'Importar.insertar.prepare';
+            if ($gestorErrores instanceof GestorErrores) {
+                $gestorErrores->addErrorAppLastError($oDB, $sClauError, (string) __LINE__, __FILE__);
+            }
+            $error_txt .= $sClauError;
+            continue;
+        }
+
         try {
             $oDblSt->execute($aDades);
         } catch (PDOException $e) {
-            $err_txt = $e->errorInfo[2];
+            $errorInfo = $e->errorInfo;
+            $err_txt = is_array($errorInfo) && isset($errorInfo[2]) ? (string) $errorInfo[2] : $e->getMessage();
             $sClauError = 'Importar.insertar.execute';
-            $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
+            if ($gestorErrores instanceof GestorErrores) {
+                $gestorErrores->addErrorAppLastErrorNoThrowText($err_txt, $sClauError, (string) __LINE__, __FILE__);
+            }
             $error_txt .= $sClauError;
         }
     }
 }
-// Fix sequences
 try {
     $sql_seq = "SELECT setval('aux_menus_id_menu_seq', (SELECT MAX(id_menu) FROM aux_menus))";
     $oDB->query($sql_seq);
 } catch (PDOException $e) {
-    $err_txt = $e->errorInfo[2];
+    $errorInfo = $e->errorInfo;
+    $err_txt = is_array($errorInfo) && isset($errorInfo[2]) ? (string) $errorInfo[2] : $e->getMessage();
     $sClauError = 'Importar.sequence.execute';
-    $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
+    if ($gestorErrores instanceof GestorErrores) {
+        $gestorErrores->addErrorAppLastErrorNoThrowText($err_txt, $sClauError, (string) __LINE__, __FILE__);
+    }
     $error_txt .= $sClauError;
 }
 

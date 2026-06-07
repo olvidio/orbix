@@ -171,8 +171,13 @@ final class MigracionesEscanear
     private function ordenarAplicaciones(array $aplicaciones): array
     {
         usort($aplicaciones, static function (array $a, array $b): int {
-            return self::ordenDatabase((string) $a['database']) <=> self::ordenDatabase((string) $b['database'])
-                ?: strcmp((string) $a['file'], (string) $b['file']);
+            $dbA = is_scalar($a['database'] ?? null) ? (string) $a['database'] : '';
+            $dbB = is_scalar($b['database'] ?? null) ? (string) $b['database'] : '';
+            $fileA = is_scalar($a['file'] ?? null) ? (string) $a['file'] : '';
+            $fileB = is_scalar($b['file'] ?? null) ? (string) $b['file'] : '';
+
+            return self::ordenDatabase($dbA) <=> self::ordenDatabase($dbB)
+                ?: strcmp($fileA, $fileB);
         });
 
         return $aplicaciones;
@@ -200,7 +205,9 @@ final class MigracionesEscanear
                 continue;
             }
             $ok++;
-            if ($aplicada->getSha1() !== (string) $aplicacion['sha1']) {
+            $sha1 = $aplicacion['sha1'] ?? null;
+            $sha1Txt = is_scalar($sha1) ? (string) $sha1 : '';
+            if ($aplicada->getSha1() !== $sha1Txt) {
                 $cambiado++;
             }
         }

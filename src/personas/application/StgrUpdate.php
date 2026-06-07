@@ -14,15 +14,19 @@ use src\personas\application\support\PersonaRepositoryResolver;
  */
 final class StgrUpdate
 {
+    public function __construct(
+        private PersonaRepositoryResolver $personaRepositoryResolver,
+    ) {
+    }
+
     /**
      * @return string  cadena vacia si todo ha ido bien; mensaje de error si no.
      */
-    public static function execute(int $id_nom, string $id_tabla, int|string $nivel_stgr): string
+    public function execute(int $id_nom, string $id_tabla, int|string $nivel_stgr): string
     {
-        $resolver = new PersonaRepositoryResolver();
         try {
-            $repository = $resolver->repositorioPorIdTabla($id_tabla);
-        } catch (\InvalidArgumentException $e) {
+            $repository = $this->personaRepositoryResolver->repositorioPorIdTabla($id_tabla);
+        } catch (\InvalidArgumentException) {
             return _("No existe la clase de la persona");
         }
 
@@ -31,7 +35,7 @@ final class StgrUpdate
             return _("No se encuentra la persona");
         }
 
-        $oPersona->setNivel_stgr($nivel_stgr);
+        $oPersona->setNivel_stgr(is_int($nivel_stgr) ? $nivel_stgr : (int)$nivel_stgr);
         if ($repository->Guardar($oPersona) === false) {
             $err = _("hay un error, no se ha guardado");
             $detalle = $repository->getErrorTxt();

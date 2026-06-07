@@ -32,7 +32,7 @@ class Coleccion
 
     public function setId_coleccion(int $id_coleccion): void
     {
-        $this->id_coleccion = ColeccionId::fromNullableInt($id_coleccion);
+        $this->id_coleccion = new ColeccionId($id_coleccion);
     }
 
     // Value Object API
@@ -45,7 +45,7 @@ class Coleccion
     {
         $this->id_coleccion = $id instanceof ColeccionId
             ? $id
-            : ColeccionId::fromNullableInt($id);
+            : (ColeccionId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
 
@@ -57,7 +57,7 @@ class Coleccion
 
     public function setNom_coleccion(string $nom_coleccion): void
     {
-        $this->nom_coleccion = ColeccionName::fromNullableString($nom_coleccion);
+        $this->nom_coleccion = new ColeccionName($nom_coleccion);
     }
 
     public function getNomColeccionVo(): ?ColeccionName
@@ -69,7 +69,7 @@ class Coleccion
     {
         $this->nom_coleccion = $name instanceof ColeccionName
             ? $name
-            : ColeccionName::fromNullableString($name);
+            : (ColeccionName::fromNullableString($name) ?? throw new \InvalidArgumentException('name cannot be null'));
     }
 
 
@@ -86,10 +86,13 @@ class Coleccion
 
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_coleccion';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

@@ -33,7 +33,7 @@ class Lugar
 
     public function setId_lugar(int $id_lugar): void
     {
-        $this->id_lugar = LugarId::fromNullableInt( $id_lugar);
+        $this->id_lugar = new LugarId($id_lugar);
     }
 
 
@@ -57,7 +57,7 @@ class Lugar
 
     public function setNom_lugar(string $nom_lugar): void
     {
-        $this->nom_lugar = LugarName::fromNullableString( $nom_lugar);
+        $this->nom_lugar = new LugarName($nom_lugar);
     }
 
     // Value Object API (duplicada con legacy)
@@ -70,7 +70,7 @@ class Lugar
     {
         $this->nom_lugar = $name instanceof LugarName
             ? $name
-            : LugarName::fromNullableString($name);
+            : (LugarName::fromNullableString($name) ?? throw new \InvalidArgumentException('name cannot be null'));
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -78,6 +78,9 @@ class Lugar
     {
         return 'id_lugar';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos():array
     {

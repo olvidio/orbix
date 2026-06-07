@@ -10,50 +10,52 @@ use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
 
 /**
- * Caso de uso: devuelve el listado (estructurado) de fases/tareas del
- * proceso filtrando por sfsv/role. El render HTML se hace en el frontend.
+ * Caso de uso: listado estructurado de fases/tareas del proceso.
  */
 class ProcesosGetListado
 {
+    public function __construct(
+        private readonly UsuarioRepositoryInterface $usuarioRepository,
+        private readonly RoleRepositoryInterface $roleRepository,
+        private readonly TareaProcesoRepositoryInterface $tareaProcesoRepository,
+        private readonly ActividadFaseRepositoryInterface $actividadFaseRepository,
+        private readonly ActividadTareaRepositoryInterface $actividadTareaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array{a_rows: list<array<string, mixed>>}
+     */
     public function execute(array $input): array
     {
-        $Qid_tipo_proceso = (int)($input['id_tipo_proceso'] ?? 0);
+        $Qid_tipo_proceso = input_int($input, 'id_tipo_proceso');
         $a_status = StatusId::getArrayStatus();
 
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
-        $id_role = $oMiUsuario->getId_role();
+        $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        $id_role = $oMiUsuario?->getId_role() ?? 0;
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-        $aRoles = $RoleRepository->getArrayRoles();
-
+        $aRoles = $this->roleRepository->getArrayRoles();
         $aOpcionesOficinas = PermisoMenuBits::valueToLabel();
 
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'SuperAdmin')) {
             $soy = 3;
         } else {
-            $soy = 0;
-            switch ($miSfsv) {
-                case 1:
-                    $soy = 1;
-                    break;
-                case 2:
-                    $soy = 2;
-                    break;
-            }
+            $soy = match ($miSfsv) {
+                1 => 1,
+                2 => 2,
+                default => 0,
+            };
         }
 
-        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
-        $cTareasProceso = $TareaProcesoRepository->getTareasProceso([
+        $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso([
             'id_tipo_proceso' => $Qid_tipo_proceso,
             '_ordre' => 'status,id_of_responsable',
         ]);
-
-        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-        $ActividadTareaRepository = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
 
         $aRows = [];
         foreach ($cTareasProceso as $oTareaProceso) {
@@ -64,25 +66,34 @@ class ProcesosGetListado
             $responsable = empty($aOpcionesOficinas[$id_of_responsable]) ? '' : $aOpcionesOficinas[$id_of_responsable];
 
             $id_fase = $oTareaProceso->getId_fase();
-            $oFase = $ActividadFaseRepository->findById($id_fase);
+            $oFase = $this->actividadFaseRepository->findById($id_fase);
+            if ($oFase === null) {
+                continue;
+            }
             $fase = $oFase->getDesc_fase();
-            $sf = ($oFase->isSf()) ? 2 : 0;
-            $sv = ($oFase->isSv()) ? 1 : 0;
+            $sf = $oFase->isSf() ? 2 : 0;
+            $sv = $oFase->isSv() ? 1 : 0;
             if (!(($soy & $sf) || ($soy & $sv))) {
                 continue;
             }
             $id_tarea = $oTareaProceso->getId_tarea();
-            $oTarea = $ActividadTareaRepository->findById($id_tarea);
+            $oTarea = $this->actividadTareaRepository->findById($id_tarea);
+            if ($oTarea === null) {
+                continue;
+            }
             $tarea = $oTarea->getDesc_tarea();
             $fase_previa = '';
-            $aFases_previas = $oTareaProceso->getJson_fases_previas(true);
+            $aFases_previas = $oTareaProceso->getJsonFasesPreviasAsList();
             foreach ($aFases_previas as $oFaseP) {
-                $id_fase_previa = $oFaseP['id_fase'];
-                if (empty($id_fase_previa)) {
+                $id_fase_previa = $oFaseP['id_fase'] ?? '';
+                if ($id_fase_previa === '' || !is_numeric($id_fase_previa)) {
                     continue;
                 }
-                $oFase_previa = $ActividadFaseRepository->findById($id_fase_previa);
-                $fase_previa .= empty($fase_previa) ? '' : ' ' . _("y") . ' ';
+                $oFase_previa = $this->actividadFaseRepository->findById((int) $id_fase_previa);
+                if ($oFase_previa === null) {
+                    continue;
+                }
+                $fase_previa .= $fase_previa === '' ? '' : ' ' . _("y") . ' ';
                 $fase_previa .= $oFase_previa->getDesc_fase();
             }
 

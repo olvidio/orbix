@@ -23,14 +23,14 @@ class DB extends DBAbstract
         $this->esquema = 'global';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
             $this->eliminar_x_config_schema();
         });
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->ejecutarCreateAllGlobal(function (): void {
             $this->create_x_config_schema();
@@ -38,7 +38,7 @@ class DB extends DBAbstract
     }
 
     // Global
-    public function create_x_config_schema()
+    public function create_x_config_schema(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 
@@ -58,7 +58,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('comun'));
     }
 
-    public function eliminar_x_config_schema()
+    public function eliminar_x_config_schema(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('comun'));
 

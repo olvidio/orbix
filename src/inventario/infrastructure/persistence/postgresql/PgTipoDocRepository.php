@@ -1,6 +1,7 @@
 <?php
 
 namespace src\inventario\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -26,7 +27,7 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
+        $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
         $this->setNomTabla('i_tipo_documento_dl');
     }
@@ -42,11 +43,20 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
 			WHERE vigente = 't'
 			ORDER BY sigla,nom_doc ";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
         $aOpciones = [];
         foreach ($stmt as $aClave) {
+            if (!is_array($aClave)) {
+                continue;
+            }
             $clave = $aClave[0];
             $val = $aClave[1];
-            $aOpciones[$clave] = $val;
+            if ((!is_int($clave) && !is_string($clave)) || (!is_scalar($val) && $val !== null)) {
+                continue;
+            }
+            $aOpciones[(int) $clave] = (string) $val;
         }
         return $aOpciones;
     }
@@ -56,9 +66,9 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
     /**
      * devuelve una colección (array) de objetos de tipo TipoDoc
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo TipoDoc
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<TipoDoc> Una colección de objetos de tipo TipoDoc
      */
     public function getTipoDocs(array $aWhere = [], array $aOperators = []): array
     {
@@ -95,27 +105,35 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $TipoDoc = TipoDoc::fromArray($aDatos);
             $TipoDocSet->add($TipoDoc);
         }
-        return $TipoDocSet->getTot();
+        return array_values($TipoDocSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -160,6 +178,12 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
             $valores = "(:id_tipo_doc,:nom_doc,:sigla,:observ,:id_coleccion,:bajo_llave,:vigente,:numerado)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
+    }
+        if ($stmt === false) {
+            return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -170,6 +194,9 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tipo_doc = $id_tipo_doc";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -181,15 +208,26 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_tipo_doc
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_tipo_doc): array|bool
+    public function datosById(int $id_tipo_doc): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tipo_doc = $id_tipo_doc";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 
@@ -199,16 +237,22 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
     public function findById(int $id_tipo_doc): ?TipoDoc
     {
         $aDatos = $this->datosById($id_tipo_doc);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return TipoDoc::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('i_tipo_documento_dl_id_tipo_doc_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

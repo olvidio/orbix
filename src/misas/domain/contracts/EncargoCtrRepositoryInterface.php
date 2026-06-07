@@ -5,46 +5,24 @@ namespace src\misas\domain\contracts;
 use src\misas\domain\entity\EncargoCtr;
 use src\misas\domain\value_objects\EncargoCtrId;
 
-/**
- * Interfaz de la clase EncargoDia y su Repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 20/3/2023
- */
 interface EncargoCtrRepositoryInterface
 {
-
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
     /**
-     * devuelve una colección (array) de objetos de tipo EncargoCtr
-     *
-     * @param int $id_ubi
-     * @return array Una colección de objetos de tipo EncargoCtr
+     * @return list<EncargoCtr>
      */
     public function getEncargosCentro(int $id_ubi): array;
 
     /**
-     * devuelve una colección (array) de objetos de tipo EncargoCtr
-     *
-     * @param int $id_enc
-     * @return array Una colección de objetos de tipo EncargoCtr
+     * @return list<EncargoCtr>
      */
     public function getCentrosEncargo(int $id_enc): array;
 
     /**
-     * devuelve una colección (array) de objetos de tipo EncargoCtr
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo EncargoCtr
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<EncargoCtr>
      */
     public function getEncargosCentros(array $aWhere = [], array $aOperators = []): array;
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(EncargoCtr $EncargoCtr): bool;
 
@@ -52,22 +30,12 @@ interface EncargoCtrRepositoryInterface
 
     public function getErrorTxt(): string;
 
-
-
     public function getNomTabla(): string;
 
     /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param EncargoCtrId $uuid_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(EncargoCtrId $uuid_item): array|bool;
+    public function datosById(EncargoCtrId $uuid_item): array|false;
 
-    /**
-     * Busca la clase con id_item en el repositorio.
-     */
     public function findById(EncargoCtrId $uuid_item): ?EncargoCtr;
-
 }

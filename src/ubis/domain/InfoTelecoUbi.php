@@ -2,18 +2,21 @@
 
 namespace src\ubis\domain;
 
-/* No vale el underscore en el nombre */
-
-use src\shared\infrastructure\ProvidesRepositories;
 use src\shared\domain\DatosInfoRepo;
+use src\ubis\application\services\UbiRepositoryResolver;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
+use src\ubis\domain\entity\TelecoUbi;
+
+/* No vale el underscore en el nombre */
 
 class InfoTelecoUbi extends DatosInfoRepo
 {
-    use ProvidesRepositories;
+    private ?string $objPau = null;
 
-    public function __construct()
-    {
+    public function __construct(
+        private UbiRepositoryResolver $ubiRepositoryResolver,
+        private DescTelecoRepositoryInterface $descTelecoRepository,
+    ) {
         $this->setTxtTitulo(_("Telecos del Ubi"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta teleco?"));
         $this->setTxtBuscar(_("buscar una teleco (número)"));
@@ -22,19 +25,26 @@ class InfoTelecoUbi extends DatosInfoRepo
         $this->setClase('src\\ubis\\domain\\entity\\TelecoUbi');
         $this->setMetodoGestor('getTelecos');
         $this->setPau('u');
-
-        // $this->setRepositoryInterface --> se hace en setObj_pau()
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return 2001;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<TelecoUbi>
+     */
+    /**
+     * @return list<TelecoUbi>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
+        if ($this->objPau === null) {
+            throw new \RuntimeException('InfoTelecoUbi: falta setObj_pau() antes de getColeccion()');
+        }
+
+        $aWhere = [];
         if (!empty($this->id_pau)) {
             $aWhere['id_ubi'] = $this->id_pau;
         }
@@ -46,38 +56,39 @@ class InfoTelecoUbi extends DatosInfoRepo
             $aOperador = ['num_teleco' => 'sin_acentos'];
         }
 
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getTelecos($aWhere, $aOperador);
+        $repo = $this->ubiRepositoryResolver->getTelecoRepository($this->objPau);
 
-        return $Coleccion;
+        return $repo->getTelecos($aWhere, $aOperador);
     }
 
-    public function setObj_pau($obj_pau): void
+    public function setObj_pau(string $obj_pau): void
     {
-        $repoInterface = $this->getTelecoRepositoryClass((string)$obj_pau);
-        $this->setRepositoryInterface($repoInterface);
+        $this->objPau = (string)$obj_pau;
+        $this->setRepositoryInterface($this->ubiRepositoryResolver->getTelecoRepositoryClass($this->objPau));
     }
 
-    public function getOpcionesParaCondicion($pKeyRepository, $valor_depende, $opcion_sel = null)
+    public function getOpcionesParaCondicion(mixed $pKeyRepository, mixed $valor_depende, mixed $opcion_sel = null): string
     {
-        $valor_depende = empty($valor_depende) ? 0 : $valor_depende;
-        //caso de actualizar el campo depende
-        $DescTelecoRepository = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
-        $aOpciones = $DescTelecoRepository->getArrayDescTelecoUbis($valor_depende);
+        $valorDepende = (is_int($valor_depende) || is_string($valor_depende)) ? (string) $valor_depende : '';
+        $aOpciones = $this->descTelecoRepository->getArrayDescTelecoUbis($valorDepende);
 
         $opciones_txt = '<option></option>';
+        $opcionSel = is_scalar($opcion_sel) || $opcion_sel === null ? (string) $opcion_sel : '';
         foreach ($aOpciones as $key => $val) {
-            $sel = ((string)$key === (string)$opcion_sel) ? 'selected' : '';
-            $opciones_txt .= "<option value=\"$key\" $sel>$val</option>";
+            $keyStr = (string) $key;
+            $valStr = (string) $val;
+            $sel = ($keyStr === $opcionSel) ? 'selected' : '';
+            $opciones_txt .= "<option value=\"$keyStr\" $sel>$valStr</option>";
         }
 
         return $opciones_txt;
     }
 
-    public function getArrayCamposDepende()
+    /**
+     * @return array<string, string>
+     */
+    public function getArrayCamposDepende(): array
     {
-        // key -> campo pKeyRepository (campo llave del repository)
-        // value -> campo que se debe llenar con valores del repository
         return ['id_tipo_teleco' => 'id_desc_teleco'];
     }
 }

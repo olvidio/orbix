@@ -36,10 +36,10 @@ interface NotaRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param int $id_situacion
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(int $id_situacion): array|bool;
+    public function datosById(int $id_situacion): array|false;
 	
     /**
      * Busca la clase con id_situacion en el repositorio.

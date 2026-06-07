@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\config\ConfigGlobal;
 use src\shared\security\HashB;
@@ -6,6 +7,7 @@ use src\shared\security\HashBInvalidException;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\entity\UsuarioGrupo;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
 
 $sfsv = ConfigGlobal::mi_sfsv();
 $error_txt = '';
@@ -17,10 +19,10 @@ try {
     ContestarJson::enviar(_("Operación no autorizada"), 'none');
     return;
 }
-$Qid_usuario = (int)($opened['id_usuario'] ?? 0);
-$Qid_grupo = (int)($opened['id_grupo'] ?? 0);
+$Qid_usuario = input_int($opened, 'id_usuario');
+$Qid_grupo = input_int($opened, 'id_grupo');
 // añado el grupo de permisos al usuario.
-$UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
+$UsuarioGrupoRepository = DependencyResolver::get(UsuarioGrupoRepositoryInterface::class);
 $oUsuarioGrupo = new UsuarioGrupo();
 $oUsuarioGrupo->setId_usuario($Qid_usuario);
 $oUsuarioGrupo->setId_grupo($Qid_grupo);

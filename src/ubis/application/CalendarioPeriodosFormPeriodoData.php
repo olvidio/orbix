@@ -6,10 +6,27 @@ use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 
 final class CalendarioPeriodosFormPeriodoData
 {
-    public static function execute(int $idItem): array
+    public function __construct(
+        private CasaPeriodoRepositoryInterface $casaPeriodoRepository,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(int $idItem): array
     {
-        $repo = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
+        $repo = $this->casaPeriodoRepository;
         $oCasaPeriodo = $repo->findById($idItem);
+        if ($oCasaPeriodo === null) {
+            return [
+                'id_item' => $idItem,
+                'f_ini' => '',
+                'f_fin' => '',
+                'sel_sv' => '',
+                'sel_sf' => '',
+                'sel_res' => '',
+            ];
+        }
         $f_ini = $oCasaPeriodo->getF_ini()?->getFromLocal() ?? '';
         $f_fin = $oCasaPeriodo->getF_fin()?->getFromLocal() ?? '';
         $sfsv = $oCasaPeriodo->getSfsv();

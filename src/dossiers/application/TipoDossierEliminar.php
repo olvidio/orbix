@@ -3,6 +3,7 @@
 namespace src\dossiers\application;
 
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
 
 /**
  * Elimina un `TipoDossier`.
@@ -12,21 +13,28 @@ use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
  */
 final class TipoDossierEliminar
 {
-    public static function execute(array $input): string
+    public function __construct(
+        private TipoDossierRepositoryInterface $tipoDossierRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $Qid_tipo_dossier = (int) ($input['id_tipo_dossier'] ?? 0);
+        $Qid_tipo_dossier = input_int($input, 'id_tipo_dossier');
         if ($Qid_tipo_dossier <= 0) {
-            return _("falta id_tipo_dossier");
+            return _('falta id_tipo_dossier');
         }
 
-        $TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
-        $oTipoDossier = $TipoDossierRepository->findById($Qid_tipo_dossier);
+        $oTipoDossier = $this->tipoDossierRepository->findById($Qid_tipo_dossier);
         if ($oTipoDossier === null) {
-            return sprintf(_("No se encuentra el dossier: %s"), $Qid_tipo_dossier);
+            return sprintf(_('No se encuentra el dossier: %s'), $Qid_tipo_dossier);
         }
 
-        if ($TipoDossierRepository->Eliminar($oTipoDossier) === false) {
-            return _("Hay un error, no se ha eliminado.");
+        if ($this->tipoDossierRepository->Eliminar($oTipoDossier) === false) {
+            return _('Hay un error, no se ha eliminado.');
         }
         return '';
     }

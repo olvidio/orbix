@@ -2,6 +2,7 @@
 
 namespace src\notas\application;
 
+
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -32,6 +33,13 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
  */
 final class TablaAlumnosAsignaturas
 {
+
+    public function __construct(
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly PersonaDlRepositoryInterface $personaDlRepository,
+        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+    ) {
+    }
     /** Valor de celda cuando la asignatura esta pendiente. */
     public const CELDA_PENDIENTE = 1;
     /** Valor de celda cuando la asignatura esta cursada pero no superada. */
@@ -109,30 +117,29 @@ final class TablaAlumnosAsignaturas
      * @param bool $usarDlComoCentro cuando `true`, la columna 3 (centro) contiene
      *   el codigo de delegacion (`getDl()`); cuando `false`, el centro de estudios
      *   (`getCentro_o_dl()`).
+     * @param array<string, mixed> $wherePersonas
+     * @param array<string, string> $operadoresPersonas
      * @return array{cabeceras: array<int, string>, filas: array<int, array<int, mixed>>}
      */
     private function construirTabla(array $wherePersonas, array $operadoresPersonas, bool $usarDlComoCentro): array
     {
-        $asignaturaRepo = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $personaRepo = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $personaNotaRepo = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        $asignaturaRepo = $this->asignaturaRepository;
+        $personaRepo = $this->personaDlRepository;
+        $personaNotaRepo = $this->personaNotaRepository;
 
         $asignaturas = $asignaturaRepo->getAsignaturas([
             'active' => 't',
             'id_nivel' => self::ID_NIVEL_ASIG_DESDE . ',' . self::ID_NIVEL_ASIG_HASTA,
             '_ordre' => 'id_nivel',
         ], ['id_nivel' => 'BETWEEN']);
-        $asignaturas = is_array($asignaturas) ? $asignaturas : [];
 
         // Mapa `id_asignatura => id_nivel` para todas las asignaturas (incluidas
         // inactivas). Necesario para resolver el nivel de una nota cuando la
         // asignatura no es opcional (`id_asignatura <= 3000`).
         $mapAsigNivel = [];
         $todas = $asignaturaRepo->getAsignaturas(['_ordre' => 'id_asignatura']);
-        if (is_array($todas)) {
-            foreach ($todas as $oAsig) {
+        foreach ($todas as $oAsig) {
                 $mapAsigNivel[(int)$oAsig->getId_asignatura()] = (int)$oAsig->getId_nivel();
-            }
         }
 
         $cabeceras = $this->cabeceras($asignaturas);
@@ -157,7 +164,7 @@ final class TablaAlumnosAsignaturas
             $idNom = (int)$oPersona->getId_nom();
             $filas[$pos] = $this->construirFila(
                 $oPersona,
-                $notasPorPersona[$idNom] ?? [],
+                array_values($notasPorPersona[$idNom] ?? []),
                 $asignaturas,
                 $mapAsigNivel,
                 $superadas,
@@ -169,8 +176,7 @@ final class TablaAlumnosAsignaturas
     }
 
     /**
-     * @param array $asignaturas asignaturas del bienio+cuadrienio que forman
-     *   las columnas dinamicas de la tabla.
+     * @param list<\src\asignaturas\domain\entity\Asignatura> $asignaturas
      * @return array<int, string>
      */
     private function cabeceras(array $asignaturas): array
@@ -211,14 +217,15 @@ final class TablaAlumnosAsignaturas
     }
 
     /**
-     * @param PersonaNota[]   $notasPersona notas ya filtradas para esta persona.
-     * @param array           $asignaturas  asignaturas que forman las columnas dinamicas.
-     * @param array<int, int> $mapAsigNivel `id_asignatura => id_nivel` (todas las asignaturas).
-     * @param array<int, int> $superadas    `id_situacion` considerados como aprobados.
-     * @return array<int, mixed> fila con 4 columnas fijas + columnas por asignatura.
+     * @param \src\personas\domain\entity\PersonaDl $oPersona
+     * @param list<PersonaNota> $notasPersona
+     * @param list<\src\asignaturas\domain\entity\Asignatura> $asignaturas
+     * @param array<int, int> $mapAsigNivel
+     * @param list<int> $superadas
+     * @return array<int, mixed>
      */
     private function construirFila(
-        $oPersona,
+        \src\personas\domain\entity\PersonaDl $oPersona,
         array $notasPersona,
         array $asignaturas,
         array $mapAsigNivel,

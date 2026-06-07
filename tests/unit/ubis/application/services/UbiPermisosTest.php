@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\unit\ubis\application\services;
 
+use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use PHPUnit\Framework\TestCase;
 use src\ubis\application\services\UbiPermisos;
+use src\ubis\domain\entity\CentroDl;
 
 final class UbiPermisosTest extends TestCase
 {
@@ -73,9 +75,9 @@ final class UbiPermisosTest extends TestCase
         $this->assertFalse(UbiPermisos::puedeModificar(''));
     }
 
-    private function fakePerm(bool $tienePermiso): object
+    private function fakePerm(bool $tienePermiso): XPermisos
     {
-        return new class($tienePermiso) {
+        return new class($tienePermiso) extends XPermisos {
             public function __construct(private readonly bool $value) {}
             public function have_perm_oficina(string $oficina): bool
             {
@@ -84,13 +86,16 @@ final class UbiPermisosTest extends TestCase
         };
     }
 
-    private function fakeUbi(string $dl): object
+    private function fakeUbi(string $dl): CentroDl
     {
-        return new class($dl) {
-            public function __construct(private readonly string $dl) {}
-            public function getDl(): string
+        return new class($dl) extends CentroDl {
+            public function __construct(private readonly string $dlVal)
             {
-                return $this->dl;
+            }
+
+            public function getDl(): ?string
+            {
+                return $this->dlVal;
             }
         };
     }

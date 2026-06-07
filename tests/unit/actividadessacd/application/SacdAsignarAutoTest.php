@@ -17,34 +17,12 @@ use src\encargossacd\domain\entity\EncargoSacd;
 
 final class SacdAsignarAutoTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
-    public function test_f_ini_iso_vacio_no_hace_nada(): void
-    {
-        $GLOBALS['container'] = $this->containerFromMap([]);
-
-        $out = SacdAsignarAuto::execute(['f_ini_iso' => '']);
+        public function test_f_ini_iso_vacio_no_hace_nada(): void {
+        $out = (new \src\actividadessacd\application\SacdAsignarAuto($this->createMock(\src\actividades\domain\contracts\ActividadDlRepositoryInterface::class), $this->createMock(\src\actividadcargos\domain\contracts\CargoRepositoryInterface::class), $this->createMock(\src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface::class), $this->createMock(\src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface::class), $this->createMock(\src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface::class), $this->createMock(\src\encargossacd\domain\contracts\EncargoRepositoryInterface::class)))->execute(['f_ini_iso' => '']);
         $this->assertSame(['asignadas' => 0, 'sin_asignar' => 0], $out);
     }
 
-    public function test_asigna_cuando_hay_centro_y_sacd_titular(): void
-    {
+    public function test_asigna_cuando_hay_centro_y_sacd_titular(): void {
         $actividadRepo = $this->createMock(ActividadDlRepositoryInterface::class);
         $actividadRepo->method('getArrayIdsWithKeyFini')->willReturn(['2026-05-01#1' => 500]);
 
@@ -87,16 +65,7 @@ final class SacdAsignarAutoTest extends TestCase
         $encargoSacdRepo = $this->createMock(EncargoSacdRepositoryInterface::class);
         $encargoSacdRepo->method('getEncargosSacd')->willReturn([$oEncSacd]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadDlRepositoryInterface::class => $actividadRepo,
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            CentroEncargadoRepositoryInterface::class => $centroEncRepo,
-            EncargoRepositoryInterface::class => $encargoRepo,
-            EncargoSacdRepositoryInterface::class => $encargoSacdRepo,
-        ]);
-
-        $out = SacdAsignarAuto::execute(['f_ini_iso' => '2026-01-01']);
+        $out = (new \src\actividadessacd\application\SacdAsignarAuto($actividadRepo, $cargoRepo, $activCargoRepo, $centroEncRepo, $encargoSacdRepo, $encargoRepo))->execute(['f_ini_iso' => '2026-01-01']);
         $this->assertSame(['asignadas' => 1, 'sin_asignar' => 0], $out);
     }
 

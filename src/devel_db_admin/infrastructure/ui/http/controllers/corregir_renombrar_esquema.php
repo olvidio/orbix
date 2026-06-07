@@ -9,9 +9,13 @@ declare(strict_types=1);
 
 use src\devel_db_admin\application\CorregirEstadoRenombrarEsquema;
 use src\devel_db_admin\application\RenombrarEsquemaVerificacionContexto;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
+
+/** @var CorregirEstadoRenombrarEsquema $useCase */
+$useCase = DependencyResolver::get(CorregirEstadoRenombrarEsquema::class);
 
 $QEsquemaOrigen = trim((string) filter_input(INPUT_POST, 'esquema_origen'));
 if ($QEsquemaOrigen === '') {
@@ -23,7 +27,7 @@ $Qcomun = (int) filter_input(INPUT_POST, 'comun');
 $Qsv = (int) filter_input(INPUT_POST, 'sv');
 $Qsf = (int) filter_input(INPUT_POST, 'sf');
 
-$payload = (new CorregirEstadoRenombrarEsquema($GLOBALS['container']))->ejecutar(
+$payload = $useCase->ejecutar(
     $QEsquemaOrigen,
     $Qregion,
     $Qdl,

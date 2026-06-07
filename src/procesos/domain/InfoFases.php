@@ -9,9 +9,9 @@ use src\shared\domain\DatosInfoRepo;
 
 class InfoFases extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ActividadFaseRepositoryInterface $actividadFaseRepository,
+    ) {
         $this->setTxtTitulo(_("Fases que se pueden realizar en una actividad"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta fase?"));
         $this->setTxtBuscar(_("fase a buscar"));
@@ -23,20 +23,19 @@ class InfoFases extends DatosInfoRepo
         $this->setRepositoryInterface(ActividadFaseRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'desc_fase');
+            $aWhere = ['_ordre' => 'desc_fase'];
             $aOperador = [];
         } else {
-            $aWhere = array('nom' => $this->k_buscar);
-            $aOperador = array('nom' => 'sin_acentos');
+            $aWhere = ['nom' => $this->k_buscar];
+            $aOperador = ['nom' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->getRepositoryInterface());
-        $Coleccion = $oLista->getActividadFases($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->actividadFaseRepository->getActividadFases($aWhere, $aOperador);
     }
 }

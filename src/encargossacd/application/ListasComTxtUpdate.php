@@ -14,32 +14,37 @@ use src\encargossacd\domain\entity\EncargoTexto;
  */
 final class ListasComTxtUpdate
 {
+
+    public function __construct(
+        private EncargoTextoRepositoryInterface $encargoTextoRepository
+    ) {
+    }
+
     /**
      * @return array{ok: true}
      */
-    public static function execute(string $clave, string $idioma, string $comunicacion): array
+    public function execute(string $clave, string $idioma, string $comunicacion): array
     {
-        $EncargoTextoRepository = $GLOBALS['container']->get(EncargoTextoRepositoryInterface::class);
-        $cEncargoTextos = $EncargoTextoRepository->getEncargoTextos([
+        $cEncargoTextos = $this->encargoTextoRepository->getEncargoTextos([
             'clave' => $clave,
             'idioma' => $idioma,
         ]);
 
-        if (is_array($cEncargoTextos) && count($cEncargoTextos) > 0) {
+        if ($cEncargoTextos !== []) {
             $oEncargoTexto = $cEncargoTextos[0];
             if ($comunicacion === '') {
-                $EncargoTextoRepository->Eliminar($oEncargoTexto);
+                $this->encargoTextoRepository->Eliminar($oEncargoTexto);
             } else {
                 $oEncargoTexto->setTexto($comunicacion);
-                $EncargoTextoRepository->Guardar($oEncargoTexto);
+                $this->encargoTextoRepository->Guardar($oEncargoTexto);
             }
         } else {
             $oEncargoTexto = new EncargoTexto();
-            $oEncargoTexto->setId_item($EncargoTextoRepository->getNewId());
+            $oEncargoTexto->setId_item($this->encargoTextoRepository->getNewId());
             $oEncargoTexto->setClave($clave);
             $oEncargoTexto->setIdioma($idioma);
             $oEncargoTexto->setTexto($comunicacion);
-            $EncargoTextoRepository->Guardar($oEncargoTexto);
+            $this->encargoTextoRepository->Guardar($oEncargoTexto);
         }
 
         return ['ok' => true];

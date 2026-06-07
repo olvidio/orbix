@@ -4,18 +4,25 @@
  * Endpoint JSON: datos crudos para la tabla `personas_select`.
  */
 
+use function src\shared\domain\helpers\input_string;
+
 use src\personas\application\PersonasSelectData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\ubis\domain\RegionStgrAviso;
 
+/** @var PersonasSelectData $useCase */
+$useCase = DependencyResolver::get(PersonasSelectData::class);
+
 try {
-    $result = PersonasSelectData::build($_POST);
+    $result = $useCase->execute($_POST);
 } catch (\Throwable $e) {
-    if (RegionStgrAviso::esDlSinRegion($e) || RegionStgrAviso::esMensajeSuave($e->getMessage())) {
+    $msg = $e->getMessage();
+    if (RegionStgrAviso::esDlSinRegion($e) || RegionStgrAviso::esMensajeSuave($msg)) {
         $problemas = [];
         RegionStgrAviso::registrar($problemas, $e);
         $result = [
-            'tabla' => (string)($_POST['tabla'] ?? ''),
+            'tabla' => input_string($_POST, 'tabla'),
             'obj_pau' => '',
             'id_tabla' => '',
             'permiso' => 1,
@@ -24,28 +31,30 @@ try {
             'personas' => [],
             'aviso' => RegionStgrAviso::combinarAvisos(
                 RegionStgrAviso::formatear($problemas),
-                RegionStgrAviso::esMensajeSuave($e->getMessage()) && !RegionStgrAviso::esDlSinRegion($e)
-                    ? (str_contains($e->getMessage() ?? '', _('persona no válida')) ? RegionStgrAviso::mensajePersonaNoValida() : $e->getMessage())
+                RegionStgrAviso::esMensajeSuave($msg) && !RegionStgrAviso::esDlSinRegion($e)
+                    ? (str_contains($msg, _('persona no válida')) ? RegionStgrAviso::mensajePersonaNoValida() : $msg)
                     : '',
             ),
         ];
     } else {
-        ContestarJson::enviar($e->getMessage());
+        ContestarJson::enviar($msg);
         return;
     }
 }
 
-if (!empty($result['error'])) {
-    if (RegionStgrAviso::esMensajeSuave((string)$result['error'])) {
+$errorVal = $result['error'] ?? '';
+if (is_string($errorVal) && $errorVal !== '') {
+    if (RegionStgrAviso::esMensajeSuave($errorVal)) {
+        $avisoPrev = $result['aviso'] ?? '';
         $result['aviso'] = RegionStgrAviso::combinarAvisos(
-            (string)($result['aviso'] ?? ''),
-            str_contains((string)$result['error'], _('persona no válida'))
+            is_string($avisoPrev) ? $avisoPrev : '',
+            str_contains($errorVal, _('persona no válida'))
                 ? RegionStgrAviso::mensajePersonaNoValida()
-                : (string)$result['error'],
+                : $errorVal,
         );
         unset($result['error']);
     } else {
-        ContestarJson::enviar((string)$result['error']);
+        ContestarJson::enviar($errorVal);
         return;
     }
 }

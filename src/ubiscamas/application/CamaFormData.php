@@ -5,6 +5,8 @@ namespace src\ubiscamas\application;
 use Ramsey\Uuid\Uuid;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\CamaId;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Datos para `frontend/ubiscamas/controller/cama_form.php`.
@@ -12,16 +14,21 @@ use src\ubiscamas\domain\value_objects\CamaId;
  */
 final class CamaFormData
 {
+    public function __construct(
+        private CamaDlRepositoryInterface $camaRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function execute(array $input): array
     {
-        $Qmod = (string)($input['mod'] ?? '');
-        $Qid_cama = (string)($input['id_cama'] ?? '');
-        $Qid_ubi = (int)($input['id_ubi'] ?? 0);
-        $Qid_habitacion = isset($input['id_habitacion']) ? (string)$input['id_habitacion'] : '';
+        $Qmod = input_string($input, 'mod');
+        $Qid_cama = input_string($input, 'id_cama');
+        $Qid_ubi = input_int($input, 'id_ubi');
+        $Qid_habitacion = input_string($input, 'id_habitacion');
 
         $uuid_cama = CamaId::fromNullableString($Qid_cama);
         $descripcion = '';
@@ -31,12 +38,13 @@ final class CamaFormData
         if ($uuid_cama === null) {
             $Qid_cama = Uuid::uuid4()->toString();
         } else {
-            $CamaRepository = $GLOBALS['container']->get(CamaDlRepositoryInterface::class);
-            $oCama = $CamaRepository->findById($uuid_cama->value());
-            $Qid_habitacion = $oCama->getIdHabitacionVo()->value();
-            $descripcion = $oCama->getDescripcion() ?? '';
-            $larga = $oCama->isLarga() ?? false;
-            $vip = $oCama->isVip() ?? false;
+            $oCama = $this->camaRepository->findById($uuid_cama->value());
+            if ($oCama !== null) {
+                $Qid_habitacion = $oCama->getIdHabitacionVo()->value();
+                $descripcion = $oCama->getDescripcion();
+                $larga = $oCama->isLarga() ?? false;
+                $vip = $oCama->isVip() ?? false;
+            }
         }
 
         return [

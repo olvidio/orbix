@@ -41,7 +41,7 @@ class Modulo
     {
         $this->id_mod = $id instanceof ModuloId
             ? $id
-            : ModuloId::fromNullableInt($id);
+            : new ModuloId($id);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
@@ -52,7 +52,7 @@ class Modulo
 
     public function setId_mod(int $id_mod): void
     {
-        $this->id_mod = ModuloId::fromNullableInt($id_mod);
+        $this->id_mod = new ModuloId($id_mod);
     }
 
     // VO API
@@ -65,7 +65,7 @@ class Modulo
     {
         $this->nom = $nombre instanceof ModuloName
             ? $nombre
-            : ModuloName::fromNullableString($nombre);
+            : ModuloName::fromString((string)$nombre);
     }
 
     // Legacy scalar API
@@ -109,6 +109,9 @@ class Modulo
         return $this->mods_req;
     }
 
+    /**
+     * @param list<int>|array<int, int|string>|null $a_mods_req
+     */
     public function setModsReqVo(ModsReq|array|null $a_mods_req = null): void
     {
         $this->mods_req = $a_mods_req instanceof ModsReq
@@ -117,11 +120,17 @@ class Modulo
     }
 
     // Legacy scalar API
+    /**
+     * @return array<int>|null
+     */
     public function getMods_req(): ?array
     {
         return $this->mods_req?->toArray();
     }
 
+    /**
+     * @param list<int>|null $a_mods_req
+     */
     public function setMods_req(?array $a_mods_req = null): void
     {
         $this->mods_req = ModsReq::fromNullableArray($a_mods_req);
@@ -133,6 +142,9 @@ class Modulo
         return $this->apps_req;
     }
 
+    /**
+     * @param list<int>|array<int, int|string>|null $a_apps_req
+     */
     public function setAppsReqVo(AppsReq|array|null $a_apps_req = null): void
     {
         $this->apps_req = $a_apps_req instanceof AppsReq
@@ -141,11 +153,17 @@ class Modulo
     }
 
     // Legacy scalar API
+    /**
+     * @return array<int|string>|null
+     */
     public function getApps_req(): ?array
     {
         return $this->apps_req?->toArray();
     }
 
+    /**
+     * @param list<int>|null $a_apps_req
+     */
     public function setApps_req(?array $a_apps_req = null): void
     {
         $this->apps_req = AppsReq::fromNullableArray($a_apps_req);
@@ -157,6 +175,9 @@ class Modulo
         return 'id_mod';
     }
 
+    /**
+     * @return list<\src\shared\domain\DatosCampo>
+     */
     public function getDatosCampos(): array
     {
         $oModuloSet = new Set();
@@ -165,7 +186,7 @@ class Modulo
         $oModuloSet->add($this->getDatosDescripcion());
         $oModuloSet->add($this->getDatosMods_req());
         $oModuloSet->add($this->getDatosApps_req());
-        return $oModuloSet->getTot();
+        return array_values($oModuloSet->getTot());
     }
 
     /**

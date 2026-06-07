@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubiscamas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\ClaseRepository;
@@ -28,14 +29,17 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('du_camas');
     }
 
-    public function getArrayCamas($sCondicion = ''): array
+    /**
+     * @return array<int|string, string>
+     */
+public function getArrayCamas(string $sCondicion = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -43,6 +47,9 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
             $sCondicion = "";
         $sQuery = "SELECT id_cama, descripcion FROM $nom_tabla $sCondicion ORDER BY descripcion";
         $stmt = $this->prepareAndExecute($oDbl, $sQuery, [], __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
         $aCamas = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $id_cama = $row['id_cama'];
@@ -59,9 +66,9 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
     /**
      * devuelve una colección (array) de objetos de tipo Cama
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Cama
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Cama> Una colección de objetos de tipo Cama
      */
     public function getCamas(array $aWhere = [], array $aOperators = []): array
     {
@@ -98,32 +105,41 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $Cama = Cama::fromArray($aDatos);
             $CamaSet->add($Cama);
         }
-        return $CamaSet->getTot();
+        return array_values($CamaSet->getTot());
     }
 
     /**
      * devuelve una colección (array) de objetos de tipo Cama para una habitación específica
      *
+     * @return list<Cama>
      */
     public function getCamasByHabitacion(HabitacionId $id_habitacion): array
     {
@@ -140,6 +156,9 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_cama = :id_cama";
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = ['id_cama' => $id_cama];
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -185,6 +204,9 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
             $aDatos['id_schema'] = $idSchema;
         }
 
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -194,6 +216,9 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_cama = :id_cama";
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         $stmt->execute(['id_cama' => $id_cama]);
         if (!$stmt->rowCount()) {
             return TRUE;
@@ -206,17 +231,27 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $id_cama
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $id_cama): array |bool
+    public function datosById(string $id_cama): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_cama = :id_cama";
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
         $stmt->execute(['id_cama' => $id_cama]);
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
     /**
@@ -225,16 +260,21 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
     public function findById(string $id_cama): ?Cama
     {
         $aDatos = $this->datosById($id_cama);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Cama::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): string|false
     {
         $oDbl = $this->getoDbl();
         $sQuery = "SELECT gen_random_uuid()";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return false;
+        }
+        $col = $stmt->fetchColumn();
+        return is_string($col) ? $col : false;
     }
 }

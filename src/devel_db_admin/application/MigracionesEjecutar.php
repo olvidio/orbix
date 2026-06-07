@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace src\devel_db_admin\application;
 
 use PDO;
+use PDOException;
 use RuntimeException;
 use Throwable;
 use src\devel_db_admin\application\services\MigracionCsvPuente;
@@ -32,7 +33,8 @@ final class MigracionesEjecutar
     private array $bootstrapPorPdo = [];
 
     public function __construct(
-        private readonly object $container,
+        private readonly MigracionAplicadaRepositoryInterface $migracionRepository,
+        private readonly DbSchemaRepositoryInterface $dbSchemaRepository,
         private readonly ?string $migrationsDir = null,
         private readonly ?MigracionSqlAnalyzer $analyzer = null,
     ) {
@@ -44,7 +46,7 @@ final class MigracionesEjecutar
      */
     public function ejecutar(string $modo, array $seleccionados, string $prefijoHasta = ''): array
     {
-        $repo = $this->container->get(MigracionAplicadaRepositoryInterface::class);
+        $repo = $this->migracionRepository;
         $repo->ensureTabla();
 
         $scan = (new MigracionesEscanear($repo, $this->migrationsDir, $this->analyzer))->escanear();
@@ -61,10 +63,16 @@ final class MigracionesEjecutar
         $lines = [];
         $analyzer = $this->analyzer ?? new MigracionSqlAnalyzer();
         foreach ($aEjecutar as $migracion) {
-            $lines[] = sprintf('Migracion %s_%s', $migracion['prefijo'], $migracion['descripcion']);
+            $migracionAplicaciones = self::normalizeRows($migracion['aplicaciones'] ?? []);
+            $lines[] = sprintf(
+                'Migracion %s_%s',
+                $this->toScalarString($migracion['prefijo'] ?? null),
+                $this->toScalarString($migracion['descripcion'] ?? null),
+            );
+            $migracion['aplicaciones'] = $migracionAplicaciones;
             $lines = array_merge($lines, $this->suspenderSuscripcionesReplicacion($migracion));
             $errorMigracion = null;
-            foreach ((array) $migracion['aplicaciones'] as $aplicacion) {
+            foreach ($migracionAplicaciones as $aplicacion) {
                 $result = $this->ejecutarAplicacion(
                     $repo,
                     $analyzer,
@@ -110,7 +118,12 @@ final class MigracionesEjecutar
     {
         $index = [];
         foreach ($migraciones as $migracion) {
-            $index[(string) $migracion['id']] = $migracion;
+            $idVal = $migracion['id'] ?? '';
+            $id = is_scalar($idVal) ? (string) $idVal : '';
+            if ($id === '') {
+                continue;
+            }
+            $index[$id] = $migracion;
         }
         ksort($index, SORT_STRING);
 
@@ -161,13 +174,13 @@ final class MigracionesEjecutar
         array $aplicacion,
         bool $reaplicarSeleccion = false,
     ): array {
-        $prefijo = (string) $aplicacion['prefijo'];
-        $descripcion = (string) $aplicacion['descripcion'];
-        $database = (string) $aplicacion['database'];
-        $sha1 = (string) $aplicacion['sha1'];
-        $tipo = (string) $aplicacion['tipo'];
-        $file = (string) $aplicacion['file'];
-        $path = (string) $aplicacion['path'];
+        $prefijo = is_scalar($aplicacion['prefijo'] ?? null) ? (string) $aplicacion['prefijo'] : '';
+        $descripcion = is_scalar($aplicacion['descripcion'] ?? null) ? (string) $aplicacion['descripcion'] : '';
+        $database = is_scalar($aplicacion['database'] ?? null) ? (string) $aplicacion['database'] : '';
+        $sha1 = is_scalar($aplicacion['sha1'] ?? null) ? (string) $aplicacion['sha1'] : '';
+        $tipo = is_scalar($aplicacion['tipo'] ?? null) ? (string) $aplicacion['tipo'] : '';
+        $file = is_scalar($aplicacion['file'] ?? null) ? (string) $aplicacion['file'] : '';
+        $path = is_scalar($aplicacion['path'] ?? null) ? (string) $aplicacion['path'] : '';
 
         $aplicada = $repo->findByKey($prefijo, $descripcion, $database);
         $lines = [];
@@ -461,7 +474,7 @@ final class MigracionesEjecutar
             return $this->schemaCache[$tipo];
         }
 
-        $repository = $this->container->get(DbSchemaRepositoryInterface::class);
+        $repository = $this->dbSchemaRepository;
         $schemas = [];
         foreach ($repository->getDbSchemas(['_ordre' => 'schema']) as $dbSchema) {
             $schema = $dbSchema->getSchema();
@@ -498,11 +511,11 @@ final class MigracionesEjecutar
         ?string $mensaje,
     ): void {
         $migracion = new MigracionAplicada();
-        $migracion->setPrefijo((string) $aplicacion['prefijo']);
-        $migracion->setDescripcion((string) $aplicacion['descripcion']);
-        $migracion->setDatabase((string) $aplicacion['database']);
-        $migracion->setTipo((string) $aplicacion['tipo']);
-        $migracion->setSha1((string) $aplicacion['sha1']);
+        $migracion->setPrefijo(is_scalar($aplicacion['prefijo'] ?? null) ? (string) $aplicacion['prefijo'] : '');
+        $migracion->setDescripcion(is_scalar($aplicacion['descripcion'] ?? null) ? (string) $aplicacion['descripcion'] : '');
+        $migracion->setDatabase(is_scalar($aplicacion['database'] ?? null) ? (string) $aplicacion['database'] : '');
+        $migracion->setTipo(is_scalar($aplicacion['tipo'] ?? null) ? (string) $aplicacion['tipo'] : '');
+        $migracion->setSha1(is_scalar($aplicacion['sha1'] ?? null) ? (string) $aplicacion['sha1'] : '');
         $migracion->setUsuario($this->usuarioActual());
         $migracion->setOk($ok);
         $migracion->setMensaje($mensaje);
@@ -583,11 +596,12 @@ final class MigracionesEjecutar
      */
     private function migracionEstructuraReplicada(array $migracion): bool
     {
-        foreach ((array) $migracion['aplicaciones'] as $aplicacion) {
+        foreach (self::normalizeRows($migracion['aplicaciones'] ?? []) as $aplicacion) {
             if (($aplicacion['tipo'] ?? '') !== MigracionTipo::ESTRUCTURA) {
                 continue;
             }
-            if (in_array((string) ($aplicacion['database_archivo'] ?? ''), ['comun', 'sv-e'], true)) {
+            $databaseArchivo = $this->toScalarString($aplicacion['database_archivo'] ?? null);
+            if (in_array($databaseArchivo, ['comun', 'sv-e'], true)) {
                 return true;
             }
         }
@@ -602,8 +616,9 @@ final class MigracionesEjecutar
     private function modulosReplicacionDeMigracion(array $migracion): array
     {
         $modulos = [];
-        foreach ((array) $migracion['aplicaciones'] as $aplicacion) {
-            $archivo = (string) ($aplicacion['database_archivo'] ?? '');
+        foreach (self::normalizeRows($migracion['aplicaciones'] ?? []) as $aplicacion) {
+            $archivoVal = $aplicacion['database_archivo'] ?? '';
+            $archivo = is_scalar($archivoVal) ? (string) $archivoVal : '';
             if ($archivo === 'comun' || $archivo === 'sv-e') {
                 $modulos[$archivo] = true;
             }
@@ -717,12 +732,42 @@ final class MigracionesEjecutar
 
     private function nombreSuscripcion(string $modulo): ?string
     {
-        $entornoPruebas = ServerConf::WEBDIR === 'pruebas';
+        $webdir = getenv('WEBDIR');
+        $entornoPruebas = is_string($webdir) && $webdir === 'pruebas';
 
         return match ($modulo) {
             'comun' => $entornoPruebas ? 'subpruebascomun' : 'subcomun',
             'sv-e' => $entornoPruebas ? 'subpruebassve' : 'subsve',
             default => null,
         };
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function toScalarString(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
+    }
+
+    /**
+     * @param mixed $rows
+     * @return array<int, array<string, mixed>>
+     */
+    private static function normalizeRows(mixed $rows): array
+    {
+        if (!is_array($rows)) {
+            return [];
+        }
+
+        $normalized = [];
+        foreach ($rows as $row) {
+            if (is_array($row)) {
+                /** @var array<string, mixed> $row */
+                $normalized[] = $row;
+            }
+        }
+
+        return $normalized;
     }
 }

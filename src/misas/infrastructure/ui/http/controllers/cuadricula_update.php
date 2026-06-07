@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\CuadriculaUpdate;
 use src\shared\web\ContestarJson;
@@ -13,7 +14,9 @@ $Qdia_iso = (string)filter_input(INPUT_POST, 'dia');
 $QTipoPlantilla = (string)filter_input(INPUT_POST, 'tipo_plantilla');
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
 
-$result = CuadriculaUpdate::execute(
+/** @var CuadriculaUpdate $useCase */
+$useCase = DependencyResolver::get(CuadriculaUpdate::class);
+$result = $useCase->execute(
     $Quuid_item,
     $Qkey,
     $Qtstart,

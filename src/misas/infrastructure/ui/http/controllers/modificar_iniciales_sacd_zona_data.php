@@ -1,6 +1,10 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\ModificarInicialesSacdZonaData;
 use src\shared\web\ContestarJson;
 
-ContestarJson::enviar('', ModificarInicialesSacdZonaData::getData());
+/** @var ModificarInicialesSacdZonaData $useCase */
+$useCase = DependencyResolver::get(ModificarInicialesSacdZonaData::class);
+$result = $useCase->getData();
+ContestarJson::enviar('', $result);

@@ -14,6 +14,14 @@ use src\encargossacd\domain\services\EncargoDominioService;
  */
 final class EncargoHorarioSelectData
 {
+
+    public function __construct(
+        private EncargoDominioService $dominioService,
+        private EncargoHorarioRepositoryInterface $encargoHorarioRepository,
+        private EncargoRepositoryInterface $encargoRepository
+    ) {
+    }
+
     /**
      * @return array{
      *     desc_enc: string,
@@ -35,29 +43,27 @@ final class EncargoHorarioSelectData
      *     }>
      * }
      */
-    public static function execute(int $id_enc): array
+    public function execute(int $id_enc): array
     {
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoHorarioRepository = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
-        $oDominio = new EncargoDominioService();
+        $oDominio = $this->dominioService;
 
         $desc_enc = '';
-        $oEncargo = $EncargoRepository->findByID($id_enc);
+        $oEncargo = $this->encargoRepository->findByID($id_enc);
         if ($oEncargo !== null) {
             $desc_enc = (string)$oEncargo->getDesc_enc();
         }
 
-        $cEncargoHorarios = $EncargoHorarioRepository->getEncargoHorarios(['id_enc' => $id_enc]);
+        $cEncargoHorarios = $this->encargoHorarioRepository->getEncargoHorarios(['id_enc' => $id_enc]);
 
         $filas = [];
-        if (is_array($cEncargoHorarios)) {
+        if ($cEncargoHorarios !== []) {
             foreach ($cEncargoHorarios as $oH) {
                 $mas_menos = (string)$oH->getMas_menos();
                 $dia_ref = (string)$oH->getDia_ref();
                 $dia_inc = (string)$oH->getDia_inc();
                 $dia_num = (string)$oH->getDia_num();
-                $h_ini = (string)$oH->getH_ini();
-                $h_fin = (string)$oH->getH_fin();
+                $h_ini = self::fmtTime($oH->getH_ini());
+                $h_fin = self::fmtTime($oH->getH_fin());
                 $n_sacd = (string)$oH->getN_sacd();
 
                 $f_ini_raw = $oH->getF_ini();
@@ -94,5 +100,17 @@ final class EncargoHorarioSelectData
             'desc_enc' => $desc_enc,
             'filas' => $filas,
         ];
+    }
+
+    private static function fmtTime(mixed $time): string
+    {
+        if ($time === null) {
+            return '';
+        }
+        if (is_object($time) && method_exists($time, 'value')) {
+            return (string) $time->value();
+        }
+
+        return is_scalar($time) ? (string) $time : '';
     }
 }

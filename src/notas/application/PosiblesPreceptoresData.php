@@ -2,6 +2,7 @@
 
 namespace src\notas\application;
 
+
 use src\profesores\domain\services\ProfesorStgrService;
 
 /**
@@ -12,9 +13,17 @@ use src\profesores\domain\services\ProfesorStgrService;
  */
 final class PosiblesPreceptoresData
 {
-    public static function execute(): array
+
+    public function __construct(
+        private readonly ProfesorStgrService $profesorStgrService,
+    ) {
+    }
+    /**
+     * @return array<int, string>
+     */
+    public function execute(): array
     {
-        $ProfesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
+        $ProfesorStgrService = $this->profesorStgrService;
         return $ProfesorStgrService->getArrayProfesoresDl();
     }
 }

@@ -16,16 +16,22 @@ use src\ubiscamas\domain\entity\Habitacion;
 interface HabitacionRepositoryInterface
 {
 
-    public function getArrayHabitaciones($sCondicion = ''): array;
+    /**
+     * @return array<int|string, string>
+     */
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayHabitaciones(string $sCondicion = ''): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Habitacion
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Habitacion
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Habitacion> Una colección de objetos de tipo Habitacion
      */
     public function getHabitaciones(array $aWhere = [], array $aOperators = []): array;
 
@@ -33,7 +39,7 @@ interface HabitacionRepositoryInterface
      * devuelve una colección (array) de objetos de tipo Habitacion para un id_ubi específico
      *
      * @param int $id_ubi
-     * @return array Una colección de objetos de tipo Habitacion
+     * @return list<Habitacion> Una colección de objetos de tipo Habitacion
      */
     public function getHabitacionesByUbi(int $id_ubi): array;
 
@@ -52,14 +58,14 @@ interface HabitacionRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $id_habitacion
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $id_habitacion): array|bool;
+    public function datosById(string $id_habitacion): array|false;
 
     /**
      * Busca la clase con id_habitacion en el repositorio.
      */
     public function findById(string $id_habitacion): ?Habitacion;
 
-    public function getNewId();
+    public function getNewId(): string|false;
 }

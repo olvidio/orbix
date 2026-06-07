@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaExRepositoryInterface;
@@ -17,15 +20,25 @@ use function src\shared\domain\helpers\curso_est;
  */
 final class ActaSelectData
 {
+
+    public function __construct(
+        private readonly DelegacionRepositoryInterface $delegacionRepository,
+        private readonly ActaRepositoryInterface $actaRepository,
+        private readonly ActaDlRepositoryInterface $actaDlRepository,
+        private readonly ActaExRepositoryInterface $actaExRepository,
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+    ) {
+    }
     /**
      * @param array{titulo?:string, acta?:string, mes_fin_stgr:int} $in
      * @return array{titulo:string, a_asignaturas: array<int|string, string|null>, actas: list<array{acta:string, f_acta:?string, id_asignatura:int, has_pdf:bool}>}
      */
-    public static function execute(array $in): array
+
+    public function execute(array $in): array
     {
-        $Qtitulo = (string)($in['titulo'] ?? '');
-        $Qacta = (string)($in['acta'] ?? '');
-        $mes_fin_stgr = (int)($in['mes_fin_stgr'] ?? 6);
+        $Qtitulo = input_string($in, 'titulo');
+        $Qacta = input_string($in, 'acta');
+        $mes_fin_stgr = input_int($in, 'mes_fin_stgr', 6);
 
         $mi_dele = ConfigGlobal::mi_delef();
         $ambito = ConfigGlobal::mi_ambito();
@@ -44,7 +57,7 @@ final class ActaSelectData
             $cActas = [];
             if (!empty($matches[1])) {
                 if ($ambito === 'rstgr') {
-                    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+                    $repoDelegacion = $this->delegacionRepository;
                     $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]);
                     $aDl = array_values($aDlMap);
                     $Qacta_dl = '';
@@ -53,21 +66,21 @@ final class ActaSelectData
                         $Qacta_dl .= empty($matches[3]) ? "$dl " . $matches[1] . '/' . date('y') : "$dl $Qacta";
                     }
                     $aWhere['acta'] = $Qacta_dl;
-                    $repoActas = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+                    $repoActas = $this->actaRepository;
                 } else {
                     $aWhere['acta'] = empty($matches[3]) ? "$mi_dele " . $matches[1] . '/' . date('y') : "$mi_dele $Qacta";
-                    $repoActas = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
+                    $repoActas = $this->actaDlRepository;
                 }
                 $cActas = $repoActas->getActas($aWhere, $aOperador);
             } else {
                 if ($ambito === 'rstgr') {
-                    $repoActas = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+                    $repoActas = $this->actaRepository;
                     $cActas = $repoActas->getActas($aWhere, $aOperador);
                 } else {
-                    $repoActas = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
+                    $repoActas = $this->actaDlRepository;
                     $cActas = $repoActas->getActas($aWhere, $aOperador);
                     if (empty($cActas)) {
-                        $repoActas = $GLOBALS['container']->get(ActaExRepositoryInterface::class);
+                        $repoActas = $this->actaExRepository;
                         $cActas = $repoActas->getActas($aWhere, $aOperador);
                     }
                 }
@@ -91,21 +104,21 @@ final class ActaSelectData
 
             $titulo = ucfirst(sprintf(_("lista de actas del curso %s. Máximo %s"), $txt_curso, $aWhere['_limit']));
             if ($ambito === 'rstgr') {
-                $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+                $repoDelegacion = $this->delegacionRepository;
                 $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]);
                 $aDl = array_values($aDlMap);
                 $sReg = implode(' |', $aDl);
                 $Qacta_pat = "^($sReg )";
                 $aWhere['acta'] = $Qacta_pat;
                 $aOperador['acta'] = '~';
-                $repoActas = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+                $repoActas = $this->actaRepository;
             } else {
-                $repoActas = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
+                $repoActas = $this->actaDlRepository;
             }
             $cActas = $repoActas->getActas($aWhere, $aOperador);
         }
 
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $AsignaturaRepository = $this->asignaturaRepository;
         $a_asignaturas = $AsignaturaRepository->getArrayAsignaturas();
 
         $actas = [];

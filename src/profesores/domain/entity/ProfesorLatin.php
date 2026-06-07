@@ -49,6 +49,9 @@ class ProfesorLatin
         return 'id_nom';
     }
 
+  /** @return array<string, mixed> */
+
+
   public function getDatosCampos(): array
     {
         $oProfesorLatinSet = new Set();

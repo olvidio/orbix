@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
@@ -13,8 +14,8 @@ if (empty($Qid_usuario)) {
     $error_txt = _("Id de usuario no válido");
 } else {
     // grupos:
-    $GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
-    $UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
+    $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
+    $UsuarioGrupoRepository = DependencyResolver::get(UsuarioGrupoRepositoryInterface::class);
     $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $Qid_usuario));
     $i = 0;
     $txt = '';
@@ -22,6 +23,9 @@ if (empty($Qid_usuario)) {
         $i++;
         $id_grupo = $oUsuarioGrupo->getId_grupo();
         $oGrupo = $GrupoRepository->findById($id_grupo);
+        if ($oGrupo === null) {
+            continue;
+        }
         if ($i > 1) {
             $txt .= ", ";
         }
@@ -29,14 +33,18 @@ if (empty($Qid_usuario)) {
     }
 
     // datos personales usuario
-    $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+    $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
+    if ($oUsuario === null) {
+        $error_txt = _("Usuario no encontrado");
+    } else {
     $usuario = $oUsuario->getUsuarioAsString();
     $email = $oUsuario->getEmailAsString();
 
     $data['grupos_txt'] = $txt;
     $data['usuario'] = $usuario;
     $data['email'] = $email;
+    }
 }
 
 ContestarJson::enviar($error_txt, $data);

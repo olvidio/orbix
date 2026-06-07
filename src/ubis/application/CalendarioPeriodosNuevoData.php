@@ -8,7 +8,14 @@ use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 
 final class CalendarioPeriodosNuevoData
 {
-    public static function execute(int $idUbi, int $year): array
+    public function __construct(
+        private CasaPeriodoRepositoryInterface $casaPeriodoRepository,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(int $idUbi, int $year): array
     {
         $f_next = '';
         $sf_chk = '';
@@ -26,7 +33,7 @@ final class CalendarioPeriodosNuevoData
                 'f_ini' => '>=',
                 'f_fin' => '<=',
             ];
-            $repo = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
+            $repo = $this->casaPeriodoRepository;
             $cCasaPeriodos = $repo->getCasaPeriodos($aWhere, $aOperador);
             if (!empty($cCasaPeriodos)) {
                 $oCasaPeriodo = $cCasaPeriodos[0];

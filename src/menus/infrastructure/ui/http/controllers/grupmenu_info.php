@@ -1,14 +1,23 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_grupmenu = (string)filter_input(INPUT_POST, 'id_grupmenu');
+$Qid_grupmenu = input_int($_POST, 'id_grupmenu');
 
-$GrupMenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
+/** @var GrupMenuRepositoryInterface $GrupMenuRepository */
+$GrupMenuRepository = DependencyResolver::get(GrupMenuRepositoryInterface::class);
 $oGrupo = $GrupMenuRepository->findById($Qid_grupmenu);
+if ($oGrupo === null) {
+    ContestarJson::enviar(_("No encuentro el grupmenu"), []);
+    return;
+}
 $grupmenu = $oGrupo->getGrup_menu();
-$orden = $oGrupo->getOrdenVo()->value();
+$orden = $oGrupo->getOrden() ?? 0;
 
 $error_txt = '';
 $data['grupmenu'] = $grupmenu;

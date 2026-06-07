@@ -4,71 +4,73 @@ namespace src\procesos\application;
 
 use frontend\actividades\helpers\ActividadTipo;
 use src\permisos\domain\PermisosActividades;
+use src\permisos\domain\XPermisos;
 use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\PermAccionBits;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
 /**
- * Caso de uso: datos para la pantalla usuario_perm_activ (alta/edicion
- * de permisos de actividad para un usuario).
- *
- * Agrupa la resolucion de repositorios para que el controlador frontend
- * no acceda directamente al contenedor ni a `use src\...`. El frontend
- * recibe arrays serializables y construye los `frontend\shared\web\Desplegable`.
+ * Caso de uso: datos para la pantalla usuario_perm_activ.
  */
 class UsuarioPermActivData
 {
+    public function __construct(
+        private readonly GrupoRepositoryInterface $grupoRepository,
+        private readonly TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        private readonly ActividadFaseRepositoryInterface $actividadFaseRepository,
+        private readonly PermUsuarioActividadRepositoryInterface $permUsuarioActividadRepository,
+    ) {
+    }
+
     /**
-     * @return array{
-     *     nombre:string,
-     *     dl_propia:string,
-     *     perm_jefe:bool,
-     *     tipo_actividad_html:string,
-     *     a_fases:array<string,string>,
-     *     a_acciones:array<string,int>,
-     *     a_afecta_a:array<string,int>,
-     *     aPerm:array<int,array{afecta_a:string,num:int,fase_ref:string,perm_on:string,perm_off:string,marcado:bool}>
-     * }
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $Qid_usuario = (int)($input['id_usuario'] ?? 0);
-        $Qid_tipo_activ_txt = (string)($input['id_tipo_activ_txt'] ?? '');
+        $Qid_usuario = input_int($input, 'id_usuario');
+        $Qid_tipo_activ_txt = input_string($input, 'id_tipo_activ_txt');
         $Qdl_propia = is_true($input['dl_propia'] ?? '') ? 't' : 'f';
-        if (empty($Qid_tipo_activ_txt)) {
+        if ($Qid_tipo_activ_txt === '') {
             $Qdl_propia = 't';
         }
 
         $oTipoActiv = new TiposActividades($Qid_tipo_activ_txt, true);
         $id_tipo_activ = $oTipoActiv->getId_tipo_activ();
 
-        $GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
-        $oUsuario = $GrupoRepository->findById($Qid_usuario);
-        $nombre = $oUsuario?->getUsuario() ?? '';
+        $oUsuario = $this->grupoRepository->findById($Qid_usuario);
+        $nombre = $oUsuario?->getUsuarioAsString() ?? '';
 
         $a_acciones = PermAccionBits::valueToLabel();
         $a_afecta_a = PermisosActividades::AFECTA;
         asort($a_afecta_a);
 
         $perm_jefe = false;
-        if ($_SESSION['oConfig']->is_jefeCalendario()
-            || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && (int)$_SESSION['session_auth']['sfsv'] === 1)
-            || ($_SESSION['oPerm']->have_perm_oficina('calendario'))
+        $oConfig = $_SESSION['oConfig'] ?? null;
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        $sessionAuth = $_SESSION['session_auth'] ?? null;
+        $miSfsv = 0;
+        if (is_array($sessionAuth) && isset($sessionAuth['sfsv']) && is_numeric($sessionAuth['sfsv'])) {
+            $miSfsv = (int) $sessionAuth['sfsv'];
+        }
+        if ((is_object($oConfig) && method_exists($oConfig, 'is_jefeCalendario') && $oConfig->is_jefeCalendario())
+            || ($oPerm instanceof XPermisos
+                && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+                && $miSfsv === 1)
+            || ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('calendario'))
         ) {
             $perm_jefe = true;
         }
 
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-        $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $Qdl_propia);
+        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, is_true($Qdl_propia));
+        $a_fases = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
 
-        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-        $a_fases = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
-
-        $PermUsuarioActividadRepository = $GLOBALS['container']->get(PermUsuarioActividadRepositoryInterface::class);
         $aPerm = [];
         foreach ($a_afecta_a as $afecta_a_txt => $num) {
             $aWhere = [
@@ -81,7 +83,7 @@ class UsuarioPermActivData
             $perm_on = '';
             $perm_off = '';
             $afecta_a_match = '';
-            $cPermUsuarioActividad = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere);
+            $cPermUsuarioActividad = $this->permUsuarioActividadRepository->getPermUsuarioActividades($aWhere);
             foreach ($cPermUsuarioActividad as $oPermiso) {
                 $fase_ref = (string)$oPermiso->getFase_ref();
                 $afecta_a_match = (string)$oPermiso->getAfecta_a();

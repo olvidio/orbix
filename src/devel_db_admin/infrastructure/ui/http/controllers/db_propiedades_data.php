@@ -8,12 +8,16 @@ declare(strict_types=1);
 
 use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\DbPropiedadesFormData;
+use src\shared\infrastructure\DependencyResolver;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$payload = DbPropiedadesFormData::build($_POST);
+/** @var DbPropiedadesFormData $data */
+$data = DependencyResolver::get(DbPropiedadesFormData::class);
+$payload = $data->build($_POST);
 if (isset($payload['error'])) {
-    ContestarJson::enviar((string) $payload['error'], 'none');
+    $error = is_scalar($payload['error']) ? (string) $payload['error'] : '';
+    ContestarJson::enviar($error, 'none');
 
     return;
 }

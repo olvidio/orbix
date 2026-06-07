@@ -17,15 +17,18 @@ use src\procesos\domain\entity\ActividadTarea;
 interface ActividadTareaRepositoryInterface
 {
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayActividadTareas(int $iid_fase): array;
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadTarea
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActividadTarea
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ActividadTarea> Una colección de objetos de tipo ActividadTarea
      */
     public function getActividadTareas(array $aWhere = [], array $aOperators = []): array;
 
@@ -46,14 +49,14 @@ interface ActividadTareaRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_tarea
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_tarea): array|bool;
+    public function datosById(int $id_tarea): array|false;
 
     /**
      * Busca la clase con id_tarea en el repositorio.
      */
     public function findById(int $id_tarea): ?ActividadTarea;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

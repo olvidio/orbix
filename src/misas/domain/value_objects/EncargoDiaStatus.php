@@ -16,6 +16,9 @@ final class EncargoDiaStatus
         $this->value = $value;
     }
 
+    /**
+     * @return list<int>
+     */
     private static function validStatuses(): array
     {
         return [

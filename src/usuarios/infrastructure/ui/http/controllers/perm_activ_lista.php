@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
@@ -12,7 +13,7 @@ use function src\shared\domain\helpers\is_true;
 
 $Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
 
-$PermUsuarioActividadRepository = $GLOBALS['container']->get(PermUsuarioActividadRepositoryInterface::class);
+$PermUsuarioActividadRepository = DependencyResolver::get(PermUsuarioActividadRepositoryInterface::class);
 $aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt, afecta_a'];
 $aOperador = [];
 $cUsuarioPerm = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere, $aOperador);
@@ -37,7 +38,7 @@ $i = 0;
  * No hay que poner unidades, pues da un error de javascript.
  * Al final obligo a que la tabla sea html.
  *
- * @var array $a_cabeceras
+ * @var list<array{name: string, width: string}> $a_cabeceras
  */
 $a_cabeceras = [['name' => _("dl propia"), 'width' => '5%'],
     ['name' => _("tipo de actividad"), 'width' => '10%'],
@@ -56,8 +57,8 @@ $aOpcionesAction = PermAccionBits::valueToLabel();
 $a_valores = [];
 $id_tipo_activ_anterior = '';
 $dl_propia_anterior = '';
-$TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-$ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+$TipoDeActividadRepository = DependencyResolver::get(TipoDeActividadRepositoryInterface::class);
+$ActividadFaseRepository = DependencyResolver::get(ActividadFaseRepositoryInterface::class);
 foreach ($cUsuarioPermArray as $aUsuarioPerm) {
     $i++;
     $id_item = $aUsuarioPerm['id_item'];

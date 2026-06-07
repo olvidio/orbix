@@ -1,11 +1,10 @@
 <?php
 
 use src\dossiers\application\TipoDossierGuardar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-/**
- * Guarda los cambios a un `TipoDossier`.
- * Responde JSON `{success, mensaje, data}`.
- */
-$error_txt = TipoDossierGuardar::execute($_POST);
+/** @var TipoDossierGuardar $useCase */
+$useCase = DependencyResolver::get(TipoDossierGuardar::class);
+$error_txt = $useCase->execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

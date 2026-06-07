@@ -328,3 +328,60 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
     - N+1 en `profesorEspecialidad()` (1 query + 2 `findById` por profesor).
     - Extraer `comprobar_notas.php` (~500 LOC inline en `frontend/`) a un `ComprobarNotas` use case tambien esta pendiente; no consume `Resumen` pero es el mismo patron.
 2. ~~**`form_notas_de_una_persona.php`, `acta_imprimir.php`, `acta_ver.php`, `acta_select.php`**: frontend controllers que importan `src\\notas\\application\\*Data` directamente en vez de usar `PostRequest::getDataFromUrl()`.~~ Resuelto en Slice 17: `form_notas_de_una_persona.php` ya consume el nuevo endpoint `/src/notas/nota_persona_form_data`. Los otros tres controladores que se señalaban en esta deuda no importan realmente ningun `*Data` (solo `DatosActa`, VOs y repos), asi que la lista original estaba sobreestimada.
+
+---
+
+## Cierre DI (2026-06-06)
+
+### Inventario inicial (antes del cierre DI)
+
+| Capa | Ficheros con `$GLOBALS['container']` | Ocurrencias |
+|------|--------------------------------------|------------:|
+| `infrastructure/ui/http/controllers/` | ~18 | ~36 |
+| `application/` | ~15 | ~25 |
+| `domain/` | 1 | 1 |
+| **Total container** | **~37 ficheros** | **~62** |
+
+| Capa | Ficheros con `$GLOBALS['oDB*']` |
+|------|--------------------------------:|
+| `infrastructure/persistence/postgresql/` | 12 |
+
+| Frontend `use src\` | Ficheros |
+|--------------------|----------|
+| — | **0** |
+
+PHPStan (`phpstan-nobaseline.neon`): **0** errores en `src/notas/` (cierre DI + PHPStan, 2026-06-06).
+
+### Cambios principales
+
+- HTTP controllers (`infrastructure/ui/http/controllers/`): `DependencyResolver::get()` para todos los casos de uso; sin `::execute()` estatico ni `new` de application.
+- Application: constructor DI + metodos de instancia (`execute()`, `parse()`, etc.). `EditarPersonaNota` recibe repos por constructor (parametro `PersonaNota` en runtime).
+- Repos Pg*: `GlobalPdo::get('oDB'|'oDBP'|…)` en lugar de `$GLOBALS['oDB*']`.
+- `src/notas/config/dependencies.php`: 11 mappings de repos + ~44 entradas `autowire()` (use cases, `ResumenFactory`, `PersonaNotaInputParser`, `ActaTribunalSync`, etc.). `EditarPersonaNota` excluido del contenedor (requiere `PersonaNota` en construccion).
+- Soporte nuevo: `application/support/ResumenFactory.php` para instanciar `legacy/Resumen` con DI.
+
+### Resultado del cierre DI
+
+| Criterio | Antes | Despues |
+|----------|------:|--------:|
+| `$GLOBALS['container']` en `src/notas/` | ~62 | **0** |
+| `$GLOBALS['oDB*']` en repos Pg* | 12 | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | parcial | **todos** |
+| Frontend `use src\` | 0 | **0** |
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (pre-cierre) | `composer phpstan:file -- src/notas/` | **731** |
+| 2026-06-06 (cierre DI) | idem | **425** |
+| 2026-06-06 (cierre DI + PHPStan) | idem | **0** |
+
+Cierre alcanzado sin baseline ni `@phpstan-ignore`: tipado en entidades `PersonaNota*`/`Nota`/`ActaTribunal`, repos Pg* y `ConstantNotaRepository`, application (`EditarPersonaNota`, `Tesera`, `legacy/Resumen`, informes STGR), contratos `datosByPk()` y controllers HTTP (`input_*`, normalización `$_FILES`/`$Qdl`).
+
+### Tests
+
+```bash
+php libs/vendor/bin/phpunit tests/unit/notas/application/   # 13 tests OK (2026-06-06)
+vendor/bin/phpunit tests/integration/notas/        # requiere DB; pendiente verificar
+```

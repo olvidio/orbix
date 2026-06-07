@@ -1,6 +1,7 @@
 <?php
 
 namespace src\configuracion\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -25,9 +26,9 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('m0_apps');
     }
@@ -37,9 +38,9 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo App
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo App
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<App> Una colección de objetos de tipo App
      */
     public function getApps(array $aWhere = [], array $aOperators = []): array
     {
@@ -76,27 +77,35 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $App =  App::fromArray($aDatos);
             $AppSet->add($App);
         }
-        return $AppSet->getTot();
+        return array_values($AppSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -133,6 +142,9 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -142,20 +154,34 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_app = $id_app";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
     }
 
-    public function datosById(int $id_app): array|bool
+    public function datosById(int $id_app): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT * FROM $nom_tabla WHERE id_app = $id_app";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
     }
 
     public function findById(int $id_app): ?App
@@ -167,10 +193,22 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         return App::fromArray($aDatos);
     }
 
+    /**
+     * @return int|string
+     */
     public function getNewId()
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('m0_apps_id_app_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $queryResult = $oDbl->query($sQuery);
+        if ($queryResult === false) {
+            return 0;
+        }
+        $result = $queryResult->fetchColumn();
+        if ($result === false || $result === null) {
+            return 0;
+        }
+
+        return $result;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -29,14 +30,17 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
+        $oDbl = GlobalPdo::get('oDB');
         $this->setoDbl($oDbl);
         $this->setoDbl_Select($oDbl);
         $this->setNomTabla('u_centros_dl');
 
     }
 
-    public function getArrayCentros($sCondicion = ''): array
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayCentros(string $sCondicion = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -45,8 +49,14 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
             $sCondicion = "WHERE active = 't'";
         $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $sCondicion ORDER BY $orden";
         $stmt = $this->prepareAndExecute($oDbl, $sQuery, [], __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
         $aCentros = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            if (!is_array($row) || !isset($row['id_ubi'], $row['nombre_ubi'])) {
+                continue;
+            }
             $id_ubi = $row['id_ubi'];
             $nombre_ubi = $row['nombre_ubi'];
 
@@ -60,9 +70,9 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
     /**
      * devuelve una colección (array) de objetos de tipo CentroDl
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo CentroDl
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<CentroDl> Una colección de objetos de tipo CentroDl
      */
     public function getCentros(array $aWhere = [], array $aOperators = []): array
     {
@@ -99,29 +109,37 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para las fechas del postgres (texto iso)
             $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
             $CentroDl = CentroDl::fromArray($aDatos);
             $CentroDlSet->add($CentroDl);
         }
-        return $CentroDlSet->getTot();
+        return array_values($CentroDlSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -187,6 +205,9 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -196,6 +217,9 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -207,20 +231,28 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_ubi
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_ubi): array |bool
+    public function datosById(int $id_ubi): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
+        if (!is_array($aDatos)) {
+            return false;
         }
-        return $aDatos;
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
     /**
@@ -229,23 +261,29 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
     public function findById(int $id_ubi): ?CentroDl
     {
         $aDatos = $this->datosById($id_ubi);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return CentroDl::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('u_centros_dl_id_auto_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 
     /**
      * @throws \Exception
      */
-    public function getNewIdUbi($id): int
+    public function getNewIdUbi(int $id): int
     {
         $miRegionDl = ConfigGlobal::mi_region_dl();
         return GenerateIdGlobal::generateIdGlobal($miRegionDl, $this->getNomTabla(), $id);

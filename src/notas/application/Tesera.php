@@ -2,9 +2,11 @@
 
 namespace src\notas\application;
 
+
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
 use function src\shared\domain\helpers\is_true;
@@ -40,6 +42,12 @@ use function src\shared\domain\helpers\is_true;
  */
 final class Tesera
 {
+
+    public function __construct(
+        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+    ) {
+    }
     /** Rango de `id_nivel` de asignaturas de bienio+cuadrienio. */
     private const ID_NIVEL_ASIG_DESDE = 1100;
     private const ID_NIVEL_ASIG_HASTA = 2500;
@@ -79,7 +87,10 @@ final class Tesera
      */
     public function cursoActual(): array
     {
-        $config = $_SESSION['oConfig'];
+        $config = $_SESSION['oConfig'] ?? null;
+        if (!$config instanceof ConfigSnapshot) {
+            throw new \RuntimeException('Configuracion de sesion no disponible');
+        }
         $ini_d = $config->getDiaIniStgr();
         $ini_m = $config->getMesIniStgr();
         $fin_d = $config->getDiaFinStgr();
@@ -111,7 +122,7 @@ final class Tesera
      */
     public function getPlan(int $idNom): int
     {
-        $repo = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        $repo = $this->personaNotaRepository;
         $cNotas = $repo->getPersonaNotas([
             'id_nom' => $idNom,
             'id_asignatura' => self::ID_ASIG_FIN_CUADRIENIO,
@@ -133,14 +144,12 @@ final class Tesera
      */
     public function getAsignaturasPosibles(int $plan = self::PLAN_NUEVO): array
     {
-        $repo = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $repo = $this->asignaturaRepository;
         $cAsignaturas = $repo->getAsignaturas([
             'active' => 't',
             'id_nivel' => self::ID_NIVEL_ASIG_DESDE . ',' . self::ID_NIVEL_ASIG_HASTA,
             '_ordre' => 'id_nivel',
         ], ['id_nivel' => 'BETWEEN']);
-        $cAsignaturas = is_array($cAsignaturas) ? $cAsignaturas : [];
-
         if ($plan !== self::PLAN_VIEJO) {
             return $cAsignaturas;
         }
@@ -150,8 +159,6 @@ final class Tesera
             'id_nivel' => self::ID_NIVEL_PLAN97_NUEVOS,
             '_ordre' => 'id_nivel',
         ], ['id_nivel' => 'IN']);
-        $cPlan97 = is_array($cPlan97) ? $cPlan97 : [];
-
         $resultado = [];
         foreach ($cAsignaturas as $oAsig) {
             if ((int)$oAsig->getId_nivel() === self::ID_NIVEL_PLAN97_DESAPARECIDO) {
@@ -184,12 +191,12 @@ final class Tesera
      *   `nombre_corto`, `fecha` (`DateTimeLocal`), `id_situacion`,
      *   `bAprobada` (`'t'|'f'`), `nota` (string), `acta` (string|null).
      *
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_asignatura: string, nombre_corto: string, fecha: \src\shared\domain\value_objects\DateTimeLocal|\src\shared\domain\value_objects\NullDateTimeLocal|null, id_situacion: int, bAprobada: bool|string, nota: string|null, acta: string|null}>
      */
     public function getAsignaturasAprobadas(int $idNom, int $plan = self::PLAN_NUEVO): array
     {
-        $personaNotaRepo = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-        $asignaturaRepo = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $personaNotaRepo = $this->personaNotaRepository;
+        $asignaturaRepo = $this->asignaturaRepository;
 
         $cNotas = $personaNotaRepo->getPersonaNotas([
             'id_nom' => $idNom,
@@ -210,7 +217,7 @@ final class Tesera
                 $idNivelAsig = $idNivel;
                 // para las opcionales hay que ver si están activas por id_nivel, no id_asignatura:
                 $oAsignaturaOpcionalGenerica = $asignaturaRepo->findById($idNivel);
-                if (!$oAsignaturaOpcionalGenerica->isActive()) {
+                if ($oAsignaturaOpcionalGenerica === null || !$oAsignaturaOpcionalGenerica->isActive()) {
                     continue;
                 }
             } else {
@@ -231,7 +238,7 @@ final class Tesera
                 'id_nivel' => $idNivel,
                 'id_asignatura' => $idAsig,
                 'nombre_asignatura' => $oAsig->getNombreAsignaturaVo()->value(),
-                'nombre_corto' => $oAsig->getNombre_corto(),
+                'nombre_corto' => (string) ($oAsig->getNombre_corto() ?? ''),
                 'fecha' => $oNota->getF_acta(),
                 'id_situacion' => (int)$oNota->getId_situacion(),
                 'bAprobada' => $oNota->isAprobada(),
@@ -260,6 +267,9 @@ final class Tesera
     public function datosParaVistaTesera(int $idNom): array
     {
         $oPersona = Persona::findPersonaEnGlobal($idNom);
+        if ($oPersona === null) {
+            throw new \RuntimeException(sprintf('Persona no encontrada: %d', $idNom));
+        }
         $ap_nom = $oPersona->getPrefApellidosNombre();
         $centro = $oPersona->getCentro_o_dl();
 
@@ -291,9 +301,11 @@ final class Tesera
                 continue;
             }
 
+            $rowIdNivelAsig = $row['id_nivel_asig'];
+            $rowIdNivel = $row['id_nivel'];
             while (
-                (int)$oAsig->getId_nivel() < (int)$row['id_nivel_asig']
-                && (int)$row['id_nivel'] < self::ID_NIVEL_MAX_CUADRIENIO
+                (int)$oAsig->getId_nivel() < $rowIdNivelAsig
+                && $rowIdNivel < self::ID_NIVEL_MAX_CUADRIENIO
                 && $a < $numAsigTotal
             ) {
                 $i++;
@@ -302,7 +314,7 @@ final class Tesera
                 $numCreditosTotal += (float)$oAsig->getCreditos();
             }
 
-            if ((int)$oAsig->getId_nivel() === (int)$row['id_nivel_asig']) {
+            if ((int)$oAsig->getId_nivel() === $rowIdNivelAsig) {
                 $i++;
                 $tabla[$i] = $this->filaAprobada($oAsig, $row);
 
@@ -333,7 +345,7 @@ final class Tesera
     }
 
     /**
-     * @return array{id_nivel: int, asignatura: string, nota: int, fecha: string|int, bAprobada: string}
+     * @return array{id_nivel: int, asignatura: string, nota: int, fecha: string, bAprobada: string}
      */
     private function filaPendiente(Asignatura $oAsig): array
     {
@@ -341,29 +353,30 @@ final class Tesera
             'id_nivel' => (int)$oAsig->getId_nivel(),
             'asignatura' => (string)$oAsig->getNombre_corto(),
             'nota' => -1,
-            'fecha' => -1,
+            'fecha' => '',
             'bAprobada' => 'f',
         ];
     }
 
     /**
-     * @param array<string, mixed> $row fila de `getAsignaturasAprobadas()`.
-     * @return array{id_nivel: int, asignatura: string, nota: mixed, fecha: string, bAprobada: string}
+     * @param array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_corto: string, fecha: \src\shared\domain\value_objects\DateTimeLocal|\src\shared\domain\value_objects\NullDateTimeLocal|null, nota: string|null, bAprobada: bool|string} $row
+     * @return array{id_nivel: int, asignatura: string, nota: string, fecha: string, bAprobada: string}
      */
     private function filaAprobada(Asignatura $oAsig, array $row): array
     {
-        $idAsig = (int)$row['id_asignatura'];
+        $idAsig = (int) $row['id_asignatura'];
+        $nombreCortoRow = (string) $row['nombre_corto'];
         if ($idAsig > self::ID_ASIG_OPCIONAL_UMBRAL && $idAsig < self::ID_ASIG_OPCIONAL_MAX) {
-            $asignatura = $oAsig->getNombre_corto() . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $row['nombre_corto'];
+            $asignatura = $oAsig->getNombre_corto() . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $nombreCortoRow;
         } else {
             $asignatura = (string)$oAsig->getNombre_corto();
         }
         return [
             'id_nivel' => (int)$oAsig->getId_nivel(),
             'asignatura' => $asignatura,
-            'nota' => $row['nota'],
-            'fecha' => $row['fecha']->getFromLocal(),
-            'bAprobada' => $row['bAprobada'],
+            'nota' => (string) ($row['nota'] ?? ''),
+            'fecha' => $row['fecha']?->getFromLocal() ?? '',
+            'bAprobada' => (string) $row['bAprobada'],
         ];
     }
 }

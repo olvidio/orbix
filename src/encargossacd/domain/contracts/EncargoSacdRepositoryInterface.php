@@ -17,15 +17,21 @@ use src\encargossacd\domain\entity\EncargoSacd;
 interface EncargoSacdRepositoryInterface
 {
 
+    /**
+     * @param list<int> $a_Id_enc
+     */
+    /**
+     * @param list<int> $a_Id_enc
+     */
     public function deleteEncargos(array $a_Id_enc): string;
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo EncargoSacd
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo EncargoSacd
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<EncargoSacd> Una colección de objetos de tipo EncargoSacd
      */
     public function getEncargosSacd(array $aWhere = [], array $aOperators = []): array;
 
@@ -46,14 +52,14 @@ interface EncargoSacdRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool;
+    public function datosById(int $id_item): array|false;
 
     /**
      * Busca la clase con id_item en el repositorio.
      */
     public function findById(int $id_item): ?EncargoSacd;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

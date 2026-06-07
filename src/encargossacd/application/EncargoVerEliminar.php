@@ -9,25 +9,32 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
  */
 final class EncargoVerEliminar
 {
+
+    public function __construct(
+        private EncargoRepositoryInterface $encargoRepository
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array{error: string}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
         $sel = $input['sel'] ?? null;
         if (!is_array($sel) || $sel === []) {
             return ['error' => ''];
         }
-        $id_enc = (int)explode('#', (string)$sel[0], 2)[0];
+        $first = $sel[0] ?? '';
+        $token = is_string($first) ? $first : (is_scalar($first) ? (string) $first : '');
+        $id_enc = (int) explode('#', $token, 2)[0];
 
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $oEncargo = $EncargoRepository->findById($id_enc);
+        $oEncargo = $this->encargoRepository->findById($id_enc);
         if ($oEncargo === null) {
             return ['error' => sprintf(_('No se encuentra el encargo %d'), $id_enc)];
         }
-        if ($EncargoRepository->Eliminar($oEncargo) === false) {
-            return ['error' => _('hay un error, no se ha eliminado') . "\n" . $EncargoRepository->getErrorTxt()];
+        if ($this->encargoRepository->Eliminar($oEncargo) === false) {
+            return ['error' => _('hay un error, no se ha eliminado') . "\n" . $this->encargoRepository->getErrorTxt()];
         }
 
         return ['error' => ''];

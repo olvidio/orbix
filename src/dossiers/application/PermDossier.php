@@ -4,6 +4,7 @@ namespace src\dossiers\application;
 
 use src\actividades\domain\entity\TiposActividades;
 use src\personas\domain\entity\Persona;
+use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use function src\shared\domain\helpers\is_true;
 
@@ -18,8 +19,13 @@ use function src\shared\domain\helpers\is_true;
  */
 class PermDossier
 {
+    private static function havePermOficina(string $perm): bool
+    {
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        return $oPerm instanceof XPermisos && $oPerm->have_perm_oficina($perm);
+    }
 
-    static function permiso($r, $rw, $depende, $pau, $id_pau)
+    public static function permiso(int $r, int $rw, mixed $depende, string $pau, int $id_pau): int
     {
         /*	$r = número referente al bit de lectura en decimal
 			$rw = número referente al bit de lectura y escritura en decimal
@@ -37,7 +43,9 @@ class PermDossier
 
 		*/
 
-        $userbits = $_SESSION['iPermMenus'];
+        $userbits = is_numeric($_SESSION['iPermMenus'] ?? null)
+            ? (int) $_SESSION['iPermMenus']
+            : 0;
 
         $lect = (($userbits & $r)); //true si tiene permiso de lectura
         $escr = (($userbits & $rw)); //true si tiene permiso de escritura
@@ -60,47 +68,47 @@ class PermDossier
             $id_tabla = $oPersona->getId_tabla();
             switch ($id_tabla) {
                 case "n":
-                    if (!$_SESSION['oPerm']->have_perm_oficina('sm')) {
+                    if (!self::havePermOficina('sm')) {
                         return 2;
                     }
                     break;
                 case "x":
-                    if (!$_SESSION['oPerm']->have_perm_oficina('nax')) {
+                    if (!self::havePermOficina('nax')) {
                         return 2;
                     }
                     break;
                 case "a":
-                    if (!$_SESSION['oPerm']->have_perm_oficina('agd')) {
+                    if (!self::havePermOficina('agd')) {
                         return 2;
                     }
                     break;
                 case "s":
-                    if (!$_SESSION['oPerm']->have_perm_oficina('sg')) {
+                    if (!self::havePermOficina('sg')) {
                         return 2;
                     }
                     break;
                 case "sssc":
-                    if (!$_SESSION['oPerm']->have_perm_oficina('des')) {
+                    if (!self::havePermOficina('des')) {
                         return 2;
                     }
                     break;
                 case "pn":
-                    if (!$_SESSION['oPerm']->have_perm_oficina('sm')) {
+                    if (!self::havePermOficina('sm')) {
                         return 2;
                     }
                     break;
                 case "px":
-                    if (!$_SESSION['oPerm']->have_perm_oficina('nax')) {
+                    if (!self::havePermOficina('nax')) {
                         return 2;
                     }
                     break;
                 case "pa":
-                    if (!$_SESSION['oPerm']->have_perm_oficina('agd')) {
+                    if (!self::havePermOficina('agd')) {
                         return 2;
                     }
                     break;
                 case "psssc":
-                    if (!$_SESSION['oPerm']->have_perm_oficina('des')) {
+                    if (!self::havePermOficina('des')) {
                         return 2;
                     }
                     break;
@@ -110,7 +118,10 @@ class PermDossier
         return $rta;
     }
 
-    function perm_activ_pers($id_tabla)
+    /**
+     * @return array<int|string, array<string, mixed>>
+     */
+    public function perm_activ_pers(string $id_tabla): array
     {
         // Esta función devuelve un array con los permisos (si o no) para asignar las
         // actividades (según el tipo: nº) según el tipo de persona de que se trate y
@@ -188,7 +199,7 @@ class PermDossier
         switch ($id_tabla) {
             case "n" : //------------------------- numerarios -------------------
             case "pn":
-                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                if (self::havePermOficina('sm')) {
                     $ref_perm_n = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 1),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 1),
@@ -212,7 +223,7 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_n);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                if (self::havePermOficina('agd')) {
                     $ref_perm_agd = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -236,13 +247,13 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_agd);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+                if (self::havePermOficina('sg')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sg);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
+                if (self::havePermOficina('sr')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+                if (self::havePermOficina('est')) {
                     $ref_perm_est = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -266,13 +277,13 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_est);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
             case "a" : //------------------------- agregados -------------------
             case "pa":
-                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                if (self::havePermOficina('sm')) {
                     $ref_perm_n = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 1),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -296,7 +307,7 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_n);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                if (self::havePermOficina('agd')) {
                     $ref_perm_agd = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -320,13 +331,13 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_agd);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+                if (self::havePermOficina('sg')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sg);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
+                if (self::havePermOficina('sr')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+                if (self::havePermOficina('est')) {
                     $ref_perm_est = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 1),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -350,13 +361,13 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_est);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
             case "x" : //------------------------- nax -------------------
             case "px":
-                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                if (self::havePermOficina('sm')) {
                     $ref_perm_n = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -379,7 +390,7 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_n);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                if (self::havePermOficina('agd')) {
                     $ref_perm_agd = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -402,7 +413,7 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_agd);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                if (self::havePermOficina('nax')) {
                     $ref_perm_x = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 1),
@@ -425,13 +436,13 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_x);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+                if (self::havePermOficina('sg')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sg);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
+                if (self::havePermOficina('sr')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+                if (self::havePermOficina('est')) {
                     $ref_perm_est = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -454,27 +465,27 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_est);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
             case "s": //------------------------- supernumerarios -------------------
-                if ($_SESSION['oPerm']->have_perm_oficina('agd') || $_SESSION['oPerm']->have_perm_oficina('sm') || $_SESSION['oPerm']->have_perm_oficina('sg')) {
+                if (self::havePermOficina('agd') || self::havePermOficina('sm') || self::havePermOficina('sg')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sg);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
+                if (self::havePermOficina('sr')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+                if (self::havePermOficina('est')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
             case "psssc":
             case "sssc": //------------------------- sss+ -------------------
-                if ($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
             default;
@@ -492,7 +503,10 @@ class PermDossier
         return $ref_perm2;
     }
 
-    function perm_pers_activ($id_tipo_activ, bool $dl_propia = TRUE)
+    /**
+     * @return array<int|string, array<string, mixed>|int>
+     */
+    public function perm_pers_activ(int|string $id_tipo_activ, bool $dl_propia = true): array
     {
         // Esta función devuelve un array con los permisos (si o no) para añadir las
         // personas (agd, n...) según el tipo de actividad de que se trate y
@@ -517,7 +531,7 @@ class PermDossier
 
         switch ($asistentes) {
             case "sss+" :
-                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('des')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -528,7 +542,7 @@ class PermDossier
                 }
                 break;
             case "n" :
-                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                if (self::havePermOficina('sm')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -541,8 +555,8 @@ class PermDossier
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
                 // cv de cl + sem inv
-                if ($_SESSION['oPerm']->have_perm_oficina('agd')
-                    and (substr($id_tipo_activ, 0, 4) == "1123"
+                if (self::havePermOficina('agd')
+                    and (substr((string) $id_tipo_activ, 0, 4) == "1123"
                         || $id_tipo_activ == "114025"
                         || $id_tipo_activ == "114026")
                 ) {
@@ -557,7 +571,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                if (self::havePermOficina('nax')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -569,7 +583,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -581,7 +595,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+                if (self::havePermOficina('est')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -595,7 +609,7 @@ class PermDossier
                 }
                 break;
             case "agd":
-                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                if (self::havePermOficina('sm')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -607,7 +621,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                if (self::havePermOficina('agd')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -619,7 +633,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                if (self::havePermOficina('nax')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -631,7 +645,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('des')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -644,7 +658,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+                if (self::havePermOficina('est')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -658,7 +672,7 @@ class PermDossier
                 }
                 break;
             case "s":
-                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                if (self::havePermOficina('sm')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -670,7 +684,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                if (self::havePermOficina('agd')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -682,7 +696,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                if (self::havePermOficina('nax')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -694,7 +708,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+                if (self::havePermOficina('sg')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -706,7 +720,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('des')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -720,7 +734,7 @@ class PermDossier
                 }
                 break;
             case "nax":
-                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                if (self::havePermOficina('sm')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -732,7 +746,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                if (self::havePermOficina('agd')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -744,7 +758,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                if (self::havePermOficina('nax')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -756,7 +770,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+                if (self::havePermOficina('sg')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -768,7 +782,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('des')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -782,7 +796,7 @@ class PermDossier
                 }
                 break;
             case "sg":
-                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                if (self::havePermOficina('sm')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -794,7 +808,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                if (self::havePermOficina('agd')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -806,7 +820,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                if (self::havePermOficina('nax')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -818,7 +832,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+                if (self::havePermOficina('sg')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -830,7 +844,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('des')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -846,7 +860,7 @@ class PermDossier
                 }
                 break;
             case "sr":
-                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                if (self::havePermOficina('sm')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -858,7 +872,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                if (self::havePermOficina('agd')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -870,7 +884,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                if (self::havePermOficina('nax')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -882,7 +896,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+                if (self::havePermOficina('sg')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -894,7 +908,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
+                if (self::havePermOficina('sr')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -906,7 +920,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                if (self::havePermOficina('des')) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -938,7 +952,12 @@ class PermDossier
      *
      *
      */
-    function daniBoleanOr($ref_perm, $ref_perm_of)
+    /**
+     * @param array<int|string, array<string, mixed>> $ref_perm
+     * @param array<int|string, array<string, mixed>> $ref_perm_of
+     * @return array<int|string, array<string, mixed>>
+     */
+    private function daniBoleanOr(array $ref_perm, array $ref_perm_of): array
     {
         $ref_perm_or = [];
         foreach ($ref_perm as $asis => $a) {
@@ -961,11 +980,11 @@ class PermDossier
     /**
      * Para no sobreescribir los permisos. Aplico un logical OR
      *
-     * @param array $ref_perm
-     * @param array $ref_perm1
-     * @return array
+     * @param array<int|string, array<string, mixed>> $ref_perm
+     * @param array<int|string, array<string, mixed>> $ref_perm1
+     * @return array<int|string, array<string, mixed>>
      */
-    private function addPerm(array $ref_perm, array $ref_perm1)
+    private function addPerm(array $ref_perm, array $ref_perm1): array
     {
         if (empty($ref_perm)) {
             return $ref_perm1;

@@ -70,22 +70,36 @@ class PermUsuarioActividad
 
     public function getId_tipo_activ_txt(): ?string
     {
-        return $this->id_tipo_activ_txt?->value();
+        if ($this->id_tipo_activ_txt === null) {
+            return null;
+        }
+
+        return sprintf('%06d', $this->id_tipo_activ_txt->value());
     }
-    public function getIdTipoActivTxtVo(): ActividadTipoIdTxt
+
+    public function getIdTipoActivTxtVo(): ?ActividadTipoIdTxt
     {
         return $this->id_tipo_activ_txt;
     }
 
     public function setId_tipo_activ_txt(?string $id_tipo_activ_txt = null): void
     {
-        $this->id_tipo_activ_txt = ActividadTipoIdTxt::fromString($id_tipo_activ_txt);
+        $this->id_tipo_activ_txt = $id_tipo_activ_txt !== null && $id_tipo_activ_txt !== ''
+            ? ActividadTipoIdTxt::fromString($id_tipo_activ_txt)
+            : null;
     }
+
     public function setIdTipoActivTxtVo(ActividadTipoIdTxt|string|int|null $id_tipo_activ_txt): void
     {
-        $this->id_tipo_activ_txt = $id_tipo_activ_txt instanceof ActividadTipoIdTxt
-            ? $id_tipo_activ_txt
-            : ActividadTipoIdTxt::fromString($id_tipo_activ_txt);
+        if ($id_tipo_activ_txt instanceof ActividadTipoIdTxt) {
+            $this->id_tipo_activ_txt = $id_tipo_activ_txt;
+            return;
+        }
+        if ($id_tipo_activ_txt === null || $id_tipo_activ_txt === '') {
+            $this->id_tipo_activ_txt = null;
+            return;
+        }
+        $this->id_tipo_activ_txt = ActividadTipoIdTxt::fromString((string) $id_tipo_activ_txt);
     }
 
 

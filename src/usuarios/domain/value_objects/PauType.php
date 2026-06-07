@@ -20,6 +20,9 @@ final class PauType
     public const PAU_NOM = 'nom'; // Persona
     public const PAU_SACD = 'sacd'; // Sacd
 
+    /**
+     * @return list<string>
+     */
     public static function getArrayPau(): array
     {
         $a_pau = [

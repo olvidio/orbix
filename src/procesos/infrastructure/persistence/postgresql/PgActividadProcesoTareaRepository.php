@@ -2,6 +2,10 @@
 
 namespace src\procesos\infrastructure\persistence\postgresql;
 
+use src\shared\infrastructure\logging\GestorErrores;
+
+use src\shared\infrastructure\GlobalPdo;
+
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\config\ConfigGlobal;
@@ -40,11 +44,18 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
     /** @var list<string> */
     private array $avisosGenerarProceso = [];
 
-    public function __construct()
-    {
-        $oDbl = $GLOBALS['oDBC'];
+    public function __construct(
+        private readonly TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        private readonly CasaRepositoryInterface $casaRepository,
+        private readonly ActividadAllRepositoryInterface $actividadAllRepository,
+        private readonly ActividadDlRepositoryInterface $actividadDlRepository,
+        private readonly ActividadExRepositoryInterface $actividadExRepository,
+        private readonly TareaProcesoRepositoryInterface $tareaProcesoRepository,
+        private readonly ProcesoTipoRepositoryInterface $procesoTipoRepository,
+    ) {
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl_select($oDbl_Select);
          if (ConfigGlobal::mi_sfsv() === 1) {
             $this->setNomTabla('a_actividad_proceso_sv');
@@ -53,7 +64,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         }
     }
 
-    public function borrarFaseTareaInexistente($id_tipo_proceso, $id_fase, $id_tarea): void
+    public function borrarFaseTareaInexistente(int $id_tipo_proceso, int $id_fase, int $id_tarea): void
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -96,12 +107,8 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                         SELECT $id_tipo_proceso, id_activ, $id_fase, $id_tarea FROM $temp_table";
         $this->pdoQuery($oDbl, $sQry_INSERT, __METHOD__, __FILE__, __LINE__);
     }
-
     /**
-     * retorna un array amb les fases i el seu estat.
-     *
-     * @param integer $iid_activ
-     * @return array|bool
+     * @return array<string, bool>
      */
     public function getListaFaseEstado(int $iid_activ): array
     {
@@ -110,14 +117,19 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $sQuery = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ
                 ";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aFasesEstado = [];
         foreach ($stmt as $aDades) {
-            $id_fase = $aDades['id_fase'];
-            $id_tarea = $aDades['id_tarea'];
-            $completado = $aDades['completado'];
-            $f = "$id_fase#$id_tarea";
-            $aFasesEstado[$f] = $completado;
+            if (!is_array($aDades)) {
+                continue;
+            }
+            $id_fase = isset($aDades['id_fase']) && is_numeric($aDades['id_fase']) ? (int) $aDades['id_fase'] : 0;
+            $id_tarea = isset($aDades['id_tarea']) && is_numeric($aDades['id_tarea']) ? (int) $aDades['id_tarea'] : 0;
+            $f = $id_fase . '#' . $id_tarea;
+            $aFasesEstado[$f] = is_true($aDades['completado'] ?? false);
         }
         return $aFasesEstado;
     }
@@ -125,9 +137,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
     /**
      * Devuelve el estado de la fase ("ok atn sacd" que es la 5)
      * o FALSE si falla.
-     *
-     * @param $iid_activ
-     * @return 't'|'f'|FALSE
+     *     * @param int $iid_activ
      */
     public function getSacdAprobado(int $iid_activ): ?bool
     {
@@ -140,10 +150,15 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
 
         $sQry = "SELECT completado FROM $nom_tabla WHERE id_activ=" . $iid_activ . " AND id_fase=$id_fase_atn_sacd ";
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return null;
+        }
         if ($stmt->rowCount() === 1) {
             $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
-            return $aDades['completado'];
+            if (!is_array($aDades)) {
+                return null;
+            }
+            return is_true($aDades['completado']);
         }
         return null;
     }
@@ -172,14 +187,13 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             return TRUE;
         }
         $iid_tipo_activ = $oActividad->getIdTipoActivVo()->value();
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-        $oTipoDeActividad = $TipoDeActividadRepository->findById($iid_tipo_activ);
+        $oTipoDeActividad = $this->tipoDeActividadRepository->findById($iid_tipo_activ);
 
         if (empty($oTipoDeActividad)) {
             $this->registrarAvisoGenerarProceso(sprintf(_("No existe este tipo de actividad: %s"), $iid_tipo_activ));
             return TRUE;
         }
-        $dl_org = $oActividad->getDl_org();
+        $dl_org = $oActividad->getDl_org() ?? '';
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
 
         if (empty($isfsv)) {
@@ -196,7 +210,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 $this->setNomTabla('a_actividad_proceso_sf');
             }
             if ($dl_org_no_f === ConfigGlobal::mi_dele()) {
-                $id_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso($sfsv);
+                $id_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso((int) $sfsv);
             } else {
                 // NO se genera si:
                 // - es una actividad de otra dl,
@@ -204,12 +218,13 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 // - y no se hace en una casa de la dl.
                 if ($isfsv != $sfsv) {
                     $id_ubi = $oActividad->getId_ubi();
-                    $dl_casa = $GLOBALS['container']->get(CasaRepositoryInterface::class)->findById($id_ubi)?->getDlVo()->value();
+                    $oCasa = $this->casaRepository->findById($id_ubi ?? 0);
+                    $dl_casa = $oCasa?->getDlVo()?->value();
                     if ($dl_casa != ConfigGlobal::mi_dele()) {
                         continue;
                     }
                 }
-                $id_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex($sfsv);
+                $id_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex((int) $sfsv);
             }
             if (empty($id_tipo_proceso)) {
                 $this->registrarAvisoGenerarProceso(
@@ -222,12 +237,12 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             if ($force === FALSE) {
                 $cActividadProcesoTarea = $this->getActividadProcesoTareas(['id_activ' => $iid_activ]);
                 if (empty($cActividadProcesoTarea)) {
-                    $iid_fase[$sfsv] = $this->generar($iid_activ, $id_tipo_proceso, $sfsv, $force, $oActividad);
+                    $iid_fase[$sfsv] = $this->generar($id_activ, $id_tipo_proceso, $sfsv, $force, $oActividad);
                 } else {
-                    $iid_fase[$sfsv] = $cActividadProcesoTarea[0]->getIdFaseVo()->value();
+                    $iid_fase[$sfsv] = $cActividadProcesoTarea[0]->getIdFaseVo()?->value() ?? 0;
                 }
             } else {
-                $iid_fase[$sfsv] = $this->generar($iid_activ, $id_tipo_proceso, $sfsv, $force, $oActividad);
+                $iid_fase[$sfsv] = $this->generar($id_activ, $id_tipo_proceso, $sfsv, $force, $oActividad);
             }
         }
 
@@ -254,12 +269,11 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
     {
         foreach (
             [
-                ActividadAllRepositoryInterface::class,
-                ActividadDlRepositoryInterface::class,
-                ActividadExRepositoryInterface::class,
-            ] as $repositoryClass
+                $this->actividadAllRepository,
+                $this->actividadDlRepository,
+                $this->actividadExRepository,
+            ] as $repository
         ) {
-            $repository = $GLOBALS['container']->get($repositoryClass);
             $oActividad = $repository->findById($id_activ);
             if ($oActividad !== null) {
                 return $oActividad;
@@ -269,10 +283,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
     }
 
     /**
-     * retorna un array amb les fases completades.
-     *
-     * @param integer iid_activ
-     * @return array|bool
+     * @return list<int>
      */
     public function getFasesCompletadas(int $iid_activ): array
     {
@@ -284,30 +295,30 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         //        AND completado='t' ";
         $sQuery = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ ";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aFasesCompletadas = [];
         if ($stmt->rowCount() > 0) {
             $aFasesCompletadas = [];
             foreach ($stmt as $aDades) {
-                if (is_true($aDades['completado'])) {
-                    $aFasesCompletadas[] = $aDades['id_fase'];
+                if (!is_array($aDades)) {
+                    continue;
+                }
+                if (is_true($aDades['completado'] ?? false)) {
+                    if (isset($aDades['id_fase']) && is_numeric($aDades['id_fase'])) {
+                        $aFasesCompletadas[] = (int) $aDades['id_fase'];
+                    }
                 }
             }
             return $aFasesCompletadas;
         }
 
         // no existe el proceso:
-        $id_fase_primera = $this->generarProceso($iid_activ);
-        return [$id_fase_primera];
+        $id_fase_primera = $this->generarProceso((string) $iid_activ);
+        return is_int($id_fase_primera) ? [$id_fase_primera] : [];
     }
-
-    /**
-     * retorna si té la fase completada o no.
-     *
-     * @param integer iid_activ
-     * @param integer iid_fase
-     * @return bool
-     */
     public function faseCompletada(int $iid_activ, int $iid_fase): bool
     {
         $oDbl = $this->getoDbl_Select();
@@ -316,24 +327,29 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         // porque hay que distinguirlo de si existe el proceso o no, y hay que crearlo.
         $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ AND id_fase=$iid_fase ";
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         if ($stmt->rowCount() == 1) {
             // aunque realmente solo debería existir un fila
             foreach ($stmt as $aDades) {
+                if (!is_array($aDades)) {
+                    continue;
+                }
                 return is_true($aDades['completado']);
             }
         } else {
             // no existe el proceso:
-            $this->generarProceso($iid_activ);
-            return FALSE;
+            $this->generarProceso((string) $iid_activ);
+            return false;
         }
-        return FALSE;
+        return false;
     }
 
     /**
      * Borra el procés per l'activitat.
      *
-     * @param integer iid_activ
+     * @param int $iid_activ
      */
     private function borrar(int $iid_activ): void
     {
@@ -349,17 +365,17 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
      * Genera el procés per l'activitat, segons el tipus de procés.
      * retorna el id_fase de la primera fase.
      *
-     * @param integer iid_activ
-     * @param integer iid_tipo_proceso
+     * @param int $iid_activ
+     * @param int $iid_tipo_proceso
      * @return int id_fase.
      */
     private function generar(
-        $iid_activ = '',
-        $iid_tipo_proceso = '',
-        $isfsv = '',
-        $force = FALSE,
+        int $iid_activ,
+        int $iid_tipo_proceso,
+        int|string $isfsv,
+        bool $force = false,
         ?ActividadAll $oActividad = null,
-    ) {
+    ): int {
         $this->borrar($iid_activ);
 
         // ordena por fases previas, no importa la fase: simplemente las vacias primero
@@ -368,10 +384,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             'id_tipo_proceso' => $iid_tipo_proceso,
             '_ordre' => '(json_fases_previas::json->0)::text DESC'
         ];
-        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
-        $cTareasProceso = $TareaProcesoRepository->getTareasProceso($aWhere);
-
-        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso($aWhere);
 
         // OJO: cuando se accede actividades ya existentes,
         // hay que intentar conservar el status que tenga. Para las actividades anteriores
@@ -379,13 +392,12 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         // Para las posteriores, sólo la primera fase del status.
         // Vamos a establecer la fecha de hoy como criterio para distinguir entre
         // actividades anteriores y posteriores.
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         if ($oActividad === null) {
             $oActividad = $this->findActividadForProceso((int) $iid_activ);
         }
         if ($oActividad === null) {
             $this->registrarAvisoGenerarProceso(sprintf(_("La actividad: %s ya no existe"), $iid_activ));
-            return FALSE;
+            return 0;
         }
         $nom_activ = $oActividad->getNom_activ();
         $statusActividad = $oActividad->getStatusVo()->value();
@@ -396,7 +408,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             $this->registrarAvisoGenerarProceso(
                 sprintf(_("error al generar el proceso de la actividad: '%s'. Está para borrar."), $nom_activ)
             );
-            return FALSE;
+            return 0;
         }
         // Si es anterior a hoy, mantengo el status de la actividad.
         $oFini = $oActividad->getF_ini();
@@ -404,24 +416,24 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         if ($oFini < $oHoy && $force === FALSE) {
             // Anterior
             foreach ($cTareasProceso as $oTareaProceso) {
-                $id_fase = $oTareaProceso->getIdFaseVo()?->value();
-                $id_tarea = $oTareaProceso->getIdTareaVo()?->value();
+                $id_fase = $oTareaProceso->getIdFaseVo()->value();
+                $id_tarea = $oTareaProceso->getIdTareaVo()->value();
                 $statusFase = $oTareaProceso->getStatusVo()->value();
                 if ($statusFase <= $statusActividad) {
-                    $completado = 't';
+                    $completado = true;
                 } else {
-                    $completado = 'f';
+                    $completado = false;
                 }
-                $newIdItem = $ActividadProcesoTareaRepository->getNewId();
+                $newIdItem = $this->getNewId();
                 $oActividadProcesoTarea = new ActividadProcesoTarea();
                 $oActividadProcesoTarea->setId_item($newIdItem);
                 //??? $oActividadProcesoTarea->setSfsvVo($isfsv);
-                $oActividadProcesoTarea->setIdTipoProcesoVo($iid_tipo_proceso);
-                $oActividadProcesoTarea->setIdActividadVo($iid_activ);
+                    $oActividadProcesoTarea->setIdTipoProcesoVo($iid_tipo_proceso);
+                    $oActividadProcesoTarea->setIdActividadVo($iid_activ);
                 $oActividadProcesoTarea->setIdFaseVo($id_fase);
                 $oActividadProcesoTarea->setIdTareaVo($id_tarea);
-                $oActividadProcesoTarea->setCompletado($completado);
-                if ($ActividadProcesoTareaRepository->Guardar($oActividadProcesoTarea) === false) {
+                $oActividadProcesoTarea->setCompletado(is_true($completado));
+                if ($this->Guardar($oActividadProcesoTarea) === false) {
                     $this->registrarAvisoGenerarProceso(
                         "1.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea"
                     );
@@ -435,10 +447,10 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 $statusNew = '';
                 foreach ($cTareasProceso as $oTareaProceso) {
                     $p++;
-                    $id_fase = $oTareaProceso->getIdFaseVo()?->value();
-                    $id_tarea = $oTareaProceso->getIdTareaVo()?->value();
+                    $id_fase = $oTareaProceso->getIdFaseVo()->value();
+                    $id_tarea = $oTareaProceso->getIdTareaVo()->value();
                     $statusFase = $oTareaProceso->getStatusVo()->value();
-                    $newIdItem = $ActividadProcesoTareaRepository->getNewId();
+                    $newIdItem = $this->getNewId();
                     $oActividadProcesoTarea = new ActividadProcesoTarea();
                     $oActividadProcesoTarea->setId_item($newIdItem);
                     //??? $oActividadProcesoTarea->setSfsvVo($isfsv);
@@ -447,34 +459,35 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                     $oActividadProcesoTarea->setIdFaseVo($id_fase);
                     $oActividadProcesoTarea->setIdTareaVo($id_tarea);
                     if ($p === 1) {
-                        $oActividadProcesoTarea->setCompletado('t'); // Marco la primera fase como completado.
+                        $oActividadProcesoTarea->setCompletado(true); // Marco la primera fase como completado.
                         // marco el status correspondiente en la actividad. Hay que hacerlo al final para no entrar en
                         // un bucle recurrente al modificar una actividad nueva que todavía no tienen el proceso.
                         $statusNew = $statusFase;
                     }
-                    if ($ActividadProcesoTareaRepository->Guardar($oActividadProcesoTarea) === false) {
+                    if ($this->Guardar($oActividadProcesoTarea) === false) {
                         $this->registrarAvisoGenerarProceso(
                             "2.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea"
                         );
                     }
                 }
                 // cambiar el status de la actividad para que se ajuste al de la fase.
-                $dl_org = $oActividad->getDl_org();
+                $dl_org = $oActividad->getDl_org() ?? '';
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
                 // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
-                if ($dl_org_no_f === ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
-                    $oActividad->setStatusVo($statusNew);
-                    $ActividadAllRepository->Guardar($oActividad, false); // registrarCambios=false, para que no anote el cambio.
+                $oPerm = $_SESSION['oPerm'] ?? null;
+                if ($dl_org_no_f === ConfigGlobal::mi_delef() && $oPerm instanceof \src\permisos\domain\XPermisos && $oPerm->have_perm_oficina('des')) {
+                    $oActividad->setStatusVo((int) $statusNew);
+                    $this->actividadAllRepository->Guardar($oActividad, false); // registrarCambios=false, para que no anote el cambio.
                 }
             } else {
                 // conservo el status
                 // al hacer 'insert' no marca dependencias (sólo con 'update').
                 // por tanto doy dos vueltas, una para crear las fases y otra para marcar las completadas
                 foreach ($cTareasProceso as $oTareaProceso) {
-                    $id_fase = $oTareaProceso->getIdFaseVo()?->value();
-                    $id_tarea = $oTareaProceso->getIdTareaVo()?->value();
+                    $id_fase = $oTareaProceso->getIdFaseVo()->value();
+                    $id_tarea = $oTareaProceso->getIdTareaVo()->value();
                     $statusFase = $oTareaProceso->getStatusVo()->value();
-                    $newIdItem = $ActividadProcesoTareaRepository->getNewId();
+                    $newIdItem = $this->getNewId();
                     $oActividadProcesoTarea = new ActividadProcesoTarea();
                     $oActividadProcesoTarea->setId_item($newIdItem);
                     //??? $oActividadProcesoTarea->setSfsvVo($isfsv);
@@ -482,7 +495,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                     $oActividadProcesoTarea->setIdActividadVo($iid_activ);
                     $oActividadProcesoTarea->setIdFaseVo($id_fase);
                     $oActividadProcesoTarea->setIdTareaVo($id_tarea);
-                    if ($ActividadProcesoTareaRepository->Guardar($oActividadProcesoTarea) === false) {
+                    if ($this->Guardar($oActividadProcesoTarea) === false) {
                         $this->registrarAvisoGenerarProceso(
                             "3.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea"
                         );
@@ -514,7 +527,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                         }
                     }
                     if (is_true($completado)) {
-                        $oActividadProcesoTarea->setCompletado($completado);
+                        $oActividadProcesoTarea->setCompletado(is_true($completado));
                         if ($this->Guardar($oActividadProcesoTarea) === false) {
                             $this->registrarAvisoGenerarProceso(
                                 "4.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea"
@@ -528,16 +541,15 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         if (!empty($cTareasProceso[0])) {
             return $cTareasProceso[0]->getIdFaseVo()->value();
         } else {
-            $ProcesoTipoRepository = $GLOBALS['container']->get(ProcesoTipoRepositoryInterface::class);
-            $oProcesoTipo = $ProcesoTipoRepository->findById($iid_tipo_proceso);
-            $nom_proceso = empty($oProcesoTipo->getNom_proceso()) ? $iid_tipo_proceso : $oProcesoTipo->getNom_proceso();
+            $oProcesoTipo = $this->procesoTipoRepository->findById((int) $iid_tipo_proceso);
+            $nom_proceso = ($oProcesoTipo === null || $oProcesoTipo->getNom_proceso() === '') ? $iid_tipo_proceso : $oProcesoTipo->getNom_proceso();
             $nom_activ = empty($nom_activ) ? $iid_activ : $nom_activ;
 
             $msg = sprintf(_("error al generar el proceso de la actividad: '%s'. Tipo de proceso: '%s' para sf/sv: %s."), $nom_activ, $nom_proceso, $isfsv);
             $msg .= ' ' . _("Probablemente no esté definido el proceso");
             $this->registrarAvisoGenerarProceso($msg);
         }
-        return true;
+        return 0;
     }
 
     /**
@@ -577,17 +589,21 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 observ                   = :observ";
         if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$id_item'")) === FALSE) {
             $sClauError = 'ActividadProcesoTarea.update.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return FALSE;
+            if (($_SESSION['oGestorErrores'] ?? null) instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+            }
+            return false;
         } else {
             try {
                 $oDblSt->execute($aDades);
             } catch (\PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
+                $err_txt = $e->errorInfo[2] ?? $e->getMessage();
+                $this->setErrorTxt(is_string($err_txt) ? $err_txt : $e->getMessage());
                 $sClauError = 'ActividadProcesoTarea.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return FALSE;
+                if (($_SESSION['oGestorErrores'] ?? null) instanceof GestorErrores) {
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, (string) __LINE__, __FILE__);
+                }
+                return false;
             }
         }
         return TRUE;
@@ -598,9 +614,9 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
     /**
      * devuelve una colección (array) de objetos de tipo ActividadProcesoTarea
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActividadProcesoTarea
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ActividadProcesoTarea> Una colección de objetos de tipo ActividadProcesoTarea
      */
     public function getActividadProcesoTareas(array $aWhere = [], array $aOperators = []): array
     {
@@ -637,27 +653,35 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $ActividadProcesoTarea = ActividadProcesoTarea::fromArray($aDatos);
             $ActividadProcesoTareaSet->add($ActividadProcesoTarea);
         }
-        return $ActividadProcesoTareaSet->getTot();
+        return array_values($ActividadProcesoTareaSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -702,6 +726,10 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
+        /** @var \PDOStatement $stmt */
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -711,6 +739,9 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -722,17 +753,27 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+
+        return $result;
     }
 
 
@@ -742,16 +783,22 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
     public function findById(int $id_item): ?ActividadProcesoTarea
     {
         $aDatos = $this->datosById($id_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return ActividadProcesoTarea::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('a_actividad_proceso_sv_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

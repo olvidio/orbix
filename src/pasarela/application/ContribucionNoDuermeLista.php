@@ -12,11 +12,19 @@ use src\pasarela\domain\ContribucionNoDuerme;
  */
 final class ContribucionNoDuermeLista
 {
-    public static function execute(): array
-    {
-        $oContribucionNoDuerme = new ContribucionNoDuerme();
+    public function __construct(
+        private readonly ContribucionNoDuerme $contribucionNoDuerme,
+    ) {
+    }
 
-        $a_excepciones_raw = $oContribucionNoDuerme->getExcepciones();
+    /**
+     * @return array{default: string, excepciones: list<array{id_tipo_activ: string, etiqueta: string, valor: string}>}
+     */
+    public function execute(): array
+    {
+        
+
+        $a_excepciones_raw = $this->contribucionNoDuerme->getExcepciones();
         $a_excepciones = [];
         foreach ($a_excepciones_raw as $id_tipo_activ => $valor) {
             $oActividadTipo = new TiposActividades((string)$id_tipo_activ);
@@ -28,7 +36,7 @@ final class ContribucionNoDuermeLista
         }
 
         return [
-            'default' => (string)$oContribucionNoDuerme->getDefault(),
+            'default' => (string)$this->contribucionNoDuerme->getDefault(),
             'excepciones' => $a_excepciones,
         ];
     }

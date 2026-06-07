@@ -31,11 +31,9 @@ class TipoCasa
         return $this->tipo_casa;
     }
 
-    public function setTipoCasaVo(TipoCasaCode|string|null $tipoCasa): void
+    public function setTipoCasaVo(TipoCasaCode|string $vo): void
     {
-        $this->tipo_casa = $tipoCasa instanceof TipoCasaCode
-        ? $tipoCasa
-        : TipoCasaCode::fromNullableString($tipoCasa);
+        $this->tipo_casa = $vo instanceof TipoCasaCode ? $vo : new TipoCasaCode($vo);
     }
 
 
@@ -81,6 +79,231 @@ class TipoCasa
     {
         return 'tipo_casa';
     }
+
+    /**
+
+
+     * @return array<string, mixed>
+
+
+     */
+
+
+    /**
+
+
+
+     * @return array<string, mixed>
+
+
+
+     */
+
+
+
+    /**
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+     */
+
+
+
+
+    /**
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+     */
+
+
+
+
+
+    /**
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+
 
     public function getDatosCampos(): array
     {

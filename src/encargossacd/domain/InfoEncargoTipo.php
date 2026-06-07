@@ -3,6 +3,7 @@
 namespace src\encargossacd\domain;
 
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\entity\EncargoTipo;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -10,8 +11,9 @@ use src\shared\domain\DatosInfoRepo;
 class InfoEncargoTipo extends DatosInfoRepo
 {
 
-    public function __construct()
-    {
+    public function __construct(
+        private EncargoTipoRepositoryInterface $encargoTipoRepository,
+    ) {
         $this->setTxtTitulo(_("tipos de encargos"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este tipo de encargo?"));
         $this->setTxtBuscar(_("buscar un tipo de encargo"));
@@ -23,7 +25,10 @@ class InfoEncargoTipo extends DatosInfoRepo
         $this->setRepositoryInterface(EncargoTipoRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<EncargoTipo>
+     */
+    public function getColeccion(): array
     {
         $aWhere = [];
         $aOperador = [];
@@ -35,8 +40,7 @@ class InfoEncargoTipo extends DatosInfoRepo
         }
         $aWhere['_ordre'] = 'id_tipo_enc';
 
-        $oLista = $GLOBALS['container']->get($this->getRepositoryInterface());
-        $Coleccion = $oLista->getEncargoTipos($aWhere, $aOperador);
+        $Coleccion = $this->encargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 
         return $Coleccion;
     }

@@ -19,6 +19,10 @@ class VerDesaparecidosDeListasData
      * @param array $a_ids Array de IDs de personas Orbix
      * @return array Datos serializables
      */
+    /**
+     * @param list<int> $a_ids
+     * @return array<string, mixed>
+     */
     public function __invoke(string $tipo_persona, array $a_ids): array
     {
         $a_persona_orbix = [];

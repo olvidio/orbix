@@ -1072,3 +1072,131 @@ crudo se parten en endpoint JSON + renderer frontend.
   (excepcion tolerable segun `refactor.md`). La migracion a PHTML +
   `ViewNewPhtml` es una pasada independiente.
 
+---
+
+## Cierre DI + PHPStan (2026-06-06)
+
+Migracion DI del modulo `src/procesos/` siguiendo el patron de
+`profesores`, `certificados`, `permisos` y `cambios`.
+
+### Inventario inicial (antes del cierre DI)
+
+| Capa | Ficheros con `$GLOBALS['container']` | Ocurrencias |
+|------|--------------------------------------|------------:|
+| `infrastructure/ui/http/controllers/` | ~15 | ~30 |
+| `application/` | ~20 | ~40 |
+| `domain/` (Info*, repos legacy) | ~8 | ~20 |
+| `infrastructure/persistence/postgresql/` | ~6 | ~12 |
+| **Total container** | **~27 ficheros** | **~100** |
+
+| Capa | Ficheros con `$GLOBALS['oDB*']` |
+|------|--------------------------------:|
+| `infrastructure/persistence/postgresql/` (6 Pg*) | 6 |
+
+| Frontend `use src\` | Ficheros |
+|--------------------|----------|
+| — | **0** (desde slice 14) |
+
+PHPStan (`phpstan-nobaseline.neon`): **482** errores en `src/procesos/`.
+
+### Estaticos / `new` convertidos a instancia + DI
+
+| Area | Antes | Despues |
+|------|-------|---------|
+| HTTP controllers (23) | `$GLOBALS['container']`, `::execute()`, `new` | `DependencyResolver::get(UseCase::class)` + `input_*` |
+| Application (25 clases) | estaticos / `$GLOBALS` | constructor DI + `execute()` instancia |
+| Domain Info* (3) | `$GLOBALS` en `getDatos()` | constructor con repos inyectados |
+| `ProcesoActividadService` | parcialmente migrado | constructor DI completo |
+
+### Repositorios Pg* (6)
+
+| Repositorio | PDO | Cross-module |
+|-------------|-----|--------------|
+| `PgProcesoTipoRepository` | `GlobalPdo::get('oDB')` | — |
+| `PgTareaProcesoRepository` | idem | — |
+| `PgActividadFaseRepository` | idem | `UsuarioRepository`, `RoleRepository`, `TareaProcesoRepository` |
+| `PgActividadTareaRepository` | idem | — |
+| `PgPermUsuarioActividadRepository` | idem | — |
+| `PgActividadProcesoTareaRepository` | `GlobalPdo::get('oDBC')` | `TipoDeActividadRepository`, `CasaRepository`, `ActividadAll/Dl/ExRepository`, `TareaProcesoRepository`, `ProcesoTipoRepository` |
+
+### `src/procesos/config/dependencies.php`
+
+Registra **6 repos** + **3 Info*** + **2 servicios/helpers** + **22 casos de uso**
+via `autowire()`:
+
+- Repos: `PermUsuarioActividad`, `ActividadFase`, `ActividadTarea`, `ProcesoTipo`,
+  `TareaProceso`, `ActividadProcesoTarea`
+- Info*: `InfoFases`, `InfoTareas`, `InfoProcesoTipo`
+- Application: todos los `*Data`, `*Get`, `*Update`, `*Lista`, `*Generar`,
+  `*Clonar`, `*Regenerar`, `*Depende`, `*Eliminar`, `*Asignar`, `*Cuadro`,
+  `UsuarioPermActiv*`, `ProcesoActividadService`, `FasesActivCambioActividadTipoHtml`
+
+Repos cross-modulo (`TipoDeActividad`, `ActividadAll/Dl/Ex`, `Casa`, `Usuario`,
+`Role`, `Grupo`, etc.) se resuelven desde los `dependencies.php` de sus modulos.
+
+### Cross-module: `permisos`
+
+`src/permisos/config/dependencies.php` inyecta
+`ActividadProcesoTareaRepositoryInterface` y `TareaProcesoRepositoryInterface`
+desde el contenedor global; wiring verificado tras el cierre DI de procesos.
+
+---
+
+## Resultado del cierre DI
+
+| Criterio | Antes | Despues |
+|----------|------:|--------:|
+| `$GLOBALS['container']` en `src/procesos/` | ~100 | **0** |
+| `$GLOBALS['oDB*']` en repos Pg* | 6 | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | 0/23 | **23/23** |
+| `application/` con constructor DI | 0/25 | **25/25** instancia |
+| Casos de uso en `dependencies.php` | 6 repos | **31** entradas `autowire()` |
+| Frontend `use src\` | 0 | **0** |
+
+---
+
+## PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (pre-cierre) | `composer phpstan:file -- src/procesos/` | **482** |
+| 2026-06-06 (cierre DI) | idem | **0** |
+
+Correcciones principales: contratos con tipos de retorno (`array|false`, etc.),
+repos Pg* con guards `$stmt === false`, entidades con setters nullable alineados
+con BD (`id_fase`/`id_tarea`), application con `input_*` helpers, PHPDoc en
+iterables de `ProcesoActividadService`, cross-module deps tipados en constructores.
+
+Fix colateral cross-modulo: `PgCasaRepository::datosById()` retorno `array|false`
+(alinear con `CasaRepositoryInterface`).
+
+---
+
+## Tests
+
+```bash
+php libs/vendor/bin/phpunit --configuration phpunit.xml tests/unit/procesos/
+php libs/vendor/bin/phpunit --configuration phpunit.xml tests/integration/procesos/
+```
+
+| Suite | Resultado |
+|-------|-----------|
+| Unit (`tests/unit/procesos/`) | **189** tests, **310** assertions — OK |
+| Integration (`tests/integration/procesos/`) | **74** tests, **249** assertions — OK |
+
+Tests unitarios de application actualizados a constructor DI (sin mock de
+`$GLOBALS['container']`). Tests de integracion usan `DependencyResolver::get()`
+para casos de uso y `$GLOBALS['container']` solo en setup de repos (patron
+`myTest` existente).
+
+---
+
+## Deuda post-refactor
+
+- **ActividadTipo legacy**: `new \src\actividades\application\ActividadTipo()`
+  inline en controladores frontend (`usuario_perm_activ`, `fases_activ_cambio`).
+- **Twig → PHTML**: plantillas `.html.twig` pendientes de pasada independiente.
+- **Renderers frontend**: HTML de tablas/arboles montado en
+  `frontend/procesos/controller/*_get.php` y similares (patron aceptado en
+  slices 14-15; futura extraccion opcional).
+

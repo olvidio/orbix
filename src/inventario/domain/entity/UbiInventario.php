@@ -32,7 +32,7 @@ class UbiInventario
 
     public function setId_ubi(int $id_ubi): void
     {
-        $this->id_ubi = UbiInventarioId::fromNullableInt($id_ubi);
+        $this->id_ubi = new UbiInventarioId($id_ubi);
     }
 
 
@@ -44,11 +44,11 @@ class UbiInventario
 
     public function setNom_ubi(string $nom_ubi): void
     {
-        $this->nom_ubi = UbiInventarioName::fromNullableString($nom_ubi);
+        $this->nom_ubi = new UbiInventarioName($nom_ubi);
     }
 
 
-    public function getId_ubi_activ(): ?string
+    public function getId_ubi_activ(): ?int
     {
         return $this->id_ubi_activ?->value();
     }
@@ -69,7 +69,7 @@ class UbiInventario
     {
         $this->id_ubi = $id instanceof UbiInventarioId
             ? $id
-            : UbiInventarioId::fromNullableInt($id);
+            : (UbiInventarioId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     public function getNomUbiVo(): UbiInventarioName
@@ -77,11 +77,11 @@ class UbiInventario
         return $this->nom_ubi;
     }
 
-    public function setNomUbiVo(UbiInventarioName|int $name): void
+    public function setNomUbiVo(UbiInventarioName|string $name): void
     {
         $this->nom_ubi = $name instanceof UbiInventarioName
             ? $name
-            : UbiInventarioName::fromNullableString($name);
+            : (UbiInventarioName::fromNullableString($name) ?? throw new \InvalidArgumentException('name cannot be null'));
     }
 
     public function getIdUbiActivVo(): ?UbiInventarioIdActiv
@@ -93,14 +93,17 @@ class UbiInventario
     {
         $this->id_ubi_activ = $id instanceof UbiInventarioIdActiv
             ? $id
-            : UbiInventarioIdActiv::fromNullableInt($id);
+            : (UbiInventarioIdActiv::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key():string
+    public function getPrimary_key(): string
     {
         return 'id_ubi';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos():array
     {

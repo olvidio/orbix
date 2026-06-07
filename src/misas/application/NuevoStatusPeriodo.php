@@ -2,6 +2,9 @@
 
 namespace src\misas\application;
 
+use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\misas\domain\EncargosZona;
@@ -9,12 +12,20 @@ use src\shared\domain\value_objects\DateTimeLocal;
 
 class NuevoStatusPeriodo
 {
+
+    public function __construct(
+        private readonly EncargoTipoRepositoryInterface $encargoTipoRepository,
+        private readonly EncargoDiaRepositoryInterface $encargoDiaRepository,
+        private readonly EncargoHorarioRepositoryInterface $encargoHorarioRepository,
+        private readonly EncargoRepositoryInterface $encargoRepository,
+    ) {
+    }
     /**
      * Actualiza `status` de todos los `EncargoDia` de encargos 8100+ de la zona en el rango.
      *
      * @return array{error: string}
      */
-    public static function execute(
+    public function execute(
         int $id_zona,
         string $periodo,
         string $empiezamin,
@@ -64,15 +75,10 @@ class NuevoStatusPeriodo
 
         $sInicio = $Qempiezamin_rep . ' 00:00:00';
         $sFin = $Qempiezamax_rep . ' 23:59:59';
-
-        $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
         $grupo = '8...';
         $aWhere = ['id_tipo_enc' => '^' . $grupo];
         $aOperador = ['id_tipo_enc' => '~'];
-        $cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
-        if (!is_iterable($cEncargoTipos)) {
-            $cEncargoTipos = [];
-        }
+        $cEncargoTipos = $this->encargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 
         $a_tipo_enc = [];
         foreach ($cEncargoTipos as $oEncargoTipo) {
@@ -85,11 +91,9 @@ class NuevoStatusPeriodo
         $oFin = new DateTimeLocal($sFin);
         $orden = 'prioridad';
 
-        $EncargosZona = new EncargosZona($id_zona, $oInicio, $oFin, $orden);
+        $EncargosZona = new EncargosZona($id_zona, $oInicio, $oFin, $this->encargoHorarioRepository, $this->encargoRepository, $orden);
         $EncargosZona->setATipoEnc($a_tipo_enc);
         $cEncargosZona = $EncargosZona->getEncargos();
-
-        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
         foreach ($cEncargosZona as $oEncargo) {
             $id_enc = $oEncargo->getId_enc();
             $aWhereDia = [
@@ -98,11 +102,11 @@ class NuevoStatusPeriodo
             ];
             $aOperadorDia = ['tstart' => 'BETWEEN'];
 
-            $cEncargosaCambiar = $EncargoDiaRepository->getEncargoDias($aWhereDia, $aOperadorDia);
+            $cEncargosaCambiar = $this->encargoDiaRepository->getEncargoDias($aWhereDia, $aOperadorDia);
             foreach ($cEncargosaCambiar as $oEncargoaCambiar) {
                 $oEncargoaCambiar->setStatus($estado);
-                if ($EncargoDiaRepository->Guardar($oEncargoaCambiar) === false) {
-                    $error_txt .= $EncargoDiaRepository->getErrorTxt();
+                if ($this->encargoDiaRepository->Guardar($oEncargoaCambiar) === false) {
+                    $error_txt .= $this->encargoDiaRepository->getErrorTxt();
                 }
             }
         }

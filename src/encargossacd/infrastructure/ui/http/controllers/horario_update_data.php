@@ -1,9 +1,14 @@
 <?php
 
 use src\encargossacd\application\EncargoHorarioUpdate;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$result = EncargoHorarioUpdate::ejecutar($_POST);
+/** @var EncargoHorarioUpdate $useCase */
+$useCase = DependencyResolver::get(EncargoHorarioUpdate::class);
+
+
+$result = $useCase->ejecutar($_POST);
 if (isset($result['_error'])) {
     ContestarJson::enviar($result['_error'], []);
     return;

@@ -4,6 +4,8 @@ namespace src\configuracion\application;
 
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
+
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\strtoupper_dlb;
 
 /**
@@ -13,34 +15,38 @@ use function src\shared\domain\helpers\strtoupper_dlb;
  */
 final class ModulosSelectData
 {
+    public function __construct(
+        private ModuloRepositoryInterface $moduloRepository,
+        private AppRepositoryInterface $appRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function execute(array $input): array
     {
         require_once dirname(__DIR__, 2) . '/shared/domain/helpers/func_tablas.php';
 
-        $Qid_sel = (string)($input['id_sel'] ?? '');
-        $Qscroll_id = (string)($input['scroll_id'] ?? '');
+        $Qid_sel = input_string($input, 'id_sel');
+        $Qscroll_id = input_string($input, 'scroll_id');
 
-        if (isset($input['stack']) && (string)$input['stack'] !== '') {
-            $stack = (string)filter_var($input['stack'], FILTER_SANITIZE_NUMBER_INT);
-            if ($stack !== 0) {
-                // Parámetros restaurados por el controller frontend vía $oPosicion.
+        if (input_string($input, 'stack') !== '') {
+            $stack = filter_var(input_string($input, 'stack'), FILTER_SANITIZE_NUMBER_INT);
+            if ($stack !== false && $stack !== '0' && $stack !== '') {
                 if (array_key_exists('restored_id_sel', $input)) {
-                    $Qid_sel = (string) $input['restored_id_sel'];
+                    $Qid_sel = input_string($input, 'restored_id_sel');
                 }
                 if (array_key_exists('restored_scroll_id', $input)) {
-                    $Qscroll_id = (string) $input['restored_scroll_id'];
+                    $Qscroll_id = input_string($input, 'restored_scroll_id');
                 }
             }
         }
 
         $aWhere = ['_ordre' => 'nom'];
         $aOperador = [];
-        $ModuloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
-        $cModulos = $ModuloRepository->getModulos($aWhere, $aOperador);
+        $cModulos = $this->moduloRepository->getModulos($aWhere, $aOperador);
 
         $a_botones = [
             ['txt' => _("modificar"), 'click' => 'fnjs_modificar("#seleccionados")'],
@@ -54,7 +60,7 @@ final class ModulosSelectData
             _("aplicaciones requeridas"),
         ];
 
-        $cMods = $ModuloRepository->getModulos();
+        $cMods = $this->moduloRepository->getModulos();
         $a_mods_todos = [];
         foreach ($cMods as $oMod) {
             $id_mod = $oMod->getId_mod();
@@ -62,8 +68,7 @@ final class ModulosSelectData
             $a_mods_todos[$id_mod] = $nom_mod;
         }
 
-        $AppRepository = $GLOBALS['container']->get(AppRepositoryInterface::class);
-        $cApps = $AppRepository->getApps();
+        $cApps = $this->appRepository->getApps();
         $a_apps_todas = [];
         foreach ($cApps as $oApp) {
             $id_app = $oApp->getIdAppVo()->value();

@@ -2,26 +2,29 @@
 
 namespace src\certificados\domain;
 
-use src\shared\config\ConfigGlobal;
+use PDO;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use src\personas\domain\entity\Persona;
+use src\shared\config\ConfigGlobal;
 use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class CertificadoEmitidoUpload
 {
+    private ?PDO $oDbl = null;
 
-    private $oDbl;
+    public function __construct(
+        private readonly CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository,
+        private readonly ConnectionRepositoryFactoryInterface $connectionRepositoryFactory,
+    ) {
+    }
 
     /**
-     * Para poder cambiar le conexión en el caso de los tests.
-     *
-     * @param $oDbl
-     * @return void
+     * Para poder cambiar la conexión en el caso de los tests.
      */
-    public function setoDbl($oDbl): void
+    public function setoDbl(PDO $oDbl): void
     {
         $this->oDbl = $oDbl;
     }
@@ -30,42 +33,49 @@ class CertificadoEmitidoUpload
     {
         $certificadoEmitidoRepository = $this->certificadoEmitidoRepository();
         $oCertificadoEmitido = $certificadoEmitidoRepository->findById($id_item);
+        if ($oCertificadoEmitido === null) {
+            return _("No se encuentra el certificado");
+        }
 
         $oCertificadoEmitido->setDocumento($contenido_doc);
-        $oCertificadoEmitido->setFirmado(TRUE);
+        $oCertificadoEmitido->setFirmado(true);
 
         if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === false) {
             return $certificadoEmitidoRepository->getErrorTxt();
         }
+
         return $oCertificadoEmitido;
     }
 
-    public function uploadNew(int                             $id_nom,
-                              false|string                    $contenido_doc,
-                              string                          $idioma,
-                              string                          $certificado,
-                              bool                            $firmado,
-                              DateTimeLocal|NullDateTimeLocal $oF_certificado,
-                              DateTimeLocal|NullDateTimeLocal $oF_enviado,
-                              ?string                         $destino): string|CertificadoEmitido
-    {
+    public function uploadNew(
+        int $id_nom,
+        false|string $contenido_doc,
+        string $idioma,
+        string $certificado,
+        bool $firmado,
+        DateTimeLocal|NullDateTimeLocal $oF_certificado,
+        DateTimeLocal|NullDateTimeLocal $oF_enviado,
+        ?string $destino,
+    ): string|CertificadoEmitido {
         $oPersona = Persona::findPersonaEnGlobal($id_nom);
-        $apellidos_nombre = $oPersona->getApellidosNombre();
-        $nom = $apellidos_nombre;
+        if ($oPersona === null) {
+            return sprintf(_('No se encuentra la persona con id_nom: %d'), $id_nom);
+        }
 
-        if (empty($destino)) {
+        $nom = $oPersona->getApellidosNombre();
+        if ($destino === null || $destino === '') {
             $destino = $oPersona->getDlVo()?->value() ?? '';
         }
 
         $certificadoEmitidoRepository = $this->certificadoEmitidoRepository();
         $id_item = $certificadoEmitidoRepository->getNewId_item();
         $oCertificadoEmitido = new CertificadoEmitido();
-        $oCertificadoEmitido->setId_item($id_item);
-        $oCertificadoEmitido->setDocumento($contenido_doc);
+        $oCertificadoEmitido->setId_item((int) $id_item);
+        $oCertificadoEmitido->setDocumento(is_string($contenido_doc) ? $contenido_doc : null);
         $oCertificadoEmitido->setId_nom($id_nom);
         $oCertificadoEmitido->setNom($nom);
         $oCertificadoEmitido->setDestino($destino);
-        $oCertificadoEmitido->setIdioma($idioma);
+        $oCertificadoEmitido->setIdiomaVo($idioma);
         $oCertificadoEmitido->setCertificado($certificado);
         $oCertificadoEmitido->setFirmado($firmado);
         $oCertificadoEmitido->setEsquema_emisor(ConfigGlobal::mi_region_dl());
@@ -75,16 +85,24 @@ class CertificadoEmitidoUpload
         if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === false) {
             return $certificadoEmitidoRepository->getErrorTxt();
         }
+
         return $oCertificadoEmitido;
     }
 
     private function certificadoEmitidoRepository(): CertificadoEmitidoRepositoryInterface
     {
-        if (!isset($this->oDbl)) {
-            return $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
+        if ($this->oDbl === null) {
+            return $this->certificadoEmitidoRepository;
         }
 
-        $factory = $GLOBALS['container']->get(ConnectionRepositoryFactoryInterface::class);
-        return $factory->createWithConnection(CertificadoEmitidoRepositoryInterface::class, $this->oDbl);
+        $repo = $this->connectionRepositoryFactory->createWithConnection(
+            CertificadoEmitidoRepositoryInterface::class,
+            $this->oDbl,
+        );
+        if (!$repo instanceof CertificadoEmitidoRepositoryInterface) {
+            throw new \RuntimeException('Repositorio de certificados emitidos inválido');
+        }
+
+        return $repo;
     }
 }

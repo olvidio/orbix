@@ -17,6 +17,8 @@ use src\personas\domain\entity\PersonaNax;
 interface PersonaNaxRepositoryInterface extends PersonaDlRepositoryInterface
 {
 
+    public function getErrorTxt(): string;
+
     public function Guardar(PersonaNax $PersonaNax): bool;
 
     public function Eliminar(PersonaNax $PersonaNax): bool;
@@ -26,7 +28,7 @@ interface PersonaNaxRepositoryInterface extends PersonaDlRepositoryInterface
      */
     public function findById(int $id_nom): ?PersonaNax;
 
-    public function getNewId();
+    public function getNewId(): int;
 
-    public function getNewIdNom($id): int;
+    public function getNewIdNom(int $id): int;
 }

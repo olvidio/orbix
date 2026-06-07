@@ -28,7 +28,7 @@ class ConfigSchema
 
     public function setParametro(string $parametro): void
     {
-        $this->parametro = ConfigParametroCode::fromNullableString($parametro);
+        $this->parametro = ConfigParametroCode::fromString($parametro);
     }
 
     // Value Object API for parametro
@@ -41,7 +41,7 @@ class ConfigSchema
     {
         $this->parametro = $code instanceof ConfigParametroCode
             ? $code
-            : ConfigParametroCode::fromNullableString($code);
+            : ConfigParametroCode::fromString((string)$code);
     }
 
 

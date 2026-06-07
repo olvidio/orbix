@@ -12,6 +12,12 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
  */
 class CambiarStatusPantallaData
 {
+
+    public function __construct(
+        private readonly ZonaRepositoryInterface $zonaRepository,
+        private readonly IdNomJefeResolver $idNomJefeResolver,
+    ) {
+    }
     /**
      * @return array{
      *   zonas_opciones: array<int|string, string>,
@@ -19,16 +25,18 @@ class CambiarStatusPantallaData
      *   estados_opciones: array<int, string>
      * }
      */
-    public static function getData(): array
+    /**
+     * @return array<string, mixed>
+     */
+
+    public function getData(): array
     {
-        $jefe = IdNomJefeResolver::resolve();
+        $jefe = $this->idNomJefeResolver->resolve();
         if ($jefe['error'] !== '') {
             throw new RuntimeException($jefe['error']);
         }
         $id_nom_jefe = $jefe['id_nom_jefe'];
-
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-        $zonas = $ZonaRepository->getArrayZonas($id_nom_jefe);
+        $zonas = $this->zonaRepository->getArrayZonas($id_nom_jefe);
 
         $orden = [
             'orden' => 'orden',

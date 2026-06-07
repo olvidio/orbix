@@ -265,3 +265,92 @@ Principios respetados en todos ellos:
 - `src/personas/config/routes.php`: 9 rutas registradas.
 - `apps/personas/controller/`: 6 wrappers legacy delgados (`require` al `frontend`).
 - `apps/personas/model/`: intacto (`Info*` pendiente de decision posterior).
+
+## Cierre DI (junio 2026)
+
+Migracion al patron de modulos cerrados (`cambios`, `casas`, `asignaturas`):
+constructor DI en application/domain, `DependencyResolver::get()` en controllers HTTP,
+`GlobalPdo::get()` en repos `Pg*`, 0 `$GLOBALS['container']` en todo `src/personas/`.
+
+### Resultado del cierre DI
+
+| Criterio | Estado |
+|----------|--------|
+| `$GLOBALS['container']` en `src/personas/` | **0** (antes ~53) |
+| Controllers HTTP con `DependencyResolver::get()` | **9/9** |
+| `application/` con constructor DI | **9** clases + `PersonaRepositoryResolver` |
+| Casos de uso en `config/dependencies.php` | **28** entradas `autowire()` |
+| Pg repos con `GlobalPdo` | **16** repos |
+| Frontend sin `use src\...` en controladores | **0** imports |
+| Tests `tests/unit/personas/` | **262 OK** (4 warnings clases vacias) |
+
+### `src/personas/config/dependencies.php`
+
+Registra 16 repositorios del modulo + `TelecoPersonaService`, `Trasladar`, `PersonaFinderService`,
+`PersonaRepositoryResolver`, 4 clases `Info*` y 9 casos de uso HTTP.
+
+Repos cross-modulo (`Centro*`, `Delegacion*`, `Dossier*`, `Preferencia*`, `Local*`, `DescTeleco*`,
+`Asignatura*`, `ActividadAll*`, etc.) se resuelven por autowire desde los `dependencies.php`
+de sus modulos (merge en bootstrap).
+
+### Application layer (constructor DI)
+
+| Clase | Dependencias inyectadas |
+|-------|------------------------|
+| `HomePersonaData` | `PersonaRepositoryResolver`, `PersonaPubRepositoryInterface`, `CentroDlRepositoryInterface`, `TelecoPersonaService` |
+| `PersonaEliminar` | `PersonaRepositoryResolver` |
+| `PersonaUpdate` | `PersonaRepositoryResolver` |
+| `PersonasEditarData` | `PersonaRepositoryResolver`, `CentroDl/Centro`, `Delegacion`, `Situacion`, `Local` repos |
+| `PersonasSelectData` | 7 repos persona + `CentroDl/Centro`, `PreferenciaRepositoryInterface` |
+| `StgrCambioData` | `PersonaRepositoryResolver` |
+| `StgrUpdate` | `PersonaRepositoryResolver` |
+| `TrasladoFormData` | `PersonaFinderService`, `CentroDlRepositoryInterface`, `SituacionRepositoryInterface` |
+| `TrasladoUpdate` | `PersonaRepositoryResolver`, `Centro`, `Traslado`, `Dossier`, `Trasladar` |
+
+`PersonaRepositoryResolver` usa `DependencyResolver::get()` (no `$GLOBALS['container']`).
+
+### Domain
+
+| Clase | Cambio |
+|-------|--------|
+| `Trasladar` | Constructor DI (6 repos + `GlobalPdo::get('oDBR')`) |
+| `TelecoPersonaService` | `TelecoPersonaRepositoryInterface` inyectado |
+| `InfoSituacion`, `InfoTraslado`, `InfoUltimaAsistencia`, `InfoTelecoPersona` | Repo inyectado en constructor (patron `InfoZona`) |
+| `Persona` (deprecated) | `DependencyResolver::get(PersonaFinderService::class)` |
+| Entidades `PersonaPub/Ex/Global/Sacd` | `getCentro_o_dl()` via `DependencyResolver::get(Centro*RepositoryInterface::class)` |
+
+### Repositorios `Pg*`
+
+Todos usan `GlobalPdo::get('oDB'|'oDBR'|'oDBP'|'oDBPC'|'oDBC'|'oDBF')` segun tabla.
+`PgPersonaPubRepository` y `PgPersonaAllRepository` inyectan repos cross-modulo por constructor.
+
+### HTTP controllers
+
+Los 9 controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()` (sin `::execute()` / `::build()` estaticos).
+Entrada POST via `input_int` / `input_string` donde aplica.
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------|
+| 2026-06-06 (inicio cierre DI) | `composer phpstan:file -- src/personas/` | **755** |
+| 2026-06-06 (cierre DI) | `composer phpstan:file -- src/personas/` | **0** |
+
+Areas abordadas:
+
+- **Application:** constructor DI; `instanceof XPermisos` para sesion; tipos en payloads.
+- **Repos `Pg*`:** `GlobalPdo`, guards `PDOStatement|false`, PHPDoc retorno, `PersonaGlobalListsTrait`.
+- **Interfaces / entity / VOs:** PHPDoc retorno; nullable setters; `Trasladar` tipado.
+- **HTTP controllers:** `DependencyResolver::get()` + `input_*`.
+- **Info* / services:** DI por constructor.
+
+### Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/` y domain
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests unitarios application pasan (`tests/unit/personas/application/`: 24 tests)
+- [x] PHPStan `src/personas/` en 0 (phpstan-nobaseline.neon)

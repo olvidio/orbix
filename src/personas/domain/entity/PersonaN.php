@@ -39,7 +39,7 @@ class PersonaN extends PersonaDl
      */
     public function getCe(): ?string
     {
-        return $this->ce?->value();
+        return $this->ce !== null ? (string) $this->ce->value() : null;
     }
 
 
@@ -68,7 +68,7 @@ class PersonaN extends PersonaDl
      */
     public function getCe_ini(): ?string
     {
-        return $this->ce_ini?->value();
+        return $this->ce_ini !== null ? (string) $this->ce_ini->value() : null;
     }
 
     public function getCeIniVo(): ?CeNumber
@@ -96,7 +96,7 @@ class PersonaN extends PersonaDl
      */
     public function getCe_fin(): ?string
     {
-        return $this->ce_fin?->value();
+        return $this->ce_fin !== null ? (string) $this->ce_fin->value() : null;
     }
 
     public function getCeFinVo(): ?CeNumber

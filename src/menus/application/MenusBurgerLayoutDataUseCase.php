@@ -14,32 +14,31 @@ use src\shared\config\ConfigGlobal;
  */
 final class MenusBurgerLayoutDataUseCase
 {
+    public function __construct(
+        private MenuDbRepositoryInterface $menuDbRepository,
+        private MetaMenuRepositoryInterface $metaMenuRepository,
+    ) {
+    }
+
     /**
      * @param array<int|string, string> $listaGrupMenu id_grupmenu => etiqueta (como en index.php)
      * @return array{menu_config: array<string, mixed>, user_menus_html: string}
      */
     public function __invoke(array $listaGrupMenu): array
     {
-        $MenusDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
 
         $aWhere = [
             'id_grupmenu' => 1,
             '_ordre' => 'id_grupmenu,orden',
         ];
-        $cMenusUtilidades = $MenusDbRepository->getMenuDbs($aWhere, []);
-        if (!is_array($cMenusUtilidades)) {
-            $cMenusUtilidades = [];
-        }
+        $cMenusUtilidades = $this->menuDbRepository->getMenuDbs($aWhere, []);
 
         $aWhere = [
             'id_grupmenu' => 1,
             '_ordre' => 'id_grupmenu,orden',
         ];
         $aOperador = ['id_grupmenu' => '!='];
-        $cMenuDbs = $MenusDbRepository->getMenuDbs($aWhere, $aOperador);
-        if (!is_array($cMenuDbs)) {
-            $cMenuDbs = [];
-        }
+        $cMenuDbs = $this->menuDbRepository->getMenuDbs($aWhere, $aOperador);
 
         $userMenusHtml = $this->buildUserMenus($cMenusUtilidades);
         $menuConfig = $this->buildMenuStructure($cMenuDbs, $listaGrupMenu);
@@ -57,17 +56,16 @@ final class MenusBurgerLayoutDataUseCase
      */
     private function buildMenuStructure(array $menus, array $listaGrupMenu): array
     {
-        $MetaMenuRepository = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
         $indexedNodes = [];
         foreach ($menus as $key => $itemObject) {
-            $pathKey = $itemObject->getId_grupmenu() . '_' . implode('_', $itemObject->getOrden());
-            $orden = $itemObject->getOrden();
+            $pathKey = $itemObject->getId_grupmenu() . '_' . implode('_', $itemObject->getOrden() ?? []);
+            $orden = $itemObject->getOrden() ?? [];
             if (empty($orden)) {
                 continue;
             }
             $id_metamenu = $itemObject->getId_metamenu();
             if (!empty($id_metamenu)) {
-                $oMetamenu = $MetaMenuRepository->findById($id_metamenu);
+                $oMetamenu = $this->metaMenuRepository->findById($id_metamenu);
                 if ($oMetamenu === null) {
                     unset($menus[$key]);
                     continue;
@@ -91,7 +89,7 @@ final class MenusBurgerLayoutDataUseCase
             $parametros = $itemObject->getParametros();
             $parametros = HashFront::add_hash($parametros, $full_url);
             if (!empty($full_url)) {
-                if (!is_null($url) && strstr((string)$url, 'fnjs') !== false) {
+                if (strstr($url, 'fnjs') !== false) {
                     $onClick = "\"$url;\"";
                 } else {
                     $onClick = "fnjs_link_submenu('$full_url','$parametros');";
@@ -108,8 +106,8 @@ final class MenusBurgerLayoutDataUseCase
         $groupedRootNodes = [];
         foreach ($menus as $itemObject) {
             $currentGroup = $itemObject->getId_grupmenu();
-            $currentOrder = $itemObject->getOrden();
-            if (empty($currentOrder)) {
+            $currentOrder = $itemObject->getOrden() ?? [];
+            if ($currentOrder === []) {
                 continue;
             }
             $currentPathKey = $currentGroup . '_' . implode('_', $currentOrder);
@@ -150,14 +148,13 @@ final class MenusBurgerLayoutDataUseCase
      */
     private function buildUserMenus(array $cMenusUtilidades): string
     {
-        $MetaMenuRepository = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
 
         $indexedNodes = [];
         foreach ($cMenusUtilidades as $itemObject) {
-            $orden = $itemObject->getOrden();
+            $orden = $itemObject->getOrden() ?? [];
             $id_grupmenu = $itemObject->getId_grupmenu();
             $pathKey = $id_grupmenu . '_' . implode('_', $orden);
-            if (empty($orden)) {
+            if ($orden === []) {
                 continue;
             }
             $id_metamenu = $itemObject->getId_metamenu();
@@ -168,7 +165,7 @@ final class MenusBurgerLayoutDataUseCase
 
             $url = '';
             if (!empty($id_metamenu)) {
-                $oMetamenu = $MetaMenuRepository->findById($id_metamenu);
+                $oMetamenu = $this->metaMenuRepository->findById($id_metamenu);
                 if ($oMetamenu === null) {
                     continue;
                 }
@@ -182,7 +179,7 @@ final class MenusBurgerLayoutDataUseCase
             $parametros = $itemObject->getParametros();
             $parametros = HashFront::add_hash($parametros, $full_url);
             if (!empty($full_url)) {
-                if (!is_null($url) && strstr((string)$url, 'fnjs') !== false) {
+                if (strstr($url, 'fnjs') !== false) {
                     $onClick = "$url;";
                 } else {
                     $onClick = "fnjs_link_submenu('$full_url','$parametros');";
@@ -199,8 +196,8 @@ final class MenusBurgerLayoutDataUseCase
         $groupedRootNodes = [];
         foreach ($cMenusUtilidades as $itemObject) {
             $currentGroup = $itemObject->getId_grupmenu();
-            $currentOrder = $itemObject->getOrden();
-            if (empty($currentOrder)) {
+            $currentOrder = $itemObject->getOrden() ?? [];
+            if ($currentOrder === []) {
                 continue;
             }
             $currentPathKey = $currentGroup . '_' . implode('_', $currentOrder);
@@ -228,9 +225,6 @@ final class MenusBurgerLayoutDataUseCase
         $li_submenus = '';
         $indice_old = 0;
         foreach ($indexedNodes as $key => $node) {
-            if ($node === null) {
-                continue;
-            }
             $indice = substr_count((string)$key, '_');
             if (empty($node['submenu'])) {
                 if ($indice_old > $indice) {

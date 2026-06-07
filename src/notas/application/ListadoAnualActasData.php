@@ -2,11 +2,13 @@
 
 namespace src\notas\application;
 
+
 use src\shared\config\ConfigGlobal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
  * Lista las actas en un rango de fechas (ISO) ordenadas por nivel y
@@ -17,12 +19,20 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
  */
 final class ListadoAnualActasData
 {
+
+    public function __construct(
+        private readonly DelegacionRepositoryInterface $delegacionRepository,
+        private readonly ActaRepositoryInterface $actaRepository,
+        private readonly ActaDlRepositoryInterface $actaDlRepository,
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+    ) {
+    }
     /**
      * @param string $inicioIso Fecha inicio inclusive (Y-m-d)
      * @param string $finIso    Fecha fin inclusive (Y-m-d)
      * @return array<int, array{id_nivel:int, acta:string, f_acta:string, nombre_corto:string}>
      */
-    public static function execute(string $inicioIso, string $finIso): array
+    public function execute(string $inicioIso, string $finIso): array
     {
         $aWhere = [
             'f_acta' => "'$inicioIso','$finIso'",
@@ -31,7 +41,7 @@ final class ListadoAnualActasData
 
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
             $mi_dele = ConfigGlobal::mi_delef();
-            $repoDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+            $repoDl = $this->delegacionRepository;
             $aDl = array_values($repoDl->getArrayDlRegionStgr([$mi_dele]));
             $Qacta_dl = '';
             foreach ($aDl as $dl) {
@@ -40,14 +50,14 @@ final class ListadoAnualActasData
             }
             $aWhere['acta'] = '^(' . $Qacta_dl . ')';
             $aOperador['acta'] = '~';
-            $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+            $ActaRepository = $this->actaRepository;
         } else {
-            $ActaRepository = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
+            $ActaRepository = $this->actaDlRepository;
         }
 
         $cActas = $ActaRepository->getActas($aWhere, $aOperador);
 
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $AsignaturaRepository = $this->asignaturaRepository;
         $aActas = [];
         $aNivel = [];
         $aFecha = [];
@@ -55,6 +65,9 @@ final class ListadoAnualActasData
         foreach ($cActas as $oActa) {
             $i++;
             $id_asignatura = $oActa->getId_asignatura();
+            if ($id_asignatura === null) {
+                continue;
+            }
             $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
@@ -68,14 +81,16 @@ final class ListadoAnualActasData
             }
 
             $oF_acta = $oActa->getF_acta();
+            $fActaLocal = $oF_acta instanceof DateTimeLocal ? $oF_acta->getFromLocal() : '';
+            $fActaIso = $oF_acta instanceof DateTimeLocal ? $oF_acta->format('Y-m-d') : '';
             $aActas[$i] = [
                 'id_nivel' => $id_nivel,
                 'acta' => $oActa->getActa(),
-                'f_acta' => $oF_acta->getFromLocal(),
+                'f_acta' => $fActaLocal,
                 'nombre_corto' => $nombre_corto,
             ];
             $aNivel[$i] = $id_nivel;
-            $aFecha[$i] = $oF_acta->format('Y-m-d');
+            $aFecha[$i] = $fActaIso;
         }
 
         if (!empty($aActas)) {

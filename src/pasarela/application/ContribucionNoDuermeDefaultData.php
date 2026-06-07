@@ -10,11 +10,19 @@ use src\pasarela\domain\ContribucionNoDuerme;
  */
 final class ContribucionNoDuermeDefaultData
 {
-    public static function execute(): array
+    public function __construct(
+        private readonly ContribucionNoDuerme $contribucionNoDuerme,
+    ) {
+    }
+
+    /**
+     * @return array{default: string}
+     */
+    public function execute(): array
     {
-        $oContribucionNoDuerme = new ContribucionNoDuerme();
+        
         return [
-            'default' => (string)$oContribucionNoDuerme->getDefault(),
+            'default' => (string)$this->contribucionNoDuerme->getDefault(),
         ];
     }
 }

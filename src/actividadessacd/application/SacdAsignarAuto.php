@@ -10,54 +10,56 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use function src\shared\domain\helpers\input_string;
 
 /**
- * Auto-asigna el sacd titular del centro encargado a las actividades de
- * sr/sg (`id_tipo_activ` regex `.(4|5|7)`) posteriores a `f_ini_iso`,
- * con `status = ACTUAL` y sin ningun cargo sacd todavia. Solo se asigna
- * a actividades con exactamente un centro encargado principal
- * (`num_orden = 0`) cuyo sacd titular se conoce.
- *
- * Sucesor de `apps/actividadessacd/model/AsignarSacd.php` (namespace
- * `actividadessacd\model`).
+ * Auto-asigna el sacd titular del centro encargado a actividades sr/sg sin sacd.
  */
 final class SacdAsignarAuto
 {
-    private string $f_ini_iso;
-
-    /** @var int[] actividades candidatas (ids indexados por f_ini). */
+    /** @var array<string, int> */
     private array $a_actividades = [];
 
-    /** @var array<int,int> id_activ => id_ubi (centro encargado principal). */
+    /** @var array<int, int> */
     private array $a_activ_ctr = [];
 
-    /** @var array<int,int> id_ubi => id_nom del sacd titular del centro. */
+    /** @var array<int, int> */
     private array $a_ctr_sacd = [];
 
-    private function __construct(string $f_ini_iso)
-    {
-        $this->f_ini_iso = $f_ini_iso;
+    public function __construct(
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private CargoRepositoryInterface $cargoRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository,
+        private EncargoRepositoryInterface $encargoRepository,
+    ) {
     }
 
     /**
-     * @param array{f_ini_iso?: string} $input
-     * @return array{asignadas:int, sin_asignar:int}
+     * @param array<string, mixed> $input
+     * @return array{asignadas: int, sin_asignar: int}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $f_ini_iso = (string)($input['f_ini_iso'] ?? '');
+        $f_ini_iso = input_string($input, 'f_ini_iso');
         if ($f_ini_iso === '') {
             return ['asignadas' => 0, 'sin_asignar' => 0];
         }
-        return (new self($f_ini_iso))->run();
+
+        $this->a_actividades = [];
+        $this->a_activ_ctr = [];
+        $this->a_ctr_sacd = [];
+
+        return $this->run($f_ini_iso);
     }
 
     /**
-     * @return array{asignadas:int, sin_asignar:int}
+     * @return array{asignadas: int, sin_asignar: int}
      */
-    private function run(): array
+    private function run(string $f_ini_iso): array
     {
-        $this->seleccionarActividades();
+        $this->seleccionarActividades($f_ini_iso);
         $a_sin_sacd = $this->actividadesSinSacd();
 
         $asig = 0;
@@ -69,11 +71,11 @@ final class SacdAsignarAuto
         return ['asignadas' => $asig, 'sin_asignar' => $sin_asig];
     }
 
-    private function seleccionarActividades(): void
+    private function seleccionarActividades(string $f_ini_iso): void
     {
         $aWhere = [
             'id_tipo_activ' => '.(4|5|7)',
-            'f_ini' => $this->f_ini_iso,
+            'f_ini' => $f_ini_iso,
             'status' => StatusId::ACTUAL,
         ];
         $aOperador = [
@@ -81,17 +83,15 @@ final class SacdAsignarAuto
             'f_ini' => '>',
         ];
 
-        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-        $this->a_actividades = $ActividadDlRepository->getArrayIdsWithKeyFini($aWhere, $aOperador);
+        $this->a_actividades = $this->actividadDlRepository->getArrayIdsWithKeyFini($aWhere, $aOperador);
     }
 
     /**
-     * @return int[] actividades sin ningun cargo sacd asignado.
+     * @return list<int>
      */
     private function actividadesSinSacd(): array
     {
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
+        $aIdCargos_sacd = $this->cargoRepository->getArrayCargos('sacd');
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
         $aWhere = [
@@ -101,11 +101,10 @@ final class SacdAsignarAuto
             'id_cargo' => 'IN',
         ];
 
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
         $a_sin = [];
-        foreach ($this->a_actividades as $id_activ) {
-            $aWhere['id_activ'] = $id_activ;
-            $cActividadCargo = $ActividadCargoRepository->getActividadCargos($aWhere, $aOperador);
+        foreach ($this->a_actividades as $_fini => $id_activ) {
+            $aWhere['id_activ'] = (int)$id_activ;
+            $cActividadCargo = $this->actividadCargoRepository->getActividadCargos($aWhere, $aOperador);
             if (count($cActividadCargo) === 0) {
                 $a_sin[] = (int)$id_activ;
             }
@@ -114,22 +113,18 @@ final class SacdAsignarAuto
     }
 
     /**
-     * Centro encargado principal (num_orden=0) de cada actividad candidata.
-     *
-     * @return array<int,int> id_activ => id_ubi.
+     * @return array<int, int>
      */
     private function centrosEncargados(): array
     {
         if ($this->a_activ_ctr !== []) {
             return $this->a_activ_ctr;
         }
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
         $a_ctr = [];
-        foreach ($this->a_actividades as $id_activ) {
-            $cCentros = $CentroEncargadoRepository->getCentrosEncargados(
-                ['id_activ' => $id_activ, 'num_orden' => 0]
+        foreach ($this->a_actividades as $_fini => $id_activ) {
+            $cCentros = $this->centroEncargadoRepository->getCentrosEncargados(
+                ['id_activ' => (int)$id_activ, 'num_orden' => 0]
             );
-            // solo debe haber uno
             if (count($cCentros) === 1) {
                 $a_ctr[(int)$id_activ] = (int)$cCentros[0]->getId_ubi();
             }
@@ -139,21 +134,16 @@ final class SacdAsignarAuto
     }
 
     /**
-     * Sacd titular de cada centro (modo 2 o 3, sin f_fin) cuyo encargo es
-     * de tipo atn ctr sv (1100) o atn ctr sf (1200).
-     *
-     * @return array<int,int> id_ubi => id_nom.
+     * @return array<int, int>
      */
     private function ctrSacd(): array
     {
         if ($this->a_ctr_sacd !== []) {
             return $this->a_ctr_sacd;
         }
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 
         $a_ctr_sacd = [];
-        $cEncargos = $EncargoRepository->getEncargos(
+        $cEncargos = $this->encargoRepository->getEncargos(
             ['id_tipo_enc' => '^1[12]00'],
             ['id_tipo_enc' => '~']
         );
@@ -161,7 +151,7 @@ final class SacdAsignarAuto
             $id_enc = $oEncargo->getId_enc();
             $id_ubi = (int)$oEncargo->getId_ubi();
 
-            $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd(
+            $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(
                 [
                     'id_enc' => $id_enc,
                     'f_fin' => 'x',
@@ -180,10 +170,6 @@ final class SacdAsignarAuto
         return $a_ctr_sacd;
     }
 
-    /**
-     * Intenta asignar el sacd titular del centro encargado a una actividad.
-     * Devuelve 1 si se asigno, 0 si no.
-     */
     private function asignarUna(int $id_activ): int
     {
         $a_activ_ctr = $this->centrosEncargados();
@@ -198,18 +184,16 @@ final class SacdAsignarAuto
         }
         $id_nom = $a_ctr_sacd[$id_ubi];
 
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
+        $aIdCargos_sacd = $this->cargoRepository->getArrayCargos('sacd');
         $id_cargo = (int)key($aIdCargos_sacd);
 
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
         $oActividadCargo = new ActividadCargo();
-        $oActividadCargo->setId_item($ActividadCargoRepository->getNewId());
+        $oActividadCargo->setId_item($this->actividadCargoRepository->getNewId());
         $oActividadCargo->setId_activ($id_activ);
         $oActividadCargo->setId_cargo($id_cargo);
         $oActividadCargo->setId_nom($id_nom);
         $oActividadCargo->setObserv('auto');
-        if ($ActividadCargoRepository->Guardar($oActividadCargo) === false) {
+        if ($this->actividadCargoRepository->Guardar($oActividadCargo) === false) {
             return 0;
         }
         return 1;

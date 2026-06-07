@@ -2,30 +2,45 @@
 
 namespace src\procesos\application;
 
+use function src\shared\domain\helpers\input_int;
+
+use src\permisos\domain\XPermisos;
+use function src\shared\domain\helpers\input_string;
+
 /**
- * Payload para {@see frontend/procesos/controller/fases_activ_cambio.php}:
- * HTML del selector tipo actividad (procesos) sin importar caso de uso en el frontend.
+ * Payload para fases_activ_cambio: HTML del selector tipo actividad.
  */
 final class FasesActivCambioTipoActividadHtmlData
 {
+    public function __construct(
+        private readonly FasesActivCambioActividadTipoHtml $actividadTipoHtml,
+    ) {
+    }
+
     /**
-     * @param array<string, mixed> $input post (campos centro / tipo actividad)
+     * @param array<string, mixed> $input
      * @return array{tipo_actividad_html: string}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $extendida = !empty((string)($input['sactividad2'] ?? ''));
+        $extendida = input_string($input, 'sactividad2') !== '';
 
         $permiso_des = false;
         $ssfsv = '';
-        if ($_SESSION['oPerm']->have_perm_oficina('vcsd')
-            || $_SESSION['oPerm']->have_perm_oficina('des')
-            || $_SESSION['oPerm']->have_perm_oficina('calendario')
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        if ($oPerm instanceof XPermisos
+            && ($oPerm->have_perm_oficina('vcsd')
+                || $oPerm->have_perm_oficina('des')
+                || $oPerm->have_perm_oficina('calendario'))
         ) {
             $permiso_des = true;
             $ssfsv = '';
         } else {
-            $mi_sfsv = (int)($_SESSION['session_auth']['sfsv'] ?? 0);
+            $sessionAuth = $_SESSION['session_auth'] ?? null;
+            $mi_sfsv = 0;
+            if (is_array($sessionAuth) && isset($sessionAuth['sfsv']) && is_numeric($sessionAuth['sfsv'])) {
+                $mi_sfsv = (int) $sessionAuth['sfsv'];
+            }
             if ($mi_sfsv === 1) {
                 $ssfsv = 'sv';
             }
@@ -34,14 +49,14 @@ final class FasesActivCambioTipoActividadHtmlData
             }
         }
 
-        $html = FasesActivCambioActividadTipoHtml::render(
+        $html = $this->actividadTipoHtml->render(
             $permiso_des,
             $ssfsv,
             $extendida,
-            (string)($input['id_tipo_activ'] ?? ''),
-            (string)($input['sasistentes'] ?? ''),
-            (string)($input['sactividad'] ?? ''),
-            (string)($input['sactividad2'] ?? ''),
+            input_string($input, 'id_tipo_activ'),
+            input_string($input, 'sasistentes'),
+            input_string($input, 'sactividad'),
+            input_string($input, 'sactividad2'),
         );
 
         return ['tipo_actividad_html' => $html];

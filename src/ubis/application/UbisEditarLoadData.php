@@ -2,6 +2,11 @@
 
 namespace src\ubis\application;
 
+use src\permisos\domain\XPermisos;
+
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
@@ -21,15 +26,25 @@ use function src\shared\domain\helpers\is_true;
  */
 final class UbisEditarLoadData
 {
+    public function __construct(
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroExRepositoryInterface $centroExRepository,
+        private CasaDlRepositoryInterface $casaDlRepository,
+        private CasaExRepositoryInterface $casaExRepository,
+        private UbisEditarNormalizeDlData $ubisEditarNormalizeDlData,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $post
+     * @return array<string, mixed>
      */
-    public static function execute(array $post): array
+    public function execute(array $post): array
     {
-        $Qid_ubi = (int)($post['id_ubi'] ?? 0);
-        $Qobj_pau = (string)($post['obj_pau'] ?? '');
-        $Qnuevo = (string)($post['nuevo'] ?? '');
-        $tipo_ubi_in = (string)($post['tipo_ubi'] ?? '');
+        $Qid_ubi = input_int($post, 'id_ubi');
+        $Qobj_pau = input_string($post, 'obj_pau');
+        $Qnuevo = input_string($post, 'nuevo');
+        $tipo_ubi_in = input_string($post, 'tipo_ubi');
 
         if (!empty($Qnuevo)) {
             return self::buildNuevo($post, $Qobj_pau, $tipo_ubi_in);
@@ -39,7 +54,7 @@ final class UbisEditarLoadData
             throw new \RuntimeException(_('falta definir obj_pau'));
         }
 
-        $repo = self::repositoryFor($Qobj_pau);
+        $repo = $this->repositoryFor($Qobj_pau);
         $oUbi = $repo->findById($Qid_ubi);
         if ($oUbi === null) {
             throw new \RuntimeException(sprintf(_('No se encuentra ubi id %s'), (string)$Qid_ubi));
@@ -67,7 +82,7 @@ final class UbisEditarLoadData
             }
         }
         if ($es_de_dl) {
-            $Qobj_pau = UbisEditarNormalizeDlData::execute($id_ubi, $tipo_ubi, $nombre_ubi, $Qobj_pau);
+            $Qobj_pau = $this->ubisEditarNormalizeDlData->execute($id_ubi, $tipo_ubi, $nombre_ubi, $Qobj_pau);
         }
 
         $botones = self::computeBotones($Qobj_pau, '', $es_de_dl);
@@ -117,9 +132,9 @@ final class UbisEditarLoadData
             throw new \RuntimeException(_('falta definir obj_pau'));
         }
 
-        $dl = (string)($post['dl'] ?? '');
-        $region = (string)($post['region'] ?? '');
-        $nombre_ubi = (string)($post['nombre_ubi'] ?? '');
+        $dl = input_string($post, 'dl');
+        $region = input_string($post, 'region');
+        $nombre_ubi = input_string($post, 'nombre_ubi');
         $nombre_ubi = urldecode($nombre_ubi);
 
         if ($dl === '' && str_contains($Qobj_pau, 'Dl')) {
@@ -134,7 +149,7 @@ final class UbisEditarLoadData
             $region = ConfigGlobal::mi_region();
         }
 
-        $botones = self::computeBotones($Qobj_pau, (string)($post['nuevo'] ?? ''), false);
+        $botones = self::computeBotones($Qobj_pau, input_string($post, 'nuevo'), false);
 
         $base = [
             'tipo_ubi' => $tipo_ubi_in,
@@ -207,12 +222,14 @@ final class UbisEditarLoadData
         $botones = 0;
         if (str_contains($Qobj_pau, 'Dl')) {
             if ($Qnuevo !== '' || $es_de_dl) {
-                if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
+                $oPerm = $_SESSION['oPerm'] ?? null;
+        if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('scdl')) {
                     $botones = '1,2';
                 }
             }
         } elseif (str_contains($Qobj_pau, 'Ex')) {
-            if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
+            $oPerm = $_SESSION['oPerm'] ?? null;
+        if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('scdl')) {
                 $botones = '1,2';
             }
         }
@@ -220,13 +237,13 @@ final class UbisEditarLoadData
         return $botones;
     }
 
-    private static function repositoryFor(string $obj_pau): CentroDlRepositoryInterface|CentroExRepositoryInterface|CasaDlRepositoryInterface|CasaExRepositoryInterface
+    private function repositoryFor(string $obj_pau): CentroDlRepositoryInterface|CentroExRepositoryInterface|CasaDlRepositoryInterface|CasaExRepositoryInterface
     {
         return match ($obj_pau) {
-            'CentroDl' => $GLOBALS['container']->get(CentroDlRepositoryInterface::class),
-            'CentroEx' => $GLOBALS['container']->get(CentroExRepositoryInterface::class),
-            'CasaDl' => $GLOBALS['container']->get(CasaDlRepositoryInterface::class),
-            'CasaEx' => $GLOBALS['container']->get(CasaExRepositoryInterface::class),
+            'CentroDl' => $this->centroDlRepository,
+            'CentroEx' => $this->centroExRepository,
+            'CasaDl' => $this->casaDlRepository,
+            'CasaEx' => $this->casaExRepository,
             default => throw new \InvalidArgumentException('obj_pau ubi no válido: ' . $obj_pau),
         };
     }

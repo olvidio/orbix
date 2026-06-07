@@ -16,8 +16,14 @@ use src\inventario\domain\entity\Equipaje;
 interface EquipajeRepositoryInterface
 {
 
+    /**
+     * @return list<int>
+     */
     public function getEquipajesCoincidentes(string $f_ini_iso, string $f_fin_iso): array;
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayEquipajes(string $f_ini_iso = ''): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -25,9 +31,9 @@ interface EquipajeRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Equipaje
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Equipaje
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Equipaje> Una colección de objetos de tipo Equipaje
      */
     public function getEquipajes(array $aWhere = [], array $aOperators = []): array;
 
@@ -48,14 +54,14 @@ interface EquipajeRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_equipaje
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_equipaje): array|bool;
+    public function datosById(int $id_equipaje): array|false;
 
     /**
      * Busca la clase con id_equipaje en el repositorio.
      */
     public function findById(int $id_equipaje): ?Equipaje;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

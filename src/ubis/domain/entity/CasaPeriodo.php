@@ -18,9 +18,9 @@ class CasaPeriodo
 
     private int $id_ubi;
 
-    private DateTimeLocal $f_ini;
+    private DateTimeLocal|NullDateTimeLocal $f_ini;
 
-    private DateTimeLocal $f_fin;
+    private DateTimeLocal|NullDateTimeLocal $f_fin;
 
     private ?SfsvOtrosId $sfsv = null;
 
@@ -58,7 +58,7 @@ class CasaPeriodo
 
     public function setF_ini(DateTimeLocal|null $f_ini = null): void
     {
-        $this->f_ini = $f_ini;
+        $this->f_ini = $f_ini ?? new NullDateTimeLocal();
     }
 
 
@@ -70,7 +70,7 @@ class CasaPeriodo
 
     public function setF_fin(DateTimeLocal|null $f_fin = null): void
     {
-        $this->f_fin = $f_fin;
+        $this->f_fin = $f_fin ?? new NullDateTimeLocal();
     }
 
     /**
@@ -78,7 +78,7 @@ class CasaPeriodo
      */
     public function getSfsv(): ?int
     {
-        return $this->sfsv->value();
+        return $this->sfsv?->value();
     }
 
     /**

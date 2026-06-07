@@ -1,8 +1,9 @@
 <?php
 
+use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
-use src\shared\domain\contracts\ColaMailRepositoryInterface;
+use src\shared\infrastructure\persistence\postgresql\PgColaMailRepository;
 use src\shared\domain\entity\ColaMail;
 use src\shared\domain\value_objects\ColaMailId;
 use src\shared\domain\value_objects\Uuid;
@@ -17,6 +18,7 @@ $Qurl_base = (string)filter_input(INPUT_POST, 'url_base');
 
 $aWhere = array('usuario' => $Qusername);
 $esquema = empty($Qesquema) ? $Qesquema_web : $Qesquema;
+$oDB = null;
 if (substr($esquema, -1) === 'v') {
     $sfsv = 1;
     $oConfigDB = new ConfigDB('sv-e');
@@ -33,30 +35,43 @@ if (substr($esquema, -1) === 'f') {
     $oDB = $oConexion->getPDO();
 }
 
+if (!($oDB instanceof \PDO)) {
+    ContestarJson::enviar(_("Esquema no válido"), ['error_txt' => _("Esquema no válido"), 'success' => false, 'email' => '????']);
+    return;
+}
+
 // Buscar el usuario en la base de datos
 $query = "SELECT * FROM aux_usuarios WHERE usuario = :usuario";
-if (($oDBSt = $oDB->prepare($query)) === false) {
+$oDBSt = $oDB->prepare($query);
+if ($oDBSt === false) {
     $sClauError = 'recuperar_password.prepare';
-    $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
+    if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+        $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, (string)__LINE__, __FILE__);
+    }
     return false;
 }
 
-if (($oDBSt->execute($aWhere)) === false) {
+if ($oDBSt->execute($aWhere) === false) {
     $sClauError = 'recuperar_password.execute';
-    $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
+    if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+        $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, (string)__LINE__, __FILE__);
+    }
     return false;
 }
 
 $error_txt = '';
 $success = false;
+$email = '????';
+$message = '';
 
-if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
+$row = $oDBSt->fetch(\PDO::FETCH_ASSOC);
+if (is_array($row)) {
     // para los bytea: (resources)
-    $handle = $row['password'];
-    if ($handle !== null) {
+    $handle = $row['password'] ?? null;
+    if (is_resource($handle)) {
         $contents = stream_get_contents($handle);
         fclose($handle);
-        $password = $contents;
+        $password = is_string($contents) ? $contents : '';
         $row['password'] = $password;
     }
     $MiUsuario = Usuario::fromArray($row);
@@ -106,7 +121,9 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
 
                 if ($oDBSt1->execute() === false) {
                     $sClauError = 'DBRol.delGrupo.execute';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDBSt1, $sClauError, __LINE__, __FILE__);
+                    if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDBSt1, $sClauError, (string)__LINE__, __FILE__);
+                    }
                     return false;
                 }
                 // 5. Construimos el enlace para el email
@@ -122,6 +139,7 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
             $message = sprintf(_("Hola %s,\n\nHas solicitado recuperar tu sistema autentificación de 2 factores. Tu código de seguridad para la aplicación es: %s\n\nSaludos,\nEl equipo de administración"), $Qusername, $codigo);
 
         }
+        if ($message !== '') {
         // Enviar email con la nueva contraseña
         $subject = _("Recuperación de código de seguridad");
 
@@ -140,12 +158,13 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
         $oConexion = new DBConnection($config);
         $oDBPC = $oConexion->getPDO();
 
-        $oColaMailRepository = $GLOBALS['container']->get(ColaMailRepositoryInterface::class);
+        $oColaMailRepository = new PgColaMailRepository();
         $oColaMailRepository->setoDbl($oDBPC);
         if ($oColaMailRepository->Guardar($oColaMail)) {
             $success = true;
         } else {
             $error_txt = _("Error al enviar el correo electrónico");
+        }
         }
     }
 } else {

@@ -1,8 +1,13 @@
 <?php
 
 use src\procesos\application\ActividadProcesoData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
 
-$Qid_activ = (int)filter_input(INPUT_POST, 'id_activ');
+/** @var ActividadProcesoData $useCase */
+$useCase = DependencyResolver::get(ActividadProcesoData::class);
 
-ContestarJson::enviar('', ActividadProcesoData::execute($Qid_activ));
+$Qid_activ = input_int($_POST, 'id_activ');
+
+ContestarJson::enviar('', $useCase->execute($Qid_activ));

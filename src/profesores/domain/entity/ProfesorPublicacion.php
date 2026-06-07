@@ -84,7 +84,7 @@ class ProfesorPublicacion
     {
         $this->titulo = $valor instanceof PublicacionTitulo
             ? $valor
-            : PublicacionTitulo::fromNullableString($valor);
+            : (PublicacionTitulo::fromNullableString($valor) ?? throw new \InvalidArgumentException('titulo cannot be null'));
     }
 
     /**
@@ -100,7 +100,7 @@ class ProfesorPublicacion
      */
     public function setTitulo(?string $valor = null): void
     {
-        $this->titulo = PublicacionTitulo::fromNullableString($valor);
+        $this->titulo = (PublicacionTitulo::fromNullableString($valor) ?? throw new \InvalidArgumentException('titulo cannot be null'));
     }
 
     public function getEditorialVo(): ?EditorialName
@@ -288,6 +288,9 @@ class ProfesorPublicacion
     {
         return 'id_item';
     }
+
+  /** @return array<string, mixed> */
+
 
   public function getDatosCampos(): array
     {

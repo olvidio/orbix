@@ -2,15 +2,25 @@
 
 namespace src\ubis\application;
 
-use src\ubis\domain\entity\Ubi;
-
 final class DireccionesQueData
 {
-    public static function execute(int $id_ubi): array
+    public function __construct(
+        private UbiFactory $ubiFactory,
+    ) {
+    }
+
+    /**
+     * @return array{tipo_ubi: string|null, titulo: string}
+     */
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(int $id_ubi): array
     {
-        $oUbi = Ubi::newUbi($id_ubi);
+        $oUbi = $this->ubiFactory->newUbi($id_ubi);
+
         return [
-            'tipo_ubi' => $oUbi->getTipo_ubi(),
+            'tipo_ubi' => $oUbi?->getTipo_ubi(),
             'titulo' => ucfirst(_("introduzca un valor para buscar una dirección existente")),
         ];
     }

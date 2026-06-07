@@ -15,6 +15,6 @@ namespace src\personas\domain\contracts;
 interface TelecoPersonaExRepositoryInterface extends TelecoPersonaRepositoryInterface
 {
 
-    public function getNewId();
+    public function getNewId(): int;
 
 }

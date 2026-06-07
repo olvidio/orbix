@@ -27,7 +27,7 @@ use Throwable;
 final class RenombrarEsquema
 {
     public function __construct(
-        private readonly object $container,
+        private readonly DbSchemaRepositoryInterface $dbSchemaRepository,
     ) {
     }
 
@@ -66,7 +66,7 @@ final class RenombrarEsquema
 
         $isDocker = (bool) preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR);
 
-        $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);
+        $DbSchemaRepository = $this->dbSchemaRepository;
         $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'comun');
         $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv');
         $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv-e');
@@ -87,8 +87,7 @@ final class RenombrarEsquema
             // datos
             // REGEXP_REPLACE(source, pattern, replacement_string,[, flags])
         
-            $region_old = strtok($esquema_old, '-');
-            $dl_old = strtok('-');
+            [$region_old, $dl_old] = array_pad(explode('-', $esquema_old, 2), 2, '');
         
             $aDatos = [
                 ['tabla' => 'a_actividades_dl', 'campo' => 'dl_org', 'pattern' => "\m$dl_old(f?)\M", 'replacement' => "$DlNew\\1"],
@@ -151,8 +150,7 @@ final class RenombrarEsquema
             // datos
             // REGEXP_REPLACE(source, pattern, replacement_string,[, flags])
         
-            $region_old = strtok($esquema_old, '-');
-            $dl_old = strtok('-');
+            [$region_old, $dl_old] = array_pad(explode('-', $esquema_old, 2), 2, '');
         
             $aDatos = [
                 ['tabla' => 'p_agregados', 'campo' => 'dl', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
@@ -186,7 +184,7 @@ final class RenombrarEsquema
             * da_plazas_dl       
             cedidas {"dlb": 2, "dlp": 3, "dlv": 1, "dlmE": 1, "dlmO": 1, "dlst": 1}
             */
-            $oAlterSchema->updateCedidasAll($dl_old, $DlNew);
+            $oAlterSchema->updateCedidasAll($dl_old, $dl);
         
             ////////////// Esquema sv-e
             // Valores Default:
@@ -212,7 +210,7 @@ final class RenombrarEsquema
         
             $oAlterSchema->setDefaults($aDefaults);
             $oAlterSchema->updateDatosRegexpTodos($aDatos);
-            $oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
+            $oAlterSchema->updatePropietarioAll($dl_old, $dl);
 
             ///// sv-e_select (servidor interno) — omitir en docker
             if (!$isDocker) {

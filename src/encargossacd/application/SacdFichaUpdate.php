@@ -2,6 +2,9 @@
 
 namespace src\encargossacd\application;
 
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
@@ -17,15 +20,24 @@ use src\encargossacd\domain\entity\EncargoSacdObserv;
  */
 final class SacdFichaUpdate
 {
+
+    public function __construct(
+        private EncargoAplicacionService $aplicacionService,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdObservRepositoryInterface $encargoSacdObservRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $post
      * @return array{error: string, mensajes: string}
      */
-    public static function execute(array $post): array
+    public function execute(array $post): array
     {
-        $id_nom = (int)($post['id_nom'] ?? 0);
-        $enc_num = (int)($post['enc_num'] ?? 0);
-        $observ = (string)($post['observ'] ?? '');
+        $id_nom = input_int($post, 'id_nom');
+        $enc_num = input_int($post, 'enc_num');
+        $observ = input_string($post, 'observ');
 
         $aId_tipo_enc = is_array($post['id_tipo_enc'] ?? null) ? $post['id_tipo_enc'] : [];
         $aId_enc = is_array($post['id_enc'] ?? null) ? $post['id_enc'] : [];
@@ -37,31 +49,27 @@ final class SacdFichaUpdate
             return ['error' => _("id_nom no valido"), 'mensajes' => ''];
         }
 
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-        $EncargoSacdObservRepository = $GLOBALS['container']->get(EncargoSacdObservRepositoryInterface::class);
-        $oAplicacion = new EncargoAplicacionService();
+        $oAplicacion = $this->aplicacionService;
 
         $mensajes = '';
         for ($i = 1; $i <= $enc_num; $i++) {
-            $id_tipo_enc = (int)($aId_tipo_enc[$i] ?? 0);
-            $id_enc = (int)($aId_enc[$i] ?? 0);
-            $dedic_m = (string)($aDedic_m[$i] ?? '');
-            $dedic_t = (string)($aDedic_t[$i] ?? '');
-            $dedic_v = (string)($aDedic_v[$i] ?? '');
+            $id_tipo_enc = $this->arrayIntAt($aId_tipo_enc, $i);
+            $id_enc = $this->arrayIntAt($aId_enc, $i);
+            $dedic_m = $this->arrayStringAt($aDedic_m, $i);
+            $dedic_t = $this->arrayStringAt($aDedic_t, $i);
+            $dedic_v = $this->arrayStringAt($aDedic_v, $i);
 
-            if ($id_tipo_enc === 5020 || $id_tipo_enc === 5030 || $id_tipo_enc === 6000) {
+            if (in_array($id_tipo_enc, [5020, 5030, 6000], true)) {
                 if ($id_enc === 0) {
-                    $cEncargos = $EncargoRepository->getEncargos(['id_tipo_enc' => $id_tipo_enc]);
-                    if (is_array($cEncargos) && empty($cEncargos)) {
+                    $cEncargos = $this->encargoRepository->getEncargos(['id_tipo_enc' => $id_tipo_enc]);
+                    if ($cEncargos === []) {
                         $desc_enc = match ($id_tipo_enc) {
                             5020 => 'estudio',
                             5030 => 'descanso',
-                            6000 => 'otros',
-                            default => '',
+                            default => 'otros',
                         };
-                        $id_enc = (int)$oAplicacion->crear_encargo($id_tipo_enc, 1, '', '', $desc_enc, '', '', '');
-                    } elseif (is_array($cEncargos) && !empty($cEncargos)) {
+                        $id_enc = $oAplicacion->crear_encargo($id_tipo_enc, 1, 0, 0, $desc_enc, '', '', '');
+                    } elseif ($cEncargos !== []) {
                         $id_enc = (int)$cEncargos[0]->getId_enc();
                     }
                 }
@@ -86,7 +94,7 @@ final class SacdFichaUpdate
                 'f_fin' => 'IS NULL',
                 'modo' => '~',
             ];
-            $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
+            $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
             if (empty($cEncargosSacd)) {
                 continue;
             }
@@ -104,34 +112,56 @@ final class SacdFichaUpdate
             $oAplicacion->modificar_horario_sacd($id_item_t_sacd, $id_enc, $id_nom, 'v', $dedic_v);
         }
 
-        $cEncargoSacdObserv = $EncargoSacdObservRepository->getEncargoSacdObservs(['id_nom' => $id_nom]);
-        $oEncargoSacdObserv = is_array($cEncargoSacdObserv) && !empty($cEncargoSacdObserv)
-            ? $cEncargoSacdObserv[0]
-            : null;
+        $cEncargoSacdObserv = $this->encargoSacdObservRepository->getEncargosSacdObservs(['id_nom' => $id_nom]);
+        $oEncargoSacdObserv = $cEncargoSacdObserv[0] ?? null;
 
         if ($oEncargoSacdObserv !== null) {
             if ($observ === '') {
-                if ($EncargoSacdObservRepository->Eliminar($oEncargoSacdObserv) === false) {
+                if ($this->encargoSacdObservRepository->Eliminar($oEncargoSacdObserv) === false) {
                     $mensajes .= _("hay un error, no se ha eliminado") . "\n";
                 }
             } else {
                 $oEncargoSacdObserv->setObserv($observ);
-                if ($EncargoSacdObservRepository->Guardar($oEncargoSacdObserv) === false) {
+                if ($this->encargoSacdObservRepository->Guardar($oEncargoSacdObserv) === false) {
                     $mensajes .= _("hay un error, no se ha guardado") . "\n";
                 }
             }
         } elseif ($observ !== '') {
-            $newId = $EncargoSacdObservRepository->getNewId();
+            $newId = $this->encargoSacdObservRepository->getNewId();
             $oEncargoSacdObserv = new EncargoSacdObserv();
             $oEncargoSacdObserv->setId_item($newId);
             $oEncargoSacdObserv->setId_nom($id_nom);
             $oEncargoSacdObserv->setObserv($observ);
-            if ($EncargoSacdObservRepository->Guardar($oEncargoSacdObserv) === false) {
+            if ($this->encargoSacdObservRepository->Guardar($oEncargoSacdObserv) === false) {
                 $mensajes .= _("hay un error, no se ha guardado") . "\n";
-                $mensajes .= $EncargoSacdObservRepository->getErrorTxt();
+                $mensajes .= $this->encargoSacdObservRepository->getErrorTxt();
             }
         }
 
         return ['error' => '', 'mensajes' => $mensajes];
+    }
+
+    /**
+     * @param array<int|string, mixed> $values
+     */
+    private function arrayStringAt(array $values, int $index): string
+    {
+        if (!isset($values[$index]) || !is_scalar($values[$index])) {
+            return '';
+        }
+
+        return (string) $values[$index];
+    }
+
+    /**
+     * @param array<int|string, mixed> $values
+     */
+    private function arrayIntAt(array $values, int $index): int
+    {
+        if (!isset($values[$index]) || !is_numeric($values[$index])) {
+            return 0;
+        }
+
+        return (int) $values[$index];
     }
 }

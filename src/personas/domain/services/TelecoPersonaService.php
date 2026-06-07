@@ -11,19 +11,13 @@ use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 class TelecoPersonaService
 {
     public function __construct(
-        private DescTelecoRepositoryInterface $descTelecoRepository
+        private DescTelecoRepositoryInterface $descTelecoRepository,
+        private TelecoPersonaRepositoryInterface $telecoPersonaRepository,
     ) {
     }
 
     /**
      * Devuelve los teleco de una persona especificados por parámetros
-     *
-     * @param int $id_nom ID de la persona
-     * @param string $tipo_teleco Tipo de telecomunicación (ej: 'e-mail', 'teléfono')
-     * @param string $separador Separador entre telecomunicaciones
-     * @param string $desc_teleco Descripción del teleco. Si es '*', se añade la descripción entre paréntesis
-     * @param bool $bDescripcion Si mostrar o no la descripción
-     * @return string Telecomunicaciones formateadas
      */
     public function getTelecosPorTipo(
         int $id_nom,
@@ -45,8 +39,7 @@ class TelecoPersonaService
             $aWhere['id_desc_teleco'] = (int)$desc_teleco;
         }
 
-        $TelecoPersonaRepository = $GLOBALS['container']->get(TelecoPersonaRepositoryInterface::class);
-        $cTelecos = $TelecoPersonaRepository->getTelecospersona($aWhere);
+        $cTelecos = $this->telecoPersonaRepository->getTelecospersona($aWhere);
 
         $tels = '';
         $separador = empty($separador) ? ".-<br>" : $separador;
@@ -64,19 +57,15 @@ class TelecoPersonaService
             }
         }
 
-        $tels = substr($tels, 0, -(strlen($separador)));
-        return $tels;
+        if ($tels === '') {
+            return '';
+        }
+
+        return substr($tels, 0, -(strlen($separador)));
     }
 
     /**
      * Devuelve el e-mail principal o primero de la lista de teleco de una persona
-     *
-     * @param int $id_nom ID de la persona
-     * @param int $id_desc_teleco Descripción del teleco en la tabla xd_desc_teleco:
-     *                         13 = e-mail principal
-     *                         14 = e-mail profesional
-     *                         15 = e-mail otros
-     * @return string E-mail encontrado o cadena vacía
      */
     public function getEmailPrincipalOPrimero(int $id_nom, int $id_desc_teleco = 13): string
     {
@@ -91,10 +80,9 @@ class TelecoPersonaService
         $aWhere['_ordre'] = 'id_desc_teleco';
 
         $e_mail = '';
-        $TelecoPersonaRepository = $GLOBALS['container']->get(TelecoPersonaRepositoryInterface::class);
-        $cTelecos = $TelecoPersonaRepository->getTelecospersona($aWhere);
+        $cTelecos = $this->telecoPersonaRepository->getTelecospersona($aWhere);
 
-        if (!empty($cTelecos) && count($cTelecos) > 0) {
+        if ($cTelecos !== []) {
             $oTeleco = $cTelecos[0];
             $e_mail = $oTeleco->getNumTelecoVo()->value();
         }

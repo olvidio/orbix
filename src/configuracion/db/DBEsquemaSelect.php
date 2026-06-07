@@ -11,12 +11,12 @@ use src\shared\infrastructure\persistence\postgresql\DBRefresh;
 class DBEsquemaSelect extends DBEsquema
 {
 
-    public function dropAllSelect()
+    public function dropAllSelect(): void
     {
         $this->eliminar_x_config_schema_select();
     }
 
-    public function createAllSelect()
+    public function createAllSelect(): void
     {
         $this->create_x_config_schema_select();
         // renovar subscripciones
@@ -27,7 +27,7 @@ class DBEsquemaSelect extends DBEsquema
     /**
      * En la BD sv-e (esquema).
      */
-    public function create_x_config_schema_select()
+    public function create_x_config_schema_select(): void
     {
         $this->addPermisoGlobal('comun_select');
 
@@ -56,7 +56,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function eliminar_x_config_schema_select()
+    public function eliminar_x_config_schema_select(): void
     {
         $datosTabla = $this->infoTable("x_config_schema");
         $nom_tabla = $datosTabla['nom_tabla'];

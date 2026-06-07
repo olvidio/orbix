@@ -34,8 +34,7 @@ final class SacdsDisponiblesDataTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_sacds_todos_desde_repositorio_sacds_ctr_vacio_sin_encargossacd(): void
-    {
+    public function test_sacds_todos_desde_repositorio_sacds_ctr_vacio_sin_encargossacd(): void {
         $p1 = $this->createMock(PersonaSacd::class);
         $p1->method('getId_nom')->willReturn(10);
         $p1->method('getPrefApellidosNombre')->willReturn('Uno, Persona');
@@ -43,9 +42,7 @@ final class SacdsDisponiblesDataTest extends TestCase
         $repo = $this->createMock(PersonaSacdRepositoryInterface::class);
         $repo->method('getSacdsBySelect')->with(15)->willReturn([$p1]);
 
-        $GLOBALS['container'] = $this->containerOne(PersonaSacdRepositoryInterface::class, $repo);
-
-        $out = SacdsDisponiblesData::execute(['id_activ' => 99, 'seleccion' => 15]);
+        $out = (new \src\actividadessacd\application\SacdsDisponiblesData($this->createMock(\src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface::class), $this->createMock(\src\encargossacd\domain\contracts\EncargoRepositoryInterface::class), $this->createMock(\src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface::class), $repo))->execute(['id_activ' => 99, 'seleccion' => 15]);
         $this->assertSame(99, $out['id_activ']);
         $this->assertSame([], $out['sacds_ctr']);
         $this->assertSame([

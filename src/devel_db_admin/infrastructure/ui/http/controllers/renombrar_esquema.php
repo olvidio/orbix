@@ -8,9 +8,13 @@ declare(strict_types=1);
 
 use src\devel_db_admin\application\RenombrarEsquema;
 use src\devel_db_admin\application\RenombrarEsquemaVerificacionContexto;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
+
+/** @var RenombrarEsquema $useCase */
+$useCase = DependencyResolver::get(RenombrarEsquema::class);
 
 $QEsquemaOrigen = trim((string) filter_input(INPUT_POST, 'esquema_origen'));
 if ($QEsquemaOrigen === '') {
@@ -23,7 +27,7 @@ $Qsv = (int) filter_input(INPUT_POST, 'sv');
 $Qsf = (int) filter_input(INPUT_POST, 'sf');
 
 try {
-    $payload = (new RenombrarEsquema($GLOBALS['container']))->ejecutar(
+    $payload = $useCase->ejecutar(
         $QEsquemaOrigen,
         $Qregion,
         $Qdl,

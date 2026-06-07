@@ -13,15 +13,12 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 final class PlanningZonesQueDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['session_auth'] = array_merge($_SESSION['session_auth'] ?? [], ['id_usuario' => 1]);
     }
@@ -29,11 +26,6 @@ final class PlanningZonesQueDataTest extends TestCase
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -51,13 +43,8 @@ final class PlanningZonesQueDataTest extends TestCase
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
         $zonaRepo->method('getArrayZonas')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $usuarioRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-            ZonaRepositoryInterface::class => $zonaRepo,
-        ]);
-
-        $out = PlanningZonesQueData::execute();
+        $useCase = new PlanningZonesQueData($usuarioRepo, $roleRepo, $zonaRepo);
+        $out = $useCase->execute();
         $this->assertNotSame('', $out['error']);
         $this->assertSame([], $out['opciones_zonas']);
     }
@@ -79,13 +66,8 @@ final class PlanningZonesQueDataTest extends TestCase
             ->with(null)
             ->willReturn([5 => 'Zona A']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $usuarioRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-            ZonaRepositoryInterface::class => $zonaRepo,
-        ]);
-
-        $out = PlanningZonesQueData::execute();
+        $useCase = new PlanningZonesQueData($usuarioRepo, $roleRepo, $zonaRepo);
+        $out = $useCase->execute();
         $this->assertSame('', $out['error']);
         $this->assertSame([5 => 'Zona A'], $out['opciones_zonas']);
     }
@@ -111,31 +93,8 @@ final class PlanningZonesQueDataTest extends TestCase
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
         $zonaRepo->method('getArrayZonas')->with(null)->willReturn([1 => 'Z']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $usuarioRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-            ZonaRepositoryInterface::class => $zonaRepo,
-        ]);
-
-        $out = PlanningZonesQueData::execute();
+        $useCase = new PlanningZonesQueData($usuarioRepo, $roleRepo, $zonaRepo);
+        $out = $useCase->execute();
         $this->assertSame('', $out['error']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

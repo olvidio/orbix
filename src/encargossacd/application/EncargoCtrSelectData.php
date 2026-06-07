@@ -2,6 +2,8 @@
 
 namespace src\encargossacd\application;
 
+use src\encargossacd\application\CentrosPorFiltroOpciones;
+
 use src\encargossacd\domain\value_objects\EncargoGrupo;
 
 /**
@@ -16,14 +18,20 @@ use src\encargossacd\domain\value_objects\EncargoGrupo;
  */
 final class EncargoCtrSelectData
 {
+
+    public function __construct(
+        private CentrosPorFiltroOpciones $centrosPorFiltroOpciones
+    ) {
+    }
+
     /**
      * @return array{id: string, name: string, opciones: array<string, string>, selected: string, blanco: bool, val_blanco: string, action: string}
      */
-    public static function execute(int $id_ubi, int $filtro_ctr, int $id_zona): array
+    public function execute(int $id_ubi, int $filtro_ctr, int $id_zona): array
     {
         $filtro_eff = $id_zona !== 0 ? EncargoGrupo::ZONAS_MISAS : $filtro_ctr;
 
-        $opciones_raw = CentrosPorFiltroOpciones::getOpciones($filtro_eff, $id_zona);
+        $opciones_raw = $this->centrosPorFiltroOpciones->getOpciones($filtro_eff, $id_zona);
         $opciones = [];
         foreach ($opciones_raw as $k => $v) {
             $opciones[(string)$k] = (string)$v;

@@ -11,13 +11,18 @@ use src\configuracion\domain\contracts\AppRepositoryInterface;
  */
 final class ApptablesAppsData
 {
+    public function __construct(
+        private readonly AppRepositoryInterface $appRepository,
+    ) {
+    }
+
     /**
      * @return array{a_apps: array<int|string, string>}
      */
-    public static function build(AppRepositoryInterface $appRepository): array
+    public function build(): array
     {
         $a_apps = [];
-        foreach ($appRepository->getApps() as $oApp) {
+        foreach ($this->appRepository->getApps() as $oApp) {
             $id = $oApp->getIdAppVo()->value();
             $a_apps[$id] = $oApp->getNomVo()->value();
         }

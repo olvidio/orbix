@@ -4,30 +4,44 @@ declare(strict_types=1);
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\application\AsignaturasMapData;
-use src\shared\infrastructure\DependencyResolver;
 use src\notas\application\ComprobarNotasConstantsData;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\notas\domain\value_objects\NotaSituacion;
+use src\shared\infrastructure\DependencyResolver;
 
 /**
  * Cuerpo de la pantalla legacy “comprobar notas” (SQL + HTML).
  *
  * @var PDO $oDB Conexión de delegación (global tras `global_object.inc`).
+ * @var string $tabla
+ * @var string $tabla_txt
  */
 
-$constantsPayload = ComprobarNotasConstantsData::execute();
-$voCn = (array)($constantsPayload['vo'] ?? []);
-$nivelVo = (array)($voCn['NivelStgrId'] ?? []);
-$situVo = (array)($voCn['NotaSituacion'] ?? []);
-$nivel_stgr_B = (int)($nivelVo['B'] ?? 1);
-$nivel_stgr_C1 = (int)($nivelVo['C1'] ?? 2);
-$nivel_stgr_C2 = (int)($nivelVo['C2'] ?? 3);
-$nivel_stgr_R = (int)($nivelVo['R'] ?? 4);
-$nivel_stgr_N = (int)($nivelVo['N'] ?? 9);
-$nota_situ_numerica = (int)($situVo['NUMERICA'] ?? 10);
-$nota_situ_cursada = (int)($situVo['CURSADA'] ?? 2);
+$dbQuery = static function (PDO $db, string $sql): PDOStatement {
+    $stmt = $db->query($sql);
+    if ($stmt === false) {
+        throw new RuntimeException('comprobar_notas: query failed');
+    }
+
+    return $stmt;
+};
+
+$constantsPayload = DependencyResolver::get(ComprobarNotasConstantsData::class)->execute();
+$nivel_stgr_B = NivelStgrId::B;
+$nivel_stgr_C1 = NivelStgrId::C1;
+$nivel_stgr_C2 = NivelStgrId::C2;
+$nivel_stgr_R = NivelStgrId::R;
+$nivel_stgr_N = NivelStgrId::N;
+$nota_situ_numerica = NotaSituacion::NUMERICA;
+$nota_situ_cursada = NotaSituacion::CURSADA;
 
 $Qactualizar = (string)filter_input(INPUT_POST, 'actualizar');
 $Qid_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
+
+$tabla = 'p_numerarios';
+$tabla_txt = 'Numerarios';
 
 if ($Qid_tabla === 'n') {
     $tabla = 'p_numerarios';
@@ -49,7 +63,7 @@ if ($Qactualizar === 'c1') {
 		HAVING count(*) < 13 
 		";
 
-    $oDBSt_sql = $oDB->query($ssql);
+    $oDBSt_sql = $dbQuery($oDB, $ssql);
     $nf = $oDBSt_sql->rowCount();
 
     foreach ($oDBSt_sql->fetchAll() as $row) {
@@ -57,7 +71,7 @@ if ($Qactualizar === 'c1') {
         $ssql_1 = "UPDATE $tabla SET nivel_stgr=" . $nivel_stgr_C1 . "
 			WHERE id_nom=$id_nom
 			";
-        $oDB->query($ssql_1);
+        $dbQuery($oDB, $ssql_1);
     }
 }
 if ($Qactualizar === 'c2') {
@@ -69,7 +83,7 @@ if ($Qactualizar === 'c2') {
 		HAVING count(*) > 12 
 		";
 
-    $oDBSt_sql = $oDB->query($ssql);
+    $oDBSt_sql = $dbQuery($oDB, $ssql);
     $nf = $oDBSt_sql->rowCount();
 
     $i = 0;
@@ -79,7 +93,7 @@ if ($Qactualizar === 'c2') {
         $ssql_1 = "UPDATE $tabla SET nivel_stgr= ". $nivel_stgr_C2 ."
 			WHERE id_nom=$id_nom
 			";
-        $oDB->query($ssql_1);
+        $dbQuery($oDB, $ssql_1);
     }
 }
 if ($Qactualizar === 'r') {
@@ -88,7 +102,7 @@ if ($Qactualizar === 'r') {
 		WHERE p.nivel_stgr != " . $nivel_stgr_R . " AND n.id_asignatura = 9998 
 		";
 
-    $oDBSt_sql = $oDB->query($ssql);
+    $oDBSt_sql = $dbQuery($oDB, $ssql);
     $nf = $oDBSt_sql->rowCount();
 
     $i = 0;
@@ -98,7 +112,7 @@ if ($Qactualizar === 'r') {
         $ssql_1 = "UPDATE $tabla SET nivel_stgr=" . $nivel_stgr_R . "
 			WHERE id_nom=$id_nom
 			";
-        $oDB->query($ssql_1);
+        $dbQuery($oDB, $ssql_1);
     }
 }
 if ($Qactualizar === 'borrar_cursada') {
@@ -112,10 +126,11 @@ if ($Qactualizar === 'borrar_cursada') {
             AND id_asignatura = $Qid_asignatura
 		";
 
-    $oDB->query($ssql);
+    $dbQuery($oDB, $ssql);
 }
 if ($Qactualizar === 'caduca_cursada') {
-    $caduca_cursada = (int)$_SESSION['oConfig']->getCaducaCursada();
+    $oConfig = $_SESSION['oConfig'] ?? null;
+    $caduca_cursada = $oConfig instanceof ConfigSnapshot ? (int) $oConfig->getCaducaCursada() : 0;
     $f_caduca_iso = (new DateTimeImmutable('today'))
         ->sub(new DateInterval('P' . $caduca_cursada . 'Y'))
         ->format('Y-m-d');
@@ -126,7 +141,7 @@ if ($Qactualizar === 'caduca_cursada') {
             AND f_acta < '$f_caduca_iso'
 		";
 
-    $oDBSt_sql = $oDB->query($ssql);
+    $oDBSt_sql = $dbQuery($oDB, $ssql);
     $nf = $oDBSt_sql->rowCount();
 
     $i = 0;
@@ -137,7 +152,7 @@ if ($Qactualizar === 'caduca_cursada') {
         $ssql_1 = "DELETE FROM e_notas_dl
 			WHERE id_nom=$id_nom AND id_asignatura = $id_asignatura
 			";
-        $oDB->query($ssql_1);
+        $dbQuery($oDB, $ssql_1);
     }
 }
 if ($Qactualizar == "9999") {
@@ -149,7 +164,7 @@ if ($Qactualizar == "9999") {
 		HAVING count(*) >= 28 AND Max(n.id_nivel)<>9999
 		ORDER BY p.apellido1 ASC,p.apellido2 ";
 
-    $oDBSt_sql = $oDB->query($ssql);
+    $oDBSt_sql = $dbQuery($oDB, $ssql);
     $nf = $oDBSt_sql->rowCount();
 
     $i = 0;
@@ -162,7 +177,7 @@ if ($Qactualizar == "9999") {
 					AND f_acta is not null
 				ORDER BY f_acta DESC";
         //echo "f_actas: $ssql_1<br>";
-        $oDBSt_sql_1 = $oDB->query($ssql_1);
+        $oDBSt_sql_1 = $dbQuery($oDB, $ssql_1);
         $f_acta = $oDBSt_sql_1->fetchColumn();
         if (empty($f_acta)) {
             //pongo la de hoy. creo que actualmente no se utiliza (Y-m-d para columna fecha).
@@ -172,11 +187,11 @@ if ($Qactualizar == "9999") {
         $ssql_2 = "UPDATE $tabla SET nivel_stgr=" . $nivel_stgr_C1 . "
 			WHERE id_nom=$id_nom
 			";
-        $oDB->query($ssql_2);
+        $dbQuery($oDB, $ssql_2);
 
         $ssql_3 = "INSERT INTO e_notas_dl(id_nom,id_nivel,id_asignatura,f_acta,id_situacion,acta)
 						 VALUES ($id_nom,'9999','9999','$f_acta',1,'fin bienio') ";
-        $oDB->query($ssql_3);
+        $dbQuery($oDB, $ssql_3);
     }
 }
 if ($Qactualizar == "9998") {
@@ -188,7 +203,7 @@ if ($Qactualizar == "9998") {
 		HAVING count(*) >= 53 AND Max(n.id_nivel)<>9998
 		ORDER BY p.apellido1,p.apellido2,nom ";
 
-    $oDBSt_sql = $oDB->query($ssql);
+    $oDBSt_sql = $dbQuery($oDB, $ssql);
     $nf = $oDBSt_sql->rowCount();
 
     $i = 0;
@@ -200,17 +215,17 @@ if ($Qactualizar == "9998") {
 			WHERE id_nom=$id_nom and id_nivel between 2000 and 3000 
 				AND f_acta is not null
 			ORDER BY f_acta DESC";
-        $oDBSt_sql_1 = $oDB->query($ssql_1);
+        $oDBSt_sql_1 = $dbQuery($oDB, $ssql_1);
         $f_acta = $oDBSt_sql_1->fetchColumn();
 
         $ssql_2 = "UPDATE $tabla SET nivel_stgr=" . $nivel_stgr_R . "
 			WHERE id_nom=$id_nom
 			";
-        $oDB->query($ssql_2);
+        $dbQuery($oDB, $ssql_2);
 
         $ssql_3 = "INSERT INTO e_notas_dl(id_nom,id_nivel,id_asignatura,f_acta,id_situacion,acta)
 						 VALUES ($id_nom,'9998','9998','$f_acta',1,'fin cuadrienio') ";
-        $oDB->query($ssql_3);
+        $dbQuery($oDB, $ssql_3);
     }
 }
 ?>
@@ -243,7 +258,7 @@ $sql = "SELECT n.id_schema,n.acta,n.f_acta,p.nom,p.apellido1,p.apellido2
         ORDER BY id_nom,n.id_schema
     ";
 
-$oDBSt_traslados = $oDB->query($sql);
+$oDBSt_traslados = $dbQuery($oDB, $sql);
 $nf = $oDBSt_traslados->rowCount();
 echo "<p>0. Personas con notas sin trasladar: $nf</p>";
 if (!empty($nf)) {
@@ -277,7 +292,7 @@ GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,nivel_stgr
 HAVING count(*) >= 28 AND Max(n.id_nivel)<>9999
 ORDER BY p.apellido1 ASC,p.apellido2 ";
 
-$oDBSt_bienio = $oDB->query($sql);
+$oDBSt_bienio = $dbQuery($oDB, $sql);
 $nf = $oDBSt_bienio->rowCount();
 echo "<p>1. $tabla_txt con el bienio terminado y sin poner que lo ha terminado : $nf</p>";
 echo "<p>Es importante poner bien la fecha en que lo ha terminado</p>";
@@ -310,7 +325,7 @@ $sql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*) as num_asig,niv
 		HAVING count(*) >= 53 AND Max(n.id_nivel)<>9998
 		ORDER BY p.apellido1,p.apellido2,nom ";
 
-$oDBSt_cuadrienio = $oDB->query($sql);
+$oDBSt_cuadrienio = $dbQuery($oDB, $sql);
 $nf = $oDBSt_cuadrienio->rowCount();
 echo "<br><p>2. $tabla_txt con el cuadrienio terminado y sin poner que lo ha terminado : $nf</p>";
 
@@ -341,14 +356,14 @@ if (!empty($nf)) {
 /** @var AsignaturasMapData $asignaturasMapData */
 $asignaturasMapData = DependencyResolver::get(AsignaturasMapData::class);
 $dAsigMap = $asignaturasMapData->execute();
-$a_asignaturas_map = $dAsigMap['a_asignaturas'] ?? [];
+$a_asignaturas_map = $dAsigMap['a_asignaturas'];
 
 $sqlF = "SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura
 FROM $tabla p,e_notas_dl n
 WHERE p.id_nom=n.id_nom AND (n.f_acta) IS NULL AND (n.id_situacion = " . $nota_situ_numerica . " OR n.id_situacion::text ~ '[34]')
 ORDER BY p.apellido1,p.apellido2 ";
 
-$oDBSt_sql = $oDB->query($sqlF);
+$oDBSt_sql = $dbQuery($oDB, $sqlF);
 $nf = $oDBSt_sql->rowCount();
 echo "<br><p>4. $tabla_txt con asignaturas sin fecha de acta: $nf</p>";
 
@@ -378,7 +393,7 @@ $ssql = "SELECT p.nivel_stgr,p.nom, p.apellido1, p.apellido2, count(*) AS NumAsi
 	HAVING count(*) < 14 
 	ORDER BY apellido1,apellido2,nom";
 
-$oDBSt_sql = $oDB->query($ssql);
+$oDBSt_sql = $dbQuery($oDB, $ssql);
 $nf = $oDBSt_sql->rowCount();
 if (!empty($nf)) {
     echo "<br><p>5. $tabla_txt con \"c1\" mal puesto: $nf</p>";
@@ -409,7 +424,7 @@ $ssql = "SELECT p.nivel_stgr,p.nom, p.apellido1, p.apellido2, count(*) AS NumAsi
 	HAVING count(*) > 13 
 	ORDER BY apellido1,apellido2,nom";
 
-$oDBSt_sql = $oDB->query($ssql);
+$oDBSt_sql = $dbQuery($oDB, $ssql);
 $nf = $oDBSt_sql->rowCount();
 if (!empty($nf)) {
     echo "<br><p>6. $tabla_txt con \"c2\" mal puesto: $nf</p>";
@@ -439,7 +454,7 @@ $ssql = "SELECT p.nivel_stgr,p.nom, p.apellido1, p.apellido2
 	WHERE p.nivel_stgr != " . $nivel_stgr_R . " AND n.id_asignatura = 9998
 	ORDER BY apellido1,apellido2,nom";
 
-$oDBSt_sql = $oDB->query($ssql);
+$oDBSt_sql = $dbQuery($oDB, $ssql);
 $nf = $oDBSt_sql->rowCount();
 if (!empty($nf)) {
     echo "<br><p>7. $tabla_txt con \"r\" sin poner: $nf</p>";
@@ -469,13 +484,14 @@ FROM $tabla p,e_notas_dl n
 WHERE p.situacion != 'B' AND p.id_nom = n.id_nom AND n.id_situacion = " . $nota_situ_cursada . "
 ORDER BY p.apellido1,p.apellido2 ";
 
-$oDBSt_sql = $oDB->query($sqlF);
+$oDBSt_sql = $dbQuery($oDB, $sqlF);
 $nf = $oDBSt_sql->rowCount();
 echo "<br><p>8. $tabla_txt con asignaturas cursadas sin examinar: $nf</p>";
 
 /* Para sacar una lista*/
 $go = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'caduca_cursada')));
-$caduca_cursada = $_SESSION['oConfig']->getCaducaCursada();
+$oConfig = $_SESSION['oConfig'] ?? null;
+$caduca_cursada = $oConfig instanceof ConfigSnapshot ? $oConfig->getCaducaCursada() : '';
 
 echo "<table>";
 foreach ($oDBSt_sql->fetchAll() as $algo) {

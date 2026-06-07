@@ -6,54 +6,70 @@ use src\shared\config\ConfigGlobal;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
+use src\permisos\domain\XPermisos;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\is_true;
 
 /**
- * Caso de uso: devuelve las tareas del proceso para un id_activ como
- * estructura (completado, fase, tarea, responsable, observ) + flag de
- * permiso de edicion. El render HTML se hace en el frontend.
+ * Caso de uso: tareas del proceso para un id_activ (estructura + permiso edición).
  */
 class ActividadProcesoGet
 {
+    public function __construct(
+        private readonly ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+        private readonly ActividadFaseRepositoryInterface $actividadFaseRepository,
+        private readonly ActividadTareaRepositoryInterface $actividadTareaRepository,
+        private readonly TareaProcesoRepositoryInterface $tareaProcesoRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @return array{error: string, a_rows: list<array<string, mixed>>}
+     */
     public function execute(array $input): array
     {
-        $Qid_activ = (int)($input['id_activ'] ?? 0);
+        $Qid_activ = input_int($input, 'id_activ');
 
         $aWhere = [
             'id_activ' => $Qid_activ,
             '_ordre' => 'id_fase',
         ];
-        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
-        $oLista = $ActividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
-
-        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-        $ActividadTareaRepository = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
-        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+        $oLista = $this->actividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
 
         $aRows = [];
         foreach ($oLista as $oActividadProcesoTarea) {
             $id_item = (int)$oActividadProcesoTarea->getId_item();
-            $id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
+            $id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso();
             $id_fase = $oActividadProcesoTarea->getId_fase();
             $id_tarea = $oActividadProcesoTarea->getId_tarea();
+            if ($id_fase === null || $id_tarea === null) {
+                continue;
+            }
             $completado = is_true($oActividadProcesoTarea->isCompletado());
             $observ = (string)$oActividadProcesoTarea->getObserv();
 
-            $oFase = $ActividadFaseRepository->findById($id_fase);
-            $fase = $oFase->getDesc_fase();
-            if (empty($fase)) {
+            $oFase = $this->actividadFaseRepository->findById($id_fase);
+            if ($oFase === null) {
                 continue;
             }
-            $oTarea = $ActividadTareaRepository->findById($id_tarea);
+            $fase = $oFase->getDesc_fase();
+            if ($fase === '') {
+                continue;
+            }
+            $oTarea = $this->actividadTareaRepository->findById($id_tarea);
+            if ($oTarea === null) {
+                continue;
+            }
             $tarea = $oTarea->getDesc_tarea();
 
-            $cTareasProceso = $TareaProcesoRepository->getTareasProceso([
+            $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso([
                 'id_tipo_proceso' => $id_tipo_proceso,
                 'id_fase' => $id_fase,
                 'id_tarea' => $id_tarea,
             ]);
-            if (empty($cTareasProceso)) {
+            if ($cTareasProceso === []) {
                 return [
                     'error' => sprintf(
                         _("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),
@@ -66,8 +82,9 @@ class ActividadProcesoGet
             }
             $oTareaProceso = $cTareasProceso[0];
             $of_responsable_txt = (string)$oTareaProceso->getOf_responsable_txt();
-            $puede_editar = empty($of_responsable_txt)
-                || ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt));
+            $oPerm = $_SESSION['oPerm'] ?? null;
+            $puede_editar = $of_responsable_txt === ''
+                || ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina($of_responsable_txt));
 
             $aRows[] = [
                 'id_item' => $id_item,

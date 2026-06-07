@@ -2,15 +2,17 @@
 
 namespace src\ubis\domain;
 
-/* No vale el underscore en el nombre */
-
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\entity\Delegacion;
+
+/* No vale el underscore en el nombre */
 
 class InfoDelegaciones extends DatosInfoRepo
 {
-    public function __construct()
-    {
+    public function __construct(
+        private DelegacionRepositoryInterface $delegacionRepository,
+    ) {
         $this->setTxtTitulo(_("delegaciones"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta delegación?"));
         $this->setTxtBuscar(_("buscar una delegación (sigla)"));
@@ -22,10 +24,11 @@ class InfoDelegaciones extends DatosInfoRepo
         $this->setRepositoryInterface(DelegacionRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<Delegacion>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = ['_ordre' => 'region'];
             $aOperador = [];
@@ -33,9 +36,7 @@ class InfoDelegaciones extends DatosInfoRepo
             $aWhere = ['dl' => $this->k_buscar];
             $aOperador = ['dl' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getDelegaciones($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->delegacionRepository->getDelegaciones($aWhere, $aOperador);
     }
 }

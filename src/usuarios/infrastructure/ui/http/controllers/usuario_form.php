@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\config\ConfigGlobal;
 use Illuminate\Http\JsonResponse;
@@ -19,9 +20,16 @@ use function src\shared\domain\helpers\is_true;
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+if ($oMiUsuario === null) {
+    $jsondata = ['success' => false, 'mensaje' => _('Usuario no encontrado')];
+    (new JsonResponse($jsondata))->send();
+    return;
+}
 $miRole = $oMiUsuario->getId_role();
+$aOpciones = [];
+$a_campos = [];
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 // a los usuarios normales (no administrador) sólo dejo ver la parte de los avisos.
@@ -50,7 +58,7 @@ if ($miRole < 4) { // es administrador
         $cond_role .= "AND (pau != '" . PauType::PAU_CTR . "' OR pau != '" . PauType::PAU_CDC . "' OR pau IS NULL)";
     }
 
-    $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
+    $RoleRepository = DependencyResolver::get(RoleRepositoryInterface::class);
     $aOpcionesRoles = $RoleRepository->getArrayRolesCondicion($cond_role);
 
     $oGrupoGrupoPermMenu = [];
@@ -58,9 +66,21 @@ if ($miRole < 4) { // es administrador
     $cUsuarioPermCtr = [];
     $camposMas = '';
     $aDataDespl = [];
+    $que_user = 'nuevo';
+    $id_role = '';
+    $usuario = '';
+    $nom_usuario = '';
+    $seccion = '';
+    $email = '';
+    $pau = '';
+    $chk_cambio_password = '';
+    $chk_has_2fa = '';
     if (!empty($Qid_usuario)) {
         $que_user = 'guardar';
         $oUsuario = $UsuarioRepository->findById($Qid_usuario);
+        if ($oUsuario === null) {
+            $error_txt = _('Usuario no encontrado');
+        } else {
 
         $seccion = $miSfsv;
         $usuario = $oUsuario->getUsuarioAsString();
@@ -71,7 +91,10 @@ if ($miRole < 4) { // es administrador
         $chk_has_2fa = is_true($has_2fa) ? 'checked' : '';
         $email = $oUsuario->getEmailAsString();
         $id_role = $oUsuario->getId_role();
-        $oRole = $RoleRepository->findById($id_role);
+        $oRole = $RoleRepository->findById($id_role ?? 0);
+        if ($oRole === null) {
+            $error_txt = _('Rol no encontrado');
+        } else {
         $pau = $oRole->getPauAsString();
         $isSv = $oRole->isSv();
         $isSf = $oRole->isSf();
@@ -86,7 +109,7 @@ if ($miRole < 4) { // es administrador
                     $cond = "WHERE sf = 't'";
                     break;
             }
-            $oGCasas = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
+            $oGCasas = DependencyResolver::get(CasaDlRepositoryInterface::class);
             $aOpcionesCasas = $oGCasas->getArrayCasas($cond);
 
             $aDataDespl['tipo'] = 'array';
@@ -99,7 +122,7 @@ if ($miRole < 4) { // es administrador
         }
         if ($pau === PauType::PAU_CTR && $isSv) { //centroSv
             $id_pau = $oUsuario->getCsvIdPauAsString();
-            $CentroDlRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
+            $CentroDlRepository = DependencyResolver::get(CentroEllosRepositoryInterface::class);
             $aOpciones = $CentroDlRepository->getArrayCentros();
 
             $aDataDespl['tipo'] = 'simple';
@@ -111,7 +134,7 @@ if ($miRole < 4) { // es administrador
         }
         if ($pau === PauType::PAU_CTR && $isSf) { //centroSf
             $id_pau = $oUsuario->getCsvIdPauVo()?->value();
-            $CentroDlRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+            $CentroDlRepository = DependencyResolver::get(CentroEllasRepositoryInterface::class);
             $aOpciones = $CentroDlRepository->getArrayCentros();
 
             $aDataDespl['tipo'] = 'simple';
@@ -125,20 +148,24 @@ if ($miRole < 4) { // es administrador
             $id_pau = $oUsuario->getCsvIdPauAsString();
 
             $nom_role = $oRole->getRoleAsString();
+            $aOpciones = [];
             switch ($nom_role) {
                 case "p-agd":
-                    $PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+                    $PersonaAgdRepository = DependencyResolver::get(PersonaAgdRepositoryInterface::class);
                     $aOpciones = $PersonaAgdRepository->getArrayPersonas();
                     break;
                 case "p-n":
-                    $PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+                    $PersonaNRepository = DependencyResolver::get(PersonaNRepositoryInterface::class);
                     $aOpciones = $PersonaNRepository->getArrayPersonas();
                     break;
                 case "p-sacd":
                 case "p-sacdInt": // para hacer pruebas desde dentro (dmz=false)
-                    $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+                    $PersonaDlRepository = DependencyResolver::get(PersonaDlRepositoryInterface::class);
                     // de momento sólo n y agd
                     $aOpciones = $PersonaDlRepository->getArraySacd("AND id_tabla ~ '[na]'");
+                    break;
+                default:
+                    $aOpciones = [];
                     break;
             }
 
@@ -151,10 +178,12 @@ if ($miRole < 4) { // es administrador
         }
 
         if (ConfigGlobal::is_app_installed('procesos')) {
-            $PermUsuarioActividadRepository = $GLOBALS['container']->get(PermUsuarioActividadRepositoryInterface::class);
+            $PermUsuarioActividadRepository = DependencyResolver::get(PermUsuarioActividadRepositoryInterface::class);
             $aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt'];
             $aOperador = [];
             $cUsuarioPerm = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere, $aOperador);
+        }
+        }
         }
     } else {
         $que_user = 'nuevo';
@@ -169,34 +198,36 @@ if ($miRole < 4) { // es administrador
         $chk_has_2fa = '';
     }
 
-    $obj = 'src\\usuarios\\domain\\entity\\Usuario';
+    if (empty($error_txt)) {
+        $obj = 'src\\usuarios\\domain\\entity\\Usuario';
 
-    $id_for_ctx = ($que_user === 'nuevo') ? 0 : (int)$Qid_usuario;
-    $ctx_guardar = HashB::sign('usuario_guardar', [
-        'que_user' => $que_user,
-        'id_usuario' => $id_for_ctx,
-        'quien' => (string)$Qquien,
-    ]);
+        $id_for_ctx = ($que_user === 'nuevo') ? 0 : (int)$Qid_usuario;
+        $ctx_guardar = HashB::sign('usuario_guardar', [
+            'que_user' => $que_user,
+            'id_usuario' => $id_for_ctx,
+            'quien' => (string)$Qquien,
+        ]);
 
-    $a_campos = [
-        'id_usuario' => $Qid_usuario,
-        'obj' => $obj,
-        'que_user' => $que_user,
-        'quien' => $Qquien,
-        'ctx_guardar' => $ctx_guardar,
-        'pau' => $pau,
-        'aDataDespl' => $aDataDespl,
-        'usuario' => $usuario,
-        'nom_usuario' => $nom_usuario,
-        'aOpcionesRoles' => $aOpcionesRoles,
-        'id_role' => $id_role,
-        'oGrupoGrupoPermMenu' => $oGrupoGrupoPermMenu,
-        'cUsuarioPermCtr' => $cUsuarioPermCtr,
-        'email' => $email,
-        'camposMas' => $camposMas,
-        'chk_cambio_password' => $chk_cambio_password,
-        'chk_has_2fa' => $chk_has_2fa,
-    ];
+        $a_campos = [
+            'id_usuario' => $Qid_usuario,
+            'obj' => $obj,
+            'que_user' => $que_user,
+            'quien' => $Qquien,
+            'ctx_guardar' => $ctx_guardar,
+            'pau' => $pau,
+            'aDataDespl' => $aDataDespl,
+            'usuario' => $usuario,
+            'nom_usuario' => $nom_usuario,
+            'aOpcionesRoles' => $aOpcionesRoles,
+            'id_role' => $id_role,
+            'oGrupoGrupoPermMenu' => $oGrupoGrupoPermMenu,
+            'cUsuarioPermCtr' => $cUsuarioPermCtr,
+            'email' => $email,
+            'camposMas' => $camposMas,
+            'chk_cambio_password' => $chk_cambio_password,
+            'chk_has_2fa' => $chk_has_2fa,
+        ];
+    }
 
 } // fin solo administradores.
 

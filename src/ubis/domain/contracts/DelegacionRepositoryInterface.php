@@ -21,9 +21,9 @@ interface DelegacionRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Delegacion
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Delegacion
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Delegacion> Una colección de objetos de tipo Delegacion
      */
     public function getDelegaciones(array $aWhere = [], array $aOperators = []): array;
 
@@ -38,7 +38,19 @@ interface DelegacionRepositoryInterface
 
     public function getNomTabla(): string;
 
-    public function datosById(int $id_dl): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_dl): array|false;
 
     /**
      * Busca la clase con dl en el repositorio.
@@ -53,28 +65,44 @@ interface DelegacionRepositoryInterface
      * Indica si la delegación (sigla) es la propia región STGR especial.
      * Devuelve true para casos especiales H y M.
      */
-    public function soy_region_stgr($dele = ''): bool;
+    public function soy_region_stgr(string $dele = ''): bool;
 
     /**
      * Devuelve información de región STGR y esquemas relacionados de la dl dada.
      * Retorna array asociativo con claves: region_stgr, esquema_region_stgr, mi_id_schema, esquema_dl
+     */
+    /**
+     * @return array<string, mixed>
+     */
+    /**
+     * @return array<string, mixed>
      */
     public function mi_region_stgr(string $dele = ''): array;
 
     /**
      * Devuelve un array [schema => id] para la región STGR indicada (incluye la propia).
      */
-    public function getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv);
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayIdSchemaRegionStgr(string $sRegionStgr, int $mi_sfsv): array;
 
     /**
      * Devuelve un array de nombres de esquemas pertenecientes al grupo STGR de la región indicada.
      * Si $mi_sfsv es null, devuelve los esquemas "comunes".
      */
-    public function getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv): array;
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArraySchemasRegionStgr(string $sRegionStgr, ?int $mi_sfsv = null): array;
 
     /**
      * Devuelve array [id_dl => dl] filtrado por regiones STGR indicadas.
      */
-    public function getArrayDlRegionStgr($aRegiones = array());
+    /**
+     * @param list<string> $aRegiones
+     * @return array<int|string, string>
+     */
+    public function getArrayDlRegionStgr(array $aRegiones = []): array;
 
 }

@@ -1,8 +1,11 @@
 <?php
 
+use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\CalendarioPeriodosFormPeriodoData;
 use src\shared\web\ContestarJson;
 
-ContestarJson::enviar('', CalendarioPeriodosFormPeriodoData::execute(
-    (int)filter_input(INPUT_POST, 'id_item')
+use function src\shared\domain\helpers\input_int;
+
+ContestarJson::enviar('', DependencyResolver::get(CalendarioPeriodosFormPeriodoData::class)->execute(
+    input_int($_POST, 'id_item')
 ));

@@ -1,32 +1,46 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\entity\Documento;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\web\ContestarJson;
 
-$Qid_tipo_doc = (string)filter_input(INPUT_POST, 'id_tipo_doc');
-$Qnumerado = (string)filter_input(INPUT_POST, 'numerado');
-$Qstr_selected_id = (string)filter_input(INPUT_POST, 'str_selected_id');
-$Qf_recibido = (string)filter_input(INPUT_POST, 'f_recibido');
-$Qf_asignado = (string)filter_input(INPUT_POST, 'f_asignado');
+$Qid_tipo_doc = input_string($_POST, 'id_tipo_doc');
+$Qnumerado = input_string($_POST, 'numerado');
+$Qstr_selected_id = input_string($_POST, 'str_selected_id');
+$Qf_recibido = input_string($_POST, 'f_recibido');
+$Qf_asignado = input_string($_POST, 'f_asignado');
 
-$selected_id = json_decode(rawurldecode($Qstr_selected_id));
+$selected_id = json_decode(rawurldecode($Qstr_selected_id), true);
+if (!is_array($selected_id)) {
+    $selected_id = [];
+}
 $error_txt = '';
 
-$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+/** @var DocumentoRepositoryInterface $DocumentoRepository */
+$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
 $i = 0;
-foreach ($selected_id as $id_ubi) {
-    $var_num = "num_" . $id_ubi;
-    $num = $_POST[$var_num];
+foreach ($selected_id as $id_ubi_raw) {
+    if (!is_numeric($id_ubi_raw)) {
+        continue;
+    }
+    $id_ubi = (int) $id_ubi_raw;
+    $var_num = 'num_' . $id_ubi;
+    $numRaw = $_POST[$var_num] ?? 0;
+    $num = is_numeric($numRaw) ? (int) $numRaw : 0;
     $cDocumentos = $DocumentoRepository->getDocumentos(['id_ubi' => $id_ubi, 'id_tipo_doc' => $Qid_tipo_doc]);
     if (empty($cDocumentos)) {
-        $DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+        /** @var DocumentoRepositoryInterface $DocumentoRepository */
+$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
         $id_new = $DocumentoRepository->getNewId();
         $oDocumento = new Documento();
         $oDocumento->setId_doc($id_new);
         $oDocumento->setIdUbiVo($id_ubi);
-        $oDocumento->setId_tipo_doc($Qid_tipo_doc);
+        $oDocumento->setId_tipo_doc((int) $Qid_tipo_doc);
     } else {
         $oDocumento = $cDocumentos[0];
     }

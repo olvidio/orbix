@@ -10,21 +10,22 @@ use src\ubis\domain\entity\Ubi;
 
 /**
  * Devuelve las actividades de cada casa en un periodo dado, agrupadas
- * por `nombre_ubi`. Para `$Qcdc_sel >= 10` se buscan las actividades
- * directamente y se agrupan por `id_ubi`.
- *
- * Migrado desde `apps/planning/domain/ActividadesPorCasas.php`
- * (slice 2 de la migracion del modulo planning).
+ * por `nombre_ubi`.
  */
 class ActividadesPorCasasService
 {
+    public function __construct(
+        private ActividadRepositoryInterface $actividadRepository,
+        private CasaDlRepositoryInterface $casaDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+    ) {
+    }
+
     /**
-     * @param array<int,int|string>|null $aIdCdc ids de casa cuando
-     *        `$Qcdc_sel === 9` (seleccion multiple). Si es `null` se
-     *        busca en `$_POST['id_cdc']`.
-     * @return array{0: string, 1: array<string, array<int, array<string, array>>>}
+     * @param array<int,int|string>|null $aIdCdc ids de casa cuando `$Qcdc_sel === 9`
+     * @return array{0: string, 1: array<int|string, array<string, list<array<string, mixed>>>>}
      */
-    public static function actividadesPorCasas(
+    public function actividadesPorCasas(
         int $Qcdc_sel,
         DateTimeLocal $oIniPlanning,
         DateTimeLocal $oFinPlanning,
@@ -35,7 +36,6 @@ class ActividadesPorCasasService
     ): array {
         $fin_iso = $oFin->format('Y-m-d');
         $inicio_iso = $oInicio->format('Y-m-d');
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
         $sCdc = '';
         $cdc = [];
         $a_actividades = [];
@@ -68,12 +68,11 @@ class ActividadesPorCasasService
                     break;
                 case 6:
                     $aWhere['sf'] = 't';
-                    $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-                    $cCentrosSf = $GesCentrosSf->getCentros(['cdc' => 't', '_ordre' => 'nombre_ubi']);
+                    $cCentrosSf = $this->centroEllasRepository->getCentros(['cdc' => 't', '_ordre' => 'nombre_ubi']);
                     break;
                 case 9:
-                    $a_id_cdc = $aIdCdc ?? ((array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY));
-                    $a_id_cdc = array_filter($a_id_cdc, static fn($v) => $v !== null && $v !== '');
+                    $a_id_cdc = $aIdCdc ?? [];
+                    $a_id_cdc = array_filter($a_id_cdc, static fn ($v) => $v !== '');
                     if (!empty($a_id_cdc)) {
                         $sCdc = implode(',', $a_id_cdc);
                         $aWhere['id_ubi'] = $sCdc;
@@ -82,8 +81,7 @@ class ActividadesPorCasasService
                     break;
             }
             $aWhere['_ordre'] = 'nombre_ubi';
-            $GesCasaDl = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
-            $cCasasDl = $GesCasaDl->getCasas($aWhere, $aOperador);
+            $cCasasDl = $this->casaDlRepository->getCasas($aWhere, $aOperador);
 
             if ($Qcdc_sel === 6) {
                 foreach ($cCentrosSf as $oCentroSf) {
@@ -97,17 +95,11 @@ class ActividadesPorCasasService
                 $nombre_ubi = $oCasaDl->getNombre_ubi();
                 $cdc[$p] = "u#$id_ubi#$nombre_ubi";
 
-                $a_cdc = $ActividadRepository->actividadesDeUnaCasa($id_ubi, $oIniPlanning, $oFinPlanning, $Qcdc_sel);
-                if ($a_cdc !== false) {
-                    $a_actividades[$nombre_ubi] = [$cdc[$p] => $a_cdc];
-                    $p++;
-                } elseif ($sin_activ === 1) {
-                    $a_actividades[$nombre_ubi] = [$cdc[$p] => []];
-                    $p++;
-                }
+                $a_cdc = $this->actividadRepository->actividadesDeUnaCasa((int)$id_ubi, $oIniPlanning, $oFinPlanning, $Qcdc_sel);
+                $a_actividades[$nombre_ubi] = [$cdc[$p] => $a_cdc];
+                $p++;
             }
             ksort($a_actividades);
-            // Linea en blanco al final para que se vean las 3 divisiones aun con todas las casas ocupadas.
             $cdc[$p + 1] = "##";
             $a_actividades[] = [$cdc[$p + 1] => []];
         } else {
@@ -131,7 +123,7 @@ class ActividadesPorCasasService
             $aOperador['status'] = '<';
             $aWhere['_ordre'] = 'id_ubi';
 
-            $aUbis = $ActividadRepository->getUbis($aWhere, $aOperador);
+            $aUbis = $this->actividadRepository->getUbis($aWhere, $aOperador);
             $p = 0;
             foreach ($aUbis as $id_ubi) {
                 if (empty($id_ubi)) {
@@ -142,18 +134,16 @@ class ActividadesPorCasasService
                     $cdc[$p] = "u#$id_ubi#$nombre_ubi";
                 } else {
                     $oCasa = Ubi::NewUbi($id_ubi);
+                    if ($oCasa === null) {
+                        continue;
+                    }
                     $id_ubi = $oCasa->getId_ubi();
                     $nombre_ubi = $oCasa->getNombre_ubi();
                     $cdc[$p] = "u#$id_ubi#$nombre_ubi";
                 }
-                $a_cdc = $ActividadRepository->actividadesDeUnaCasa($id_ubi, $oIniPlanning, $oFinPlanning, $Qcdc_sel);
-                if ($a_cdc !== false) {
-                    $a_actividades[$nombre_ubi] = [$cdc[$p] => $a_cdc];
-                    $p++;
-                } elseif ($sin_activ === 1) {
-                    $a_actividades[$nombre_ubi] = [$cdc[$p] => []];
-                    $p++;
-                }
+                $a_cdc = $this->actividadRepository->actividadesDeUnaCasa((int)$id_ubi, $oIniPlanning, $oFinPlanning, $Qcdc_sel);
+                $a_actividades[$nombre_ubi] = [$cdc[$p] => $a_cdc];
+                $p++;
             }
             ksort($a_actividades);
             $cdc[$p + 1] = "##";

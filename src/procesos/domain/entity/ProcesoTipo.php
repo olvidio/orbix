@@ -32,7 +32,7 @@ class ProcesoTipo
     {
         $this->id_tipo_proceso = $id_tipo_proceso instanceof ProcesoTipoId
             ? $id_tipo_proceso
-            : ProcesoTipoId::fromNullableInt($id_tipo_proceso);
+            : (ProcesoTipoId::fromNullableInt($id_tipo_proceso) ?? throw new \InvalidArgumentException('id_tipo_proceso cannot be null'));
     }
 
     /**
@@ -48,7 +48,7 @@ class ProcesoTipo
      */
     public function setId_tipo_proceso(int $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = ProcesoTipoId::fromNullableInt($id_tipo_proceso);
+        $this->id_tipo_proceso = (ProcesoTipoId::fromNullableInt($id_tipo_proceso) ?? throw new \InvalidArgumentException('id_tipo_proceso cannot be null'));
     }
 
 
@@ -80,6 +80,9 @@ class ProcesoTipo
     {
         return 'id_tipo_proceso';
     }
+
+  /** @return array<string, mixed> */
+
 
   public function getDatosCampos(): array
     {

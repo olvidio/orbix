@@ -2,6 +2,7 @@
 
 namespace src\dossiers\infrastructure\persistence\postgresql;
 
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -9,7 +10,6 @@ use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\entity\Dossier;
-use src\dossiers\domain\entity\TipoDossier;
 use src\dossiers\domain\value_objects\DossierPk;
 use src\shared\traits\HandlesPdoErrors;
 
@@ -29,8 +29,7 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
-        $this->setoDbl($oDbl);
+        $this->setoDbl(GlobalPdo::get('oDB'));
         $this->setNomTabla('d_dossiers_abiertos');
     }
 
@@ -39,9 +38,9 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
     /**
      * devuelve una colección (array) de objetos de tipo Dossier
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Dossier
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Dossier> Una colección de objetos de tipo Dossier
      */
     public function getDossieres(array $aWhere = [], array $aOperators = []): array
     {
@@ -78,31 +77,36 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        if (isset($aWhere['_ordre']) && is_scalar($aWhere['_ordre']) && (string) $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . (string) $aWhere['_ordre'];
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && (string) $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . (string) $aWhere['_limit'];
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            // para las fechas del postgres (texto iso)
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_camb_dossier'] = (new ConverterDate('date', $aDatos['f_camb_dossier']))->fromPg();
             $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
             $Dossier = Dossier::fromArray($aDatos);
             $DossierSet->add($Dossier);
         }
-        return $DossierSet->getTot();
+        return array_values($DossierSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -159,6 +163,9 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -169,30 +176,47 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
 
         $sql = "SELECT * FROM $nom_tabla WHERE id_pau = $id_pau AND id_tipo_dossier = $id_tipo_dossier AND tabla = '$tabla' ";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
 
-    public function datosById(int $id_tipo_dossier, int $id_pau, string $tabla): array|bool
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_tipo_dossier, int $id_pau, string $tabla): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_pau = $id_pau AND id_tipo_dossier = $id_tipo_dossier AND tabla = '$tabla' ";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
-            $aDatos['f_camb_dossier'] = (new ConverterDate('date', $aDatos['f_camb_dossier']))->fromPg();
-            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
+        if ($stmt === false) {
+            return false;
         }
-        return $aDatos;
+
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
+        $aDatos['f_camb_dossier'] = (new ConverterDate('date', $aDatos['f_camb_dossier']))->fromPg();
+        $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
-    public function datosByPk(DossierPk $pk): array|bool
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosByPk(DossierPk $pk): array|false
     {
         return $this->datosById($pk->idTipoDossier(), $pk->idPau(), $pk->tabla());
     }
@@ -223,21 +247,4 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
         return $this->findById($pk->idTipoDossier(), $pk->idPau(), $pk->tabla());
     }
 
-    private function cambiarConexion($db)
-    {
-        switch ($db) {
-            case TipoDossier::DB_COMUN:
-                $oDbl = $GLOBALS['oDBC'];
-                $this->setoDbl($oDbl);
-                break;
-            case TipoDossier::DB_INTERIOR:
-                $oDbl = $GLOBALS['oDB'];
-                $this->setoDbl($oDbl);
-                break;
-            case TipoDossier::DB_EXTERIOR:
-                $oDbl = $GLOBALS['oDBE'];
-                $this->setoDbl($oDbl);
-                break;
-        }
-    }
 }

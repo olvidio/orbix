@@ -4,13 +4,12 @@ namespace Tests\integration\procesos\application;
 
 use src\procesos\application\ProcesosEliminar;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 use Tests\factories\procesos\TareaProcesoFactory;
 use Tests\myTest;
 
 /**
  * Tests de integración para ProcesosEliminar.
- *
- * Cubre eliminación exitosa y el mensaje de error cuando el id no existe.
  */
 class ProcesosEliminarTest extends myTest
 {
@@ -32,14 +31,14 @@ class ProcesosEliminarTest extends myTest
 
         $this->assertNotNull($this->repository->findById($id_item));
 
-        $msg = (new ProcesosEliminar())->execute(['id_item' => $id_item]);
+        $msg = DependencyResolver::get(ProcesosEliminar::class)->execute(['id_item' => $id_item]);
         $this->assertSame('', $msg);
         $this->assertNull($this->repository->findById($id_item));
     }
 
     public function test_id_inexistente_devuelve_mensaje_error(): void
     {
-        $msg = (new ProcesosEliminar())->execute(['id_item' => 99999999]);
+        $msg = DependencyResolver::get(ProcesosEliminar::class)->execute(['id_item' => 99999999]);
         $this->assertSame(_('no se encuentra la tarea a borrar'), $msg);
     }
 }

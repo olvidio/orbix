@@ -2,25 +2,28 @@
 
 namespace src\ubis\application;
 
-use src\shared\infrastructure\ProvidesRepositories;
+use src\shared\domain\DatosCampo;
 use src\ubis\application\services\UbiPermisos;
+use src\ubis\application\services\UbiRepositoryResolver;
+use src\ubis\domain\entity\TelecoUbi;
 use function src\shared\domain\helpers\is_true;
 use function src\shared\domain\helpers\urlsafe_b64encode;
 
 final class TelecoTablaData
 {
-    use ProvidesRepositories;
-
-    public static function execute(string $obj_pau, int $id_ubi): array
-    {
-        return (new self())->run($obj_pau, $id_ubi);
+    public function __construct(
+        private UbiRepositoryResolver $ubiRepositoryResolver,
+    ) {
     }
-
-    private function run(string $obj_pau, int $id_ubi): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(string $obj_pau, int $id_ubi): array
     {
-        $repoTeleco = $this->getTelecoRepository($obj_pau);
-        $repoUbi = $this->getRepository($obj_pau);
+        $repoTeleco = $this->ubiRepositoryResolver->getTelecoRepository($obj_pau);
+        $repoUbi = $this->ubiRepositoryResolver->getRepository($obj_pau);
 
+        /** @var list<TelecoUbi> $coleccion */
         $coleccion = $repoTeleco->getTelecos(['id_ubi' => $id_ubi]) ?: [];
         $botones = $this->getPermisosBotones($obj_pau, $id_ubi, $repoUbi);
 
@@ -29,16 +32,23 @@ final class TelecoTablaData
         $c = 0;
         foreach ($coleccion as $oFila) {
             $v = 0;
-            $pks1 = 'get' . ucfirst($oFila->getPrimary_key() ?? '');
+            $pks1 = 'get' . ucfirst($oFila->getPrimary_key());
             $val_pks = $oFila->$pks1();
             $pks = urlsafe_b64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
             $a_valores[$c]['sel'] = $pks;
             foreach ($oFila->getDatosCampos() as $oDatosCampo) {
+                if (!$oDatosCampo instanceof DatosCampo) {
+                    continue;
+                }
                 if ($c === 0) {
-                    $a_cabeceras[] = ucfirst($oDatosCampo->getEtiqueta() ?? '');
+                    $a_cabeceras[] = ucfirst($oDatosCampo->getEtiqueta());
                 }
                 $v++;
-                $metodo = $oDatosCampo->getMetodoGet();
+                $metodoRaw = $oDatosCampo->getMetodoGet();
+                if (!is_string($metodoRaw) || $metodoRaw === '') {
+                    continue;
+                }
+                $metodo = $metodoRaw;
                 $valor_camp = (substr($metodo, -2) === 'Vo') ? $oFila->$metodo()->value() : $oFila->$metodo();
                 if (!$valor_camp) {
                     $a_valores[$c][$v] = '';
@@ -56,8 +66,11 @@ final class TelecoTablaData
                         break;
                     case 'depende':
                     case 'opciones':
-                        $RepoRelacionado = $GLOBALS['container']->get($var_1);
-                        $oRelacionado = $RepoRelacionado->findById($valor_camp);
+                        $oRelacionado = null;
+                        if ($var_1 !== '' && class_exists($var_1)) {
+                            $repoRelacionado = $this->ubiRepositoryResolver->getDireccionRepositoryByInterface($var_1);
+                            $oRelacionado = $repoRelacionado->findById((int) $valor_camp);
+                        }
                         if (substr($var_2, -2) === 'Vo') {
                             $a_valores[$c][$v] = $oRelacionado?->$var_2()?->value() ?: $valor_camp;
                         } else {
@@ -89,7 +102,10 @@ final class TelecoTablaData
 
     private function getPermisosBotones(string $obj_pau, int $id_ubi, object $repoUbi): string
     {
-        $oUbi = str_contains($obj_pau, 'Dl') ? $repoUbi->findById($id_ubi) : null;
+        $oUbi = null;
+        if (str_contains($obj_pau, 'Dl') && method_exists($repoUbi, 'findById')) {
+            $oUbi = $repoUbi->findById($id_ubi);
+        }
         return UbiPermisos::puedeModificar($obj_pau, $oUbi) ? '1' : '0';
     }
 }

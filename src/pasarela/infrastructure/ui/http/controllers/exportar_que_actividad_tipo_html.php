@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ExportarQueActividadTipoHtml;
@@ -10,5 +11,8 @@ $input = [
     'snom_tipo' => (string)filter_input(INPUT_POST, 'snom_tipo'),
 ];
 
-$data = ExportarQueActividadTipoHtml::execute($input);
+/** @var ExportarQueActividadTipoHtml $useCase */
+$useCase = DependencyResolver::get(ExportarQueActividadTipoHtml::class);
+
+$data = $useCase->execute($input);
 ContestarJson::enviar('', $data);

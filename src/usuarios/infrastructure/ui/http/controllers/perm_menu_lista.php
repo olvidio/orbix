@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\permisos\domain\MenuDlPermissionBits;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
@@ -6,7 +7,7 @@ use src\shared\web\ContestarJson;
 
 $Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
 
-$PermMenuRepository = $GLOBALS['container']->get(PermMenuRepositoryInterface::class);
+$PermMenuRepository = DependencyResolver::get(PermMenuRepositoryInterface::class);
 $oGrupoGrupoPermMenu = $PermMenuRepository->getPermMenus(array('id_usuario' => $Qid_usuario));
 
 $a_cabeceras = [array('name' => _("oficina o grupo"), 'width' => '350')];

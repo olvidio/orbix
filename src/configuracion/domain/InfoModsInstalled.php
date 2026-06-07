@@ -5,13 +5,14 @@ namespace src\configuracion\domain;
 /* No vale el underscore en el nombre */
 
 use src\configuracion\domain\contracts\ModuloInstaladoRepositoryInterface;
+use src\configuracion\domain\entity\ModuloInstalado;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoModsInstalled extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private ModuloInstaladoRepositoryInterface $moduloInstaladoRepository,
+    ) {
         $this->setTxtTitulo(_("módulos instalados"));
         $this->setTxtEliminar(_("¿Está seguro que desea desinstalar este módulo?"));
         $this->setTxtBuscar(_("buscar un módulo"));
@@ -23,22 +24,19 @@ class InfoModsInstalled extends DatosInfoRepo
         $this->setRepositoryInterface(ModuloInstaladoRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<ModuloInstalado>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'id_mod');
+            $aWhere = ['_ordre' => 'id_mod'];
             $aOperador = [];
         } else {
-            $aWhere = array('id_mod' => $this->k_buscar);
+            $aWhere = ['id_mod' => $this->k_buscar];
             $aOperador = [];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
 
-        $Coleccion = $oLista->getModuloInstalados($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->moduloInstaladoRepository->getModuloInstalados($aWhere, $aOperador);
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\VerPlanSacdData;
 use src\shared\web\ContestarJson;
@@ -8,4 +9,7 @@ $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-ContestarJson::enviar('', VerPlanSacdData::getData($Qid_sacd_key, $Qperiodo, $Qempiezamin, $Qempiezamax));
+/** @var VerPlanSacdData $useCase */
+$useCase = DependencyResolver::get(VerPlanSacdData::class);
+$result = $useCase->getData($Qid_sacd_key, $Qperiodo, $Qempiezamin, $Qempiezamax);
+ContestarJson::enviar('', $result);

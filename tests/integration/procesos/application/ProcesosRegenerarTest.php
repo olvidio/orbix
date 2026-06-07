@@ -4,15 +4,12 @@ namespace Tests\integration\procesos\application;
 
 use src\procesos\application\ProcesosRegenerar;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 use Tests\factories\procesos\TareaProcesoFactory;
 use Tests\myTest;
 
 /**
  * Tests de integración para ProcesosRegenerar.
- *
- * Verifica que la ejecución con un id_tipo_proceso que no tiene tareas
- * termina sin errores y devuelve la cadena vacía (comportamiento
- * declarado por el caso de uso).
  */
 class ProcesosRegenerarTest extends myTest
 {
@@ -40,7 +37,7 @@ class ProcesosRegenerarTest extends myTest
 
     public function test_regenerar_proceso_sin_tareas_no_falla(): void
     {
-        $msg = (new ProcesosRegenerar())->execute(['id_tipo_proceso' => 999999999]);
+        $msg = DependencyResolver::get(ProcesosRegenerar::class)->execute(['id_tipo_proceso' => 999999999]);
         $this->assertSame('', $msg);
     }
 
@@ -53,7 +50,7 @@ class ProcesosRegenerarTest extends myTest
         $this->idsCreados[] = $o->getId_item();
         $this->repository->Guardar($o);
 
-        $msg = (new ProcesosRegenerar())->execute(['id_tipo_proceso' => $id_tipo_proceso]);
+        $msg = DependencyResolver::get(ProcesosRegenerar::class)->execute(['id_tipo_proceso' => $id_tipo_proceso]);
         $this->assertSame('', $msg);
     }
 }

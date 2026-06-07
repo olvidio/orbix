@@ -2,6 +2,8 @@
 
 namespace src\personas\application;
 
+use function src\shared\domain\helpers\input_string;
+
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\application\support\PersonaSeleccionInput;
@@ -19,27 +21,19 @@ use src\ubis\domain\RegionStgrAviso;
  */
 final class HomePersonaData
 {
+    public function __construct(
+        private PersonaRepositoryResolver $personaRepositoryResolver,
+        private PersonaPubRepositoryInterface $personaPubRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private TelecoPersonaService $telecoPersonaService,
+    ) {
+    }
+
     /**
      * @param array<string,mixed> $input habitualmente `$_POST`
-     * @return array{
-     *     error?: string,
-     *     Qobj_pau?: string,
-     *     id_nom?: int,
-     *     titulo?: string,
-     *     dl?: string,
-     *     f_nacimiento?: string,
-     *     situacion?: string,
-     *     f_situacion?: string,
-     *     profesion?: string,
-     *     stgr?: string,
-     *     observ?: string,
-     *     ctr?: string,
-     *     telfs?: string,
-     *     mails?: string,
-     *     aviso?: string
-     * }
+     * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function execute(array $input): array
     {
         $a_sel = self::normalizeSel($input['sel'] ?? null);
         if (!empty($a_sel)) {
@@ -51,17 +45,16 @@ final class HomePersonaData
             $id_tabla = $seleccion['id_tabla'];
         }
 
-        $Qobj_pau = (string)($input['obj_pau'] ?? '');
+        $Qobj_pau = input_string($input, 'obj_pau');
 
-        $resolver = new PersonaRepositoryResolver();
         $problemasRegionStgr = [];
         try {
             if ($Qobj_pau === 'PersonaEx') {
                 $marcaAviso = false;
-                $oPersona = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class)
+                $oPersona = $this->personaPubRepository
                     ->findByIdParaListado($id_nom, $problemasRegionStgr, $marcaAviso);
             } else {
-                $repoPersona = $resolver->repositorio($Qobj_pau);
+                $repoPersona = $this->personaRepositoryResolver->repositorio($Qobj_pau);
                 $oPersona = $repoPersona->findById($id_nom);
             }
         } catch (\InvalidArgumentException) {
@@ -78,12 +71,12 @@ final class HomePersonaData
         $titulo = (string)$oPersona->getNombreApellidos();
         $dl = (string)($oPersona->getDl() ?? '');
         $f_nacimiento = (string)($oPersona->getF_nacimiento()?->getFromLocal() ?? '');
-        $situacion = (string)($oPersona->getSituacion() ?? '');
+        $situacion = $oPersona->getSituacion();
         $f_situacion = (string)($oPersona->getF_situacion()?->getFromLocal() ?? '');
         $profesion = (string)($oPersona->getProfesion() ?? '');
         $id_nivel_stgr = $oPersona->getNivel_stgr();
         $a_niveles_stgr = NivelStgrId::getArrayNivelStgr();
-        $stgr = (string)($a_niveles_stgr[$id_nivel_stgr] ?? '');
+        $stgr = (string)($a_niveles_stgr[$id_nivel_stgr ?? ''] ?? '');
         $observ = (string)($oPersona->getObserv() ?? '');
 
         // PersonaDl generico => subclase real segun id_tabla.
@@ -101,21 +94,19 @@ final class HomePersonaData
         if ($Qobj_pau !== 'PersonaEx' && $Qobj_pau !== 'PersonaIn') {
             $id_ctr = $oPersona->getId_ctr();
             if (!empty($id_ctr)) {
-                $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                $oCentroDl = $CentroDlRepository->findById($id_ctr);
+                $oCentroDl = $this->centroDlRepository->findById($id_ctr);
                 $ctr = (string)($oCentroDl?->getNombre_ubi() ?? '');
             }
         }
 
-        $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
-        $telfs_fijo = $telecoService->getTelecosPorTipo($id_nom, 'telf', " / ", "*");
-        $telfs_movil = $telecoService->getTelecosPorTipo($id_nom, 'móvil', " / ", "*");
-        if (!empty($telfs_fijo) && !empty($telfs_movil)) {
+        $telfs_fijo = $this->telecoPersonaService->getTelecosPorTipo($id_nom, 'telf', " / ", "*");
+        $telfs_movil = $this->telecoPersonaService->getTelecosPorTipo($id_nom, 'móvil', " / ", "*");
+        if ($telfs_fijo !== '' && $telfs_movil !== '') {
             $telfs = $telfs_fijo . " / " . $telfs_movil;
         } else {
-            $telfs = ($telfs_fijo ?? '') . ($telfs_movil ?? '');
+            $telfs = $telfs_fijo . $telfs_movil;
         }
-        $mails = (string)$telecoService->getTelecosPorTipo($id_nom, 'e-mail', " / ", "*");
+        $mails = (string)$this->telecoPersonaService->getTelecosPorTipo($id_nom, 'e-mail', " / ", "*");
 
         $result = [
             'Qobj_pau' => $Qobj_pau,
@@ -147,7 +138,7 @@ final class HomePersonaData
     private static function normalizeSel(mixed $sel): array
     {
         if (is_array($sel)) {
-            return array_values(array_filter(array_map('strval', $sel), static fn(string $v): bool => $v !== ''));
+            return array_values(array_filter(array_map(static fn(mixed $v): string => is_scalar($v) ? (string)$v : '', $sel), static fn(string $v): bool => $v !== ''));
         }
         if (is_string($sel) && $sel !== '') {
             return [$sel];

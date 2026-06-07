@@ -4,18 +4,15 @@ namespace src\permisos\domain;
 
 class PermDl extends XPermisos
 {
-    var $classname = "PermDl";
+    public string $classname = 'PermDl';
 
     public function __construct()
     {
-        $this->iaccion = $_SESSION['iPermMenus'];
+        $iPermMenus = $_SESSION['iPermMenus'] ?? 0;
+        $this->iaccion = is_numeric($iPermMenus) ? (int) $iPermMenus : 0;
         $this->omplir();
     }
 
-    /**
-     * debe ser el mismo valor que en los menus,
-     * excepto para los inclusivos (más de uno).
-     */
     private function omplir(): void
     {
         $this->permissions = MenuDlPermissionBits::map();

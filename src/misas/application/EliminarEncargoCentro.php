@@ -7,25 +7,28 @@ use src\misas\domain\value_objects\EncargoCtrId;
 
 class EliminarEncargoCentro
 {
+
+    public function __construct(
+        private readonly EncargoCtrRepositoryInterface $encargoCtrRepository,
+    ) {
+    }
     /**
      * Elimina un `EncargoCtr` por su uuid. Devuelve texto vacio si todo fue
      * bien, o el mensaje de error del repositorio en caso contrario.
      */
-    public static function execute(string $id_item): string
+    public function execute(string $id_item): string
     {
         if (empty($id_item)) {
             return _('Falta el identificador del encargo-centro a eliminar');
         }
 
-        $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface::class);
-
-        $EncargoCtr = $EncargoCtrRepository->findById(new EncargoCtrId($id_item));
+        $EncargoCtr = $this->encargoCtrRepository->findById(new EncargoCtrId($id_item));
         if ($EncargoCtr === null) {
             return sprintf(_('No se encuentra el encargo-centro %s'), $id_item);
         }
 
-        if ($EncargoCtrRepository->Eliminar($EncargoCtr) === false) {
-            return $EncargoCtrRepository->getErrorTxt();
+        if ($this->encargoCtrRepository->Eliminar($EncargoCtr) === false) {
+            return $this->encargoCtrRepository->getErrorTxt();
         }
         return '';
     }

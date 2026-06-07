@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\permisos\domain\MenuDlPermissionBits;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
@@ -8,14 +9,18 @@ use src\shared\web\ContestarJson;
 $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
 $Qid_item = (int)filter_input(INPUT_POST, 'id_item');
 
-$GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
+$GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada
+if ($oUsuario === null) {
+    ContestarJson::enviar(_('Grupo no encontrado'), 'none');
+    return;
+}
 $nombre = $oUsuario->getUsuarioAsString();
 
-$PermMenuRepository = $GLOBALS['container']->get(PermMenuRepositoryInterface::class);
+$PermMenuRepository = DependencyResolver::get(PermMenuRepositoryInterface::class);
 if (!empty($Qid_item)) {
-    $oPermiso = $PermMenuRepository->findById(['id_item' => $Qid_item]);
-    $menu_perm = $oPermiso->getMenu_perm();
+    $oPermiso = $PermMenuRepository->findById($Qid_item);
+    $menu_perm = $oPermiso !== null ? $oPermiso->getMenu_perm() : 0;
 } else { // es nuevo
     $menu_perm = 0;
 }

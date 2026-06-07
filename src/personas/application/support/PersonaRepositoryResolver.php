@@ -2,7 +2,12 @@
 
 namespace src\personas\application\support;
 
-use src\shared\infrastructure\ProvidesRepositories;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 
 /**
  * Helper transversal para resolver el repositorio de una persona
@@ -16,8 +21,14 @@ use src\shared\infrastructure\ProvidesRepositories;
  */
 final class PersonaRepositoryResolver
 {
-    use ProvidesRepositories {
-        getRepository as private getRepositoryFromTrait;
+    public function __construct(
+        private PersonaNRepositoryInterface $personaNRepository,
+        private PersonaAgdRepositoryInterface $personaAgdRepository,
+        private PersonaNaxRepositoryInterface $personaNaxRepository,
+        private PersonaSRepositoryInterface $personaSRepository,
+        private PersonaSSSCRepositoryInterface $personaSSSCRepository,
+        private PersonaExRepositoryInterface $personaExRepository,
+    ) {
     }
 
     /**
@@ -63,9 +74,47 @@ final class PersonaRepositoryResolver
     /**
      * @throws \InvalidArgumentException si `$obj_pau` no es una persona conocida.
      */
-    public function repositorio(string $obj_pau): object
+    public function repositorio(string $obj_pau): PersonaNRepositoryInterface|PersonaAgdRepositoryInterface|PersonaNaxRepositoryInterface|PersonaSRepositoryInterface|PersonaSSSCRepositoryInterface|PersonaExRepositoryInterface
     {
-        return $this->getRepositoryFromTrait($obj_pau);
+        return match ($obj_pau) {
+            'PersonaN' => $this->personaNRepository,
+            'PersonaAgd' => $this->personaAgdRepository,
+            'PersonaNax' => $this->personaNaxRepository,
+            'PersonaS' => $this->personaSRepository,
+            'PersonaSSSC' => $this->personaSSSCRepository,
+            'PersonaEx' => $this->personaExRepository,
+            default => throw new \InvalidArgumentException("obj_pau '$obj_pau' no reconocido"),
+        };
+    }
+
+    public function personaNRepository(): PersonaNRepositoryInterface
+    {
+        return $this->personaNRepository;
+    }
+
+    public function personaAgdRepository(): PersonaAgdRepositoryInterface
+    {
+        return $this->personaAgdRepository;
+    }
+
+    public function personaNaxRepository(): PersonaNaxRepositoryInterface
+    {
+        return $this->personaNaxRepository;
+    }
+
+    public function personaSRepository(): PersonaSRepositoryInterface
+    {
+        return $this->personaSRepository;
+    }
+
+    public function personaSSSCRepository(): PersonaSSSCRepositoryInterface
+    {
+        return $this->personaSSSCRepository;
+    }
+
+    public function personaExRepository(): PersonaExRepositoryInterface
+    {
+        return $this->personaExRepository;
     }
 
     /**
@@ -73,13 +122,13 @@ final class PersonaRepositoryResolver
      *
      * @throws \InvalidArgumentException si `$id_tabla` no es reconocido.
      */
-    public function repositorioPorIdTabla(string $id_tabla): object
+    public function repositorioPorIdTabla(string $id_tabla): PersonaNRepositoryInterface|PersonaAgdRepositoryInterface|PersonaNaxRepositoryInterface|PersonaSRepositoryInterface|PersonaSSSCRepositoryInterface|PersonaExRepositoryInterface
     {
         $map = self::entityTypeByIdTabla();
         if (!isset($map[$id_tabla])) {
             throw new \InvalidArgumentException("id_tabla '$id_tabla' no reconocido");
         }
-        return $this->getRepositoryFromTrait($map[$id_tabla]);
+        return $this->repositorio($map[$id_tabla]);
     }
 
     /**

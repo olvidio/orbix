@@ -9,30 +9,25 @@ use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 
 /**
- * Caso de uso: datos para la pantalla `procesos_ver` (formulario
- * editar / nuevo de una fase dentro de un tipo de proceso).
- *
- * Devuelve todos los arrays necesarios para que el controlador
- * frontend monte los `frontend\shared\web\Desplegable` (fases, tareas, status,
- * oficinas responsables, fases previas y sus tareas) y el
- * formulario de edicion.
+ * Caso de uso: datos para la pantalla `procesos_ver`.
  */
 class ProcesosVerData
 {
+    public function __construct(
+        private readonly ActividadFaseRepositoryInterface $actividadFaseRepository,
+        private readonly ActividadTareaRepositoryInterface $actividadTareaRepository,
+        private readonly TareaProcesoRepositoryInterface $tareaProcesoRepository,
+    ) {
+    }
+
     /**
-     * @param string $mod 'editar' o 'nuevo'
-     * @param int $id_item id de la fila TareaProceso si mod=editar
-     * @return array
+     * @return array<string, mixed>
      */
-    public static function execute(string $mod, int $id_item): array
+    public function execute(string $mod, int $id_item): array
     {
         $a_oficinas = PermisoMenuBits::valueToLabel();
-
         $a_status = StatusId::getArrayStatus();
-
-        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-        $ActividadTareaRepository = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
-        $a_fases = $ActividadFaseRepository->getArrayActividadFases();
+        $a_fases = $this->actividadFaseRepository->getArrayActividadFases();
 
         $data = [
             'mod' => $mod,
@@ -48,29 +43,32 @@ class ProcesosVerData
         ];
 
         if ($mod === 'editar') {
-            $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
-            $oTareaProceso = $TareaProcesoRepository->findById($id_item);
+            $oTareaProceso = $this->tareaProcesoRepository->findById($id_item);
+            if ($oTareaProceso === null) {
+                return $data;
+            }
             $data['status'] = $oTareaProceso->getStatus();
             $data['id_of_responsable'] = $oTareaProceso->getId_of_responsable();
             $data['id_fase'] = $oTareaProceso->getId_fase();
             $data['id_tarea'] = $oTareaProceso->getId_tarea();
-            $data['a_tareas'] = $ActividadTareaRepository->getArrayActividadTareas($data['id_fase']);
+            $data['a_tareas'] = $this->actividadTareaRepository->getArrayActividadTareas($data['id_fase']);
 
-            $aFases_previas = $oTareaProceso->getJson_fases_previas(true);
+            $aFases_previas = $oTareaProceso->getJsonFasesPreviasAsList();
             $a_previas = [];
             foreach ($aFases_previas as $oFaseP) {
                 $id_fase_previa = $oFaseP['id_fase'] ?? '';
-                if (empty($id_fase_previa)) {
+                if ($id_fase_previa === '' || !is_numeric($id_fase_previa)) {
                     continue;
                 }
+                $idFasePrevia = (int) $id_fase_previa;
                 $a_previas[] = [
                     'id_fase_previa' => $id_fase_previa,
                     'id_tarea_previa' => $oFaseP['id_tarea'] ?? '',
                     'mensaje_requisito' => $oFaseP['mensaje'] ?? '',
-                    'a_tareas_previa' => $ActividadTareaRepository->getArrayActividadTareas($id_fase_previa),
+                    'a_tareas_previa' => $this->actividadTareaRepository->getArrayActividadTareas($idFasePrevia),
                 ];
             }
-            if (empty($a_previas)) {
+            if ($a_previas === []) {
                 $a_previas[] = [
                     'id_fase_previa' => '',
                     'id_tarea_previa' => '',

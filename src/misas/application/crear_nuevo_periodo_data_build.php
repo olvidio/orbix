@@ -1,5 +1,8 @@
 <?php
 
+use src\misas\application\support\EncargoDiaTimeHelper;
+use src\misas\application\support\MisasBuildInput;
+
 /**
  * Funcion global que construye el periodo (Slice 8 - revision). Vive fuera de
  * cualquier `namespace` para que el fragmento procedural herede el espacio
@@ -26,16 +29,18 @@ use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 /**
  * @see \src\misas\application\CrearNuevoPeriodoData::build()
+ * @param array<string, mixed> $in
+ * @return array<string, mixed>
  */
-function misas_crear_nuevo_periodo_build(array $in): array
+function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\CrearNuevoPeriodoData $self): array
 {
-    $Qid_zona = (int)($in['id_zona'] ?? 0);
-    $QTipoPlantilla = (string)($in['tipo_plantilla'] ?? '');
-    $Qseleccion = (int)($in['seleccion'] ?? 0);
-    $Qperiodo = (string)($in['periodo'] ?? '');
-    $Qempiezamin = (string)($in['empiezamin'] ?? '');
-    $Qempiezamax = (string)($in['empiezamax'] ?? '');
-    $Qorden = (string)($in['orden'] ?? '');
+    $Qid_zona = MisasBuildInput::int($in, 'id_zona');
+    $QTipoPlantilla = MisasBuildInput::string($in, 'tipo_plantilla');
+    $Qseleccion = MisasBuildInput::int($in, 'seleccion');
+    $Qperiodo = MisasBuildInput::string($in, 'periodo');
+    $Qempiezamin = MisasBuildInput::string($in, 'empiezamin');
+    $Qempiezamax = MisasBuildInput::string($in, 'empiezamax');
+    $Qorden = MisasBuildInput::string($in, 'orden');
     if ($Qorden === '') {
         $Qorden = 'desc_enc';
     }
@@ -46,6 +51,9 @@ function misas_crear_nuevo_periodo_build(array $in): array
 
     try {
             $un_dia = new DateInterval('P1D');
+
+    $Qempiezamin_rep = str_replace('/', '-', $Qempiezamin);
+    $Qempiezamax_rep = str_replace('/', '-', $Qempiezamax);
 
     switch ($Qperiodo) {
         case "proxima_semana":
@@ -112,15 +120,15 @@ function misas_crear_nuevo_periodo_build(array $in): array
     $aWhere = [];
     $aWhere['id_zona'] = $Qid_zona;
     $aOperador = [];
-    $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
+    $ZonaSacdRepository = $self->getZonaSacdRepository();
     $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
     $contador_1a_sacd = [];
     $contador_total_sacd = [];
     $contador_sacd = [];
     $esta_sacd = [];
     $donde_esta_sacd = [];
-    $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-    $InicialesSacdService = $GLOBALS['container']->get(InicialesSacdService::class);
+    $ActividadRepository = $self->getActividadRepository();
+    $InicialesSacdService = $self->getInicialesSacdService();
     foreach ($cZonaSacd as $oZonaSacd) {
         $id_nom = $oZonaSacd->getId_nom();
         $contador_1a_sacd[$id_nom] = [];
@@ -143,21 +151,27 @@ function misas_crear_nuevo_periodo_build(array $in): array
         $aWhereAct['status'] = StatusId::ACTUAL;
         $aWhere = ['id_nom' => $id_nom];
         $aOperador = [];
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+        $ActividadCargoRepository = $self->getActividadCargoRepository();
         $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
         foreach ($cAsistentes as $aAsistente) {
             $id_activ = $aAsistente['id_activ'];
 
             $aWhereAct['id_activ'] = $id_activ;
             $cActividades = $ActividadRepository->getActividades($aWhereAct, $aOperadorAct);
-            if (is_array($cActividades) && count($cActividades) === 0) {
+            if ($cActividades === []) {
                 continue;
             }
 
             $oActividad = $cActividades[0];
             $dInicioActividad = $oActividad->getF_ini();
+            if ($dInicioActividad === null) {
+                continue;
+            }
             $sInicioActividad = $dInicioActividad->format('Y-m-d');
             $dFinActividad = $oActividad->getF_fin();
+            if ($dFinActividad === null) {
+                continue;
+            }
             $sFinActividad = $dFinActividad->format('Y-m-d');
             $nom_activ = $oActividad->getNom_activ();
             $nom_llarg = $nom_activ;
@@ -187,13 +201,16 @@ function misas_crear_nuevo_periodo_build(array $in): array
         $aOperadorE['f_ini'] = '<=';
         $aWhereE['f_fin'] = "'$sFin_iso'";
         $aOperadorE['f_fin'] = '>=';
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
+        $EncargoRepository = $self->getEncargoRepository();
+        $EncargoSacdHorarioRepository = $self->getEncargoSacdHorarioRepository();
         $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc = $oTareaHorarioSacd->getId_enc();
             $oF_ini = $oTareaHorarioSacd->getF_ini();
             $oF_fin = $oTareaHorarioSacd->getF_fin();
+            if ($oF_ini === null || $oF_fin === null) {
+                continue;
+            }
 
             $oEncargo = $EncargoRepository->findById($id_enc);
             if ($oEncargo === null) {
@@ -201,7 +218,7 @@ function misas_crear_nuevo_periodo_build(array $in): array
             }
             $id_tipo_enc = $oEncargo->getId_tipo_enc();
             $id = (string)$id_tipo_enc;
-            if ($id[0] != 7 && $id[0] != 4) {
+            if ($id[0] !== '7' && $id[0] !== '4') {
                 continue;
             }
 
@@ -232,7 +249,7 @@ function misas_crear_nuevo_periodo_build(array $in): array
         }
     }
 
-    $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+    $EncargoTipoRepository = $self->getEncargoTipoRepository();
 
     $grupo = '8...';
     $aWhere = [];
@@ -258,7 +275,9 @@ function misas_crear_nuevo_periodo_build(array $in): array
         $bendicion = 'NO';
 
         $dia_completo = $date->format('Y-m-d');
-        $dia_semana = date('w', strtotime($dia_completo));
+        $tsDia = strtotime($dia_completo);
+        $dia_semana = $tsDia !== false ? (int) date('w', $tsDia) : 0;
+        $dia_semana_iso = $tsDia !== false ? (int) date('N', $tsDia) : 1;
 
         $temps = '';
 
@@ -291,9 +310,7 @@ function misas_crear_nuevo_periodo_build(array $in): array
             $bendicion = 'SI';
         }
         if ((($mes == 3) && ($dia == 25)) || (((($mes == 4) && ($dia >= 1) && ($dia <= 9)) || (($mes == 3) && ($dia == 31))) && ($temps === 'P') && ($semana == 2) && ($dia_semana == 1)) || (($temps === 'Q') && ($dia_semana == 1) && ($dia == 26) && ($mes == 3))) {
-            if (($mes == 3) && ($dia == 28)) {
-                $bendicion = 'SI';
-            }
+            $bendicion = 'SI';
         }
         if (($mes == 4) && ($dia == 23)) {
             $bendicion = 'SI';
@@ -331,7 +348,7 @@ function misas_crear_nuevo_periodo_build(array $in): array
             $bendicion = 'SI';
         }
 
-        if (($mes == 1) && ($dia > 6) && ($dia < 14) && ($dia_semana == 7)) {
+        if (($mes == 1) && ($dia > 6) && ($dia < 14) && ($dia_semana_iso === 7)) {
             $bendicion = 'SI';
         }
         $Ascension = new DateTime("$anyo-03-21");
@@ -396,7 +413,7 @@ function misas_crear_nuevo_periodo_build(array $in): array
         $hay_bendicion[$dia_completo] = $bendicion;
     }
 
-    $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $orden);
+    $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $self->getEncargoHorarioRepository(), $self->getEncargoRepository());
     $EncargosZona->setATipoEnc($a_tipo_enc);
     $cEncargosZona = $EncargosZona->getEncargos();
     foreach ($cEncargosZona as $oEncargo) {
@@ -413,7 +430,7 @@ function misas_crear_nuevo_periodo_build(array $in): array
         ];
 
         // Borro los encargos de la zona ya asignados en ese periodo
-        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+        $EncargoDiaRepository = $self->getEncargoDiaRepository();
         $cEncargosaBorrar = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
         foreach ($cEncargosaBorrar as $oEncargoaBorrar) {
             $EncargoDiaRepository->Eliminar($oEncargoaBorrar);
@@ -422,6 +439,17 @@ function misas_crear_nuevo_periodo_build(array $in): array
         $data_cols = [];
         $meta_dia = [];
         foreach ($date_range as $date) {
+            $dia_plantilla = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_UNO);
+            $dia_plantilla2 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_DOS);
+            $dia_plantilla3 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_TRES);
+            $aWhere2 = [];
+            $aOperador2 = [];
+            $aWhere3 = [];
+            $aOperador3 = [];
+            $id_nom = null;
+            $observ = '';
+            $hora_ini = '';
+            $hora_fin = '';
             $ok_encargo = false;
             $dia_completo = $date->format('Y-m-d');
 
@@ -476,7 +504,7 @@ function misas_crear_nuevo_periodo_build(array $in): array
 
                     if ($dia_week == 7) {
                         $num_mes = $date->format('d');
-                        $num_semana = intdiv($num_mes, 7);
+                        $num_semana = intdiv((int) $num_mes, 7);
                         $intervalo_plantilla = 'P' . ($dia_week + $num_semana - 1) . 'D';
                     } else {
                         $intervalo_plantilla = 'P' . ($dia_week - 1) . 'D';
@@ -540,7 +568,7 @@ function misas_crear_nuevo_periodo_build(array $in): array
                     ];
                 }
 
-                $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+                $EncargoDiaRepository = $self->getEncargoDiaRepository();
                 $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
                 if (count($cEncargosDia) > 1) {
                     throw new \RuntimeException(_("solo deberia haber uno"));
@@ -548,8 +576,11 @@ function misas_crear_nuevo_periodo_build(array $in): array
                 if (count($cEncargosDia) === 1) {
                     $oEncargoDia = $cEncargosDia[0];
                     $id_nom = $oEncargoDia->getId_nom();
-                    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                    $hora_fin = $oEncargoDia->getTend()->format('H:i');
+                    if ($id_nom === null) {
+                        continue;
+                    }
+                    $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
+                    $hora_fin = EncargoDiaTimeHelper::format($oEncargoDia->getTend(), 'H:i');
                     $observ = $oEncargoDia->getObserv();
                 }
 
@@ -584,7 +615,7 @@ function misas_crear_nuevo_periodo_build(array $in): array
                 }
 
                 if ((($QTipoPlantilla == PlantillaConfig::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_MENSUAL_TRES)) && (!$ok_encargo)) {
-                    $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+                    $EncargoDiaRepository = $self->getEncargoDiaRepository();
                     $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere2, $aOperador2);
 
                     if (count($cEncargosDia) > 1) {
@@ -593,8 +624,8 @@ function misas_crear_nuevo_periodo_build(array $in): array
                     if (count($cEncargosDia) === 1) {
                         $oEncargoDia = $cEncargosDia[0];
                         $id_nom = $oEncargoDia->getId_nom();
-                        $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                        $hora_fin = $oEncargoDia->getTend()->format('H:i');
+                        $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
+                        $hora_fin = EncargoDiaTimeHelper::format($oEncargoDia->getTend(), 'H:i');
                         $observ = $oEncargoDia->getObserv();
                     }
 
@@ -624,7 +655,7 @@ function misas_crear_nuevo_periodo_build(array $in): array
                     }
                 }
                 if ((($QTipoPlantilla == PlantillaConfig::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_MENSUAL_TRES)) && (!$ok_encargo)) {
-                    $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+                    $EncargoDiaRepository = $self->getEncargoDiaRepository();
                     $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere3, $aOperador3);
 
                     if (count($cEncargosDia) > 1) {
@@ -633,8 +664,8 @@ function misas_crear_nuevo_periodo_build(array $in): array
                     if (count($cEncargosDia) === 1) {
                         $oEncargoDia = $cEncargosDia[0];
                         $id_nom = $oEncargoDia->getId_nom();
-                        $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                        $hora_fin = $oEncargoDia->getTend()->format('H:i');
+                        $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
+                        $hora_fin = EncargoDiaTimeHelper::format($oEncargoDia->getTend(), 'H:i');
                         $observ = $oEncargoDia->getObserv();
                     }
 
@@ -721,7 +752,7 @@ function misas_crear_nuevo_periodo_build(array $in): array
                 $aOperador = [
                     'tstart' => 'BETWEEN',
                 ];
-                $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+                $EncargoDiaRepository = $self->getEncargoDiaRepository();
                 $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
                 if (count($cEncargosDia) > 1) {
@@ -731,7 +762,10 @@ function misas_crear_nuevo_periodo_build(array $in): array
                 if (count($cEncargosDia) === 1) {
                     $oEncargoDia = $cEncargosDia[0];
                     $id_nom = $oEncargoDia->getId_nom();
-                    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+                    if ($id_nom === null) {
+                        continue;
+                    }
+                    $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
                     if ($hora_ini == '00:00') {
                         $hora_ini = '';
                     }
@@ -744,8 +778,8 @@ function misas_crear_nuevo_periodo_build(array $in): array
                         "uuid_item" => $oEncargoDia->getUuidItemVo()->value(),
                         "color" => $color,
                         "key" => "$id_nom#$iniciales",
-                        "tstart" => $oEncargoDia->getTstart()->getHora(),
-                        "tend" => $oEncargoDia->getTend()->getHora(),
+                        "tstart" => EncargoDiaTimeHelper::hora($oEncargoDia->getTstart()),
+                        "tend" => EncargoDiaTimeHelper::hora($oEncargoDia->getTend()),
                         "observ" => $oEncargoDia->getObserv(),
                         "id_enc" => $id_enc,
                     ];

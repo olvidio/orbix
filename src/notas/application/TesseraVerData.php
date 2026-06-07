@@ -12,19 +12,23 @@ use src\ubis\domain\RegionStgrAviso;
  */
 final class TesseraVerData
 {
+    public function __construct(
+        private readonly Tesera $tesera,
+    ) {
+    }
     /**
      * @return array<string, mixed>
      */
-    public static function execute(int $id_nom): array
+    public function execute(int $id_nom): array
     {
         if ($id_nom <= 0) {
-            return self::respuestaConAviso(RegionStgrAviso::mensajePersonaNoValida());
+            return $this->respuestaConAviso(RegionStgrAviso::mensajePersonaNoValida());
         }
 
         $problemasRegionStgr = [];
         $oPersona = Persona::findPersonaEnGlobal($id_nom, $problemasRegionStgr);
         if ($oPersona === null) {
-            return self::respuestaConAviso(sprintf(
+            return $this->respuestaConAviso(sprintf(
                 _('No encuentro persona con id_nom: %s'),
                 (string)$id_nom
             ));
@@ -37,18 +41,16 @@ final class TesseraVerData
                 (string)($oPersona->getDl() ?? ''),
             );
 
-            return self::respuestaConAviso(RegionStgrAviso::formatear($problemasRegionStgr));
+            return $this->respuestaConAviso(RegionStgrAviso::formatear($problemasRegionStgr));
         }
 
-        $tesera = new Tesera();
-
-        return $tesera->datosParaVistaTesera($id_nom);
+        return $this->tesera->datosParaVistaTesera($id_nom);
     }
 
     /**
      * @return array<string, mixed>
      */
-    private static function respuestaConAviso(string $aviso): array
+    private function respuestaConAviso(string $aviso): array
     {
         return [
             'aviso' => $aviso,

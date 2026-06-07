@@ -10,7 +10,12 @@ use src\pasarela\domain\Nombre;
  */
 final class NombreExcepcionGuardar
 {
-    public static function execute(string $id_tipo_activ, string $valor): string
+    public function __construct(
+        private readonly Nombre $nombre,
+    ) {
+    }
+
+    public function execute(string $id_tipo_activ, string $valor): string
     {
         if ($id_tipo_activ === '') {
             return _('Falta id_tipo_activ');
@@ -18,8 +23,8 @@ final class NombreExcepcionGuardar
         if ($valor === '') {
             return _('Falta nombre');
         }
-        $oNombre = new Nombre();
-        $oNombre->addNombre($id_tipo_activ, $valor);
+        
+        $this->nombre->addNombre($id_tipo_activ, $valor);
         return '';
     }
 }

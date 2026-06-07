@@ -1,20 +1,25 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use src\inventario\domain\entity\Egm;
 use src\inventario\domain\entity\Whereis;
 use src\shared\web\ContestarJson;
 
-$Qid_grupo = (integer)filter_input(INPUT_POST, 'id_grupo');
-$Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
-$Qid_lugar = (integer)filter_input(INPUT_POST, 'id_lugar');
+$Qid_grupo = input_int($_POST, 'id_grupo');
+$Qid_equipaje = input_int($_POST, 'id_equipaje');
+$Qid_lugar = input_int($_POST, 'id_lugar');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $error_txt = '';
 
 // Nuevo egm:
-$EgmRepository = $GLOBALS['container']->get(EgmRepositoryInterface::class);
+/** @var EgmRepositoryInterface $EgmRepository */
+$EgmRepository = DependencyResolver::get(EgmRepositoryInterface::class);
 $aWhere = [
     'id_equipaje' => $Qid_equipaje,
     'id_grupo' => $Qid_grupo,
@@ -38,8 +43,13 @@ if (empty($cEgm)) {
     $id_item_egm = $oEgm->getId_item();
 }
 
-$WhereisRepository = $GLOBALS['container']->get(WhereisRepositoryInterface::class);
-foreach ($a_sel as $id_doc) {
+/** @var WhereisRepositoryInterface $WhereisRepository */
+$WhereisRepository = DependencyResolver::get(WhereisRepositoryInterface::class);
+foreach ($a_sel as $id_doc_raw) {
+    if (!is_numeric($id_doc_raw)) {
+        continue;
+    }
+    $id_doc = (int) $id_doc_raw;
     $new_id = $WhereisRepository->getNewId();
     $oWhereis = new Whereis();
     $oWhereis->setId_item_whereis($new_id);

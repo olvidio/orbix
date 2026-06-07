@@ -1,13 +1,17 @@
 <?php
 
+use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\DireccionesEditarData;
 use src\shared\web\ContestarJson;
 
-ContestarJson::enviar('', DireccionesEditarData::execute(
-    (int)filter_input(INPUT_POST, 'id_ubi'),
-    (string)filter_input(INPUT_POST, 'mod'),
-    (string)filter_input(INPUT_POST, 'obj_dir'),
-    (string)filter_input(INPUT_POST, 'id_direccion'),
-    (int)filter_input(INPUT_POST, 'idx'),
-    (string)filter_input(INPUT_POST, 'inc')
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
+ContestarJson::enviar('', DependencyResolver::get(DireccionesEditarData::class)->execute(
+    input_int($_POST, 'id_ubi'),
+    input_string($_POST, 'mod'),
+    input_string($_POST, 'obj_dir'),
+    input_string($_POST, 'id_direccion'),
+    input_int($_POST, 'idx'),
+    input_string($_POST, 'inc')
 ));

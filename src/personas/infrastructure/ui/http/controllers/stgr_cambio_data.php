@@ -2,16 +2,15 @@
 
 /**
  * Endpoint JSON: datos para el formulario `stgr_cambio.phtml`.
- *
- * Ruta: /src/personas/stgr_cambio_data
- *
- * Respuesta: `ContestarJson::enviar($error, $data)`.
  */
 
-use src\shared\web\ContestarJson;
 use src\personas\application\StgrCambioData;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 
-$result = StgrCambioData::build($_POST);
+/** @var StgrCambioData $useCase */
+$useCase = DependencyResolver::get(StgrCambioData::class);
+$result = $useCase->execute($_POST);
 
 if (!empty($result['error'])) {
     ContestarJson::enviar((string)$result['error']);

@@ -2,33 +2,38 @@
 
 namespace src\ubis\application\services;
 
-
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 final class DelegacionQuery
 {
+    public function __construct(
+        private DelegacionRepositoryInterface $delegacionRepository,
+    ) {
+    }
+
     /**
-     * Devuelve un array [id_dl => dl] de delegaciones activas filtradas por region_stgr.
-     * Si $regionesStgr está vacío, devuelve todas las delegaciones (activas).
-     *
-     * @param array $regionesStgr Lista de códigos region_stgr
-     * @return array [id_dl => dl]
+     * @param list<string> $regionesStgr
+     * @return array<int|string, string>
      */
-    public static function arrayDlByRegionStgr(array $regionesStgr = []): array
+    public function arrayDlByRegionStgr(array $regionesStgr = []): array
     {
-        $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $aWhere = ['status' => true, '_ordre' => 'dl'];
         $aOper = [];
         if (!empty($regionesStgr)) {
-            // Usamos operador IN sobre region_stgr
             $aWhere['region_stgr'] = "'" . implode("','", $regionesStgr) . "'";
             $aOper['region_stgr'] = 'IN';
         }
-        $delegaciones = $repo->getDelegaciones($aWhere, $aOper) ?: [];
+        $delegaciones = $this->delegacionRepository->getDelegaciones($aWhere, $aOper) ?: [];
         $out = [];
         foreach ($delegaciones as $dl) {
-            $out[$dl->getIdDlVo()?->value() ?? 0] = $dl->getDlVo()?->value() ?? '';
+            $idDl = $dl->getIdDlVo()->value();
+            $dlCode = $dl->getDlVo()->value();
+            if ($dlCode === null) {
+                continue;
+            }
+            $out[$idDl] = $dlCode;
         }
+
         return $out;
     }
 }

@@ -1,18 +1,23 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
+
 use src\certificados\domain\CertificadoEmitidoDelete;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+/** @var CertificadoEmitidoDelete $useCase */
+$useCase = DependencyResolver::get(CertificadoEmitidoDelete::class);
 
-if (!empty($a_sel)) { //vengo de un checkbox
-    $Qid_item = (integer)strtok($a_sel[0], "#");
+$a_sel = input_string_list($_POST, 'sel');
+if ($a_sel !== []) {
+    $Qid_item = (int) strtok($a_sel[0], '#');
 } else {
-    $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+    $Qid_item = input_int($_POST, 'id_item');
 }
 
-$CertificadoDelete = new CertificadoEmitidoDelete();
-$error_txt = $CertificadoDelete->delete($Qid_item);
+$error_txt = $useCase->delete($Qid_item);
 
-// envía una Response
 ContestarJson::enviar($error_txt, 'ok');

@@ -2,35 +2,52 @@
 
 namespace src\planning\application;
 
+use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
-use src\shared\infrastructure\ProvidesRepositories;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 
 /**
  * Elige el repositorio de personas según `obj_pau` (misma lógica que el controlador legacy).
  */
 final class PlanningPersonaRepositoryPicker
 {
-    use ProvidesRepositories;
-
-    public function get(string $obj_pau): object
-    {
-        if ($obj_pau === '' || $obj_pau === 'PersonaDl') {
-            return $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        }
-        if ($obj_pau === 'PersonaSacd') {
-            return $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
-        }
-
-        return $this->getRepository($obj_pau);
+    public function __construct(
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private PersonaSacdRepositoryInterface $personaSacdRepository,
+        private PersonaRepositoryResolver $personaRepositoryResolver,
+    ) {
     }
 
-    public function getSafe(string $obj_pau): object
+    /**
+     * @return PersonaDlRepositoryInterface|PersonaSacdRepositoryInterface|PersonaNRepositoryInterface|PersonaAgdRepositoryInterface|PersonaNaxRepositoryInterface|PersonaSRepositoryInterface|PersonaSSSCRepositoryInterface|PersonaExRepositoryInterface
+     */
+    public function get(string $obj_pau): PersonaDlRepositoryInterface|PersonaSacdRepositoryInterface|PersonaNRepositoryInterface|PersonaAgdRepositoryInterface|PersonaNaxRepositoryInterface|PersonaSRepositoryInterface|PersonaSSSCRepositoryInterface|PersonaExRepositoryInterface
+    {
+        if ($obj_pau === '' || $obj_pau === 'PersonaDl') {
+            return $this->personaDlRepository;
+        }
+        if ($obj_pau === 'PersonaSacd') {
+            return $this->personaSacdRepository;
+        }
+
+        return $this->personaRepositoryResolver->repositorio($obj_pau);
+    }
+
+    /**
+     * @return PersonaDlRepositoryInterface|PersonaSacdRepositoryInterface|PersonaNRepositoryInterface|PersonaAgdRepositoryInterface|PersonaNaxRepositoryInterface|PersonaSRepositoryInterface|PersonaSSSCRepositoryInterface|PersonaExRepositoryInterface
+     */
+    public function getSafe(string $obj_pau): PersonaDlRepositoryInterface|PersonaSacdRepositoryInterface|PersonaNRepositoryInterface|PersonaAgdRepositoryInterface|PersonaNaxRepositoryInterface|PersonaSRepositoryInterface|PersonaSSSCRepositoryInterface|PersonaExRepositoryInterface
     {
         try {
             return $this->get($obj_pau);
         } catch (\InvalidArgumentException) {
-            return $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+            return $this->personaDlRepository;
         }
     }
 }

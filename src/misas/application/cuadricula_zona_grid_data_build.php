@@ -1,5 +1,8 @@
 <?php
 
+use src\misas\application\support\EncargoDiaTimeHelper;
+use src\misas\application\support\MisasBuildInput;
+
 /**
  * Funcion global que construye la cuadricula (Slice 6b). Debe vivir fuera de
  * cualquier `namespace` para que el fragmento procedural herede el espacio
@@ -28,21 +31,34 @@ use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
 
 /**
+ * @param array<string, mixed> $in
+ * @return array<string, mixed>
  * @see \src\misas\application\CuadriculaZonaGridData::build()
+ * @param array<string, mixed> $in
+ * @return array<string, mixed>
  */
-function misas_cuadricula_zona_grid_build(array $in): array
+function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\CuadriculaZonaGridData $self): array
 {
     $preference_warning = '';
 
-    $Qid_zona = (int)($in['id_zona'] ?? 0);
-    $QTipoPlantilla = (string)($in['tipo_plantilla'] ?? '');
-    $Qperiodo = (string)($in['periodo'] ?? '');
-    $Qorden = (string)($in['orden'] ?? '');
-    $Qempiezamin = (string)($in['empiezamin'] ?? '');
-    $Qempiezamax = (string)($in['empiezamax'] ?? '');
-    $Qfila = (int)($in['fila'] ?? 0);
-    $Qcolumna = (int)($in['columna'] ?? 0);
-    $Qseleccion = (int)($in['seleccion'] ?? 0);
+
+    $lista_sacd = [];
+    $esta_en_zona = [];
+    $interval3 = new DateInterval(PlantillaConfig::INTERVAL_SEMANAL);
+    $meta_dia2 = [];
+    $meta_dia3 = [];
+    $data_cols2 = [];
+    $data_cols3 = [];
+    $meta_sacd = [];
+    $Qid_zona = MisasBuildInput::int($in, 'id_zona');
+    $QTipoPlantilla = MisasBuildInput::string($in, 'tipo_plantilla');
+    $Qperiodo = MisasBuildInput::string($in, 'periodo');
+    $Qorden = MisasBuildInput::string($in, 'orden');
+    $Qempiezamin = MisasBuildInput::string($in, 'empiezamin');
+    $Qempiezamax = MisasBuildInput::string($in, 'empiezamax');
+    $Qfila = MisasBuildInput::int($in, 'fila');
+    $Qcolumna = MisasBuildInput::int($in, 'columna');
+    $Qseleccion = MisasBuildInput::int($in, 'seleccion');
 
     // Defaults so the return below never references undefined vars if the
     // fragment exits early or the file fails to load (include would warn).
@@ -54,7 +70,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
 
     if ($QTipoPlantilla != 'p') {
         $id_usuario = ConfigGlobal::mi_id_usuario();
-        $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
+        $PreferenciaRepository = $self->getPreferenciaRepository();
         $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'ultima_plantilla');
         if ($oPreferencia === null) {
             $oPreferencia = new Preferencia();
@@ -72,10 +88,10 @@ function misas_cuadricula_zona_grid_build(array $in): array
     $aWhere = [];
     $aWhere['id_zona'] = $Qid_zona;
     $aOperador = [];
-    $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
+    $ZonaSacdRepository = $self->getZonaSacdRepository();
     $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
     $sacd_zona = [];
-    $InicialesSacdService = $GLOBALS['container']->get(InicialesSacdService::class);
+    $InicialesSacdService = $self->getInicialesSacdService();
     foreach ($cZonaSacd as $oZonaSacd) {
         $id_nom = $oZonaSacd->getId_nom();
         $nombre_sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
@@ -88,7 +104,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
         case "esta_semana":
             $dia_week = date('N');
             $dia_week--;
-            if ($dia_week == -1) {
+            if ($dia_week === 0) {
                 $dia_week = 6;
             }
             $empiezamin = new DateTimeLocal(date('Y-m-d'));
@@ -156,12 +172,20 @@ function misas_cuadricula_zona_grid_build(array $in): array
             $Qempiezamax_rep = str_replace('/', '-', $Qempiezamax);
     }
 
-    if (!isset($Qorden) || ($Qorden === null))
+    if ($Qorden === '') {
         $Qorden = 'desc_enc';
+    }
 
     $a_dias_semana_breve = [1 => 'L', 2 => 'M', 3 => 'X', 4 => 'J', 5 => 'V', 6 => 'S', 7 => 'D'];
     $a_nombre_mes_breve = [1 => 'Ene', 2 => 'feb', 3 => 'mar', 4 => 'abr', 5 => 'may', 6 => 'jun', 7 => 'jul', 8 => 'ago', 9 => 'sep', 10 => 'oct', 11 => 'nov', 12 => 'dic'];
 
+    $oInicio = new DateTimeLocal($Qempiezamin_rep);
+    $oFin = new DateTimeLocal($Qempiezamax_rep);
+    $interval = new DateInterval('P1D');
+    $oFinPeriod = clone $oFin;
+    $oFinPeriod->add($interval);
+    $date_range = new \DatePeriod($oInicio, $interval, $oFinPeriod);
+    $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
 
     $columns_cuadricula = "[
         {'id': 'encargo', 'name' : 'Encargo', 'field' : 'encargo', 'width' : 250, 'cssClass' : 'cell-title', 'formatter': formato_encargos}";
@@ -251,7 +275,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
                 $dia_week = $date->format('N');
                 $dia_week_sacd[$num_dia] = $date->format('N');
                 $dia_mes = $date->format('d');
-                $nom_dia = $a_dias_semana[$dia_week] . ' ' . intdiv(date_diff($date, $oInicio)->format('%a'), 7) + 1;
+                $nom_dia = $a_dias_semana[$dia_week] . ' ' . (intdiv((int) date_diff($date, $oInicio)->format('%a'), 7) + 1);
 
                 $columns_cuadricula .= ",
                 {'id' : '" . $num_dia . "', 'name' : '" . $nom_dia . "', 'field' : '" . $num_dia . "', 'width' : 60, 'formatter': formato}";
@@ -284,7 +308,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
 
     $data_cuadricula = [];
 
-    $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+    $EncargoTipoRepository = $self->getEncargoTipoRepository();
 
     $grupo = '8...';
     //if (!empty($grupo)) {
@@ -301,7 +325,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
             $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
     }
 
-    $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $Qorden);
+    $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $self->getEncargoHorarioRepository(), $self->getEncargoRepository());
     $EncargosZona->setATipoEnc($a_tipo_enc);
     $cEncargosZona = $EncargosZona->getEncargos();
     foreach ($cEncargosZona as $oEncargo) {
@@ -339,7 +363,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
                     break;
                 case PlantillaConfig::PLANTILLA_MENSUAL_UNO:
                 case PlantillaConfig::PLANTILLA_MENSUAL_TRES:
-                    $nom_dia = $a_dias_semana[$dia_week] . ' ' . intdiv(date_diff($date, $oInicio)->format('%a'), 7) + 1;
+                    $nom_dia = $a_dias_semana[$dia_week] . ' ' . (intdiv((int) date_diff($date, $oInicio)->format('%a'), 7) + 1);
                     break;
                 case PlantillaConfig::PLAN_DE_MISAS:
                     $nom_dia = $a_dias_semana_breve[$dia_week] . ' ' . $dia_mes . '.' . $num_mes;
@@ -373,7 +397,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
             $aOperador = [
                 'tstart' => 'BETWEEN',
             ];
-            $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+            $EncargoDiaRepository = $self->getEncargoDiaRepository();
             $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
             if (count($cEncargosDia) > 1) {
@@ -387,8 +411,11 @@ function misas_cuadricula_zona_grid_build(array $in): array
             if (count($cEncargosDia) === 1) {
                 $oEncargoDia = $cEncargosDia[0];
                 $id_nom = $oEncargoDia->getId_nom();
+                if ($id_nom === null) {
+                    continue;
+                }
                 $estado = $oEncargoDia->getStatus();
-                $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+                $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
                 if ($hora_ini === '00:00')
                     $hora_ini = '';
                 $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
@@ -415,8 +442,8 @@ function misas_cuadricula_zona_grid_build(array $in): array
                     "uuid_item" => $oEncargoDia->getUuidItemVo()->value(),
                     "color" => $color,
                     "key" => "$id_nom#$iniciales",
-                    "tstart" => $oEncargoDia->getTstart()->getHora(),
-                    "tend" => $oEncargoDia->getTend()->getHora(),
+                    "tstart" => EncargoDiaTimeHelper::hora($oEncargoDia->getTstart()),
+                    "tend" => EncargoDiaTimeHelper::hora($oEncargoDia->getTend()),
                     "observ" => $oEncargoDia->getObserv(),
                     "id_enc" => $id_enc,
                     "dia" => $num_dia,
@@ -479,7 +506,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
                 $aOperador = [
                     'tstart' => 'BETWEEN',
                 ];
-                $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+                $EncargoDiaRepository = $self->getEncargoDiaRepository();
                 $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
                     if (count($cEncargosDia) > 1) {
@@ -493,7 +520,10 @@ function misas_cuadricula_zona_grid_build(array $in): array
                 if (count($cEncargosDia) === 1) {
                     $oEncargoDia = $cEncargosDia[0];
                     $id_nom = $oEncargoDia->getId_nom();
-                    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+                    if ($id_nom === null) {
+                        continue;
+                    }
+                    $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
                     if ($hora_ini == '00:00')
                         $hora_ini = '';
                     $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
@@ -509,8 +539,8 @@ function misas_cuadricula_zona_grid_build(array $in): array
                         "uuid_item" => $oEncargoDia->getUuidItemVo()->value(),
                         "color" => $color,
                         "key" => "$id_nom#$iniciales",
-                        "tstart" => $oEncargoDia->getTstart()->getHora(),
-                        "tend" => $oEncargoDia->getTend()->getHora(),
+                        "tstart" => EncargoDiaTimeHelper::hora($oEncargoDia->getTstart()),
+                        "tend" => EncargoDiaTimeHelper::hora($oEncargoDia->getTend()),
                         "observ" => $oEncargoDia->getObserv(),
                         "id_enc" => $id_enc,
                         "dia" => $num_dia2,
@@ -530,7 +560,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
                 $aOperador = [
                     'tstart' => 'BETWEEN',
                 ];
-                $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+                $EncargoDiaRepository = $self->getEncargoDiaRepository();
                 $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
                 if (count($cEncargosDia) > 1) {
@@ -544,7 +574,10 @@ function misas_cuadricula_zona_grid_build(array $in): array
                 if (count($cEncargosDia) === 1) {
                     $oEncargoDia = $cEncargosDia[0];
                     $id_nom = $oEncargoDia->getId_nom();
-                    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+                    if ($id_nom === null) {
+                        continue;
+                    }
+                    $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
                     if ($hora_ini == '00:00')
                         $hora_ini = '';
                     $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
@@ -560,8 +593,8 @@ function misas_cuadricula_zona_grid_build(array $in): array
                         "uuid_item" => $oEncargoDia->getUuidItemVo()->value(),
                         "color" => $color,
                         "key" => "$id_nom#$iniciales",
-                        "tstart" => $oEncargoDia->getTstart()->getHora(),
-                        "tend" => $oEncargoDia->getTend()->getHora(),
+                        "tstart" => EncargoDiaTimeHelper::hora($oEncargoDia->getTstart()),
+                        "tend" => EncargoDiaTimeHelper::hora($oEncargoDia->getTend()),
                         "observ" => $oEncargoDia->getObserv(),
                         "id_enc" => $id_enc,
                         "dia" => $num_dia3,
@@ -578,13 +611,13 @@ function misas_cuadricula_zona_grid_build(array $in): array
 
         $data_cols["encargo"] = $desc_enc;
         $data_cols["id_nom"] = '';
-        if (substr($tipo_enc, 0, 2) == 81) {
+        if (str_starts_with((string) $tipo_enc, '81')) {
             $data_cols["color_encargo"] = 'azulclaro';
         }
-        if (substr($tipo_enc, 0, 2) == 82) {
+        if (str_starts_with((string) $tipo_enc, '82')) {
             $data_cols["color_encargo"] = 'violetaclaro';
         }
-        if (substr($tipo_enc, 0, 2) == 83) {
+        if (str_starts_with((string) $tipo_enc, '83')) {
             $data_cols["color_encargo"] = 'amarilloclaro';
         }
         $data_cols["meta"] = $meta_dia;
@@ -606,7 +639,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
     $contador_total_sacd = [];
     $esta_sacd = [];
     $donde_esta_sacd = [];
-    $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+    $ActividadRepository = $self->getActividadRepository();
     foreach ($sacd_zona as $id_nom => $nombre_sacd) {
     //    echo $id_nom.'->'.$nombre_sacd.'<br>';
         $contador_sacd[$id_nom] = [];
@@ -630,7 +663,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
         $aWhere = ['id_nom' => $id_nom];
         $aOperador = [];
 
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+        $ActividadCargoRepository = $self->getActividadCargoRepository();
         $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
 
         foreach ($cAsistentes as $aAsistente) {
@@ -641,13 +674,19 @@ function misas_cuadricula_zona_grid_build(array $in): array
             // Seleccionar sólo las del periodo
             $aWhereAct['id_activ'] = $id_activ;
             $cActividades = $ActividadRepository->getActividades($aWhereAct, $aOperadorAct);
-            if (is_array($cActividades) && count($cActividades) == 0) continue;
+            if ($cActividades === []) { continue; }
 
             $oActividad = $cActividades[0]; // sólo debería haber una.
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $dInicioActividad = $oActividad->getF_ini();
+            if ($dInicioActividad === null) {
+                continue;
+            }
             $sInicioActividad = $dInicioActividad->format('Y-m-d');
             $dFinActividad = $oActividad->getF_fin();
+            if ($dFinActividad === null) {
+                continue;
+            }
             $sFinActividad = $dFinActividad->format('Y-m-d');
             $nom_activ = $oActividad->getNom_activ();
             $oTipoActividad = new TiposActividades($id_tipo_activ);
@@ -680,18 +719,24 @@ function misas_cuadricula_zona_grid_build(array $in): array
         $aOperadorE['f_ini'] = '<=';
         $aWhereE['f_fin'] = "'$sInicio_iso'";
         $aOperadorE['f_fin'] = '>=';
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
+        $EncargoRepository = $self->getEncargoRepository();
+        $EncargoSacdHorarioRepository = $self->getEncargoSacdHorarioRepository();
         $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc = $oTareaHorarioSacd->getId_enc();
             $oF_ini = $oTareaHorarioSacd->getF_ini();
             $oF_fin = $oTareaHorarioSacd->getF_fin();
+            if ($oF_ini === null || $oF_fin === null) {
+                continue;
+            }
 
             $oEncargo = $EncargoRepository->findById($id_enc);
+            if ($oEncargo === null) {
+                continue;
+            }
             $id_tipo_enc = $oEncargo->getId_tipo_enc();
             $id = (string)$id_tipo_enc;
-            if ($id[0] != 7 && $id[0] != 4) {
+            if ($id[0] !== '7' && $id[0] !== '4') {
                 continue;
             }
 
@@ -708,8 +753,8 @@ function misas_cuadricula_zona_grid_build(array $in): array
     //                $hfi = empty($h_fin) ? '22:00' : (string)$h_fin;
 
     //                $propio = "p";
-            $nom_llarg = $oEncargo->getDesc_enc();
-            $nom_curt = ($nom_llarg[0] === 'A') ? 'a' : 'x';
+            $nom_llarg = $oEncargo->getDesc_enc() ?? '';
+            $nom_curt = ($nom_llarg !== '' && $nom_llarg[0] === 'A') ? 'a' : 'x';
             if ($ini != $fi) {
                 $nom_llarg .= " ($ini-$fi)";
             } else {
@@ -792,16 +837,19 @@ function misas_cuadricula_zona_grid_build(array $in): array
             $aOperador = [
                 'tstart' => 'BETWEEN',
             ];
-            $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+            $EncargoDiaRepository = $self->getEncargoDiaRepository();
             $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
             $misas_dia = 0;
             $misas_1a_hora = 0;
             $misas_dia_zona = 0;
             $misas_1a_hora_zona = 0;
-            $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+            $EncargoRepository = $self->getEncargoRepository();
             foreach ($cEncargosDia as $oEncargoDia) {
                 $id_enc = $oEncargoDia->getId_enc();
+                if ($id_enc === null) {
+                    continue;
+                }
     //            echo 'id_enc: '.$id_enc.'<br>';
                 $oEncargo = $EncargoRepository->findById($id_enc);
                 if ($oEncargo===null) {
@@ -810,7 +858,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
                 $id_tipo_enc = $oEncargo->getId_tipo_enc();
                 $id_zona_enc = $oEncargo->getId_zona();
     //            echo 'tipo: '.$id_tipo_enc.' zona: '.$id_zona_enc.'<br>';
-                if (substr($id_tipo_enc, 1, 1) == '1') {
+                if (substr((string)$id_tipo_enc, 1, 1) == '1') {
                     $misas_dia++;
                     $misas_1a_hora++;
                     if ($Qid_zona == $id_zona_enc) {
@@ -818,7 +866,7 @@ function misas_cuadricula_zona_grid_build(array $in): array
                         $misas_1a_hora_zona++;
                     }
                 }
-                if (substr($id_tipo_enc, 1, 1) == '2') {
+                if (substr((string)$id_tipo_enc, 1, 1) == '2') {
                     $misas_dia++;
                     if ($Qid_zona == $id_zona_enc) {
                         $misas_dia_zona++;

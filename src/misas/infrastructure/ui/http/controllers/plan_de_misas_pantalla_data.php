@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\PlanDeMisasPantallaData;
 use src\shared\web\ContestarJson;
@@ -9,7 +10,10 @@ if ($pantalla === '') {
 }
 
 try {
-    ContestarJson::enviar('', PlanDeMisasPantallaData::getData($pantalla));
+    /** @var PlanDeMisasPantallaData $useCase */
+$useCase = DependencyResolver::get(PlanDeMisasPantallaData::class);
+$result = $useCase->getData($pantalla);
+ContestarJson::enviar('', $result);
 } catch (\RuntimeException $e) {
     ContestarJson::enviar($e->getMessage());
 }

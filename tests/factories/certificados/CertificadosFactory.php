@@ -45,7 +45,7 @@ class CertificadosFactory
                 $id_nom_c = $id_nom;
                 $nom_c = $nom;
             }
-            $idioma = $faker->languageCode();
+            $idioma = 'es_ES.UTF-8';
             $destino = $faker->colorName;
             $f_cert_iso = $faker->dateTimeBetween()->format('Y-m-d'); // a date between -30 years ago, and now
             $oFCertificado = new DateTimeLocal($f_cert_iso); // a date between -30 years ago, and now
@@ -71,7 +71,7 @@ class CertificadosFactory
             $Certificado->setId_item($id_item);
             $Certificado->setId_nom($id_nom_c);
             $Certificado->setNom($nom_c);
-            $Certificado->setIdioma($idioma);
+            $Certificado->setIdiomaVo($idioma);
             $Certificado->setDestino($destino);
             $Certificado->setCertificado($certificado);
             $Certificado->setF_certificado($f_certificado);

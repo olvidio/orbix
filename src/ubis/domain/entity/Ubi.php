@@ -2,13 +2,8 @@
 
 namespace src\ubis\domain\entity;
 
-use src\shared\config\ConfigGlobal;
-use src\ubis\domain\contracts\CasaRepositoryInterface;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
-use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
-use src\ubis\domain\contracts\CentroExRepositoryInterface;
-use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
+use src\ubis\application\UbiFactory;
 
 
 class Ubi
@@ -26,57 +21,8 @@ class Ubi
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public static function NewUbi($id_ubi): Casa|Centro|CentroDl|CentroEx|CentroEllas|CentroEllos|null
+    public static function NewUbi(int|string $id_ubi): Casa|Centro|CentroDl|CentroEx|CentroEllas|CentroEllos|null
     {
-        if (ConfigGlobal::is_dmz()) {
-            $CentroRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
-            // para la sf (comienza por 2).
-            if ((int)substr($id_ubi, 0, 1) === 2) {
-                $CentroRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-            }
-            $oCentro = $CentroRepository->findById($id_ubi);
-        } else {
-            // para la sf (comienza por 2).
-            if ((int)substr($id_ubi, 0, 1) === 2) {
-                // Si soy sv solo tengo acceso a los de la dl,
-                // En caso contrario puedo ver los de todas las regiones.
-                if (ConfigGlobal::mi_sfsv() === 1) {
-                    $CentroRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-                } else {
-                    $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-                }
-            } else {
-                // Si soy sf solo tengo acceso a los de la dl,
-                // En caso contrario puedo ver los de todas las regiones.
-                if (ConfigGlobal::mi_sfsv() === 2) {
-                    $CentroRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
-                } else {
-                    $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-                }
-            }
-            $oCentro = $CentroRepository->findById($id_ubi);
-            if ($oCentro !== null) {
-                $tipo_ubi = $oCentro->getTipo_ubi();
-                switch ($tipo_ubi) {
-                    case 'ctrdl':
-                    case 'ctrsf':
-                            // Si es de mi dl, la clase será CentroDl.
-                        if ($oCentro->getDl() === ConfigGlobal::mi_delef()) {
-                            $oCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class)->findById($id_ubi);
-                        }
-                        break;
-                    case 'ctrex':
-                        $oCentro = $GLOBALS['container']->get(CentroExRepositoryInterface::class)->findById($id_ubi);
-                        break;
-                    default:
-                        $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
-                        exit ($err_switch);
-                }
-                $oUbi = $oCentro;
-            } else {
-                $oUbi = $GLOBALS['container']->get(CasaRepositoryInterface::class)->findById($id_ubi);
-            }
-        }
-        return $oUbi;
+        return DependencyResolver::get(UbiFactory::class)->newUbi($id_ubi);
     }
 }

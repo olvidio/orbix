@@ -17,22 +17,29 @@ use src\ubiscamas\domain\value_objects\HabitacionId;
 interface CamaRepositoryInterface
 {
 
-    public function getArrayCamas($sCondicion = ''): array;
+    /**
+     * @return array<int|string, string>
+     */
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayCamas(string $sCondicion = ''): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Cama
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Cama
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Cama> Una colección de objetos de tipo Cama
      */
     public function getCamas(array $aWhere = [], array $aOperators = []): array;
 
     /**
      * devuelve una colección (array) de objetos de tipo Cama para una habitación específica
      *
+     * @return list<Cama>
      */
     public function getCamasByHabitacion(HabitacionId $id_habitacion): array;
 
@@ -51,14 +58,14 @@ interface CamaRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $id_cama
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $id_cama): array|bool;
+    public function datosById(string $id_cama): array|false;
 
     /**
      * Busca la clase con id_cama en el repositorio.
      */
     public function findById(string $id_cama): ?Cama;
 
-    public function getNewId();
+    public function getNewId(): string|false;
 }

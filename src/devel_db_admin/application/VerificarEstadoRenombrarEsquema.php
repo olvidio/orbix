@@ -59,6 +59,7 @@ final class VerificarEstadoRenombrarEsquema
 
         $soloDestino = $ctx->soloDestinoComprobacion;
 
+        /** @var list<array{nombre: string, items: list<array{texto: string, estado: string}>}> $bloques */
         $bloques = [];
         $oImportar = new ConfigDB('importar');
 
@@ -227,6 +228,9 @@ final class VerificarEstadoRenombrarEsquema
         ];
     }
 
+    /**
+     * @return array{nombre: string, items: list<array{texto: string, estado: string}>}
+     */
     private function bloqueOpcionesFormulario(
         int $comun,
         int $sv,
@@ -234,6 +238,7 @@ final class VerificarEstadoRenombrarEsquema
         bool $sinRenombreEfectivo,
         bool $soloDestinoComprobacion,
     ): array {
+        /** @var list<array{texto: string, estado: string}> $items */
         $items = [];
         $items[] = [
             'texto' => _('Esta comprobación revisa esquemas/roles, db_idschema, ficheros .inc y los ALTER COLUMN SET DEFAULT del renombre (réplicas omitidas en docker; bloques de defaults de comun/sv solo si los checkboxes correspondientes están marcados).'),
@@ -287,6 +292,7 @@ final class VerificarEstadoRenombrarEsquema
             return $this->bloqueBdSinRenombre($nombre, $pdo, $schemaOld, $roleOld, $dbIdschemaLabel, $schemasIdschema);
         }
 
+        /** @var list<array{texto: string, estado: string}> $items */
         $items = [];
         if ($pdo === null) {
             $items[] = ['texto' => _('No se ha podido conectar a esta base (revisar importar.inc / red).'), 'estado' => 'error'];
@@ -430,6 +436,7 @@ final class VerificarEstadoRenombrarEsquema
         string $dbIdschemaLabel,
         array $schemasIdschema,
     ): array {
+        /** @var list<array{texto: string, estado: string}> $items */
         $items = [];
         if ($pdo === null) {
             $items[] = ['texto' => _('No se ha podido conectar a esta base (revisar importar.inc / red).'), 'estado' => 'error'];
@@ -501,8 +508,13 @@ final class VerificarEstadoRenombrarEsquema
             $placeholders = implode(',', array_fill(0, count($trio), '?'));
             $st = $pdo->prepare('SELECT schema FROM ' . self::TABLA_DB_IDSCHEMA . " WHERE schema IN ($placeholders)");
             $st->execute($trio);
-            $found = $st->fetchAll(PDO::FETCH_COLUMN);
-            $found = is_array($found) ? $found : [];
+            $foundRaw = $st->fetchAll(PDO::FETCH_COLUMN);
+            $found = [];
+            foreach ($foundRaw as $value) {
+                if (is_string($value) && $value !== '') {
+                    $found[] = $value;
+                }
+            }
         } catch (Throwable) {
             $items[] = ['texto' => _('No se pudo leer public.db_idschema (¿tabla ausente o sin permisos?).'), 'estado' => 'aviso'];
 
@@ -521,7 +533,7 @@ final class VerificarEstadoRenombrarEsquema
                 'estado' => 'falta',
             ];
         }
-        if ($missing === [] && $trio !== []) {
+        if ($missing === []) {
             $items[] = ['texto' => _('db_idschema: trío de esquemas registrado.'), 'estado' => 'ok'];
         }
 
@@ -539,8 +551,13 @@ final class VerificarEstadoRenombrarEsquema
             $placeholders = implode(',', array_fill(0, count($schemas), '?'));
             $st = $pdo->prepare('SELECT schema FROM ' . self::TABLA_DB_IDSCHEMA . " WHERE schema IN ($placeholders)");
             $st->execute($schemas);
-            $found = $st->fetchAll(PDO::FETCH_COLUMN);
-            $found = is_array($found) ? $found : [];
+            $foundRaw = $st->fetchAll(PDO::FETCH_COLUMN);
+            $found = [];
+            foreach ($foundRaw as $value) {
+                if (is_string($value) && $value !== '') {
+                    $found[] = $value;
+                }
+            }
         } catch (Throwable) {
             $items[] = ['texto' => _('No se pudo leer public.db_idschema (¿tabla ausente o sin permisos?).'), 'estado' => 'aviso'];
 
@@ -605,9 +622,11 @@ final class VerificarEstadoRenombrarEsquema
             $base = $row['fichero'];
             $archivo = ConfigDB::ficheroIncNombre($base);
             $keys = ConfigDB::clavesEnFicheroRoles($base);
-            if ($row['old'] === $row['new']) {
-                $clave = $row['old'];
-                $has = $clave !== '' && in_array($clave, $keys, true);
+            $old = $row['old'];
+            $new = $row['new'];
+            if ($old === $new) {
+                $clave = $old;
+                $has = in_array($clave, $keys, true);
                 $items[] = [
                     'texto' => $has
                         ? sprintf(_('%s: clave "%s" presente.'), $archivo, $clave)
@@ -617,27 +636,22 @@ final class VerificarEstadoRenombrarEsquema
 
                 continue;
             }
-            $hasOld = in_array($row['old'], $keys, true);
-            $hasNew = in_array($row['new'], $keys, true);
+            $hasOld = in_array($old, $keys, true);
+            $hasNew = in_array($new, $keys, true);
             if ($hasNew && !$hasOld) {
                 $items[] = [
-                    'texto' => sprintf(_('%s: clave nueva "%s" presente, antigua "%s" ausente.'), $archivo, $row['new'], $row['old']),
+                    'texto' => sprintf(_('%s: clave nueva "%s" presente, antigua "%s" ausente.'), $archivo, $new, $old),
                     'estado' => 'ok',
                 ];
             } elseif ($hasOld && !$hasNew) {
                 $items[] = [
-                    'texto' => sprintf(_('%s: sigue la clave antigua "%s"; falta "%s".'), $archivo, $row['old'], $row['new']),
+                    'texto' => sprintf(_('%s: sigue la clave antigua "%s"; falta "%s".'), $archivo, $old, $new),
                     'estado' => 'falta',
-                ];
-            } elseif ($hasOld && $hasNew) {
-                $items[] = [
-                    'texto' => sprintf(_('%s: coexisten "%s" y "%s" (limpiar la antigua al terminar).'), $archivo, $row['old'], $row['new']),
-                    'estado' => 'error',
                 ];
             } else {
                 $items[] = [
-                    'texto' => sprintf(_('%s: no hay clave ni "%s" ni "%s" (¿otro nombre o fichero ausente?).'), $archivo, $row['old'], $row['new']),
-                    'estado' => 'aviso',
+                    'texto' => sprintf(_('%s: coexisten "%s" y "%s" (limpiar la antigua al terminar).'), $archivo, $old, $new),
+                    'estado' => 'error',
                 ];
             }
         }
@@ -645,6 +659,9 @@ final class VerificarEstadoRenombrarEsquema
         return ['nombre' => $nombre, 'items' => $items];
     }
 
+    /**
+     * @return array{texto: string, estado: string}
+     */
     private function itemEsperado(string $titulo, bool $ok, string $detalleOk, string $detalleMal): array
     {
         return [
@@ -804,7 +821,15 @@ SQL;
             return null;
         }
 
-        return $row[0] === null ? null : (string) $row[0];
+        if (!is_array($row)) {
+            return null;
+        }
+        $valor = $row[0] ?? null;
+        if (!is_scalar($valor)) {
+            return null;
+        }
+
+        return (string) $valor;
     }
 
     private function expresionDefaultEquivale(?string $db, string $expected): bool
@@ -816,12 +841,19 @@ SQL;
             return true;
         }
 
-        return strtolower(preg_replace('/\s+/', '', $db)) === strtolower(preg_replace('/\s+/', '', $expected));
+        $dbNorm = preg_replace('/\s+/', '', $db);
+        $expectedNorm = preg_replace('/\s+/', '', $expected);
+        if (!is_string($dbNorm) || !is_string($expectedNorm)) {
+            return false;
+        }
+
+        return strtolower($dbNorm) === strtolower($expectedNorm);
     }
 
     private function normalizarExprDefault(string $s): string
     {
-        $s = trim(preg_replace('/\s+/', ' ', $s));
+        $collapsed = preg_replace('/\s+/', ' ', $s);
+        $s = trim(is_string($collapsed) ? $collapsed : $s);
         // pg_get_expr suele omitir el calificador public. en funciones del search_path.
         return (string) preg_replace('/\bpublic\./i', '', $s);
     }
@@ -833,7 +865,7 @@ SQL;
     {
         foreach ($bloques as $b) {
             foreach ($b['items'] as $it) {
-                if (($it['estado'] ?? '') === 'falta' || ($it['estado'] ?? '') === 'error') {
+                if ($it['estado'] === 'falta' || $it['estado'] === 'error') {
                     return false;
                 }
             }

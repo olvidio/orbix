@@ -2,19 +2,19 @@
 
 /**
  * Endpoint JSON: datos para la ficha `personas_editar.phtml`.
- *
- * Ruta: /src/personas/personas_editar_data
- *
- * Respuesta: `ContestarJson::enviar($error, $data)`.
  */
 
-use src\shared\web\ContestarJson;
 use src\personas\application\PersonasEditarData;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 
-$result = PersonasEditarData::build($_POST);
+/** @var PersonasEditarData $useCase */
+$useCase = DependencyResolver::get(PersonasEditarData::class);
+$result = $useCase->execute($_POST);
 
-if (!empty($result['error'])) {
-    ContestarJson::enviar((string)$result['error']);
+$errorVal = $result['error'] ?? '';
+if (is_string($errorVal) && $errorVal !== '') {
+    ContestarJson::enviar($errorVal);
     return;
 }
 

@@ -55,7 +55,7 @@ final class CopiarEsquema
                  * Posteriormente hay que cambiar el id_schema (si tiene)
                  * y actualizar la secuencia (se hace al final, en DBTrasvase)
                  *
-                 * @var array $aTablas
+                 * @var array<string, array{id_schema: string}> $aTablas
                  */
                 $aTablas = [
                     'a_tipos_actividad' => ['id_schema' => 'yes'],

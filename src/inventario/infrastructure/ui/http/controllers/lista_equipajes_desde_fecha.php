@@ -1,13 +1,18 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qf_ini_iso = (string)filter_input(INPUT_POST, 'f_ini_iso');
+$Qf_ini_iso = input_string($_POST, 'f_ini_iso');
 
 $error_txt = '';
 
-$EquipajeRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
+/** @var EquipajeRepositoryInterface $EquipajeRepository */
+$EquipajeRepository = DependencyResolver::get(EquipajeRepositoryInterface::class);
 $aOpciones = $EquipajeRepository->getArrayEquipajes($Qf_ini_iso);
 
 $data = [

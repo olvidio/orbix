@@ -24,7 +24,7 @@ class EncargoDia
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     private EncargoDiaId $uuid_item;
-    private int $id_enc;
+    private ?int $id_enc = null;
 
     private DateTimeLocal|NullDateTimeLocal|null $tstart;
     private DateTimeLocal|NullDateTimeLocal|null $tend;

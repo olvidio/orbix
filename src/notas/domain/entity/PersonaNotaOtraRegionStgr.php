@@ -25,21 +25,27 @@ class PersonaNotaOtraRegionStgr
 {
     use Hydratable;
 
+    /**
+     * @param array<string, mixed>|null $a_id
+     */
     public function __construct(?array $a_id = null)
     {
         if ($a_id !== null) {
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id === 'id_nom') && $val_id !== '') {
-                    $this->id_nom = (int)$val_id;
+                if (!is_scalar($val_id) || (string) $val_id === '') {
+                    continue;
                 }
-                if (($nom_id === 'id_asignatura') && $val_id !== '') {
-                    $this->id_asignatura = AsignaturaId::fromNullableInt((int)$val_id);
+                if ($nom_id === 'id_nom') {
+                    $this->id_nom = (int) $val_id;
                 }
-                if (($nom_id === 'id_nivel') && $val_id !== '') {
-                    $this->id_nivel = $val_id;
+                if ($nom_id === 'id_asignatura') {
+                    $this->id_asignatura = new AsignaturaId((int) $val_id);
                 }
-                if (($nom_id === 'tipo_acta') && $val_id !== '') {
-                    $this->tipo_acta = TipoActa::fromNullableInt((int)$val_id);
+                if ($nom_id === 'id_nivel') {
+                    $this->id_nivel = new NivelId((int) $val_id);
+                }
+                if ($nom_id === 'tipo_acta') {
+                    $this->tipo_acta = TipoActa::fromNullableInt((int) $val_id);
                 }
             }
         }
@@ -58,7 +64,7 @@ class PersonaNotaOtraRegionStgr
 
     protected ?ActaNumero $acta;
 
-    protected DateTimeLocal $f_acta;
+    protected ?DateTimeLocal $f_acta = null;
 
     protected ?Detalle $detalle;
 
@@ -80,33 +86,30 @@ class PersonaNotaOtraRegionStgr
 
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
 
-    public function getPersonaNotaPk()
-    {
+    public function getPersonaNotaPk(): PersonaNotaPk {
          return PersonaNotaPk::fromArray(['id_nom' => $this->id_nom ,
             'id_nivel' => $this->id_nivel->value() ,
-            'tipo_acta' => $this->tipo_acta,
+            'tipo_acta' => $this->tipo_acta?->value() ?? TipoActa::FORMATO_ACTA,
         ]);
     }
 
 
     public function isAprobada(): bool
     {
-        $nota_corte = $_SESSION['oConfig']->getNotaCorte();
-        $aprobada = 'f';
-        if ($this->id_situacion === NotaSituacion::NUMERICA) {
+        $config = $_SESSION['oConfig'] ?? null;
+        if (!is_object($config) || !method_exists($config, 'getNotaCorte')) {
+            return false;
+        }
+        $nota_corte = (float) $config->getNotaCorte();
+        if ($this->id_situacion->value() === NotaSituacion::NUMERICA) {
             $nota_num = $this->getNotaNumVo()?->value();
             $nota_max = $this->getNotaMaxVo()?->value();
-            // deben ser números.
-            if (is_numeric($nota_num) && is_numeric($nota_max)) {
-                if ($nota_num / $nota_max >= $nota_corte) {
-                    $aprobada = 't';
-                }
+            if (is_numeric($nota_num) && is_numeric($nota_max) && (float) $nota_max !== 0.0) {
+                return (float) $nota_num / (float) $nota_max >= $nota_corte;
             }
-        } else {
-            $aNotasSuperadas = NotaSituacion::getArraySuperadas();
-            $aprobada = in_array($this->id_situacion->value(), $aNotasSuperadas);
+            return false;
         }
-        return $aprobada;
+        return in_array($this->id_situacion->value(), NotaSituacion::getArraySuperadas(), true);
     }
 
     /**
@@ -133,7 +136,7 @@ class PersonaNotaOtraRegionStgr
                     //$a = new \NumberFormatter("es_ES.UTF-8", \NumberFormatter::DECIMAL);
                     // SI dejo el locale en blanco coge el que se ha definido por defecto en el usuario.
                     $a = new NumberFormatter("", NumberFormatter::DECIMAL);
-                    $num_local = $a->format($num);
+                    $num_local = $a->format((float) $num);
                     $nota_txt = $num_local . '/' . $max;
                     if ($max >= 1) {
                         $nota_x_uno = $num / $max;
@@ -200,14 +203,16 @@ class PersonaNotaOtraRegionStgr
      */
     public function setId_nivel(int $id_nivel): void
     {
-        $this->id_nivel = NivelId::fromNullableInt($id_nivel);
+        $this->id_nivel = new NivelId((int) $id_nivel);
     }
 
     public function setIdNivelVo(NivelId|int|null $oIdNivel): void
     {
-        $this->id_nivel = $oIdNivel instanceof NivelId
-            ? $oIdNivel
-            : AsignaturaId::fromNullableInt($oIdNivel);
+        if ($oIdNivel instanceof NivelId) {
+            $this->id_nivel = $oIdNivel;
+        } elseif ($oIdNivel !== null) {
+            $this->id_nivel = new NivelId($oIdNivel);
+        }
     }
 
     /**
@@ -227,13 +232,15 @@ class PersonaNotaOtraRegionStgr
      */
     public function setId_asignatura(int $id_asignatura): void
     {
-        $this->id_asignatura = AsignaturaId::fromNullableInt($id_asignatura);
+        $this->id_asignatura = new AsignaturaId((int) $id_asignatura);
     }
     public function setIdAsignaturaVo(AsignaturaId|int|null $oIdAsignatura): void
     {
-        $this->id_asignatura = $oIdAsignatura instanceof AsignaturaId
-            ? $oIdAsignatura
-            : AsignaturaId::fromNullableInt($oIdAsignatura);
+        if ($oIdAsignatura instanceof AsignaturaId) {
+            $this->id_asignatura = $oIdAsignatura;
+        } elseif ($oIdAsignatura !== null) {
+            $this->id_asignatura = new AsignaturaId($oIdAsignatura);
+        }
     }
 
     /**
@@ -253,13 +260,15 @@ class PersonaNotaOtraRegionStgr
      */
     public function setId_situacion(int $id_situacion): void
     {
-        $this->id_situacion = NotaSituacion::fromNullableInt($id_situacion);
+        $this->id_situacion = new NotaSituacion((int) $id_situacion);
     }
     public function setIdSituacionVo(NotaSituacion|int|null $oIdSituacion): void
     {
-        $this->id_situacion = $oIdSituacion instanceof NotaSituacion
-            ? $oIdSituacion
-            : NotaSituacion::fromNullableInt($oIdSituacion);
+        if ($oIdSituacion instanceof NotaSituacion) {
+            $this->id_situacion = $oIdSituacion;
+        } elseif ($oIdSituacion !== null) {
+            $this->id_situacion = new NotaSituacion($oIdSituacion);
+        }
     }
 
     /**
@@ -267,7 +276,7 @@ class PersonaNotaOtraRegionStgr
      */
     public function getActa(): ?string
     {
-        return isset($this->acta) ? $this->acta?->value() : null;
+        return $this->acta?->value();
     }
 
     public function getActaVo(): ?ActaNumero
@@ -296,9 +305,9 @@ class PersonaNotaOtraRegionStgr
     }
 
 
-    public function setF_acta(DateTimeLocal|null $f_acta = null): void
+    public function setF_acta(DateTimeLocal|NullDateTimeLocal|null $f_acta = null): void
     {
-        $this->f_acta = $f_acta;
+        $this->f_acta = $f_acta instanceof NullDateTimeLocal ? null : $f_acta;
     }
 
 
@@ -328,10 +337,7 @@ class PersonaNotaOtraRegionStgr
             : Detalle::fromNullableString($oDetalle);
     }
 
-    public function isPreceptor(): bool
-    {
-        return $this->preceptor;
-    }
+    public function isPreceptor(): bool { return (bool) ($this->preceptor ?? false); }
 
     public function setPreceptor(bool $preceptor): void
     {
@@ -351,10 +357,7 @@ class PersonaNotaOtraRegionStgr
     /**
      * @deprecated use getEpocaVo()
      */
-    public function getEpoca(): ?string
-    {
-        return $this->epoca?->value();
-    }
+    public function getEpoca(): ?string { $v = $this->epoca?->value(); return $v !== null ? (string) $v : null; }
     public function getEpocaVo(): ?NotaEpoca
     {
         return $this->epoca;
@@ -390,11 +393,13 @@ class PersonaNotaOtraRegionStgr
     {
         $this->id_activ = ActividadId::fromNullableInt($id_activ);
     }
-    public function setIdActivVo(ActividadId|int|null $valor)
+    public function setIdActivVo(ActividadId|int|null $idActiv): void
     {
-        $this->id_activ = $valor instanceof ActividadId
-            ? $valor
-            : ActividadId::fromNullableInt($valor);
+        if ($idActiv instanceof ActividadId) {
+            $this->id_activ = $idActiv;
+        } elseif ($idActiv !== null) {
+            $this->id_activ = new ActividadId($idActiv);
+        }
     }
 
     /**
@@ -402,7 +407,8 @@ class PersonaNotaOtraRegionStgr
      */
     public function getNota_num(): ?string
     {
-        return $this->nota_num?->value();
+        $v = $this->nota_num?->value();
+        return $v !== null ? (string) $v : null;
     }
     public function getNotaNumVo(): ?NotaNum
     {
@@ -429,7 +435,8 @@ class PersonaNotaOtraRegionStgr
      */
     public function getNota_max(): ?string
     {
-        return $this->nota_max?->value();
+        $v = $this->nota_max?->value();
+        return $v !== null ? (string) $v : null;
     }
     public function getNotaMaxVo(): ?NotaMax
     {
@@ -453,7 +460,7 @@ class PersonaNotaOtraRegionStgr
     /**
      * @deprecated use getTipoActaVo()
      */
-    public function getTipo_acta(): ?string
+    public function getTipo_acta(): ?int
     {
         return $this->tipo_acta?->value();
     }
@@ -481,6 +488,9 @@ class PersonaNotaOtraRegionStgr
      * @param boolean $returnArray si hay que devolver un array en vez de un objeto.
      * @return array|stdClass|null
      */
+    /**
+     * @return array<string, mixed>|stdClass|null
+     */
     public function getJson_certificados(bool $returnArray = FALSE): array|stdClass|null
     {
         return (new ConverterJson($this->json_certificados, $returnArray))->fromPg();
@@ -491,13 +501,16 @@ class PersonaNotaOtraRegionStgr
      * @param boolean $db =FALSE optional. Para determinar la variable que se le pasa es ya un objeto json,
      *  o es una variable de php hay que convertirlo. En la base de datos ya es json.
      */
+    /**
+     * @param string|array<string, mixed>|null $oJSON
+     */
     public function setJson_certificados(string|array|null $oJSON, bool $db = FALSE): void
     {
-        $a_json_certificados = (new ConverterJson($oJSON, FALSE))->toPg($db);
-        if ($a_json_certificados === "[]" || empty($a_json_certificados)) {
+        $encoded = (new ConverterJson($oJSON, FALSE))->toPg($db);
+        if ($encoded === "[]" || $encoded === "" || $encoded === null) {
             $this->json_certificados = null;
-        } else {
-            $this->json_certificados = (new ConverterJson($oJSON, FALSE))->toPg($db);
+        } elseif (is_string($encoded)) {
+            $this->json_certificados = $encoded;
         }
     }
 }

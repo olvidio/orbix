@@ -3,12 +3,15 @@
 namespace src\actividadessacd\application\services;
 
 use src\shared\config\ConfigGlobal;
+use src\actividadessacd\application\services\ActividadesSacdHelper;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\entity\PersonaEx;
+use src\personas\domain\entity\PersonaSacd;
 use src\personas\domain\services\TelecoPersonaService;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
 use src\shared\domain\entity\ColaMail;
@@ -20,6 +23,7 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
+use src\permisos\domain\PermisosActividades;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -33,7 +37,7 @@ use function src\shared\domain\helpers\is_true;
  */
 final class ComunicarActividadesSacdService
 {
-    /** @var array<mixed> */
+    /** @var list<PersonaSacd|PersonaEx|null> */
     private array $cPersonas = [];
     private string $inicioIso = '';
     private string $finIso = '';
@@ -41,9 +45,27 @@ final class ComunicarActividadesSacdService
     private bool $soloCargos = false;
     private bool $quitarInactivos = false;
 
+    public function __construct(
+        private CargoRepositoryInterface $cargoRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private ActividadesSacdHelper $actividadesSacdHelper,
+        private ConfigSchemaRepositoryInterface $configSchemaRepository,
+        private UsuarioRepositoryInterface $usuarioRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private TelecoPersonaService $telecoPersonaService,
+        private ColaMailRepositoryInterface $colaMailRepository,
+    ) {
+    }
+
+    /**
+     * @param array<int, PersonaSacd|PersonaEx|null> $cPersonas
+     */
     public function setPersonas(array $cPersonas): void
     {
-        $this->cPersonas = $cPersonas;
+        $this->cPersonas = array_values($cPersonas);
     }
 
     public function setInicioIso(string $inicioIso): void
@@ -80,10 +102,9 @@ final class ComunicarActividadesSacdService
      */
     public function getArrayComunicacion(): array
     {
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
+        $aIdCargos_sacd = $this->cargoRepository->getArrayCargos('sacd');
 
-        $oHelper = new ActividadesSacdHelper();
+        $oHelper = $this->actividadesSacdHelper;
         $array_actividades = [];
 
         $aWhereAct = [
@@ -96,12 +117,12 @@ final class ComunicarActividadesSacdService
             'f_fin' => '>=',
         ];
 
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+        $ActividadAllRepository = $this->actividadAllRepository;
+        $CentroEncargadoRepository = $this->centroEncargadoRepository;
+        $ActividadCargoRepository = $this->actividadCargoRepository;
 
         foreach ($this->cPersonas as $oPersona) {
-            if ($oPersona === null) {
+            if (!($oPersona instanceof PersonaSacd || $oPersona instanceof PersonaEx)) {
                 continue;
             }
             $id_nom = (int)$oPersona->getId_nom();
@@ -126,15 +147,20 @@ final class ComunicarActividadesSacdService
 
             $ord_activ = [];
             foreach ($cAsistentes as $aAsistente) {
-                $id_activ = $aAsistente['id_activ'];
-                $propio = $aAsistente['propio'];
-                $id_cargo = empty($aAsistente['id_cargo']) ? null : $aAsistente['id_cargo'];
+                $id_activ = $this->mixedToInt($aAsistente['id_activ'] ?? 0);
+                $propio = is_true($aAsistente['propio'] ?? false);
+                $id_cargo = isset($aAsistente['id_cargo']) && $aAsistente['id_cargo'] !== ''
+                    ? $this->mixedToInt($aAsistente['id_cargo'])
+                    : null;
 
-                $_SESSION['oPermActividades']->setId_activ($id_activ);
-                if (!is_true($this->propuesta) && ConfigGlobal::is_app_installed('procesos')) {
-                    // Para los sacd: fase ok_sacd completada; para asistentes:
-                    // fase ok_asistente completada.
-                    $permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
+                $oPermSesion = $_SESSION['oPermActividades'] ?? null;
+                if ($oPermSesion instanceof PermisosActividades) {
+                    $oPermSesion->setId_activ($id_activ);
+                    if (!is_true($this->propuesta) && ConfigGlobal::is_app_installed('procesos')) {
+                        $permiso_ver = $oPermSesion->havePermisoSacd($id_cargo, $propio);
+                    } else {
+                        $permiso_ver = true;
+                    }
                 } else {
                     $permiso_ver = true;
                 }
@@ -151,9 +177,12 @@ final class ComunicarActividadesSacdService
                 $lugar_esp = $oActividad->getLugar_esp();
                 $oF_ini = $oActividad->getF_ini();
                 $oF_fin = $oActividad->getF_fin();
+                if ($oF_ini === null || $oF_fin === null) {
+                    continue;
+                }
                 $h_ini = $oActividad->getH_ini();
                 $h_fin = $oActividad->getH_fin();
-                $observ = $oActividad->getObserv();
+                $observ = (string)$oActividad->getObserv();
 
                 $f_ini = $oF_ini->formatRoman();
                 $f_fin = $oF_fin->formatRoman();
@@ -171,7 +200,7 @@ final class ComunicarActividadesSacdService
                 $snom_tipo = $oTipoActiv->getNom_tipoText();
 
                 if (empty($lugar_esp)) {
-                    $oCasa = Ubi::NewUbi($id_ubi);
+                    $oCasa = Ubi::NewUbi((int)$id_ubi);
                     $nombre_ubi = $oCasa?->getNombre_ubi() ?? '?';
                 } else {
                     $nombre_ubi = $lugar_esp;
@@ -186,7 +215,7 @@ final class ComunicarActividadesSacdService
                 }
 
                 $cargo = '';
-                if (!empty($id_cargo) && !array_key_exists($id_cargo, $aIdCargos_sacd)) {
+                if ($id_cargo !== null && !array_key_exists($id_cargo, $aIdCargos_sacd)) {
                     $cargo = 'te carrec';
                 }
                 $array_act = [
@@ -205,7 +234,7 @@ final class ComunicarActividadesSacdService
                 ];
                 // clave de orden: Ymd. Si hay duplicados, sumamos 1 para
                 // mantener a todos.
-                $f_ord = $oF_ini->format('Ymd');
+                $f_ord = (int)$oF_ini->format('Ymd');
                 while (array_key_exists($f_ord, $ord_activ)) {
                     $f_ord++;
                 }
@@ -231,19 +260,21 @@ final class ComunicarActividadesSacdService
      * texto de error vacio si todo OK, o descriptivo si falta algun
      * dato esencial (jefe de calendario, mail del jefe...).
      */
+    /**
+     * @param array<int, array<string, mixed>> $array_actividades
+     */
     public function enviarMails(array $array_actividades): string
     {
         $oDateLocal = new DateTimeLocal();
         $hoy_local = $oDateLocal->getFromLocal('.');
-        $oHelper = new ActividadesSacdHelper();
+        $oHelper = $this->actividadesSacdHelper;
         $poblacion = $oHelper->getLugar_dl();
         $lugar_fecha = "$poblacion, $hoy_local";
 
         $asunto = _("atención actividades");
         $mi_dele = ConfigGlobal::mi_dele();
 
-        $ConfigSchemaRepository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
-        $oConfigSchema = $ConfigSchemaRepository->findById('jefe_calendario');
+        $oConfigSchema = $this->configSchemaRepository->findById('jefe_calendario');
         $valor = $oConfigSchema?->getValorVo()?->value();
         if (empty($valor)) {
             return _("falta el definir el jefe de calendario");
@@ -251,8 +282,7 @@ final class ComunicarActividadesSacdService
         $a_jefes_calendario = explode(',', $valor);
         $jefe_calendario = $a_jefes_calendario[0];
 
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $cUsuarios = $UsuarioRepository->getUsuarios(['usuario' => $jefe_calendario]);
+        $cUsuarios = $this->usuarioRepository->getUsuarios(['usuario' => $jefe_calendario]);
         if (empty($cUsuarios)) {
             return _("No hay un mail (jefe calendario) para enviar los errores. No se procesan los mails.");
         }
@@ -262,29 +292,33 @@ final class ComunicarActividadesSacdService
             return _("No hay un mail (jefe calendario) para enviar los errores. No se procesan los mails.");
         }
 
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
-        $ColaMailRepository = $GLOBALS['container']->get(ColaMailRepositoryInterface::class);
+        $PersonaDlRepository = $this->personaDlRepository;
+        $CentroDlRepository = $this->centroDlRepository;
+        $telecoService = $this->telecoPersonaService;
+        $ColaMailRepository = $this->colaMailRepository;
 
         foreach ($array_actividades as $id_nom => $vector) {
             $oPersona = $PersonaDlRepository->findById((int)$id_nom);
-            $nom_ap = $vector['nom_ap'] ?? '';
+            $nom_ap = $this->mixedToString($vector['nom_ap'] ?? '');
 
-            $propio = $vector['txt']['t_propio'];
-            $f_ini = $vector['txt']['t_f_ini'];
-            $f_fin = $vector['txt']['t_f_fin'];
-            $nombre_ubi = $vector['txt']['t_nombre_ubi'];
-            $sfsv = $vector['txt']['t_sfsv'];
-            $actividad = $vector['txt']['t_actividad'];
-            $asistentes = $vector['txt']['t_asistentes'];
-            $encargado = $vector['txt']['t_encargado'];
-            $observ = $vector['txt']['t_observ'];
-            $nom_tipo = $vector['txt']['t_nom_tipo'];
-            $txt = $vector['txt']['com_sacd'];
-            $a_actividades = $vector['actividades'];
-            if (empty($a_actividades)) {
-                continue; // sin actividades, no se envia
+            $txtBlock = $vector['txt'] ?? [];
+            if (!is_array($txtBlock)) {
+                continue;
+            }
+            $propio = $this->mixedToString($txtBlock['t_propio'] ?? '');
+            $f_ini = $this->mixedToString($txtBlock['t_f_ini'] ?? '');
+            $f_fin = $this->mixedToString($txtBlock['t_f_fin'] ?? '');
+            $nombre_ubi = $this->mixedToString($txtBlock['t_nombre_ubi'] ?? '');
+            $sfsv = $this->mixedToString($txtBlock['t_sfsv'] ?? '');
+            $actividad = $this->mixedToString($txtBlock['t_actividad'] ?? '');
+            $asistentes = $this->mixedToString($txtBlock['t_asistentes'] ?? '');
+            $encargado = $this->mixedToString($txtBlock['t_encargado'] ?? '');
+            $observ = $this->mixedToString($txtBlock['t_observ'] ?? '');
+            $nom_tipo = $this->mixedToString($txtBlock['t_nom_tipo'] ?? '');
+            $txt = $this->mixedToString($txtBlock['com_sacd'] ?? '');
+            $a_actividades = $vector['actividades'] ?? [];
+            if (!is_array($a_actividades) || empty($a_actividades)) {
+                continue;
             }
 
             $e_mail_sacd = $telecoService->getEmailPrincipalOPrimero((int)$id_nom);
@@ -323,38 +357,53 @@ final class ComunicarActividadesSacdService
             $body_sacd = '';
             $body_ctr = '';
             foreach ($a_actividades as $act) {
-                $marca = is_true($act['propio']) ? '*' : '';
-                $cargo_observ = !empty($act['cargo']) ? ($act['cargo'] . '. ' . $act['observ']) : $act['observ'];
+                if (!is_array($act)) {
+                    continue;
+                }
+                $actPropio = is_true($act['propio'] ?? false);
+                $actFIni = $this->mixedToString($act['f_ini'] ?? '');
+                $actFFin = $this->mixedToString($act['f_fin'] ?? '');
+                $actNombreUbi = $this->mixedToString($act['nombre_ubi'] ?? '');
+                $actSfsv = $this->mixedToString($act['sfsv'] ?? '');
+                $actActividad = $this->mixedToString($act['actividad'] ?? '');
+                $actAsistentes = $this->mixedToString($act['asistentes'] ?? '');
+                $actEncargado = $this->mixedToString($act['encargado'] ?? '');
+                $actObserv = $this->mixedToString($act['observ'] ?? '');
+                $actNomTipo = $this->mixedToString($act['nom_tipo'] ?? '');
+                $actCargo = $this->mixedToString($act['cargo'] ?? '');
+
+                $marca = $actPropio ? '*' : '';
+                $cargo_observ = $actCargo !== '' ? ($actCargo . '. ' . $actObserv) : $actObserv;
 
                 $body_sacd .= "<tr>
-                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>$marca " . $act['f_ini'] . "</td>
-                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>" . $act['f_fin'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['nombre_ubi'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['sfsv'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['actividad'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['asistentes'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['encargado'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $cargo_observ . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['nom_tipo'] . "</td>
+                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>$marca $actFIni</td>
+                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>$actFFin</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actNombreUbi</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actSfsv</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actActividad</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actAsistentes</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actEncargado</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$cargo_observ</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actNomTipo</td>
                     </tr>";
 
                 $body_ctr .= "<tr>
-                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>$marca " . $act['f_ini'] . "</td>
-                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>" . $act['f_fin'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['nombre_ubi'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['sfsv'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['actividad'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['asistentes'] . "</td>
+                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>$marca $actFIni</td>
+                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>$actFFin</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actNombreUbi</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actSfsv</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actActividad</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actAsistentes</td>
                         ";
-                if ($act['sfsv'] === 'sf') {
+                if ($actSfsv === 'sf') {
                     $body_ctr .= "<td style='text-align: center; padding: 1rem; outline: 1px solid black;'></td>
                             <td style='text-align: center; padding: 1rem; outline: 1px solid black;'></td>
                             <td style='text-align: center; padding: 1rem; outline: 1px solid black;'></td>
                         </tr>";
                 } else {
-                    $body_ctr .= "<td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['encargado'] . "</td>
-                            <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $cargo_observ . "</td>
-                            <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['nom_tipo'] . "</td>
+                    $body_ctr .= "<td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actEncargado</td>
+                            <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$cargo_observ</td>
+                            <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>$actNomTipo</td>
                         </tr>";
                 }
             }
@@ -401,5 +450,24 @@ final class ComunicarActividadesSacdService
             }
         }
         return '';
+    }
+
+    private function mixedToString(mixed $value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_int($value) || is_float($value)) {
+            return (string)$value;
+        }
+        if (is_bool($value)) {
+            return $value ? 't' : 'f';
+        }
+        return '';
+    }
+
+    private function mixedToInt(mixed $value): int
+    {
+        return is_numeric($value) ? (int)$value : 0;
     }
 }

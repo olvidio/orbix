@@ -7,12 +7,13 @@ declare(strict_types=1);
  */
 
 use src\shared\web\ContestarJson;
-use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\devel_db_admin\application\ApptablesAppsData;
+use src\shared\infrastructure\DependencyResolver;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$appRepository = $GLOBALS['container']->get(AppRepositoryInterface::class);
-$payload = ApptablesAppsData::build($appRepository);
+/** @var ApptablesAppsData $data */
+$data = DependencyResolver::get(ApptablesAppsData::class);
+$payload = $data->build();
 
 ContestarJson::enviar('', $payload);

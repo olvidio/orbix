@@ -8,33 +8,12 @@ use src\usuarios\domain\contracts\LocalRepositoryInterface;
 
 final class LocalesDesplegableDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
-    public function test_devuelve_locales_del_repositorio(): void
-    {
+        public function test_devuelve_locales_del_repositorio(): void {
         $locales = ['ca' => 'Català', 'es' => 'Castellano'];
         $repo = $this->createMock(LocalRepositoryInterface::class);
         $repo->expects($this->once())->method('getArrayLocales')->willReturn($locales);
 
-        $GLOBALS['container'] = $this->containerOne(LocalRepositoryInterface::class, $repo);
-
-        $out = LocalesDesplegableData::execute();
+        $out = (new \src\actividadessacd\application\LocalesDesplegableData($repo))->execute();
         $this->assertSame(['a_locales' => $locales], $out);
     }
 

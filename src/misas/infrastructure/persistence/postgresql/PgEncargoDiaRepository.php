@@ -1,6 +1,7 @@
 <?php
 
 namespace src\misas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -28,8 +29,8 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl = GlobalPdo::get('oDBC');
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl($oDbl);
         $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('misa_cuadricula_dl');
@@ -40,9 +41,9 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
     /**
      * devuelve una colección (array) de objetos de tipo EncargoDia
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo EncargoDia
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<EncargoDia> Una colección de objetos de tipo EncargoDia
      */
     public function getEncargoDias(array $aWhere = [], array $aOperators = []): array
     {
@@ -79,30 +80,38 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para las fechas del postgres (texto iso)
             $aDatos['tstart'] = (new ConverterDate('datetime', $aDatos['tstart']))->fromPg();
             $aDatos['tend'] = (new ConverterDate('datetime', $aDatos['tend']))->fromPg();
             $EncargoDia = EncargoDia::fromArray($aDatos);
             $EncargoDiaSet->add($EncargoDia);
         }
-        return $EncargoDiaSet->getTot();
+        return array_values($EncargoDiaSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -144,12 +153,18 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
                     status                   = :status";
             $sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
         } else {
             // INSERT
             $campos = "(uuid_item,id_enc,tstart,tend,id_nom,observ,status)";
             $valores = "(:uuid_item,:id_enc,:tstart,:tend,:id_nom,:observ,:status)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
         }
         return $this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -161,6 +176,9 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
         $uuid_item = $vo->value();
         $sql = " SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -171,21 +189,31 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
+     * @return array<string, mixed>|false
      */
-    public function datosById(EncargoDiaId $vo): array|bool
+    public function datosById(EncargoDiaId $vo): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $uuid_item = $vo->value();
         $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        // para las fechas del postgres (texto iso)
-        if ($aDatos !== FALSE) {
-            $aDatos['tstart'] = (new ConverterDate('datetime', $aDatos['tstart']))->fromPg();
-            $aDatos['tend'] = (new ConverterDate('datetime', $aDatos['tend']))->fromPg();
+        if ($stmt === false) {
+            return false;
         }
-        return $aDatos;
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $aDatos['tstart'] = (new ConverterDate('datetime', $aDatos['tstart']))->fromPg();
+        $aDatos['tend'] = (new ConverterDate('datetime', $aDatos['tend']))->fromPg();
+
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+
+        return $result;
     }
 
 
@@ -195,7 +223,7 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
     public function findById(EncargoDiaId $vo): ?EncargoDia
     {
         $aDatos = $this->datosById($vo);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return EncargoDia::fromArray($aDatos);

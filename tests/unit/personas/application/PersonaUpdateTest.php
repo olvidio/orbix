@@ -7,46 +7,31 @@ namespace Tests\unit\personas\application;
 use PHPUnit\Framework\TestCase;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\PersonaUpdate;
+use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaN;
 use src\personas\infrastructure\persistence\postgresql\PgPersonaNRepository;
 
 final class PersonaUpdateTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_sin_id_nom(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([
-            PersonaNRepositoryInterface::class => $this->createMock(PersonaNRepositoryInterface::class),
-        ]);
+        $useCase = new PersonaUpdate($this->makeResolver());
 
-        $this->assertNotSame('', PersonaUpdate::execute(['id_nom' => 0, 'obj_pau' => 'PersonaN']));
+        $this->assertNotSame('', $useCase->execute(['id_nom' => 0, 'obj_pau' => 'PersonaN']));
     }
 
     public function test_obj_pau_desconocido(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([]);
+        $useCase = new PersonaUpdate($this->makeResolver());
 
-        $this->assertNotSame('', PersonaUpdate::execute(['id_nom' => 1, 'obj_pau' => 'PersonaX']));
+        $this->assertNotSame('', $useCase->execute(['id_nom' => 1, 'obj_pau' => 'PersonaX']));
     }
 
     public function test_exito_actualiza_mock(): void
@@ -57,9 +42,9 @@ final class PersonaUpdateTest extends TestCase
         $repo->method('findById')->with(50)->willReturn($persona);
         $repo->expects($this->once())->method('Guardar')->with($persona)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerFromMap([
+        $useCase = new PersonaUpdate($this->makeResolver([
             PersonaNRepositoryInterface::class => $repo,
-        ]);
+        ]));
 
         $input = [
             'id_nom' => 50,
@@ -73,7 +58,7 @@ final class PersonaUpdateTest extends TestCase
             'apellido2' => '',
         ];
 
-        $this->assertSame('', PersonaUpdate::execute($input));
+        $this->assertSame('', $useCase->execute($input));
     }
 
     public function test_exito_persona_ex_sin_id_ctr_ni_ce(): void
@@ -88,11 +73,11 @@ final class PersonaUpdateTest extends TestCase
         $repo->method('findById')->with(99)->willReturn($persona);
         $repo->expects($this->once())->method('Guardar')->with($persona)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerFromMap([
+        $useCase = new PersonaUpdate($this->makeResolver([
             PersonaExRepositoryInterface::class => $repo,
-        ]);
+        ]));
 
-        $result = PersonaUpdate::execute([
+        $result = $useCase->execute([
             'id_nom' => 99,
             'obj_pau' => 'PersonaEx',
             'dl' => 'BCN',
@@ -122,11 +107,9 @@ final class PersonaUpdateTest extends TestCase
         $repo->method('Guardar')->willReturn(false);
         $repo->method('getErrorTxt')->willReturn('db');
 
-        $GLOBALS['container'] = $this->containerFromMap([
+        $msg = (new PersonaUpdate($this->makeResolver([
             PersonaNRepositoryInterface::class => $repo,
-        ]);
-
-        $msg = PersonaUpdate::execute([
+        ])))->execute([
             'id_nom' => 1,
             'obj_pau' => 'PersonaN',
             'situacion' => 'A',
@@ -137,20 +120,17 @@ final class PersonaUpdateTest extends TestCase
     }
 
     /**
-     * @param array<class-string, object> $services
+     * @param array<class-string, object> $overrides
      */
-    private function containerFromMap(array $services): object
+    private function makeResolver(array $overrides = []): PersonaRepositoryResolver
     {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        return new PersonaRepositoryResolver(
+            $overrides[PersonaNRepositoryInterface::class] ?? $this->createMock(PersonaNRepositoryInterface::class),
+            $overrides[PersonaAgdRepositoryInterface::class] ?? $this->createMock(PersonaAgdRepositoryInterface::class),
+            $overrides[PersonaNaxRepositoryInterface::class] ?? $this->createMock(PersonaNaxRepositoryInterface::class),
+            $overrides[PersonaSRepositoryInterface::class] ?? $this->createMock(PersonaSRepositoryInterface::class),
+            $overrides[PersonaSSSCRepositoryInterface::class] ?? $this->createMock(PersonaSSSCRepositoryInterface::class),
+            $overrides[PersonaExRepositoryInterface::class] ?? $this->createMock(PersonaExRepositoryInterface::class),
+        );
     }
 }

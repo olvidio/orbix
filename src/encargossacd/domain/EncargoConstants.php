@@ -5,20 +5,26 @@ namespace src\encargossacd\domain;
 class EncargoConstants
 {
 
-    function getOpcionesEncargos()
+    /** @return array<int|string, string> */
+    public function getOpcionesEncargos(): array
     {
-        $opciones = [
-            "5020" => _("estudio"),
-            "5030" => _("descanso"),
-            "1110" => _("retiro"),
-            "6000" => _("otros"),
-        ];
-        return $opciones;
+        $combined = array_combine(
+            ['5020', '5030', '1110', '6000'],
+            [
+                (string) _('estudio'),
+                (string) _('descanso'),
+                (string) _('retiro'),
+                (string) _('otros'),
+            ],
+        );
+
+        return $combined;
     }
 
     // -------------------------------------------- complejo ----------------------------
     // NO se usan, son solo para asegurar que exista la traducción
-    function traduccion_c()
+    /** @return string */
+    public function traduccion_c(): string
     {
         $txt =
             _("estudio") .

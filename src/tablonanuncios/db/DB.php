@@ -24,14 +24,14 @@ class DB extends DBAbstract
         $this->esquema = 'public';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->ejecutarDropAllGlobal(function (): void {
             $this->eliminar_tablon_anuncios();
         });
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->ejecutarCreateAllGlobal(function (): void {
             $this->create_tablon_anuncios();
@@ -42,7 +42,7 @@ class DB extends DBAbstract
      * En el esquema sv
      *   OJO Corresponde al esquema sf/sv, no al comun.
      */
-    public function create_tablon_anuncios()
+    public function create_tablon_anuncios(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
 
@@ -70,7 +70,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal($this->permisoGlobalEffective('sfsv'));
     }
 
-    public function eliminar_tablon_anuncios()
+    public function eliminar_tablon_anuncios(): void
     {
         $this->addPermisoGlobal($this->permisoGlobalEffective('sfsv'));
 

@@ -1,18 +1,22 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\shared\web\ContestarJson;
 use frontend\shared\web\Periodo;
 
-$Qid_cdc = (int)filter_input(INPUT_POST, 'id_cdc');
-$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
-$Qyear = (int)filter_input(INPUT_POST, 'year');
-$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-$Qinicio = (string)filter_input(INPUT_POST, 'inicio');
-$Qfin = (string)filter_input(INPUT_POST, 'fin');
+$Qid_cdc = input_int($_POST, 'id_cdc');
+$Qperiodo = input_string($_POST, 'periodo');
+$Qyear = input_int($_POST, 'year');
+$Qempiezamin = input_string($_POST, 'empiezamin');
+$Qempiezamax = input_string($_POST, 'empiezamax');
+$Qinicio = input_string($_POST, 'inicio');
+$Qfin = input_string($_POST, 'fin');
 
 $error_txt = '';
 $a_valores = [];
@@ -36,7 +40,8 @@ if (empty($Qid_cdc)) {
     }
 
     $oUbi = Ubi::NewUbi($Qid_cdc);
-    $nombre_ubi = empty($oUbi->getNombreUbiVo()->value()) ? 'sin determinar' : $oUbi->getNombreUbiVo()->value();
+    $nombreUbiVo = $oUbi?->getNombreUbiVo();
+    $nombre_ubi = ($nombreUbiVo === null || empty($nombreUbiVo->value())) ? 'sin determinar' : $nombreUbiVo->value();
 
     $aWhere['id_ubi'] = $Qid_cdc;
     $aWhere['dl_org'] = ConfigGlobal::mi_dele();
@@ -49,7 +54,8 @@ if (empty($Qid_cdc)) {
     $aWhere['status'] = 4;
     $aOperador['status'] = '<';
     $aWhere['_ordre'] = 'f_ini';
-    $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+    /** @var ActividadRepositoryInterface $ActividadRepository */
+$ActividadRepository = DependencyResolver::get(ActividadRepositoryInterface::class);
     $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
 
     $a = 0;

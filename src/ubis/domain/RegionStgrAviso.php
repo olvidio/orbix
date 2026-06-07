@@ -54,7 +54,7 @@ final class RegionStgrAviso
     }
 
     /**
-     * @param array<string, array<string, string>> $problemas
+     * @param array<string, array<int|string, string>> $problemas
      */
     public static function registrarPersonaSinSchema(
         array &$problemas,
@@ -69,7 +69,7 @@ final class RegionStgrAviso
         if ($dl !== '') {
             $etiqueta .= ', dl ' . $dl;
         }
-        $problemas[self::TIPO_PERSONA_SIN_ID_SCHEMA][(string)$idNom] = $etiqueta;
+        $problemas[self::TIPO_PERSONA_SIN_ID_SCHEMA][(string) $idNom] = $etiqueta;
     }
 
     public static function esDlSinRegion(\Throwable $e): bool
@@ -93,7 +93,7 @@ final class RegionStgrAviso
     }
 
     /**
-     * @param array<string, array<string, string>> $problemas tipo => [dele => dele]
+     * @param array<string, array<int|string, string>> $problemas tipo => [dele => dele]
      */
     public static function registrar(array &$problemas, \Throwable $e): void
     {
@@ -113,7 +113,7 @@ final class RegionStgrAviso
     }
 
     /**
-     * @param array<string, array<string, string>> $problemas
+     * @param array<string, array<int|string, string>> $problemas
      */
     public static function formatear(array $problemas): string
     {

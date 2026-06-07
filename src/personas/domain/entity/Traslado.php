@@ -88,9 +88,12 @@ class Traslado
     }
     public function setTipoCmbVo(TrasladoTipoCmbCode|string|null $vo): void
     {
-        $this->tipo_cmb = $vo instanceof TrasladoTipoCmbCode
+        $resolved = $vo instanceof TrasladoTipoCmbCode
             ? $vo
             : TrasladoTipoCmbCode::fromNullableString($vo);
+        if ($resolved !== null) {
+            $this->tipo_cmb = $resolved;
+        }
     }
 
 
@@ -150,7 +153,10 @@ class Traslado
      */
     public function setCtr_destino(string $ctr_destino): void
     {
-        $this->ctr_destino =  NombreCentroText::fromNullableString($ctr_destino);
+        $resolved = NombreCentroText::fromNullableString($ctr_destino);
+        if ($resolved !== null) {
+            $this->ctr_destino = $resolved;
+        }
     }
     public function getCtrDestinoVo(): NombreCentroText
     {
@@ -158,9 +164,12 @@ class Traslado
     }
     public function setCtrDestinoVo(NombreCentroText|string|null $vo = null): void
     {
-        $this->ctr_destino = $vo instanceof NombreCentroText
+        $resolved = $vo instanceof NombreCentroText
             ? $vo
             : NombreCentroText::fromNullableString($vo);
+        if ($resolved !== null) {
+            $this->ctr_destino = $resolved;
+        }
     }
 
     /**
@@ -189,10 +198,14 @@ class Traslado
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    /** @return array<string, string> */
+    public function getPrimary_key(): array
     {
-        return 'id_item';
+        return ['id_item' => (string)$this->id_item];
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

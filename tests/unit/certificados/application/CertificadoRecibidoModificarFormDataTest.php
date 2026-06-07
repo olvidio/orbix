@@ -12,15 +12,12 @@ use src\usuarios\domain\contracts\LocalRepositoryInterface;
 
 final class CertificadoRecibidoModificarFormDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['session_auth'] = array_merge($_SESSION['session_auth'] ?? [], [
             'idioma' => 'es_ES.UTF-8',
@@ -30,11 +27,6 @@ final class CertificadoRecibidoModificarFormDataTest extends TestCase
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -57,12 +49,8 @@ final class CertificadoRecibidoModificarFormDataTest extends TestCase
         $localRepo = $this->createMock(LocalRepositoryInterface::class);
         $localRepo->method('getArrayLocales')->willReturn(['ca_ES.UTF-8' => 'Català']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CertificadoRecibidoRepositoryInterface::class => $certRepo,
-            LocalRepositoryInterface::class => $localRepo,
-        ]);
-
-        $data = CertificadoRecibidoModificarFormData::execute(10);
+        $useCase = new CertificadoRecibidoModificarFormData($certRepo, $localRepo);
+        $data = $useCase->execute(10);
 
         $this->assertSame(55, $data['id_nom']);
         $this->assertSame('N1', $data['nom']);
@@ -90,30 +78,8 @@ final class CertificadoRecibidoModificarFormDataTest extends TestCase
         $localRepo = $this->createMock(LocalRepositoryInterface::class);
         $localRepo->method('getArrayLocales')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CertificadoRecibidoRepositoryInterface::class => $certRepo,
-            LocalRepositoryInterface::class => $localRepo,
-        ]);
-
-        $data = CertificadoRecibidoModificarFormData::execute(1);
+        $useCase = new CertificadoRecibidoModificarFormData($certRepo, $localRepo);
+        $data = $useCase->execute(1);
         $this->assertSame('', $data['chk_firmado']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

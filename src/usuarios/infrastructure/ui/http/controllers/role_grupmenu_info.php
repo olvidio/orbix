@@ -1,20 +1,29 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_role = (string)filter_input(INPUT_POST, 'id_role');
+$Qid_role = (int)filter_input(INPUT_POST, 'id_role');
 
 $error_txt = '';
 
-$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
+$RoleRepository = DependencyResolver::get(RoleRepositoryInterface::class);
 $oRole = $RoleRepository->findById($Qid_role);
+if ($oRole === null) {
+    ContestarJson::enviar(_('Rol no encontrado'), 'none');
+    return;
+}
 $role = $oRole->getRoleAsString();
+$ambito = ($_SESSION['oConfig'] ?? null) instanceof ConfigSnapshot
+    ? $_SESSION['oConfig']->getAmbito()
+    : '';
 
 // los que ya tengo:
-$GrupMenuRoleRepository = $GLOBALS['container']->get(GrupMenuRoleRepositoryInterface::class);
+$GrupMenuRoleRepository = DependencyResolver::get(GrupMenuRoleRepositoryInterface::class);
 $cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $Qid_role));
 $aGrupMenus = [];
 foreach ($cGMR as $oGrupMenuRole) {
@@ -22,7 +31,7 @@ foreach ($cGMR as $oGrupMenuRole) {
     $aGrupMenus[$id_grupmenu] = 'x';
 }
 
-$GrupMenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
+$GrupMenuRepository = DependencyResolver::get(GrupMenuRepositoryInterface::class);
 $cGM = $GrupMenuRepository->getGrupMenus();
 $a_valores = [];
 $i = 0;
@@ -32,7 +41,7 @@ foreach ($cGM as $oGrupMenu) {
     // que no lo tenga
     if (array_key_exists($id_grupmenu, $aGrupMenus)) continue;
 
-    $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
+    $grup_menu = $oGrupMenu->getGrup_menu($ambito);
 
     $a_valores[$i]['sel'] = "$Qid_role#$id_grupmenu";
     $a_valores[$i][1] = $grup_menu;

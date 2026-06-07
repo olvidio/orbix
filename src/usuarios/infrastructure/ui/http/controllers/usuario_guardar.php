@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
@@ -12,6 +13,8 @@ use src\usuarios\domain\value_objects\Password;
 use src\usuarios\domain\value_objects\IdPau;
 use src\usuarios\domain\value_objects\NombreUsuario;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 $ctxRaw = (string)filter_input(INPUT_POST, 'ctx');
 try {
@@ -21,8 +24,8 @@ try {
     return;
 }
 
-$que_user = (string)($opened['que_user'] ?? '');
-$id_usuario_ctx = (int)($opened['id_usuario'] ?? 0);
+$que_user = input_string($opened, 'que_user');
+$id_usuario_ctx = input_int($opened, 'id_usuario');
 if ($que_user !== 'nuevo' && $que_user !== 'guardar') {
     ContestarJson::enviar(_("Operación no autorizada"), 'none');
     return;
@@ -58,16 +61,20 @@ $Qcasas = (array)filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIR
 $Qcambio_password = (bool)filter_input(INPUT_POST, 'cambio_password');
 $Qhas_2fa = (bool)filter_input(INPUT_POST, 'has_2fa');
 
-$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$RoleRepository = DependencyResolver::get(RoleRepositoryInterface::class);
+$UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 
 if (empty($Qid_usuario)) {
-    $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+    $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
     $id_new_usuario = $UsuarioRepository->getNewId();
     $oUsuario = new Usuario();
     $oUsuario->setId_usuario($id_new_usuario);
 } else {
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
+    if ($oUsuario === null) {
+        ContestarJson::enviar(_('Usuario no encontrado'), 'none');
+        return;
+    }
 }
 $oUsuario->setUsuarioVo(new Username($Qusuario));
 $oUsuario->setid_role($Qid_role);
@@ -81,6 +88,10 @@ if (!empty($Qpassword)) {
     $oUsuario->setPasswordVo(new Password($my_passwd));
 }
 $oRole = $RoleRepository->findById($Qid_role);
+if ($oRole === null) {
+    ContestarJson::enviar(_('Rol no encontrado'), 'none');
+    return;
+}
 $pau = $oRole->getPauAsString();
 // sacd
 if (($pau === 'sacd' || $pau === 'nom') && !empty($Qid_nom)) {

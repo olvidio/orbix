@@ -13,29 +13,36 @@ use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\value_objects\FaseId;
 use frontend\shared\web\Periodo;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\is_true;
 
 /**
- * Caso de uso: construye el listado de sacd con actividades incompatibles
- * (solapes). Para cada sacd de la dl/de paso, devuelve las actividades que
- * le caen en el periodo y que se solapan entre si segun el criterio de
- * `CargoOAsistenteInterface::getSolapes`.
- *
- * Sucesor de la rama `solape` del dispatcher legacy
- * `apps/actividadessacd/controller/activ_sacd_ajax.php`. Se ha extraido
- * del caso `lista_activ` original porque el refactor.md pide "un endpoint
- * por accion".
+ * Caso de uso: construye el listado de sacd con actividades incompatibles (solapes).
  */
 final class SolapesSacdData
 {
-    public static function execute(array $input): array
-    {
-        $year = (string)($input['year'] ?? '');
-        $periodo = (string)($input['periodo'] ?? '');
-        $empiezamin = (string)($input['empiezamin'] ?? '');
-        $empiezamax = (string)($input['empiezamax'] ?? '');
+    public function __construct(
+        private ActividadFaseRepositoryInterface $actividadFaseRepository,
+        private ActividadDlRepositoryInterface $actividadDlRepository,
+        private PersonaSacdRepositoryInterface $personaSacdRepository,
+        private CargoOAsistenteInterface $cargoOAsistenteRepository,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+    ) {
+    }
 
-        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-        $oActividadFase = $ActividadFaseRepository->findById(FaseId::FASE_OK_SACD);
+    /**
+     * @param array<string, mixed> $input
+     * @return array<string, mixed>
+     */
+    public function execute(array $input): array
+    {
+        $year = input_string($input, 'year');
+        $periodo = input_string($input, 'periodo');
+        $empiezamin = input_string($input, 'empiezamin');
+        $empiezamax = input_string($input, 'empiezamax');
+
+        $oActividadFase = $this->actividadFaseRepository->findById(FaseId::FASE_OK_SACD);
         $txt_fase_ok_sacd = $oActividadFase !== null
             ? (string)$oActividadFase->getDesc_fase()
             : '';
@@ -59,13 +66,10 @@ final class SolapesSacdData
             'status' => '<',
         ];
 
-        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-        $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
 
-        // sacd de la dl (n y a).
-        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
         $mi_dl = ConfigGlobal::mi_delef();
-        $cSacds = $PersonaSacdRepository->getPersonas(
+        $cSacds = $this->personaSacdRepository->getPersonas(
             [
                 'id_tabla' => "'n','a'",
                 'sacd' => 't',
@@ -75,11 +79,7 @@ final class SolapesSacdData
             ['id_tabla' => 'IN']
         );
 
-        $CargoOAsistenteRepository = $GLOBALS['container']->get(CargoOAsistenteInterface::class);
-        $a_solapes = $CargoOAsistenteRepository->getSolapes($cSacds, $cActividades);
-
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $a_solapes = $this->cargoOAsistenteRepository->getSolapes($cSacds, $cActividades);
 
         $filas = [];
         foreach ($a_solapes as $id_nom => $aId_activ) {
@@ -92,15 +92,15 @@ final class SolapesSacdData
             $actividades = [];
             $id_ubi_anterior = '';
             foreach ($aId_activ as $id_activ) {
-                $oActividad = $ActividadAllRepository->findById((int)$id_activ);
+                $oActividad = $this->actividadAllRepository->findById((int)$id_activ);
                 if ($oActividad === null) {
                     continue;
                 }
                 $nom_activ = (string)$oActividad->getNom_activ();
                 $id_ubi = (string)$oActividad->getId_ubi();
                 $status = (int)$oActividad->getStatus();
-                $sacd_aprobado = $ActividadProcesoTareaRepository->getSacdAprobado((int)$id_activ);
-                $clase = ($sacd_aprobado === true) ? 'plaza4' : '';
+                $sacd_aprobado = $this->actividadProcesoTareaRepository->getSacdAprobado((int)$id_activ);
+                $clase = is_true($sacd_aprobado) ? 'plaza4' : '';
                 if ($status === StatusId::PROYECTO) {
                     $clase = 'wrong-soft';
                 }

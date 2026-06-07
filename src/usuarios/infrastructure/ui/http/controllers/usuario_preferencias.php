@@ -1,5 +1,7 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
@@ -8,7 +10,7 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$preferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
+$preferenciaRepository = DependencyResolver::get(PreferenciaRepositoryInterface::class);
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $id_role = ConfigGlobal::mi_id_role();
@@ -16,7 +18,7 @@ $id_role = ConfigGlobal::mi_id_role();
 // ----------- Layout -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'layout');
 if ($oPreferencia !== null) {
-    $layout = $oPreferencia->getPreferenciaVo()->value();
+    $layout = $oPreferencia->getPreferenciaVo()?->value() ?? '';
 } else {
     $layout = '';
 }
@@ -28,7 +30,7 @@ if ($layout === 'modern') {
 // ----------- Página de inicio -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'inicio');
 if ($oPreferencia !== null) {
-    $preferencia = $oPreferencia->getPreferenciaVo()->value();
+    $preferencia = $oPreferencia->getPreferenciaVo()?->value() ?? '';
     [$inicio, $oficina] = explode('#', $preferencia);
 } else {
     $inicio = '';
@@ -45,14 +47,20 @@ if (ConfigGlobal::is_app_installed('cambios')) {
 }
 
 //oficinas posibles:
-$GrupMenuRoleRepository = $GLOBALS['container']->get(GrupMenuRoleRepositoryInterface::class);
+$GrupMenuRoleRepository = DependencyResolver::get(GrupMenuRoleRepositoryInterface::class);
 $cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $id_role));
-$GrupMenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
+$GrupMenuRepository = DependencyResolver::get(GrupMenuRepositoryInterface::class);
 $oficinas_posibles = [];
+$ambito = ($_SESSION['oConfig'] ?? null) instanceof ConfigSnapshot
+    ? $_SESSION['oConfig']->getAmbito()
+    : '';
 foreach ($cGMR as $oGMR) {
     $id_grupmenu = $oGMR->getId_grupmenu();
     $oGrupMenu = $GrupMenuRepository->findById($id_grupmenu);
-    $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
+    if ($oGrupMenu === null) {
+        continue;
+    }
+    $grup_menu = $oGrupMenu->getGrup_menu($ambito);
 
     $oficinas_posibles[$id_grupmenu] = $grup_menu;
 }
@@ -60,7 +68,7 @@ foreach ($cGMR as $oGMR) {
 // ----------- Página de estilo -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'estilo');
 if ($oPreferencia !== null) {
-    $preferencia = $oPreferencia->getPreferenciaVo()->value();
+    $preferencia = $oPreferencia->getPreferenciaVo()?->value() ?? '';
     [$estilo_color, $tipo_menu] = explode('#', $preferencia);
 } else {
     $estilo_color = '';
@@ -79,7 +87,7 @@ $tipo_menu_v = ($tipo_menu === "vertical") ? "selected" : '';
 // ----------- Tipo de tablas -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'tabla_presentacion');
 if ($oPreferencia !== null) {
-    $tipo_tabla = $oPreferencia->getPreferenciaVo()->value();
+    $tipo_tabla = $oPreferencia->getPreferenciaVo()?->value() ?? '';
 } else {
     $tipo_tabla = '';
 }
@@ -89,7 +97,7 @@ $tipo_tabla_h = ($tipo_tabla === "html") ? "selected" : '';
 // ----------- Orden Apellidos en listas -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'ordenApellidos');
 if ($oPreferencia !== null) {
-    $tipo_apellidos = $oPreferencia->getPreferenciaVo()->value();
+    $tipo_apellidos = $oPreferencia->getPreferenciaVo()?->value() ?? '';
 } else {
     $tipo_apellidos = '';
 }
@@ -100,7 +108,7 @@ $tipo_apellidos_ap_nom = ($tipo_apellidos === "ap_nom") ? "selected" : '';
 //Tengo la variable $idioma en ConfigGlobal, pero vuelvo a consultarla
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'idioma');
 if ($oPreferencia !== null) {
-    $preferencia = $oPreferencia->getPreferenciaVo()->value();
+    $preferencia = $oPreferencia->getPreferenciaVo()?->value() ?? '';
     [$idioma] = explode('#', $preferencia);
 } else {
     $idioma = '';
@@ -109,7 +117,7 @@ if ($oPreferencia !== null) {
 // ----------- Zona Horaria -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'zona_horaria');
 if ($oPreferencia !== null) {
-    $preferencia = $oPreferencia->getPreferenciaVo()->value();
+    $preferencia = $oPreferencia->getPreferenciaVo()?->value() ?? '';
     [$zona_horaria] = explode('#', $preferencia);
 } else {
     $zona_horaria = '';

@@ -17,10 +17,6 @@ final class DossierPk
         if ($idTipoDossier <= 0) {
             throw new \InvalidArgumentException('id_tipo_dossier debe ser > 0');
         }
-        // puede ser negativo para los ex
-        if (!is_numeric($idPau)) {
-            throw new \InvalidArgumentException('id_pau debe ser > 0');
-        }
         $tabla = trim($tabla);
         if ($tabla === '') {
             throw new \InvalidArgumentException('tabla no puede ser vacía');
@@ -32,13 +28,24 @@ final class DossierPk
         }
     }
 
+    /**
+     * @param array<string, mixed> $pk
+     */
     public static function fromArray(array $pk): self
     {
-        $tabla = $pk['tabla'] instanceof DossierTabla
-            ? $pk['tabla']->value()
-            : $pk['tabla'];
+        $tablaRaw = $pk['tabla'] ?? '';
+        $tabla = $tablaRaw instanceof DossierTabla
+            ? $tablaRaw->value()
+            : (is_scalar($tablaRaw) ? (string) $tablaRaw : '');
 
-        return new self((int)$pk['id_tipo_dossier'], (int)$pk['id_pau'], (string)$tabla);
+        $idTipo = $pk['id_tipo_dossier'] ?? 0;
+        $idPau = $pk['id_pau'] ?? 0;
+
+        return new self(
+            is_numeric($idTipo) ? (int) $idTipo : 0,
+            is_numeric($idPau) ? (int) $idPau : 0,
+            $tabla,
+        );
     }
 
     public function idTipoDossier(): int
@@ -53,11 +60,7 @@ final class DossierPk
 
     public function tabla(): string
     {
-        $tabla = $this->tabla instanceof DossierTabla
-            ? $this->tabla->value()
-            : $this->tabla;
-
-        return $tabla;
+        return $this->tabla;
     }
 
     public function equals(self $other): bool

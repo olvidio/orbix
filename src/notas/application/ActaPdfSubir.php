@@ -2,42 +2,49 @@
 
 namespace src\notas\application;
 
+
+use function src\shared\domain\helpers\input_string;
+
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\shared\infrastructure\ui\http\MultipartUploadGuard;
 
 /**
  * Sube (persiste) el contenido binario de un PDF firmado en el campo
  * `pdf` del acta identificada por `acta_num`.
- *
- * El contenido se lee del array `$files` que tiene la misma forma que
- * `$_FILES` (clave `acta_pdf` generada por bootstrap-fileinput en
- * `acta_ver.phtml`).
  */
 final class ActaPdfSubir
 {
+
+    public function __construct(
+        private readonly ActaRepositoryInterface $actaRepository,
+    ) {
+    }
     /**
-     * @return array{error: string, http_status: int} `http_status` solo aplica si `error` no está vacío
+     * @param array<string, mixed> $input
+     * @param array<string, array<string, mixed>> $files
+     * @return array{error: string, http_status: int}
      */
-    public static function execute(array $input, array $files): array
+    public function execute(array $input, array $files): array
     {
-        $acta = (string) ($input['acta_num'] ?? '');
-        if (empty($acta)) {
+        $acta = input_string($input, 'acta_num');
+        if ($acta === '') {
             return ['error' => _('No se encuentra el acta'), 'http_status' => 200];
         }
 
         $fileKey = 'acta_pdf';
-        if (empty($files[$fileKey])) {
-            /* bootstrap-fileinput puede llamar sin fichero en algunos flujos */
+        if (!isset($files[$fileKey])) {
             return ['error' => '', 'http_status' => 200];
         }
+        /** @var array<string, mixed> $file */
+        $file = $files[$fileKey];
 
-        $uploadError = (int) ($files[$fileKey]['error'] ?? UPLOAD_ERR_OK);
+        $uploadError = isset($file['error']) && is_int($file['error']) ? $file['error'] : UPLOAD_ERR_OK;
         if ($uploadError === UPLOAD_ERR_NO_FILE) {
             return ['error' => '', 'http_status' => 200];
         }
 
         if ($uploadError !== UPLOAD_ERR_OK) {
-            $fileName = (string) ($files[$fileKey]['name'] ?? '');
+            $fileName = isset($file['name']) && is_string($file['name']) ? $file['name'] : '';
 
             return [
                 'error' => MultipartUploadGuard::messageForPhpUploadError($uploadError, $fileName),
@@ -45,27 +52,47 @@ final class ActaPdfSubir
             ];
         }
 
-        $tmpFilePath = $files[$fileKey]['tmp_name'] ?? '';
-        $fileName = $files[$fileKey]['name'] ?? '';
-        if (empty($tmpFilePath)) {
+        $tmpFilePath = $file['tmp_name'] ?? null;
+        $fileName = isset($file['name']) && is_string($file['name']) ? $file['name'] : '';
+        if (!is_string($tmpFilePath) || $tmpFilePath === '') {
             return [
                 'error' => sprintf(_("No se puede subir el archivo %s"), $fileName),
                 'http_status' => 200,
             ];
         }
 
-        $fp = fopen($tmpFilePath, 'rb');
-        $contenido_doc = fread($fp, (int) filesize($tmpFilePath));
-        fclose($fp);
+        $fileSize = filesize($tmpFilePath);
+        if ($fileSize === false || $fileSize <= 0) {
+            return [
+                'error' => sprintf(_("No se puede leer el archivo %s"), $fileName),
+                'http_status' => 200,
+            ];
+        }
 
-        $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+        $fp = fopen($tmpFilePath, 'rb');
+        if ($fp === false) {
+            return [
+                'error' => sprintf(_("No se puede abrir el archivo %s"), $fileName),
+                'http_status' => 200,
+            ];
+        }
+        $contenido_doc = fread($fp, $fileSize);
+        fclose($fp);
+        if (!is_string($contenido_doc)) {
+            return [
+                'error' => sprintf(_("No se puede leer el archivo %s"), $fileName),
+                'http_status' => 200,
+            ];
+        }
+
+        $ActaRepository = $this->actaRepository;
         $oActa = $ActaRepository->findById($acta);
         if ($oActa === null) {
             return ['error' => _('No se encuentra el acta'), 'http_status' => 200];
         }
         $oActa->setPdf($contenido_doc);
         if ($ActaRepository->Guardar($oActa) === false) {
-            return ['error' => (string) $oActa->getErrorTxt(), 'http_status' => 200];
+            return ['error' => $ActaRepository->getErrorTxt(), 'http_status' => 200];
         }
 
         return ['error' => '', 'http_status' => 200];

@@ -37,7 +37,7 @@ class ActividadFase
      */
     public function setId_fase(int $id_fase): void
     {
-        $this->id_fase = new FaseId($id_fase);
+        $this->id_fase = (FaseId::fromNullableInt($id_fase) ?? throw new \InvalidArgumentException('id_fase cannot be null'));
     }
 
     public function getIdFaseVo(): FaseId
@@ -49,7 +49,7 @@ class ActividadFase
     {
         $this->id_fase = $id_fase instanceof FaseId
             ? $id_fase
-            : new FaseId($id_fase);
+            : (FaseId::fromNullableInt($id_fase) ?? throw new \InvalidArgumentException('id_fase cannot be null'));
     }
 
     public function getDesc_fase(): ?string
@@ -89,6 +89,9 @@ class ActividadFase
     {
         return 'id_fase';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

@@ -1,15 +1,18 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ConfigMagik;
 use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qcabecera = (string)filter_input(INPUT_POST, 'cabecera');
-$QcabeceraB = (string)filter_input(INPUT_POST, 'cabeceraB');
-$Qfirma = (string)filter_input(INPUT_POST, 'firma');
-$Qpie = (string)filter_input(INPUT_POST, 'pie');
+$Qcabecera = input_string($_POST, 'cabecera');
+$QcabeceraB = input_string($_POST, 'cabeceraB');
+$Qfirma = input_string($_POST, 'firma');
+$Qpie = input_string($_POST, 'pie');
 
 $file = ConfigGlobal::$dir_web ."/data/inventario/cabecera_pie_textos.ini";
 $Config = new ConfigMagik($file, true, true);

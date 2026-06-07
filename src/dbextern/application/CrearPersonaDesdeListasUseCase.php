@@ -5,27 +5,27 @@ namespace src\dbextern\application;
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
 use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\dbextern\domain\entity\IdMatchPersona;
-use src\dbextern\domain\SincroDB;
+use src\dbextern\application\support\SincroDBFactory;
+use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\entity\PersonaAgd;
+use src\personas\domain\entity\PersonaN;
+use src\personas\domain\entity\PersonaS;
+use src\personas\domain\entity\PersonaSSSC;
 use src\personas\domain\Trasladar;
 use src\shared\domain\value_objects\DateTimeLocal;
 
 class CrearPersonaDesdeListasUseCase
 {
-    private PersonaBDURepositoryInterface $personaBDURepository;
-    private IdMatchPersonaRepositoryInterface $idMatchRepository;
-
     public function __construct(
-        PersonaBDURepositoryInterface    $personaBDURepository,
-        IdMatchPersonaRepositoryInterface $idMatchRepository
-    )
-    {
-        $this->personaBDURepository = $personaBDURepository;
-        $this->idMatchRepository = $idMatchRepository;
+        private PersonaBDURepositoryInterface $personaBDURepository,
+        private IdMatchPersonaRepositoryInterface $idMatchRepository,
+        private PersonaRepositoryResolver $personaRepositoryResolver,
+        private Trasladar $trasladar,
+        private SincroDBFactory $sincroDBFactory,
+    ) {
     }
 
     /**
-     * Crea una persona en Orbix desde la BDU y la vincula.
-     *
      * @return string Error text (empty on success)
      */
     public function __invoke(int $id_nom_listas, string $tipo_persona): string
@@ -35,7 +35,7 @@ class CrearPersonaDesdeListasUseCase
             return _("no se encontró la persona en la BDU");
         }
 
-        $oSincroDB = new SincroDB();
+        $oSincroDB = $this->sincroDBFactory->create();
 
         $nombre = $oPersonaListas->getNombre();
         $nx1 = $oPersonaListas->getNx1();
@@ -46,6 +46,9 @@ class CrearPersonaDesdeListasUseCase
         $lugar_nacimiento = $oPersonaListas->getLugar_Naci();
         $dl_listas = $oPersonaListas->getDl();
         $dl_orbix = $oSincroDB->dlListas2Orbix($dl_listas);
+        if ($dl_orbix === false) {
+            return _("no se pudo resolver la delegación de listas");
+        }
 
         $id_tipo_persona = substr((string)$id_nom_listas, 0, 1);
         $obj_pau = $this->resolverClasePersona($id_tipo_persona);
@@ -53,19 +56,38 @@ class CrearPersonaDesdeListasUseCase
             return sprintf(_("opción no definida para tipo persona %s"), $id_tipo_persona);
         }
 
-        // Buscar si ya está en orbix (otras dl): si está unida, intentar traslado
         $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_listas' => $id_nom_listas]);
-        if (!empty($cIdMatch[0]) && !empty($cIdMatch)) {
+        if ($cIdMatch !== []) {
             $id_orbix = $cIdMatch[0]->getId_orbix();
-            $oTrasladar = new Trasladar();
-            $oTrasladar->getEsquemas($id_orbix, $tipo_persona);
+            if ($id_orbix !== null) {
+                $this->trasladar->setId_nom($id_orbix);
+                $this->trasladar->getEsquemas($id_orbix, $tipo_persona);
+            }
         }
 
         $oHoy = new DateTimeLocal();
-        // Legacy: crear persona usando clases de personas\model\entity
-        $obj = 'personas\\model\\entity\\' . $obj_pau;
-        $oPersona = new $obj();
+        try {
+            $repo = $this->personaRepositoryResolver->repositorio($obj_pau);
+        } catch (\InvalidArgumentException) {
+            return _("No existe la clase de la persona");
+        }
 
+        $newIdAuto = $repo->getNewId();
+        $id_orbix = $repo->getNewIdNom($newIdAuto);
+
+        $oPersona = match ($obj_pau) {
+            'PersonaN' => new PersonaN(),
+            'PersonaAgd' => new PersonaAgd(),
+            'PersonaS' => new PersonaS(),
+            'PersonaSSSC' => new PersonaSSSC(),
+            default => null,
+        };
+        if ($oPersona === null) {
+            return _("No existe la clase de la persona");
+        }
+
+        $oPersona->setId_nom($id_orbix);
+        $oPersona->setId_tabla($tipo_persona);
         $oPersona->setSituacion('A');
         $oPersona->setF_situacion($oHoy);
         $oPersona->setNom($nombre);
@@ -73,16 +95,15 @@ class CrearPersonaDesdeListasUseCase
         $oPersona->setApellido1($apellido1_sinprep);
         $oPersona->setNx2($nx2);
         $oPersona->setApellido2($apellido2_sinprep);
-        $oPersona->setF_nacimiento($f_nacimiento);
+        $f_nacimiento_vo = DateTimeLocal::createFromLocal((string)$f_nacimiento);
+        $oPersona->setF_nacimiento($f_nacimiento_vo instanceof DateTimeLocal ? $f_nacimiento_vo : null);
         $oPersona->setLugar_nacimiento($lugar_nacimiento);
         $oPersona->setDl($dl_orbix);
 
-        if ($oPersona->DBGuardar() === false) {
+        if ($repo->Guardar($oPersona) === false) {
             return _("hay un error, no se ha guardado");
         }
-        $id_orbix = $oPersona->getId_nom();
 
-        // Unir
         $oIdMatch = new IdMatchPersona();
         $oIdMatch->setId_listas($id_nom_listas);
         $oIdMatch->setId_orbix($id_orbix);

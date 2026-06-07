@@ -25,7 +25,7 @@ final class InventarioCssInlineDataTest extends TestCase
 
     public function test_lee_inventario_css_php(): void
     {
-        $data = InventarioCssInlineData::build();
+        $data = (new InventarioCssInlineData())->execute();
         $this->assertArrayHasKey('css', $data);
         $this->assertStringContainsString('<style>', $data['css']);
         $this->assertStringContainsString('@media print', $data['css']);

@@ -23,8 +23,8 @@ class EncargoCtr
 
     private EncargoCtrId $uuid_item;
 
-    private int $id_enc;
-    private int $id_ubi;
+    private ?int $id_enc = null;
+    private ?int $id_ubi = null;
 
     /**
      *

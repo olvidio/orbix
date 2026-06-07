@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ExportarActividadesData;
@@ -13,5 +14,8 @@ $input = [
     'id_cdc' => (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
 ];
 
-$data = ExportarActividadesData::execute($input);
+/** @var ExportarActividadesData $useCase */
+$useCase = DependencyResolver::get(ExportarActividadesData::class);
+
+$data = $useCase->execute($input);
 ContestarJson::enviar('', $data);

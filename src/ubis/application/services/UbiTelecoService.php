@@ -2,22 +2,23 @@
 
 namespace src\ubis\application\services;
 
-use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 
 final class UbiTelecoService
 {
-    use ProvidesRepositories;
+    public function __construct(
+        private UbiRepositoryResolver $ubiRepositoryResolver,
+        private DescTelecoRepositoryInterface $descTelecoRepository,
+    ) {
+    }
 
-    public static function texto(
+    public function texto(
         string $obj_pau,
         int $id_ubi,
         string $tipo_teleco,
         string $desc_teleco = '*',
         string $separador = ' / '
     ): string {
-        $self = new self();
-
         $tipoTelecoMap = [
             'telf' => 1,
             'fax' => 4,
@@ -28,7 +29,7 @@ final class UbiTelecoService
             return '';
         }
 
-        $TelecoRepository = $self->getTelecoRepository($obj_pau);
+        $TelecoRepository = $this->ubiRepositoryResolver->getTelecoRepository($obj_pau);
         $aWhere = [
             'id_ubi' => $id_ubi,
             'id_tipo_teleco' => $id_tipo_teleco,
@@ -42,17 +43,16 @@ final class UbiTelecoService
             return '';
         }
 
-        $DescTelecoRepository = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
         $aTelefonos = [];
         foreach ($cTelecos as $oTelecoUbi) {
-            $num_teleco = trim($oTelecoUbi->getNumTelecoVo()->value() ?? '');
+            $num_teleco = trim($oTelecoUbi->getNumTelecoVo()->value());
             if ($num_teleco === '') {
                 continue;
             }
             if ($desc_teleco === '*') {
                 $id_desc = $oTelecoUbi->getId_desc_teleco();
                 if (!empty($id_desc)) {
-                    $oDescTel = $DescTelecoRepository->findById((int)$id_desc);
+                    $oDescTel = $this->descTelecoRepository->findById((int)$id_desc);
                     $desc = $oDescTel?->getDescTelecoVo()?->value() ?? '';
                     if ($desc !== '') {
                         $num_teleco .= "($desc)";

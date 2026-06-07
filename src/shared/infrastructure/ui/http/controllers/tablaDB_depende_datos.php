@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
 
 $Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
@@ -10,7 +11,7 @@ $opcion_sel = (string)filter_input(INPUT_POST, 'opcion_sel');
 
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info_encoded);
-$oDatos = new $obj();
+$oDatos = DatosInfoRepoResolver::resolve($obj);
 
 $data['aOpciones'] = $oDatos->getOpcionesParaCondicion($QpKeyRepository,$Qvalor_depende,$opcion_sel);
 

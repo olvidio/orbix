@@ -7,6 +7,11 @@ use src\misas\domain\entity\InicialesSacd;
 
 class UpdateIniciales
 {
+
+    public function __construct(
+        private readonly InicialesSacdRepositoryInterface $inicialesSacdRepository,
+    ) {
+    }
     /**
      * Inserta o actualiza la fila de iniciales/color para un sacerdote.
      *
@@ -14,11 +19,10 @@ class UpdateIniciales
      * error del repositorio. El controlador HTTP es quien serializa la
      * respuesta con `ContestarJson::enviar(...)`.
      */
-    public static function execute(int $id_sacd, string $iniciales, string $color): string
+    public function execute(int $id_sacd, string $iniciales, string $color): string
     {
-        $InicialesSacdRepository = $GLOBALS['container']->get(InicialesSacdRepositoryInterface::class);
 
-        $InicialesSacd = $InicialesSacdRepository->findById($id_sacd);
+        $InicialesSacd = $this->inicialesSacdRepository->findById($id_sacd);
         if ($InicialesSacd === null) {
             $InicialesSacd = new InicialesSacd();
             $InicialesSacd->setId_nom($id_sacd);
@@ -26,8 +30,8 @@ class UpdateIniciales
         $InicialesSacd->setIniciales($iniciales);
         $InicialesSacd->setColor(InicialesColorHex::normalizeForStorage($color));
 
-        if ($InicialesSacdRepository->Guardar($InicialesSacd) === false) {
-            return $InicialesSacdRepository->getErrorTxt();
+        if ($this->inicialesSacdRepository->Guardar($InicialesSacd) === false) {
+            return $this->inicialesSacdRepository->getErrorTxt();
         }
         return '';
     }

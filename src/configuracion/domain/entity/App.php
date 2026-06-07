@@ -31,7 +31,7 @@ class App
     {
         $this->id_app = $id_app instanceof AppId
             ? $id_app
-            : AppId::fromNullableInt($id_app);
+            : new AppId($id_app);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
@@ -42,7 +42,7 @@ class App
 
     public function setId_app(int $id_app): void
     {
-        $this->id_app = AppId::fromNullableInt($id_app);
+        $this->id_app = new AppId($id_app);
     }
 
     // VO API
@@ -55,13 +55,13 @@ class App
     {
         $this->nom = $nombre_app instanceof AppName
             ? $nombre_app
-            : AppName::fromNullableString($nombre_app);
+            : AppName::fromString((string)$nombre_app);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
     public function getNom(): string
     {
-        return $this->nom?->value();
+        return $this->nom->value();
     }
 
     public function setNom(string $nom): void
@@ -79,12 +79,15 @@ class App
      * Devuelve una colección de objetor tipo DatosCampo
      *
      */
+    /**
+     * @return list<\src\shared\domain\DatosCampo>
+     */
     public function getDatosCampos(): array
     {
         $oAppSet = new Set();
 
         $oAppSet->add($this->getDatosNombreApp());
-        return $oAppSet->getTot();
+        return array_values($oAppSet->getTot());
     }
 
     /**

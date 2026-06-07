@@ -1,6 +1,7 @@
 <?php
 
 namespace src\notas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -29,11 +30,11 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
     {
         // Si es cr, se mira en todas:
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $oDbl = $GLOBALS['oDBP'];
+            $oDbl = GlobalPdo::get('oDBP');
             $this->setoDbl($oDbl);
             $this->setNomTabla('e_actas_tribunal');
         } else {
-            $oDbl = $GLOBALS['oDB'];
+            $oDbl = GlobalPdo::get('oDB');
             $this->setoDbl($oDbl);
             $this->setNomTabla('e_actas_tribunal_dl');
         }
@@ -42,15 +43,12 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
     /**
      * retorna JSON llista d'examinadors
      * des del 2020 (perque els d'abans són amb llatí)
-     *
-     * @param string sQuery la query a executar.
-     * @return false Json
      */
-    public function getJsonExaminadores($sQuery = ''): string
+    public function getJsonExaminadores(string $sQuery = ''): string
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (!empty($sQuery)) {
+        if ($sQuery !== '') {
             $sCondi = "WHERE public.sin_acentos(examinador::text)  ~* public.sin_acentos('$sQuery'::text)
                         AND substring(acta, '\/(\d{2})')::integer > 19 ";
         } else {
@@ -59,15 +57,24 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
         $sOrdre = " ORDER BY examinador";
         $sLimit = " LIMIT 25";
         $sQry = "SELECT DISTINCT examinador FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
-        //echo "qry: $sQry<br>";
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return '[]';
+        }
 
         $json = '[';
         $i = 0;
-        foreach ($oDbl->query($sQry) as $aDades) {
+        while (($aDades = $stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
+            if (!is_array($aDades)) {
+                continue;
+            }
+            $examinador = $aDades['examinador'] ?? '';
+            if (!is_string($examinador) || $examinador === '') {
+                continue;
+            }
             $i++;
             $json .= ($i > 1) ? ',' : '';
-            $json .= "{\"label\":\"" . $aDades['examinador'] . "\"}";
+            $json .= '{"label":"' . $examinador . '"}';
         }
         $json .= ']';
         return $json;
@@ -79,9 +86,16 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
     /**
      * devuelve una colección (array) de objetos de tipo ActaTribunalDl
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActaTribunalDl
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<\src\notas\domain\entity\ActaTribunal> Una colección de objetos de tipo ActaTribunalDl
+     */
+    /** @param array<string, mixed> $aWhere */
+
+    /**
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<\src\notas\domain\entity\ActaTribunal>
      */
     public function getActasTribunales(array $aWhere = [], array $aOperators = []): array
     {
@@ -118,27 +132,35 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $ActaTribunalDl = ActaTribunal::fromArray($aDatos);
             $ActaTribunalDlSet->add($ActaTribunalDl);
         }
-        return $ActaTribunalDlSet->getTot();
+        return array_values($ActaTribunalDlSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -180,6 +202,9 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -189,6 +214,9 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -200,17 +228,26 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
 
@@ -220,7 +257,7 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
     public function findById(int $id_item): ?ActaTribunal
     {
         $aDatos = $this->datosById($id_item);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return ActaTribunal::fromArray($aDatos);

@@ -23,19 +23,20 @@ final class MigracionesListaData
         $rows = [];
 
         foreach ($scan['migraciones'] as $migracion) {
-            $id = (string) $migracion['id'];
-            $aplicaciones = (array) $migracion['aplicaciones'];
-            $files = (array) ($migracion['files'] ?? []);
+            $idValue = $migracion['id'] ?? null;
+            $id = is_scalar($idValue) ? (string) $idValue : '';
+            $aplicaciones = self::normalizeRows($migracion['aplicaciones'] ?? []);
+            $files = self::normalizeRows($migracion['files'] ?? []);
             $rows[] = [
                 // Sin prefijo '#': Lista/SlickGrid añaden el separador; si el id ya lleva '#',
                 // el value del checkbox queda '#id' y el backend no coincide con migraciones[id].
                 'sel' => $id,
                 'fichero' => $this->resumenArchivos($files),
-                'prefijo' => (string) $migracion['prefijo'],
-                'descripcion' => (string) $migracion['descripcion'],
+                'prefijo' => $this->toScalarString($migracion['prefijo'] ?? null),
+                'descripcion' => $this->toScalarString($migracion['descripcion'] ?? null),
                 'bds' => $this->resumenDatabases($aplicaciones),
                 'tipo' => $this->resumenTipos($aplicaciones),
-                'estado' => (string) $migracion['estado'],
+                'estado' => $this->toScalarString($migracion['estado'] ?? null),
                 'fecha' => $this->fechaUltima($aplicaciones),
             ];
         }
@@ -62,7 +63,7 @@ final class MigracionesListaData
     {
         $nombres = [];
         foreach ($files as $meta) {
-            $nombre = (string) ($meta['file'] ?? '');
+            $nombre = $this->toScalarString($meta['file'] ?? null);
             if ($nombre !== '') {
                 $nombres[$nombre] = $nombre;
             }
@@ -79,7 +80,7 @@ final class MigracionesListaData
     {
         $databases = [];
         foreach ($aplicaciones as $aplicacion) {
-            $database = (string) ($aplicacion['database'] ?? '');
+            $database = $this->toScalarString($aplicacion['database'] ?? null);
             if ($database !== '') {
                 $databases[$database] = $database;
             }
@@ -97,7 +98,7 @@ final class MigracionesListaData
     {
         $tipos = [];
         foreach ($aplicaciones as $aplicacion) {
-            $tipo = (string) ($aplicacion['tipo'] ?? '');
+            $tipo = $this->toScalarString($aplicacion['tipo'] ?? null);
             if ($tipo !== '') {
                 $tipos[$tipo] = $tipo;
             }
@@ -121,5 +122,34 @@ final class MigracionesListaData
         rsort($fechas, SORT_STRING);
 
         return $fechas[0] ?? '';
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function toScalarString(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
+    }
+
+    /**
+     * @param mixed $rows
+     * @return array<int, array<string, mixed>>
+     */
+    private static function normalizeRows(mixed $rows): array
+    {
+        if (!is_array($rows)) {
+            return [];
+        }
+
+        $normalized = [];
+        foreach ($rows as $row) {
+            if (is_array($row)) {
+                /** @var array<string, mixed> $row */
+                $normalized[] = $row;
+            }
+        }
+
+        return $normalized;
     }
 }

@@ -54,7 +54,7 @@ class ActividadProcesoTarea
     {
         $this->id_tipo_proceso = $id_tipo_proceso instanceof ProcesoTipoId
             ? $id_tipo_proceso
-            : new ProcesoTipoId($id_tipo_proceso);
+            : (ProcesoTipoId::fromNullableInt($id_tipo_proceso) ?? throw new \InvalidArgumentException('id_tipo_proceso cannot be null'));
     }
 
     /**
@@ -70,7 +70,7 @@ class ActividadProcesoTarea
      */
     public function setId_tipo_proceso(int $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = ProcesoTipoId::fromNullableInt($id_tipo_proceso);
+        $this->id_tipo_proceso = (ProcesoTipoId::fromNullableInt($id_tipo_proceso) ?? throw new \InvalidArgumentException('id_tipo_proceso cannot be null'));
     }
 
 
@@ -83,7 +83,7 @@ class ActividadProcesoTarea
     {
         $this->id_activ = $id_activ instanceof ActividadId
             ? $id_activ
-            : ActividadId::fromNullableInt($id_activ);
+            : (ActividadId::fromNullableInt($id_activ) ?? throw new \InvalidArgumentException('id_activ cannot be null'));
     }
 
     /**
@@ -99,7 +99,7 @@ class ActividadProcesoTarea
      */
     public function setId_activ(int $id_activ): void
     {
-        $this->id_activ = ActividadId::fromNullableInt($id_activ);
+        $this->id_activ = (ActividadId::fromNullableInt($id_activ) ?? throw new \InvalidArgumentException('id_activ cannot be null'));
     }
 
 

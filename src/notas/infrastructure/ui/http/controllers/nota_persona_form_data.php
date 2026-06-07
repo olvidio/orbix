@@ -1,6 +1,7 @@
 <?php
 
 use src\notas\application\NotaPersonaFormData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 /**
@@ -31,8 +32,8 @@ $input = [
     'mod' => (string)filter_input(INPUT_POST, 'mod'),
 ];
 
-$data = NotaPersonaFormData::execute($input);
-$data['helpers'] = NotaPersonaFormData::opcionalesGenericasHelpers();
-$data = array_merge($data, NotaPersonaFormData::formNotasVoPack());
+$data = (DependencyResolver::get(NotaPersonaFormData::class))->execute($input);
+$data['helpers'] = (DependencyResolver::get(NotaPersonaFormData::class))->opcionalesGenericasHelpers();
+$data = array_merge($data, (DependencyResolver::get(NotaPersonaFormData::class))->formNotasVoPack());
 
 ContestarJson::enviar('', $data);

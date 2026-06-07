@@ -41,8 +41,7 @@ final class ListaActividadesSacdDataTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_sin_actividades_filas_vacias_y_claves_esperadas(): void
-    {
+    public function test_sin_actividades_filas_vacias_y_claves_esperadas(): void {
         $actRepo = $this->createMock(ActividadDlRepositoryInterface::class);
         $actRepo->method('getActividades')->willReturn([]);
 
@@ -52,14 +51,7 @@ final class ListaActividadesSacdDataTest extends TestCase
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
         $centroRepo = $this->createMock(CentroEncargadoRepositoryInterface::class);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadDlRepositoryInterface::class => $actRepo,
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            CentroEncargadoRepositoryInterface::class => $centroRepo,
-        ]);
-
-        $out = ListaActividadesSacdData::execute([
+        $out = (new \src\actividadessacd\application\ListaActividadesSacdData($actRepo, $cargoRepo, $activCargoRepo, $centroRepo, $this->createMock(\src\procesos\domain\contracts\ActividadFaseRepositoryInterface::class), $this->createMock(\src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface::class)))->execute([
             'tipo' => 'sv',
             'year' => '2030',
             'periodo' => 'tot_any',

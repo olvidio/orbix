@@ -14,6 +14,14 @@ use src\usuarios\domain\contracts\LocalRepositoryInterface;
  */
 final class EncargoSelectData
 {
+
+    public function __construct(
+        private EncargoAplicacionService $aplicacionService,
+        private EncargoRepositoryInterface $encargoRepository,
+        private LocalRepositoryInterface $localRepository
+    ) {
+    }
+
     /**
      * @return array{
      *     filas: list<array{
@@ -29,11 +37,9 @@ final class EncargoSelectData
      *     }>
      * }
      */
-    public static function execute(string $desc_enc, int $id_tipo_enc): array
+    public function execute(string $desc_enc, int $id_tipo_enc): array
     {
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
-        $oAplicacion = new EncargoAplicacionService();
+        $oAplicacion = $this->aplicacionService;
         $a_seccion = $oAplicacion->getArraySeccion();
 
         $aWhere = ['_ordre' => 'desc_enc'];
@@ -46,11 +52,11 @@ final class EncargoSelectData
             $aWhere['id_tipo_enc'] = $id_tipo_enc;
         }
 
-        $cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
+        $cEncargos = $this->encargoRepository->getEncargos($aWhere, $aOperador);
 
         $filas = [];
         $idiomaCache = [];
-        if (is_array($cEncargos)) {
+        if ($cEncargos !== []) {
             foreach ($cEncargos as $oEncargo) {
                 $id_ubi = (int)$oEncargo->getId_ubi();
                 $idioma_enc = (string)$oEncargo->getIdioma_enc();
@@ -60,9 +66,9 @@ final class EncargoSelectData
 
                 if (!array_key_exists($idioma_enc, $idiomaCache)) {
                     $idiomaCache[$idioma_enc] = '';
-                    $cIdiomas = $LocalRepository->getLocales(['idioma' => $idioma_enc]);
-                    if (is_array($cIdiomas) && count($cIdiomas) > 0) {
-                        $idiomaCache[$idioma_enc] = (string)$cIdiomas[0]->getNom_idioma();
+                    $cIdiomas = $this->localRepository->getLocales(['idioma' => $idioma_enc]);
+                    if ($cIdiomas !== []) {
+                        $idiomaCache[$idioma_enc] = (string)$cIdiomas[0]->getNomIdiomaAsString();
                     }
                 }
 
@@ -74,10 +80,10 @@ final class EncargoSelectData
                     }
                 }
 
-                $sf_sv = (int)$oEncargo->getSf_sv();
+                $sf_sv = (int)$oEncargo->getGrupo_encargo();
                 $seccion = '';
                 if ($sf_sv !== 0) {
-                    $seccion = (string)($a_seccion[$sf_sv] ?? '?¿?');
+                    $seccion = (string) ($a_seccion[(string) $sf_sv] ?? '?¿?');
                 }
 
                 $filas[] = [

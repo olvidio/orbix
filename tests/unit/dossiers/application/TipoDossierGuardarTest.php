@@ -11,31 +11,10 @@ use src\dossiers\domain\entity\TipoDossier;
 
 final class TipoDossierGuardarTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_sin_id(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([
-            TipoDossierRepositoryInterface::class => $this->createMock(TipoDossierRepositoryInterface::class),
-        ]);
-
-        $this->assertNotSame('', TipoDossierGuardar::execute([]));
+        $useCase = new TipoDossierGuardar($this->createMock(TipoDossierRepositoryInterface::class));
+        $this->assertNotSame('', $useCase->execute([]));
     }
 
     public function test_no_encontrado(): void
@@ -43,11 +22,8 @@ final class TipoDossierGuardarTest extends TestCase
         $repo = $this->createMock(TipoDossierRepositoryInterface::class);
         $repo->method('findById')->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            TipoDossierRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertNotSame('', TipoDossierGuardar::execute(['id_tipo_dossier' => 2]));
+        $useCase = new TipoDossierGuardar($repo);
+        $this->assertNotSame('', $useCase->execute(['id_tipo_dossier' => 2]));
     }
 
     public function test_falla_guardar(): void
@@ -58,11 +34,8 @@ final class TipoDossierGuardarTest extends TestCase
         $repo->method('findById')->willReturn($tipo);
         $repo->method('Guardar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            TipoDossierRepositoryInterface::class => $repo,
-        ]);
-
-        $this->assertNotSame('', TipoDossierGuardar::execute([
+        $useCase = new TipoDossierGuardar($repo);
+        $this->assertNotSame('', $useCase->execute([
             'id_tipo_dossier' => 3,
             'tabla_from' => 'p',
         ]));
@@ -76,11 +49,8 @@ final class TipoDossierGuardarTest extends TestCase
         $repo->method('findById')->with(7)->willReturn($tipo);
         $repo->expects($this->once())->method('Guardar')->with($tipo)->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            TipoDossierRepositoryInterface::class => $repo,
-        ]);
-
-        $msg = TipoDossierGuardar::execute([
+        $useCase = new TipoDossierGuardar($repo);
+        $msg = $useCase->execute([
             'id_tipo_dossier' => 7,
             'descripcion' => 'Desc',
             'tabla_from' => 'p',
@@ -118,23 +88,5 @@ final class TipoDossierGuardarTest extends TestCase
         $o->setPermiso_escritura(0);
         $o->setDepende_modificar(false);
         return $o;
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

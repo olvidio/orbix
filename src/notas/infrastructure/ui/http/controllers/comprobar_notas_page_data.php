@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\GlobalPdo;
 
 /**
  * HTML de {@see frontend/notas/controller/comprobar_notas.php} (SQL en backend).
@@ -8,11 +9,7 @@ use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$oDB = $GLOBALS['oDB'] ?? null;
-if (!$oDB instanceof \PDO) {
-    ContestarJson::enviar(_('No hay conexión a base de datos (comprobar_notas).'));
-    return;
-}
+$oDB = GlobalPdo::get('oDB');
 
 ob_start();
 try {

@@ -76,7 +76,7 @@ class EncargoHorario
 
     public function setF_ini(DateTimeLocal|null $f_ini = null): void
     {
-        $this->f_ini = $f_ini;
+        $this->f_ini = $f_ini ?? new DateTimeLocal();
     }
 
 

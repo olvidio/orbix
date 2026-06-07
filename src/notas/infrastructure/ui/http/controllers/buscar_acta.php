@@ -1,6 +1,7 @@
 <?php
 
 use src\notas\application\BuscarActaData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 /**
@@ -11,5 +12,5 @@ use src\shared\web\ContestarJson;
  * `BuscarActaData::execute`. El JS decodifica `data` con guardia
  * `(typeof json.data === 'string') ? JSON.parse(json.data) : json.data`.
  */
-$data = BuscarActaData::execute($_POST);
+$data = (DependencyResolver::get(BuscarActaData::class))->execute($_POST);
 ContestarJson::enviar('', $data);

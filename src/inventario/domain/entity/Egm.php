@@ -31,10 +31,13 @@ class Egm
 
     public function setId_item(?int $id = null): void
     {
+        if ($id === null) {
+            throw new \InvalidArgumentException('id_item cannot be null');
+        }
         $this->id_item = $id;
     }
 
-    public function getId_equipaje(): ?string
+    public function getId_equipaje(): ?int
     {
         return $this->id_equipaje?->value();
     }
@@ -46,7 +49,7 @@ class Egm
     }
 
 
-    public function getId_grupo(): ?string
+    public function getId_grupo(): ?int
     {
         return $this->id_grupo?->value();
     }
@@ -58,7 +61,7 @@ class Egm
     }
 
 
-    public function getId_lugar(): ?string
+    public function getId_lugar(): ?int
     {
         return $this->id_lugar?->value();
     }
@@ -91,7 +94,7 @@ class Egm
     {
         $this->id_equipaje = $id instanceof EgmEquipajeId
             ? $id
-            : EgmEquipajeId::fromNullableInt($id);
+            : (EgmEquipajeId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     public function getIdGrupoVo(): ?EgmGrupoId
@@ -103,7 +106,7 @@ class Egm
     {
         $this->id_grupo = $id instanceof EgmGrupoId
             ? $id
-            : EgmGrupoId::fromNullableInt($id);
+            : (EgmGrupoId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     public function getIdLugarVo(): ?EgmLugarId
@@ -115,7 +118,7 @@ class Egm
     {
         $this->id_lugar = $id instanceof EgmLugarId
             ? $id
-            : EgmLugarId::fromNullableInt($id);
+            : (EgmLugarId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     public function getTextoVo(): ?EgmTexto
@@ -131,7 +134,7 @@ class Egm
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_item';
     }

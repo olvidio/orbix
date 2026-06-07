@@ -63,14 +63,22 @@ class Nota
      */
     public function setId_situacion(int $id_situacion): void
     {
-        $this->id_situacion = NotaSituacion::fromNullableInt( $id_situacion);
+        $vo = NotaSituacion::fromNullableInt($id_situacion);
+        if ($vo !== null) {
+            $this->id_situacion = $vo;
+        }
     }
 
     public function setIdSituacionVo(NotaSituacion|int|null $oIdSituacion): void
     {
-        $this->id_situacion = $oIdSituacion instanceof NotaSituacion
-            ? $oIdSituacion
-            : NotaSituacion::fromNullableInt( $oIdSituacion);
+        if ($oIdSituacion instanceof NotaSituacion) {
+            $this->id_situacion = $oIdSituacion;
+        } elseif ($oIdSituacion !== null) {
+            $vo = NotaSituacion::fromNullableInt($oIdSituacion);
+            if ($vo !== null) {
+                $this->id_situacion = $vo;
+            }
+        }
     }
 
     public function getDescripcionVo(): ?Descripcion
@@ -80,9 +88,12 @@ class Nota
 
     public function setDescripcionVo(Descripcion|string|null $oDescripcion): void
     {
-        $this->descripcion = $oDescripcion instanceof Descripcion
+        $vo = $oDescripcion instanceof Descripcion
             ? $oDescripcion
             : Descripcion::fromNullableString($oDescripcion);
+        if ($vo !== null) {
+            $this->descripcion = $vo;
+        }
     }
 
     /**
@@ -98,7 +109,10 @@ class Nota
      */
     public function setDescripcion(string $descripcion): void
     {
-        $this->descripcion = Descripcion::fromNullableString($descripcion);
+        $vo = Descripcion::fromNullableString($descripcion);
+        if ($vo !== null) {
+            $this->descripcion = $vo;
+        }
     }
 
 

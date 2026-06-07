@@ -1,6 +1,7 @@
 <?php
 
 namespace src\usuarios\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -25,9 +26,9 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBE'];
+        $oDbl = GlobalPdo::get('oDBE');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBE_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('aux_cross_usuarios_grupos');
     }
@@ -37,9 +38,9 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
     /**
      * devuelve una colección (array) de objetos de tipo UsuarioGrupo
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo UsuarioGrupo
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<UsuarioGrupo> Una colección de objetos de tipo UsuarioGrupo
      */
     public function getUsuariosGrupos(array $aWhere = [], array $aOperators = []): array
     {
@@ -76,27 +77,35 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $UsuarioGrupo = UsuarioGrupo::fromArray($aDatos);
             $UsuarioGrupoSet->add($UsuarioGrupo);
         }
-        return $UsuarioGrupoSet->getTot();
+        return array_values($UsuarioGrupoSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -129,6 +138,9 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
         $valores = "(:id_usuario,:id_grupo)";
         $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -137,15 +149,26 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_usuario
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_usuario): array |bool
+    public function datosById(int $id_usuario): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
     /**
@@ -154,7 +177,7 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
     public function findById(int $id_usuario): ?UsuarioGrupo
     {
         $aDatos = $this->datosById($id_usuario);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return UsuarioGrupo::fromArray($aDatos);

@@ -11,8 +11,9 @@ use src\shared\domain\DatosInfoRepo;
 class InfoProfesorCongreso extends DatosInfoRepo
 {
 
-    public function __construct()
-    {
+    public function __construct(
+        private ProfesorCongresoRepositoryInterface $profesorCongresoRepository,
+    ) {
         $this->setTxtTitulo(_("congresos a los que ha asistido una persona"));
         $this->setTxtEliminar();
         $this->setTxtBuscar();
@@ -25,13 +26,18 @@ class InfoProfesorCongreso extends DatosInfoRepo
         $this->setRepositoryInterface(ProfesorCongresoRepositoryInterface::class);
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return 1024;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
+        $aWhere = [];
+        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->id_pau)) {
@@ -44,9 +50,6 @@ class InfoProfesorCongreso extends DatosInfoRepo
             $aWhere['congreso'] = $this->k_buscar;
             $aOperador['congreso'] = 'sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getProfesorCongresos($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->profesorCongresoRepository->getProfesorCongresos($aWhere, $aOperador);
     }
 }

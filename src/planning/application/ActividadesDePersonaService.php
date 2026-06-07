@@ -2,41 +2,43 @@
 
 namespace src\planning\application;
 
-use src\shared\config\ConfigGlobal;
 use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\entity\TiposActividades;
+use src\personas\domain\entity\PersonaEx;
+use src\personas\domain\entity\PersonaGlobal;
+use src\personas\domain\entity\PersonaSacd;
+use src\permisos\domain\PermisosActividades;
+use src\permisos\domain\PermisosActividadesTrue;
 use src\planning\domain\value_objects\PlanningStyle;
+use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Recoge las actividades de cada persona dentro de un periodo dado.
- *
- * Modo por defecto (`agruparPorCentro = true`) agrupa las actividades por
- * el nombre del centro de la persona — forma usada por
- * `planning_ctr_select` para listar varios centros.
- *
- * Modo `agruparPorCentro = false` devuelve una lista plana
- * `[ ['p#id#nombre' => [actividad, ...]], ... ]` — forma usada por
- * `planning_persona_ver` para dibujar un unico calendario.
- *
- * Migrado desde `apps/planning/domain/ActividadesDePersona.php` y de la
- * logica inline de `apps/planning/controller/planning_persona_ver.php`
- * (slice 2 de la migracion del modulo planning).
  */
 class ActividadesDePersonaService
 {
-    public static function actividadesPorPersona(
-        array|bool $cPersonas,
+    public function __construct(
+        private ActividadRepositoryInterface $actividadRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CargoOAsistenteInterface $cargoOAsistente,
+    ) {
+    }
+
+    /**
+     * @param iterable<PersonaGlobal|PersonaSacd|PersonaEx>|bool $cPersonas
+     * @return array<int|string, array<int, array<string, list<array<string, mixed>>>>>|list<array<string, list<array<string, mixed>>>>
+     */
+    public function actividadesPorPersona(
+        iterable|bool $cPersonas,
         string $fin_iso,
         string $inicio_iso,
         DateTimeLocal $oIniPlanning,
         string $inicio_local,
         bool $agruparPorCentro = true
     ): array {
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $aListaCtr = [];
         $p = 0;
         $persona = [];
@@ -55,9 +57,9 @@ class ActividadesDePersonaService
                 $id_ubi = $oPersona->getId_ctr();
                 if (empty($id_ubi)) {
                     $nombre_ubi = _("centro?");
-                } elseif (!in_array($id_ubi, $aListaCtr, true)) {
-                    $oCentroDl = $CentroDlRepository->findById($id_ubi);
-                    $nombre_ubi = $oCentroDl->getNombre_ubi();
+                } elseif (!array_key_exists($id_ubi, $aListaCtr)) {
+                    $oCentroDl = $this->centroDlRepository->findById($id_ubi);
+                    $nombre_ubi = $oCentroDl?->getNombre_ubi() ?? _("centro?");
                     $aListaCtr[$id_ubi] = $nombre_ubi;
                 } else {
                     $nombre_ubi = $aListaCtr[$id_ubi];
@@ -80,16 +82,15 @@ class ActividadesDePersonaService
 
             $cCargoOAsistente = [];
             if (ConfigGlobal::is_app_installed('actividadcargos')) {
-                $CargoOAsistente = $GLOBALS['container']->get(CargoOAsistenteInterface::class);
-                $cCargoOAsistente = $CargoOAsistente->getCargoOAsistente($id_nom, $aWhere, $aOperador);
+                $cCargoOAsistente = $this->cargoOAsistente->getCargoOAsistente((int)$id_nom);
             }
             foreach ($cCargoOAsistente as $oCargoOAsistente) {
                 $id_activ = $oCargoOAsistente->getId_activ();
                 $propio = $oCargoOAsistente->isPropio();
 
                 $aWhere['id_activ'] = $id_activ;
-                $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
-                if (is_array($cActividades) && count($cActividades) === 0) {
+                $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador);
+                if (count($cActividades) === 0) {
                     continue;
                 }
 
@@ -115,12 +116,18 @@ class ActividadesDePersonaService
                     $ini = (string)$oF_ini->getFromLocal();
                     $hini = (string)$h_ini;
                 }
-                $fi = (string)$oF_fin->getFromLocal();
+                $fi = (string)($oF_fin?->getFromLocal() ?? '');
                 $hfi = (string)$h_fin;
 
                 if (ConfigGlobal::is_app_installed('procesos')) {
-                    $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-                    $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+                    $oPermSesion = $_SESSION['oPermActividades'] ?? null;
+                    if ($oPermSesion instanceof PermisosActividades) {
+                        $oPermSesion->setActividad($id_activ, (string)$id_tipo_activ, $dl_org);
+                        $oPermActiv = $oPermSesion->getPermisoActual('datos');
+                    } else {
+                        $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
+                        $oPermActiv = $oPermActividades->getPermisoActual('datos');
+                    }
 
                     if ($oPermActiv->have_perm_activ('ocupado') === false) {
                         continue;

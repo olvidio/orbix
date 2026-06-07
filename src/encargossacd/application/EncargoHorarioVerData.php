@@ -16,10 +16,17 @@ use src\shared\domain\value_objects\TimeLocal;
  */
 final class EncargoHorarioVerData
 {
+
+    public function __construct(
+        private EncargoDominioService $dominioService,
+        private EncargoHorarioRepositoryInterface $encargoHorarioRepository
+    ) {
+    }
+
     /**
      * @return array<string, mixed>
      */
-    public static function cargar(string $mod, int $id_enc, int $id_item_h): array
+    public function cargar(string $mod, int $id_enc, int $id_item_h): array
     {
         if ($mod === 'nuevo' || $id_item_h <= 0) {
             return self::conOpciones([
@@ -37,10 +44,9 @@ final class EncargoHorarioVerData
             ]);
         }
 
-        $repo = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
-        $enc = $repo->findById($id_item_h);
+        $enc = $this->encargoHorarioRepository->findById($id_item_h);
         if ($enc === null) {
-            return self::cargar('nuevo', $id_enc, 0);
+            return $this->cargar('nuevo', $id_enc, 0);
         }
 
         return self::conOpciones(self::serializeHorario($enc));
@@ -55,9 +61,9 @@ final class EncargoHorarioVerData
      * @param array<string, int|string> $base
      * @return array<string, mixed>
      */
-    private static function conOpciones(array $base): array
+    private function conOpciones(array $base): array
     {
-        $oDominio = new EncargoDominioService();
+        $oDominio = $this->dominioService;
         $dia = $oDominio->calcular_dia(
             (string)($base['mas_menos'] ?? ''),
             (string)($base['dia_ref'] ?? ''),
@@ -75,7 +81,7 @@ final class EncargoHorarioVerData
     /**
      * @return array<string, int|string>
      */
-    private static function serializeHorario(EncargoHorario $e): array
+    private function serializeHorario(EncargoHorario $e): array
     {
         $f_ini = $e->getF_ini();
         $f_fin = $e->getF_fin();
@@ -97,7 +103,7 @@ final class EncargoHorarioVerData
         ];
     }
 
-    private static function fmtDate(mixed $d): string
+    private function fmtDate(mixed $d): string
     {
         if ($d === null) {
             return '';
@@ -112,7 +118,7 @@ final class EncargoHorarioVerData
         return '';
     }
 
-    private static function fmtTime(mixed $t): string
+    private function fmtTime(mixed $t): string
     {
         if ($t === null) {
             return '';

@@ -22,6 +22,7 @@ final class NotaSituacion
     public const EXAMINADO = 12;
     public const FALTA_CERTIFICADO = 13;
 
+    /** @return array<int, string> */
     public static function getArraySituacionTxt(): array
     {
         return [
@@ -42,6 +43,7 @@ final class NotaSituacion
         ];
     }
 
+    /** @return list<int> */
     public static function getArrayNoSuperadas(): array
     {
         return [
@@ -56,6 +58,7 @@ final class NotaSituacion
         ];
     }
 
+    /** @return list<int> */
     public static function getArraySuperadas(): array
     {
         return [

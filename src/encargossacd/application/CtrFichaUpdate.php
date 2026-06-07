@@ -2,6 +2,9 @@
 
 namespace src\encargossacd\application;
 
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
 use src\encargossacd\application\traits\EncargoFunciones;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
@@ -23,30 +26,41 @@ use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
  */
 final class CtrFichaUpdate
 {
+
+    public function __construct(
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+        private EncargoFunciones $encargoFunciones,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository,
+        private EncargoTipoRepositoryInterface $encargoTipoRepository
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $post
      * @return array{error: string}
      */
-    public static function execute(array $post): array
+    public function execute(array $post): array
     {
-        $e = (int)($post['e'] ?? 0);
-        $mod = (string)($post["mod_$e"] ?? '');
-        $id_enc = (int)($post["id_enc_$e"] ?? 0);
-        $sacd_num = (int)($post['sacd_num'] ?? 0);
-        $id_ubi = (int)($post["id_ubi_$e"] ?? 0);
-        $tipo_centro = (string)($post["tipo_centro_$e"] ?? '');
+        $e = input_int($post, 'e');
+        $mod = input_string($post, 'mod_' . $e);
+        $id_enc = input_int($post, 'id_enc_' . $e);
+        $sacd_num = input_int($post, 'sacd_num');
+        $id_ubi = input_int($post, 'id_ubi_' . $e);
+        $tipo_centro = input_string($post, 'tipo_centro_' . $e);
 
-        $n_sacd = (int)($post['n_sacd'] ?? 0);
+        $n_sacd = input_int($post, 'n_sacd');
         $n_sacd = $n_sacd === 0 ? 1 : $n_sacd;
 
-        $id_sacd_titular = (int)($post['id_sacd_titular'] ?? 0);
-        $id_sacd_suplente = (int)($post['id_sacd_suplente'] ?? 0);
-        $observ = (string)($post['observ'] ?? '');
+        $id_sacd_titular = input_int($post, 'id_sacd_titular');
+        $id_sacd_suplente = input_int($post, 'id_sacd_suplente');
+        $observ = input_string($post, 'observ');
         $cl = !empty($post['cl']);
-        $num_alum = (int)($post['num_alum'] ?? 0);
-        $dedic_ctr_m = (string)($post['dedic_ctr_m'] ?? '');
-        $dedic_ctr_t = (string)($post['dedic_ctr_t'] ?? '');
-        $dedic_ctr_v = (string)($post['dedic_ctr_v'] ?? '');
+        $num_alum = input_int($post, 'num_alum');
+        $dedic_ctr_m = input_string($post, 'dedic_ctr_m');
+        $dedic_ctr_t = input_string($post, 'dedic_ctr_t');
+        $dedic_ctr_v = input_string($post, 'dedic_ctr_v');
 
         $Aid_sacd = is_array($post['id_sacd'] ?? null) ? $post['id_sacd'] : [];
         $Adedic_m = is_array($post['dedic_m'] ?? null) ? $post['dedic_m'] : [];
@@ -54,17 +68,14 @@ final class CtrFichaUpdate
         $Adedic_v = is_array($post['dedic_v'] ?? null) ? $post['dedic_v'] : [];
 
         $oF_fin = new DateTimeLocal();
-        $oEncargoFunciones = new EncargoFunciones();
-
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+        $oEncargoFunciones = $this->encargoFunciones;
 
         switch ($mod) {
             case 'nuevo':
-                return self::nuevo(
+                return $this->nuevo(
                     $oEncargoFunciones,
-                    $EncargoRepository,
-                    $EncargoTipoRepository,
+                    $this->encargoRepository,
+                    $this->encargoTipoRepository,
                     $tipo_centro,
                     $id_ubi,
                     $id_sacd_titular,
@@ -83,9 +94,9 @@ final class CtrFichaUpdate
                     $num_alum,
                 );
             case 'editar':
-                return self::editar(
+                return $this->editar(
                     $oEncargoFunciones,
-                    $EncargoRepository,
+                    $this->encargoRepository,
                     $tipo_centro,
                     $id_enc,
                     $id_sacd_titular,
@@ -115,7 +126,7 @@ final class CtrFichaUpdate
      * @param array<int, mixed> $Adedic_v
      * @return array{error: string}
      */
-    private static function nuevo(
+    private function nuevo(
         EncargoFunciones $oEncargoFunciones,
         EncargoRepositoryInterface $EncargoRepository,
         EncargoTipoRepositoryInterface $EncargoTipoRepository,
@@ -148,8 +159,7 @@ final class CtrFichaUpdate
         $id_tipo_enc = 0;
         if ($first === 2) {
             $sf_sv = 2;
-            $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-            $oCentroSf = $CentroEllasRepository->findById($id_ubi);
+            $oCentroSf = $this->centroEllasRepository->findById($id_ubi);
             if ($oCentroSf !== null) {
                 $nombre_ubi = (string)$oCentroSf->getNombre_ubi();
                 $tipo_ctr = (string)$oCentroSf->getTipo_ctr();
@@ -160,8 +170,7 @@ final class CtrFichaUpdate
             };
         } elseif ($first === 1) {
             $sf_sv = 1;
-            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-            $oCentroDl = $CentroDlRepository->findById($id_ubi);
+            $oCentroDl = $this->centroDlRepository->findById($id_ubi);
             if ($oCentroDl !== null) {
                 $nombre_ubi = (string)$oCentroDl->getNombre_ubi();
                 $tipo_ctr = (string)$oCentroDl->getTipo_ctr();
@@ -174,20 +183,24 @@ final class CtrFichaUpdate
             };
         }
 
-        $oEncargoTipo = $EncargoTipoRepository->findById($id_tipo_enc);
+        $oEncargoTipo = $this->encargoTipoRepository->findById($id_tipo_enc);
         $tipo_enc = $oEncargoTipo !== null ? (string)$oEncargoTipo->getTipo_enc() : '';
         $desc_enc = $tipo_enc . " ($nombre_ubi)";
 
-        $newId = $EncargoRepository->getNewId();
+        $newId = $this->encargoRepository->getNewId();
         $oEncargo = new Encargo();
         $oEncargo->setId_enc($newId);
         $oEncargo->setId_tipo_enc($id_tipo_enc);
-        $oEncargo->setGrupoEncargoVo(EncargoGrupo::fromNullableInt($sf_sv));
+        $grupo = EncargoGrupo::fromNullableInt($sf_sv);
+        if ($grupo === null) {
+            return ['error' => _('grupo de encargo no valido') . "\n"];
+        }
+        $oEncargo->setGrupoEncargoVo($grupo);
         $oEncargo->setId_ubi($id_ubi);
         $oEncargo->setDesc_enc($desc_enc);
         $oEncargo->setObserv($observ);
-        if ($EncargoRepository->Guardar($oEncargo) === false) {
-            return ['error' => _('hay un error, no se ha guardado') . "\n" . $EncargoRepository->getErrorTxt()];
+        if ($this->encargoRepository->Guardar($oEncargo) === false) {
+            return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoRepository->getErrorTxt()];
         }
 
         $id_enc = (int)$oEncargo->getId_enc();
@@ -209,18 +222,21 @@ final class CtrFichaUpdate
                 $modo = $cl ? 2 : 3;
                 $Aid_sacd[0] = $id_sacd_titular;
             }
-            $oEncargoSacd = $oEncargoFunciones->insert_sacd($id_enc, (int)($Aid_sacd[$i] ?? 0), $modo);
-            $id_item_t_sacd = (int)$oEncargoSacd->getId_item();
+            $oEncargoSacd = $oEncargoFunciones->insert_sacd($id_enc, $this->arrayIntAt($Aid_sacd, $i), $modo);
+            if ($oEncargoSacd === null) {
+                continue;
+            }
+            $id_item_t_sacd = (int) $oEncargoSacd->getId_item();
 
-            $this_id_sacd = (int)($Aid_sacd[$i] ?? 0);
-            if (!empty($Adedic_m[$i])) {
-                $oEncargoFunciones->insert_horario_sacd($id_item_t_sacd, $id_enc, $this_id_sacd, 'm', $Adedic_m[$i]);
+            $this_id_sacd = $this->arrayIntAt($Aid_sacd, $i);
+            if ($this->arrayStringAt($Adedic_m, $i) !== '') {
+                $oEncargoFunciones->insert_horario_sacd($id_item_t_sacd, $id_enc, $this_id_sacd, 'm', $this->arrayStringAt($Adedic_m, $i));
             }
-            if (!empty($Adedic_t[$i])) {
-                $oEncargoFunciones->insert_horario_sacd($id_item_t_sacd, $id_enc, $this_id_sacd, 't', $Adedic_t[$i]);
+            if ($this->arrayStringAt($Adedic_t, $i) !== '') {
+                $oEncargoFunciones->insert_horario_sacd($id_item_t_sacd, $id_enc, $this_id_sacd, 't', $this->arrayStringAt($Adedic_t, $i));
             }
-            if (!empty($Adedic_v[$i])) {
-                $oEncargoFunciones->insert_horario_sacd($id_item_t_sacd, $id_enc, $this_id_sacd, 'v', $Adedic_v[$i]);
+            if ($this->arrayStringAt($Adedic_v, $i) !== '') {
+                $oEncargoFunciones->insert_horario_sacd($id_item_t_sacd, $id_enc, $this_id_sacd, 'v', $this->arrayStringAt($Adedic_v, $i));
             }
         }
 
@@ -241,7 +257,7 @@ final class CtrFichaUpdate
      * @param array<int, mixed> $Adedic_v
      * @return array{error: string}
      */
-    private static function editar(
+    private function editar(
         EncargoFunciones $oEncargoFunciones,
         EncargoRepositoryInterface $EncargoRepository,
         string $tipo_centro,
@@ -262,14 +278,12 @@ final class CtrFichaUpdate
         DateTimeLocal $oF_fin,
     ): array {
         $oF_ini = new DateTimeLocal();
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-
         if ($tipo_centro !== 'of') {
             if ($id_sacd_titular === 0) {
                 if ($id_enc !== 0) {
-                    $oEncargo = $EncargoRepository->findById($id_enc);
+                    $oEncargo = $this->encargoRepository->findById($id_enc);
                     if ($oEncargo !== null) {
-                        $EncargoRepository->Eliminar($oEncargo);
+                        $this->encargoRepository->Eliminar($oEncargo);
                     }
 
                     return ['error' => ''];
@@ -282,11 +296,11 @@ final class CtrFichaUpdate
                 return ['error' => _('El sacd titular y suplente deben ser distintos')];
             }
 
-            $oEncargo = $EncargoRepository->findById($id_enc);
+            $oEncargo = $this->encargoRepository->findById($id_enc);
             if ($oEncargo !== null) {
                 $oEncargo->setObserv($observ);
-                if ($EncargoRepository->Guardar($oEncargo) === false) {
-                    return ['error' => _('hay un error, no se ha guardado') . "\n" . $EncargoRepository->getErrorTxt()];
+                if ($this->encargoRepository->Guardar($oEncargo) === false) {
+                    return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoRepository->getErrorTxt()];
                 }
             }
 
@@ -295,14 +309,14 @@ final class CtrFichaUpdate
             $oEncargoFunciones->modificar_horario_ctr($id_enc, 'v', $dedic_ctr_v, $n_sacd);
         }
 
-        $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd(
+        $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(
             ['id_enc' => $id_enc, 'modo' => '5', 'f_fin' => 'x'],
             ['f_fin' => 'IS NULL'],
         );
         foreach ($cEncargosSacd as $oEncargoSacd) {
             $oEncargoSacd->setF_fin($oF_fin);
-            if ($EncargoSacdRepository->Guardar($oEncargoSacd) === false) {
-                return ['error' => _('hay un error, no se ha guardado') . "\n" . $EncargoSacdRepository->getErrorTxt()];
+            if ($this->encargoSacdRepository->Guardar($oEncargoSacd) === false) {
+                return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoSacdRepository->getErrorTxt()];
             }
             $id_nom = (int)$oEncargoSacd->getId_nom();
             $oEncargoFunciones->finalizar_horario_sacd($id_enc, $id_nom, $oF_fin);
@@ -310,12 +324,12 @@ final class CtrFichaUpdate
 
         for ($i = 0; $i < $sacd_num; $i++) {
             if ($i > 0 || $tipo_centro === 'of') {
-                $sacd_id = (int)($Aid_sacd[$i] ?? 0);
+                $sacd_id = $this->arrayIntAt($Aid_sacd, $i);
                 if ($sacd_id !== 0) {
                     $oEncargoFunciones->insert_sacd($id_enc, $sacd_id, 5);
                 }
             } else {
-                $cTitular = $EncargoSacdRepository->getEncargosSacd(
+                $cTitular = $this->encargoSacdRepository->getEncargosSacd(
                     [
                         'id_enc' => $id_enc,
                         'modo' => '(2|3)',
@@ -340,28 +354,28 @@ final class CtrFichaUpdate
                         $oEncargoFunciones->finalizar_sacd($id_enc, $actual_id_sacd_titular, $actual_modo, $oF_fin);
                     }
                 } elseif ($actual_modo !== $modo && $oActualTitular !== null) {
-                    $cExistente = $EncargoSacdRepository->getEncargosSacd([
+                    $cExistente = $this->encargoSacdRepository->getEncargosSacd([
                         'id_enc' => $id_enc,
                         'id_nom' => $actual_id_sacd_titular,
                         'modo' => $modo,
                         'f_ini' => $oF_ini->getIso(),
                     ]);
                     foreach ($cExistente as $oEx) {
-                        if ($EncargoSacdRepository->Eliminar($oEx) === false) {
-                            return ['error' => _('hay un error, no se ha eliminado') . "\n" . $EncargoSacdRepository->getErrorTxt()];
+                        if ($this->encargoSacdRepository->Eliminar($oEx) === false) {
+                            return ['error' => _('hay un error, no se ha eliminado') . "\n" . $this->encargoSacdRepository->getErrorTxt()];
                         }
                     }
                     $oActualTitular->setModo($modo);
-                    if ($EncargoSacdRepository->Guardar($oActualTitular) === false) {
-                        return ['error' => _('hay un error, no se ha guardado') . "\n" . $oActualTitular->getErrorTxt()];
+                    if ($this->encargoSacdRepository->Guardar($oActualTitular) === false) {
+                        return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoSacdRepository->getErrorTxt()];
                     }
                 }
                 $Aid_sacd[0] = $id_sacd_titular;
             }
 
-            $sacd_id = (int)($Aid_sacd[$i] ?? 0);
+            $sacd_id = $this->arrayIntAt($Aid_sacd, $i);
             if ($sacd_id !== 0) {
-                $cItem = $EncargoSacdRepository->getEncargosSacd(
+                $cItem = $this->encargoSacdRepository->getEncargosSacd(
                     [
                         'id_nom' => $sacd_id,
                         'id_enc' => $id_enc,
@@ -375,41 +389,65 @@ final class CtrFichaUpdate
                     $id_item_t_sacd = (int)$oIt->getId_item();
                 }
 
-                $oEncargoFunciones->modificar_horario_sacd($id_item_t_sacd, $id_enc, $sacd_id, 'm', (string)($Adedic_m[$i] ?? ''));
-                $oEncargoFunciones->modificar_horario_sacd($id_item_t_sacd, $id_enc, $sacd_id, 't', (string)($Adedic_t[$i] ?? ''));
-                $oEncargoFunciones->modificar_horario_sacd($id_item_t_sacd, $id_enc, $sacd_id, 'v', (string)($Adedic_v[$i] ?? ''));
+                $oEncargoFunciones->modificar_horario_sacd($id_item_t_sacd, $id_enc, $sacd_id, 'm', $this->arrayStringAt($Adedic_m, $i));
+                $oEncargoFunciones->modificar_horario_sacd($id_item_t_sacd, $id_enc, $sacd_id, 't', $this->arrayStringAt($Adedic_t, $i));
+                $oEncargoFunciones->modificar_horario_sacd($id_item_t_sacd, $id_enc, $sacd_id, 'v', $this->arrayStringAt($Adedic_v, $i));
             }
         }
 
         if ($id_sacd_suplente !== 0) {
-            $cSupl = $EncargoSacdRepository->getEncargosSacd(
+            $cSupl = $this->encargoSacdRepository->getEncargosSacd(
                 ['id_enc' => $id_enc, 'modo' => '4', 'f_fin' => 'x'],
                 ['f_fin' => 'IS NULL'],
             );
-            if (!is_array($cSupl) || count($cSupl) === 0) {
+            if ($cSupl === []) {
                 $oEncargoFunciones->insert_sacd($id_enc, $id_sacd_suplente, 4);
             } else {
                 foreach ($cSupl as $oS) {
                     $actual_id_sacd_suplente = (int)$oS->getId_nom();
                     if ($actual_id_sacd_suplente !== $id_sacd_suplente) {
                         $oS->setF_fin($oF_fin);
-                        if ($oS->DBGuardar() === false) {
-                            return ['error' => _('hay un error, no se ha guardado') . "\n" . $oS->getErrorTxt()];
+                        if ($this->encargoSacdRepository->Guardar($oS) === false) {
+                            return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoSacdRepository->getErrorTxt()];
                         }
                         $oEncargoFunciones->insert_sacd($id_enc, $id_sacd_suplente, 4);
                     }
                 }
             }
         } else {
-            $cSupl = $EncargoSacdRepository->getEncargosSacd(['id_enc' => $id_enc, 'modo' => 4]);
+            $cSupl = $this->encargoSacdRepository->getEncargosSacd(['id_enc' => $id_enc, 'modo' => 4]);
             foreach ($cSupl as $oS) {
                 $oS->setF_fin($oF_fin);
-                if ($EncargoSacdRepository->Guardar($oS) === false) {
-                    return ['error' => _('hay un error, no se ha guardado') . "\n" . $EncargoSacdRepository->getErrorTxt()];
+                if ($this->encargoSacdRepository->Guardar($oS) === false) {
+                    return ['error' => _('hay un error, no se ha guardado') . "\n" . $this->encargoSacdRepository->getErrorTxt()];
                 }
             }
         }
 
         return ['error' => ''];
+    }
+
+    /**
+     * @param array<int|string, mixed> $values
+     */
+    private function arrayStringAt(array $values, int $index): string
+    {
+        if (!isset($values[$index]) || !is_scalar($values[$index])) {
+            return '';
+        }
+
+        return (string) $values[$index];
+    }
+
+    /**
+     * @param array<int|string, mixed> $values
+     */
+    private function arrayIntAt(array $values, int $index): int
+    {
+        if (!isset($values[$index]) || !is_numeric($values[$index])) {
+            return 0;
+        }
+
+        return (int) $values[$index];
     }
 }

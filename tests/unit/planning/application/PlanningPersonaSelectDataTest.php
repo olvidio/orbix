@@ -5,33 +5,23 @@ declare(strict_types=1);
 namespace Tests\unit\planning\application;
 
 use PHPUnit\Framework\TestCase;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\ubis\domain\entity\CentroDl;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\PersonaDl;
+use src\planning\application\PlanningPersonaRepositoryPicker;
 use src\planning\application\PlanningPersonaSelectData;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\entity\CentroDl;
 
 final class PlanningPersonaSelectDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_mapea_filas_del_repositorio(): void
     {
         $p = $this->createMock(PersonaDl::class);
@@ -43,12 +33,8 @@ final class PlanningPersonaSelectDataTest extends TestCase
         $repo = $this->createMock(PersonaNRepositoryInterface::class);
         $repo->expects($this->once())->method('getPersonas')->willReturn([$p]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            PersonaNRepositoryInterface::class => $repo,
-            PersonaDlRepositoryInterface::class => $this->createMock(PersonaDlRepositoryInterface::class),
-        ]);
-
-        $out = PlanningPersonaSelectData::execute([
+        $useCase = $this->createUseCase(personaN: $repo);
+        $out = $useCase->execute([
             'obj_pau' => 'PersonaN',
             'apellido1' => '',
             'centro' => '',
@@ -75,7 +61,7 @@ final class PlanningPersonaSelectDataTest extends TestCase
         $repoN = $this->createMock(PersonaNRepositoryInterface::class);
         $repoN->expects($this->once())
             ->method('getPersonas')
-            ->with($this->callback(static fn(array $where): bool => ($where['id_ctr'] ?? null) === 42))
+            ->with($this->callback(static fn (array $where): bool => ($where['id_ctr'] ?? null) === 42))
             ->willReturn([$p]);
 
         $repoDl = $this->createMock(PersonaDlRepositoryInterface::class);
@@ -84,13 +70,8 @@ final class PlanningPersonaSelectDataTest extends TestCase
         $repoCentro = $this->createMock(CentroDlRepositoryInterface::class);
         $repoCentro->method('getCentros')->willReturn([$centro]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            PersonaNRepositoryInterface::class => $repoN,
-            PersonaDlRepositoryInterface::class => $repoDl,
-            CentroDlRepositoryInterface::class => $repoCentro,
-        ]);
-
-        $out = PlanningPersonaSelectData::execute([
+        $useCase = $this->createUseCase(personaDl: $repoDl, personaN: $repoN, centroDl: $repoCentro);
+        $out = $useCase->execute([
             'obj_pau' => 'PersonaN',
             'centro' => 'Mi centro',
         ]);
@@ -104,29 +85,31 @@ final class PlanningPersonaSelectDataTest extends TestCase
         $repo = $this->createMock(PersonaNRepositoryInterface::class);
         $repo->method('getPersonas')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            PersonaNRepositoryInterface::class => $repo,
-            PersonaDlRepositoryInterface::class => $this->createMock(PersonaDlRepositoryInterface::class),
-        ]);
-
-        $this->assertSame([], PlanningPersonaSelectData::execute(['obj_pau' => 'PersonaN']));
+        $useCase = $this->createUseCase(personaN: $repo);
+        $this->assertSame([], $useCase->execute(['obj_pau' => 'PersonaN']));
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
+    private function createUseCase(
+        ?PersonaDlRepositoryInterface $personaDl = null,
+        ?PersonaNRepositoryInterface $personaN = null,
+        ?CentroDlRepositoryInterface $centroDl = null,
+    ): PlanningPersonaSelectData {
+        $picker = new PlanningPersonaRepositoryPicker(
+            $personaDl ?? $this->createMock(PersonaDlRepositoryInterface::class),
+            $this->createMock(PersonaSacdRepositoryInterface::class),
+            new PersonaRepositoryResolver(
+                $personaN ?? $this->createMock(PersonaNRepositoryInterface::class),
+                $this->createMock(PersonaAgdRepositoryInterface::class),
+                $this->createMock(PersonaNaxRepositoryInterface::class),
+                $this->createMock(PersonaSRepositoryInterface::class),
+                $this->createMock(PersonaSSSCRepositoryInterface::class),
+                $this->createMock(PersonaExRepositoryInterface::class),
+            ),
+        );
 
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        return new PlanningPersonaSelectData(
+            $picker,
+            $centroDl ?? $this->createMock(CentroDlRepositoryInterface::class),
+        );
     }
 }

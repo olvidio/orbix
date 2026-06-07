@@ -10,7 +10,12 @@ use src\pasarela\domain\Activacion;
  */
 final class ActivacionExcepcionGuardar
 {
-    public static function execute(string $id_tipo_activ, string $valor): string
+    public function __construct(
+        private readonly Activacion $activacion,
+    ) {
+    }
+
+    public function execute(string $id_tipo_activ, string $valor): string
     {
         $error_txt = '';
         if ($id_tipo_activ === '') {
@@ -19,8 +24,8 @@ final class ActivacionExcepcionGuardar
         if ($valor === '') {
             return _('Falta valor de activación');
         }
-        $oActivacion = new Activacion();
-        $oActivacion->addActivacion($id_tipo_activ, $valor);
+        
+        $this->activacion->addActivacion($id_tipo_activ, $valor);
         return $error_txt;
     }
 }

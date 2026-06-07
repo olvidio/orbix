@@ -12,6 +12,7 @@ final class TrasladoTipoCmbCode
     const sede = 'sede';
     const ctr = 'ctr';
 
+    /** @return array<string, string> */
     public static function getArrayTipoCambio(): array
     {
         return [

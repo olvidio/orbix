@@ -6,9 +6,11 @@ use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\certificados\domain\CertificadoRecibidoDelete;
 use src\certificados\domain\CertificadoRecibidoUpload;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
+use src\shared\infrastructure\DependencyResolver;
 use Tests\factories\certificados\CertificadosFactory;
 use Tests\myTest;
 
@@ -46,7 +48,7 @@ class CertificadoRecibidoUploadTest extends myTest
     {
         $oDBdst = $this->setConexion('H-dlbv');
         foreach ($this->cCertificados as $Certificado) {
-            $CertificadoUpload = new CertificadoRecibidoUpload();
+            $CertificadoUpload = DependencyResolver::get(CertificadoRecibidoUpload::class);
             $CertificadoUpload->setoDbl($oDBdst);
 
             $id_item = 0;  // para que cree uno nuevo
@@ -54,7 +56,7 @@ class CertificadoRecibidoUploadTest extends myTest
             $id_nom = $Certificado->getId_nom();
             $certificado = $Certificado->getCertificado();
             $firmado = $Certificado->isFirmado();
-            $idioma = $Certificado->getIdioma();
+            $idioma = (string) ($Certificado->getIdiomaVo()?->value() ?? '');
             $oF_certificado = $Certificado->getF_certificado();
             $oF_recibido = $Certificado->getF_enviado();
             $destino = $Certificado->getDestino();
@@ -75,7 +77,7 @@ class CertificadoRecibidoUploadTest extends myTest
             $this->assertEquals($CertificadoDB->getDestino(), $CertificadoDB2->getDestino());
             $this->assertEquals($CertificadoDB->getDocumento(), $CertificadoDB2->getDocumento());
             $this->assertEquals($CertificadoDB->getId_nom(), $CertificadoDB2->getId_nom());
-            $this->assertEquals($CertificadoDB->getIdioma(), $CertificadoDB2->getIdioma());
+            $this->assertEquals($CertificadoDB->getIdiomaVo()?->value(), $CertificadoDB2->getIdiomaVo()?->value());
             $this->assertEquals($CertificadoDB->isFirmado(), $CertificadoDB2->isFirmado());
 
             // borrar las pruebas

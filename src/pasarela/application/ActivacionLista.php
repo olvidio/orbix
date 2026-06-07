@@ -15,11 +15,19 @@ use src\pasarela\domain\Activacion;
  */
 final class ActivacionLista
 {
-    public static function execute(): array
-    {
-        $oActivacion = new Activacion();
+    public function __construct(
+        private readonly Activacion $activacion,
+    ) {
+    }
 
-        $a_excepciones_raw = $oActivacion->getExcepciones();
+    /**
+     * @return array{default: string, excepciones: list<array{id_tipo_activ: string, etiqueta: string, valor: string}>}
+     */
+    public function execute(): array
+    {
+        
+
+        $a_excepciones_raw = $this->activacion->getExcepciones();
         $a_excepciones = [];
         foreach ($a_excepciones_raw as $id_tipo_activ => $valor) {
             $oActividadTipo = new TiposActividades((string)$id_tipo_activ);
@@ -31,7 +39,7 @@ final class ActivacionLista
         }
 
         return [
-            'default' => (string)$oActivacion->getDefault(),
+            'default' => (string)$this->activacion->getDefault(),
             'excepciones' => $a_excepciones,
         ];
     }

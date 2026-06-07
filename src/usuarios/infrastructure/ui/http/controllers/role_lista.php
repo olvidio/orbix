@@ -1,9 +1,11 @@
 <?php
 
+use src\shared\infrastructure\DependencyResolver;
 use src\usuarios\application\rolesLista;
 use src\shared\web\ContestarJson;
 
-$jsondata = rolesLista::rolesLista();
+/** @var rolesLista $useCase */
+$useCase = DependencyResolver::get(rolesLista::class);
+$jsondata = $useCase->execute();
 
-// envía una Response
 ContestarJson::send($jsondata);

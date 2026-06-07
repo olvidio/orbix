@@ -59,9 +59,15 @@ class Cama
 
     public function setIdCamaVo(CamaId|string|null $id): void
     {
-        $this->id_cama = $id instanceof CamaId
-            ? $id
-            : CamaId::fromNullableString($id);
+        if ($id instanceof CamaId) {
+            $this->id_cama = $id;
+            return;
+        }
+        $parsed = CamaId::fromNullableString($id);
+        if ($parsed === null) {
+            throw new \InvalidArgumentException('id_cama cannot be null');
+        }
+        $this->id_cama = $parsed;
     }
 
     /**
@@ -77,7 +83,11 @@ class Cama
      */
     public function setId_habitacion(string $id_habitacion): void
     {
-        $this->id_habitacion = HabitacionId::fromNullableString($id_habitacion);
+        $parsed = HabitacionId::fromNullableString($id_habitacion);
+        if ($parsed === null) {
+            throw new \InvalidArgumentException('id_habitacion cannot be null');
+        }
+        $this->id_habitacion = $parsed;
     }
 
     public function getIdHabitacionVo(): HabitacionId

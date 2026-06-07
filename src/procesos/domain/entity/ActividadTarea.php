@@ -35,7 +35,7 @@ class ActividadTarea
     {
         $this->id_fase = $id_fase instanceof FaseId
             ? $id_fase
-            : FaseId::fromNullableInt($id_fase);
+            : (FaseId::fromNullableInt($id_fase) ?? throw new \InvalidArgumentException('id_fase cannot be null'));
     }
 
     /**
@@ -51,7 +51,7 @@ class ActividadTarea
      */
     public function setId_fase(int $id_fase): void
     {
-        $this->id_fase = FaseId::fromNullableInt($id_fase);
+        $this->id_fase = (FaseId::fromNullableInt($id_fase) ?? throw new \InvalidArgumentException('id_fase cannot be null'));
     }
 
 
@@ -65,7 +65,7 @@ class ActividadTarea
     {
         $this->id_tarea = $id_tarea instanceof TareaId
             ? $id_tarea
-            : TareaId::fromNullableInt($id_tarea);
+            : (TareaId::fromNullableInt($id_tarea) ?? throw new \InvalidArgumentException('id_tarea cannot be null'));
     }
 
     /**
@@ -101,6 +101,9 @@ class ActividadTarea
     {
         return 'id_tarea';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

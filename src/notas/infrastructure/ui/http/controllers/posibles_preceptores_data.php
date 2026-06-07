@@ -1,6 +1,7 @@
 <?php
 
 use src\notas\application\PosiblesPreceptoresData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 /**
@@ -11,7 +12,7 @@ use src\shared\web\ContestarJson;
  * - `frontend/notas/view/form_notas_de_una_persona.phtml`
  * - `apps/actividadestudios/view/form_1303.phtml`
  */
-$aOpciones = PosiblesPreceptoresData::execute();
+$aOpciones = (DependencyResolver::get(PosiblesPreceptoresData::class))->execute();
 
 $payload = [
     'id' => 'id_preceptor',

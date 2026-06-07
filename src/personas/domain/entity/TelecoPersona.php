@@ -75,7 +75,10 @@ class TelecoPersona
      */
     public function setNum_teleco(string $num_teleco): void
     {
-        $this->num_teleco = NumTelecoText::fromNullableString($num_teleco);
+        $resolved = NumTelecoText::fromNullableString($num_teleco);
+        if ($resolved !== null) {
+            $this->num_teleco = $resolved;
+        }
     }
     public function getNumTelecoVo(): NumTelecoText
     {
@@ -83,9 +86,12 @@ class TelecoPersona
     }
     public function setNumTelecoVo(NumTelecoText|string|null $texto): void
     {
-        $this->num_teleco = $texto instanceof   NumTelecoText
+        $resolved = $texto instanceof NumTelecoText
             ? $texto
             : NumTelecoText::fromNullableString($texto);
+        if ($resolved !== null) {
+            $this->num_teleco = $resolved;
+        }
     }
 
     /**
@@ -127,10 +133,14 @@ class TelecoPersona
     // la conversión a texto debe realizarse en la capa repositorio de descripciones.
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    /** @return array<string, string> */
+    public function getPrimary_key(): array
     {
-        return 'id_item';
+        return ['id_item' => (string)$this->id_item];
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

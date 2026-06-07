@@ -77,7 +77,7 @@ class EncargoSacd
      */
     public function setModo(int $modo): void
     {
-        $this->modo = EncargoModoId::fromNullableInt($modo);
+        $this->modo = (EncargoModoId::fromNullableInt($modo) ?? throw new \InvalidArgumentException('modo cannot be empty'));
     }
 
     public function getModoVo(): EncargoModoId
@@ -89,7 +89,7 @@ class EncargoSacd
     {
         $this->modo = $vo instanceof EncargoModoId
             ? $vo
-            : EncargoModoId::fromNullableInt($vo);
+            : (EncargoModoId::fromNullableInt($vo) ?? throw new \InvalidArgumentException('modo cannot be empty'));
     }
 
 
@@ -101,7 +101,7 @@ class EncargoSacd
 
     public function setF_ini(DateTimeLocal|null $f_ini = null): void
     {
-        $this->f_ini = $f_ini;
+        $this->f_ini = $f_ini ?? new DateTimeLocal();
     }
 
 

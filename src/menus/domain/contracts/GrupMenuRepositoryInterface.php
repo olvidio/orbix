@@ -16,6 +16,15 @@ use src\menus\domain\entity\GrupMenu;
 interface GrupMenuRepositoryInterface
 {
 
+    /**
+     * @return array<int|string, string>
+     */
+    /**
+     * @return array<int|string, string>
+     */
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayGrupMenus(): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -23,9 +32,9 @@ interface GrupMenuRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo GrupMenu
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo GrupMenu
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<GrupMenu> Una colección de objetos de tipo GrupMenu
      */
     public function getGrupMenus(array $aWhere = [], array $aOperators = []): array;
 
@@ -46,14 +55,14 @@ interface GrupMenuRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_grupmenu
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_grupmenu): array|bool;
+    public function datosById(int $id_grupmenu): array|false;
 
     /**
      * Busca la clase con id_grupmenu en el repositorio.
      */
     public function findById(int $id_grupmenu): ?GrupMenu;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

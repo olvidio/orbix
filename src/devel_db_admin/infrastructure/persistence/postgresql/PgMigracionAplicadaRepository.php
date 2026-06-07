@@ -7,6 +7,7 @@ namespace src\devel_db_admin\infrastructure\persistence\postgresql;
 use PDO;
 use src\devel_db_admin\domain\contracts\MigracionAplicadaRepositoryInterface;
 use src\devel_db_admin\domain\entity\MigracionAplicada;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\traits\HandlesPdoErrors;
 
@@ -16,10 +17,10 @@ final class PgMigracionAplicadaRepository extends ClaseRepository implements Mig
 
     public function __construct()
     {
-        $this->setoDbl($GLOBALS['oDBPC']);
+        $this->setoDbl(GlobalPdo::get('oDBPC'));
         // La tabla de control se crea en la BD principal y se consulta inmediatamente
         // tras escribir; por eso las lecturas usan la misma conexion de escritura.
-        $this->setoDbl_select($GLOBALS['oDBPC']);
+        $this->setoDbl_select(GlobalPdo::get('oDBPC'));
         $this->setNomTabla('migracion_aplicada');
     }
 
@@ -82,7 +83,7 @@ SQL;
         }
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (empty($row)) {
+        if (!is_array($row) || $row === []) {
             return null;
         }
 

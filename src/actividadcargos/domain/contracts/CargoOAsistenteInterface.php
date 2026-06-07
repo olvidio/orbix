@@ -12,7 +12,7 @@ interface CargoOAsistenteInterface
     public function getCargoOAsistente(int $iid_nom): array;
 
     /**
-     * @param iterable<\src\personas\domain\entity\PersonaGlobal> $cPersonas
+     * @param iterable<\src\personas\domain\entity\PersonaGlobal|\src\personas\domain\entity\PersonaSacd> $cPersonas
      * @param iterable<\src\actividades\domain\entity\ActividadAll> $cActividades
      * @return array<int, list<int>>
      */

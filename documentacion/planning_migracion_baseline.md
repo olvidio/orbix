@@ -167,3 +167,96 @@ Limpiezas realizadas:
 - Centralizada la construccion de `PeriodoQue` en `frontend/planning/support/PeriodoPlanningHelper.php`.
 - `web\Desplegable` para `zones_que` instanciado en el controller frontend (patron `ubis`), no en la vista.
 - `menus.csv` y `aux_metamenus.csv` actualizados a `frontend/planning/controller/...`.
+
+## Cierre DI (2026-06-06)
+
+### `$GLOBALS['container']` en `src/planning/`
+
+| Fase | Ficheros con `$GLOBALS['container']` |
+|------|--------------------------------------:|
+| Pre-cierre (application) | **8** |
+| Post-cierre | **0** |
+
+### Application (12 clases)
+
+| Clase | Dependencias inyectadas (resumen) |
+|-------|-----------------------------------|
+| `ActividadesDePersonaService` | `ActividadRepository`, `CentroDlRepository`, `CargoOAsistente` |
+| `ActividadesPorCasasService` | `ActividadRepository`, `CasaDlRepository`, `CentroEllasRepository` |
+| `ActividadesPorZonasService` | `Cargo`, `Zona*`, `Actividad*`, `PersonaSacd`, `Encargo*`, `ActividadCargo` |
+| `CasaPeriodosForPlanning` | `CasaPeriodoRepository` |
+| `PlanningPersonaRepositoryPicker` | `PersonaDl`, `PersonaSacd`, `PersonaRepositoryResolver` |
+| `PlanningCasaQueFormData` | — (sesión / `XPermisos`) |
+| `PlanningCasaVerData` | `ActividadesPorCasasService`, `CasaPeriodosForPlanning` |
+| `PlanningCtrSelectData` | `PersonaDl`, `CentroDl`, `ActividadesDePersonaService` |
+| `PlanningPersonaSelectData` | `PlanningPersonaRepositoryPicker`, `CentroDl` |
+| `PlanningPersonaVerData` | `PlanningPersonaRepositoryPicker`, `ActividadesDePersonaService` |
+| `PlanningZonesQueData` | `Usuario`, `Role`, `Zona` |
+| `PlanningZonesSelectData` | `ActividadesPorZonasService` |
+
+Sesión: `instanceof XPermisos` / `PermisosActividades` en servicios de actividades;
+`PlanningCasaQueFormData` valida `MiUsuario` vía `method_exists`.
+
+### HTTP controllers (7)
+
+Todos en `infrastructure/ui/http/controllers/` usan `DependencyResolver::get()`
+(sin `::execute()` estáticos). Entrada POST vía `input_int` / `input_string` /
+`input_string_list` donde aplica.
+
+### Repos `Pg*`
+
+El módulo **no define repositorios propios** (`src/planning/` no tiene capa
+`infrastructure/persistence`). Los repos cross-módulo se resuelven por
+`autowire()` desde los `dependencies.php` de `actividades`, `personas`, `ubis`,
+`usuarios`, `zonassacd`, `encargossacd`, `actividadcargos`.
+
+### `src/planning/config/dependencies.php`
+
+Registra 4 servicios de aplicación + 8 casos de uso (`autowire()`).
+`PersonaRepositoryResolver` se resuelve desde `src/personas/config/dependencies.php`.
+
+## Deuda post-refactor
+
+### Completado
+
+- [x] 0 `$GLOBALS['container']` en todo `src/planning/`
+- [x] 7 controllers HTTP via `DependencyResolver`
+- [x] Casos de uso con constructor DI (métodos de instancia)
+- [x] `dependencies.php` con todos los use cases
+- [x] Frontend sin `use src\...` en controladores (0)
+- [x] PHPStan: `src/planning/` sin errores en `phpstan-nobaseline.neon` (0)
+- [x] Tests unitarios (`tests/unit/planning/`: 69 tests)
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (pre-cierre DI) | `composer phpstan:file -- src/planning/` | **115** |
+| 2026-06-06 (cierre DI) | `composer phpstan:file -- src/planning/` | **0** |
+
+Áreas abordadas:
+
+- **Application:** constructor DI en 12 clases; `PlanningPersonaRepositoryPicker`
+  sin `ProvidesRepositories` / `$GLOBALS`; `getCargoOAsistente(int)` alineado
+  con la interfaz; guards `DateTimeLocal|false`, `Zona|null`, `Ubi::NewUbi` null.
+- **Permisos sesión:** `instanceof PermisosActividades` / `PermisosActividadesTrue`.
+- **HTTP controllers:** `DependencyResolver::get()` + `input_*`; fechas de periodo
+  validadas antes de `DateTimeLocal`.
+- **VO:** tipos en `PlanningStyle::clase()`.
+
+### Pendiente
+
+- [ ] `ActividadesPorZonasService` sigue usando `frontend\shared\web\Desplegable`
+  para el modo `id_zona=todo` (deuda de capa; fuera de alcance DI).
+- [ ] Parámetro `$sin_activ` en `ActividadesPorCasasService` conservado por
+  contrato HTTP aunque el repo ya no devuelve `false`.
+
+## Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/`
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests existentes pasan (`tests/unit/planning/`: 69 tests)
+- [x] PHPStan `src/planning/` en 0 (phpstan-nobaseline.neon)

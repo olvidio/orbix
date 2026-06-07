@@ -116,7 +116,7 @@ class MetaMenu
         return $this->descripcion?->value();
     }
 
-    public function getDescripcionVo(): MetaMenuDescripcion
+    public function getDescripcionVo(): ?MetaMenuDescripcion
     {
         return $this->descripcion;
     }
@@ -137,10 +137,13 @@ class MetaMenu
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_metamenu';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

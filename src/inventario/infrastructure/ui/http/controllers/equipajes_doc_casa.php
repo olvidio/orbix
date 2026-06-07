@@ -1,5 +1,9 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
@@ -8,26 +12,36 @@ use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
+$Qid_equipaje = input_int($_POST, 'id_equipaje');
 $error_txt = '';
 
-$EquipajeRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
+/** @var EquipajeRepositoryInterface $EquipajeRepository */
+$EquipajeRepository = DependencyResolver::get(EquipajeRepositoryInterface::class);
 $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
+if ($oEquipaje === null) {
+    ContestarJson::enviar($error_txt, []);
+    return;
+}
 $id_ubi_activ = $oEquipaje->getId_ubi_activ();
-$nombre_lugar = $oEquipaje->getLugarVo()->value();
+$nombre_lugar = $oEquipaje->getLugarVo()?->value() ?? '';
 
-$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
-$TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
-$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
-$UbiInventarioRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
+/** @var DocumentoRepositoryInterface $DocumentoRepository */
+$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
+/** @var TipoDocRepositoryInterface $TipoDocRepository */
+$TipoDocRepository = DependencyResolver::get(TipoDocRepositoryInterface::class);
+/** @var LugarRepositoryInterface $LugarRepository */
+$LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
+/** @var UbiInventarioRepositoryInterface $UbiInventarioRepository */
+$UbiInventarioRepository = DependencyResolver::get(UbiInventarioRepositoryInterface::class);
 $cUbsiInventario = $UbiInventarioRepository->getUbisInventario(['id_ubi_activ' => $id_ubi_activ]);
 $a_valores = [];
 $id_ubi = null;
-if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
+if (!empty($cUbsiInventario)) {
 
     //para ordenar por colecciones:
     $aColeccion = [];
-    $ColeccionRepository = $GLOBALS['container']->get(ColeccionRepositoryInterface::class);
+    /** @var ColeccionRepositoryInterface $ColeccionRepository */
+$ColeccionRepository = DependencyResolver::get(ColeccionRepositoryInterface::class);
     $cColecciones = $ColeccionRepository->getColecciones(array('_ordre' => 'nom_coleccion'));
     foreach ($cColecciones as $oColeccion) {
         $aColeccion[$oColeccion->getId_coleccion()] = $oColeccion->isAgrupar();
@@ -39,6 +53,7 @@ if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
     $cDocumentos = $DocumentoRepository->getDocumentos(['id_ubi' => $id_ubi, 'eliminado' => 'f']);
 
     $d = 0;
+    $orden = [];
     $a_tipo = [];
     $a_num = [];
     $a_lugar = [];
@@ -50,15 +65,15 @@ if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
         $observ = $oDocumento->getObservVo()?->value();
         $id_tipo_doc = $oDocumento->getId_tipo_doc();
         $id_lugar_doc = $oDocumento->getId_lugar();
-        $oTipoDoc = $TipoDocRepository->findById($id_tipo_doc);
+        $oTipoDoc = $TipoDocRepository->findById((int) $id_tipo_doc);
         if ($oTipoDoc === null) {
-            throw new \Exception("Documento no encontrado con ID: " . $id_tipo_doc);
+            continue;
         }
         $lugar = '';
         if (!empty($id_lugar_doc)) {
             $oLugar = $LugarRepository->findById($id_lugar_doc);
             if ($oLugar === null) {
-                throw new \Exception("Lugar no encontrado con ID: " . $id_lugar_doc);
+                continue;
             }
             $lugar = $oLugar->getNom_lugar();
         }

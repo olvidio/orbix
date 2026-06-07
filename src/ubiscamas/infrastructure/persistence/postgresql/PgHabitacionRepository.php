@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubiscamas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -25,14 +26,17 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('du_habitaciones');
     }
 
-    public function getArrayHabitaciones($sCondicion = ''): array
+    /**
+     * @return array<int|string, string>
+     */
+public function getArrayHabitaciones(string $sCondicion = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -41,6 +45,9 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
             $sCondicion = "";
         $sQuery = "SELECT id_habitacion, nombre FROM $nom_tabla $sCondicion ORDER BY $orden";
         $stmt = $this->prepareAndExecute($oDbl, $sQuery, [], __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
         $aHabitaciones = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $id_habitacion = $row['id_habitacion'];
@@ -57,9 +64,9 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
     /**
      * devuelve una colección (array) de objetos de tipo Habitacion
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Habitacion
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Habitacion> Una colección de objetos de tipo Habitacion
      */
     public function getHabitaciones(array $aWhere = [], array $aOperators = []): array
     {
@@ -96,34 +103,42 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $Habitacion = Habitacion::fromArray($aDatos);
             $HabitacionSet->add($Habitacion);
         }
-        return $HabitacionSet->getTot();
+        return array_values($HabitacionSet->getTot());
     }
 
     /**
      * devuelve una colección (array) de objetos de tipo Habitacion para un id_ubi específico
      *
      * @param int $id_ubi
-     * @return array Una colección de objetos de tipo Habitacion
+     * @return list<Habitacion> Una colección de objetos de tipo Habitacion
      */
     public function getHabitacionesByUbi(int $id_ubi): array
     {
@@ -139,6 +154,9 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_habitacion = :id_habitacion";
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = ['id_habitacion' => $id_habitacion];
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
@@ -181,6 +199,9 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -190,6 +211,9 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_habitacion = :id_habitacion";
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         $stmt->execute(['id_habitacion' => $id_habitacion]);
         if (!$stmt->rowCount()) {
             return TRUE;
@@ -202,17 +226,27 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $id_habitacion
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $id_habitacion): array |bool
+    public function datosById(string $id_habitacion): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_habitacion = :id_habitacion";
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
         $stmt->execute(['id_habitacion' => $id_habitacion]);
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
     /**
@@ -221,16 +255,21 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
     public function findById(string $id_habitacion): ?Habitacion
     {
         $aDatos = $this->datosById($id_habitacion);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Habitacion::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): string|false
     {
         $oDbl = $this->getoDbl();
         $sQuery = "SELECT gen_random_uuid()";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return false;
+        }
+        $col = $stmt->fetchColumn();
+        return is_string($col) ? $col : false;
     }
 }

@@ -5,13 +5,14 @@ namespace src\menus\domain;
 /* No vale el underscore en el nombre */
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\menus\domain\entity\GrupMenu;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoGrupMenus extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private GrupMenuRepositoryInterface $grupMenuRepository,
+    ) {
         $this->setTxtTitulo(_("grupmenus"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este grupmenu?"));
         $this->setTxtBuscar(_("buscar un grupmenú por descripción"));
@@ -23,10 +24,11 @@ class InfoGrupMenus extends DatosInfoRepo
         $this->setRepositoryInterface(GrupMenuRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<GrupMenu>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = ['_ordre' => 'orden'];
             $aOperador = [];
@@ -34,9 +36,7 @@ class InfoGrupMenus extends DatosInfoRepo
             $aWhere = ['descripcion' => $this->k_buscar];
             $aOperador = ['descripcion' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getGrupMenus($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->grupMenuRepository->getGrupMenus($aWhere, $aOperador);
     }
 }

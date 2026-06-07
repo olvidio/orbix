@@ -16,29 +16,8 @@ use src\actividadessacd\application\SacdReordenar;
  */
 final class SacdReordenarTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
-    public function test_sin_id_activ_devuelve_error(): void
-    {
-        $GLOBALS['container'] = $this->containerFromMap([]);
-
-        $out = SacdReordenar::execute([
+        public function test_sin_id_activ_devuelve_error(): void {
+        $out = (new \src\actividadessacd\application\SacdReordenar($this->createMock(\src\actividadcargos\domain\contracts\CargoRepositoryInterface::class), $this->createMock(\src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface::class)))->execute([
             'id_activ' => 0,
             'id_nom' => 111,
             'num_orden' => 'mas',
@@ -46,11 +25,8 @@ final class SacdReordenarTest extends TestCase
         $this->assertStringContainsString('faltan parametros', $out);
     }
 
-    public function test_direccion_invalida_devuelve_error(): void
-    {
-        $GLOBALS['container'] = $this->containerFromMap([]);
-
-        $out = SacdReordenar::execute([
+    public function test_direccion_invalida_devuelve_error(): void {
+        $out = (new \src\actividadessacd\application\SacdReordenar($this->createMock(\src\actividadcargos\domain\contracts\CargoRepositoryInterface::class), $this->createMock(\src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface::class)))->execute([
             'id_activ' => 500,
             'id_nom' => 111,
             'num_orden' => 'invertir',
@@ -58,8 +34,7 @@ final class SacdReordenarTest extends TestCase
         $this->assertStringContainsString('direccion de orden', $out);
     }
 
-    public function test_mas_intercambia_id_nom_con_cargo_anterior(): void
-    {
+    public function test_mas_intercambia_id_nom_con_cargo_anterior(): void {
         $cargo1 = new ActividadCargo();
         $cargo1->setId_cargo(2001);
         $cargo1->setId_nom(222);
@@ -78,12 +53,7 @@ final class SacdReordenarTest extends TestCase
         $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->expects($this->exactly(2))->method('Guardar')->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-        ]);
-
-        $out = SacdReordenar::execute([
+        $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
             'id_activ' => 500,
             'id_nom' => 111,
             'num_orden' => 'mas',
@@ -93,8 +63,7 @@ final class SacdReordenarTest extends TestCase
         $this->assertSame(222, $cargo2->getId_nom());
     }
 
-    public function test_menos_intercambia_id_nom_con_cargo_posterior(): void
-    {
+    public function test_menos_intercambia_id_nom_con_cargo_posterior(): void {
         $cargo1 = new ActividadCargo();
         $cargo1->setId_cargo(2001);
         $cargo1->setId_nom(111);
@@ -110,12 +79,7 @@ final class SacdReordenarTest extends TestCase
         $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->expects($this->exactly(2))->method('Guardar')->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-        ]);
-
-        $out = SacdReordenar::execute([
+        $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
             'id_activ' => 500,
             'id_nom' => 111,
             'num_orden' => 'menos',
@@ -125,8 +89,7 @@ final class SacdReordenarTest extends TestCase
         $this->assertSame(111, $cargo2->getId_nom());
     }
 
-    public function test_mas_en_primera_posicion_no_hace_nada(): void
-    {
+    public function test_mas_en_primera_posicion_no_hace_nada(): void {
         $cargo1 = new ActividadCargo();
         $cargo1->setId_cargo(2001);
         $cargo1->setId_nom(111);
@@ -142,12 +105,7 @@ final class SacdReordenarTest extends TestCase
         $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->expects($this->never())->method('Guardar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-        ]);
-
-        $out = SacdReordenar::execute([
+        $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
             'id_activ' => 500,
             'id_nom' => 111,
             'num_orden' => 'mas',
@@ -155,8 +113,7 @@ final class SacdReordenarTest extends TestCase
         $this->assertSame('', $out);
     }
 
-    public function test_menos_en_ultima_posicion_no_hace_nada(): void
-    {
+    public function test_menos_en_ultima_posicion_no_hace_nada(): void {
         $cargo1 = new ActividadCargo();
         $cargo1->setId_cargo(2001);
         $cargo1->setId_nom(222);
@@ -172,12 +129,7 @@ final class SacdReordenarTest extends TestCase
         $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->expects($this->never())->method('Guardar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-        ]);
-
-        $out = SacdReordenar::execute([
+        $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
             'id_activ' => 500,
             'id_nom' => 111,
             'num_orden' => 'menos',
@@ -185,8 +137,7 @@ final class SacdReordenarTest extends TestCase
         $this->assertSame('', $out);
     }
 
-    public function test_id_nom_no_encontrado_no_hace_nada(): void
-    {
+    public function test_id_nom_no_encontrado_no_hace_nada(): void {
         $cargo1 = new ActividadCargo();
         $cargo1->setId_cargo(2001);
         $cargo1->setId_nom(222);
@@ -198,12 +149,7 @@ final class SacdReordenarTest extends TestCase
         $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1]);
         $activCargoRepo->expects($this->never())->method('Guardar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-        ]);
-
-        $out = SacdReordenar::execute([
+        $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
             'id_activ' => 500,
             'id_nom' => 999,
             'num_orden' => 'menos',
@@ -211,8 +157,7 @@ final class SacdReordenarTest extends TestCase
         $this->assertSame('', $out);
     }
 
-    public function test_vecino_con_id_nom_cero_no_se_intercambia(): void
-    {
+    public function test_vecino_con_id_nom_cero_no_se_intercambia(): void {
         $cargo1 = new ActividadCargo();
         $cargo1->setId_cargo(2001);
         $cargo1->setId_nom(0);
@@ -228,12 +173,7 @@ final class SacdReordenarTest extends TestCase
         $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->expects($this->never())->method('Guardar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-        ]);
-
-        $out = SacdReordenar::execute([
+        $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
             'id_activ' => 500,
             'id_nom' => 111,
             'num_orden' => 'mas',
@@ -241,8 +181,7 @@ final class SacdReordenarTest extends TestCase
         $this->assertSame('', $out);
     }
 
-    public function test_error_si_guardar_falla(): void
-    {
+    public function test_error_si_guardar_falla(): void {
         $cargo1 = new ActividadCargo();
         $cargo1->setId_cargo(2001);
         $cargo1->setId_nom(222);
@@ -258,12 +197,7 @@ final class SacdReordenarTest extends TestCase
         $activCargoRepo->method('getActividadCargos')->willReturn([$cargo1, $cargo2]);
         $activCargoRepo->method('Guardar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-        ]);
-
-        $out = SacdReordenar::execute([
+        $out = (new \src\actividadessacd\application\SacdReordenar($cargoRepo, $activCargoRepo))->execute([
             'id_activ' => 500,
             'id_nom' => 111,
             'num_orden' => 'mas',

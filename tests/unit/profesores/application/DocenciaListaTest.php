@@ -17,26 +17,18 @@ use src\notas\domain\value_objects\ActaNumero;
 
 final class DocenciaListaTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
     }
 
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -68,13 +60,8 @@ final class DocenciaListaTest extends TestCase
             7 => ['ap_nom' => 'López, Ana', 'dl' => 'dlx'],
         ]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            AsignaturaRepositoryInterface::class => $repoAsig,
-            ProfesorStgrService::class => $svc,
-            ProfesorDocenciaStgrRepositoryInterface::class => $repoDoc,
-        ]);
-
-        $out = DocenciaLista::getTablaData();
+        $useCase = new DocenciaLista($repoAsig, $svc, $repoDoc);
+        $out = $useCase->getTablaData();
 
         $this->assertSame('tabla_docencia', $out['id_tabla']);
         $this->assertCount(1, $out['a_valores']);
@@ -97,22 +84,4 @@ final class DocenciaListaTest extends TestCase
         };
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
-    }
 }

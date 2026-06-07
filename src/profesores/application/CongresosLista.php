@@ -7,9 +7,18 @@ use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
 use src\profesores\domain\services\ProfesorStgrService;
 use src\profesores\domain\value_objects\CongresoTipo;
 
-class CongresosLista
+final class CongresosLista
 {
-    public static function getTablaData(): array
+    public function __construct(
+        private ProfesorStgrService $profesorStgrService,
+        private ProfesorCongresoRepositoryInterface $profesorCongresoRepository,
+    ) {
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getTablaData(): array
     {
         $a_cabeceras = [];
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
@@ -22,17 +31,15 @@ class CongresosLista
         $a_cabeceras[6] = _("fin");
         $a_cabeceras[7] = _("organiza");
 
-        $ProfesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
-        $a_nomProfesor = $ProfesorStgrService->getArrayProfesoresConDl();
+        $a_nomProfesor = $this->profesorStgrService->getArrayProfesoresConDl();
 
-        $ProfesorCongresoRepository = $GLOBALS['container']->get(ProfesorCongresoRepositoryInterface::class);
         $a_tiposCong = CongresoTipo::getArrayTiposCongreso();
         $a_valores = [];
         $p = 0;
         foreach ($a_nomProfesor as $id_nom => $aClave) {
             $ap_nom = $aClave['ap_nom'];
             $dl = $aClave['dl'];
-            $cProfesorCongreso = $ProfesorCongresoRepository->getProfesorCongresos(['id_nom' => $id_nom]);
+            $cProfesorCongreso = $this->profesorCongresoRepository->getProfesorCongresos(['id_nom' => $id_nom]);
             foreach ($cProfesorCongreso as $oProfesorCongreso) {
                 $p++;
                 $tipo = empty($a_tiposCong[$oProfesorCongreso->getTipo()]) ? '' : $a_tiposCong[$oProfesorCongreso->getTipo()];

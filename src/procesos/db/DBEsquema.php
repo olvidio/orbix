@@ -15,9 +15,9 @@ class DBEsquema extends DBAbstract
 
     private string $dir_base = ServerConf::DIR . "/src/procesos/db";
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
-        if (empty($esquema_sfsv)) {
+        if ($esquema_sfsv === null || $esquema_sfsv === '') {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
         }
         $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
@@ -68,10 +68,15 @@ class DBEsquema extends DBAbstract
 
     }
 
-    protected function infoTable($tabla): array
+    /**
+     * @return array{tabla: string, nom_tabla: string, campo_seq: string, id_seq: string, filename: string}
+     */
+    protected function infoTable(string $tabla): array
     {
-        $datosTabla = [];
-        $datosTabla['tabla'] = $tabla;
+        $datosTabla = ['tabla' => $tabla, 'nom_tabla' => '', 'campo_seq' => '', 'id_seq' => ''];
+        $nom_tabla = '';
+        $campo_seq = '';
+        $id_seq = '';
         switch ($tabla) {
             case "a_tipos_actividad":
                 $nom_tabla = $this->getNomTabla($tabla);
@@ -109,6 +114,8 @@ class DBEsquema extends DBAbstract
                 $campo_seq = 'id_item';
                 $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
                 break;
+            default:
+                throw new \InvalidArgumentException('Tabla desconocida: ' . $tabla);
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
         $datosTabla['campo_seq'] = $campo_seq;
@@ -123,18 +130,17 @@ class DBEsquema extends DBAbstract
      * Tiene un foreing key con el id_activ. Entiendo que no hay problemas con sf, ya
      * los procesoso podrian ser distintos, pero no interfieren los ids.
      */
-    public function create_a_actividad_proceso($seccion): void
+    public function create_a_actividad_proceso(string $seccion): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
 
         $tabla_padre = "a_actividad_proceso";
-        if ($seccion === 'sv') {
-            $tabla = "a_actividad_proceso_sv";
-        }
-        if ($seccion === 'sf') {
-            $tabla = "a_actividad_proceso_sf";
-        }
+        $tabla = match ($seccion) {
+            'sv' => 'a_actividad_proceso_sv',
+            'sf' => 'a_actividad_proceso_sf',
+            default => throw new \InvalidArgumentException('Invalid seccion: ' . $seccion),
+        };
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -189,17 +195,16 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_a_actividad_proceso($seccion): void
+    public function eliminar_a_actividad_proceso(string $seccion): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
 
-        if ($seccion === 'sv') {
-            $tabla = "a_actividad_proceso_sv";
-        }
-        if ($seccion === 'sf') {
-            $tabla = "a_actividad_proceso_sf";
-        }
+        $tabla = match ($seccion) {
+            'sv' => 'a_actividad_proceso_sv',
+            'sf' => 'a_actividad_proceso_sf',
+            default => throw new \InvalidArgumentException('Invalid seccion: ' . $seccion),
+        };
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];

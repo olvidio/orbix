@@ -53,7 +53,7 @@ final class DossierTipoFileSuffixResolver
             return null;
         }
         $dbVal = $tipo->getDbVo()?->value();
-        $db = $dbVal !== null && $dbVal !== '' ? (int) $dbVal : null;
+        $db = $dbVal;
         $baseName = $this->selectBaseClassName($suffix);
 
         if ($db === 5) {
@@ -120,7 +120,7 @@ final class DossierTipoFileSuffixResolver
     {
         $app = $tipo->getApp();
         $dbVal = $tipo->getDbVo()?->value();
-        $db = $dbVal !== null && $dbVal !== '' ? (int) $dbVal : null;
+        $db = $dbVal;
         $baseName = $this->selectBaseClassName($suffix);
 
         if ($db === 5) {

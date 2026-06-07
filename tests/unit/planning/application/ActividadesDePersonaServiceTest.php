@@ -19,13 +19,11 @@ use src\ubis\domain\entity\CentroDl;
  */
 final class ActividadesDePersonaServiceTest extends TestCase
 {
-    private mixed $previousContainer;
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         // Nos aseguramos de que `ConfigGlobal::is_app_installed('actividadcargos')`
         // devuelva false => el servicio no intentara invocar a CargoOAsistenteInterface.
@@ -34,23 +32,13 @@ final class ActividadesDePersonaServiceTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         $_SESSION = $this->previousSession;
         parent::tearDown();
     }
 
     public function test_cpersonas_no_array_con_agrupacion_devuelve_vacio(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadRepositoryInterface::class => $this->createStub(ActividadRepositoryInterface::class),
-            CentroDlRepositoryInterface::class => $this->createStub(CentroDlRepositoryInterface::class),
-        ]);
-
-        $out = ActividadesDePersonaService::actividadesPorPersona(
+        $out = $this->createService()->actividadesPorPersona(
             false,
             '2030-03-31',
             '2030-01-01',
@@ -64,12 +52,7 @@ final class ActividadesDePersonaServiceTest extends TestCase
 
     public function test_cpersonas_no_array_sin_agrupacion_devuelve_vacio(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadRepositoryInterface::class => $this->createStub(ActividadRepositoryInterface::class),
-            CentroDlRepositoryInterface::class => $this->createStub(CentroDlRepositoryInterface::class),
-        ]);
-
-        $out = ActividadesDePersonaService::actividadesPorPersona(
+        $out = $this->createService()->actividadesPorPersona(
             false,
             '2030-03-31',
             '2030-01-01',
@@ -83,12 +66,7 @@ final class ActividadesDePersonaServiceTest extends TestCase
 
     public function test_cpersonas_array_vacio_devuelve_vacio(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadRepositoryInterface::class => $this->createStub(ActividadRepositoryInterface::class),
-            CentroDlRepositoryInterface::class => $this->createStub(CentroDlRepositoryInterface::class),
-        ]);
-
-        $out = ActividadesDePersonaService::actividadesPorPersona(
+        $out = $this->createService()->actividadesPorPersona(
             [],
             '2030-03-31',
             '2030-01-01',
@@ -107,12 +85,7 @@ final class ActividadesDePersonaServiceTest extends TestCase
         $oPersona->method('getPrefApellidosNombre')->willReturn('Fulanito de Tal');
         $oPersona->method('getId_ctr')->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadRepositoryInterface::class => $this->createStub(ActividadRepositoryInterface::class),
-            CentroDlRepositoryInterface::class => $this->createStub(CentroDlRepositoryInterface::class),
-        ]);
-
-        $out = ActividadesDePersonaService::actividadesPorPersona(
+        $out = $this->createService()->actividadesPorPersona(
             [$oPersona],
             '2030-03-31',
             '2030-01-01',
@@ -143,12 +116,7 @@ final class ActividadesDePersonaServiceTest extends TestCase
         $centroRepo = $this->createStub(CentroDlRepositoryInterface::class);
         $centroRepo->method('findById')->with(777)->willReturn($oCentroDl);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadRepositoryInterface::class => $this->createStub(ActividadRepositoryInterface::class),
-            CentroDlRepositoryInterface::class => $centroRepo,
-        ]);
-
-        $out = ActividadesDePersonaService::actividadesPorPersona(
+        $out = $this->createService(centroDl: $centroRepo)->actividadesPorPersona(
             [$oPersona],
             '2030-03-31',
             '2030-01-01',
@@ -173,12 +141,7 @@ final class ActividadesDePersonaServiceTest extends TestCase
         $oPersona2->method('getId_nom')->willReturn(2);
         $oPersona2->method('getPrefApellidosNombre')->willReturn('Dos Dos');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadRepositoryInterface::class => $this->createStub(ActividadRepositoryInterface::class),
-            CentroDlRepositoryInterface::class => $this->createStub(CentroDlRepositoryInterface::class),
-        ]);
-
-        $out = ActividadesDePersonaService::actividadesPorPersona(
+        $out = $this->createService()->actividadesPorPersona(
             [$oPersona1, $oPersona2],
             '2030-03-31',
             '2030-01-01',
@@ -211,12 +174,7 @@ final class ActividadesDePersonaServiceTest extends TestCase
         $centroRepo = $this->createMock(CentroDlRepositoryInterface::class);
         $centroRepo->method('findById')->with(888)->willReturn($oCentroDl);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadRepositoryInterface::class => $this->createStub(ActividadRepositoryInterface::class),
-            CentroDlRepositoryInterface::class => $centroRepo,
-        ]);
-
-        $out = ActividadesDePersonaService::actividadesPorPersona(
+        $out = $this->createService(centroDl: $centroRepo)->actividadesPorPersona(
             [$oPersona1, $oPersona2],
             '2030-03-31',
             '2030-01-01',
@@ -247,13 +205,7 @@ final class ActividadesDePersonaServiceTest extends TestCase
             ->method('getCargoOAsistente')
             ->willReturn([]); // sin cargos/asistentes -> sin actividades
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadRepositoryInterface::class => $this->createStub(ActividadRepositoryInterface::class),
-            CentroDlRepositoryInterface::class => $this->createStub(CentroDlRepositoryInterface::class),
-            CargoOAsistenteInterface::class => $cargoOAsistente,
-        ]);
-
-        $out = ActividadesDePersonaService::actividadesPorPersona(
+        $out = $this->createService(cargoOAsistente: $cargoOAsistente)->actividadesPorPersona(
             [$oPersona],
             '2030-03-31',
             '2030-01-01',
@@ -272,21 +224,15 @@ final class ActividadesDePersonaServiceTest extends TestCase
         return DateTimeLocal::createFromFormat('Y/m/d', $iso);
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+    private function createService(
+        ?ActividadRepositoryInterface $actividadRepository = null,
+        ?CentroDlRepositoryInterface $centroDl = null,
+        ?CargoOAsistenteInterface $cargoOAsistente = null,
+    ): ActividadesDePersonaService {
+        return new ActividadesDePersonaService(
+            $actividadRepository ?? $this->createStub(ActividadRepositoryInterface::class),
+            $centroDl ?? $this->createStub(CentroDlRepositoryInterface::class),
+            $cargoOAsistente ?? $this->createStub(CargoOAsistenteInterface::class),
+        );
     }
 }

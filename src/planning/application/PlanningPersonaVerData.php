@@ -2,22 +2,29 @@
 
 namespace src\planning\application;
 
-use src\planning\application\ActividadesDePersonaService;
 use src\shared\domain\value_objects\DateTimeLocal;
+
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Actividades por persona (vista plana) para `planning_persona_ver`.
  */
 final class PlanningPersonaVerData
 {
+    public function __construct(
+        private PlanningPersonaRepositoryPicker $personaRepositoryPicker,
+        private ActividadesDePersonaService $actividadesDePersonaService,
+    ) {
+    }
+
     /**
-     * @param array<string, mixed> $post
+     * @param array<string, mixed> $input
      * @param list<string> $aid_nom
-     * @return array{a_actividades: array}
+     * @return array{a_actividades: array<int|string, mixed>}
      */
-    public static function execute(array $post, array $aid_nom, DateTimeLocal $oIniPlanning, string $inicio_local, string $fin_iso, string $inicio_iso): array
+    public function execute(array $input, array $aid_nom, DateTimeLocal $oIniPlanning, string $inicio_local, string $fin_iso, string $inicio_iso): array
     {
-        $Qobj_pau = (string)($post['obj_pau'] ?? '');
+        $Qobj_pau = input_string($input, 'obj_pau');
         $aWhere = [
             'id_nom' => implode(',', $aid_nom),
         ];
@@ -25,11 +32,10 @@ final class PlanningPersonaVerData
             'id_nom' => 'OR',
         ];
 
-        $picker = new PlanningPersonaRepositoryPicker();
-        $PersonaRepository = $picker->getSafe($Qobj_pau);
+        $PersonaRepository = $this->personaRepositoryPicker->getSafe($Qobj_pau);
         $cPersonas = $PersonaRepository->getPersonas($aWhere, $aOperador);
 
-        $a_actividades = ActividadesDePersonaService::actividadesPorPersona(
+        $a_actividades = $this->actividadesDePersonaService->actividadesPorPersona(
             $cPersonas,
             $fin_iso,
             $inicio_iso,

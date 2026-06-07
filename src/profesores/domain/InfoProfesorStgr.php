@@ -11,8 +11,9 @@ use src\shared\domain\DatosInfoRepo;
 class InfoProfesorStgr extends DatosInfoRepo
 {
 
-    public function __construct()
-    {
+    public function __construct(
+        private ProfesorStgrRepositoryInterface $profesorStgrRepository,
+    ) {
         $this->setTxtTitulo(_("dossier de nombramientos del studium generale"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este nombramiento?"));
         $this->setTxtBuscar(_("todos"));
@@ -25,13 +26,18 @@ class InfoProfesorStgr extends DatosInfoRepo
         $this->setRepositoryInterface(ProfesorStgrRepositoryInterface::class);
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return 1018;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
+        $aWhere = [];
+        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->id_pau)) {
@@ -44,9 +50,6 @@ class InfoProfesorStgr extends DatosInfoRepo
             //$aWhere['congreso'] = $this->k_buscar;
             //$aOperador['congreso'] ='sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getProfesoresStgr($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->profesorStgrRepository->getProfesoresStgr($aWhere, $aOperador);
     }
 }

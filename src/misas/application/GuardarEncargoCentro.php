@@ -9,6 +9,11 @@ use src\misas\domain\value_objects\EncargoCtrId;
 
 class GuardarEncargoCentro
 {
+
+    public function __construct(
+        private readonly EncargoCtrRepositoryInterface $encargoCtrRepository,
+    ) {
+    }
     /**
      * Inserta o actualiza un `EncargoCtr` (relacion encargo ↔ centro).
      *
@@ -18,16 +23,15 @@ class GuardarEncargoCentro
      * Devuelve texto vacio si todo fue bien, o el mensaje de error del
      * repositorio en caso contrario.
      */
-    public static function execute(string $id_item, int $id_enc, int $id_ctr): string
+    public function execute(string $id_item, int $id_enc, int $id_ctr): string
     {
-        $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface::class);
 
         if (empty($id_item)) {
             $Uuid = new EncargoCtrId(RamseyUuid::uuid4()->toString());
             $EncargoCtr = new EncargoCtr();
             $EncargoCtr->setUuidItemVo($Uuid);
         } else {
-            $EncargoCtr = $EncargoCtrRepository->findById(new EncargoCtrId($id_item));
+            $EncargoCtr = $this->encargoCtrRepository->findById(new EncargoCtrId($id_item));
             if ($EncargoCtr === null) {
                 return sprintf(_('No se encuentra el encargo-centro %s'), $id_item);
             }
@@ -36,8 +40,8 @@ class GuardarEncargoCentro
         $EncargoCtr->setId_ubi($id_ctr);
         $EncargoCtr->setId_enc($id_enc);
 
-        if ($EncargoCtrRepository->Guardar($EncargoCtr) === false) {
-            return $EncargoCtrRepository->getErrorTxt();
+        if ($this->encargoCtrRepository->Guardar($EncargoCtr) === false) {
+            return $this->encargoCtrRepository->getErrorTxt();
         }
         return '';
     }

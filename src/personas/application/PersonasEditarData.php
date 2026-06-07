@@ -2,6 +2,9 @@
 
 namespace src\personas\application;
 
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
@@ -32,18 +35,27 @@ use src\usuarios\domain\contracts\LocalRepositoryInterface;
  */
 final class PersonasEditarData
 {
+    public function __construct(
+        private PersonaRepositoryResolver $personaRepositoryResolver,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroRepositoryInterface $centroRepository,
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private SituacionRepositoryInterface $situacionRepository,
+        private LocalRepositoryInterface $localRepository,
+    ) {
+    }
+
     /**
      * @param array<string,mixed> $input habitualmente `$_POST`
      * @return array<string,mixed>
      */
-    public static function build(array $input): array
+    public function execute(array $input): array
     {
-        $Qnuevo = (int)($input['nuevo'] ?? 0);
-        $Qobj_pau = (string)($input['obj_pau'] ?? '');
+        $Qnuevo = input_int($input, 'nuevo');
+        $Qobj_pau = input_string($input, 'obj_pau');
 
-        $resolver = new PersonaRepositoryResolver();
         try {
-            $repoPersona = $resolver->repositorio($Qobj_pau);
+            $repoPersona = $this->personaRepositoryResolver->repositorio($Qobj_pau);
         } catch (\InvalidArgumentException) {
             return ['error' => _("No existe la clase de la persona")];
         }
@@ -73,7 +85,7 @@ final class PersonasEditarData
             'titulo' => '',
             'nom_ctr' => '',
             'id_ctr' => '',
-            'id_tabla' => (string)($input['tabla'] ?? ''),
+            'id_tabla' => input_string($input, 'tabla'),
             'dl' => '',
             'idioma_preferido' => '',
             'situacion' => '',
@@ -82,7 +94,7 @@ final class PersonasEditarData
         ];
 
         if (!empty($Qnuevo)) {
-            $Qapellido1 = (string)($input['apellido1'] ?? '');
+            $Qapellido1 = input_string($input, 'apellido1');
             $out['apellido1'] = urldecode($Qapellido1);
             $out['f_situacion'] = (new DateTimeLocal())->getFromLocal();
             $out['situacion'] = 'A';
@@ -108,14 +120,14 @@ final class PersonasEditarData
             $out['id_tabla'] = (string)$oPersona->getId_tabla();
             $out['dl'] = (string)($oPersona->getDl() ?? '');
             $out['nivel_stgr'] = (string)($oPersona->getNivel_stgr() ?? '');
-            $out['id_ctr'] = method_exists($oPersona, 'getId_ctr') ? (string)$oPersona->getId_ctr() : '';
-            $out['situacion'] = (string)($oPersona->getSituacion() ?? '');
+            $out['id_ctr'] = $oPersona instanceof \src\personas\domain\entity\PersonaDl ? (string)($oPersona->getId_ctr() ?? '') : '';
+            $out['situacion'] = $oPersona->getSituacion();
             $out['idioma_preferido'] = (string)($oPersona->getIdioma_preferido() ?? '');
             $out['trato'] = (string)($oPersona->getTrato() ?? '');
             $out['nom'] = (string)($oPersona->getNom() ?? '');
             $out['apel_fam'] = (string)($oPersona->getApel_fam() ?? '');
             $out['nx1'] = (string)($oPersona->getNx1() ?? '');
-            $out['apellido1'] = (string)($oPersona->getApellido1() ?? '');
+            $out['apellido1'] = $oPersona->getApellido1();
             $out['nx2'] = (string)($oPersona->getNx2() ?? '');
             $out['apellido2'] = (string)($oPersona->getApellido2() ?? '');
             $out['lugar_nacimiento'] = (string)($oPersona->getLugar_nacimiento() ?? '');
@@ -136,11 +148,10 @@ final class PersonasEditarData
                 : '';
 
             if (!empty($out['id_ctr'])) {
-                $centroRepoIface = ConfigGlobal::mi_ambito() === 'rstgr'
-                    ? CentroRepositoryInterface::class
-                    : CentroDlRepositoryInterface::class;
-                $CentroDlRepository = $GLOBALS['container']->get($centroRepoIface);
-                $oCentroDl = $CentroDlRepository->findById($out['id_ctr']);
+                $centroRepository = ConfigGlobal::mi_ambito() === 'rstgr'
+                    ? $this->centroRepository
+                    : $this->centroDlRepository;
+                $oCentroDl = $centroRepository->findById((int)$out['id_ctr']);
                 $out['nom_ctr'] = (string)($oCentroDl?->getNombre_ubi() ?? '');
             }
 
@@ -162,14 +173,12 @@ final class PersonasEditarData
         }
 
         // Opciones: delegaciones.
-        $repoDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        $repoDl = $this->delegacionRepository;
         $cDeleg = $repoDl->getDelegaciones(['active' => true, '_ordre' => 'dl']);
         $a_dl_todas = [];
-        if (is_iterable($cDeleg)) {
-            foreach ($cDeleg as $oDeleg) {
-                $dl_sigla = (string)$oDeleg->getDlVo()->value();
-                $a_dl_todas[$dl_sigla] = $dl_sigla;
-            }
+        foreach ($cDeleg as $oDeleg) {
+            $dl_sigla = (string)$oDeleg->getDlVo()->value();
+            $a_dl_todas[$dl_sigla] = $dl_sigla;
         }
         if ($Qnuevo === 1 && $Qobj_pau === 'PersonaEx') {
             $oDBPropiedades = new DBPropiedades();
@@ -182,19 +191,16 @@ final class PersonasEditarData
 
         // Opciones: centros (solo si no se conoce nom_ctr todavia).
         if (empty($out['nom_ctr'])) {
-            $GesCentroDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-            $out['opciones_centros'] = $GesCentroDl->getArrayCentros();
+            $out['opciones_centros'] = $this->centroDlRepository->getArrayCentros();
         } else {
             $out['opciones_centros'] = [];
         }
 
         // Opciones: situacion.
-        $SituacionRepository = $GLOBALS['container']->get(SituacionRepositoryInterface::class);
-        $out['opciones_situacion'] = $SituacionRepository->getArraySituaciones();
+        $out['opciones_situacion'] = $this->situacionRepository->getArraySituaciones();
 
         // Opciones: idioma preferido.
-        $Localrepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
-        $out['opciones_lengua'] = $Localrepository->getArrayLocales();
+        $out['opciones_lengua'] = $this->localRepository->getArrayLocales();
 
         // Opciones: nivel_stgr.
         $out['opciones_stgr'] = NivelStgrId::getArrayNivelStgr();
@@ -214,7 +220,7 @@ final class PersonasEditarData
         if (!empty($a_sel)) {
             return (int)strtok((string)$a_sel[0], '#');
         }
-        return (int)($input['id_nom'] ?? 0);
+        return input_int($input, 'id_nom');
     }
 
     /**
@@ -224,7 +230,7 @@ final class PersonasEditarData
     private static function normalizeSel(mixed $sel): array
     {
         if (is_array($sel)) {
-            return array_values(array_filter(array_map('strval', $sel), static fn(string $v): bool => $v !== ''));
+            return array_values(array_filter(array_map(static fn(mixed $v): string => is_scalar($v) ? (string)$v : '', $sel), static fn(string $v): bool => $v !== ''));
         }
         if (is_string($sel) && $sel !== '') {
             return [$sel];

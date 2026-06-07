@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\PasswordHasher;
@@ -10,9 +11,13 @@ $error_txt = '';
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qpassword = (string)filter_input(INPUT_POST, 'password');
 
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);
-$usuario = $oUsuario->getUsuario();
+if ($oUsuario === null) {
+    ContestarJson::enviar(_('Usuario no encontrado'), 'none');
+    return;
+}
+$usuario = $oUsuario->getUsuarioVo();
 
 if (!empty($Qpassword)) {
     $oCrypt = new PasswordHasher();
@@ -23,7 +28,7 @@ if (!empty($Qpassword)) {
         exit();
     } else {
         $my_passwd = $oCrypt->encode($Qpassword);
-        $oUsuario->setPassword(new Password($my_passwd));
+        $oUsuario->setPasswordVo(new Password($my_passwd));
         $oUsuario->setCambio_password(false);
     }
 

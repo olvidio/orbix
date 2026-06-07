@@ -4,27 +4,31 @@ namespace src\procesos\application;
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\is_true;
 
 /**
- * Caso de uso: devuelve las opciones disponibles para el desplegable
- * `fase_ref[]` de la pantalla usuario_perm_activ, filtradas por el tipo
- * de actividad y la delegacion.
+ * Caso de uso: opciones del desplegable fase_ref[] en usuario_perm_activ.
  */
 class UsuarioPermActivFases
 {
+    public function __construct(
+        private readonly TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        private readonly ActividadFaseRepositoryInterface $actividadFaseRepository,
+    ) {
+    }
+
     /**
-     * @return array{opciones:array<string,string>}
+     * @param array<string, mixed> $input
+     * @return array{opciones: array<int|string, string>}
      */
-    public static function execute(array $input): array
+    public function execute(array $input): array
     {
-        $Qid_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
-        $Qdl_propia = (string)($input['dl_propia'] ?? '');
+        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
+        $Qdl_propia = input_string($input, 'dl_propia');
 
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-        $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $Qdl_propia);
-
-        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-        $aOpciones = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
+        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, is_true($Qdl_propia));
+        $aOpciones = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
 
         return ['opciones' => $aOpciones];
     }

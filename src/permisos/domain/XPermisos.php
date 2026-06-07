@@ -14,12 +14,8 @@ abstract class XPermisos
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * permisions. array amb els diferents tipos de permisos i el seu numero.
-     *
-     * @var array
-     */
-    protected $permissions;
+    /** @var array<string, int> */
+    protected array $permissions = [];
     /**
      * permis amb el que es contruyeix la clase. La resta es compara amb aquest.
      *
@@ -29,17 +25,23 @@ abstract class XPermisos
 
     /* METODES ----------------------------------------------------------------- */
 
-    function setAccion(int $iaccion)
+    public function setAccion(int $iaccion): void
     {
         $this->iaccion = $iaccion;
     }
 
-    function getPermissions()
+    /**
+     * @return array<string, int>
+     */
+    public function getPermissions(): array
     {
         return $this->permissions;
     }
 
-    function setPermissions($permissions)
+    /**
+     * @param array<string, int> $permissions
+     */
+    public function setPermissions(array $permissions): void
     {
         $this->permissions = $permissions;
     }
@@ -48,14 +50,10 @@ abstract class XPermisos
      * diu si té el permís $p (integer).
      *
      *  Ara per els menus va bé.
-     * @param string $p nom del permís: ocupado|ver|modificar|crear|borrar
      * @return boolean
      */
-    public function have_perm_bit($pagebits)
+    public function have_perm_bit(int $pagebits): bool
     {
-        //$pageperm = preg_split('/,/', $p);
-        //list ($ok0, $pagebits) = $this->permsum($pageperm);
-        $ok0 = true;
         $userbits = $this->iaccion;
         /*
                 echo "user: $userbits<br>";
@@ -74,11 +72,7 @@ abstract class XPermisos
         echo "OR = page : ".var_dump((($userbits | $pagebits) === $pagebits)) ."<br>";
         echo "OR : ".var_dump((($userbits | $pagebits) === $userbits)) ."<br>";
         */
-        if (!($has_one && $ok0)) {
-            return false;
-        }
-
-        return true;
+        return $has_one;
     }
 
     /**
@@ -88,10 +82,10 @@ abstract class XPermisos
      * @param string $p nom del permís: ocupado|ver|modificar|crear|borrar
      * @return boolean
      */
-    public function have_perm_activ(string $p)
+    public function have_perm_activ(string $p): bool
     {
-        $pageperm = preg_split('/,/', $p);
-        list ($ok0, $pagebits) = $this->permsum($pageperm);
+        $pageperm = preg_split('/,/', $p) ?: [];
+        [$ok0, $pagebits] = $this->permsum($pageperm);
         $userbits = $this->iaccion;
         $has_all = (($userbits & $pagebits) === $pagebits);
         if (!($has_all && $ok0)) {
@@ -107,10 +101,10 @@ abstract class XPermisos
      * @param string $p el nom de la oficina
      * @return boolean
      */
-    public function have_perm_oficina(string $p)
+    public function have_perm_oficina(string $p): bool
     {
-        $pageperm = preg_split('/,/', $p);
-        list ($ok0, $pagebits) = $this->permsum($pageperm);
+        $pageperm = preg_split('/,/', $p) ?: [];
+        [$ok0, $pagebits] = $this->permsum($pageperm);
         $userbits = $this->iaccion;
 
         $has_one = (($userbits & $pagebits) != 0);
@@ -128,10 +122,10 @@ abstract class XPermisos
      * @param string $p nom del permís: ocupado|ver|modificar|crear|borrar
      * @return boolean
      */
-    public function have_perm_action(string $p)
+    public function have_perm_action(string $p): bool
     {
-        $pageperm = preg_split('/,/', $p);
-        list ($ok0, $pagebits) = $this->permsum($pageperm);
+        $pageperm = preg_split('/,/', $p) ?: [];
+        [$ok0, $pagebits] = $this->permsum($pageperm);
         $userbits = $this->iaccion;
 
         $has_all = (($userbits & $pagebits) === $pagebits);
@@ -149,11 +143,11 @@ abstract class XPermisos
      * @param string $p nom del permís: ocupado|ver|modificar|crear|borrar
      * @return boolean
      */
-    public function only_perm(string $p)
+    public function only_perm(string $p): bool
     {
-        $pageperm = preg_split('/,/', $p);
+        $pageperm = preg_split('/,/', $p) ?: [];
 
-        list ($ok0, $pagebits) = $this->permsum($pageperm);
+        [$ok0, $pagebits] = $this->permsum($pageperm);
         $userbits = $this->iaccion;
 
         if ($userbits === $pagebits) {
@@ -169,20 +163,19 @@ abstract class XPermisos
    *
    *
    */
-    public function permxor($p)
+    /**
+     * @param list<int> $p
+     * @return array{0: bool, 1: int}
+     */
+    public function permxor(array $p): array
     {
-        if (!is_array($p)) {
-            return array(false, 0);
-        }
-        //$perms = $this->permissions;
         $r = 0;
-        reset($p);
         foreach ($p as $key => $val) {
             echo "val: $val :: $key<br>";
             $r ^= $val;
         }
 
-        return array(true, $r);
+        return [true, $r];
     }
 
     /*
@@ -190,17 +183,18 @@ abstract class XPermisos
    *
    *
    */
-    public function permsum_bit($p)
+    /**
+     * @param list<int> $p
+     * @return array{0: bool, 1: int}
+     */
+    public function permsum_bit(array $p): array
     {
-        if (!is_array($p)) {
-            return array(false, 0);
-        }
         $r = 0;
-        foreach ($p as $key => $val) {
+        foreach ($p as $val) {
             $r |= $val;
         }
 
-        return array(true, $r);
+        return [true, $r];
     }
 
     /*
@@ -208,42 +202,42 @@ abstract class XPermisos
    *
    *
    */
-    public function permsum($p)
+    /**
+     * @param list<string> $p
+     * @return array{0: bool, 1: int}
+     */
+    public function permsum(array $p): array
     {
-        if (!is_array($p)) {
-            return array(false, 0);
-        }
         $perms = $this->permissions;
         $r = 0;
-        reset($p);
-        foreach ($p as $key => $val) {
+        foreach ($p as $val) {
             if (!isset($perms[$val])) {
-                //return array(false, 0);
-                continue; // si hi ha un permis que no és dels predefinits m'ho salto.
+                continue;
             }
             $r |= $perms[$val];
         }
 
-        return array(true, $r);
+        return [true, $r];
     }
 
     ## Look for a match within an list of strints
 
-    function perm_islisted($perms, $look_for)
+    public function perm_islisted(string $perms, string $look_for): bool
     {
-        $permlist = explode(",", $perms);
-        foreach ($permlist as $a => $b) {
+        $permlist = explode(',', $perms);
+        foreach ($permlist as $b) {
             if ($look_for === $b) {
                 return true;
             }
         }
+
         return false;
     }
 
     ## Return a complete <select> tag for permission
     ## selection.
 
-    function perm_sel($name, $current = "", $class = "")
+    public function perm_sel(string $name, string $current = '', string $class = ''): string
     {
         reset($this->permissions);
         $ret = sprintf("<select multiple name=\"%s[]\"%s>\n",
@@ -264,7 +258,7 @@ abstract class XPermisos
      * dibuja una lista de radios
      *
      */
-    public function cuadros_radio($nomcamp, $bin)
+    public function cuadros_radio(string $nomcamp, int $bin): string
     {
         $camp = $nomcamp . "[]";
         //si $bin es nulo, le pongo todo 0
@@ -288,7 +282,10 @@ abstract class XPermisos
      * Con el nombre exacto. No si contiene.
      *
      */
-    public function cuadros_check_menu($nomcamp, $a_perm)
+    /**
+     * @param list<int> $a_perm
+     */
+    public function cuadros_check_menu(string $nomcamp, array $a_perm): string
     {
         $camp = $nomcamp . "[]";
         $txt = "";
@@ -308,7 +305,7 @@ abstract class XPermisos
      * dibuja una lista de check solo lectura
      *
      */
-    public function cuadros_check_read($bin)
+    public function cuadros_check_read(int $bin): string
     {
         //si $bin es nulo, le pongo todo 0
         if (empty($bin)) {
@@ -330,7 +327,7 @@ abstract class XPermisos
      * dibuja una lista de checkbox
      *
      */
-    public function cuadros_check($nomcamp, $bin)
+    public function cuadros_check(string $nomcamp, int $bin): string
     {
         $camp = $nomcamp . "[]";
         //si $bin es nulo, le pongo todo 0
@@ -364,7 +361,7 @@ abstract class XPermisos
         return $txt;
     }
 
-    public function lista_txt2($bin)
+    public function lista_txt2(int $bin): string
     {
         //si $bin es nulo, le pongo todo 0
         if (empty($bin)) {
@@ -383,7 +380,7 @@ abstract class XPermisos
         return $txt;
     }
 
-    public function lista_txt($bin)
+    public function lista_txt(int $bin): string
     {
         //si $bin es nulo, le pongo todo 0
         if (empty($bin)) {
@@ -402,7 +399,7 @@ abstract class XPermisos
         return $txt;
     }
 
-    public function lista_tiene_txt($bin)
+    public function lista_tiene_txt(int $bin): string
     {
         //si $bin es nulo, le pongo todo 0
         if (empty($bin)) {
@@ -420,7 +417,10 @@ abstract class XPermisos
         return $txt;
     }
 
-    public function lista_array($bin = 0)
+    /**
+     * @return array<int, string>
+     */
+    public function lista_array(int $bin = 0): array
     {
         //si $bin es nulo, le pongo todo 0
         if (empty($bin)) {

@@ -4,13 +4,12 @@ namespace Tests\integration\procesos\application;
 
 use src\procesos\application\ProcesosUpdate;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 use Tests\factories\procesos\TareaProcesoFactory;
 use Tests\myTest;
 
 /**
  * Tests de integración para ProcesosUpdate.
- *
- * Cubre la actualización de una TareaProceso existente (caminos principales).
  */
 class ProcesosUpdateTest extends myTest
 {
@@ -52,7 +51,7 @@ class ProcesosUpdateTest extends myTest
             'mensaje_requisito' => [],
         ];
 
-        $msg = (new ProcesosUpdate())->execute($input);
+        $msg = DependencyResolver::get(ProcesosUpdate::class)->execute($input);
         $this->assertSame('', $msg);
 
         $oTareaProceso = $this->repository->findById($this->id_item);
@@ -77,7 +76,7 @@ class ProcesosUpdateTest extends myTest
             'mensaje_requisito' => [0 => '', 1 => 'requisito'],
         ];
 
-        $msg = (new ProcesosUpdate())->execute($input);
+        $msg = DependencyResolver::get(ProcesosUpdate::class)->execute($input);
         $this->assertSame('', $msg);
 
         $oTareaProceso = $this->repository->findById($this->id_item);
@@ -104,7 +103,7 @@ class ProcesosUpdateTest extends myTest
             'mensaje_requisito' => [],
         ];
 
-        $msg = (new ProcesosUpdate())->execute($input);
+        $msg = DependencyResolver::get(ProcesosUpdate::class)->execute($input);
         $this->assertSame('', $msg);
 
         $oTareaProceso = $this->repository->findById($this->id_item);

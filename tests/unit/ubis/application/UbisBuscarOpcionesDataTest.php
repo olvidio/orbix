@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Tests\unit\ubis\application;
 
 use PHPUnit\Framework\TestCase;
+use src\ubis\application\services\RegionDropdown;
+use src\ubis\application\services\TipoCasaDropdown;
+use src\ubis\application\services\TipoCentroDropdown;
 use src\ubis\application\UbisBuscarOpcionesData;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\RegionRepositoryInterface;
@@ -16,24 +19,6 @@ use src\ubis\domain\value_objects\RegionNameText;
 
 final class UbisBuscarOpcionesDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_agruppa_dropdowns_y_paises(): void
     {
         $region = $this->createMock(Region::class);
@@ -52,37 +37,18 @@ final class UbisBuscarOpcionesDataTest extends TestCase
         $dirRepo = $this->createMock(DireccionCentroRepositoryInterface::class);
         $dirRepo->method('getArrayPaises')->willReturn(['ES' => 'España']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            RegionRepositoryInterface::class => $regionRepo,
-            TipoCentroRepositoryInterface::class => $tipoCtrRepo,
-            TipoCasaRepositoryInterface::class => $tipoCasaRepo,
-            DireccionCentroRepositoryInterface::class => $dirRepo,
-        ]);
+        $useCase = new UbisBuscarOpcionesData(
+            $dirRepo,
+            new RegionDropdown($regionRepo),
+            new TipoCentroDropdown($tipoCtrRepo),
+            new TipoCasaDropdown($tipoCasaRepo),
+        );
 
-        $out = UbisBuscarOpcionesData::execute();
+        $out = $useCase->execute();
 
         $this->assertSame(['cr' => 'Costa'], $out['opciones_region']);
         $this->assertSame(['Z' => 'Zonal'], $out['opciones_tipo_ctr']);
         $this->assertSame(['c' => 'Casa'], $out['opciones_tipo_casa']);
         $this->assertSame(['ES' => 'España'], $out['opciones_pais']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
     }
 }

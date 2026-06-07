@@ -2,21 +2,20 @@
 
 /**
  * Endpoint JSON: elimina una persona.
- *
- * Ruta: /src/personas/persona_eliminar
- *
- * Respuesta: `ContestarJson::enviar($error, 'ok')` -> `{success, mensaje, data}`
- *
- * Migrado desde la rama "eliminar" de `apps/personas/controller/personas_update.php`
- * (slice 2 de la migracion del modulo `personas`).
  */
 
 use src\personas\application\PersonaEliminar;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_nom = (int)filter_input(INPUT_POST, 'id_nom');
-$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
-$error_txt = PersonaEliminar::execute($Qid_nom, $Qobj_pau);
+$Qid_nom = input_int($_POST, 'id_nom');
+$Qobj_pau = input_string($_POST, 'obj_pau');
+
+/** @var PersonaEliminar $useCase */
+$useCase = DependencyResolver::get(PersonaEliminar::class);
+$error_txt = $useCase->execute($Qid_nom, $Qobj_pau);
 
 ContestarJson::enviar($error_txt, 'ok');

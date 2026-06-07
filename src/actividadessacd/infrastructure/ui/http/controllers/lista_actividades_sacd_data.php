@@ -2,21 +2,21 @@
 /**
  * Endpoint backend: devuelve el listado de actividades del tipo + periodo
  * elegidos junto con los sacd encargados y los flags de permiso.
- *
- * El HTML de la tabla se construye en el controller frontend
- * `frontend/actividadessacd/controller/activ_sacd.php` + vista.
  */
 
 use src\actividadessacd\application\ListaActividadesSacdData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
 $input = [
-    'tipo' => (string)filter_input(INPUT_POST, 'tipo'),
-    'year' => (string)filter_input(INPUT_POST, 'year'),
-    'periodo' => (string)filter_input(INPUT_POST, 'periodo'),
-    'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
+    'tipo' => input_string($_POST, 'tipo'),
+    'year' => input_string($_POST, 'year'),
+    'periodo' => input_string($_POST, 'periodo'),
+    'empiezamin' => input_string($_POST, 'empiezamin'),
+    'empiezamax' => input_string($_POST, 'empiezamax'),
 ];
 
-$data = ListaActividadesSacdData::execute($input);
-ContestarJson::enviar('', $data);
+/** @var ListaActividadesSacdData $useCase */
+$useCase = DependencyResolver::get(ListaActividadesSacdData::class);
+ContestarJson::enviar('', $useCase->execute($input));

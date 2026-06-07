@@ -17,31 +17,36 @@ use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
  */
 final class CtrFichaData
 {
+    public function __construct(
+        private EncargoAplicacionService $aplicacionService,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+    ) {
+    }
+
     /**
      * @return array{filtro_ctr: int, opciones_seccion: array<string, string>}
      */
-    public static function execute(int $id_ubi, int $filtro_ctr): array
+    public function execute(int $id_ubi, int $filtro_ctr): array
     {
         if ($id_ubi > 0) {
-            $filtro_ctr = self::calcularFiltroDesdeCentro($id_ubi, $filtro_ctr);
+            $filtro_ctr = $this->calcularFiltroDesdeCentro($id_ubi, $filtro_ctr);
         }
-
-        $oAplicacion = new EncargoAplicacionService();
 
         return [
             'filtro_ctr' => $filtro_ctr,
-            'opciones_seccion' => $oAplicacion->getArraySeccion(),
+            'opciones_seccion' => $this->aplicacionService->getArraySeccion(),
         ];
     }
 
-    private static function calcularFiltroDesdeCentro(int $id_ubi, int $filtro_ctr): int
+    private function calcularFiltroDesdeCentro(int $id_ubi, int $filtro_ctr): int
     {
         $id_ubi_txt = (string)$id_ubi;
 
         if ((int)$id_ubi_txt[0] === 2) {
-            $repo = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+            $repo = $this->centroEllasRepository;
         } else {
-            $repo = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+            $repo = $this->centroDlRepository;
         }
 
         $oCentro = $repo->findById($id_ubi);

@@ -13,6 +13,9 @@ class UbiDireccion
     private ?bool $propietario = null;
     private ?bool $principal = null; // Si es la dirección principal
 
+    /**
+     * @param array{id_ubi?: int, id_direccion?: int, propietario?: bool, principal?: bool}|null $data
+     */
     public function __construct(?array $data = null)
     {
         if ($data !== null) {

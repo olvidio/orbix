@@ -18,23 +18,21 @@ use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
 
 final class DireccionesResolverTest extends TestCase
 {
-    private mixed $previousContainer;
+    private DireccionesResolver $resolver;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-        $GLOBALS['container'] = $this->fakeContainer();
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
+        $this->resolver = new DireccionesResolver(
+            $this->createMock(DireccionCentroDlRepositoryInterface::class),
+            $this->createMock(DireccionCentroExRepositoryInterface::class),
+            $this->createMock(DireccionCasaDlRepositoryInterface::class),
+            $this->createMock(DireccionCasaExRepositoryInterface::class),
+            $this->createMock(CentroDlRepositoryInterface::class),
+            $this->createMock(CentroExRepositoryInterface::class),
+            $this->createMock(CasaDlRepositoryInterface::class),
+            $this->createMock(CasaExRepositoryInterface::class),
+        );
     }
 
     public static function direccionMappingProvider(): array
@@ -51,8 +49,8 @@ final class DireccionesResolverTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('direccionMappingProvider')]
     public function test_direccionRepo_devuelve_repo_segun_objeto(string $objDir, string $expectedInterface): void
     {
-        $repo = DireccionesResolver::direccionRepo($objDir);
-        $this->assertSame($expectedInterface, $repo->key);
+        $repo = $this->resolver->direccionRepo($objDir);
+        $this->assertInstanceOf($expectedInterface, $repo);
     }
 
     public static function ubiMappingProvider(): array
@@ -69,33 +67,21 @@ final class DireccionesResolverTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('ubiMappingProvider')]
     public function test_ubiRepo_devuelve_repo_segun_objeto(string $objDir, string $expectedInterface): void
     {
-        $repo = DireccionesResolver::ubiRepo($objDir);
-        $this->assertSame($expectedInterface, $repo->key);
+        $repo = $this->resolver->ubiRepo($objDir);
+        $this->assertInstanceOf($expectedInterface, $repo);
     }
 
     public function test_direccionRepo_lanza_excepcion_si_desconocido(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('obj_dir desconocido: foo');
-        DireccionesResolver::direccionRepo('foo');
+        $this->resolver->direccionRepo('foo');
     }
 
     public function test_ubiRepo_lanza_excepcion_si_vacio(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('obj_dir desconocido: ');
-        DireccionesResolver::ubiRepo('');
-    }
-
-    private function fakeContainer(): object
-    {
-        return new class {
-            public function get(string $key): object
-            {
-                return new class($key) {
-                    public function __construct(public readonly string $key) {}
-                };
-            }
-        };
+        $this->resolver->ubiRepo('');
     }
 }

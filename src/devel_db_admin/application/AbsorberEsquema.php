@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\devel_db_admin\infrastructure\DBAlterSchema;
 use src\shared\config\ReplicaSelectPolicy;
 use src\shared\infrastructure\persistence\ConfigDB;
@@ -28,7 +29,8 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 final class AbsorberEsquema
 {
     public function __construct(
-        private readonly object $container,
+        private readonly DelegacionRepositoryInterface $delegacionRepository,
+        private readonly CargoRepositoryInterface $cargoRepository,
     ) {
     }
 
@@ -39,8 +41,7 @@ final class AbsorberEsquema
         $esquemaMatrizv = $esquemaMatriz . 'v';
         $esquemaDelv = $esquemaDel . 'v';
 
-        $region_new = strtok($esquemaMatriz, '-');
-        $dl_new = strtok('-');
+        [$region_new, $dl_new] = $this->parseRegionDl($esquemaMatriz);
 
         $oConfigDB = new ConfigDB('importar');
         $config = $oConfigDB->getEsquema('public');
@@ -48,7 +49,7 @@ final class AbsorberEsquema
         $oConexion = new DBConnection($config);
         $oDevelPC = $oConexion->getPDO();
 
-        $oAlterSchema = new DBAlterSchema();
+        $oAlterSchema = new DBAlterSchema($this->cargoRepository);
         $oAlterSchema->setContinuarEnError(true);
         $oAlterSchema->setDbConexion($oDevelPC);
         $oAlterSchema->setSchema($esquemaMatriz);
@@ -99,7 +100,7 @@ final class AbsorberEsquema
         $oConexion = new DBConnection($config);
         $oDevelPC = $oConexion->getPDO();
 
-        $oAlterSchema = new DBAlterSchema();
+        $oAlterSchema = new DBAlterSchema($this->cargoRepository);
         $oAlterSchema->setContinuarEnError(true);
         $oAlterSchema->setDbConexion($oDevelPC);
         $oAlterSchema->setSchema($esquemaMatrizv);
@@ -202,14 +203,13 @@ final class AbsorberEsquema
         $oAlterSchema->setInserts($aInserts);
         $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
-        $region_old = strtok($esquemaDel, '-');
-        $dl_old = strtok('-');
+        [$region_old, $dl_old] = $this->parseRegionDl($esquemaDel);
 
-        $gesDelegaciones = $this->container->get(DelegacionRepositoryInterface::class);
+        $gesDelegaciones = $this->delegacionRepository;
         $cDelegaciones = $gesDelegaciones->getDelegaciones(['dl' => $dl_old, 'region' => $region_old]);
-        $id_dl_old = $cDelegaciones[0]->getIdDlVo()?->value() ?? 0;
+        $id_dl_old = $cDelegaciones[0]->getIdDlVo()->value();
         $cDelegaciones = $gesDelegaciones->getDelegaciones(['dl' => $dl_new, 'region' => $region_new]);
-        $id_dl_new = $cDelegaciones[0]->getIdDlVo()?->value() ?? 0;
+        $id_dl_new = $cDelegaciones[0]->getIdDlVo()->value();
 
         $aDatos = [
             ['tabla' => 'da_plazas_dl', 'campo' => 'id_dl', 'old' => "$id_dl_old", 'new' => "$id_dl_new"],
@@ -240,7 +240,7 @@ final class AbsorberEsquema
         $oConexion = new DBConnection($config);
         $oDevelPC = $oConexion->getPDO();
 
-        $oAlterSchema = new DBAlterSchema();
+        $oAlterSchema = new DBAlterSchema($this->cargoRepository);
         $oAlterSchema->setContinuarEnError(true);
         $oAlterSchema->setDbConexion($oDevelPC);
 
@@ -280,11 +280,15 @@ final class AbsorberEsquema
         $oAlterSchema->insertarCargos();
         $errores = array_merge($errores, $oAlterSchema->consumirErrores());
 
-        $DelegacionRepository = $this->container->get(DelegacionRepositoryInterface::class);
+        $DelegacionRepository = $this->delegacionRepository;
         $oDelegacion = $DelegacionRepository->findById($id_dl_old);
-        $oDelegacion->setActive(false);
-        if ($DelegacionRepository->Guardar($oDelegacion) === false) {
-            $errores[] = _('hay un error, no se ha guardado') . ': ' . $DelegacionRepository->getErrorTxt();
+        if ($oDelegacion === null) {
+            $errores[] = _('Delegación origen no encontrada.');
+        } else {
+            $oDelegacion->setActive(false);
+            if ($DelegacionRepository->Guardar($oDelegacion) === false) {
+                $errores[] = _('hay un error, no se ha guardado') . ': ' . $DelegacionRepository->getErrorTxt();
+            }
         }
 
         $oDBRol = new DBRol();
@@ -395,5 +399,17 @@ final class AbsorberEsquema
         } catch (\Throwable) {
             return false;
         }
+    }
+
+    /**
+     * @return array{0: string, 1: string}
+     */
+    private function parseRegionDl(string $esquema): array
+    {
+        $partes = explode('-', trim($esquema), 2);
+        $region = $partes[0];
+        $dl = $partes[1] ?? '';
+
+        return [$region, $dl];
     }
 }

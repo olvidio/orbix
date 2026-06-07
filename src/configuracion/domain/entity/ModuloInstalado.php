@@ -31,7 +31,7 @@ class ModuloInstalado
     {
         $this->id_mod = $id instanceof ModuloId
             ? $id
-            : ModuloId::fromNullableInt($id);
+            : new ModuloId($id);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
@@ -42,7 +42,7 @@ class ModuloInstalado
 
     public function setId_mod(int $id_mod): void
     {
-        $this->id_mod = ModuloId::fromNullableInt($id_mod);
+        $this->id_mod = new ModuloId($id_mod);
     }
 
 
@@ -57,7 +57,7 @@ class ModuloInstalado
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_mod';
     }
@@ -65,13 +65,16 @@ class ModuloInstalado
      * Devuelve una colección de objetor tipo DatosCampo
      *
      */
+    /**
+     * @return list<\src\shared\domain\DatosCampo>
+     */
     public function getDatosCampos(): array
     {
         $oModuloInstaladoSet = new Set();
 
         $oModuloInstaladoSet->add($this->getDatosId_mod());
         $oModuloInstaladoSet->add($this->getDatosStatus());
-        return $oModuloInstaladoSet->getTot();
+        return array_values($oModuloInstaladoSet->getTot());
     }
 
     private function getDatosId_mod(): DatosCampo

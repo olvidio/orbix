@@ -41,9 +41,11 @@ class TelecoUbi
 
     public function setIdUbiVo(TelecoUbiId|int|null $id): void
     {
-        $this->id_ubi = $id instanceof TelecoUbiId
-            ? $id
-            : TelecoUbiId::fromNullableInt($id);
+        if ($id instanceof TelecoUbiId) {
+            $this->id_ubi = $id;
+        } elseif ($id !== null) {
+            $this->id_ubi = new TelecoUbiId($id);
+        }
     }
 
     /**
@@ -59,7 +61,7 @@ class TelecoUbi
      */
     public function setId_ubi(int $id_ubi): void
     {
-        $this->id_ubi = TelecoUbiId::fromNullableInt($id_ubi);
+        $this->id_ubi = new TelecoUbiId($id_ubi);
     }
 
 
@@ -80,13 +82,11 @@ class TelecoUbi
      */
     public function setId_tipo_teleco(int $id_tipo_teleco): void
     {
-        $this->id_tipo_teleco = TipoTelecoId::fromNullableInt($id_tipo_teleco);
+        $this->id_tipo_teleco = new TipoTelecoId($id_tipo_teleco);
     }
-    public function setIdTipoTelecoVo(TipoTelecoId|int|null $valor = null): void
+    public function setIdTipoTelecoVo(TipoTelecoId|int $valor): void
     {
-        $this->id_tipo_teleco = $valor instanceof TipoTelecoId
-            ? $valor
-            : TipoTelecoId::fromNullableInt($valor);
+        $this->id_tipo_teleco = $valor instanceof TipoTelecoId ? $valor : new TipoTelecoId($valor);
     }
 
 
@@ -113,7 +113,7 @@ class TelecoUbi
      */
     public function setNum_teleco(string $num_teleco): void
     {
-        $this->num_teleco = NumTelecoText::fromNullableString($num_teleco);
+        $this->num_teleco = new NumTelecoText($num_teleco);
     }
 
     public function getNumTelecoVo(): NumTelecoText
@@ -121,11 +121,9 @@ class TelecoUbi
         return $this->num_teleco;
     }
 
-    public function setNumTelecoVo(NumTelecoText|string|null $texto): void
+    public function setNumTelecoVo(NumTelecoText|string $vo): void
     {
-        $this->num_teleco = $texto instanceof NumTelecoText
-            ? $texto
-            : NumTelecoText::fromNullableString($texto);
+        $this->num_teleco = $vo instanceof NumTelecoText ? $vo : new NumTelecoText($vo);
     }
 
     /**
@@ -168,10 +166,235 @@ class TelecoUbi
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_item';
     }
+
+    /**
+
+
+     * @return array<string, mixed>
+
+
+     */
+
+
+    /**
+
+
+
+     * @return array<string, mixed>
+
+
+
+     */
+
+
+
+    /**
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+     */
+
+
+
+
+    /**
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+     */
+
+
+
+
+
+    /**
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+
 
     public function getDatosCampos(): array
     {

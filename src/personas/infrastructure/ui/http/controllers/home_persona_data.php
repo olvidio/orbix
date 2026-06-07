@@ -5,22 +5,26 @@
  */
 
 use src\personas\application\HomePersonaData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\ubis\domain\RegionStgrAviso;
 
-$result = HomePersonaData::build($_POST);
+/** @var HomePersonaData $useCase */
+$useCase = DependencyResolver::get(HomePersonaData::class);
+$result = $useCase->execute($_POST);
 
-if (!empty($result['error'])) {
-    if (RegionStgrAviso::esMensajeSuave((string)$result['error'])) {
+$errorVal = $result['error'] ?? '';
+if (is_string($errorVal) && $errorVal !== '') {
+    if (RegionStgrAviso::esMensajeSuave($errorVal)) {
         $result['aviso'] = RegionStgrAviso::combinarAvisos(
-            (string)($result['aviso'] ?? ''),
-            str_contains((string)$result['error'], _('persona no válida'))
+            is_string($result['aviso'] ?? null) ? $result['aviso'] : '',
+            str_contains($errorVal, _('persona no válida'))
                 ? RegionStgrAviso::mensajePersonaNoValida()
-                : (string)$result['error'],
+                : $errorVal,
         );
         unset($result['error']);
     } else {
-        ContestarJson::enviar((string)$result['error']);
+        ContestarJson::enviar($errorVal);
         return;
     }
 }

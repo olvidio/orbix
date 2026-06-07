@@ -2,6 +2,7 @@
 
 namespace src\notas\application;
 
+
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -18,11 +19,22 @@ use function src\shared\domain\helpers\is_true;
  */
 final class NotasDeUnaPersonaData
 {
-    public static function getTabla(int $id_pau, int $permiso): array
-    {
-        $msg = self::getMensajeMatriculasPendientes($id_pau);
 
-        $aValores = self::getFilas($id_pau, $permiso);
+    public function __construct(
+        private readonly MatriculaRepositoryInterface $matriculaRepository,
+        private readonly ActividadAllRepositoryInterface $actividadAllRepository,
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
+    ) {
+    }
+    /**
+     * @return array{aValores: array<int, array<int|string, mixed>>, aviso: string}
+     */
+    public function getTabla(int $id_pau, int $permiso): array
+    {
+        $msg = $this->getMensajeMatriculasPendientes($id_pau);
+
+        $aValores = $this->getFilas($id_pau, $permiso);
 
         return [
             'aValores' => $aValores,
@@ -30,15 +42,15 @@ final class NotasDeUnaPersonaData
         ];
     }
 
-    private static function getMensajeMatriculasPendientes(int $id_pau): string
+    private function getMensajeMatriculasPendientes(int $id_pau): string
     {
-        $matriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
+        $matriculaRepository = $this->matriculaRepository;
         $cMatriculasPendientes = $matriculaRepository->getMatriculasPendientes($id_pau);
         if (count($cMatriculasPendientes) === 0) {
             return '';
         }
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $ActividadAllRepository = $this->actividadAllRepository;
+        $AsignaturaRepository = $this->asignaturaRepository;
         $msg = '';
         foreach ($cMatriculasPendientes as $oMatricula) {
             $oActividad = $ActividadAllRepository->findById($oMatricula->getId_activ());
@@ -56,16 +68,19 @@ final class NotasDeUnaPersonaData
         return _("tiene pendiente de poner las notas de:") . '<br>' . $msg;
     }
 
-    private static function getFilas(int $id_pau, int $permiso): array
+    /**
+     * @return array<int, array<int|string, mixed>>
+     */
+    private function getFilas(int $id_pau, int $permiso): array
     {
-        $PersonaNotaRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        $PersonaNotaRepository = $this->personaNotaRepository;
         $cPersonaNotas = $PersonaNotaRepository->getPersonaNotas(
             ['id_nom' => $id_pau, '_ordre' => 'id_nivel'],
             ['id_asignatura' => '<']
         );
 
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $AsignaturaRepository = $this->asignaturaRepository;
+        $ActividadAllRepository = $this->actividadAllRepository;
 
         $i = 0;
         $a_valores = [];

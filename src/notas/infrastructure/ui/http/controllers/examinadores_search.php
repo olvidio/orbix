@@ -1,6 +1,7 @@
 <?php
 
 use src\notas\application\ExaminadoresSearchData;
+use src\shared\infrastructure\DependencyResolver;
 
 /**
  * Autocomplete jQuery-UI. Devuelve JSON raw `[{label, value}, ...]`.
@@ -8,4 +9,4 @@ use src\notas\application\ExaminadoresSearchData;
  * directamente en el cuerpo de la respuesta.
  */
 header('Content-Type: application/json; charset=utf-8');
-echo ExaminadoresSearchData::execute($_POST);
+echo (DependencyResolver::get(ExaminadoresSearchData::class))->execute($_POST);

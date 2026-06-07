@@ -17,35 +17,11 @@ use src\actividadessacd\domain\value_objects\SacdTextoTexto;
  */
 final class TextoComunicacionGuardarTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
-    public function test_sin_clave_devuelve_error(): void
-    {
+        public function test_sin_clave_devuelve_error(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
         $repo->expects($this->never())->method('getActividadSacdTextos');
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionGuardar::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
             'clave' => '',
             'idioma' => 'ca',
             'texto' => 'hola',
@@ -53,17 +29,11 @@ final class TextoComunicacionGuardarTest extends TestCase
         $this->assertStringContainsString('faltan parametros', $out);
     }
 
-    public function test_sin_idioma_devuelve_error(): void
-    {
+    public function test_sin_idioma_devuelve_error(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
         $repo->expects($this->never())->method('getActividadSacdTextos');
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionGuardar::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => '',
             'texto' => 'hola',
@@ -71,19 +41,13 @@ final class TextoComunicacionGuardarTest extends TestCase
         $this->assertStringContainsString('faltan parametros', $out);
     }
 
-    public function test_texto_vacio_sin_fila_existente_no_crea_nada(): void
-    {
+    public function test_texto_vacio_sin_fila_existente_no_crea_nada(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
         $repo->method('getActividadSacdTextos')->willReturn([]);
         $repo->expects($this->never())->method('Guardar');
         $repo->expects($this->never())->method('Eliminar');
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionGuardar::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'ca_ES.UTF-8',
             'texto' => '',
@@ -91,8 +55,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $this->assertSame('', $out);
     }
 
-    public function test_texto_vacio_con_fila_existente_elimina(): void
-    {
+    public function test_texto_vacio_con_fila_existente_elimina(): void {
         $oTexto = new ActividadSacdTexto();
         $oTexto->setId_item(77);
 
@@ -104,12 +67,7 @@ final class TextoComunicacionGuardarTest extends TestCase
             ->willReturn(true);
         $repo->expects($this->never())->method('Guardar');
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionGuardar::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'ca',
             'texto' => '',
@@ -117,8 +75,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $this->assertSame('', $out);
     }
 
-    public function test_texto_vacio_con_fila_existente_error_si_eliminar_falla(): void
-    {
+    public function test_texto_vacio_con_fila_existente_error_si_eliminar_falla(): void {
         $oTexto = new ActividadSacdTexto();
         $oTexto->setId_item(77);
 
@@ -126,12 +83,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $repo->method('getActividadSacdTextos')->willReturn([$oTexto]);
         $repo->method('Eliminar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionGuardar::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'ca',
             'texto' => '',
@@ -139,8 +91,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $this->assertStringContainsString('no se ha eliminado el texto', $out);
     }
 
-    public function test_fila_existente_con_texto_actualiza(): void
-    {
+    public function test_fila_existente_con_texto_actualiza(): void {
         $oTexto = new ActividadSacdTexto();
         $oTexto->setId_item(77);
         $oTexto->setTextoVo(new SacdTextoTexto('viejo'));
@@ -157,12 +108,7 @@ final class TextoComunicacionGuardarTest extends TestCase
             }))
             ->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionGuardar::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'ca',
             'texto' => 'nuevo',
@@ -170,8 +116,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $this->assertSame('', $out);
     }
 
-    public function test_fila_existente_con_texto_error_si_guardar_falla(): void
-    {
+    public function test_fila_existente_con_texto_error_si_guardar_falla(): void {
         $oTexto = new ActividadSacdTexto();
         $oTexto->setId_item(77);
 
@@ -179,12 +124,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $repo->method('getActividadSacdTextos')->willReturn([$oTexto]);
         $repo->method('Guardar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionGuardar::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'ca',
             'texto' => 'nuevo',
@@ -192,8 +132,7 @@ final class TextoComunicacionGuardarTest extends TestCase
         $this->assertStringContainsString('no se ha guardado el texto', $out);
     }
 
-    public function test_sin_fila_con_texto_crea_entidad_y_guarda(): void
-    {
+    public function test_sin_fila_con_texto_crea_entidad_y_guarda(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
         $repo->method('getActividadSacdTextos')->willReturn([]);
         $repo->method('getNewId')->willReturn(4242);
@@ -207,12 +146,7 @@ final class TextoComunicacionGuardarTest extends TestCase
             }))
             ->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionGuardar::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'es_ES.UTF-8',
             'texto' => 'hola sacd',
@@ -226,19 +160,13 @@ final class TextoComunicacionGuardarTest extends TestCase
         $this->assertSame('hola sacd', $guardada->getTextoVo()->value());
     }
 
-    public function test_sin_fila_con_texto_error_si_guardar_falla(): void
-    {
+    public function test_sin_fila_con_texto_error_si_guardar_falla(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
         $repo->method('getActividadSacdTextos')->willReturn([]);
         $repo->method('getNewId')->willReturn(1);
         $repo->method('Guardar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerOne(
-            ActividadSacdTextoRepositoryInterface::class,
-            $repo
-        );
-
-        $out = TextoComunicacionGuardar::execute([
+        $out = (new \src\actividadessacd\application\TextoComunicacionGuardar($repo))->execute([
             'clave' => 'com_sacd',
             'idioma' => 'ca',
             'texto' => 'algo',

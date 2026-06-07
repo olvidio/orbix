@@ -1,18 +1,21 @@
 <?php
 
+use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\CasasOpcionesData;
 use src\shared\web\ContestarJson;
+
+use function src\shared\domain\helpers\is_true;
 
 $filtro = [];
 
 if (array_key_exists('active', $_POST)) {
-    $filtro['active'] = filter_var($_POST['active'], FILTER_VALIDATE_BOOLEAN);
+    $filtro['active'] = is_true($_POST['active']);
 }
 if (array_key_exists('sv', $_POST)) {
-    $filtro['sv'] = filter_var($_POST['sv'], FILTER_VALIDATE_BOOLEAN);
+    $filtro['sv'] = is_true($_POST['sv']);
 }
 if (array_key_exists('sf', $_POST)) {
-    $filtro['sf'] = filter_var($_POST['sf'], FILTER_VALIDATE_BOOLEAN);
+    $filtro['sf'] = is_true($_POST['sf']);
 }
 if (!empty($_POST['id_ubi_in'])) {
     $raw = $_POST['id_ubi_in'];
@@ -20,8 +23,15 @@ if (!empty($_POST['id_ubi_in'])) {
         $raw = preg_split('/[\s,]+/', $raw, -1, PREG_SPLIT_NO_EMPTY) ?: [];
     }
     if (is_array($raw)) {
-        $filtro['id_ubi_in'] = array_values(array_map('intval', $raw));
+        $ids = [];
+        foreach ($raw as $item) {
+            if (!is_int($item) && !is_string($item) && !is_float($item) && !is_bool($item) && $item !== null) {
+                continue;
+            }
+            $ids[] = (int) $item;
+        }
+        $filtro['id_ubi_in'] = $ids;
     }
 }
 
-ContestarJson::enviar('', CasasOpcionesData::execute($filtro));
+ContestarJson::enviar('', DependencyResolver::get(CasasOpcionesData::class)->execute($filtro));

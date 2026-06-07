@@ -2,6 +2,8 @@
 
 namespace src\notas\application;
 
+use function src\shared\domain\helpers\input_string;
+
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 
 /**
@@ -10,10 +12,19 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
  */
 final class AsignaturasSearchData
 {
-    public static function execute(array $input): string
+
+    public function __construct(
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function execute(array $input): string
     {
-        $search = (string)($input['search'] ?? '');
-        $repo = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $search = input_string($input, 'search');
+        $repo = $this->asignaturaRepository;
         return (string)$repo->getJsonAsignaturas(['nombre_asignatura' => $search]);
     }
 }

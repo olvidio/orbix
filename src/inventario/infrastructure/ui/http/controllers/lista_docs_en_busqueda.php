@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
@@ -8,12 +9,18 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+/** @var DocumentoRepositoryInterface $DocumentoRepository */
+$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
 $cDocumentos = $DocumentoRepository->getDocumentos(['en_busqueda' => 't']);
 
-$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
-$TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
-$UbiInventarioRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
+/** @var LugarRepositoryInterface $LugarRepository */
+$LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
+/** @var TipoDocRepositoryInterface $TipoDocRepository */
+$TipoDocRepository = DependencyResolver::get(TipoDocRepositoryInterface::class);
+/** @var UbiInventarioRepositoryInterface $UbiInventarioRepository */
+$UbiInventarioRepository = DependencyResolver::get(UbiInventarioRepositoryInterface::class);
+$a_valores = [];
+$a_nom = [];
 $i = 0;
 foreach ($cDocumentos as $oDocumento) {
     $i++;
@@ -22,14 +29,23 @@ foreach ($cDocumentos as $oDocumento) {
     $num_reg = $oDocumento->getNum_reg();
     $id_tipo_doc = $oDocumento->getId_tipo_doc();
 
-    $oTipoDoc = $TipoDocRepository->findById($id_tipo_doc);
+    $oTipoDoc = $TipoDocRepository->findById((int) $id_tipo_doc);
+    if ($oTipoDoc === null) {
+        continue;
+    }
     $nom_doc = $oTipoDoc->getNom_doc();
     $NombreDoc = empty($nom_doc) ? $oTipoDoc->getSigla() : $oTipoDoc->getSigla() . ' (' . $nom_doc . ')';
 
-    $oUbiDoc = $UbiInventarioRepository->findById($id_ubi);
+    $oUbiDoc = $UbiInventarioRepository->findById((int) $id_ubi);
+    if ($oUbiDoc === null) {
+        continue;
+    }
     $nom_ubi = $oUbiDoc->getNom_ubi();
     if (!empty($id_lugar)) {
-        $oLugar = $LugarRepository->findById($id_lugar);
+        $oLugar = $LugarRepository->findById((int) $id_lugar);
+        if ($oLugar === null) {
+            continue;
+        }
         $nom_ubi .= " --> " . $oLugar->getNom_lugar();
     }
     $a_valores[$i][1] = $nom_ubi;

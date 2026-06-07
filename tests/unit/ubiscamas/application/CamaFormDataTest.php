@@ -14,34 +14,16 @@ use src\ubiscamas\domain\value_objects\HabitacionId;
 
 final class CamaFormDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_sin_id_cama_genera_uuid_y_no_consulta_repo(): void
     {
         $repo = $this->createMock(CamaDlRepositoryInterface::class);
         $repo->expects($this->never())->method('findById');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CamaDlRepositoryInterface::class => $repo,
+        $out = (new CamaFormData($repo))->execute([
+            'id_ubi' => 4,
+            'id_habitacion' => 'hab-x',
+            'id_cama' => '',
         ]);
-
-        $out = CamaFormData::build(['id_ubi' => 4, 'id_habitacion' => 'hab-x', 'id_cama' => '']);
 
         $this->assertNotSame('', $out['id_cama']);
         $this->assertTrue(Uuid::isValid($out['id_cama']));
@@ -65,11 +47,7 @@ final class CamaFormDataTest extends TestCase
         $repo = $this->createMock(CamaDlRepositoryInterface::class);
         $repo->expects($this->once())->method('findById')->with($cid)->willReturn($cama);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CamaDlRepositoryInterface::class => $repo,
-        ]);
-
-        $out = CamaFormData::build([
+        $out = (new CamaFormData($repo))->execute([
             'id_cama' => $cid,
             'id_ubi' => 2,
             'mod' => 'edit',
@@ -80,24 +58,5 @@ final class CamaFormDataTest extends TestCase
         $this->assertSame('Lateral', $out['descripcion']);
         $this->assertTrue($out['larga']);
         $this->assertTrue($out['vip']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
     }
 }

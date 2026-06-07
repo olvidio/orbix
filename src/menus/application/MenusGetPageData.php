@@ -2,6 +2,9 @@
 
 namespace src\menus\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
 use src\menus\domain\PermisoMenuBits;
@@ -12,28 +15,33 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
  */
 final class MenusGetPageData
 {
+    public function __construct(
+        private RoleRepositoryInterface $roleRepository,
+        private MenuDbRepositoryInterface $menuDbRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $post
      * @return array<string, mixed>
      */
-    public static function execute(array $post): array
+    public function execute(array $post): array
     {
-        $Qfiltro_grupo = (string)($post['filtro_grupo'] ?? '');
-        $Qnuevo = (string)($post['nuevo'] ?? '');
-        $Qid_menu = (string)($post['id_menu'] ?? '');
+        $Qfiltro_grupo = input_string($post, 'filtro_grupo');
+        $Qnuevo = input_string($post, 'nuevo');
+        $Qid_menu = input_string($post, 'id_menu');
 
-        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-        $aRoles = $RoleRepository->getArrayRoles();
-        $MenuDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
+        $aRoles = $this->roleRepository->getArrayRoles();
 
+        $iPermMenus = $_SESSION['iPermMenus'] ?? 1;
         $usuario = [
-            'i_perm_menus' => (int)($_SESSION['iPermMenus'] ?? 1),
+            'i_perm_menus' => is_numeric($iPermMenus) ? (int) $iPermMenus : 1,
         ];
 
         $perm_menu_bit_map = PermisoMenuBits::map();
 
         if (!empty($Qid_menu) || !empty($Qnuevo)) {
-            $edit = self::buildEditPayload($MenuDbRepository, $Qid_menu, $Qnuevo, $Qfiltro_grupo);
+            $edit = $this->buildEditPayload($Qid_menu, $Qnuevo, $Qfiltro_grupo);
 
             return array_merge([
                 'mode' => 'edit',
@@ -47,9 +55,9 @@ final class MenusGetPageData
         $menu_rows = [];
         if ($Qfiltro_grupo !== '') {
             $aWhere = ['id_grupmenu' => $Qfiltro_grupo, '_ordre' => 'orden'];
-            $oMenuDbs = $MenuDbRepository->getMenuDbs($aWhere);
+            $oMenuDbs = $this->menuDbRepository->getMenuDbs($aWhere);
             foreach ($oMenuDbs as $oMenuDb) {
-                $menu_rows[] = self::serializeMenuDb($oMenuDb);
+                $menu_rows[] = $this->serializeMenuDb($oMenuDb);
             }
         }
 
@@ -63,14 +71,19 @@ final class MenusGetPageData
         ];
     }
 
-    private static function buildEditPayload(
-        MenuDbRepositoryInterface $MenuDbRepository,
+    /**
+     * @return array<string, mixed>
+     */
+    private function buildEditPayload(
         string $Qid_menu,
         string $Qnuevo,
         string $Qfiltro_grupo
     ): array {
         if (!empty($Qid_menu)) {
-            $oMenuDb = $MenuDbRepository->findById($Qid_menu);
+            $oMenuDb = $this->menuDbRepository->findById((int) $Qid_menu);
+            if ($oMenuDb === null) {
+                throw new \RuntimeException(_('No encuentro el menu'));
+            }
             $oMenuDb->setId_menu((int)$Qid_menu);
 
             $orden = $oMenuDb->getOrden();
@@ -113,7 +126,7 @@ final class MenusGetPageData
     /**
      * @return array<string, mixed>
      */
-    private static function serializeMenuDb(MenuDb $oMenuDb): array
+    private function serializeMenuDb(MenuDb $oMenuDb): array
     {
         return [
             'id_menu' => $oMenuDb->getId_menu(),

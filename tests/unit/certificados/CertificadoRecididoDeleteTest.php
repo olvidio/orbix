@@ -6,7 +6,7 @@ use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
-use RuntimeException;
+use src\shared\infrastructure\DependencyResolver;
 use src\certificados\domain\CertificadoRecibidoDelete;
 use src\certificados\domain\CertificadoRecibidoUpload;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
@@ -48,9 +48,9 @@ class CertificadoRecididoDeleteTest extends myTest
     {
         $oDBdst = $this->setConexion('H-dlbv');
         foreach ($this->cCertificados as $Certificado) {
-            $CertificadoRecibidoUpload = new CertificadoRecibidoUpload();
+            $CertificadoRecibidoUpload = DependencyResolver::get(CertificadoRecibidoUpload::class);
             $CertificadoRecibidoUpload->setoDbl($oDBdst);
-            $CertificadoRecibidoDelete = new CertificadoRecibidoDelete();
+            $CertificadoRecibidoDelete = DependencyResolver::get(CertificadoRecibidoDelete::class);
             $CertificadoRecibidoDelete->setoDbl($oDBdst);
 
             $id_item = 0;  // para que cree uno nuevo
@@ -58,7 +58,7 @@ class CertificadoRecididoDeleteTest extends myTest
             $id_nom = $Certificado->getId_nom();
             $certificado = $Certificado->getCertificado();
             $firmado = $Certificado->isFirmado();
-            $idioma = $Certificado->getIdioma();
+            $idioma = (string) ($Certificado->getIdiomaVo()?->value() ?? '');
             $oF_certificado = $Certificado->getF_certificado();
             $oF_recibido = $Certificado->getF_enviado();
             $destino = $Certificado->getDestino();

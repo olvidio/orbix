@@ -9,8 +9,9 @@ use src\shared\domain\DatosInfoRepo;
 class InfoProfesorLatin extends DatosInfoRepo
 {
 
-    public function __construct()
-    {
+    public function __construct(
+        private ProfesorLatinRepositoryInterface $profesorLatinRepository,
+    ) {
         $this->setTxtTitulo(_("dossier profesores de latín"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esto?"));
         $this->setTxtBuscar(_("todos"));
@@ -23,13 +24,18 @@ class InfoProfesorLatin extends DatosInfoRepo
         $this->setRepositoryInterface(ProfesorLatinRepositoryInterface::class);
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return 1022;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
+        $aWhere = [];
+        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->id_pau)) {
@@ -42,9 +48,6 @@ class InfoProfesorLatin extends DatosInfoRepo
             //$aWhere['congreso'] = $this->k_buscar;
             //$aOperador['congreso'] ='sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getProfesoresLatin($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->profesorLatinRepository->getProfesoresLatin($aWhere, $aOperador);
     }
 }

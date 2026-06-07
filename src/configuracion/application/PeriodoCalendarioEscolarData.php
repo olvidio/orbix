@@ -10,6 +10,11 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
  */
 final class PeriodoCalendarioEscolarData
 {
+    public function __construct(
+        private ObtenerConfigSnapshot $obtenerConfigSnapshot,
+    ) {
+    }
+
     /**
      * @return array{
      *   mes_fin_stgr: int,
@@ -20,14 +25,16 @@ final class PeriodoCalendarioEscolarData
      *   dia_ini_crt: int,
      *   mes_ini_crt: int,
      *   dia_fin_crt: int,
-     *   mes_fin_crt: int,
      *   any_final_est: int,
      *   any_final_crt: int
      * }
      */
-    public static function execute(): array
+    public function execute(): array
     {
-        $oConfig = $_SESSION['oConfig'] ?? self::buildFallbackSnapshot();
+        $sessionConfig = $_SESSION['oConfig'] ?? null;
+        $oConfig = $sessionConfig instanceof ConfigSnapshot
+            ? $sessionConfig
+            : $this->obtenerConfigSnapshot->execute();
 
         return [
             'mes_fin_stgr' => $oConfig->getMesFinStgr(),
@@ -38,19 +45,8 @@ final class PeriodoCalendarioEscolarData
             'dia_ini_crt' => $oConfig->getDiaIniCrt(),
             'mes_ini_crt' => $oConfig->getMesIniCrt(),
             'dia_fin_crt' => $oConfig->getDiaFinCrt(),
-            'mes_fin_crt' => $oConfig->getMesFinCrt(),
             'any_final_est' => $oConfig->any_final_curs('est'),
             'any_final_crt' => $oConfig->any_final_curs('crt'),
         ];
-    }
-
-    /**
-     * Fallback para contextos donde la sesión no se ha inicializado con
-     * `global_object.inc` (p. ej. scripts de mantenimiento). Resuelve el
-     * snapshot por el contenedor para evitar re-implementar la carga.
-     */
-    private static function buildFallbackSnapshot(): ConfigSnapshot
-    {
-        return $GLOBALS['container']->get(ObtenerConfigSnapshot::class)->execute();
     }
 }

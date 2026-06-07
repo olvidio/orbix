@@ -21,9 +21,9 @@ interface PreferenciaRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Preferencia
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Preferencia
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Preferencia> Una colección de objetos de tipo Preferencia
      */
     public function getPreferencias(array $aWhere = [], array $aOperators = []): array;
 
@@ -44,9 +44,9 @@ interface PreferenciaRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $tipo
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_usuario, string $tipo): array|bool;
+    public function datosById(int $id_usuario, string $tipo): array|false;
 
     /**
      * Busca la clase con tipo en el repositorio.

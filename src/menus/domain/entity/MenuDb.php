@@ -16,7 +16,7 @@ class MenuDb
 
     private int $id_menu;
 
-    private ?array $orden = null;
+    /** @var list<int>|null */ /** @var list<int>|null */ /** @var list<int>|null */ /** @var list<int>|null */ private ?array $orden = null;
 
     private ?MenuName $menu = null;
 
@@ -44,13 +44,13 @@ class MenuDb
     }
 
 
-    public function getOrden(): ?array
+    /** @return list<int>|null */ /** @return list<int>|null */ /** @return list<int>|null */ /** @return list<int>|null */ public function getOrden(): ?array
     {
         return $this->orden;
     }
 
 
-    public function setOrden(?array $orden = null): void
+    /** @param list<int>|null $orden */ /** @param list<int>|null $orden */ /** @param list<int>|null $orden */ /** @param list<int>|null $orden */ public function setOrden(?array $orden = null): void
     {
         $this->orden = $orden;
     }

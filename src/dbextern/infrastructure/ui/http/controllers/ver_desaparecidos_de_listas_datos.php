@@ -1,16 +1,24 @@
 <?php
 
-use src\shared\web\ContestarJson;
 use src\dbextern\application\VerDesaparecidosDeListasData;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
-$tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
-$ids_desaparecidos_de_listas = (string)filter_input(INPUT_POST, 'ids_desaparecidos_de_listas');
+$tipo_persona = input_string($_POST, 'tipo_persona');
+$ids_desaparecidos_de_listas = input_string($_POST, 'ids_desaparecidos_de_listas');
 
-$a_ids = json_decode(urldecode($ids_desaparecidos_de_listas), true) ?: [];
+$decoded = json_decode(urldecode($ids_desaparecidos_de_listas), true);
+/** @var list<int> $a_ids */
+$a_ids = [];
+if (is_array($decoded)) {
+    foreach ($decoded as $id) {
+        if (is_int($id) || (is_string($id) && is_numeric($id))) {
+            $a_ids[] = (int)$id;
+        }
+    }
+}
 
-$personaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-$useCase = new VerDesaparecidosDeListasData($personaDlRepository);
-$data = $useCase($tipo_persona, $a_ids);
+$data = DependencyResolver::get(VerDesaparecidosDeListasData::class)($tipo_persona, $a_ids);
 
 ContestarJson::enviar('', $data);

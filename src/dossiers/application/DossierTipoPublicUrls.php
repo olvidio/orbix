@@ -3,39 +3,68 @@
 namespace src\dossiers\application;
 
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\dossiers\domain\entity\TipoDossier;
+use src\shared\infrastructure\DependencyResolver;
 
 /**
  * Rutas publicas (frontend/ o apps/) para form/update segun id_tipo_dossier.
- *
- * Prefiere `frontend/<app>/controller/form_<codigo>.php` si existe (modulo ya migrado
- * siguiendo `refactor.md`); cae a `apps/<app>/controller/form_<suffix>.php` cuando
- * el modulo todavia vive en legacy.
  */
 final class DossierTipoPublicUrls
 {
+    public function __construct(
+        private TipoDossierRepositoryInterface $tipoDossierRepository,
+        private DossierTipoFileSuffixResolver $suffixResolver,
+    ) {
+    }
+
     public static function relativeFormController(int $idTipoDossier): string
     {
-        return self::resolveRelativePath($idTipoDossier, 'form');
+        return self::resolve()->relativeFormControllerInstance($idTipoDossier);
     }
 
     public static function relativeUpdate(int $idTipoDossier): string
     {
-        return self::resolveRelativePath($idTipoDossier, 'update');
+        return self::resolve()->relativeUpdateInstance($idTipoDossier);
     }
 
     /**
-     * Resuelve la ruta relativa al prefijo `form_` / `update_`.
-     *
-     * Orden de preferencia:
-     * 1. `frontend/<app>/controller/<prefijo>_<codigo>.php` (si el codigo esta definido
-     *    en `d_tipos_dossiers` y el fichero existe).
-     * 2. `apps/<app>/controller/<prefijo>_<suffix>.php` donde `suffix` es el
-     *    codigo si el fichero existe en `apps/...`, si no el `id_tipo_dossier`.
+     * @param array<string, mixed> $aQuery
+     * @return array{path: string, query: array<string, mixed>}
      */
-    private static function resolveRelativePath(int $idTipoDossier, string $prefijo): string
+    public static function formControllerLinkSpec(int $idTipoDossier, array $aQuery): array
     {
-        $tipo = self::requireTipo($idTipoDossier);
-        $app = $tipo->getApp();
+        return self::resolve()->formControllerLinkSpecInstance($idTipoDossier, $aQuery);
+    }
+
+    public function relativeFormControllerInstance(int $idTipoDossier): string
+    {
+        return $this->resolveRelativePath($idTipoDossier, 'form');
+    }
+
+    public function relativeUpdateInstance(int $idTipoDossier): string
+    {
+        return $this->resolveRelativePath($idTipoDossier, 'update');
+    }
+
+    /**
+     * @param array<string, mixed> $aQuery
+     * @return array{path: string, query: array<string, mixed>}
+     */
+    public function formControllerLinkSpecInstance(int $idTipoDossier, array $aQuery): array
+    {
+        $path = $this->relativeFormControllerInstance($idTipoDossier);
+        array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
+
+        return [
+            'path' => $path,
+            'query' => $aQuery,
+        ];
+    }
+
+    private function resolveRelativePath(int $idTipoDossier, string $prefijo): string
+    {
+        $tipo = $this->requireTipo($idTipoDossier);
+        $app = $tipo->getApp() ?? '';
         $codigo = trim((string) ($tipo->getCodigoVo()?->value() ?? ''));
         if ($codigo !== '') {
             $projectRoot = dirname(__DIR__, 3);
@@ -45,40 +74,25 @@ final class DossierTipoPublicUrls
             }
         }
 
-        $resolver = DossierTipoFileSuffixResolver::fromDefaultProjectRoot();
         $kind = $prefijo === 'form'
             ? DossierTipoFileSuffixResolver::KIND_FORM_CONTROLLER
             : DossierTipoFileSuffixResolver::KIND_UPDATE;
-        $suffix = $resolver->resolveSuffix($tipo, $kind);
+        $suffix = $this->suffixResolver->resolveSuffix($tipo, $kind);
+
         return 'apps/' . $app . '/controller/' . $prefijo . '_' . $suffix . '.php';
     }
 
-    /**
-     * Spec de URL (path relativo + query) para formulario; la firma va en el borde
-     * (p. ej. `frontend/dossiers/helpers/DossierTipoFormLinkSpecsSigning` en widgets Select_*).
-     *
-     * @return array{path: string, query: array<string, mixed>}
-     */
-    public static function formControllerLinkSpec(int $idTipoDossier, array $aQuery): array
+    private function requireTipo(int $idTipoDossier): TipoDossier
     {
-        $path = self::relativeFormController($idTipoDossier);
-        if (is_array($aQuery)) {
-            array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
-        }
-
-        return [
-            'path' => $path,
-            'query' => $aQuery,
-        ];
-    }
-
-    private static function requireTipo(int $idTipoDossier): \src\dossiers\domain\entity\TipoDossier
-    {
-        $repo = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
-        $tipo = $repo->findById($idTipoDossier);
+        $tipo = $this->tipoDossierRepository->findById($idTipoDossier);
         if ($tipo === null) {
             throw new \RuntimeException('d_tipos_dossiers: id no encontrado ' . $idTipoDossier);
         }
         return $tipo;
+    }
+
+    private static function resolve(): self
+    {
+        return DependencyResolver::get(self::class);
     }
 }

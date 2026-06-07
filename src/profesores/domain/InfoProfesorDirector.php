@@ -11,8 +11,9 @@ use src\shared\domain\DatosInfoRepo;
 class InfoProfesorDirector extends DatosInfoRepo
 {
 
-    public function __construct()
-    {
+    public function __construct(
+        private ProfesorDirectorRepositoryInterface $profesorDirectorRepository,
+    ) {
         $this->setTxtTitulo(_("dossier de directores de departamento del studium generale"));
         $this->setTxtEliminar();
         $this->setTxtBuscar(_("todos"));
@@ -25,13 +26,18 @@ class InfoProfesorDirector extends DatosInfoRepo
         $this->setRepositoryInterface(ProfesorDirectorRepositoryInterface::class);
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return 1020;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
+        $aWhere = [];
+        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->id_pau)) {
@@ -44,9 +50,6 @@ class InfoProfesorDirector extends DatosInfoRepo
             //$aWhere['congreso'] = $this->k_buscar;
             //$aOperador['congreso'] ='sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getProfesoresDirectores($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->profesorDirectorRepository->getProfesoresDirectores($aWhere, $aOperador);
     }
 }

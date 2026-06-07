@@ -22,6 +22,7 @@ final class ActividadQueFiltrosBloque
 {
     public function __construct(
         private ActividadLugar $actividadLugar,
+        private DelegacionDropdown $delegacionDropdown,
     ) {
     }
 
@@ -40,7 +41,7 @@ final class ActividadQueFiltrosBloque
 
         $mi_dele = ConfigGlobal::mi_delef((string) $sfsv);
 
-        $oDesplFiltroLugar = Desplegable::desdeOpciones(DelegacionDropdown::dlURegionesFiltro($sfsv), 'filtro_lugar');
+        $oDesplFiltroLugar = Desplegable::desdeOpciones($this->delegacionDropdown->dlURegionesFiltro($sfsv), 'filtro_lugar');
         $oDesplFiltroLugar->setAction('fnjs_lugar()');
         $oDesplFiltroLugar->setOpcion_sel($filtro_lugar);
 
@@ -55,7 +56,7 @@ final class ActividadQueFiltrosBloque
             $oDesplegableCasasHtml = $oDesplegableCasas->desplegable();
         }
 
-        $oDesplDelegacionesOrg = Desplegable::desdeOpciones(DelegacionDropdown::delegacionesURegiones($sfsv, true), 'dl_org');
+        $oDesplDelegacionesOrg = Desplegable::desdeOpciones($this->delegacionDropdown->delegacionesURegiones($sfsv, true), 'dl_org');
         $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
         if ($modo === 'importar') {
             $oDesplDelegacionesOrg->setOpcion_no([$mi_dele]);

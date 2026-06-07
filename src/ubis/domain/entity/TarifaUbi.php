@@ -29,7 +29,7 @@ class TarifaUbi
 
     private ?ObservCasaText $observ = null;
 
-    private serieId $id_serie;
+    private SerieId $id_serie;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -75,13 +75,11 @@ class TarifaUbi
      */
     public function setId_tarifa(int $id_tarifa): void
     {
-        $this->id_tarifa = TarifaId::fromNullableInt( $id_tarifa);
+        $this->id_tarifa = new TarifaId($id_tarifa);
     }
-    public function setIdTarifaVo(TarifaId|int|null $valor = null): void
+    public function setIdTarifaVo(TarifaId|int $valor): void
     {
-        $this->id_tarifa = $valor instanceof TarifaId
-            ? $valor
-            : TarifaId::fromNullableInt($valor);
+        $this->id_tarifa = $valor instanceof TarifaId ? $valor : new TarifaId($valor);
     }
 
     /**
@@ -101,13 +99,11 @@ class TarifaUbi
      */
     public function setYear(int $year): void
     {
-        $this->year = YearNumber::fromNullableInt($year);
+        $this->year = new YearNumber($year);
     }
-    public function setYearVo(YearNumber|int|null $valor = null): void
+    public function setYearVo(YearNumber|int $valor): void
     {
-        $this->year = $valor instanceof YearNumber
-            ? $valor
-            : YearNumber::fromNullableInt($valor);
+        $this->year = $valor instanceof YearNumber ? $valor : new YearNumber($valor);
     }
 
     /**
@@ -115,7 +111,7 @@ class TarifaUbi
      */
     public function getCantidad(): ?float
     {
-        return $this->cantidad?->value();
+        return $this->cantidad->value();
     }
     public function getCantidadVo(): ?TarifaCantidad
     {
@@ -127,13 +123,11 @@ class TarifaUbi
      */
     public function setCantidad(float $cantidad): void
     {
-        $this->cantidad = TarifaCantidad::fromNullableFloat($cantidad);
+        $this->cantidad = new TarifaCantidad($cantidad);
     }
-    public function setCantidadVo(TarifaCantidad|float|null $vo): void
+    public function setCantidadVo(TarifaCantidad|float $vo): void
     {
-        $this->cantidad = $vo instanceof TarifaCantidad
-            ? $vo
-            : TarifaCantidad::fromNullableFloat($vo);
+        $this->cantidad = $vo instanceof TarifaCantidad ? $vo : new TarifaCantidad($vo);
     }
 
     /**
@@ -179,13 +173,11 @@ class TarifaUbi
      */
     public function setId_serie(int $id_serie): void
     {
-        $this->id_serie = SerieId::fromNullableInt($id_serie);
+        $this->id_serie = new SerieId($id_serie);
     }
-    public function setIdSerieVo(SerieId|int|null $valor = null): void
+    public function setIdSerieVo(SerieId|int $valor): void
     {
-        $this->id_serie = $valor instanceof SerieId
-            ? $valor
-            : SerieId::fromNullableInt($valor);
+        $this->id_serie = $valor instanceof SerieId ? $valor : new SerieId($valor);
     }
 
 }

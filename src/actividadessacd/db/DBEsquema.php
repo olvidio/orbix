@@ -15,9 +15,9 @@ class DBEsquema extends DBAbstract
 
     private string $dir_base = ServerConf::DIR . "/src/actividadessacd/db";
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
-        if (empty($esquema_sfsv)) {
+        if ($esquema_sfsv === null || $esquema_sfsv === '') {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
         }
         $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
@@ -50,15 +50,20 @@ class DBEsquema extends DBAbstract
         $this->llenar_atn_sacd_textos();
     }
 
+    /**
+     * @return array{tabla: string, nom_tabla: string, campo_seq: string, id_seq: string, filename: string}
+     */
     protected function infoTable(string $tabla): array
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
+        $nom_tabla = $this->getNomTabla($tabla);
+        $campo_seq = '';
+        $id_seq = '';
         switch ($tabla) {
-            case "a_sacd_textos":
-                $nom_tabla = $this->getNomTabla($tabla);
+            case 'a_sacd_textos':
                 $campo_seq = 'id_item';
-                $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
+                $id_seq = $nom_tabla . '_' . $campo_seq . '_seq';
                 break;
         }
         $datosTabla['nom_tabla'] = $nom_tabla;

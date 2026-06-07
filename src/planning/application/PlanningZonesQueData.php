@@ -2,6 +2,7 @@
 
 namespace src\planning\application;
 
+use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
@@ -11,20 +12,32 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
  */
 final class PlanningZonesQueData
 {
+    public function __construct(
+        private UsuarioRepositoryInterface $usuarioRepository,
+        private RoleRepositoryInterface $roleRepository,
+        private ZonaRepositoryInterface $zonaRepository,
+    ) {
+    }
+
     /**
      * @return array{error: string, opciones_zonas: array<int|string, string>}
      */
-    public static function execute(): array
+    public function execute(): array
     {
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById((int)($_SESSION['session_auth']['id_usuario'] ?? 0));
+        $id_usuario = ConfigGlobal::mi_id_usuario();
+        $oMiUsuario = $this->usuarioRepository->findById((int)$id_usuario);
+        if ($oMiUsuario === null) {
+            return ['error' => _("No se encuentra el usuario"), 'opciones_zonas' => []];
+        }
         $id_role = $oMiUsuario->getId_role();
 
-        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-        $aRoles = $RoleRepository->getArrayRoles();
+        $aRoles = $this->roleRepository->getArrayRoles();
         $id_nom_jefe = null;
         if (!empty($aRoles[$id_role]) && $aRoles[$id_role] === 'p-sacd') {
-            if (!$_SESSION['oConfig']->is_jefeCalendario()) {
+            $oConfig = $_SESSION['oConfig'] ?? null;
+            $esJefeCalendario = is_object($oConfig) && method_exists($oConfig, 'is_jefeCalendario')
+                && $oConfig->is_jefeCalendario();
+            if (!$esJefeCalendario) {
                 $id_nom_jefe = (int)$oMiUsuario->getCsvIdPauAsString();
                 if (empty($id_nom_jefe)) {
                     return ['error' => _("No tiene permiso para ver esta página"), 'opciones_zonas' => []];
@@ -32,8 +45,7 @@ final class PlanningZonesQueData
             }
         }
 
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-        $aOpciones = $ZonaRepository->getArrayZonas($id_nom_jefe);
+        $aOpciones = $this->zonaRepository->getArrayZonas($id_nom_jefe);
         if (count($aOpciones) < 1) {
             return ['error' => _("No tiene permiso para ver esta página"), 'opciones_zonas' => []];
         }

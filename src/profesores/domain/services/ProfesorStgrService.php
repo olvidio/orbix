@@ -10,26 +10,23 @@ use function src\shared\domain\helpers\usort_profesores_por_apellidos;
 
 class ProfesorStgrService
 {
-    private ProfesorStgrRepositoryInterface $profesorStgrRepository;
-    private PersonaDlRepositoryInterface $personaDlRepository;
-
     public function __construct(
-        ProfesorStgrRepositoryInterface $profesorStgrRepository,
-        PersonaDlRepositoryInterface $personaDlRepository
+        private ProfesorStgrRepositoryInterface $profesorStgrRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private PersonaPubRepositoryInterface $personaPubRepository,
     ) {
-        $this->profesorStgrRepository = $profesorStgrRepository;
-        $this->personaDlRepository = $personaDlRepository;
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function getArrayProfesoresPub(): array
     {
-        $PersonaPubRepository = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class);
-        $cPersonasPub = $PersonaPubRepository->getPersonas(array('profesor_stgr' => 't'));
+        $cPersonasPub = $this->personaPubRepository->getPersonas(['profesor_stgr' => 't']);
 
         $aProfesores = [];
         foreach ($cPersonasPub as $oPersona) {
             $id_nom = $oPersona->getId_nom();
-            // comprobar situación
             $situacion = $oPersona->getSituacionVo()->value();
             if ($situacion !== 'A') {
                 continue;
@@ -39,7 +36,7 @@ class ProfesorStgrService
                 'ap_nom' => $oPersona->getPrefApellidosNombre(),
                 'ap1' => $oPersona->getApellido1Vo()->value(),
                 'ap2' => $oPersona->getApellido2Vo()?->value() ?? '',
-                'nom' => $oPersona->getNomVo()->value(),
+                'nom' => $oPersona->getNomVo()?->value() ?? '',
             ];
         }
         usort_profesores_por_apellidos($aProfesores);
@@ -52,9 +49,12 @@ class ProfesorStgrService
         return $aOpciones;
     }
 
+    /**
+     * @return array<int, array{id_nom: int, ap_nom: string, dl: string}>
+     */
     public function getArrayProfesoresConDl(): array
     {
-        $gesProfesores = $this->profesorStgrRepository->getProfesoresStgr(array('f_cese' => ''), array('f_cese' => 'IS NULL'));
+        $gesProfesores = $this->profesorStgrRepository->getProfesoresStgr(['f_cese' => ''], ['f_cese' => 'IS NULL']);
         $aProfesores = [];
         $aAp1 = [];
         $aAp2 = [];
@@ -65,17 +65,16 @@ class ProfesorStgrService
             if ($oPersonaDl === null) {
                 continue;
             }
-            // comprobar situación
             $situacion = $oPersonaDl->getSituacionVo()->value();
             if ($situacion !== 'A') {
                 continue;
             }
+            $dl = $oPersonaDl->getDlVo()?->value() ?? '';
             $ap_nom = $oPersonaDl->getPrefApellidosNombre();
-            $dl = $oPersonaDl->getDlVo()->value();
-            $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom, 'dl' => $dl);
+            $aProfesores[] = ['id_nom' => $id_nom, 'ap_nom' => $ap_nom, 'dl' => $dl];
             $aAp1[] = $oPersonaDl->getApellido1Vo()->value();
-            $aAp2[] = $oPersonaDl->getApellido2Vo()?->value();
-            $aNom[] = $oPersonaDl->getNomVo()->value();
+            $aAp2[] = $oPersonaDl->getApellido2Vo()?->value() ?? '';
+            $aNom[] = $oPersonaDl->getNomVo()?->value() ?? '';
         }
         $multisort_args = [];
         $multisort_args[] = $aAp1;
@@ -87,22 +86,23 @@ class ProfesorStgrService
         $multisort_args[] = $aNom;
         $multisort_args[] = SORT_ASC;
         $multisort_args[] = SORT_STRING;
-        $multisort_args[] = &$aProfesores;   // finally add the source array, by reference
-        call_user_func_array("array_multisort", $multisort_args);
+        $multisort_args[] = &$aProfesores;
+        call_user_func_array('array_multisort', $multisort_args);
 
         $aOpciones = [];
         foreach ($aProfesores as $aClave) {
-            $clave = $aClave['id_nom'];
-            //$val=$aClave['ap_nom'];
-            //$dl=$aClave['dl'];
-            $aOpciones[$clave] = $aClave;
+            $aOpciones[$aClave['id_nom']] = $aClave;
         }
+
         return $aOpciones;
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function getArrayProfesoresDl(): array
     {
-        $gesProfesores = $this->profesorStgrRepository->getProfesoresStgr(array('f_cese' => ''), array('f_cese' => 'IS NULL'));
+        $gesProfesores = $this->profesorStgrRepository->getProfesoresStgr(['f_cese' => ''], ['f_cese' => 'IS NULL']);
         $aFilas = [];
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
@@ -110,8 +110,7 @@ class ProfesorStgrService
             if ($oPersonaDl === null) {
                 continue;
             }
-            // comprobar situación
-            $situacion = $oPersonaDl?->getSituacionVo()->value();
+            $situacion = $oPersonaDl->getSituacionVo()->value();
             if ($situacion !== 'A') {
                 continue;
             }
@@ -120,7 +119,7 @@ class ProfesorStgrService
                 'ap_nom' => $oPersonaDl->getPrefApellidosNombre(),
                 'ap1' => $oPersonaDl->getApellido1Vo()->value(),
                 'ap2' => $oPersonaDl->getApellido2Vo()?->value() ?? '',
-                'nom' => $oPersonaDl->getNomVo()->value(),
+                'nom' => $oPersonaDl->getNomVo()?->value() ?? '',
             ];
         }
         usort_profesores_por_apellidos($aFilas);

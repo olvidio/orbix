@@ -10,7 +10,7 @@ use PDO;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\PersonaPub;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalListsTrait;
-use src\shared\traits\HandlesPdoErrors;
+use src\shared\infrastructure\GlobalPdo;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
 use src\ubis\domain\RegionStgrConfigException;
@@ -27,19 +27,19 @@ use src\ubis\domain\RegionStgrConfigException;
  */
 class PgPersonaPubRepository extends ClaseRepository implements PersonaPubRepositoryInterface
 {
-    use HandlesPdoErrors;
     use PersonaGlobalListsTrait;
 
-    public function __construct()
-    {
-        $oDbl = $GLOBALS['oDBP'];
-        $this->setoDbl($oDbl);
+    public function __construct(
+        private readonly DelegacionRepositoryInterface $delegacionRepository,
+    ) {
+        $this->setoDbl(GlobalPdo::get('oDBP'));
         $this->setNomTabla('v_personas_pub');
     }
 
     /**
      * Crea una entidad PersonaPub desde un array de datos
      */
+    /** @param array<string, mixed> $aDatos */
     protected function createEntityFromArray(array $aDatos): PersonaPub
     {
         return PersonaPub::fromArray($this->withIdSchema($aDatos));
@@ -48,23 +48,42 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
     /**
      * v_personas_pub no incluye id_schema; se obtiene del esquema de la dl de origen.
      */
+    /**
+     * @param array<string, mixed> $aDatos
+     * @return array<string, mixed>
+     */
     private function withIdSchema(array $aDatos): array
     {
-        if (isset($aDatos['id_schema']) && $aDatos['id_schema'] !== '' && $aDatos['id_schema'] !== null) {
+        if (!empty($aDatos['id_schema'])) {
             return $aDatos;
         }
         $dl = $aDatos['dl'] ?? '';
-        if ($dl === '' || $dl === null || $dl === 'cg') {
+        if (!is_string($dl) || $dl === '' || $dl === 'cg') {
             return $aDatos;
         }
         $id_nom = $aDatos['id_nom'] ?? null;
-        if ($id_nom < 0 || $id_nom === null ) {
+        if (!is_numeric($id_nom) || (int) $id_nom < 0) {
             return $aDatos;
         }
-        $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $aDatos['id_schema'] = $gesDelegacion->mi_region_stgr((string) $dl)['mi_id_schema'];
+        $aDatos['id_schema'] = $this->delegacionRepository->mi_region_stgr((string) $dl)['mi_id_schema'];
 
         return $aDatos;
+    }
+
+    /**
+     * @param array<mixed, mixed> $row
+     * @return array<string, mixed>
+     */
+    private function normalizeAssocRow(array $row): array
+    {
+        $result = [];
+        foreach ($row as $key => $value) {
+            if (is_string($key)) {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -72,9 +91,9 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
     /**
      * devuelve una colección (array) de objetos de tipo PersonaDl
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo PersonaDl
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<PersonaPub> Una colección de objetos de tipo PersonaPub
      */
     public function getPersonas(array $aWhere = [], array $aOperators = []): array
     {
@@ -111,23 +130,32 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
@@ -142,11 +170,17 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             }
             $PersonaDlSet->add($Persona);
         }
-        return $PersonaDlSet->getTot();
+        return array_values($PersonaDlSet->getTot());
     }
 
     /**
-     * @return array<int, PersonaPub>
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param array<int, true> $sinRegionStgrPorIdNom
+     * @return list<PersonaPub>
+     * @param-out array<string, array<string, string>> $problemasRegionStgr
+     * @param-out array<int, true> $sinRegionStgrPorIdNom
      */
     public function getPersonasParaListado(
         array $aWhere,
@@ -181,16 +215,21 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         unset($aWhere['_ordre']);
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         unset($aWhere['_limit']);
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $aDatos) {
             $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
@@ -204,20 +243,25 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             $PersonaDlSet->add($persona);
         }
 
-        return $PersonaDlSet->getTot();
+        return array_values($PersonaDlSet->getTot());
     }
 
     public function findByIdParaListado(int $id_nom, array &$problemasRegionStgr, bool &$marcaAvisoRegionStgr): ?PersonaPub
     {
         $marcaAvisoRegionStgr = false;
         $aDatos = $this->datosById($id_nom);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
 
         return $this->createEntityParaListado($aDatos, $problemasRegionStgr, $marcaAvisoRegionStgr);
     }
 
+    /**
+     * @param array<string, mixed> $aDatos
+     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param-out bool $marcaAvisoRegionStgr
+     */
     private function createEntityParaListado(
         array $aDatos,
         array &$problemasRegionStgr,
@@ -246,6 +290,9 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -257,23 +304,31 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_nom
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_nom): array|bool
+    public function datosById(int $id_nom): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom ORDER BY CASE WHEN situacion = 'A' THEN 0 ELSE 1 END LIMIT 1";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
-            $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
-            $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+        if (!is_array($aDatos)) {
+            return false;
         }
-        return $aDatos;
+        $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
+        $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
+        $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+
+        return $result;
     }
 
 
@@ -283,7 +338,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
     public function findById(int $id_nom): ?PersonaPub
     {
         $aDatos = $this->datosById($id_nom);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return $this->createEntityFromArray($aDatos);

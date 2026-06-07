@@ -22,9 +22,9 @@ interface EncargoHorarioRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo EncargoHorario
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo EncargoHorario
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<EncargoHorario> Una colección de objetos de tipo EncargoHorario
      */
     public function getEncargoHorarios(array $aWhere = [], array $aOperators = []): array;
 
@@ -45,14 +45,14 @@ interface EncargoHorarioRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item_h
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_item_h): array|bool;
+    public function datosById(int $id_item_h): array|false;
 
     /**
      * Busca la clase con id_item_h en el repositorio.
      */
     public function findById(int $id_item_h): ?EncargoHorario;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

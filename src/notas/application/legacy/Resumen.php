@@ -2,6 +2,7 @@
 
 namespace src\notas\application\legacy;
 
+
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
@@ -15,8 +16,13 @@ use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use src\shared\traits\HandlesPdoErrors;
 use function src\shared\domain\helpers\is_true;
 
+/**
+ * @phpstan-type ResumenRta array{num: int|float|string, lista: string}
+ * @phpstan-type ResumenCeRta array{num: int, lista: string, error?: bool}
+ */
 class Resumen
 {
+
     use HandlesPdoErrors;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
@@ -27,17 +33,14 @@ class Resumen
      * @var boolean
      */
     protected bool $blista;
-    /**
-     *
-     * @var array
-     */
-    protected array $a_dl;
+    /** @var array<int, int|string> */
+    protected array $a_dl = [];
 
-    protected $dinicurso;
-    protected $dfincurso;
-    protected $iany;
-    protected $iany2;
-    protected $sce_lugar;
+    protected string $dinicurso = '';
+    protected string $dfincurso = '';
+    protected int $iany = 0;
+    protected int $iany2 = 0;
+    protected string $sce_lugar = '';
 
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
     /**
@@ -45,19 +48,26 @@ class Resumen
      *
      * @var string
      */
-    protected $sNomTabla;
-    protected $sNomNotas;
-    protected $sNomPersonas;
-    protected $sNomAsignaturas;
+    protected string $sNomTabla = '';
+    protected string $sNomNotas = '';
+    protected string $sNomPersonas = '';
+    protected string $sNomAsignaturas = '';
     // para las cr, se mira directamente en la table de 'e_notas', no 'e_notas_dl'.
-    protected $tablaNotas;
-    protected ResumenTempTablesService $tempTablesService;
+    protected string $tablaNotas = '';
 
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
-    function __construct(string $nom = '')
-    {
+    public function __construct(
+        string $nom,
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+        private readonly SectorRepositoryInterface $sectorRepository,
+        private readonly ActividadAllRepositoryInterface $actividadAllRepository,
+        private readonly PersonaDlRepositoryInterface $personaDlRepository,
+        private readonly ProfesorDirectorRepositoryInterface $profesorDirectorRepository,
+        private readonly DepartamentoRepositoryInterface $departamentoRepository,
+        private readonly ResumenTempTablesService $tempTablesService,
+    ) {
         $tabla = "tmp_est_" . $nom;
         $notas = "tmp_notas_" . $nom;
         $asignaturas = "tmp_asignaturas";
@@ -83,7 +93,6 @@ class Resumen
         $this->setNomNotas($notas);
         $this->setNomAsignaturas($asignaturas);
         $this->setNomPersonas($personas);
-        $this->tempTablesService = new ResumenTempTablesService();
 
         // En el caso cr-stgr, se consulta la tabla de notas
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
@@ -96,123 +105,104 @@ class Resumen
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getNomTabla()
-    {
+    public function getNomTabla(): string {
         return $this->sNomTabla;
     }
 
-    public function setNomTabla(string $nomTabla)
-    {
+    public function setNomTabla(string $nomTabla): void {
         $this->sNomTabla = $nomTabla;
     }
 
-    public function getNomPersonas()
-    {
+    public function getNomPersonas(): string {
         return $this->sNomPersonas;
     }
 
-    public function setNomPersonas($personas)
-    {
+    public function setNomPersonas(string $personas): void {
         $this->sNomPersonas = $personas;
     }
 
-    public function getNomNotas()
-    {
+    public function getNomNotas(): string {
         return $this->sNomNotas;
     }
 
-    public function setNomNotas($notas)
-    {
+    public function setNomNotas(string $notas): void {
         $this->sNomNotas = $notas;
     }
 
-    public function getNomAsignaturas()
-    {
+    public function getNomAsignaturas(): string {
         return $this->sNomAsignaturas;
     }
 
-    public function setNomAsignaturas($asignaturas)
-    {
+    public function setNomAsignaturas(string $asignaturas): void {
         $this->sNomAsignaturas = $asignaturas;
     }
 
-    public function getLista()
-    {
+    public function getLista(): bool {
         return $this->blista;
     }
 
-    public function setLista($blista)
-    {
+    public function setLista(bool $blista): void {
         $this->blista = $blista;
     }
 
-    public function getCe_lugar()
-    {
+    public function getCe_lugar(): string {
         return $this->sce_lugar;
     }
 
-    public function setCe_lugar($sce_lugar)
-    {
+    public function setCe_lugar(string $sce_lugar): void {
         $this->sce_lugar = $sce_lugar;
     }
 
-    public function getAnyIniCurs()
-    {
+    public function getAnyIniCurs(): int {
         if (empty($this->iany)) {
-            $this->iany = date("Y");
+            $this->iany = (int) date("Y");
         }
         return $this->iany;
     }
 
-    public function setAnyIniCurs($iany)
-    {
+    public function setAnyIniCurs(int $iany): void {
         $this->iany = $iany;
     }
 
-    public function getAnyFiCurs()
-    {
+    public function getAnyFiCurs(): int {
         if (empty($this->iany2)) {
             $this->iany2 = (int)$this->getAnyIniCurs() + 1;
         }
         return $this->iany2;
     }
 
-    public function setAnyFiCurs($iany2)
-    {
+    public function setAnyFiCurs(int $iany2): void {
         $this->iany2 = $iany2;
     }
 
-    public function getIniCurso()
-    {
+    public function getIniCurso(): string {
         if (empty($this->dinicurso)) {
             $any = $this->getAnyIniCurs();
-            $this->dinicurso = date("Y-m-d", mktime(0, 0, 0, 10, 1, $any));
+            $ts = mktime(0, 0, 0, 10, 1, (int) $any);
+            $this->dinicurso = $ts !== false ? date("Y-m-d", $ts) : '';
         }
         return $this->dinicurso;
     }
 
-    public function setIniCurso($dinicurso)
-    {
+    public function setIniCurso(string $dinicurso): void {
         $this->dinicurso = $dinicurso;
     }
 
-    public function getFinCurso()
-    {
+    public function getFinCurso(): string {
         if (empty($this->dfincurso)) {
             $any = $this->getAnyFiCurs();
-            $this->dfincurso = date("Y-m-d", mktime(0, 0, 0, 9, 30, $any));
+            $ts = mktime(0, 0, 0, 9, 30, (int) $any);
+            $this->dfincurso = $ts !== false ? date("Y-m-d", $ts) : '';
         }
         return $this->dfincurso;
     }
 
-    public function setFinCurso($dfincurso)
-    {
+    public function setFinCurso(string $dfincurso): void {
         $this->dfincurso = $dfincurso;
     }
 
     /* Pongo en la variable $curso el periodo del curso */
-    public function getCurso()
-    {
+    public function getCurso(): string {
         $curso = "BETWEEN '" . $this->getIniCurso() . "' AND '" . $this->getFinCurso() . "' ";
         return $curso;
     }
@@ -223,7 +213,7 @@ class Resumen
      $notas="tmp_notas_numerarios";
      */
 
-    public function nuevaTabla()
+    public function nuevaTabla(): void
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -240,7 +230,7 @@ class Resumen
             $fincurs,
             $curs,
             ConfigGlobal::mi_ambito() === 'rstgr',
-            $this->getArrayDl() ?? []
+            $this->getArrayDl()
         );
 
         // Busco los que han ido a un ci
@@ -285,21 +275,23 @@ class Resumen
         );
 
         $a_superadas = NotaSituacion::getArraySuperadas();
+        $notas_vf = 'e_notas_dl';
         // Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
         if (ConfigGlobal::mi_sfsv() == 1) {
             $notas_vf = 'publicv.e_notas';
-        }
-        if (ConfigGlobal::mi_sfsv() == 2) {
+        } elseif (ConfigGlobal::mi_sfsv() == 2) {
             $notas_vf = 'publicf.e_notas';
+        } else {
+            $notas_vf = $this->getNomNotas();
         }
         $this->tempTablesService->rebuildNotasTable($notas, $tabla, $curs, $notas_vf, $a_superadas);
 
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $AsignaturaRepository = $this->asignaturaRepository;
         $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('active' => 'true'));
         $this->tempTablesService->rebuildAsignaturasTable($asignaturas, $cAsignaturas);
     }
 
-    public function Lista($sql, $campos, $cabecera)
+    public function Lista(string $sql, string $campos, int|string $cabecera): string
     {
         // $campos es un string con los campos que se quiere listar, separados por comas
         $camp = explode(',', $campos);
@@ -313,9 +305,13 @@ class Resumen
             $p = reset($camp);
         }
         foreach ($this->tempTablesService->query($sql) as $fila => $valor) {
+            if (!is_array($valor)) {
+                continue;
+            }
             $html .= "<tr><td width=20></td>";
             foreach ($camp as $key => $val) {
-                $html .= "<td>$valor[$val]</td>";
+                $cell = $valor[$val] ?? '';
+                $html .= '<td>' . (is_scalar($cell) ? (string) $cell : '') . '</td>';
             }
             $html .= "</tr>";
             $p = reset($camp);
@@ -326,7 +322,10 @@ class Resumen
         return $html;
     }
 
-    public function enBienio()
+    /** @return ResumenRta */
+
+
+    public function enBienio(): array
     {
         $tabla = $this->getNomTabla();
 
@@ -345,7 +344,8 @@ class Resumen
         return $rta;
     }
 
-    public function enCuadrienio($c = 'all')
+    /** @return ResumenRta */
+    public function enCuadrienio(int|string $c = 'all'): array
     {
         $tabla = $this->getNomTabla();
         $where = '';
@@ -375,7 +375,10 @@ class Resumen
         return $rta;
     }
 
-    public function enRepaso()
+    /** @return ResumenRta */
+
+
+    public function enRepaso(): array
     {
         $tabla = $this->getNomTabla();
 
@@ -394,7 +397,10 @@ class Resumen
         return $rta;
     }
 
-    public function enTotal()
+    /** @return ResumenRta */
+
+
+    public function enTotal(): array
     {
         $tabla = $this->getNomTabla();
 
@@ -418,9 +424,9 @@ class Resumen
      * Incluye a los que han empezado este curso, y los que han terminado este curso
      * Debe contar también a los que se han ido a otras dl.
      *
-     * @return array
+     * @return ResumenCeRta
      */
-    public function enCe()
+    public function enCe(): array
     {
         //$tabla = $this->getNomTabla();
         $tabla = 'p_numerarios';
@@ -457,7 +463,7 @@ class Resumen
         if ($nf >= 1) {
             $rta['error'] = true;
             $rta['num'] = $nf;
-            if (is_true($this->blista) && $rta['num'] > 0) {
+            if (is_true($this->blista)) {
                 $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ce_lugar", 1);
             } else {
                 $rta['lista'] = '';
@@ -468,7 +474,10 @@ class Resumen
         return array('num' => 0, 'lista' => '');
     }
 
-    public function sinCe()
+    /** @return ResumenRta */
+
+
+    public function sinCe(): array
     {
         $tabla = $this->getNomTabla();
         //$ce_lugar = $this->getCe_lugar();
@@ -492,16 +501,20 @@ class Resumen
         return $rta;
     }
 
-    public function aprobadasCe()
+    /** @return ResumenRta */
+
+
+    public function aprobadasCe(): array
     {
         //$tabla = $this->getNomTabla();
         $tabla = 'p_numerarios';
         //$notas = $this->getNomNotas();
         if (ConfigGlobal::mi_sfsv() == 1) {
             $notas_vf = 'publicv.e_notas';
-        }
-        if (ConfigGlobal::mi_sfsv() == 2) {
+        } elseif (ConfigGlobal::mi_sfsv() == 2) {
             $notas_vf = 'publicf.e_notas';
+        } else {
+            $notas_vf = $this->getNomNotas();
         }
         $ce_lugar = $this->getCe_lugar();
         $a_lugares = explode(',', $ce_lugar);
@@ -536,21 +549,17 @@ class Resumen
                 $Where_superada
 				";
         $statement = $this->tempTablesService->query($ssql);
-        $rta['num'] = $statement->fetchColumn();
-        if (is_true($this->blista) && $rta['num'] > 0) {
-            $rta['lista'] = '';
-        } else {
-            $rta['lista'] = '';
-        }
+        $num = $statement->fetchColumn();
+        $rta['num'] = is_numeric($num) ? (int) $num : 0;
+        $rta['lista'] = '';
         return $rta;
     }
 
-    public function aprobadasSinCe()
+    /** @return ResumenRta */
+    public function aprobadasSinCe(): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
-        //$ce_lugar = $this->getCe_lugar();
-        //$any = $this->getAnyFiCurs();
 
         $ssql = "SELECT count(*)
 			FROM $tabla p, $notas n
@@ -561,13 +570,11 @@ class Resumen
 			";
 
         $statement = $this->tempTablesService->query($ssql);
-        $rta['num'] = $statement->fetchColumn();
-        if (is_true($this->blista) && $rta['num'] > 0) {
-            $rta['lista'] = '';
-        } else {
-            $rta['lista'] = '';
-        }
-        return $rta;
+        $num = $statement->fetchColumn();
+        return [
+            'num' => is_numeric($num) ? (int) $num : 0,
+            'lista' => '',
+        ];
     }
 
     /**
@@ -575,7 +582,9 @@ class Resumen
      *
      * @return array
      */
-    public function bienioSinAcabar()
+    /** @return ResumenRta */
+
+    public function bienioSinAcabar(): array
     {
         $tabla = $this->getNomTabla();
 
@@ -592,7 +601,7 @@ class Resumen
 
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (is_true($this->blista)) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -605,7 +614,9 @@ class Resumen
      *
      * @return array
      */
-    public function ceAcabadoEnBienio()
+    /** @return ResumenRta */
+
+    public function ceAcabadoEnBienio(): array
     {
         //$ce_lugar = $this->getCe_lugar();
         $any = $this->getAnyFiCurs();
@@ -621,7 +632,7 @@ class Resumen
         if ($nf >= 1) {
             $rta['error'] = true;
             $rta['num'] = $nf;
-            if (is_true($this->blista) && $rta['num'] > 0) {
+            if (is_true($this->blista)) {
                 $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
             } else {
                 $rta['lista'] = '';
@@ -632,7 +643,11 @@ class Resumen
     }
 
 
-    public function aprobadasBienio()
+    /** @return ResumenRta */
+
+
+
+    public function aprobadasBienio(): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -656,7 +671,10 @@ class Resumen
         return $rta;
     }
 
-    public function aprobadasCuadrienio()
+    /** @return ResumenRta */
+
+
+    public function aprobadasCuadrienio(): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -711,7 +729,9 @@ class Resumen
     }
 
     // cuadrienio
-    public function masAsignaturasQue($numAsig = 10)
+    /** @return ResumenRta */
+
+    public function masAsignaturasQue(int $numAsig = 10): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -737,7 +757,8 @@ class Resumen
         return $rta;
     }
 
-    public function masCreditosQue($creditos = '28.5')
+    /** @return ResumenRta */
+    public function masCreditosQue(int|float|string $creditos = '28.5'): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -763,7 +784,10 @@ class Resumen
         return $rta;
     }
 
-    public function menosAsignaturasQue($numASig = 5)
+    /** @return ResumenRta */
+
+
+    public function menosAsignaturasQue(int $numASig = 5): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -789,7 +813,8 @@ class Resumen
         return $rta;
     }
 
-    public function menosCreditosQue($creditos = '14')
+    /** @return ResumenRta */
+    public function menosCreditosQue(int|float|string $creditos = '14'): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -815,7 +840,10 @@ class Resumen
         return $rta;
     }
 
-    public function ningunaSuperada()
+    /** @return ResumenRta */
+
+
+    public function ningunaSuperada(): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -837,7 +865,10 @@ class Resumen
         return $rta;
     }
 
-    public function conPreceptorBienio()
+    /** @return ResumenRta */
+
+
+    public function conPreceptorBienio(): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -859,7 +890,10 @@ class Resumen
         return $rta;
     }
 
-    public function conPreceptorCuadrienio()
+    /** @return ResumenRta */
+
+
+    public function conPreceptorCuadrienio(): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -881,7 +915,10 @@ class Resumen
         return $rta;
     }
 
-    public function terminadoCuadrienio()
+    /** @return ResumenRta */
+
+
+    public function terminadoCuadrienio(): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -910,7 +947,9 @@ class Resumen
      *
      * @return array
      */
-    public function laicosConCuadrienio()
+    /** @return ResumenRta */
+
+    public function laicosConCuadrienio(): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -950,7 +989,7 @@ class Resumen
      * posibles profesores (n y agd)
      * posibles profesores asociados (añado s y sss+)
      */
-    public function nuevaTablaProfe()
+    public function nuevaTablaProfe(): void
     {
         $tabla = $this->getNomTabla();
         $personas = $this->getNomPersonas();
@@ -958,7 +997,8 @@ class Resumen
         $this->tempTablesService->rebuildProfesorTable($tabla, $personas);
     }
 
-    public function profesorDeTipo($id_tipo = 0)
+    /** @return ResumenRta */
+    public function profesorDeTipo(int $id_tipo = 0): array
     {
         $tabla = $this->getNomTabla();
         $id_tipo = (int)$id_tipo;
@@ -980,7 +1020,10 @@ class Resumen
         return $rta;
     }
 
-    public function profesorDeLatin()
+    /** @return ResumenRta */
+
+
+    public function profesorDeLatin(): array
     {
         $tabla = $this->getNomTabla();
 
@@ -997,7 +1040,10 @@ class Resumen
         return $rta;
     }
 
-    public function arrayProfesorDepartamento()
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function arrayProfesorDepartamento(): array
     {
         $tabla = $this->getNomTabla();
 
@@ -1012,33 +1058,46 @@ class Resumen
     }
 
     /*44. Número de profesores que dieron clase de su especialidad*/
-    public function profesorEspecialidad($otras = FALSE)
+    /** @return ResumenRta */
+    public function profesorEspecialidad(bool $otras = false): array
     {
         $any = $this->getAnyFiCurs();
         $curso_inicio = $any - 1;
-        $SectorRepository = $GLOBALS['container']->get(SectorRepositoryInterface::class);
+        $SectorRepository = $this->sectorRepository;
         $a_sectores = $SectorRepository->getArraySectoresPorDepartamento();
         $asignaturas = $this->getNomAsignaturas();
         $a_profe_dept = $this->arrayProfesorDepartamento();
         $docencia_dep = [];
         $docencia_no_dep = [];
         $nombres = [];
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $ActividadAllRepository = $this->actividadAllRepository;
+        $PersonaDlRepository = $this->personaDlRepository;
         foreach ($a_profe_dept as $row) {
-            $id_nom = $row['id_nom'];
-            $id_departamento = $row['id_departamento'];
+            $id_nom = $row['id_nom'] ?? null;
+            $id_departamento = $row['id_departamento'] ?? null;
+            if (!is_int($id_nom) && !is_string($id_nom)) {
+                continue;
+            }
+            $id_nom = (int) $id_nom;
+            if (!is_int($id_departamento) && !is_string($id_departamento)) {
+                continue;
+            }
+            $id_departamento = (int) $id_departamento;
             // asignaturas (sector) por profesor. No contar las preceptuaciones
             $ssql = "SELECT DISTINCT d.id_nom,d.id_activ,a.id_sector,a.nombre_corto"
                 . " FROM d_docencia_stgr d JOIN $asignaturas a USING (id_asignatura)"
                 . " WHERE d.id_nom=$id_nom AND curso_inicio=$curso_inicio AND d.tipo != 'p'";
             //echo "sql: $ssql<br>";
             foreach ($this->tempTablesService->query($ssql) as $row2) {
-                $id_nom = $row2['id_nom'];
-                $id_activ = $row2['id_activ'];
-                $id_sector = $row2['id_sector'];
-                $nombre_corto = $row2['nombre_corto'];
-                if (in_array($id_sector, $a_sectores[$id_departamento])) {
+                if (!is_array($row2)) {
+                    continue;
+                }
+                $id_nom = is_numeric($row2['id_nom'] ?? null) ? (int) $row2['id_nom'] : 0;
+                $id_activ = is_numeric($row2['id_activ'] ?? null) ? (int) $row2['id_activ'] : 0;
+                $id_sector = is_numeric($row2['id_sector'] ?? null) ? (int) $row2['id_sector'] : 0;
+                $nombre_corto = is_string($row2['nombre_corto'] ?? null) ? $row2['nombre_corto'] : '';
+                $sectoresDept = $a_sectores[$id_departamento] ?? [];
+                if (in_array($id_sector, $sectoresDept, true)) {
                     $docencia_dep[$id_nom] = 1;
                 } else {
                     $docencia_no_dep[$id_nom] = 1;
@@ -1046,14 +1105,19 @@ class Resumen
 
                 if (is_true($this->blista)) {
                     $oPersonaDl = $PersonaDlRepository->findById($id_nom);
+                    if ($oPersonaDl === null) {
+                        continue;
+                    }
                     $nom = $oPersonaDl->getNom();
                     $apellido1 = $oPersonaDl->getApellido1();
                     $apellido2 = $oPersonaDl->getApellido2();
 
                     $nom_activ = '';
-                    if (!empty($id_activ)) {
+                    if ($id_activ > 0) {
                         $oActividad = $ActividadAllRepository->findById($id_activ);
-                        $nom_activ = $oActividad->getNom_activ();
+                        if ($oActividad !== null) {
+                            $nom_activ = $oActividad->getNom_activ();
+                        }
                     }
                     $nombres[$id_nom] = array('nom' => $nom,
                         'apellido1' => $apellido1,
@@ -1084,8 +1148,8 @@ class Resumen
             foreach ($a_docencia as $id_nom => $valor) {
                 $html .= "<tr><td width=20></td>";
                 foreach ($camp as $key => $val) {
-                    $data = $nombres[$id_nom][$val];
-                    $html .= "<td>$data</td>";
+                    $data = (string) ($nombres[$id_nom][$val] ?? '');
+                    $html .= '<td>' . $data . '</td>';
                 }
                 $html .= "</tr>";
                 $p = reset($camp);
@@ -1102,7 +1166,9 @@ class Resumen
     }
 
     /*42. Número de profesores asistentes a congresos...*/
-    public function ProfesorCongreso()
+    /** @return ResumenRta */
+
+    public function ProfesorCongreso(): array
     {
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
@@ -1122,7 +1188,9 @@ class Resumen
     }
 
     // Profesores de Bienio.
-    public function ProfesoresEnBienio()
+    /** @return ResumenRta */
+
+    public function ProfesoresEnBienio(): array
     {
         $tabla = $this->getNomTabla();
 
@@ -1142,7 +1210,9 @@ class Resumen
     }
 
     // Profesores de Cuadrienio.
-    public function ProfesoresEnCuadrienio()
+    /** @return ResumenRta */
+
+    public function ProfesoresEnCuadrienio(): array
     {
         $tabla = $this->getNomTabla();
 
@@ -1162,14 +1232,16 @@ class Resumen
     }
 
     // Numero de departamentos con director
-    public function Departamentos()
+    /** @return ResumenRta */
+
+    public function Departamentos(): array
     {
         $tabla = $this->getNomTabla();
 
-        $ProfesorDirectorRepository = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);
+        $ProfesorDirectorRepository = $this->profesorDirectorRepository;
         $cDirectores = $ProfesorDirectorRepository->getProfesoresDirectores(array('f_cese' => 1), array('f_cese' => 'IS NULL'));
-        $DepartamentoRepository = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $DepartamentoRepository = $this->departamentoRepository;
+        $PersonaDlRepository = $this->personaDlRepository;
 
         $rta['num'] = count($cDirectores);
         if (is_true($this->blista) && $rta['num'] > 0) {
@@ -1193,18 +1265,14 @@ class Resumen
         return $rta;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getArrayDl()
+    /** @return array<int, int|string> */
+    public function getArrayDl(): array
     {
         return $this->a_dl;
     }
 
-    /**
-     * @param mixed $sdl
-     */
-    public function setArrayDl($dl)
+    /** @param array<int, int|string> $dl */
+    public function setArrayDl(array $dl): void
     {
         $this->a_dl = $dl;
     }

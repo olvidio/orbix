@@ -15,30 +15,34 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
  */
 class PlanDeMisasPantallaData
 {
+
+    public function __construct(
+        private readonly ZonaRepositoryInterface $zonaRepository,
+        private readonly PreferenciaRepositoryInterface $preferenciaRepository,
+        private readonly IdNomJefeResolver $idNomJefeResolver,
+    ) {
+    }
     /**
      * @return array{
      *   pantalla: string,
      *   zonas_opciones: array<int|string, string>,
      *   orden_opciones: array<string, string>,
-     *   tipos_plantilla?: array<int, string>,
-     *   plantilla_selected?: int
+     *   tipos_plantilla?: array<string, string>,
+     *   plantilla_selected?: string
      * }
      */
-    public static function getData(string $pantalla): array
+    public function getData(string $pantalla): array
     {
         if (!in_array($pantalla, ['preparar', 'modificar', 'ver', 'modificar_plantilla'], true)) {
             $pantalla = 'preparar';
         }
 
-        $jefe = IdNomJefeResolver::resolve();
+        $jefe = $this->idNomJefeResolver->resolve();
         if ($jefe['error'] !== '') {
             throw new RuntimeException($jefe['error']);
         }
         $id_nom_jefe = $jefe['id_nom_jefe'];
-
-        $container = $GLOBALS['container'];
-        $ZonaRepository = $container->get(ZonaRepositoryInterface::class);
-        $zonas = $ZonaRepository->getArrayZonas($id_nom_jefe);
+        $zonas = $this->zonaRepository->getArrayZonas($id_nom_jefe);
 
         $orden = [
             'orden' => 'orden',
@@ -61,12 +65,12 @@ class PlanDeMisasPantallaData
                 PlantillaConfig::PLANTILLA_DOMINGOS_TRES => 'semanal y domingos tres opciones',
                 PlantillaConfig::PLANTILLA_MENSUAL_TRES => 'mensual tres opciones',
             ];
-            $PreferenciaRepository = $container->get(PreferenciaRepositoryInterface::class);
             $id_usuario = ConfigGlobal::mi_id_usuario();
-            $aPref = $PreferenciaRepository->getPreferencias(['id_usuario' => $id_usuario, 'tipo' => 'ultima_plantilla']);
+            $aPref = $this->preferenciaRepository->getPreferencias(['id_usuario' => $id_usuario, 'tipo' => 'ultima_plantilla']);
             $ultima = PlantillaConfig::PLANTILLA_SEMANAL_TRES;
             if (count($aPref) > 0) {
-                $ultima = (int)$aPref[0]->getPreferencia();
+                $pref = $aPref[0]->getPreferencia();
+                $ultima = is_string($pref) ? $pref : (string) $pref;
             }
             $out['tipos_plantilla'] = $tipos;
             $out['plantilla_selected'] = $ultima;

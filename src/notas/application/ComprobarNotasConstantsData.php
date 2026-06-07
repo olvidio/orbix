@@ -16,7 +16,7 @@ final class ComprobarNotasConstantsData
     /**
      * @return array{vo: array{NivelStgrId: array<string, int>, NotaSituacion: array<string, int>}}
      */
-    public static function execute(): array
+    public function execute(): array
     {
         return [
             'vo' => [

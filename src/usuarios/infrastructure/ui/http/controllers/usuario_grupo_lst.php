@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
@@ -11,8 +12,12 @@ $sfsv = ConfigGlobal::mi_sfsv();
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);
+if ($oUsuario === null) {
+    ContestarJson::enviar(_('Usuario no encontrado'), 'none');
+    return;
+}
 $id_role = $oUsuario->getId_role();
 $aWhere = [];
 $aOperador = [];
@@ -22,10 +27,10 @@ $aOperador['id_usuario'] = '~';
 // Ahora mismo no sé porque hay que filtrar por role. Para añadir se tienen que ver...
 //$aWhere['id_role'] = $id_role;
 // listado de grupos posibles
-$GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
+$GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 $cGrupos = $GrupoRepository->getGrupos($aWhere,$aOperador);
 // no pongo los que ya tengo. Los pongo en un array
-$UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
+$UsuarioGrupoRepository = DependencyResolver::get(UsuarioGrupoRepositoryInterface::class);
 $cListaGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $Qid_usuario));
 $aGruposOn = [];
 foreach ($cListaGrupos as $oUsuarioGrupo) {

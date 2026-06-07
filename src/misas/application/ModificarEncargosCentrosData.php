@@ -7,6 +7,12 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 class ModificarEncargosCentrosData
 {
+
+    public function __construct(
+        private readonly ZonaRepositoryInterface $zonaRepository,
+        private readonly IdNomJefeResolver $idNomJefeResolver,
+    ) {
+    }
     /**
      * Devuelve el desplegable de zonas que el usuario actual puede ver, para
      * pintar la pantalla `modificar_encargos_centros`. Replica la logica de
@@ -18,9 +24,12 @@ class ModificarEncargosCentrosData
      *   - `error`          : texto vacio si todo ok, mensaje si falta permiso.
      *   - `a_opciones_zona`: array id_zona => nombre_zona.
      */
-    public static function getData(): array
+    /**
+     * @return array{error: string, a_opciones_zona: array<int|string, string>}
+     */
+    public function getData(): array
     {
-        $jefe = IdNomJefeResolver::resolve();
+        $jefe = $this->idNomJefeResolver->resolve();
         if ($jefe['error'] !== '') {
             return [
                 'error' => $jefe['error'],
@@ -28,11 +37,9 @@ class ModificarEncargosCentrosData
             ];
         }
 
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-
         return [
             'error' => '',
-            'a_opciones_zona' => $ZonaRepository->getArrayZonas($jefe['id_nom_jefe']),
+            'a_opciones_zona' => $this->zonaRepository->getArrayZonas($jefe['id_nom_jefe']),
         ];
     }
 }

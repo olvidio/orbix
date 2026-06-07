@@ -25,6 +25,10 @@ class VerOrbixOtraDlData
      * @param array $a_ids_traslados_A Array de IDs de personas en listas
      * @return array Datos serializables
      */
+    /**
+     * @param list<int> $a_ids_traslados_A
+     * @return array<string, mixed>
+     */
     public function __invoke(string $tipo_persona, array $a_ids_traslados_A): array
     {
         $a_persona_listas = [];
@@ -32,13 +36,16 @@ class VerOrbixOtraDlData
         foreach ($a_ids_traslados_A as $id_nom_listas) {
             $i++;
             $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_listas' => $id_nom_listas]);
-            $id_nom_orbix = $cIdMatch[0]->getId_orbix();
+            if ($cIdMatch === []) {
+                continue;
+            }
+            $id_nom_orbix = $cIdMatch[0]->getId_orbix() ?? 0;
 
             $oPersonaListas = $this->personaBDURepository->findById($id_nom_listas);
 
             $dl_listas = $oPersonaListas?->getDl() ?? '';
             preg_match('/(\w*)(cr)$/', $dl_listas, $matches);
-            if (!empty($matches[2]) && $matches[2] === 'cr') {
+            if (!empty($matches[2])) {
                 $dl = $matches[1];
             } else {
                 $dl = "dl" . $dl_listas;

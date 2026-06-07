@@ -5,13 +5,14 @@ namespace src\configuracion\domain;
 /* No vale el underscore en el nombre */
 
 use src\configuracion\domain\contracts\AppRepositoryInterface;
+use src\configuracion\domain\entity\App;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoApps extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private AppRepositoryInterface $appRepository,
+    ) {
         $this->setTxtTitulo(_("aplicaciones"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta aplicación?"));
         $this->setTxtBuscar(_("buscar una aplicación"));
@@ -23,20 +24,19 @@ class InfoApps extends DatosInfoRepo
         $this->setRepositoryInterface(AppRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<App>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'nom');
+            $aWhere = ['_ordre' => 'nom'];
             $aOperador = [];
         } else {
-            $aWhere = array('nom' => $this->k_buscar);
-            $aOperador = array('nom' => 'sin_acentos');
+            $aWhere = ['nom' => $this->k_buscar];
+            $aOperador = ['nom' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getApps($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->appRepository->getApps($aWhere, $aOperador);
     }
 }

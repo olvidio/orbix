@@ -10,8 +10,9 @@ use src\shared\domain\DatosInfoRepo;
 class InfoProfesorPublicacion extends DatosInfoRepo
 {
 
-    public function __construct()
-    {
+    public function __construct(
+        private ProfesorPublicacionRepositoryInterface $profesorPublicacionRepository,
+    ) {
         $this->setTxtTitulo(_("dossier de publicaciones"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta publicación?"));
         $this->setTxtBuscar();
@@ -24,13 +25,18 @@ class InfoProfesorPublicacion extends DatosInfoRepo
         $this->setRepositoryInterface(ProfesorPublicacionRepositoryInterface::class);
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return 1012;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
+        $aWhere = [];
+        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->id_pau)) {
@@ -43,9 +49,6 @@ class InfoProfesorPublicacion extends DatosInfoRepo
             $aWhere['titulo'] = $this->k_buscar;
             $aOperador['titulo'] = 'sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getProfesorPublicaciones($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->profesorPublicacionRepository->getProfesorPublicaciones($aWhere, $aOperador);
     }
 }

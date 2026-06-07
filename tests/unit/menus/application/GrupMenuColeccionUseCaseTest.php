@@ -15,15 +15,12 @@ use src\menus\domain\entity\MenuDb;
 
 final class GrupMenuColeccionUseCaseTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         $_SESSION['session_auth'] = array_merge($_SESSION['session_auth'] ?? [], ['id_role' => 0]);
     }
@@ -31,11 +28,6 @@ final class GrupMenuColeccionUseCaseTest extends TestCase
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -43,29 +35,29 @@ final class GrupMenuColeccionUseCaseTest extends TestCase
     {
         $_SESSION['session_auth']['id_role'] = 0;
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            GrupMenuRoleRepositoryInterface::class => $this->createMock(GrupMenuRoleRepositoryInterface::class),
-            GrupMenuRepositoryInterface::class => $this->createMock(GrupMenuRepositoryInterface::class),
-            MenuDbRepositoryInterface::class => $this->createMock(MenuDbRepositoryInterface::class),
-        ]);
+        $useCase = new GrupMenuColeccionUseCase(
+            $this->createMock(GrupMenuRoleRepositoryInterface::class),
+            $this->createMock(GrupMenuRepositoryInterface::class),
+            $this->createMock(MenuDbRepositoryInterface::class),
+        );
 
-        $this->assertSame([], (new GrupMenuColeccionUseCase())());
+        $this->assertSame([], $useCase());
     }
 
-    public function test_getGrupMenuRoles_false_devuelve_vacio(): void
+    public function test_getGrupMenuRoles_vacio_devuelve_vacio(): void
     {
         $_SESSION['session_auth']['id_role'] = 5;
 
         $gmRoleRepo = $this->createMock(GrupMenuRoleRepositoryInterface::class);
-        $gmRoleRepo->method('getGrupMenuRoles')->willReturn(false);
+        $gmRoleRepo->method('getGrupMenuRoles')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            GrupMenuRoleRepositoryInterface::class => $gmRoleRepo,
-            GrupMenuRepositoryInterface::class => $this->createMock(GrupMenuRepositoryInterface::class),
-            MenuDbRepositoryInterface::class => $this->createMock(MenuDbRepositoryInterface::class),
-        ]);
+        $useCase = new GrupMenuColeccionUseCase(
+            $gmRoleRepo,
+            $this->createMock(GrupMenuRepositoryInterface::class),
+            $this->createMock(MenuDbRepositoryInterface::class),
+        );
 
-        $this->assertSame([], (new GrupMenuColeccionUseCase())());
+        $this->assertSame([], $useCase());
     }
 
     public function test_ordena_por_orden_y_filtra_sin_items(): void
@@ -100,13 +92,9 @@ final class GrupMenuColeccionUseCaseTest extends TestCase
             [2, null],
         ]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            GrupMenuRoleRepositoryInterface::class => $gmRoleRepo,
-            GrupMenuRepositoryInterface::class => $gmRepo,
-            MenuDbRepositoryInterface::class => $menuRepo,
-        ]);
+        $useCase = new GrupMenuColeccionUseCase($gmRoleRepo, $gmRepo, $menuRepo);
 
-        $out = (new GrupMenuColeccionUseCase())();
+        $out = $useCase();
         $this->assertCount(1, $out);
         $this->assertSame(1, $out[0]->getId_grupmenu());
     }
@@ -145,33 +133,11 @@ final class GrupMenuColeccionUseCaseTest extends TestCase
             [2, $gEarly],
         ]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            GrupMenuRoleRepositoryInterface::class => $gmRoleRepo,
-            GrupMenuRepositoryInterface::class => $gmRepo,
-            MenuDbRepositoryInterface::class => $menuRepo,
-        ]);
+        $useCase = new GrupMenuColeccionUseCase($gmRoleRepo, $gmRepo, $menuRepo);
 
-        $out = (new GrupMenuColeccionUseCase())();
+        $out = $useCase();
         $this->assertCount(2, $out);
         $this->assertSame(2, $out[0]->getId_grupmenu());
         $this->assertSame(1, $out[1]->getId_grupmenu());
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

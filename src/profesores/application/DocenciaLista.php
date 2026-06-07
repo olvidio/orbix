@@ -8,12 +8,21 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\services\ProfesorStgrService;
 
-class DocenciaLista
+final class DocenciaLista
 {
-    public static function getTablaData(): array
+    public function __construct(
+        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private ProfesorStgrService $profesorStgrService,
+        private ProfesorDocenciaStgrRepositoryInterface $profesorDocenciaStgrRepository,
+    ) {
+    }
+
+    /**
+     * @return array{id_tabla: string, a_cabeceras: array<int, string>, a_valores: array<int, array<int, mixed>>}
+     */
+    public function getTablaData(): array
     {
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $cAsignaturas = $AsignaturaRepository->getAsignaturas();
+        $cAsignaturas = $this->asignaturaRepository->getAsignaturas();
         $a_asignaturas = [];
         foreach ($cAsignaturas as $oAsignatura) {
             $a_asignaturas[$oAsignatura->getId_asignatura()] = $oAsignatura->getNombre_corto();
@@ -29,20 +38,18 @@ class DocenciaLista
         $a_cabeceras[5] = _("modo");
         $a_cabeceras[6] = _("acta");
 
-        $ProfesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
-        $a_nomProfesor = $ProfesorStgrService->getArrayProfesoresConDl();
+        $a_nomProfesor = $this->profesorStgrService->getArrayProfesoresConDl();
 
-        $ProfesorDocenciaStgrRepository = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
         $a_tipos_docendia = TipoActividadAsignatura::getTiposActividad();
         $a_valores = [];
         $p = 0;
         foreach ($a_nomProfesor as $id_nom => $aClave) {
             $ap_nom = $aClave['ap_nom'];
             $dl = $aClave['dl'];
-            $cProfesorDocenciaStgr = $ProfesorDocenciaStgrRepository->getProfesorDocenciasStgr(['id_nom' => $id_nom]);
+            $cProfesorDocenciaStgr = $this->profesorDocenciaStgrRepository->getProfesorDocenciasStgr(['id_nom' => $id_nom]);
             foreach ($cProfesorDocenciaStgr as $oProfesorDocenciaStgr) {
                 $p++;
-                $id_asignatura = $oProfesorDocenciaStgr->getIdAsignaturaVo()?->value();
+                $id_asignatura = $oProfesorDocenciaStgr->getIdAsignaturaVo()->value();
                 $nom_asignatura = empty($a_asignaturas[$id_asignatura]) ? '?' : $a_asignaturas[$id_asignatura];
 
                 $tipo = $oProfesorDocenciaStgr->getTipoVo()?->value();

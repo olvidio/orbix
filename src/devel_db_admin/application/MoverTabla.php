@@ -25,8 +25,12 @@ final class MoverTabla
 
         $msg = '';
         foreach ($aEsquemas as $esquema) {
-            $esquemaNewv = $esquema;
-            $esquemaRefv = $esquema;
+            $esquemaTxt = $esquema;
+            if ($esquemaTxt === '') {
+                continue;
+            }
+            $esquemaNewv = $esquemaTxt;
+            $esquemaRefv = $esquemaTxt;
 
             $aTablas = [$tabla => $tabla];
             $oDBTabla = new DBTabla();
@@ -45,7 +49,7 @@ final class MoverTabla
         }
 
         $lines = [];
-        if (ConfigGlobal::SERVIDOR === 'orbix.local') {
+        if (str_ends_with((string) ConfigGlobal::SERVIDOR, '.local')) {
             $a_rta = [];
             $command = "grep -r \"setNomTabla('$tabla');\" ";
             $command .= ServerConf::DIR . '/*';
@@ -58,8 +62,12 @@ final class MoverTabla
                 $lines[] = "cambiando $filename<br>";
 
                 $dump = file_get_contents($filename);
+                if ($dump === false) {
+                    $lines[] = "No se ha podido leer: $filename<br>";
+                    continue;
+                }
                 $count = 0;
-                $dump_nou = str_replace('$oDbl = $GLOBALS[\'oDB\'];', '$oDbl = $GLOBALS[\'oDBE\'];', $dump ?? '', $count);
+                $dump_nou = str_replace('$oDbl = $GLOBALS[\'oDB\'];', '$oDbl = $GLOBALS[\'oDBE\'];', $dump, $count);
 
                 if ($count < 1) {
                     $lines[] = "No se ha modificado: $filename<br>";

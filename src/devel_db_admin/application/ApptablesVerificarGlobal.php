@@ -47,8 +47,8 @@ final class ApptablesVerificarGlobal
         }
 
         $cfgReplica = $importar->getConexionImportarReplica('public_select');
-        $diag['replica_host'] = (string) ($cfgReplica['host'] ?? '');
-        $diag['replica_dbname'] = (string) ($cfgReplica['dbname'] ?? '');
+        $diag['replica_host'] = is_scalar($cfgReplica['host'] ?? null) ? (string) $cfgReplica['host'] : '';
+        $diag['replica_dbname'] = is_scalar($cfgReplica['dbname'] ?? null) ? (string) $cfgReplica['dbname'] : '';
 
         $this->assertTablas(
             $this->pdoReplica($cfgReplica),

@@ -17,24 +17,30 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
  */
 class VerPlanSacdData
 {
+
+    public function __construct(
+        private readonly UsuarioRepositoryInterface $usuarioRepository,
+        private readonly ZonaRepositoryInterface $zonaRepository,
+        private readonly EncargoDiaRepositoryInterface $encargoDiaRepository,
+        private readonly EncargoRepositoryInterface $encargoRepository,
+    ) {
+    }
     /**
      * @return array{rows: array<int, array{dia: string, encargo: string, observ: string}>}
      */
-    public static function getData(
+    public function getData(
         string $id_sacd_key,
         string $periodo,
         string $empiezamin,
         string $empiezamax,
     ): array {
-        $container = $GLOBALS['container'];
-
-        $UsuarioRepository = $container->get(UsuarioRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        if ($oMiUsuario === null) {
+            return ['rows' => []];
+        }
         $id_sacd_csv = $oMiUsuario->getCsvIdPauAsString();
-
-        $ZonasRepository = $container->get(ZonaRepositoryInterface::class);
-        $cZonas = $ZonasRepository->getZonas(['id_nom' => $id_sacd_csv]);
-        $jefe_zona = is_array($cZonas) && count($cZonas) > 0;
+        $cZonas = $this->zonaRepository->getZonas(['id_nom' => $id_sacd_csv]);
+        $jefe_zona = count($cZonas) > 0;
 
         $exp_id_sacd = explode('#', $id_sacd_key);
         $Qid_sacd = $exp_id_sacd[0];
@@ -47,10 +53,7 @@ class VerPlanSacdData
         $oFin = new DateTimeLocal($Qempiezamax_rep);
         $interval = new \DateInterval('P1D');
         $date_range = new \DatePeriod($oInicio, $interval, $oFin);
-
-        $EncargoDiaRepository = $container->get(EncargoDiaRepositoryInterface::class);
-        $EncargoRepository = $container->get(EncargoRepositoryInterface::class);
-
+        
         $rows = [];
         foreach ($date_range as $date) {
             $dia_week = (int)$date->format('N');
@@ -63,7 +66,7 @@ class VerPlanSacdData
                 '_ordre' => 'tstart',
             ];
             $aOperador = ['tstart' => 'BETWEEN'];
-            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
+            $cEncargosDia = $this->encargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
             if (count($cEncargosDia) === 0) {
                 $rows[] = ['dia' => $dia, 'encargo' => '', 'observ' => ''];
@@ -95,7 +98,11 @@ class VerPlanSacdData
                     $dia_y_hora .= '-' . $hora_fin;
                 }
 
-                $oEncargo = $EncargoRepository->findById($oEncargoDia->getId_enc());
+                $id_enc = $oEncargoDia->getId_enc();
+                if ($id_enc === null) {
+                    continue;
+                }
+                $oEncargo = $this->encargoRepository->findById($id_enc);
                 $rows[] = [
                     'dia' => $dia_y_hora,
                     'encargo' => $oEncargo !== null ? (string)$oEncargo->getDesc_enc() : '',

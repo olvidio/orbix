@@ -16,7 +16,13 @@ use src\inventario\domain\entity\UbiInventario;
 interface UbiInventarioRepositoryInterface
 {
 
-    public function getUbisInventarioLugar($bLugar): array;
+    /**
+     * @return list<UbiInventario>
+     */
+    public function getUbisInventarioLugar(bool $bLugar): array;
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayUbisInventario(): array;
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -24,9 +30,9 @@ interface UbiInventarioRepositoryInterface
 	/**
 	 * devuelve una colección (array) de objetos de tipo UbiInventario
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo UbiInventario
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<UbiInventario> Una colección de objetos de tipo UbiInventario
 	
 	 */
 	public function getUbisInventario(array $aWhere=[], array $aOperators=[]): array;
@@ -48,10 +54,10 @@ interface UbiInventarioRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param int $id_ubi
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(int $id_ubi): array|bool;
+    public function datosById(int $id_ubi): array|false;
 	
     /**
      * Busca la clase con id_ubi en el repositorio.
@@ -59,5 +65,5 @@ interface UbiInventarioRepositoryInterface
      */
     public function findById(int $id_ubi): ?UbiInventario;
 	
-    public function getNewId();
+    public function getNewId(): int;
 }

@@ -2,6 +2,9 @@
 
 namespace src\personas\application;
 
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\support\PersonaRepositoryResolver;
 
@@ -17,6 +20,11 @@ use src\personas\application\support\PersonaRepositoryResolver;
  */
 final class StgrCambioData
 {
+    public function __construct(
+        private PersonaRepositoryResolver $personaRepositoryResolver,
+    ) {
+    }
+
     /**
      * @param array<string,mixed> $input habitualmente `$_POST`
      * @return array{
@@ -26,24 +34,23 @@ final class StgrCambioData
      *     opciones_nivel_stgr?: array<int,string>
      * }
      */
-    public static function build(array $input): array
+    public function execute(array $input): array
     {
         $a_sel = self::normalizeSel($input['sel'] ?? null);
         if (!empty($a_sel)) {
             $id_nom = (int)strtok((string)$a_sel[0], '#');
             $id_tabla = (string)strtok('#');
         } else {
-            $id_nom = (int)($input['id_nom'] ?? 0);
-            $id_tabla = (string)($input['id_tabla'] ?? '');
+            $id_nom = input_int($input, 'id_nom');
+            $id_tabla = input_string($input, 'id_tabla');
         }
 
         if (empty($id_tabla)) {
             return ['error' => _("No existe la clase de la persona")];
         }
 
-        $resolver = new PersonaRepositoryResolver();
         try {
-            $repository = $resolver->repositorioPorIdTabla($id_tabla);
+            $repository = $this->personaRepositoryResolver->repositorioPorIdTabla($id_tabla);
         } catch (\InvalidArgumentException) {
             return ['error' => _("No existe la clase de la persona")];
         }
@@ -63,16 +70,13 @@ final class StgrCambioData
     }
 
     /**
-     * Acepta `sel` como array (envio tipico desde `Lista`) o string
-     * (envio directo desde otras pantallas).
-     *
      * @param mixed $sel
      * @return array<int,string>
      */
     private static function normalizeSel(mixed $sel): array
     {
         if (is_array($sel)) {
-            return array_values(array_filter(array_map('strval', $sel), static fn(string $v): bool => $v !== ''));
+            return array_values(array_filter(array_map(static fn(mixed $v): string => is_scalar($v) ? (string)$v : '', $sel), static fn(string $v): bool => $v !== ''));
         }
         if (is_string($sel) && $sel !== '') {
             return [$sel];

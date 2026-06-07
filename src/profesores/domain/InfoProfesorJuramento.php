@@ -11,8 +11,9 @@ use src\shared\domain\DatosInfoRepo;
 class InfoProfesorJuramento extends DatosInfoRepo
 {
 
-    public function __construct()
-    {
+    public function __construct(
+        private ProfesorJuramentoRepositoryInterface $profesorJuramentoRepository,
+    ) {
         $this->setTxtTitulo(_("dossier juramento del studium generale"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esto?"));
         $this->setTxtBuscar(_("todos"));
@@ -25,13 +26,18 @@ class InfoProfesorJuramento extends DatosInfoRepo
         $this->setRepositoryInterface(ProfesorJuramentoRepositoryInterface::class);
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return 1021;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<object>
+     */
+    public function getColeccion(): array
     {
+        $aWhere = [];
+        $aOperador = [];
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->id_pau)) {
@@ -44,9 +50,6 @@ class InfoProfesorJuramento extends DatosInfoRepo
             //$aWhere['congreso'] = $this->k_buscar;
             //$aOperador['congreso'] ='sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getProfesorJuramentos($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->profesorJuramentoRepository->getProfesorJuramentos($aWhere, $aOperador);
     }
 }

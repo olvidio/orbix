@@ -1,11 +1,14 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\ZonaSacdDatosGet;
 use src\shared\web\ContestarJson;
 
-$Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
-$Qid_sacd = (int)filter_input(INPUT_POST, 'id_sacd');
+$Qid_zona = (int)filter_input(INPUT_POST, 'id_zona', FILTER_VALIDATE_INT);
+$Qid_sacd = (int)filter_input(INPUT_POST, 'id_sacd', FILTER_VALIDATE_INT);
 
-$result = ZonaSacdDatosGet::execute($Qid_zona, $Qid_sacd);
+/** @var ZonaSacdDatosGet $useCase */
+$useCase = DependencyResolver::get(ZonaSacdDatosGet::class);
+$result = $useCase->execute($Qid_zona, $Qid_sacd);
 
-ContestarJson::enviar((string)($result['error'] ?? ''), $result['payload'] ?? []);
+ContestarJson::enviar($result['error'], $result['payload']);

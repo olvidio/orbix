@@ -1,16 +1,24 @@
 <?php
 
-use src\shared\web\ContestarJson;
 use src\dbextern\application\VerDesaparecidosDeOrbixData;
-use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_string;
 
-$tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
-$ids_desaparecidos_de_orbix = (string)filter_input(INPUT_POST, 'ids_desaparecidos_de_orbix');
+$tipo_persona = input_string($_POST, 'tipo_persona');
+$ids_desaparecidos_de_orbix = input_string($_POST, 'ids_desaparecidos_de_orbix');
 
-$a_ids = json_decode(urldecode($ids_desaparecidos_de_orbix), true) ?: [];
+$decoded = json_decode(urldecode($ids_desaparecidos_de_orbix), true);
+/** @var list<int> $a_ids */
+$a_ids = [];
+if (is_array($decoded)) {
+    foreach ($decoded as $id) {
+        if (is_int($id) || (is_string($id) && is_numeric($id))) {
+            $a_ids[] = (int)$id;
+        }
+    }
+}
 
-$personaBDURepository = $GLOBALS['container']->get(PersonaBDURepositoryInterface::class);
-$useCase = new VerDesaparecidosDeOrbixData($personaBDURepository);
-$data = $useCase($tipo_persona, $a_ids);
+$data = DependencyResolver::get(VerDesaparecidosDeOrbixData::class)($tipo_persona, $a_ids);
 
 ContestarJson::enviar('', $data);

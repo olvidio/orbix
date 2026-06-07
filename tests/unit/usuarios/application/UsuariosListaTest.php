@@ -13,15 +13,12 @@ use src\usuarios\domain\entity\Usuario;
 
 final class UsuariosListaTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
             $_SESSION['session_auth'] = [];
@@ -33,11 +30,6 @@ final class UsuariosListaTest extends TestCase
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -49,12 +41,12 @@ final class UsuariosListaTest extends TestCase
         $userRepo = $this->createMock(UsuarioRepositoryInterface::class);
         $userRepo->method('findById')->with(1)->willReturn($yo);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $userRepo,
-            RoleRepositoryInterface::class => $this->createMock(RoleRepositoryInterface::class),
-        ]);
+        $useCase = new usuariosLista(
+            $userRepo,
+            $this->createMock(RoleRepositoryInterface::class),
+        );
 
-        $out = usuariosLista::usuariosLista('');
+        $out = $useCase->execute('');
 
         $this->assertFalse($out['success']);
         $this->assertSame(_('no tiene permisos para ver esto'), $out['mensaje']);
@@ -84,36 +76,13 @@ final class UsuariosListaTest extends TestCase
         $roleRepo = $this->createMock(RoleRepositoryInterface::class);
         $roleRepo->method('findById')->with(2)->willReturn($role);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            UsuarioRepositoryInterface::class => $userRepo,
-            RoleRepositoryInterface::class => $roleRepo,
-        ]);
-
-        $out = usuariosLista::usuariosLista('');
+        $useCase = new usuariosLista($userRepo, $roleRepo);
+        $out = $useCase->execute('');
 
         $this->assertTrue($out['success']);
         $this->assertIsArray($out['data']);
         $this->assertSame('9#', $out['data']['a_valores'][1]['sel']);
         $this->assertSame('Admin', $out['data']['a_valores'][1][3]);
         $this->assertSame('p@x.test', $out['data']['a_valores'][1][5]);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
     }
 }

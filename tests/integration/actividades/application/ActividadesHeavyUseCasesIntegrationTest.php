@@ -18,6 +18,7 @@ use src\actividades\domain\value_objects\StatusId;
 use src\shared\config\ConfigGlobal;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
+use src\shared\infrastructure\DependencyResolver;
 use Tests\myTest;
 
 /**
@@ -407,7 +408,10 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
     private function refreshPermActividadesSession(): void
     {
         if (ConfigGlobal::is_app_installed('procesos')) {
-            $_SESSION['oPermActividades'] = new PermisosActividades(ConfigGlobal::mi_id_usuario());
+            $_SESSION['oPermActividades'] = DependencyResolver::make(
+                PermisosActividades::class,
+                ['idUsuario' => ConfigGlobal::mi_id_usuario()]
+            );
         } else {
             $_SESSION['oPermActividades'] = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
         }

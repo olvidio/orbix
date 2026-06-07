@@ -6,6 +6,7 @@
 
 use src\shared\web\ContestarJson;
 use src\notas\application\ComprobarNotasConstantsData;
+use src\shared\infrastructure\DependencyResolver;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -13,7 +14,7 @@ $error = '';
 $data = [];
 
 try {
-    $data = ComprobarNotasConstantsData::execute();
+    $data = (DependencyResolver::get(ComprobarNotasConstantsData::class))->execute();
 } catch (\Throwable $e) {
     $error = $e->getMessage();
 }

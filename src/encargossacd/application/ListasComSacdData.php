@@ -20,15 +20,28 @@ use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
  */
 final class ListasComSacdData
 {
+
+    public function __construct(
+        private EncargoAplicacionService $aplicacionService,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdHorarioRepositoryInterface $encargoSacdHorarioRepository,
+        private EncargoSacdObservRepositoryInterface $encargoSacdObservRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository
+    ) {
+    }
+
     /**
      * @return array{
-     *     array_modo: array<int, array<string, mixed>>,
+     *     array_modo: array<int, array<int|string, mixed>>,
      *     lugar_fecha: string
      * }
      */
-    public static function execute(string $sel): array
+    public function execute(string $sel): array
     {
-        $oService = new EncargoAplicacionService();
+        $oService = $this->aplicacionService;
 
         $hoy_iso = date('Y-m-d');
         $oDateLocal = new DateTimeLocal();
@@ -37,14 +50,6 @@ final class ListasComSacdData
         $lugar_fecha = "$poblacion, $hoy_local";
 
         $array_orden = [1 => 1, 2 => 2, 3 => 2, 4 => 4, 5 => 3, 6 => 5];
-
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $EncargoSacdObservRepository = $GLOBALS['container']->get(EncargoSacdObservRepositoryInterface::class);
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-        $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 
         $cPersonas = [];
         $aWhere = [];
@@ -57,7 +62,7 @@ final class ListasComSacdData
                 $aWhere['dl'] = ConfigGlobal::mi_delef();
                 $aWhere['_ordre'] = 'apellido1,apellido2,nom';
                 $aOperador['id_tabla'] = '~';
-                $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador) ?: [];
+                $cPersonas = $this->personaDlRepository->getPersonas($aWhere, $aOperador) ?: [];
                 break;
             case 'sssc':
                 $aWhere['id_tabla'] = '^sss';
@@ -66,16 +71,19 @@ final class ListasComSacdData
                 $aWhere['dl'] = ConfigGlobal::mi_delef();
                 $aWhere['_ordre'] = 'apellido1,apellido2,nom';
                 $aOperador['id_tabla'] = '~';
-                $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador) ?: [];
+                $cPersonas = $this->personaDlRepository->getPersonas($aWhere, $aOperador) ?: [];
                 break;
         }
 
+        /** @var array<int, array{nom_ap: string, txt: array<string, string>, grupo: array<string, list<array<string, mixed>>>, observ: list<array{desc_enc: string}>}> $array_modo */
         $array_modo = [];
         $s = 0;
         foreach ($cPersonas as $oPersona) {
             $s++;
             $id_nom = $oPersona->getId_nom();
             $idioma = (string)$oPersona->getIdioma_preferido();
+            /** @var array<int|string, list<array<string, mixed>>> $grupos */
+            $grupos = [];
             $array_modo[$s] = [
                 'nom_ap' => $oPersona->getNombreApellidos(),
                 'txt' => [
@@ -90,19 +98,20 @@ final class ListasComSacdData
                     't_otros' => $oService->getTraduccion('t_otros', $idioma),
                 ],
                 'grupo' => [],
+                'observ' => [],
             ];
 
-            $cEncargoSacdObserv = $EncargoSacdObservRepository->getEncargosSacdObservs(['id_nom' => $id_nom]) ?: [];
+            $cEncargoSacdObserv = $this->encargoSacdObservRepository->getEncargosSacdObservs(['id_nom' => $id_nom]) ?: [];
             $observ = '';
             if (count($cEncargoSacdObserv) > 0) {
                 $observ = (string)$cEncargoSacdObserv[0]->getObserv();
             }
 
-            $cEncargosSacd1 = $EncargoSacdRepository->getEncargosSacd(
+            $cEncargosSacd1 = $this->encargoSacdRepository->getEncargosSacd(
                 ['id_nom' => $id_nom, 'f_fin' => 'x', '_ordre' => 'modo'],
                 ['f_fin' => 'IS NULL'],
             ) ?: [];
-            $cEncargosSacd2 = $EncargoSacdRepository->getEncargosSacd(
+            $cEncargosSacd2 = $this->encargoSacdRepository->getEncargosSacd(
                 ['id_nom' => $id_nom, 'f_fin' => $hoy_iso, '_ordre' => 'modo'],
                 ['f_fin' => '>'],
             ) ?: [];
@@ -111,7 +120,7 @@ final class ListasComSacdData
             foreach ($cEncargosSacd as $oEncargoSacd) {
                 $id_enc = $oEncargoSacd->getId_enc();
                 $modo = (int)$oEncargoSacd->getModo();
-                $oEncargo = $EncargoRepository->findById($id_enc);
+                $oEncargo = $this->encargoRepository->findById($id_enc);
                 if ($oEncargo === null) {
                     continue;
                 }
@@ -130,9 +139,9 @@ final class ListasComSacdData
                 $nombre_ubi = '';
                 if (!empty($id_ubi)) {
                     if ((int)substr((string)$id_ubi, 0, 1) === 2) {
-                        $oUbi = $CentroEllasRepository->findById($id_ubi);
+                        $oUbi = $this->centroEllasRepository->findById($id_ubi);
                     } else {
-                        $oUbi = $CentroDlRepository->findById($id_ubi);
+                        $oUbi = $this->centroDlRepository->findById($id_ubi);
                     }
                     $nombre_ubi = $oUbi?->getNombre_ubi() ?? '';
                 }
@@ -148,33 +157,33 @@ final class ListasComSacdData
 
                 $sup_tit = '';
                 if ($modo === 2 || $modo === 3) {
-                    $cPar = $EncargoSacdRepository->getEncargosSacd(
+                    $cPar = $this->encargoSacdRepository->getEncargosSacd(
                         ['id_enc' => $id_enc, 'f_fin' => 'x', 'modo' => 4],
                         ['f_fin' => 'IS NULL'],
                     ) ?: [];
                     if (count($cPar) === 0) {
-                        $cPar = $EncargoSacdRepository->getEncargosSacd(
+                        $cPar = $this->encargoSacdRepository->getEncargosSacd(
                             ['id_enc' => $id_enc, 'f_fin' => $hoy_iso, 'modo' => 4],
                             ['f_fin' => '>'],
                         ) ?: [];
                     }
                     if (count($cPar) === 1) {
-                        $oSup = $PersonaDlRepository->findById($cPar[0]->getId_nom());
+                        $oSup = $this->personaDlRepository->findById($cPar[0]->getId_nom());
                         $sup_tit = $oSup?->getNombreApellidos() ?? '';
                     }
                 } elseif ($modo === 4) {
-                    $cPar = $EncargoSacdRepository->getEncargosSacd(
+                    $cPar = $this->encargoSacdRepository->getEncargosSacd(
                         ['id_enc' => $id_enc, 'f_fin' => 'x', 'modo' => '[23]'],
                         ['modo' => '~', 'f_fin' => 'IS NULL'],
                     ) ?: [];
                     if (count($cPar) === 0) {
-                        $cPar = $EncargoSacdRepository->getEncargosSacd(
+                        $cPar = $this->encargoSacdRepository->getEncargosSacd(
                             ['id_enc' => $id_enc, 'f_fin' => $hoy_iso, 'modo' => '[23]'],
                             ['modo' => '~', 'f_fin' => '>'],
                         ) ?: [];
                     }
                     if (count($cPar) === 1) {
-                        $oTit = $PersonaDlRepository->findById($cPar[0]->getId_nom());
+                        $oTit = $this->personaDlRepository->findById($cPar[0]->getId_nom());
                         $sup_tit = $oTit?->getNombreApellidos() ?? '';
                     }
                 }
@@ -185,9 +194,9 @@ final class ListasComSacdData
                     'f_fin' => "'$hoy_iso'",
                 ];
                 $aOperadorH = ['f_fin' => '>'];
-                $cHorarios1 = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereH, $aOperadorH) ?: [];
+                $cHorarios1 = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereH, $aOperadorH) ?: [];
                 $aOperadorH['f_fin'] = 'IS NULL';
-                $cHorarios2 = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereH, $aOperadorH) ?: [];
+                $cHorarios2 = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereH, $aOperadorH) ?: [];
                 $cHorarios = array_merge($cHorarios1, $cHorarios2);
 
                 $dedic_m = '';
@@ -210,7 +219,8 @@ final class ListasComSacdData
                 if ($id_tipo_enc === 5020 || $id_tipo_enc === 5030 || $id_tipo_enc === 6000) {
                     $grupo = 6;
                     $nombre_ubi = $oService->getTraduccion('e_' . $desc_enc, $idioma);
-                    $dedic_m = $oService->dedicacion($id_nom, $id_enc, $idioma);
+                    $dedicacion = $oService->dedicacion($id_nom, $id_enc, $idioma);
+                    $dedic_m = is_string($dedicacion) ? $dedicacion : '';
                 }
 
                 if ($id_tipo_enc === 4002 || $id_tipo_enc === 1110 || $id_tipo_enc === 1210) {
@@ -220,7 +230,8 @@ final class ListasComSacdData
                 if (!empty($id_enc)) {
                     $nombre_ubi_lugar = $nombre_ubi;
                     $nombre_ubi_lugar .= empty($desc_lugar) ? '' : ' (' . $desc_lugar . ')';
-                    $array_modo[$s]['grupo'][$grupo][] = [
+                    $grupoKey = (string) $grupo;
+                    $array_modo[$s]['grupo'][$grupoKey][] = [
                         'desc_enc' => $desc_enc,
                         'nombre_ubi' => $nombre_ubi_lugar,
                         'seccion' => $seccion,
@@ -232,13 +243,34 @@ final class ListasComSacdData
                 }
             }
             if ($observ !== '') {
-                $array_modo[$s][7][] = ['desc_enc' => $observ];
+                $array_modo[$s]['observ'][] = ['desc_enc' => $observ];
             }
         }
 
         return [
-            'array_modo' => $array_modo,
+            'array_modo' => $this->normalizeArrayModo($array_modo),
             'lugar_fecha' => $lugar_fecha,
         ];
+    }
+
+    /**
+     * @param array<int|string, mixed> $array_modo
+     * @return array<int, array<string, mixed>>
+     */
+    private function normalizeArrayModo(array $array_modo): array
+    {
+        $out = [];
+        foreach ($array_modo as $k => $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $normalized = [];
+            foreach ($row as $rk => $rv) {
+                $normalized[(string) $rk] = $rv;
+            }
+            $out[(int) $k] = $normalized;
+        }
+
+        return $out;
     }
 }

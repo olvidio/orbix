@@ -1,5 +1,6 @@
 <?php
 
+use function src\shared\domain\helpers\input_string;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
 
@@ -21,7 +22,7 @@ $config = $oConfigDB->getEsquema('public'); //de la database comun
 $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
-$Qaccion = (string)filter_input(INPUT_POST, 'accion');
+$Qaccion = input_string($_POST, 'accion');
 
 //$dir_base = "/var/www/orbix";
 $dir_base = ServerConf::DIR;
@@ -41,6 +42,9 @@ if ($Qaccion === 'importar') {
 
     // Cambiar el directorio local al de la instalacion
     $txt_base = file_get_contents($filename_base);
+    if ($txt_base === false) {
+        return;
+    }
     $txt_comun = str_replace("DIRBASE", $dir_base, $txt_base);
     file_put_contents($filename, $txt_comun);
 
@@ -50,29 +54,23 @@ if ($Qaccion === 'importar') {
     $user = $config['user'];
     $password = $config['password'];
     //opcionales
-    $str_conexio = '';
+    $strParts = [];
     if (!empty($config['sslmode'])) {
-        $str_conexio .= empty($str_conexio) ? '' : '&';
-        $str_conexio .= "sslmode=" . $config['sslmode'];
+        $strParts[] = 'sslmode=' . $config['sslmode'];
     }
     if (!empty($config['sslcert'])) {
-        $str_conexio .= empty($str_conexio) ? '' : '&';
-        $str_conexio .= "sslcert=" . $config['sslcert'];
+        $strParts[] = 'sslcert=' . $config['sslcert'];
     }
     if (!empty($config['sslkey'])) {
-        $str_conexio .= empty($str_conexio) ? '' : '&';
-        $str_conexio .= "sslkey=" . $config['sslkey'];
+        $strParts[] = 'sslkey=' . $config['sslkey'];
     }
     if (!empty($config['sslrootcert'])) {
-        $str_conexio .= empty($str_conexio) ? '' : '&';
-        $str_conexio .= "sslrootcert=" . $config['sslrootcert'];
+        $strParts[] = 'sslrootcert=' . $config['sslrootcert'];
     }
-    if (!empty($str_conexio)) {
-        $str_conexio = '?' . $str_conexio;
-    }
+    $strConexio = $strParts !== [] ? '?' . implode('&', $strParts) : '';
 
     $password_encoded = urlencode($password);
-    $dsn = "postgresql://$user:$password_encoded@$host:$port/" . $dbname . $str_conexio;
+    $dsn = "postgresql://$user:$password_encoded@$host:$port/" . $dbname . $strConexio;
 
     $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q  -X -t --pset pager=off ";
     $command .= "--file=" . $filename . " ";
@@ -81,7 +79,7 @@ if ($Qaccion === 'importar') {
     passthru($command); // no output to capture so no need to store it
     // read the file, if empty all's well
     $error = file_get_contents($filelog);
-    if (trim($error) != '') {
+    if ($error !== false && trim($error) !== '') {
         if (ConfigGlobal::is_debug_mode()) {
             echo sprintf(_("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>"), $command, $filelog);
         }

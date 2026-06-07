@@ -30,7 +30,7 @@ class CertificadoEmitido
 
     private ?string $esquema_emisor = null;
 
-    private ?bool $firmado = null;
+    private bool $firmado = false;
 
     private ?string $documento = null;
 

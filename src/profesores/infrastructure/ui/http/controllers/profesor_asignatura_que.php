@@ -1,10 +1,9 @@
 <?php
 
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\profesores\application\ProfesorAsignaturaQueData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-$data = [
-    'aOpciones' => $AsignaturaRepository->getArrayAsignaturasConSeparador(),
-];
-ContestarJson::enviar('', $data);
+/** @var ProfesorAsignaturaQueData $useCase */
+$useCase = DependencyResolver::get(ProfesorAsignaturaQueData::class);
+ContestarJson::enviar('', $useCase->execute());

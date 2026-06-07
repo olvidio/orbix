@@ -6,6 +6,7 @@ namespace Tests\unit\ubis\application;
 
 use PHPUnit\Framework\TestCase;
 use src\ubis\application\DelegacionQueData;
+use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Delegacion;
 use src\ubis\domain\value_objects\DelegacionCode;
@@ -17,15 +18,12 @@ use src\ubis\domain\value_objects\RegionCode;
  */
 final class DelegacionQueDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
     /** @var array<string, mixed> */
     private array $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
         $this->previousSession = $_SESSION ?? [];
         if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
             $_SESSION['session_auth'] = [];
@@ -37,11 +35,6 @@ final class DelegacionQueDataTest extends TestCase
     protected function tearDown(): void
     {
         $_SESSION = $this->previousSession;
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
         parent::tearDown();
     }
 
@@ -53,11 +46,8 @@ final class DelegacionQueDataTest extends TestCase
         $repo = $this->createMock(DelegacionRepositoryInterface::class);
         $repo->method('getDelegaciones')->with(['active' => true])->willReturn([$dlPropia, $dlOtra]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            DelegacionRepositoryInterface::class => $repo,
-        ]);
-
-        $out = DelegacionQueData::execute();
+        $useCase = new DelegacionQueData(new DelegacionDropdown($repo));
+        $out = $useCase->execute();
 
         $this->assertArrayHasKey('opciones_dl_destino', $out);
         $keys = array_keys($out['opciones_dl_destino']);
@@ -73,24 +63,5 @@ final class DelegacionQueDataTest extends TestCase
         $m->method('getNombreDlVo')->willReturn(new DelegacionName($nombre));
 
         return $m;
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
     }
 }

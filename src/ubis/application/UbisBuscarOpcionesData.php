@@ -9,25 +9,35 @@ use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 
 /**
  * Opciones de formulario para frontend/ubis/controller/ubis_buscar.php
- *
- * @return array{
- *     opciones_region: array<string, string>,
- *     opciones_tipo_ctr: array<string, string>,
- *     opciones_tipo_casa: array<string, string>,
- *     opciones_pais: array<string, string>
- * }
  */
 class UbisBuscarOpcionesData
 {
-    public static function execute(): array
-    {
-        $repo = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
+    public function __construct(
+        private DireccionCentroRepositoryInterface $direccionCentroRepository,
+        private RegionDropdown $regionDropdown,
+        private TipoCentroDropdown $tipoCentroDropdown,
+        private TipoCasaDropdown $tipoCasaDropdown,
+    ) {
+    }
 
+    /**
+     * @return array{
+     *     opciones_region: array<string, string>,
+     *     opciones_tipo_ctr: array<string, string>,
+     *     opciones_tipo_casa: array<string, string>,
+     *     opciones_pais: array<string, string>
+     * }
+     */
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(): array
+    {
         return [
-            'opciones_region' => RegionDropdown::activasOrdenNombre(),
-            'opciones_tipo_ctr' => TipoCentroDropdown::listaTiposCentro(),
-            'opciones_tipo_casa' => TipoCasaDropdown::listaTiposCasa(),
-            'opciones_pais' => $repo->getArrayPaises(),
+            'opciones_region' => $this->regionDropdown->activasOrdenNombre(),
+            'opciones_tipo_ctr' => $this->tipoCentroDropdown->listaTiposCentro(),
+            'opciones_tipo_casa' => $this->tipoCasaDropdown->listaTiposCasa(),
+            'opciones_pais' => $this->direccionCentroRepository->getArrayPaises(),
         ];
     }
 }

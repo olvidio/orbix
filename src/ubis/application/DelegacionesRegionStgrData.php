@@ -11,13 +11,19 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
  */
 final class DelegacionesRegionStgrData
 {
+    public function __construct(
+        private DelegacionRepositoryInterface $delegacionRepository,
+    ) {
+    }
+
     /**
      * @return array{a_delegaciones: array<int|string, string>}
      */
-    public static function execute(string $region_stgr): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(string $region_stgr): array
     {
-        $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-
-        return ['a_delegaciones' => $repo->getArrayDlRegionStgr([$region_stgr])];
+        return ['a_delegaciones' => $this->delegacionRepository->getArrayDlRegionStgr([$region_stgr])];
     }
 }

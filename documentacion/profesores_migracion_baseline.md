@@ -87,3 +87,99 @@ Los ficheros bajo `apps/profesores/controller/` con el mismo nombre hacen `requi
 - Misma cardinalidad de filas para mismo dataset.
 - Mismo comportamiento en ambito `rstgr` y no `rstgr`.
 - Sin errores PHP con datos existentes y con conjunto vacio.
+
+---
+
+## Cierre DI (junio 2026)
+
+Migracion al patron de modulos cerrados (`personas`, `usuarios`, `dossiers`, `planning`):
+constructor DI en application/domain, `DependencyResolver::get()` en controllers HTTP,
+`GlobalPdo::get()` en repos `Pg*`, 0 `$GLOBALS['container']` en todo `src/profesores/`.
+
+### Resultado del cierre DI
+
+| Criterio | Antes | Despues |
+|----------|------:|--------:|
+| `$GLOBALS['container']` en `src/profesores/` | ~31 | **0** |
+| `$GLOBALS['oDB*']` en repos Pg* | 11 | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | 0/6 | **6/6** |
+| `application/` con constructor DI | 0/6 | **6/6** instancia |
+| Casos de uso en `dependencies.php` | 10 repos | **28** entradas `autowire()` |
+| Frontend `use src\` | 0 | **0** |
+
+### `src/profesores/config/dependencies.php`
+
+Registra 10 repositorios del modulo + `ProfesorStgrService`, `ProfesorAsignaturaService`,
+`ProfesorActividad`, 10 clases `InfoProfesor*` y 6 casos de uso HTTP.
+
+Repos cross-modulo (`Asignatura*`, `Departamento*`, `PersonaDl*`, `Teleco*`, `TipoDossier*`,
+`Centro*`, `Delegacion*`, `AsistentePub*`) se resuelven por autowire desde los `dependencies.php`
+de sus modulos.
+
+### Application layer (constructor DI)
+
+| Clase | Metodo principal |
+|-------|------------------|
+| `CongresosLista` | `getTablaData()` |
+| `DocenciaLista` | `getTablaData()` |
+| `FichaProfesorStgr` | `getFichaData()` |
+| `ListaPorDepartamentos` | `getData()` |
+| `ProfesorAsignaturaQueData` | `execute()` |
+| `ProfesoresAsignaturaLista` | `getTablaData()` |
+
+### Domain
+
+| Clase | Cambio |
+|-------|--------|
+| `ProfesorStgrService` | `PersonaPubRepositoryInterface` inyectado en constructor |
+| `ProfesorAsignaturaService` | Ya con DI; tipado PHPDoc retornos |
+| `ProfesorActividad` | `ProfesorStgrService` + `AsistentePubRepositoryInterface` inyectados |
+| `InfoProfesor*` (×10) | Repo inyectado en constructor (patron `InfoSituacion`) |
+| `PgProfesorAmpliacionRepository` | `PersonaDlRepositoryInterface` inyectado |
+
+### Repositorios `Pg*`
+
+Los 10 repos usan `GlobalPdo::get('oDB'|'oDBPC')`. Guards `PDOStatement|false` en
+colecciones, `datosById`, `Guardar` y `getNewId`.
+
+### HTTP controllers
+
+Los 6 controllers en `infrastructure/ui/http/controllers/` usan
+`DependencyResolver::get()` (sin metodos estaticos). Entrada POST via `input_int` /
+`input_string` / `input_string_list` donde aplica.
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (pre-cierre) | `composer phpstan:file -- src/profesores/` | **355** |
+| 2026-06-06 (cierre DI) | `composer phpstan:file -- src/profesores/` | **0** |
+
+Areas abordadas (355 → 0):
+
+- **Repos `Pg*`:** `GlobalPdo`, guards `PDOStatement|false`, `array_values` en colecciones,
+  `datosById(): array|false`, PHPDoc en interfaces.
+- **Application:** constructor DI; null checks tras `findById()`; tipado payloads tabla.
+- **Domain:** `InfoProfesor*` DI; entity VO setters; services tipados.
+- **HTTP controllers:** `DependencyResolver::get()` + `input_*`.
+
+Sin `@phpstan-ignore`.
+
+### Tests
+
+| Suite | Resultado |
+|-------|-----------|
+| `tests/unit/profesores/` | **190 OK** |
+| `tests/integration/profesores/` | **92 OK** |
+
+Tests de application actualizados a constructor DI (sin mock de `$GLOBALS['container']`).
+
+### Checklist de cierre
+
+Ver [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md#checklist-cerrar-un-módulo).
+
+- [x] `$GLOBALS['container']` migrado a DI por constructor en `application/` y domain
+- [x] Controllers HTTP sin `$GLOBALS` directo (`DependencyResolver`)
+- [x] `dependencies.php` con todos los use cases
+- [x] Tests unitarios + integracion pasan
+- [x] PHPStan `src/profesores/` en 0 (phpstan-nobaseline.neon)

@@ -2,6 +2,8 @@
 
 namespace src\encargossacd\application;
 
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
@@ -20,6 +22,16 @@ use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
  */
 final class ListasAData
 {
+
+    public function __construct(
+        private EncargoAplicacionService $aplicacionService,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository
+    ) {
+    }
+
     /**
      * @return array{
      *     cabecera_left: string,
@@ -28,9 +40,13 @@ final class ListasAData
      *     Html: string
      * }
      */
-    public static function execute(int $sf): array
+    public function execute(int $sf): array
     {
-        $any = $_SESSION['oConfig']->any_final_curs('crt');
+        /** @var ConfigSnapshot $oConfig */
+
+        $oConfig = $_SESSION['oConfig'];
+
+        $any = $oConfig->any_final_curs('crt');
         $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->getFromLocal();
         $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->getFromLocal();
 
@@ -38,7 +54,7 @@ final class ListasAData
         $cabecera_right = ConfigGlobal::mi_delef();
         $cabecera_right_2 = 'ref. cr 1/14, 10, a)';
 
-        $oService = new EncargoAplicacionService();
+        $oService = $this->aplicacionService;
         $poblacion = $oService->getLugar_dl();
         $oDateLocal = new DateTimeLocal();
         $hoy_local = $oDateLocal->getFromLocal('.');
@@ -49,17 +65,16 @@ final class ListasAData
             : ['n', 'a[jm$]', 's[jm]', 'ss'];
 
         $Html = '';
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-
+        $labels = [
+            'n' => _('1. ctr de n'),
+            'a[jm$]' => _('2. ctr de agd'),
+            's[jm]' => _('3. ctr de sg'),
+        ];
+        if ($sf !== 1) {
+            $labels['ss'] = _('4. ctr de sss+');
+        }
         foreach ($tipos_de_ctr as $tipo_ctr_que) {
-            $txt_tipo_ctr = match ($tipo_ctr_que) {
-                'n' => _('1. ctr de n'),
-                'a[jm$]' => _('2. ctr de agd'),
-                's[jm]' => _('3. ctr de sg'),
-                'ss' => _('4. ctr de sss+'),
-                default => '',
-            };
+            $txt_tipo_ctr = $labels[$tipo_ctr_que] ?? '';
             if ($txt_tipo_ctr !== '') {
                 $Html .= "<div class=salta_pag><table><tr><td class=grupo colspan=2>$txt_tipo_ctr</td></tr>";
             }
@@ -72,11 +87,10 @@ final class ListasAData
             $aOperador = ['tipo_ctr' => '~'];
 
             if ($sf === 1) {
-                $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+                $cCentros = $this->centroEllasRepository->getCentros($aWhere, $aOperador) ?: [];
             } else {
-                $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                $cCentros = $this->centroDlRepository->getCentros($aWhere, $aOperador) ?: [];
             }
-            $cCentros = $GesCentros->getCentros($aWhere, $aOperador) ?: [];
 
             foreach ($cCentros as $oCentro) {
                 $sacd_titular = '';
@@ -86,7 +100,7 @@ final class ListasAData
                 $nombre_ubi = $oCentro->getNombre_ubi();
                 $tipo_ctr = $oCentro->getTipo_ctr();
 
-                $cEncargos = $EncargoRepository->getEncargos(
+                $cEncargos = $this->encargoRepository->getEncargos(
                     ['id_ubi' => $id_ubi, 'id_tipo_enc' => '1[0123]0.'],
                     ['id_tipo_enc' => '~'],
                 ) ?: [];
@@ -94,7 +108,7 @@ final class ListasAData
                     $id_enc = $oEncargo->getId_enc();
                     $id_tipo_enc = (string)$oEncargo->getId_tipo_enc();
 
-                    $cEncargoSacd = $EncargoSacdRepository->getEncargosSacd(
+                    $cEncargoSacd = $this->encargoSacdRepository->getEncargosSacd(
                         ['id_enc' => $id_enc, 'f_fin' => 'null', '_ordre' => 'modo'],
                         ['f_fin' => 'IS NULL'],
                     ) ?: [];

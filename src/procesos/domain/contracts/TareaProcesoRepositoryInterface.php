@@ -18,14 +18,29 @@ use src\procesos\domain\entity\TareaProceso;
 interface TareaProcesoRepositoryInterface
 {
 
+    /**
+     * @return array<string, list<array<string, string>>>
+     */
     public function getArrayFasesDependientes(int $iid_tipo_proceso): array;
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     public function arbolPrevio(int $iid_tipo_proceso): array;
 
+    /**
+     * @param array<string, bool> $aFasesEstado
+     */
     public function getStatusProceso(int $iid_tipo_proceso, array $aFasesEstado): int;
 
+    /**
+     * @return array<int, int>
+     */
     public function getFasesProceso(int $iid_tipo_proceso): array;
 
+    /**
+     * @return list<TareaProceso>
+     */
     public function getFaseIndependiente(int $id_tipo_proceso): array;
 
 
@@ -34,9 +49,9 @@ interface TareaProcesoRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo TareaProceso
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo TareaProceso
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<TareaProceso> Una colección de objetos de tipo TareaProceso
      * @throws JsonException
      */
     public function getTareasProceso(array $aWhere = [], array $aOperators = []): array;
@@ -58,10 +73,10 @@ interface TareaProcesoRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      * @throws JsonException
      */
-    public function datosById(int $id_item): array|bool;
+    public function datosById(int $id_item): array|false;
 
     /**
      * Busca la clase con id_item en el repositorio.
@@ -69,5 +84,5 @@ interface TareaProcesoRepositoryInterface
      */
     public function findById(int $id_item): ?TareaProceso;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

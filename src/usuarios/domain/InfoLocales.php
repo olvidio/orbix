@@ -2,19 +2,20 @@
 
 namespace src\usuarios\domain;
 
-/* No vale el underscore en el nombre */
-
 use src\shared\domain\DatosInfoRepo;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
+use src\usuarios\domain\entity\Local;
+
+/* No vale el underscore en el nombre */
 
 class InfoLocales extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
-        $this->setTxtTitulo(_("idiomas posibles para la aplicación"));
+    public function __construct(
+        private LocalRepositoryInterface $localRepository,
+    ) {
+        $this->setTxtTitulo(_('idiomas posibles para la aplicación'));
         $this->setTxtEliminar();
-        $this->setTxtBuscar(_("idioma a buscar"));
+        $this->setTxtBuscar(_('idioma a buscar'));
         $this->setTxtExplicacion();
 
         $this->setClase('src\\usuarios\\domain\\entity\\Local');
@@ -23,21 +24,20 @@ class InfoLocales extends DatosInfoRepo
         $this->setRepositoryInterface(LocalRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<Local>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = [];
             $aOperador = [];
         } else {
-            $aWhere = array('nom_idioma' => $this->k_buscar);
-            $aOperador = array('nom_idioma' => 'sin_acentos');
+            $aWhere = ['nom_idioma' => $this->k_buscar];
+            $aOperador = ['nom_idioma' => 'sin_acentos'];
         }
         $aWhere['_ordre'] = 'active DESC,nom_idioma ASC';
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getLocales($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->localRepository->getLocales($aWhere, $aOperador);
     }
 }

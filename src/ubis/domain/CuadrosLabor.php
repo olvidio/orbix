@@ -9,6 +9,9 @@ class CuadrosLabor extends XPermisos
 {
     public string $classname = "CuadrosLabor";
 
+    /**
+     * @return array<string, int>
+     */
     public function generarArrayTraducido(): array
     {
         return CuadrosLaborBits::labeledMap(ConfigGlobal::mi_sfsv());
@@ -19,6 +22,9 @@ class CuadrosLabor extends XPermisos
         $this->permissions = CuadrosLaborBits::labeledMap(ConfigGlobal::mi_sfsv());
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function getTxtTiposLabor(): array
     {
         return array_flip($this->permissions);

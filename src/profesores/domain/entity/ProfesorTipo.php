@@ -32,7 +32,7 @@ class ProfesorTipo
     {
         $this->id_tipo_profesor = $valor instanceof ProfesorTipoId
             ? $valor
-            : ProfesorTipoId::fromNullableInt($valor);
+            : (ProfesorTipoId::fromNullableInt($valor) ?? throw new \InvalidArgumentException('id_tipo_profesor cannot be null'));
     }
 
     /**
@@ -48,7 +48,7 @@ class ProfesorTipo
      */
     public function setId_tipo_profesor(?int $valor = null): void
     {
-        $this->id_tipo_profesor = ProfesorTipoId::fromNullableInt($valor);
+        $this->id_tipo_profesor = (ProfesorTipoId::fromNullableInt($valor) ?? throw new \InvalidArgumentException('id_tipo_profesor cannot be null'));
     }
 
     public function getTipoProfesorVo(): ?ProfesorTipoName
@@ -84,6 +84,9 @@ class ProfesorTipo
     {
         return 'id_tipo_profesor';
     }
+
+  /** @return array<string, mixed> */
+
 
   public function getDatosCampos(): array
     {

@@ -18,14 +18,8 @@ class PermisoDossier extends XPermisos
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * sPermLogin de PermisoMenu
-     *
-     * @var string llista de valors separats per comes amb els permisos.
-     */
-    private $sPermLogin;
-
-    public $todos;
+    /** @var mixed */
+    public mixed $todos = null;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -35,7 +29,9 @@ class PermisoDossier extends XPermisos
      */
     function __construct()
     {
-        $this->iaccion = $_SESSION['iPermMenus'];
+        $this->iaccion = is_numeric($_SESSION['iPermMenus'] ?? null)
+            ? (int) $_SESSION['iPermMenus']
+            : 0;
         $this->omplir();
     }
 

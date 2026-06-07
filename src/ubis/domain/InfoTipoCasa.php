@@ -4,14 +4,15 @@ namespace src\ubis\domain;
 
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\TipoCasaRepositoryInterface;
+use src\ubis\domain\entity\TipoCasa;
 
 /* No vale el underscore en el nombre */
 
 class InfoTipoCasa extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private TipoCasaRepositoryInterface $tipoCasaRepository,
+    ) {
         $this->setTxtTitulo(_("tipos de casa"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este tipo de casa?"));
         $this->setTxtBuscar(_("buscar un tipo de casa"));
@@ -23,20 +24,19 @@ class InfoTipoCasa extends DatosInfoRepo
         $this->setRepositoryInterface(TipoCasaRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<TipoCasa>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'nombre_tipo_casa');
+            $aWhere = ['_ordre' => 'nombre_tipo_casa'];
             $aOperador = [];
         } else {
-            $aWhere = array('nombre_tipo_casa' => $this->k_buscar);
-            $aOperador = array('nombre_tipo_casa' => 'sin_acentos');
+            $aWhere = ['nombre_tipo_casa' => $this->k_buscar];
+            $aOperador = ['nombre_tipo_casa' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getTiposCasa($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->tipoCasaRepository->getTiposCasa($aWhere, $aOperador);
     }
 }

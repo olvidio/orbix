@@ -5,13 +5,14 @@ namespace src\menus\domain;
 /* No vale el underscore en el nombre */
 
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
+use src\menus\domain\entity\MetaMenu;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoMetaMenus extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private MetaMenuRepositoryInterface $metaMenuRepository,
+    ) {
         $this->setTxtTitulo(_("metamenus"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este metamenu?"));
         $this->setTxtBuscar(_("buscar un metamenú por descripción"));
@@ -23,10 +24,11 @@ class InfoMetaMenus extends DatosInfoRepo
         $this->setRepositoryInterface(MetaMenuRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<MetaMenu>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = ['_ordre' => 'url'];
             $aOperador = [];
@@ -34,9 +36,7 @@ class InfoMetaMenus extends DatosInfoRepo
             $aWhere = ['descripcion' => $this->k_buscar];
             $aOperador = ['descripcion' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getMetamenus($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->metaMenuRepository->getMetamenus($aWhere, $aOperador);
     }
 }

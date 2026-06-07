@@ -16,6 +16,9 @@ use src\ubis\domain\entity\TipoCasa;
 interface TipoCasaRepositoryInterface
 {
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayTiposCasa(): array;
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -23,9 +26,9 @@ interface TipoCasaRepositoryInterface
 	/**
 	 * devuelve una colección (array) de objetos de tipo TipoCasa
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo TipoCasa
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<TipoCasa> Una colección de objetos de tipo TipoCasa
 	
 	 */
 	public function getTiposCasa(array $aWhere=[], array $aOperators=[]): array;
@@ -47,10 +50,22 @@ interface TipoCasaRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param string $tipo_casa
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(string $tipo_casa): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(string $tipo_casa): array|false;
 	
     /**
      * Busca la clase con tipo_casa en el repositorio.

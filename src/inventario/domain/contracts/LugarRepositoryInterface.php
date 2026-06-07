@@ -16,6 +16,12 @@ use src\inventario\domain\entity\Lugar;
 interface LugarRepositoryInterface
 {
 
+    /**
+     * @return array<int|string, string>
+     */
+    /**
+     * @return array<int|string, string>
+     */
     public function getArrayLugares(int $id_ubi): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -23,9 +29,9 @@ interface LugarRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Lugar
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Lugar
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Lugar> Una colección de objetos de tipo Lugar
      */
     public function getLugares(array $aWhere = [], array $aOperators = []): array;
 
@@ -46,14 +52,14 @@ interface LugarRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_lugar
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_lugar): array|bool;
+    public function datosById(int $id_lugar): array|false;
 
     /**
      * Busca la clase con id_lugar en el repositorio.
      */
     public function findById(int $id_lugar): ?Lugar;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

@@ -8,15 +8,7 @@ final class ActividadId
 
     public function __construct(int $value)
     {
-        $this->validate($value);
         $this->value = $value;
-    }
-
-    private function validate(int $value): void
-    {
-        if (!is_numeric($value)) {
-            throw new \InvalidArgumentException('ActividadId must be integer');
-        }
     }
 
     public function value(): int

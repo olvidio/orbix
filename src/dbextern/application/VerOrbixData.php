@@ -3,22 +3,20 @@
 namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
-use src\dbextern\domain\SincroDB;
+use src\dbextern\application\support\SincroDBFactory;
 use src\personas\application\support\PersonaRepositoryResolver;
 
 class VerOrbixData
 {
-    private IdMatchPersonaRepositoryInterface $idMatchRepository;
-
-    public function __construct(IdMatchPersonaRepositoryInterface $idMatchRepository)
-    {
-        $this->idMatchRepository = $idMatchRepository;
+    public function __construct(
+        private IdMatchPersonaRepositoryInterface $idMatchRepository,
+        private PersonaRepositoryResolver $personaRepositoryResolver,
+        private SincroDBFactory $sincroDBFactory,
+    ) {
     }
 
     /**
-     * Obtiene la lista de personas Orbix sin unir a la BDU.
-     *
-     * @return array Datos serializables
+     * @return array<string, mixed>
      */
     public function __invoke(string $region, string $tipo_persona): array
     {
@@ -29,13 +27,12 @@ class VerOrbixData
             'sssc' => 'PersonaSSSC',
             default => '',
         };
-        if (empty($obj_pau)) {
+        if ($obj_pau === '') {
             return ['lista' => []];
         }
 
-        $resolver = new PersonaRepositoryResolver();
         try {
-            $repoPersona = $resolver->repositorio($obj_pau);
+            $repoPersona = $this->personaRepositoryResolver->repositorio($obj_pau);
         } catch (\InvalidArgumentException) {
             return ['error' => _("No existe la clase de la persona")];
         }
@@ -47,7 +44,7 @@ class VerOrbixData
             $id_nom_orbix = $oPersonaOrbix->getId_nom();
 
             $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_orbix' => $id_nom_orbix]);
-            if (!empty($cIdMatch[0]) && !empty($cIdMatch)) {
+            if ($cIdMatch !== []) {
                 continue;
             }
             $i++;
@@ -67,11 +64,11 @@ class VerOrbixData
     }
 
     /**
-     * Obtiene los posibles matches BDU para una persona Orbix.
+     * @return list<array<string, mixed>>
      */
     public function getPosiblesMatches(string $tipo_persona, string $region, string $dl, int $id_nom_orbix): array
     {
-        $oSincroDB = new SincroDB();
+        $oSincroDB = $this->sincroDBFactory->create();
         $oSincroDB->setTipo_persona($tipo_persona);
         $oSincroDB->setRegion($region);
         $oSincroDB->setDlListas($dl);

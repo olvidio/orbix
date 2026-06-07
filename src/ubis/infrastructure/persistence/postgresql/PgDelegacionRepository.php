@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use PDO;
 use src\shared\config\ConfigGlobal;
@@ -28,18 +29,18 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('xu_dl');
     }
 
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-    public function soy_region_stgr($dele = ''): bool
+    public function soy_region_stgr(string $dele = ''): bool
     {
-        if (empty($dele)) {
+        if ($dele === '') {
             $dele = ConfigGlobal::mi_dele();
         }
 
@@ -57,12 +58,20 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 
         $sQuery = "SELECT region_stgr, region FROM $nom_tabla WHERE dl = '$dele'";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
 
         $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
-        $region_stgr = 'cr' . $aDades['region_stgr'];
-        if (empty($aDades['region_stgr'])) {
+        if (!is_array($aDades) || !isset($aDades['region_stgr'])) {
             throw new RegionStgrConfigException(RegionStgrAviso::TIPO_REGION_STGR_FALTA, $dele);
         }
+        $regionStgrRaw = $aDades['region_stgr'];
+        $regionStgr = is_scalar($regionStgrRaw) ? (string) $regionStgrRaw : '';
+        if ($regionStgr === '') {
+            throw new RegionStgrConfigException(RegionStgrAviso::TIPO_REGION_STGR_FALTA, $dele);
+        }
+        $region_stgr = 'cr' . $regionStgr;
 
         return $dele === $region_stgr;
     }
@@ -82,14 +91,20 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         } else {
             $sQuery = "SELECT region_stgr, region FROM $nom_tabla WHERE dl = '$dele'";
             $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
             $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
-            if ($aDades === false || empty($aDades)) {
+            if (!is_array($aDades) || $aDades === []) {
                 throw new RegionStgrConfigException(RegionStgrAviso::TIPO_DL_NO_ENCONTRADA, $dele);
             }
-            $region_dele = $aDades['region'];
-            $region_stgr = $aDades['region_stgr'];
-            if (empty($aDades['region_stgr'])) {
+            if (!isset($aDades['region'], $aDades['region_stgr'])) {
+                throw new RegionStgrConfigException(RegionStgrAviso::TIPO_DL_NO_ENCONTRADA, $dele);
+            }
+            $region_dele = (string) $aDades['region'];
+            $region_stgr = (string) $aDades['region_stgr'];
+            if ($region_stgr === '') {
                 throw new RegionStgrConfigException(RegionStgrAviso::TIPO_REGION_STGR_FALTA, $dele);
             }
         }
@@ -117,20 +132,23 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
                         FROM db_idschema
                         WHERE schema = '$esquema_region_stgr' OR schema = '$esquema_dele'";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            throw new RegionStgrConfigException(
+                RegionStgrAviso::TIPO_ESQUEMA_NO_ENCONTRADO,
+                $dele,
+                $esquema_region_stgr,
+            );
+        }
 
         $id_esquema_dele = null;
         foreach ($stmt as $aDades) {
-            if ($aDades === false) {
-                throw new RegionStgrConfigException(
-                    RegionStgrAviso::TIPO_ESQUEMA_NO_ENCONTRADO,
-                    $dele,
-                    $esquema_region_stgr,
-                );
+            if (!is_array($aDades) || !isset($aDades['schema'], $aDades['id'])) {
+                continue;
             }
-            if ($aDades['schema'] === $esquema_region_stgr) {
+            if ((string) $aDades['schema'] === $esquema_region_stgr) {
                 //$id_esquema_region_stgr = $aDades['id'];
             }
-            if ($aDades['schema'] === $esquema_dele) {
+            if ((string) $aDades['schema'] === $esquema_dele) {
                 $id_esquema_dele = $aDades['id'];
             }
         }
@@ -150,7 +168,10 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         ];
     }
 
-    public function getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv): array
+    /**
+     * @return array<int|string, string>
+     */
+    public function getArrayIdSchemaRegionStgr(string $sRegionStgr, int $mi_sfsv): array
     {
         $mi_sfsv_text = $mi_sfsv === 1 ? 'v' : 'f';
         $oDbl = $this->getoDbl_Select();
@@ -169,23 +190,27 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
                  WHERE $where
                 ";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $a_idschema = [];
         foreach ($stmt as $row) {
-            $schema = $row['schema'];
-            $id = $row['id'];
-            $a_idschema[$schema] = $id;
+            if (!is_array($row) || !isset($row['schema'], $row['id'])) {
+                continue;
+            }
+            $a_idschema[(string) $row['schema']] = (string) $row['id'];
         }
+
         return $a_idschema;
     }
 
     /**
      * retorna un Array [id_dl => "region-dl"], els esquemes d'una regió del stgr
      *
-     * @param string region.
-     * @return array Una Llista d'esquemes.
+     * @return array<int|string, string>
      */
-    public function getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv = null): array
+    public function getArraySchemasRegionStgr(string $sRegionStgr, ?int $mi_sfsv = null): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -194,29 +219,36 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
                  WHERE active = 't' AND region_stgr = '$sRegionStgr'
                  ORDER BY region,dl";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $a_schema = [];
         foreach ($stmt as $row) {
+            if (!is_array($row) || !isset($row['id_dl'], $row['region'], $row['dl'])) {
+                continue;
+            }
             $id_dl = $row['id_dl'];
-            $region = $row['region'];
-            $dl = $row['dl'];
+            $region = (string) $row['region'];
+            $dl = (string) $row['dl'];
             if ($mi_sfsv === 1) {
                 $dl .= 'v';
             } elseif ($mi_sfsv === 2) {
                 $dl .= 'f';
             }
-            $a_schema[$id_dl] = "$region-$dl";
+            $a_schema[$id_dl] = $region . '-' . $dl;
         }
+
         return $a_schema;
     }
 
     /**
      * retorna un Array, les dl d'una regió del stgr
      *
-     * @param array optional lista de regions.
-     * @return array Una Llista de delegacions.
+     * @param list<string> $aRegiones
+     * @return array<int|string, string>
      */
-    public function getArrayDlRegionStgr($aRegiones = array()): array
+    public function getArrayDlRegionStgr(array $aRegiones = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -236,22 +268,27 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 					ORDER BY dl";
         }
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $a_dl = [];
         foreach ($stmt as $row) {
-            $id_dl = $row['id_dl'];
-            $dl = $row['dl'];
-            $a_dl[$id_dl] = $dl;
+            if (!is_array($row) || !isset($row['id_dl'], $row['dl'])) {
+                continue;
+            }
+            $a_dl[$row['id_dl']] = (string) $row['dl'];
         }
+
         return $a_dl;
     }
 
     /**
      * devuelve una colección (array) de objetos de tipo Delegacion
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Delegacion
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Delegacion> Una colección de objetos de tipo Delegacion
      */
     public function getDelegaciones(array $aWhere = [], array $aOperators = []): array
     {
@@ -288,34 +325,42 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $Delegacion = Delegacion::fromArray($aDatos);
             $DelegacionSet->add($Delegacion);
         }
-        return $DelegacionSet->getTot();
+        return array_values($DelegacionSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(Delegacion $Delegacion): bool
     {
-        $dl = $Delegacion->getDlVo()?->value() ?? '';
+        $dl = $Delegacion->getDlVo()->value() ?? '';
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE dl = '$dl'";
@@ -353,6 +398,9 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -362,19 +410,36 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_dl = $id_dl ";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
     }
 
-    public function datosById(int $id_dl): array|bool
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosById(int $id_dl): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_dl = $id_dl ";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
 
     }
 
@@ -385,7 +450,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
     public function findById(int $id_dl): ?Delegacion
     {
         $aDatos = $this->datosById($id_dl);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return Delegacion::fromArray($aDatos);
@@ -395,6 +460,12 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('xu_dl_id_dl_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

@@ -13,7 +13,6 @@ use src\inventario\domain\value_objects\{EquipajeCabecera,
     EquipajePie};
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 
 class Equipaje
@@ -54,7 +53,7 @@ class Equipaje
 
     public function setId_equipaje(int $id_equipaje): void
     {
-        $this->id_equipaje = EquipajeId::fromNullableInt($id_equipaje);
+        $this->id_equipaje = new EquipajeId($id_equipaje);
     }
 
 
@@ -81,26 +80,26 @@ class Equipaje
         $this->lugar = EquipajeLugar::fromNullableString($lugar);
     }
 
-    public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_ini(): DateTimeLocal|null
     {
-        return $this->f_ini ?? new NullDateTimeLocal;
+        return $this->f_ini;
     }
 
-    public function setF_ini(DateTimeLocal|NullDateTimeLocal|null $f_ini = null): void
+    public function setF_ini(DateTimeLocal|null $f_ini = null): void
     {
-        $this->f_ini = $f_ini instanceof NullDateTimeLocal ? null : $f_ini;
-    }
-
-
-    public function getF_fin(): DateTimeLocal|NullDateTimeLocal|null
-    {
-        return $this->f_fin ?? new NullDateTimeLocal;
+        $this->f_ini = $f_ini;
     }
 
 
-    public function setF_fin(DateTimeLocal|NullDateTimeLocal|null $f_fin = null): void
+    public function getF_fin(): DateTimeLocal|null
     {
-        $this->f_fin = $f_fin instanceof NullDateTimeLocal ? null : $f_fin;
+        return $this->f_fin;
+    }
+
+
+    public function setF_fin(DateTimeLocal|null $f_fin = null): void
+    {
+        $this->f_fin = $f_fin;
     }
 
     public function getId_ubi_activ(): ?int
@@ -118,7 +117,7 @@ class Equipaje
 
     public function getNom_equipaje(): ?string
     {
-        return $this->nom_equipaje->value();
+        return $this->nom_equipaje?->value();
     }
 
 
@@ -142,7 +141,7 @@ class Equipaje
 
     public function getPie(): ?string
     {
-        return $this->pie->value();
+        return $this->pie?->value();
     }
 
 
@@ -173,7 +172,7 @@ class Equipaje
     {
         $this->id_equipaje = $id instanceof EquipajeId
             ? $id
-            : EquipajeId::fromNullableInt($id);
+            : (EquipajeId::fromNullableInt($id) ?? throw new \InvalidArgumentException('id cannot be null'));
     }
 
     public function getIdsActivVo(): ?EquipajeIdsActiv
@@ -249,10 +248,13 @@ class Equipaje
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_equipaje';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

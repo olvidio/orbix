@@ -1,24 +1,36 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
-$Qinventario = (integer)filter_input(INPUT_POST, 'inventario');
+$Qid_tipo_doc = input_int($_POST, 'id_tipo_doc');
+$Qinventario = input_int($_POST, 'inventario');
 $error_txt = '';
 
 if (empty($Qinventario)) {
-    $TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
+    /** @var TipoDocRepositoryInterface $TipoDocRepository */
+$TipoDocRepository = DependencyResolver::get(TipoDocRepositoryInterface::class);
     $oTipoDoc = $TipoDocRepository->findById($Qid_tipo_doc);
+    if ($oTipoDoc === null) {
+        ContestarJson::enviar($error_txt, []);
+        return;
+    }
     $nom_doc = $oTipoDoc->getNom_doc();
     $nombreDoc = empty($nom_doc) ? $oTipoDoc->getSigla() : $oTipoDoc->getSigla() . ' (' . $nom_doc . ')';
 } else {
     $nombreDoc = _("Para imprimir inventario");
 }
 
-$UbiInventarioRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
+/** @var UbiInventarioRepositoryInterface $UbiInventarioRepository */
+$UbiInventarioRepository = DependencyResolver::get(UbiInventarioRepositoryInterface::class);
 $cUbisInventario = $UbiInventarioRepository->getUbisInventarioLugar(false);
+$a_valores = [];
+$a_nom = [];
 $i = 0;
 foreach ($cUbisInventario as $oUbiInventario) {
     $i++;

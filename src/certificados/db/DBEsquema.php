@@ -3,6 +3,7 @@
 namespace src\certificados\db;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\DependencyResolver;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\entity\DBAbstract;
 
@@ -13,9 +14,9 @@ use src\utils_database\domain\entity\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
-        if (empty($esquema_sfsv)) {
+        if ($esquema_sfsv === null || $esquema_sfsv === '') {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
         }
         $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
@@ -28,7 +29,8 @@ class DBEsquema extends DBAbstract
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
-        $gesDelegeacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        /** @var DelegacionRepositoryInterface $gesDelegeacion */
+        $gesDelegeacion = DependencyResolver::get(DelegacionRepositoryInterface::class);
         if ($gesDelegeacion->soy_region_stgr($dl)) {
             $this->eliminar_e_certificados_emitidos();
         }
@@ -54,7 +56,8 @@ class DBEsquema extends DBAbstract
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
-        $gesDelegeacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        /** @var DelegacionRepositoryInterface $gesDelegeacion */
+        $gesDelegeacion = DependencyResolver::get(DelegacionRepositoryInterface::class);
         if ($gesDelegeacion->soy_region_stgr($dl)) {
             $this->create_e_certificados_emitidos();
         }
@@ -80,26 +83,32 @@ class DBEsquema extends DBAbstract
     {
     }
 
-    protected function infoTable($tabla)
+    /**
+     * @return array{tabla: string, nom_tabla: string, campo_seq: string, id_seq: string}
+     */
+    protected function infoTable(string $tabla): array
     {
-        $datosTabla = [];
+        $datosTabla = ['tabla' => '', 'nom_tabla' => '', 'campo_seq' => 'id_item', 'id_seq' => ''];
         switch ($tabla) {
-            case "e_certificados_emitidos":
-                $datosTabla['tabla'] = "e_certificados_rstgr";
-                $nom_tabla = $this->getNomTabla("e_certificados_rstgr");
+            case 'e_certificados_emitidos':
+                $datosTabla['tabla'] = 'e_certificados_rstgr';
+                $nom_tabla = $this->getNomTabla('e_certificados_rstgr');
                 $campo_seq = 'id_item';
-                $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
+                $id_seq = $nom_tabla . '_' . $campo_seq . '_seq';
                 break;
-            case "e_certificados_recibidos":
-                $datosTabla['tabla'] = "e_certificados_dl";
-                $nom_tabla = $this->getNomTabla("e_certificados_dl");
+            case 'e_certificados_recibidos':
+                $datosTabla['tabla'] = 'e_certificados_dl';
+                $nom_tabla = $this->getNomTabla('e_certificados_dl');
                 $campo_seq = 'id_item';
-                $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
+                $id_seq = $nom_tabla . '_' . $campo_seq . '_seq';
                 break;
+            default:
+                throw new \InvalidArgumentException('Tabla desconocida: ' . $tabla);
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
         $datosTabla['campo_seq'] = $campo_seq;
         $datosTabla['id_seq'] = $id_seq;
+
         return $datosTabla;
     }
 

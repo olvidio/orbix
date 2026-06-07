@@ -10,13 +10,18 @@ use src\pasarela\domain\ContribucionNoDuerme;
  */
 final class ContribucionNoDuermeExcepcionEliminar
 {
-    public static function execute(string $id_tipo_activ): string
+    public function __construct(
+        private readonly ContribucionNoDuerme $contribucionNoDuerme,
+    ) {
+    }
+
+    public function execute(string $id_tipo_activ): string
     {
         if ($id_tipo_activ === '') {
             return _('Falta id_tipo_activ');
         }
-        $oContribucionNoDuerme = new ContribucionNoDuerme();
-        $oContribucionNoDuerme->delContribucionNoDuerme($id_tipo_activ);
+        
+        $this->contribucionNoDuerme->delContribucionNoDuerme($id_tipo_activ);
         return '';
     }
 }

@@ -6,73 +6,58 @@ use src\shared\config\ConfigGlobal;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
 use function src\shared\domain\helpers\is_true_txt;
+use function src\shared\domain\helpers\poner_empty_on_null;
 
 /**
  * Widget dossier 2006 (codigo habitaciones_cdc): habitaciones de un centro.
  *
  * Render: {@see \frontend\ubiscamas\helpers\SelectHabitacionesCdcRender}.
- *
- * @package    orbix
- * @subpackage ubiscamas
  */
 class Select_habitaciones_cdc
 {
-    // --------- Variables internas de la clase.
-    /**
-     * array con los permisos (si o no) para añadir las personas (agd, n...)
-     * según el tipo de actividad de que se trate y quién seamos nosotros.
-     * @var array $a_ref_perm
-     */
-    private $a_ref_perm;
-    /* @var $mwg_err string */
-    private $msg_err;
-    /* @var $a_valores array */
-    private $a_valores;
-    /**
-     * Para pasar a la vista, aparece como alerta antes de ejecutarse
-     * @var string $txt_eliminar
-     */
-    private $txt_eliminar;
-    /* @var $bloque string  necesario para el script */
-    private $bloque;
-
-    // ---------- Variables requeridas
-    private string $queSel;
-    /* @var $id_dossier integer */
-    private $id_dossier;
-    /* @var $pau string */
-    private $pau;
-    /* @var $obj_pau string */
-    private $obj_pau;
-    /* @var $id_pau integer */
-    private $id_pau;
-    /**
-     * 3: para todo, 2, 1:solo lectura
-     * @var integer permiso
-     */
-    private $permiso;
-
-    // ------ Variables para mantener la selección de la grid al volver atras
-    private $Qid_sel;
-    private $Qscroll_id;
-    /**
-     * @var list<array{label: string, spec: array{path: string, query: array<string, mixed>}}>
-     */
-    private array $a_links_dl_specs = [];
-
-
-    private function getBotones()
-    {
-        $a_botones = array(
-                array('txt' => _("modificar habitación"), 'click' => "fnjs_mod_habitacion(this.form)"),
-                array('txt' => _("borrar habitación"), 'click' => "fnjs_eliminar_habitacion(this.form)")
-        );
-        return $a_botones;
+    public function __construct(
+        private HabitacionDlRepositoryInterface $habitacionRepository,
+    ) {
     }
 
-    private function getCabeceras()
+    /** @var list<array{perm: mixed, obj: string, nom: string}> */
+    private array $a_ref_perm = [];
+
+    private string $msg_err = '';
+
+    /** @var array<int, array<string, mixed>> */
+    private array $a_valores = [];
+
+    private string $bloque = '';
+
+    private string $queSel = '';
+    private int $id_dossier = 0;
+    private string $pau = '';
+    private string $obj_pau = '';
+    private int $id_pau = 0;
+    private int $permiso = 1;
+
+    /** @var int|string|null */
+    private $Qid_sel;
+    /** @var int|string|null */
+    private $Qscroll_id;
+
+    /** @var list<array{label: string, spec: array{path: string, query: array<string, mixed>}}> */
+    private array $a_links_dl_specs = [];
+
+    /** @return list<array{txt: string, click: string}> */
+    private function getBotones(): array
     {
-        $a_cabeceras = [
+        return [
+            ['txt' => _("modificar habitación"), 'click' => "fnjs_mod_habitacion(this.form)"],
+            ['txt' => _("borrar habitación"), 'click' => "fnjs_eliminar_habitacion(this.form)"],
+        ];
+    }
+
+    /** @return list<string> */
+    private function getCabeceras(): array
+    {
+        return [
             _("nombre"),
             _("planta"),
             _("adaptada"),
@@ -81,32 +66,32 @@ class Select_habitaciones_cdc
             _("despacho"),
             _("tipoLavabo"),
         ];
-        return $a_cabeceras;
     }
 
-    private function getValores()
+    /** @return array<int, array<string, mixed>> */
+    private function getValores(): array
     {
-        if (empty($this->a_valores)) {
+        if ($this->a_valores === []) {
             $this->getTabla();
         }
         return $this->a_valores;
     }
 
-    private function getTabla()
+    private function getTabla(): void
     {
-        $HabitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
-
         $c = 0;
         $a_valores = [];
-        $cHabitaciones = $HabitacionRepository->getHabitaciones(['id_ubi' => $this->id_pau, '_ordre' => 'orden, planta']);
+        $cHabitaciones = $this->habitacionRepository->getHabitaciones([
+            'id_ubi' => $this->id_pau,
+            '_ordre' => 'orden, planta',
+        ]);
+        $tiposLavabo = TipoLavabo::getArrayTipoLavabo();
         foreach ($cHabitaciones as $oHabitacion) {
             $c++;
             $id_habitacion = $oHabitacion->getId_habitacion();
             $id_ubi = $oHabitacion->getId_ubi();
             $orden = $oHabitacion->getOrden();
             $nombre = $oHabitacion->getNombre();
-            $numero_camas = $oHabitacion->getNumero_camas();
-            $numero_camas_vip = $oHabitacion->getNumero_camas_vip();
             $planta = $oHabitacion->getPlanta();
             $sillon = $oHabitacion->isSillon();
             $adaptada = $oHabitacion->isAdaptada();
@@ -118,7 +103,7 @@ class Select_habitaciones_cdc
             $adaptada_txt = is_true_txt($adaptada);
             $despacho_txt = is_true_txt($despacho);
 
-            $tipoLavabo_txt = TipoLavabo::getArrayTipoLavabo()[$tipoLavabo];
+            $tipoLavabo_txt = $tiposLavabo[$tipoLavabo ?? 0] ?? '';
 
             $a_valores[$c]['sel'] = "$id_habitacion#$id_ubi#$orden";
             $a_valores[$c][1] = $nombre;
@@ -130,14 +115,15 @@ class Select_habitaciones_cdc
             $a_valores[$c][7] = $tipoLavabo_txt;
         }
 
+        /** @var array<int, array<string, mixed>> $a_valores */
         $this->a_valores = $a_valores;
-        if (!empty($this->msg_err)) {
+        if ($this->msg_err !== '') {
             echo $this->msg_err;
         }
     }
 
     /**
-     * Datos puros para {@see \frontend\ubiscamas\helpers\SelectHabitacionesCdcRender} (firma en frontend).
+     * Datos puros para {@see \frontend\ubiscamas\helpers\SelectHabitacionesCdcRender}.
      *
      * @return array<string, mixed>
      */
@@ -158,6 +144,9 @@ class Select_habitaciones_cdc
                     'queSel' => $this->queSel,
                     'id_dossier' => $this->id_dossier,
                     'permiso' => 3,
+                    'bloque' => $this->bloque,
+                    'scroll_id' => $this->Qscroll_id,
+                    'id_sel' => $this->Qid_sel,
                 ],
             ],
             'tabla' => [
@@ -174,27 +163,24 @@ class Select_habitaciones_cdc
         ];
     }
 
-    private function setLinksInsert()
+    private function setLinksInsert(): void
     {
         $this->a_links_dl_specs = [];
-        $a_ref_perm = $this->a_ref_perm;
-        if (empty($a_ref_perm) || ConfigGlobal::mi_ambito() === 'rstgr') { // si es nulo, no tengo permisos de ningún tipo
-            return '';
+        if ($this->a_ref_perm === [] || ConfigGlobal::mi_ambito() === 'rstgr') {
+            return;
         }
-        reset($a_ref_perm);
-        foreach ($a_ref_perm as $clave => $val) {
-            $perm = $val["perm"];
-            $obj_pau = $val["obj"];
-            $nom = $val["nom"];
+        foreach ($this->a_ref_perm as $val) {
+            $perm = $val['perm'];
+            $obj_pau = $val['obj'];
+            $nom = $val['nom'];
             if (!empty($perm)) {
-                $aQuery = array('mod' => 'nuevo',
+                $aQuery = [
+                    'mod' => 'nuevo',
                     'pau' => $this->pau,
                     'obj_pau' => $obj_pau,
-                    'id_pau' => $this->id_pau);
-                // el hppt_build_query no pasa los valores null
-                if (is_array($aQuery)) {
-                    array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
-                }
+                    'id_pau' => $this->id_pau,
+                ];
+                array_walk($aQuery, poner_empty_on_null(...));
                 $nom2 = sprintf(_("añadir %s"), $nom);
                 $this->a_links_dl_specs[] = [
                     'label' => $nom2,
@@ -207,75 +193,73 @@ class Select_habitaciones_cdc
         }
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return $this->id_dossier;
     }
 
-    public function getPau()
+    public function getPau(): string
     {
         return $this->pau;
     }
 
-    public function getObj_pau()
+    public function getObj_pau(): string
     {
         return $this->obj_pau;
     }
 
-    public function getId_pau()
+    public function getId_pau(): int
     {
         return $this->id_pau;
     }
 
-    public function getPermiso()
+    public function getPermiso(): int
     {
         return $this->permiso;
     }
 
-    public function setId_dossier($Qid_dossier)
+    public function setId_dossier(int|string $Qid_dossier): void
     {
-        $this->id_dossier = $Qid_dossier;
+        $this->id_dossier = (int) $Qid_dossier;
     }
 
-    public function setPau($Qpau)
+    public function setPau(string $Qpau): void
     {
         $this->pau = $Qpau;
     }
 
-    public function setObj_pau($Qobj_pau)
+    public function setObj_pau(string $Qobj_pau): void
     {
         $this->obj_pau = $Qobj_pau;
     }
 
-    public function setId_pau($Qid_pau)
+    public function setId_pau(int|string $Qid_pau): void
     {
-        $this->id_pau = $Qid_pau;
+        $this->id_pau = (int) $Qid_pau;
     }
 
-    public function setPermiso($Qpermiso)
+    public function setPermiso(int|string $Qpermiso): void
     {
-        $this->permiso = $Qpermiso;
+        $this->permiso = (int) $Qpermiso;
     }
 
-    public function setQid_sel($Qid_sel)
+    public function setQid_sel(int|string|null $Qid_sel): void
     {
         $this->Qid_sel = $Qid_sel;
     }
 
-    public function setQscroll_id($Qscroll_id)
+    public function setQscroll_id(int|string|null $Qscroll_id): void
     {
         $this->Qscroll_id = $Qscroll_id;
     }
 
-    public function setBloque($bloque)
+    public function setBloque(string $bloque): void
     {
         $this->bloque = $bloque;
     }
 
-    public function setQueSel($queSel)
+    public function setQueSel(string $queSel): void
     {
         $this->queSel = $queSel;
     }
-
-
 }

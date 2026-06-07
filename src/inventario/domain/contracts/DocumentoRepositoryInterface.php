@@ -21,9 +21,9 @@ interface DocumentoRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Documento
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Documento
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Documento> Una colección de objetos de tipo Documento
      */
     public function getDocumentos(array $aWhere = [], array $aOperators = []): array;
 
@@ -44,14 +44,14 @@ interface DocumentoRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_doc
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_doc): array|bool;
+    public function datosById(int $id_doc): array|false;
 
     /**
      * Busca la clase con id_doc en el repositorio.
      */
     public function findById(int $id_doc): ?Documento;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

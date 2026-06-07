@@ -2,60 +2,70 @@
 
 namespace src\usuarios\application;
 
-use src\shared\config\ConfigGlobal;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
 class rolesLista
 {
+    public function __construct(
+        private UsuarioRepositoryInterface $usuarioRepository,
+        private GrupMenuRepositoryInterface $grupMenuRepository,
+        private RoleRepositoryInterface $roleRepository,
+        private GrupMenuRoleRepositoryInterface $grupMenuRoleRepository,
+    ) {
+    }
 
-    public static function rolesLista(): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(): array
     {
         $error_txt = '';
-        $jsondata = [];
 
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        if ($oMiUsuario === null) {
+            return ContestarJson::respuestaPhp(_('Usuario no encontrado'), '');
+        }
         $miRole = $oMiUsuario->getId_role();
         $miSfsv = ConfigGlobal::mi_sfsv();
-        // Sólo puede manipular los roles el superadmin (id_role=1).
-        // y desde el sv
         $permiso = 0;
         if ($miRole === 1 && ConfigGlobal::mi_sfsv() === 1) {
             $permiso = 1;
         }
 
-        // todos los posibles GrupMenu
-        $GrupMuenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
-        $cGM = $GrupMuenuRepository->getGrupMenus(array('_ordre' => 'grup_menu'));
+        $cGM = $this->grupMenuRepository->getGrupMenus(['_ordre' => 'grup_menu']);
         $aGrupMenus = [];
+        $ambito = ($_SESSION['oConfig'] ?? null) instanceof ConfigSnapshot
+            ? $_SESSION['oConfig']->getAmbito()
+            : '';
         foreach ($cGM as $oGrupMenu) {
             $id_grupmenu = $oGrupMenu->getId_grupmenu();
-            $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
+            $grup_menu = $oGrupMenu->getGrup_menu($ambito);
             $aGrupMenus[$id_grupmenu] = $grup_menu;
         }
 
-        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-        $cRoles = $RoleRepository->getRoles(['_ordre' => 'role']);
+        $cRoles = $this->roleRepository->getRoles(['_ordre' => 'role']);
 
-        // Para admin, puede modificar los grupmenus que tiene cada rol, pero no
-        // crear ni borrar
         if ($miRole === 2) {
             $permiso = 2;
         }
 
         $a_cabeceras = ['role', 'sf', 'sv', 'pau', 'dmz', 'grup menu'];
-        $a_botones[] = ['txt' => _("modificar"),
-            'click' => "fnjs_modificar(\"#seleccionados\")",
+        $a_botones[] = [
+            'txt' => _('modificar'),
+            'click' => 'fnjs_modificar("#seleccionados")',
         ];
 
         if ($permiso > 0) {
             if ($permiso === 1) {
-                $a_botones[] = ['txt' => _("borrar"),
-                    'click' => "fnjs_eliminar(this.form)",
+                $a_botones[] = [
+                    'txt' => _('borrar'),
+                    'click' => 'fnjs_eliminar(this.form)',
                 ];
             }
         } else {
@@ -77,9 +87,7 @@ class rolesLista
             }
             $i++;
 
-            $GrupMuenuRoleRepository = $GLOBALS['container']->get(GrupMenuRoleRepositoryInterface::class);
-            $cGMR = $GrupMuenuRoleRepository->getGrupMenuRoles(array('id_role' => $id_role));
-            // intentar ordenar por el nombre del grupmenu
+            $cGMR = $this->grupMenuRoleRepository->getGrupMenuRoles(['id_role' => $id_role]);
             $a_GM = [];
             foreach ($cGMR as $oGrupMenuRole) {
                 $id_grupmenu = $oGrupMenuRole->getId_grupmenu();
@@ -87,10 +95,9 @@ class rolesLista
                 $a_GM[$id_grupmenu] = $grup_menu;
             }
             sort($a_GM);
-            // pasar a texto:
             $str_GM = '';
             foreach ($a_GM as $grup_menu) {
-                $str_GM .= !empty($str_GM) ? ',' : '';
+                $str_GM .= $str_GM !== '' ? ',' : '';
                 $str_GM .= $grup_menu;
             }
 
@@ -105,7 +112,8 @@ class rolesLista
             }
         }
 
-        $data = ['a_cabeceras' => $a_cabeceras,
+        $data = [
+            'a_cabeceras' => $a_cabeceras,
             'a_botones' => $a_botones,
             'a_valores' => $a_valores,
             'permiso' => $permiso,

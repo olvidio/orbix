@@ -47,24 +47,17 @@ final class SacdAsignarTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_sin_id_activ_devuelve_error(): void
-    {
-        $GLOBALS['container'] = $this->containerFromMap([]);
-
-        $out = SacdAsignar::execute(['id_activ' => 0, 'id_nom' => 123]);
+    public function test_sin_id_activ_devuelve_error(): void {
+        $out = (new \src\actividadessacd\application\SacdAsignar($this->createMock(\src\actividadcargos\domain\contracts\CargoRepositoryInterface::class), $this->createMock(\src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface::class), $this->createMock(\src\actividades\domain\contracts\ActividadDlRepositoryInterface::class), $this->createMock(\src\asistentes\domain\contracts\AsistenteDlRepositoryInterface::class)))->execute(['id_activ' => 0, 'id_nom' => 123]);
         $this->assertStringContainsString('faltan parametros', $out);
     }
 
-    public function test_sin_id_nom_devuelve_error(): void
-    {
-        $GLOBALS['container'] = $this->containerFromMap([]);
-
-        $out = SacdAsignar::execute(['id_activ' => 99, 'id_nom' => 0]);
+    public function test_sin_id_nom_devuelve_error(): void {
+        $out = (new \src\actividadessacd\application\SacdAsignar($this->createMock(\src\actividadcargos\domain\contracts\CargoRepositoryInterface::class), $this->createMock(\src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface::class), $this->createMock(\src\actividades\domain\contracts\ActividadDlRepositoryInterface::class), $this->createMock(\src\asistentes\domain\contracts\AsistenteDlRepositoryInterface::class)))->execute(['id_activ' => 99, 'id_nom' => 0]);
         $this->assertStringContainsString('faltan parametros', $out);
     }
 
-    public function test_todos_los_cargos_sacd_ocupados_devuelve_error(): void
-    {
+    public function test_todos_los_cargos_sacd_ocupados_devuelve_error(): void {
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->with('sacd')->willReturn([
             2001 => 'sacd1',
@@ -80,17 +73,11 @@ final class SacdAsignarTest extends TestCase
         $activCargoRepo->method('getActividadCargos')->willReturn([$ocupado1, $ocupado2]);
         $activCargoRepo->expects($this->never())->method('Guardar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-        ]);
-
-        $out = SacdAsignar::execute(['id_activ' => 500, 'id_nom' => 111]);
+        $out = (new \src\actividadessacd\application\SacdAsignar($cargoRepo, $activCargoRepo, $this->createMock(\src\actividades\domain\contracts\ActividadDlRepositoryInterface::class), $this->createMock(\src\asistentes\domain\contracts\AsistenteDlRepositoryInterface::class)))->execute(['id_activ' => 500, 'id_nom' => 111]);
         $this->assertStringContainsString('No puede haber tantos cargos de sacd', $out);
     }
 
-    public function test_primer_hueco_libre_se_asigna_y_actividad_sf_no_crea_asistencia(): void
-    {
+    public function test_primer_hueco_libre_se_asigna_y_actividad_sf_no_crea_asistencia(): void {
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->with('sacd')->willReturn([
             2001 => 'sacd1',
@@ -122,14 +109,7 @@ final class SacdAsignarTest extends TestCase
         $asistenteRepo = $this->createMock(AsistenteDlRepositoryInterface::class);
         $asistenteRepo->expects($this->never())->method('Guardar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            ActividadDlRepositoryInterface::class => $actividadRepo,
-            AsistenteDlRepositoryInterface::class => $asistenteRepo,
-        ]);
-
-        $out = SacdAsignar::execute(['id_activ' => 500, 'id_nom' => 111]);
+        $out = (new \src\actividadessacd\application\SacdAsignar($cargoRepo, $activCargoRepo, $actividadRepo, $asistenteRepo))->execute(['id_activ' => 500, 'id_nom' => 111]);
         $this->assertSame('', $out);
         $this->assertNotNull($guardado);
         $this->assertSame(2002, $guardado->getId_cargo());
@@ -138,8 +118,7 @@ final class SacdAsignarTest extends TestCase
         $this->assertSame(987654, $guardado->getId_item());
     }
 
-    public function test_actividad_sv_crea_asistencia(): void
-    {
+    public function test_actividad_sv_crea_asistencia(): void {
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'sacd1']);
 
@@ -163,14 +142,7 @@ final class SacdAsignarTest extends TestCase
             }))
             ->willReturn(true);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            ActividadDlRepositoryInterface::class => $actividadRepo,
-            AsistenteDlRepositoryInterface::class => $asistenteRepo,
-        ]);
-
-        $out = SacdAsignar::execute(['id_activ' => 500, 'id_nom' => 111]);
+        $out = (new \src\actividadessacd\application\SacdAsignar($cargoRepo, $activCargoRepo, $actividadRepo, $asistenteRepo))->execute(['id_activ' => 500, 'id_nom' => 111]);
         $this->assertSame('', $out);
         $this->assertNotNull($asisGuardado);
         $this->assertSame(500, $asisGuardado->getId_activ());
@@ -179,8 +151,7 @@ final class SacdAsignarTest extends TestCase
         $this->assertFalse($asisGuardado->isFalta());
     }
 
-    public function test_error_si_guardar_cargo_falla(): void
-    {
+    public function test_error_si_guardar_cargo_falla(): void {
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'sacd1']);
 
@@ -192,18 +163,11 @@ final class SacdAsignarTest extends TestCase
         $actividadRepo = $this->createMock(ActividadDlRepositoryInterface::class);
         $actividadRepo->expects($this->never())->method('findById');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            ActividadDlRepositoryInterface::class => $actividadRepo,
-        ]);
-
-        $out = SacdAsignar::execute(['id_activ' => 500, 'id_nom' => 111]);
+        $out = (new \src\actividadessacd\application\SacdAsignar($cargoRepo, $activCargoRepo, $actividadRepo, $this->createMock(\src\asistentes\domain\contracts\AsistenteDlRepositoryInterface::class)))->execute(['id_activ' => 500, 'id_nom' => 111]);
         $this->assertStringContainsString('no se ha guardado el cargo', $out);
     }
 
-    public function test_error_si_guardar_asistencia_falla_en_sv(): void
-    {
+    public function test_error_si_guardar_asistencia_falla_en_sv(): void {
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'sacd1']);
 
@@ -220,19 +184,11 @@ final class SacdAsignarTest extends TestCase
         $asistenteRepo = $this->createMock(AsistenteDlRepositoryInterface::class);
         $asistenteRepo->method('Guardar')->willReturn(false);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            ActividadDlRepositoryInterface::class => $actividadRepo,
-            AsistenteDlRepositoryInterface::class => $asistenteRepo,
-        ]);
-
-        $out = SacdAsignar::execute(['id_activ' => 500, 'id_nom' => 111]);
+        $out = (new \src\actividadessacd\application\SacdAsignar($cargoRepo, $activCargoRepo, $actividadRepo, $asistenteRepo))->execute(['id_activ' => 500, 'id_nom' => 111]);
         $this->assertStringContainsString('no se ha guardado la asistencia', $out);
     }
 
-    public function test_actividad_inexistente_guarda_cargo_y_no_crea_asistencia(): void
-    {
+    public function test_actividad_inexistente_guarda_cargo_y_no_crea_asistencia(): void {
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'sacd1']);
 
@@ -247,14 +203,7 @@ final class SacdAsignarTest extends TestCase
         $asistenteRepo = $this->createMock(AsistenteDlRepositoryInterface::class);
         $asistenteRepo->expects($this->never())->method('Guardar');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-            ActividadDlRepositoryInterface::class => $actividadRepo,
-            AsistenteDlRepositoryInterface::class => $asistenteRepo,
-        ]);
-
-        $out = SacdAsignar::execute(['id_activ' => 500, 'id_nom' => 111]);
+        $out = (new \src\actividadessacd\application\SacdAsignar($cargoRepo, $activCargoRepo, $actividadRepo, $asistenteRepo))->execute(['id_activ' => 500, 'id_nom' => 111]);
         $this->assertSame('', $out);
     }
 

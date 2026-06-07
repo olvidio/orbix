@@ -3,24 +3,37 @@
 namespace src\usuarios\application;
 
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use src\shared\web\ContestarJson;
 
 class usuarioEliminar
 {
-    static public function eliminarFromAray(array $a_sel)
+    public function __construct(
+        private UsuarioRepositoryInterface $usuarioRepository,
+    ) {
+    }
+
+    /**
+     * @param list<string> $a_sel
+     *
+     * @return array{error: string, data: string}
+     */
+    public function execute(array $a_sel): array
     {
         $error_txt = '';
+        $id_usuario = 0;
 
-        if (!empty($a_sel)) { //vengo de un checkbox
-            $id_usuario = (integer)strtok($a_sel[0], "#");
-        }
-        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-        $oUsuario = $UsuarioRepository->findById($id_usuario);
-        if ($UsuarioRepository->Eliminar($oUsuario) === false) {
-            $error_txt .= _("hay un error, no se ha eliminado");
-            $error_txt .= "\n" . $UsuarioRepository->getErrorTxt();
+        if ($a_sel !== []) {
+            $id_usuario = (int)strtok($a_sel[0], '#');
         }
 
-        ContestarJson::enviar($error_txt, 'ok');
+        $oUsuario = $this->usuarioRepository->findById($id_usuario);
+        if ($oUsuario === null) {
+            return ['error' => _('Usuario no encontrado'), 'data' => 'ok'];
+        }
+        if ($this->usuarioRepository->Eliminar($oUsuario) === false) {
+            $error_txt .= _('hay un error, no se ha eliminado');
+            $error_txt .= "\n" . $this->usuarioRepository->getErrorTxt();
+        }
+
+        return ['error' => $error_txt, 'data' => 'ok'];
     }
 }

@@ -20,7 +20,7 @@ class IdMatchPersona
         return $this->id_listas;
     }
 
-    function setId_listas(int $id_listas)
+    function setId_listas(int $id_listas): void
     {
         $this->id_listas = $id_listas;
     }
@@ -30,7 +30,7 @@ class IdMatchPersona
         return $this->id_orbix;
     }
 
-    function setId_orbix(?int $id_orbix = null)
+    function setId_orbix(?int $id_orbix = null): void
     {
         $this->id_orbix = $id_orbix;
     }
@@ -40,7 +40,7 @@ class IdMatchPersona
         return $this->id_tabla;
     }
 
-    function setId_tabla(?string $id_tabla = null)
+    function setId_tabla(?string $id_tabla = null): void
     {
         $this->id_tabla = $id_tabla ?? '';
     }

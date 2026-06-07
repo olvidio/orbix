@@ -15,9 +15,9 @@ class DBEsquema extends DBAbstract
 
     private string $dir_base = ServerConf::DIR . "/src/pasarela/db";
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
-        if (empty($esquema_sfsv)) {
+        if ($esquema_sfsv === null || $esquema_sfsv === '') {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
         }
         $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
@@ -45,21 +45,26 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    protected function infoTable($tabla): array
+    /**
+     * @return array{tabla?: string, nom_tabla: string, campo_seq: string, id_seq: string, filename: string}
+     */
+    protected function infoTable(string $tabla): array
     {
         $datosTabla = [];
+        $nom_tabla = '';
+        $campo_seq = '';
+        $id_seq = '';
         $datosTabla['tabla'] = $tabla;
         switch ($tabla) {
-            case "pasarela_dl":
+            case 'pasarela_dl':
                 $nom_tabla = $this->getNomTabla($tabla);
-                $campo_seq = '';
-                $id_seq = '';
                 break;
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
         $datosTabla['campo_seq'] = $campo_seq;
         $datosTabla['id_seq'] = $id_seq;
         $datosTabla['filename'] = $this->dir_base . "/$tabla.csv";
+
         return $datosTabla;
     }
 

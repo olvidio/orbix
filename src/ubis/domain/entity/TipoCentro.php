@@ -31,9 +31,14 @@ class TipoCentro
 
     public function setTipoCtrVo(TipoCentroCode|string|null $tipoCentro = null): void
     {
-        $this->tipo_ctr = $tipoCentro instanceof TipoCentroCode
-            ? $tipoCentro
-            : TipoCentroCode::fromNullableString($tipoCentro);
+        if ($tipoCentro instanceof TipoCentroCode) {
+            $this->tipo_ctr = $tipoCentro;
+            return;
+        }
+        $resolved = TipoCentroCode::fromNullableString($tipoCentro);
+        if ($resolved !== null) {
+            $this->tipo_ctr = $resolved;
+        }
     }
 
 
@@ -45,7 +50,7 @@ class TipoCentro
 
     public function setTipo_ctr(string $tipo_ctr): void
     {
-        $this->tipo_ctr = TipoCentroCode::fromNullableString($tipo_ctr);
+        $this->tipo_ctr = new TipoCentroCode($tipo_ctr);
     }
 
     // VO API
@@ -78,6 +83,195 @@ class TipoCentro
     {
         return 'tipo_ctr';
     }
+
+    /**
+
+
+     * @return array<string, mixed>
+
+
+     */
+
+
+    /**
+
+
+
+     * @return array<string, mixed>
+
+
+
+     */
+
+
+
+    /**
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+     */
+
+
+
+
+    /**
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+     */
+
+
+
+
+
+    /**
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
+    /**
+
+
+
+
+
+
+
+
+
+
+     * @return array<string, mixed>
+
+
+
+
+
+
+
+
+
+
+     */
+
+
+
+
+
+
+
+
+
 
     public function getDatosCampos(): array
     {

@@ -5,17 +5,20 @@ namespace src\inventario\domain;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
+use src\inventario\domain\entity\Documento;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
 
 class InfoDocsxCtr extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
-        $this->setTxtTitulo(_("documentos"));
-        $this->setTxtEliminar(_("¿Está seguro que desea eliminar este documento?"));
+    public function __construct(
+        private DocumentoRepositoryInterface $documentoRepository,
+        private UbiInventarioRepositoryInterface $ubiInventarioRepository,
+        private LugarRepositoryInterface $lugarRepository,
+    ) {
+        $this->setTxtTitulo(_('documentos'));
+        $this->setTxtEliminar(_('¿Está seguro que desea eliminar este documento?'));
         $this->setTxtBuscar();
         $this->setTxtExplicacion();
 
@@ -26,88 +29,81 @@ class InfoDocsxCtr extends DatosInfoRepo
         $this->setRepositoryInterface(DocumentoRepositoryInterface::class);
     }
 
-    public function getBuscar_view()
+    public function getBuscar_view(): string
     {
         return '../view/buscarDocsxCtr.phtml';
     }
 
-    public function getBuscar_namespace()
+    public function getBuscar_namespace(): string
     {
         return __NAMESPACE__;
     }
 
-    /**
-     * campos del formulario a añadir al hashBuscar
-     *
-     * @return string
-     */
-    public function addCamposFormBuscar()
+    public function addCamposFormBuscar(): string
     {
         return '!exacto';
     }
 
-    public function addCampos($a_campos=[])
+    /**
+     * @param array<string, mixed> $a_campos
+     * @return array<string, mixed>
+     */
+    public function addCampos(array $a_campos = []): array
     {
         return $a_campos;
     }
 
-    public function getColeccion()
+    /**
+     * @return list<Documento>
+     */
+    public function getColeccion(): array
     {
-        // Si se quiere listar una selección, $k_buscar
         if (empty($this->k_buscar)) {
-            $Coleccion = [];
-        } else {
-            $nom_ubi = str_replace("+", "\+", $this->k_buscar); // para los centros de la sss+
-            $aWhereUbi = array('nom_ubi' => $nom_ubi);
-            if ($this->exacto) {
-                $aOperadorUbi = [];
-            } else {
-                $aOperadorUbi = array('nom_ubi' => 'sin_acentos');
-            }
-            //selecciono los ctrs
-            $RepoUbiInventario = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
-            $cUbisInventario = $RepoUbiInventario->getUbisInventario($aWhereUbi, $aOperadorUbi);
-            $lst_id_ubi = '';
-            foreach ($cUbisInventario as $oUbiDoc) {
-                $lst_id_ubi .= empty($lst_id_ubi) ? '' : ',';
-                $lst_id_ubi .= $oUbiDoc->getId_ubi();
-            }
-            // para evitar que salgan todos
-            if (empty($lst_id_ubi)) {
-                $aWhere = ['_limit' => 6];
-                $aOperador = [];
-            } else {
-                $aWhere = ['id_ubi' => $lst_id_ubi];
-                $aOperador = ['id_ubi' => 'IN'];
-            }
-            $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
-            $Coleccion = $ColeccionRepository->getDocumentos($aWhere, $aOperador);
+            return [];
         }
 
-        return $Coleccion;
+        $nom_ubi = str_replace('+', '\+', $this->k_buscar);
+        $aWhereUbi = ['nom_ubi' => $nom_ubi];
+        $aOperadorUbi = $this->exacto ? [] : ['nom_ubi' => 'sin_acentos'];
+
+        $cUbisInventario = $this->ubiInventarioRepository->getUbisInventario($aWhereUbi, $aOperadorUbi);
+        $lst_id_ubi = '';
+        foreach ($cUbisInventario as $oUbiDoc) {
+            $lst_id_ubi .= $lst_id_ubi === '' ? '' : ',';
+            $lst_id_ubi .= $oUbiDoc->getId_ubi();
+        }
+
+        if ($lst_id_ubi === '') {
+            $aWhere = ['_limit' => 6];
+            $aOperador = [];
+        } else {
+            $aWhere = ['id_ubi' => $lst_id_ubi];
+            $aOperador = ['id_ubi' => 'IN'];
+        }
+
+        return $this->documentoRepository->getDocumentos($aWhere, $aOperador);
     }
 
-    public function getOpcionesParaCondicion($pKeyRepository,$valor_depende, $opcion_sel=null)
+    public function getOpcionesParaCondicion(mixed $pKeyRepository, mixed $valor_depende, mixed $opcion_sel = null): string
     {
-        $valor_depende = empty($valor_depende) ? 0 : $valor_depende;
-        //caso de actualizar el campo depende
-        $LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
-        $aOpciones = $LugarRepository->getArrayLugares($valor_depende);
+        $idUbi = is_numeric($valor_depende) ? (int) $valor_depende : 0;
+        $aOpciones = $this->lugarRepository->getArrayLugares($idUbi);
 
         $opciones_txt = '<option></option>';
         foreach ($aOpciones as $key => $val) {
-            $sel = ((string)$key === (string)$opcion_sel) ? 'selected' : '';
+            $opcionSelStr = is_scalar($opcion_sel) ? (string) $opcion_sel : '';
+            $sel = ((string) $key === $opcionSelStr) ? 'selected' : '';
             $opciones_txt .= "<option value=\"$key\" $sel>$val</option>";
         }
 
         return $opciones_txt;
     }
 
-    public function getArrayCamposDepende()
+    /**
+     * @return array<string, string>
+     */
+    public function getArrayCamposDepende(): array
     {
-        // key -> campo pKeyRepository (campo llave del repository)
-        // value -> campo que se debe llenar con valores del repository
-        return ['id_ubi' =>'id_lugar'];
+        return ['id_ubi' => 'id_lugar'];
     }
-
 }

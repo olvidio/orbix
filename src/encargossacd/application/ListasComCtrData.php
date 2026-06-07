@@ -23,6 +23,17 @@ use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
  */
 final class ListasComCtrData
 {
+
+    public function __construct(
+        private EncargoAplicacionService $aplicacionService,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository
+    ) {
+    }
+
     /**
      * @return array{
      *     array_atn_sacd: array<string, array<string, mixed>>,
@@ -30,9 +41,9 @@ final class ListasComCtrData
      *     lugar_fecha: string
      * }
      */
-    public static function execute(string $sfsv): array
+    public function execute(string $sfsv): array
     {
-        $oService = new EncargoAplicacionService();
+        $oService = $this->aplicacionService;
 
         $oDateLocal = new DateTimeLocal();
         $hoy_local = $oDateLocal->getFromLocal('.');
@@ -43,27 +54,21 @@ final class ListasComCtrData
         $cCentros = [];
         switch ($sfsv) {
             case 'sv':
-                $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                $cCentros = $GesCentros->getCentros(['active' => 't', '_ordre' => 'tipo_ctr,nombre_ubi']) ?: [];
+                $cCentros = $this->centroDlRepository->getCentros(['active' => 't', '_ordre' => 'tipo_ctr,nombre_ubi']) ?: [];
                 $origen_txt = (string)ConfigGlobal::mi_dele();
                 break;
             case 'sf':
-                $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-                $cCentros = $GesCentros->getCentros(['active' => 't', '_ordre' => 'tipo_ctr,nombre_ubi']) ?: [];
+                $cCentros = $this->centroEllasRepository->getCentros(['active' => 't', '_ordre' => 'tipo_ctr,nombre_ubi']) ?: [];
                 $origen_txt = ConfigGlobal::mi_dele() . 'f';
                 break;
         }
 
         $array_atn_sacd = [];
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-
         foreach ($cCentros as $oCentro) {
             $id_ubi = $oCentro->getId_ubi();
             $nombre_ubi = (string)$oCentro->getNombre_ubi();
 
-            $cEncargos = $EncargoRepository->getEncargos(
+            $cEncargos = $this->encargoRepository->getEncargos(
                 ['id_ubi' => $id_ubi, 'id_tipo_enc' => '(1|2|3).00'],
                 ['id_tipo_enc' => '~'],
             ) ?: [];
@@ -77,7 +82,7 @@ final class ListasComCtrData
             if (empty($id_enc)) {
                 continue;
             }
-            $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd(
+            $cEncargosSacd = $this->encargoSacdRepository->getEncargosSacd(
                 ['id_enc' => $id_enc, 'f_fin' => 'x', '_ordre' => 'modo'],
                 ['f_fin' => 'IS NULL'],
             ) ?: [];
@@ -92,7 +97,7 @@ final class ListasComCtrData
             ];
             foreach ($cEncargosSacd as $oEncargoSacd) {
                 $id_nom = $oEncargoSacd->getId_nom();
-                $oPersona = $PersonaDlRepository->findById($id_nom);
+                $oPersona = $this->personaDlRepository->findById($id_nom);
                 if ($oPersona === null) {
                     continue;
                 }

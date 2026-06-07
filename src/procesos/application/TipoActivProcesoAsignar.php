@@ -4,28 +4,39 @@ namespace src\procesos\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
 /**
- * Caso de uso: asigna un id_tipo_proceso al tipo de actividad indicado,
- * distinguiendo entre proceso propio (dl) o no-propio segun `propio`.
+ * Caso de uso: asigna id_tipo_proceso al tipo de actividad (propio / no-propio).
  */
 class TipoActivProcesoAsignar
 {
+    public function __construct(
+        private readonly TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(array $input): string
     {
-        $Qid_tipo_activ = (int)($input['id_tipo_activ'] ?? 0);
-        $Qpropio = (string)($input['propio'] ?? '');
-        $Qid_tipo_proceso = (int)($input['id_tipo_proceso'] ?? 0);
+        $Qid_tipo_activ = input_int($input, 'id_tipo_activ');
+        $Qpropio = input_string($input, 'propio');
+        $Qid_tipo_proceso = input_int($input, 'id_tipo_proceso');
 
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-        $oTipoDeActividad = $TipoDeActividadRepository->findById($Qid_tipo_activ);
+        $oTipoDeActividad = $this->tipoDeActividadRepository->findById($Qid_tipo_activ);
+        if ($oTipoDeActividad === null) {
+            return _('tipo de actividad no encontrado');
+        }
         if (is_true($Qpropio)) {
             $oTipoDeActividad->setId_tipo_proceso($Qid_tipo_proceso, ConfigGlobal::mi_sfsv());
         } else {
             $oTipoDeActividad->setId_tipo_proceso_ex($Qid_tipo_proceso, ConfigGlobal::mi_sfsv());
         }
-        if ($TipoDeActividadRepository->Guardar($oTipoDeActividad) === false) {
+        if ($this->tipoDeActividadRepository->Guardar($oTipoDeActividad) === false) {
             return _("hay un error, no se ha guardado el proceso");
         }
 

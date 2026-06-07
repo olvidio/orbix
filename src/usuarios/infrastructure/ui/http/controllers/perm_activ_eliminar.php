@@ -1,17 +1,20 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\shared\web\ContestarJson;
 
 $error_txt = '';
+$Qid_item = 0;
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-    $Qid_usuario = (integer)strtok($a_sel[0], "#");
-    $Qid_item = (integer)strtok("#");
+if (!empty($a_sel) && is_string($a_sel[0])) { //vengo de un checkbox
+    strtok($a_sel[0], "#");
+    $tok = strtok("#");
+    $Qid_item = is_string($tok) ? (int)$tok : 0;
 }
 
-$PermUsuarioActividadRepository = $GLOBALS['container']->get(PermUsuarioActividadRepositoryInterface::class);
+$PermUsuarioActividadRepository = DependencyResolver::get(PermUsuarioActividadRepositoryInterface::class);
 $oPermUsuarioActividad = $PermUsuarioActividadRepository->findById($Qid_item);
 if ($oPermUsuarioActividad === null) {
     $error_txt .= _("no existe el registro");

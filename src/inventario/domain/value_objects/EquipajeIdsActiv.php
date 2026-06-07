@@ -26,9 +26,6 @@ final class EquipajeIdsActiv
         return $this->value;
     }
 
-    /**
-     * @return int[] Parsed list of ids
-     */
     /* Lo anulo, porque en la base de datos se guarda como string, no como array
     public function toArray(): array
     {
@@ -42,6 +39,9 @@ final class EquipajeIdsActiv
         return $this->value;
     }
 
+    /**
+     * @param array<int, int|string> $ids
+     */
     public static function fromArray(array $ids): self
     {
         $clean = array_values(array_filter(array_map('intval', $ids), fn($v) => $v > 0));

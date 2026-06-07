@@ -3,16 +3,19 @@
 namespace src\pasarela\application;
 
 use frontend\actividades\helpers\ActividadTipo;
+use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 
 /**
  * HTML del selector de tipo de actividad para la pantalla «exportar qué».
- * Replica la configuración que antes hacía {@see frontend\pasarela\controller\exportar_que}
- * sobre {@see ActividadTipo}.
  */
 final class ExportarQueActividadTipoHtml
 {
-    public static function execute(array $input): array
+    /**
+     * @param array<string, string> $input
+     * @return array{html: string}
+     */
+    public function execute(array $input): array
     {
         $Qid_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
         $Qsasistentes = (string)($input['sasistentes'] ?? '');
@@ -20,10 +23,12 @@ final class ExportarQueActividadTipoHtml
         $Qsnom_tipo = (string)($input['snom_tipo'] ?? '');
 
         $isfsv = ConfigGlobal::mi_sfsv();
+        $oPerm = $_SESSION['oPerm'] ?? null;
         $permiso_des = false;
-        if ($_SESSION['oPerm']->have_perm_oficina('vcsd')
-            || $_SESSION['oPerm']->have_perm_oficina('des')
-            || $_SESSION['oPerm']->have_perm_oficina('calendario')
+        if ($oPerm instanceof XPermisos
+            && ($oPerm->have_perm_oficina('vcsd')
+                || $oPerm->have_perm_oficina('des')
+                || $oPerm->have_perm_oficina('calendario'))
         ) {
             $permiso_des = true;
             $ssfsv = '';
@@ -46,10 +51,15 @@ final class ExportarQueActividadTipoHtml
         $oActividadTipo->setNom_tipo($Qsnom_tipo);
         $oActividadTipo->setEvitarProcesos(true);
 
+        $oConfig = $_SESSION['oConfig'] ?? null;
         $perm_jefe = false;
-        if ($_SESSION['oConfig']->is_jefeCalendario()
-            || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() === 1)
-            || ($_SESSION['oPerm']->have_perm_oficina('admin_sf') && ConfigGlobal::mi_sfsv() === 2)
+        if ((is_object($oConfig) && method_exists($oConfig, 'is_jefeCalendario') && $oConfig->is_jefeCalendario())
+            || ($oPerm instanceof XPermisos
+                && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+                && ConfigGlobal::mi_sfsv() === 1)
+            || ($oPerm instanceof XPermisos
+                && $oPerm->have_perm_oficina('admin_sf')
+                && ConfigGlobal::mi_sfsv() === 2)
         ) {
             $perm_jefe = true;
         }

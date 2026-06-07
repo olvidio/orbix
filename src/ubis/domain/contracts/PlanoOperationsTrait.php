@@ -8,9 +8,7 @@ trait PlanoOperationsTrait
     /**
      * Descarga el plano de una dirección
      *
-     * @param int $id_direccion
-     * @param string $nom_tabla
-     * @return array
+     * @return array<string, mixed>
      */
     public function planoDownload(int $id_direccion): array
     {
@@ -36,10 +34,9 @@ trait PlanoOperationsTrait
      * Sube/actualiza el plano de una dirección
      *
      * @param int $id_direccion
-     * @param string $nom_tabla
-     * @param string|null $nom
+     *      * @param string|null $nom
      * @param string|null $extension
-     * @param mixed $fichero
+     * @param resource|string|null $fichero
      * @return void
      */
     public function planoUpload(int $id_direccion, ?string $nom, ?string $extension, $fichero): void
@@ -66,8 +63,7 @@ trait PlanoOperationsTrait
      * Borra el plano de una dirección
      *
      * @param int $id_direccion
-     * @param string $nom_tabla
-     * @return void
+     *      * @return void
      */
     public function planoBorrar(int $id_direccion): void
     {

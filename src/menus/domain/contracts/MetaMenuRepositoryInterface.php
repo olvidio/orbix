@@ -16,6 +16,10 @@ use src\menus\domain\entity\MetaMenu;
 interface MetaMenuRepositoryInterface
 {
 
+    /**
+     * @param list<string> $a_modulos
+     * @return array<int|string, string>
+     */
     public function getArrayMetaMenus(array $a_modulos = []): array;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -23,9 +27,9 @@ interface MetaMenuRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo MetaMenu
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo MetaMenu
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<MetaMenu> Una colección de objetos de tipo MetaMenu
      */
     public function getMetaMenus(array $aWhere = [], array $aOperators = []): array;
 
@@ -46,14 +50,14 @@ interface MetaMenuRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_metamenu
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_metamenu): array|bool;
+    public function datosById(int $id_metamenu): array|false;
 
     /**
      * Busca la clase con id_metamenu en el repositorio.
      */
     public function findById(int $id_metamenu): ?MetaMenu;
 
-    public function getNewId();
+    public function getNewId(): int;
 }

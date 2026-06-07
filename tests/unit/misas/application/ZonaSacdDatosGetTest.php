@@ -13,34 +13,12 @@ use src\zonassacd\domain\entity\ZonaSacd;
 
 final class ZonaSacdDatosGetTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_no_existe(): void
     {
         $zRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zRepo->method('getZonasSacds')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ZonaSacdRepositoryInterface::class => $zRepo,
-        ]);
-
-        $out = ZonaSacdDatosGet::execute(1, 2);
+        $out = (new ZonaSacdDatosGet($zRepo, $this->createStub(PersonaSacdRepositoryInterface::class)))->execute(1, 2);
         $this->assertNotSame('', $out['error']);
         $this->assertSame([], $out['payload']);
     }
@@ -65,12 +43,7 @@ final class ZonaSacdDatosGetTest extends TestCase
         $pRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
         $pRepo->method('findById')->with(9)->willReturn($persona);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ZonaSacdRepositoryInterface::class => $zRepo,
-            PersonaSacdRepositoryInterface::class => $pRepo,
-        ]);
-
-        $out = ZonaSacdDatosGet::execute(5, 9);
+        $out = (new ZonaSacdDatosGet($zRepo, $pRepo))->execute(5, 9);
         $this->assertSame('', $out['error']);
         $this->assertSame('Juan Pérez', $out['payload']['nombre_sacd']);
         $this->assertTrue($out['payload']['dw1']);
@@ -94,31 +67,8 @@ final class ZonaSacdDatosGetTest extends TestCase
         $pRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
         $pRepo->method('findById')->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ZonaSacdRepositoryInterface::class => $zRepo,
-            PersonaSacdRepositoryInterface::class => $pRepo,
-        ]);
-
-        $out = ZonaSacdDatosGet::execute(1, 2);
+        $out = (new ZonaSacdDatosGet($zRepo, $pRepo))->execute(1, 2);
         $this->assertSame('', $out['error']);
         $this->assertSame('?', $out['payload']['nombre_sacd']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

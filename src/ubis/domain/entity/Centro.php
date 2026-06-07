@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\domain\entity;
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -24,8 +25,8 @@ class Centro
     // Esto inyecta los métodos getDirecciones, emailPrincipalOPrimero y getTeleco aquí
     use UbiContactsTrait;
 
-    protected $repoCasaDireccion;
-    protected $repoDireccion;
+    protected RelacionCentroDireccionRepositoryInterface $repoCasaDireccion;
+    protected DireccionCentroRepositoryInterface $repoDireccion;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -68,8 +69,8 @@ class Centro
      */
     public function __construct()
     {
-        $this->repoCasaDireccion = $GLOBALS['container']->get(RelacionCentroDireccionRepositoryInterface::class);
-        $this->repoDireccion = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
+        $this->repoCasaDireccion = DependencyResolver::get(RelacionCentroDireccionRepositoryInterface::class);
+        $this->repoDireccion = DependencyResolver::get(DireccionCentroRepositoryInterface::class);
     }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
@@ -114,9 +115,11 @@ class Centro
     /** Setter VO para id_ubi */
     public function setIdUbiVo(CentroId|int|null $id): void
     {
-        $this->id_ubi = $id instanceof CentroId
-            ? $id
-            : CentroId::fromNullableInt($id);
+        if ($id instanceof CentroId) {
+            $this->id_ubi = $id;
+        } elseif ($id !== null) {
+            $this->id_ubi = new CentroId($id);
+        }
     }
 
 
@@ -144,9 +147,11 @@ class Centro
 
     public function setNombreUbiVo(UbiNombreText|string|null $texto): void
     {
-        $this->nombre_ubi = $texto instanceof UbiNombreText
-            ? $texto
-            : new UbiNombreText($texto);
+        if ($texto instanceof UbiNombreText) {
+            $this->nombre_ubi = $texto;
+        } elseif ($texto !== null && $texto !== '') {
+            $this->nombre_ubi = new UbiNombreText($texto);
+        }
     }
 
 
@@ -164,7 +169,7 @@ class Centro
      */
     public function setDl(?string $dl = null): void
     {
-        $this->dl = DelegacionCode::fromNullableString($dl);
+        $this->dl = new DelegacionCode($dl);
     }
 
     public function getDlVo(): ?DelegacionCode
@@ -245,7 +250,7 @@ class Centro
      */
     public function isActive(): bool
     {
-        return $this->active;
+        return (bool) $this->active;
     }
 
     /**
@@ -396,9 +401,13 @@ class Centro
 
     public function setIdCtrPadreVo(CentroId|int|null $valor = null): void
     {
-        $this->id_ctr_padre = $valor instanceof CentroId
-            ? $valor
-            : CentroId::fromNullableInt($valor);
+        if ($valor instanceof CentroId) {
+            $this->id_ctr_padre = $valor;
+        } elseif ($valor !== null) {
+            $this->id_ctr_padre = new CentroId($valor);
+        } else {
+            $this->id_ctr_padre = null;
+        }
     }
 
     public function getIdAuto(): int
@@ -415,28 +424,29 @@ class Centro
     /**
      * Obtiene Una direccione con sus metadatos (principal, propietario)
      *
-     * @return array<DireccionDetalle>
      */
     public function getUnaDireccionDetallada(int $id_direccion): ?DireccionDetalle
     {
         $relaciones = $this->repoCasaDireccion->getRelacionesPorUbi($this->getId_ubi());
-        $direcciDetallada = null;
+        $direccionDetallada = null;
 
         foreach ($relaciones as $row) {
-            if ($id_direccion !== $row['id_direccion']) {
+            if (!isset($row['id_direccion']) || !is_numeric($row['id_direccion'])) {
                 continue;
             }
-            $direccion = $this->repoDireccion->findById($row['id_direccion']);
+            $rowIdDireccion = (int) $row['id_direccion'];
+            if ($id_direccion !== $rowIdDireccion) {
+                continue;
+            }
+            $direccion = $this->repoDireccion->findById($rowIdDireccion);
             if ($direccion !== null) {
-                // Creamos el objeto intermedio con los booleanos de la DB
-                // Aseguramos conversión a bool explícita
-                $esPrincipal = is_true($row['principal']);
-                $esPropietario = is_true($row['propietario']);
+                $esPrincipal = is_true($row['principal'] ?? false);
+                $esPropietario = is_true($row['propietario'] ?? false);
 
                 $direccionDetallada = new DireccionDetalle([
                     'direccion' => $direccion,
                     'principal' => $esPrincipal,
-                    'propietario' => $esPropietario
+                    'propietario' => $esPropietario,
                 ]);
             }
         }
@@ -447,7 +457,7 @@ class Centro
     /**
      * Obtiene las direcciones con sus metadatos (principal, propietario)
      *
-     * @return array<DireccionDetalle>
+     * @return list<DireccionDetalle>
      */
     public function getDireccionesDetalladas(): array
     {
@@ -456,7 +466,14 @@ class Centro
         $direccionesDetalladas = [];
 
         foreach ($relaciones as $row) {
-            $direccion = $this->repoDireccion->findById($row['id_direccion']);
+            if (!isset($row['id_direccion'])) {
+                continue;
+            }
+            $idDireccionRaw = $row['id_direccion'];
+            if (!is_int($idDireccionRaw) && !is_string($idDireccionRaw)) {
+                continue;
+            }
+            $direccion = $this->repoDireccion->findById((int) $idDireccionRaw);
             if ($direccion !== null) {
                 // Creamos el objeto intermedio con los booleanos de la DB
                 // Aseguramos conversión a bool explícita
@@ -477,12 +494,12 @@ class Centro
     /**
      * Obtiene todas las direcciones asociadas a esta casa
      *
-     * @return array<Direccion>
+     * @return list<Direccion>
      */
     public function getDirecciones(): array
     {
         $detalles = $this->getDireccionesDetalladas();
-        return array_map(fn(DireccionDetalle $d) => $d->getDireccionVo(), $detalles);
+        return array_values(array_filter(array_map(static fn (DireccionDetalle $d) => $d->getDireccionVo(), $detalles)));
     }
 
     /**
@@ -493,9 +510,11 @@ class Centro
         $this->repoCasaDireccion->asociarDireccion(
             $this->getId_ubi(),
             $id_direccion,
-            $principal,
-            $propietario
+            $principal
         );
+        if ($propietario) {
+            $this->repoCasaDireccion->updatePropietario($this->getId_ubi(), $id_direccion, true);
+        }
     }
 
     /**

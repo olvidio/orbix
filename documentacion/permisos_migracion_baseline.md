@@ -81,3 +81,76 @@ dar cero en ficheros vivos.
 - Ejercitar en pantalla varias vistas que dependen de permisos (menu principal,
   una actividad con permisos, perm_menu_form) para confirmar que no hay fatal
   de autoload.
+
+---
+
+## Cierre DI + PHPStan (2026-06-06)
+
+Módulo **domain-only** (6 ficheros en `src/permisos/domain/`, sin `application/` ni HTTP).
+
+### Estructura final
+
+```
+src/permisos/
+├── config/dependencies.php   (factory PermisosActividades)
+└── domain/
+    ├── MenuDlPermissionBits.php
+    ├── PermDl.php
+    ├── PermisosActividades.php
+    ├── PermisosActividadesTrue.php
+    ├── XPermisos.php
+    └── XResto.php
+```
+
+### `PermisosActividades` — inyección por constructor
+
+Repositorios inyectados:
+
+- `UsuarioGrupoRepositoryInterface`
+- `ActividadAllRepositoryInterface`
+- `ActividadProcesoTareaRepositoryInterface`
+- `TipoDeActividadRepositoryInterface`
+- `TareaProcesoRepositoryInterface`
+
+`carregar()` usa `GlobalPdo::get('oDBE')` (sin `$GLOBALS['oDBE']`).
+
+Instanciación vía contenedor:
+
+```php
+DependencyResolver::make(PermisosActividades::class, ['idUsuario' => $id]);
+```
+
+### Callers actualizados
+
+| Fichero | Cambio |
+|---------|--------|
+| `src/shared/global_object.inc` | Sesión `oPermActividades` vía `DependencyResolver::make` |
+| `src/cambios/application/AvisosGenerarTabla.php` | Idem (2 sitios) |
+| `src/cambios/application/legacy/Avisos.php` | Idem (4 sitios) |
+| `tests/myTest.php` | Idem |
+| `tests/integration/actividades/.../ActividadesHeavyUseCasesIntegrationTest.php` | Idem |
+| `tests/integration/actividadessacd/.../ActividadesSacdHeavyUseCasesIntegrationTest.php` | Idem |
+
+`PermisosActividadesTrue` se mantiene simple (`new PermisosActividadesTrue($id)`), sin GLOBALS.
+
+### PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (inicio) | `composer phpstan:file -- src/permisos/` | **161** |
+| 2026-06-06 (cierre) | `composer phpstan:file -- src/permisos/` | **0** |
+
+### Deuda `$GLOBALS`
+
+| Métrica | Antes | Después |
+|---------|------:|--------:|
+| `$GLOBALS['container']` en `src/permisos/` | 7 | **0** |
+| `$GLOBALS['oDBE']` en `src/permisos/` | 1 | **0** |
+
+### Checklist de cierre
+
+- [x] 0 `$GLOBALS['container']` en `src/permisos/`
+- [x] 0 `$GLOBALS['oDBE']` raw en `src/permisos/`
+- [x] `config/dependencies.php` con factory `PermisosActividades`
+- [x] PHPStan `src/permisos/` en 0 (phpstan-nobaseline.neon)
+- [x] Callers de sesión y cambios migrados a `DependencyResolver::make`

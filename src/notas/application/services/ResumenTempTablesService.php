@@ -1,6 +1,7 @@
 <?php
 
 namespace src\notas\application\services;
+use src\shared\infrastructure\GlobalPdo;
 
 use PDO;
 
@@ -10,9 +11,12 @@ class ResumenTempTablesService
 
     public function __construct()
     {
-        $this->pdo =  $GLOBALS['oDB'];
+        $this->pdo = GlobalPdo::get('oDB');
     }
 
+    /**
+     * @param array<int, int|string> $delegaciones
+     */
     public function rebuildMainTable(
         string $tabla,
         string $personas,
@@ -109,6 +113,9 @@ class ResumenTempTablesService
         $this->pdo->query($sql);
     }
 
+    /**
+     * @param list<int> $situacionesSuperadas
+     */
     public function rebuildNotasTable(
         string $notas,
         string $tabla,
@@ -141,6 +148,9 @@ class ResumenTempTablesService
         $this->pdo->query($sqlLlenar);
     }
 
+    /**
+     * @param iterable<\src\asignaturas\domain\entity\Asignatura> $asignaturasCollection
+     */
     public function rebuildAsignaturasTable(string $asignaturas, iterable $asignaturasCollection): void
     {
         $sqlDelete = "DROP TABLE IF EXISTS $asignaturas CASCADE";
@@ -191,7 +201,11 @@ class ResumenTempTablesService
 
     public function query(string $sql): \PDOStatement
     {
-        return $this->pdo->query($sql);
+        $stmt = $this->pdo->query($sql);
+        if ($stmt === false) {
+            throw new \RuntimeException('Query failed');
+        }
+        return $stmt;
     }
 
     public function prepare(string $sql): \PDOStatement

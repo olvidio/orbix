@@ -8,38 +8,47 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
+use src\profesores\domain\entity\ProfesorDirector;
+use src\profesores\domain\entity\ProfesorStgr;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
-class ListaPorDepartamentos
+final class ListaPorDepartamentos
 {
-    public static function getData(array $dl, int $filtro): array
+    public function __construct(
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private ProfesorTipoRepositoryInterface $profesorTipoRepository,
+        private DepartamentoRepositoryInterface $departamentoRepository,
+        private ProfesorDirectorRepositoryInterface $profesorDirectorRepository,
+        private ProfesorStgrRepositoryInterface $profesorStgrRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+    ) {
+    }
+
+    /**
+     * @param list<string> $dl
+     * @return array<string, mixed>
+     */
+    public function getData(array $dl, int $filtro): array
     {
         $rstgr = ConfigGlobal::mi_ambito() === 'rstgr';
         if ($rstgr && $filtro !== 1) {
             $region_stgr = ConfigGlobal::mi_dele();
-            $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-            $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
 
             return [
                 'modo' => 'filtro',
                 'rstgr' => true,
                 'a_checked' => $dl,
-                'a_delegaciones' => $a_delegacionesStgr,
+                'a_delegaciones' => $this->delegacionRepository->getArrayDlRegionStgr([$region_stgr]),
             ];
         }
 
-        $ProfesorTipoRepository = $GLOBALS['container']->get(ProfesorTipoRepositoryInterface::class);
-        $cProfesorTipo = $ProfesorTipoRepository->getProfesorTipos();
+        $cProfesorTipo = $this->profesorTipoRepository->getProfesorTipos();
         $cTipoProfesor = [];
         foreach ($cProfesorTipo as $oProfesorTipo) {
             $cTipoProfesor[$oProfesorTipo->getId_tipo_profesor()] = $oProfesorTipo->getTipo_profesor();
         }
 
-        $DepartamentoRepository = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
-        $cDepartamentos = $DepartamentoRepository->getDepartamentos(['_ordre' => 'departamento']);
-        $ProfesorDirectorRepository = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);
-        $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $cDepartamentos = $this->departamentoRepository->getDepartamentos(['_ordre' => 'departamento']);
 
         $aClaustro = [];
         foreach ($cDepartamentos as $oDepartamento) {
@@ -47,21 +56,21 @@ class ListaPorDepartamentos
             $departamento = $oDepartamento->getDepartamento();
 
             $aProfesores = [];
-            $aDirs = self::getPersonasOrdenadas(
-                $ProfesorDirectorRepository->getProfesoresDirectores(
-                    self::buildWhere($id_departamento, $dl),
-                    self::buildOperador($dl)
+            $aDirs = $this->getPersonasOrdenadas(
+                $this->profesorDirectorRepository->getProfesoresDirectores(
+                    $this->buildWhere($id_departamento, $dl),
+                    $this->buildOperador($dl)
                 ),
-                $PersonaDlRepository
+                $this->personaDlRepository
             );
             $aProfesores['director'] = $aDirs;
 
             foreach ($cTipoProfesor as $id_tipo => $tipo) {
-                $aWhere = self::buildWhere($id_departamento, $dl);
+                $aWhere = $this->buildWhere($id_departamento, $dl);
                 $aWhere['id_tipo_profesor'] = $id_tipo;
-                $aProfesores[$tipo] = self::getPersonasOrdenadas(
-                    $ProfesorRepository->getProfesoresStgr($aWhere, self::buildOperador($dl)),
-                    $PersonaDlRepository
+                $aProfesores[$tipo] = $this->getPersonasOrdenadas(
+                    $this->profesorStgrRepository->getProfesoresStgr($aWhere, $this->buildOperador($dl)),
+                    $this->personaDlRepository
                 );
             }
 
@@ -79,7 +88,11 @@ class ListaPorDepartamentos
         ];
     }
 
-    private static function buildWhere(int $id_departamento, array $dl): array
+    /**
+     * @param list<string> $dl
+     * @return array<string, mixed>
+     */
+    private function buildWhere(int $id_departamento, array $dl): array
     {
         $aWhere = [
             'id_departamento' => $id_departamento,
@@ -89,24 +102,34 @@ class ListaPorDepartamentos
             $aWhere['id_dl'] = implode(',', $dl);
             $aWhere['_ordre'] = 'id_dl';
         }
+
         return $aWhere;
     }
 
-    private static function buildOperador(array $dl): array
+    /**
+     * @param list<string> $dl
+     * @return array<string, string>
+     */
+    private function buildOperador(array $dl): array
     {
         $aOperador = ['f_cese' => 'IS NULL'];
         if (!empty($dl)) {
             $aOperador['id_dl'] = 'IN';
         }
+
         return $aOperador;
     }
 
-    private static function getPersonasOrdenadas(iterable $rows, PersonaDlRepositoryInterface $PersonaDlRepository): array
+    /**
+     * @param list<ProfesorDirector|ProfesorStgr> $rows
+     * @return array<string, array<string, string>>
+     */
+    private function getPersonasOrdenadas(array $rows, PersonaDlRepositoryInterface $personaDlRepository): array
     {
         $aProfes = [];
         foreach ($rows as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
-            $oPersonaDl = $PersonaDlRepository->findById($id_nom);
+            $oPersonaDl = $personaDlRepository->findById($id_nom);
             if ($oPersonaDl === null || $oPersonaDl->getSituacion() !== 'A') {
                 continue;
             }
@@ -115,6 +138,7 @@ class ListaPorDepartamentos
             $aProfes[$ap_orden][$dl] = $oPersonaDl->getPrefApellidosNombre() . ' (' . $oPersonaDl->getCentro_o_dl() . ')';
         }
         ksort($aProfes);
+
         return $aProfes;
     }
 }

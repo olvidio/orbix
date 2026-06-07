@@ -1,10 +1,13 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\QuitarHorarioPlantilla;
 use src\shared\web\ContestarJson;
 
-$result = QuitarHorarioPlantilla::execute([
+/** @var QuitarHorarioPlantilla $useCase */
+$useCase = DependencyResolver::get(QuitarHorarioPlantilla::class);
+$result = $useCase->execute([
     'id_item' => filter_input(INPUT_POST, 'id_item'),
 ]);
 
-ContestarJson::enviar((string)($result['error'] ?? ''));
+ContestarJson::enviar($result['error']);

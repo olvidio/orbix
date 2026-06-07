@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
-use src\notas\application\Tesera;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\RegionStgrAviso;
@@ -14,10 +13,14 @@ use src\ubis\domain\RegionStgrAviso;
  */
 final class TesseraImprimirData
 {
+    public function __construct(
+        private readonly Tesera $tesera,
+    ) {
+    }
     /**
      * @return array<string, mixed>
      */
-    public static function execute(int $id_nom): array
+    public function execute(int $id_nom): array
     {
         if ($id_nom <= 0) {
             return ['aviso' => RegionStgrAviso::mensajePersonaNoValida()];
@@ -39,10 +42,9 @@ final class TesseraImprimirData
             return ['aviso' => RegionStgrAviso::formatear($problemasRegionStgr)];
         }
 
-        $tesera = new Tesera();
-        $plan = $tesera->getPlan($id_nom);
-        $cAsignaturas = $tesera->getAsignaturasPosibles($plan);
-        $aAprobadas = $tesera->getAsignaturasAprobadas($id_nom, $plan);
+        $plan = $this->tesera->getPlan($id_nom);
+        $cAsignaturas = $this->tesera->getAsignaturasPosibles($plan);
+        $aAprobadas = $this->tesera->getAsignaturasAprobadas($id_nom, $plan);
 
         $outAsigs = [];
         foreach ($cAsignaturas as $oAsig) {

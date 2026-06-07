@@ -1,6 +1,7 @@
 <?php
 
 namespace src\ubis\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 
@@ -18,16 +19,22 @@ class PgTelecoCtrExRepository extends PgTelecoUbiRepository implements TelecoCtr
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBR'];
+        $oDbl = GlobalPdo::get('oDBR');
         $this->setoDbl($oDbl);
         $this->setoDbl_select($oDbl);
         $this->setNomTabla('d_teleco_ctr_ex');
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('d_teleco_ctr_ex_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

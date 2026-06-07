@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\entity\PermUsuarioActividad;
@@ -35,7 +36,7 @@ if (empty($Qid_tipo_activ)) {
 }
 
 // afecta a:
-$PermUsuarioActividadRepository = $GLOBALS['container']->get(PermUsuarioActividadRepositoryInterface::class);
+$PermUsuarioActividadRepository = DependencyResolver::get(PermUsuarioActividadRepositoryInterface::class);
 foreach (PermAfectadosBits::map() as $afecta_a) {
     $aWhere = [
         'id_usuario' => $Qid_usuario,

@@ -1,9 +1,13 @@
 <?php
 
+use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\TelecoTablaData;
 use src\shared\web\ContestarJson;
 
-$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
-$Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
-ContestarJson::enviar('', TelecoTablaData::execute($Qobj_pau, $Qid_ubi));
+$Qobj_pau = input_string($_POST, 'obj_pau');
+$Qid_ubi = input_int($_POST, 'id_ubi');
+
+ContestarJson::enviar('', DependencyResolver::get(TelecoTablaData::class)->execute($Qobj_pau, $Qid_ubi));

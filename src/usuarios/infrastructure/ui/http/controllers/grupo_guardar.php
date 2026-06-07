@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\entity\Grupo;
@@ -13,13 +14,17 @@ if (empty($Qusuario)) {
 }
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
-$GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
+$GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 if (empty($Qid_usuario)) {
     $id_usuario_new = $GrupoRepository->getNewId();
     $oGrupo = new Grupo();
     $oGrupo->setId_usuario($id_usuario_new);
 } else {
     $oGrupo = $GrupoRepository->findById($Qid_usuario);
+    if ($oGrupo === null) {
+        ContestarJson::enviar(_('Grupo no encontrado'), 'none');
+        return;
+    }
 }
 $oGrupo->setUsuarioVo(new Username($Qusuario));
 

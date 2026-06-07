@@ -2,6 +2,7 @@
 
 namespace src\dossiers\infrastructure\persistence\postgresql;
 
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
@@ -28,10 +29,8 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
-        $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
-        $this->setoDbl_select($oDbl_Select);
+        $this->setoDbl(GlobalPdo::get('oDBPC'));
+        $this->setoDbl_select(GlobalPdo::get('oDBPC_Select'));
         $this->setNomTabla('d_tipos_dossiers');
     }
 
@@ -40,9 +39,9 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
     /**
      * devuelve una colección (array) de objetos de tipo TipoDossier
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo TipoDossier
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<TipoDossier> Una colección de objetos de tipo TipoDossier
      */
     public function getTiposDossiers(array $aWhere = [], array $aOperators = []): array
     {
@@ -79,27 +78,33 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        if (isset($aWhere['_ordre']) && is_scalar($aWhere['_ordre']) && (string) $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . (string) $aWhere['_ordre'];
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && (string) $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . (string) $aWhere['_limit'];
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TipoDossier =  TipoDossier::fromArray($aDatos);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $TipoDossier = TipoDossier::fromArray($aDatos);
             $TipoDossierSet->add($TipoDossier);
         }
-        return $TipoDossierSet->getTot();
+        return array_values($TipoDossierSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -109,7 +114,7 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
         return $this->findById($id->value());
     }
 
-    public function datosByIdVo(TipoDossierId $id): array|bool
+    public function datosByIdVo(TipoDossierId $id): array|false
     {
         return $this->datosById($id->value());
     }
@@ -160,18 +165,23 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
-    private
-    function isNew(int $id_tipo_dossier): bool
+    private function isNew(int $id_tipo_dossier): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tipo_dossier = $id_tipo_dossier";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
-            return TRUE;
+            return true;
         }
         return false;
     }
@@ -180,27 +190,31 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_tipo_dossier
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public
-    function datosById(int $id_tipo_dossier): array|bool
+    public function datosById(int $id_tipo_dossier): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tipo_dossier = $id_tipo_dossier";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
+        if ($stmt === false) {
+            return false;
+        }
+
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+        return $result;
     }
 
-
-    /**
-     * Busca la clase con id_tipo_dossier en la base de datos .
-     */
-    public
-    function findById(int $id_tipo_dossier): ?TipoDossier
+    public function findById(int $id_tipo_dossier): ?TipoDossier
     {
         $aDatos = $this->datosById($id_tipo_dossier);
         if (empty($aDatos)) {
@@ -216,9 +230,9 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
             return null;
         }
         $a = $this->getTiposDossiers(['codigo' => $codigo], ['codigo' => '=']);
-        if ($a === false || !is_array($a) || count($a) === 0) {
+        if ($a === []) {
             return null;
         }
-        return $a[array_key_first($a)];
+        return $a[array_key_first($a)] ?? null;
     }
 }

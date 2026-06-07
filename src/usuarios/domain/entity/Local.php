@@ -140,6 +140,9 @@ class Local
         return 'idLocaleVo';
     }
 
+    /**
+     * @return list<mixed>
+     */
     public function getDatosCampos(): array
     {
         $oLocalSet = new Set();
@@ -149,7 +152,7 @@ class Local
         $oLocalSet->add($this->getDatosIdioma());
         $oLocalSet->add($this->getDatosNom_idioma());
         $oLocalSet->add($this->getDatosActive());
-        return $oLocalSet->getTot();
+        return array_values($oLocalSet->getTot());
     }
 
     private function getDatosIdLocale(): DatosCampo

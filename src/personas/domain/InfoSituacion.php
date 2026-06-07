@@ -5,13 +5,14 @@ namespace src\personas\domain;
 /* No vale el underscore en el nombre */
 
 use src\personas\domain\contracts\SituacionRepositoryInterface;
+use src\personas\domain\entity\Situacion;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoSituacion extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
+    public function __construct(
+        private SituacionRepositoryInterface $situacionRepository,
+    ) {
         $this->setTxtTitulo(_("tipos de situación"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este tipo de situación?"));
         $this->setTxtBuscar(_("buscar un tipo de situación"));
@@ -23,20 +24,19 @@ class InfoSituacion extends DatosInfoRepo
         $this->setRepositoryInterface(SituacionRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<Situacion>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'situacion');
+            $aWhere = ['_ordre' => 'situacion'];
             $aOperador = [];
         } else {
-            $aWhere = array('situacion' => $this->k_buscar);
-            $aOperador = array('situacion' => 'sin_acentos');
+            $aWhere = ['situacion' => $this->k_buscar];
+            $aOperador = ['situacion' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getSituaciones($aWhere, $aOperador);
 
-        return $Coleccion;
+        return $this->situacionRepository->getSituaciones($aWhere, $aOperador);
     }
 }

@@ -48,7 +48,7 @@ class EncargoTexto
      */
     public function setIdioma(string $idioma): void
     {
-        $this->idioma = LocaleCode::fromNullableString($idioma);
+        $this->idioma = (LocaleCode::fromNullableString($idioma) ?? throw new \InvalidArgumentException('idioma cannot be empty'));
     }
 
     public function getIdiomaVo(): LocaleCode
@@ -60,7 +60,7 @@ class EncargoTexto
     {
         $this->idioma = $vo instanceof LocaleCode
             ? $vo
-            : LocaleCode::fromNullableString($vo);
+            : (LocaleCode::fromNullableString(is_string($vo) ? $vo : null) ?? throw new \InvalidArgumentException('idioma cannot be empty'));
     }
 
     /**
@@ -80,13 +80,13 @@ class EncargoTexto
      */
     public function setClave(string $clave): void
     {
-        $this->clave = EncargoTextClave::fromNullableString($clave);
+        $this->clave = (EncargoTextClave::fromNullableString($clave) ?? throw new \InvalidArgumentException('clave cannot be empty'));
     }
     public function setClaveVo(EncargoTextClave|string|null $vo): void
     {
         $this->clave = $vo instanceof EncargoTextClave
             ? $vo
-            : EncargoTextClave::fromNullableString($vo);
+            : (EncargoTextClave::fromNullableString(is_string($vo) ? $vo : null) ?? throw new \InvalidArgumentException('clave cannot be empty'));
     }
 
     /**

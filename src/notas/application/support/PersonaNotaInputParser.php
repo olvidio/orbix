@@ -2,6 +2,10 @@
 
 namespace src\notas\application\support;
 
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_int;
+
+
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\domain\entity\PersonaNota;
@@ -22,25 +26,37 @@ use function src\shared\domain\helpers\is_true;
  */
 final class PersonaNotaInputParser
 {
-    public static function parse(array $input, bool $eliminar = false): PersonaNota
+
+    public function __construct(
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
+    ) {
+    }
+    /**
+     * @param array<string, mixed> $input
+     */
+    public function parse(array $input, bool $eliminar = false): PersonaNota
     {
-        $id_pau = (int)($input['id_pau'] ?? 0);
+        $id_pau = input_int($input, 'id_pau');
 
         $a_sel = (array)($input['sel'] ?? []);
         if (!empty($a_sel)) {
-            $id_nivel = (int)strtok((string)$a_sel[0], '#');
+            $sel0 = $a_sel[0] ?? null;
+            if (!is_scalar($sel0)) {
+                throw new \RuntimeException(_('Selección de nota no válida.'));
+            }
+            $id_nivel = (int)strtok((string) $sel0, '#');
             $id_asignatura = (int)strtok('#');
             $tipo_acta = (int)strtok('#');
         } else {
-            $id_asignatura = (int)($input['id_asignatura'] ?? 0);
-            $id_nivel = (int)($input['id_nivel'] ?? 0);
-            $tipo_acta = (int)($input['tipo_acta'] ?? 0);
+            $id_asignatura = input_int($input, 'id_asignatura');
+            $id_nivel = input_int($input, 'id_nivel');
+            $tipo_acta = input_int($input, 'tipo_acta');
         }
 
         if ($id_asignatura === 1) {
-            $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+            $AsignaturaRepository = $this->asignaturaRepository;
             $cAsignaturas = $AsignaturaRepository->getAsignaturas(['id_nivel' => $id_nivel]);
-            if (!is_array($cAsignaturas) || count($cAsignaturas) === 0) {
+            if (count($cAsignaturas) === 0) {
                 throw new \RuntimeException(sprintf(_("No se encuentra una asignatura para el nivel: %s"), $id_nivel));
             }
             $id_asignatura = $cAsignaturas[0]->getId_asignatura();
@@ -60,16 +76,17 @@ final class PersonaNotaInputParser
             return $oPersonaNota;
         }
 
-        $id_situacion = (int)($input['id_situacion'] ?? 0);
-        $acta = (string)($input['acta'] ?? '');
-        $f_acta = (string)($input['f_acta'] ?? '');
-        $preceptor = (string)($input['preceptor'] ?? '');
-        $id_preceptor = (int)($input['id_preceptor'] ?? 0);
-        $detalle = (string)($input['detalle'] ?? '');
-        $epoca = (int)($input['epoca'] ?? 0);
-        $id_activ = (int)($input['id_activ'] ?? 0);
-        $nota_num = isset($input['nota_num']) ? (float)$input['nota_num'] : 0.0;
-        $nota_max = (int)($input['nota_max'] ?? 0);
+        $id_situacion = input_int($input, 'id_situacion');
+        $acta = input_string($input, 'acta');
+        $f_acta = input_string($input, 'f_acta');
+        $preceptor = input_string($input, 'preceptor');
+        $id_preceptor = input_int($input, 'id_preceptor');
+        $detalle = input_string($input, 'detalle');
+        $epoca = input_int($input, 'epoca');
+        $id_activ = input_int($input, 'id_activ');
+        $nota_num_raw = $input['nota_num'] ?? null;
+        $nota_num = is_numeric($nota_num_raw) ? (float) $nota_num_raw : 0.0;
+        $nota_max = input_int($input, 'nota_max');
 
         if ($epoca === 0) {
             $epoca = NotaEpoca::EPOCA_OTRO;

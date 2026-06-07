@@ -1,6 +1,7 @@
 <?php
 
 namespace src\procesos\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
@@ -26,21 +27,16 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = GlobalPdo::get('oDBC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('a_tareas');
     }
-
-    /**
-     * retorna un objecte del tipus Desplegable
-     * les posibles tareas d'una fase
-     *
-     * @param integer iid_fase la fase a la que pertany.
-     * @return array
+/**
+     * @return array<int|string, string>
      */
-    public function getArrayActividadTareas(int $iid_fase): array
+public function getArrayActividadTareas(int $iid_fase): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -50,12 +46,21 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
                        WHERE id_fase = $iid_fase
                        ORDER BY id_fase,desc_tarea";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $aOpciones = [];
         foreach ($stmt as $aClave) {
-            $clave = $aClave[0];
-            $val = $aClave[1];
-            $aOpciones[$clave] = $val;
+            if (!is_array($aClave)) {
+                continue;
+            }
+            $claveRaw = $aClave['id_tarea'] ?? ($aClave[0] ?? null);
+            $valRaw = $aClave['desc_tarea'] ?? ($aClave[1] ?? null);
+            if (!is_numeric($claveRaw)) {
+                continue;
+            }
+            $aOpciones[(int) $claveRaw] = is_scalar($valRaw) ? (string) $valRaw : '';
         }
 
         return $aOpciones;
@@ -66,9 +71,9 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
     /**
      * devuelve una colección (array) de objetos de tipo ActividadTarea
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ActividadTarea
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<ActividadTarea> Una colección de objetos de tipo ActividadTarea
      */
     public function getActividadTareas(array $aWhere = [], array $aOperators = []): array
     {
@@ -105,27 +110,35 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        $ordreVal = $aWhere['_ordre'] ?? null;
+        if (is_string($ordreVal) && $ordreVal !== '') {
+            $sOrdre = ' ORDER BY ' . $ordreVal;
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        $limitVal = $aWhere['_limit'] ?? null;
+        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+            $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             $ActividadTarea = ActividadTarea::fromArray($aDatos);
             $ActividadTareaSet->add($ActividadTarea);
         }
-        return $ActividadTareaSet->getTot();
+        return array_values($ActividadTareaSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -166,6 +179,10 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
+        /** @var \PDOStatement $stmt */
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -175,6 +192,9 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tarea = $id_tarea";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -186,17 +206,27 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_tarea
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_tarea): array|bool
+    public function datosById(int $id_tarea): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tarea = $id_tarea";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+        if ($stmt === false) {
+            return false;
+        }
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+        $result = [];
+        foreach ($aDatos as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+
+        return $result;
     }
 
 
@@ -206,16 +236,22 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
     public function findById(int $id_tarea): ?ActividadTarea
     {
         $aDatos = $this->datosById($id_tarea);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return ActividadTarea::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('a_tareas_id_tarea_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

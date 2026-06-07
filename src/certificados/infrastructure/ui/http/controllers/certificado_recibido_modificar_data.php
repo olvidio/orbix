@@ -1,20 +1,18 @@
 <?php
 
-use src\shared\web\ContestarJson;
-use src\certificados\application\CertificadoRecibidoModificarFormData;
+use function src\shared\domain\helpers\input_int;
 
-require_once 'frontend/shared/global_header_front.inc';
+use src\certificados\application\CertificadoRecibidoModificarFormData;
+use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
+
+/** @var CertificadoRecibidoModificarFormData $useCase */
+$useCase = DependencyResolver::get(CertificadoRecibidoModificarFormData::class);
 
 $error = '';
 $data = [];
 try {
-    $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qid_item = (int)strtok((string)($a_sel[0] ?? ''), '#');
-    if ($Qid_item <= 0) {
-        throw new \RuntimeException(_('certificado no válido'));
-    }
-    $data = CertificadoRecibidoModificarFormData::execute($Qid_item);
-    $data['id_item'] = $Qid_item;
+    $data = $useCase->execute(input_int($_POST, 'id_item'));
 } catch (\Throwable $e) {
     $error = $e->getMessage();
 }

@@ -17,7 +17,7 @@ use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 final class CrearEsquema
 {
     public function __construct(
-        private readonly object $container,
+        private readonly DbSchemaRepositoryInterface $dbSchemaRepository,
     ) {
     }
 
@@ -113,8 +113,7 @@ final class CrearEsquema
                 $oDBRol->delGrupo('orbix');
             }
             $schema = $RegionNew . '-' . $DlNew;
-            $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);
-            $DbSchemaRepository->llenarNuevo($schema, 'comun');
+            $this->dbSchemaRepository->llenarNuevo($schema, 'comun');
         }
 
         if ($sv !== 0) {
@@ -139,8 +138,7 @@ final class CrearEsquema
             $oDBRol->delGrupo('orbixv');
 
             $schema = $RegionNew . '-' . $DlNew;
-            $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);
-            $DbSchemaRepository->llenarNuevo($schema, 'sv');
+            $this->dbSchemaRepository->llenarNuevo($schema, 'sv');
 
             $config = $oConfigDB->getEsquema('publicv-e');
             $oConexion = new DBConnection($config);
@@ -189,8 +187,7 @@ final class CrearEsquema
             }
 
             $schema = $RegionNew . '-' . $DlNew;
-            $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);
-            $DbSchemaRepository->llenarNuevo($schema, 'sv-e');
+            $this->dbSchemaRepository->llenarNuevo($schema, 'sv-e');
         }
         if ($sf !== 0) {
             $oConfigDB = new ConfigDB('importar');
@@ -213,8 +210,7 @@ final class CrearEsquema
             $oDBRol->delGrupo('orbixf');
 
             $schema = $RegionNew . '-' . $DlNew;
-            $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);
-            $DbSchemaRepository->llenarNuevo($schema, 'sf');
+            $this->dbSchemaRepository->llenarNuevo($schema, 'sf');
         }
 
         return $avisos;

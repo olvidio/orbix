@@ -22,9 +22,9 @@ interface EncargoSacdHorarioRepositoryInterface
 	/**
 	 * devuelve una colección (array) de objetos de tipo EncargoSacdHorario
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo EncargoSacdHorario
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<EncargoSacdHorario> Una colección de objetos de tipo EncargoSacdHorario
 	
 	 */
 	public function getEncargoSacdHorarios(array $aWhere=[], array $aOperators=[]): array;
@@ -46,10 +46,10 @@ interface EncargoSacdHorarioRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param int $id_item
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(int $id_item): array|bool;
+    public function datosById(int $id_item): array|false;
 	
     /**
      * Busca la clase con id_item en el repositorio.
@@ -57,7 +57,7 @@ interface EncargoSacdHorarioRepositoryInterface
      */
     public function findById(int $id_item): ?EncargoSacdHorario;
 	
-    public function getNewId();
+    public function getNewId(): int;
 
     /**
      * Filas en `encargo_sacd_horario_excepcion` para este horario.

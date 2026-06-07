@@ -3,127 +3,132 @@
 namespace src\dbextern\domain;
 
 use PDO;
+use PDOStatement;
+use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
+use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\dbextern\domain\entity\IdMatchPersona;
 use src\dbextern\domain\entity\PersonaBDU;
 use src\dbextern\infrastructure\persistence\postgresql\OdbcDlListasRepository;
-use src\dbextern\infrastructure\persistence\postgresql\PgIdMatchPersonaRepository;
-use src\dbextern\infrastructure\persistence\postgresql\PgPersonaBDURepository;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
+use src\personas\domain\entity\PersonaAgd;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaGlobal;
+use src\personas\domain\entity\PersonaN;
+use src\personas\domain\entity\PersonaNax;
+use src\personas\domain\entity\PersonaS;
 use src\personas\domain\entity\TelecoPersona;
+use src\permisos\domain\XPermisos;
 use src\personas\domain\Trasladar;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\GlobalPdo;
 
-/**
- * Description of SincroDB
- *
- * @author Daniel Serrabou <dani@moneders.net>
- */
 class SincroDB
 {
+    private string $tipo_persona = '';
+    private int $id_tipo = 0;
 
-    private $tipo_persona;    //'n', 'a', 's', 'sssc'.
-    private $id_tipo;        //1  ,  2,   3,    4.
+    /** @var list<PersonaBDU>|null */
+    private ?array $cPersonasListas = null;
 
-    private $cPersonasListas;
+    private string $region = '';
+    private string $dl_listas = '';
 
-    private $region;
-    private $dl_listas;
-    private $aCentros;
+    /** @var array<string, int> */
+    private array $aCentros = [];
 
-    private $aDlListas2Orbix;
-    private $aDlOrbix2listas;
-    private $path_ini;
-    private $tabla;
+    /** @var array<string, string>|null */
+    private ?array $aDlListas2Orbix = null;
 
-    public function __construct()
-    {
-        //$this->tabla = 'dbo.q_dl_Estudios_b ';
+    /** @var array<string, string>|null */
+    private ?array $aDlOrbix2listas = null;
+
+    private string $path_ini = '';
+    private string $tabla;
+
+    public function __construct(
+        private PersonaBDURepositoryInterface $personaBDURepository,
+        private IdMatchPersonaRepositoryInterface $idMatchRepository,
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private PersonaDlRepositoryFactoryInterface $personaDlRepositoryFactory,
+        private TelecoPersonaDlRepositoryInterface $telecoPersonaDlRepository,
+        private OdbcDlListasRepository $dlListasRepository,
+        private PersonaRepositoryResolver $personaRepositoryResolver,
+        private Trasladar $trasladar,
+    ) {
         $this->tabla = 'tmp_bdu';
     }
 
-    public function getTipo_persona()
+    public function getTipo_persona(): string
     {
         return $this->tipo_persona;
     }
 
-    public function getId_tipo()
+    public function getId_tipo(): int
     {
         return $this->id_tipo;
     }
 
-    public function setTipo_persona($tipo_persona)
+    public function setTipo_persona(string $tipo_persona): void
     {
         $this->tipo_persona = $tipo_persona;
-        $id_tipo = 0;
-        switch ($tipo_persona) {
-            case 'n':
-                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
-                    $id_tipo = 1;
-                }
-                break;
-            case 'a':
-                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
-                    $id_tipo = 2;
-                }
-                break;
-            case 's':
-                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
-                    $id_tipo = 3;
-                }
-                break;
-            case 'sssc':
-                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
-                    $id_tipo = 4;
-                }
-                break;
-            default:
-                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
-                exit ($err_switch);
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        $id_tipo = match ($tipo_persona) {
+            'n' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('sm')) ? 1 : 0,
+            'a' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('agd')) ? 2 : 0,
+            's' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('sg')) ? 3 : 0,
+            'sssc' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('des')) ? 4 : 0,
+            default => 0,
+        };
+        if ($id_tipo === 0 && !in_array($tipo_persona, ['n', 'a', 's', 'sssc'], true)) {
+            $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+            exit($err_switch);
         }
         $this->id_tipo = $id_tipo;
     }
 
-    public function getRegion()
+    public function getRegion(): string
     {
         return $this->region;
     }
 
-    public function setRegion($region)
+    public function setRegion(string $region): void
     {
         $this->region = $region;
     }
 
-    public function getDlListas()
+    public function getDlListas(): string
     {
         return $this->dl_listas;
     }
 
-    public function setDlListas($dl)
+    public function setDlListas(string $dl): void
     {
         $this->dl_listas = $dl;
     }
 
-    public function getCentros()
+    /**
+     * @return array<string, int>
+     */
+    public function getCentros(): array
     {
         return $this->aCentros;
     }
 
-    public function setCentros($aCentros)
+    /**
+     * @param array<string, int> $aCentros
+     */
+    public function setCentros(array $aCentros): void
     {
         $this->aCentros = $aCentros;
     }
 
-    private function cargarArrayDl()
+    private function cargarArrayDl(): void
     {
-        /* formato de dl en listas, tipo: Acscr (para Acsecr)
-         * formato de dl en orbix: crAcse
-         */
-        $DllistasRepository = new OdbcDlListasRepository();
-        $cDllistas = $DllistasRepository->getDlListas();
+        $cDllistas = $this->dlListasRepository->getDlListas();
         $this->aDlListas2Orbix = [];
         $this->aDlOrbix2listas = [];
         foreach ($cDllistas as $oDlListas) {
@@ -133,7 +138,7 @@ class SincroDB
             preg_match('/(cr) (\w*)$/', $nombre_dl, $matches);
             if (!empty($matches[1])) {
                 $reg = $matches[2];
-                $dl_orbix = 'cr' . $reg; // 'crAcse'
+                $dl_orbix = 'cr' . $reg;
             } else {
                 $dl_orbix = 'dl' . $dl_listas;
             }
@@ -143,87 +148,88 @@ class SincroDB
         }
     }
 
-    public function dlListas2Orbix($dl_listas)
+    public function dlListas2Orbix(string $dl_listas): string|false
     {
-        if (empty($this->aDlListas2Orbix)) {
+        if ($this->aDlListas2Orbix === null) {
             $this->cargarArrayDl();
         }
 
         if (empty($this->aDlListas2Orbix[$dl_listas])) {
             $msg = sprintf(_("No se encuentra la dl %s en la tabla Aux de listas"), $dl_listas);
             echo $msg;
-            return FALSE;
-        } else {
-            return $this->aDlListas2Orbix[$dl_listas];
+
+            return false;
         }
+
+        return $this->aDlListas2Orbix[$dl_listas];
     }
 
-    public function dlOrbix2Listas($dl_orbix)
+    public function dlOrbix2Listas(string $dl_orbix): string|false
     {
-        if (empty($this->aDlOrbix2listas)) {
+        if ($this->aDlOrbix2listas === null) {
             $this->cargarArrayDl();
         }
 
         if (empty($this->aDlOrbix2listas[$dl_orbix])) {
             $msg = sprintf(_("No se encuentra la dl %s en la tabla Aux de listas"), $dl_orbix);
             echo $msg;
-            return FALSE;
-        } else {
-            return $this->aDlOrbix2listas[$dl_orbix];
+
+            return false;
         }
+
+        return $this->aDlOrbix2listas[$dl_orbix];
     }
 
-    public function getPersonasBDU()
+    /**
+     * @return list<PersonaBDU>
+     */
+    public function getPersonasBDU(): array
     {
-        if (empty($this->cPersonasListas)) {
+        if ($this->cPersonasListas === null) {
             $Query = "SELECT * FROM $this->tabla 
                         WHERE identif::text LIKE '$this->id_tipo%' AND  Dl='$this->dl_listas' 
                             AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
-            // todos los de listas
-            $PersonaBDURepository = new PgPersonaBDURepository();
-            $cPersonasBDU = $PersonaBDURepository->getPersonaBDUQuery($Query);
+            $cPersonasBDU = $this->personaBDURepository->getPersonaBDUQuery($Query);
 
-            // Añadir las delegaciones dependientes de la región (que no tienen esquema propio)
             if (array_key_exists($this->region, ConfigGlobal::REGIONES_CON_DL)) {
                 $cPersonasBDU_n = [];
                 foreach (ConfigGlobal::REGIONES_CON_DL[$this->region] as $dl_n) {
-
                     $Query = "SELECT * FROM $this->tabla
                           WHERE identif::text LIKE '$this->id_tipo%' AND  Dl='$dl_n'
                                AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
-                    // todos los de listas
-                    $cPersonasBDU_n[] = $PersonaBDURepository->getPersonaBDUQuery($Query);
-
+                    $cPersonasBDU_n[] = $this->personaBDURepository->getPersonaBDUQuery($Query);
                 }
-                $cPersonasBDU = array_merge($cPersonasBDU, ...array_values($cPersonasBDU_n));
+                foreach ($cPersonasBDU_n as $chunk) {
+                    $cPersonasBDU = array_merge($cPersonasBDU, $chunk);
+                }
             }
             $this->cPersonasListas = $cPersonasBDU;
         }
+
         return $this->cPersonasListas;
     }
 
-    public function union_automatico($oPersonaListas)
+    public function union_automatico(PersonaBDU $oPersonaListas): bool
     {
         $id_nom_listas = $oPersonaListas->getIdentif();
         $apellido1_sinprep = $oPersonaListas->getApellido1_sinprep();
         $apellido2_sinprep = $oPersonaListas->getApellido2_sinprep();
         $f_nacimiento = $oPersonaListas->getFecha_Naci();
+        $f_nacimiento_txt = $f_nacimiento;
         $nombre = $oPersonaListas->getNombre();
 
         $aWhere = [];
         $aOperador = [];
         $aWhere['id_tabla'] = $this->tipo_persona;
         $aWhere['apellido1'] = $apellido1_sinprep;
-        // Para los extranjeros que no tienen segundo apellido.
-        if (!empty($apellido2_sinprep)) {
+        if ($apellido2_sinprep !== '') {
             $aWhere['apellido2'] = $apellido2_sinprep;
         }
-        $aWhere['f_nacimiento'] = "'$f_nacimiento'";
+        $aWhere['f_nacimiento'] = "'$f_nacimiento_txt'";
         $aWhere['nom'] = trim($nombre);
 
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $cPersonasDl = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
-        if ($cPersonasDl !== false && count($cPersonasDl) == 1) {
+        $cPersonasDl = $this->personaDlRepository->getPersonas($aWhere, $aOperador);
+        if (count($cPersonasDl) === 1) {
             $oPersonaDl = $cPersonasDl[0];
             $id_nom = $oPersonaDl->getId_nom();
 
@@ -232,136 +238,106 @@ class SincroDB
             $oIdMatch->setId_orbix($id_nom);
             $oIdMatch->setId_tabla($this->tipo_persona);
 
-            $IdMatchRepository = new PgIdMatchPersonaRepository();
-            if ($IdMatchRepository->Guardar($oIdMatch) === false) {
+            if ($this->idMatchRepository->Guardar($oIdMatch) === false) {
                 return false;
             }
+
             return true;
         }
+
         return false;
     }
 
     /**
-     * Posibles coincidencias en la BDU
-     *
-     * @param integer $id_nom_orbix
-     * @return string[][]
+     * @return list<array<string, mixed>>
      */
-    public function posiblesBDU(int $id_nom_orbix)
+    public function posiblesBDU(int $id_nom_orbix): array
     {
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $oPersonaDl = $PersonaDlRepository->findById($id_nom_orbix);
+        $oPersonaDl = $this->personaDlRepository->findById($id_nom_orbix);
+        if ($oPersonaDl === null) {
+            return [];
+        }
 
-        $apellido1 = $oPersonaDl->getApellido1();
-        $apellido1 = str_replace("'","''", $apellido1);
+        $apellido1 = str_replace("'", "''", $oPersonaDl->getApellido1());
 
         $Query = "SELECT * FROM $this->tabla
                         WHERE identif::text LIKE '$this->id_tipo%' AND  ApeNom LIKE '%" . $apellido1 . "%'
                             AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
-        // todos los de listas
-        $PersonaBDURepository = new PgPersonaBDURepository();
-        $cPersonasBDU = $PersonaBDURepository->getPersonaBDUQuery($Query);
+        $cPersonasBDU = $this->personaBDURepository->getPersonaBDUQuery($Query);
 
-        $i = 0;
         $a_lista_bdu = [];
-        $PgIdMatchRepository = new PgIdMatchPersonaRepository();
         foreach ($cPersonasBDU as $oPersonaBDU) {
             $id_nom_listas = $oPersonaBDU->getIdentif();
-            $cIdMatch = $PgIdMatchRepository->getIdMatchPersonas(array('id_listas' => $id_nom_listas));
-            if (!empty($cIdMatch[0]) and count($cIdMatch) > 0) {
+            $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_listas' => $id_nom_listas]);
+            if ($cIdMatch !== []) {
                 continue;
             }
-            $id_nom_listas = $oPersonaBDU->getIdentif();
-            $ape_nom = $oPersonaBDU->getApenom();
-            $nombre = $oPersonaBDU->getNombre();
-            $apellido1 = $oPersonaBDU->getApellido1();
-            $nx1 = $oPersonaBDU->getNx1();
-            $apellido1_sinprep = $oPersonaBDU->getApellido1_sinprep();
-            $nx2 = $oPersonaBDU->getNx2();
-            $apellido2 = $oPersonaBDU->getApellido2();
-            $apellido2_sinprep = $oPersonaBDU->getApellido2_sinprep();
-            $f_nacimiento = $oPersonaBDU->getFecha_Naci();
-            $dl_persona = $oPersonaBDU->getDl();
-            $lugar_nacimiento = $oPersonaBDU->getLugar_Naci();
-            $f_nacimiento = empty($f_nacimiento) ? '??' : $f_nacimiento;
-            $pertenece_r = $oPersonaBDU->getPertenece_r();
-            $compartida_con_r = $oPersonaBDU->getCompartida_con_r();
-            $a_lista_bdu[$i] = [
+            $a_lista_bdu[] = [
                 'id_nom' => $id_nom_listas,
-                'ape_nom' => $ape_nom,
-                'nombre' => $nombre,
-                'dl_persona' => $dl_persona,
-                'apellido1' => $apellido1,
-                'apellido2' => $apellido2,
-                'f_nacimiento' => $f_nacimiento,
-                'pertenece_r' => $pertenece_r,
-                'compartida_con_r' => $compartida_con_r,
+                'ape_nom' => $oPersonaBDU->getApenom(),
+                'nombre' => $oPersonaBDU->getNombre(),
+                'dl_persona' => $oPersonaBDU->getDl(),
+                'apellido1' => $oPersonaBDU->getApellido1(),
+                'apellido2' => $oPersonaBDU->getApellido2(),
+                'f_nacimiento' => empty($oPersonaBDU->getFecha_Naci()) ? '??' : $oPersonaBDU->getFecha_Naci(),
+                'pertenece_r' => $oPersonaBDU->getPertenece_r(),
+                'compartida_con_r' => $oPersonaBDU->getCompartida_con_r(),
             ];
-            $i++;
         }
+
         return $a_lista_bdu;
     }
 
-    public function posiblesOrbixOtrasDl($id_nom_listas)
+    /**
+     * @return list<list<array<string, mixed>>>
+     */
+    public function posiblesOrbixOtrasDl(int $id_nom_listas): array
     {
-        // posibles esquemas
-        /*
-         * @todo: filtrar por regiones?
-         */
-        $oDBR = $GLOBALS['oDBR'];
+        $oDBR = GlobalPdo::get('oDBR');
         $qRs = $oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
-        $aResultSql = $qRs->fetchAll(\PDO::FETCH_ASSOC);
-        $aEsquemas = $aResultSql;
-        //Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
-        $oDBR = $GLOBALS['oDBR'];
+        if ($qRs === false) {
+            return [];
+        }
+        $aEsquemas = $qRs->fetchAll(PDO::FETCH_ASSOC);
+
         $qRs = $oDBR->query('SHOW search_path');
-        $aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
-        $path_org = addslashes($aPath['search_path']);
+        if ($qRs === false) {
+            return [];
+        }
         $a_posibles = [];
-        $e = 0;
         foreach ($aEsquemas as $esquemaName) {
             $esquema = $esquemaName['schemaname'];
-            //elimino el de H-H
             if (strpos($esquema, '-')) {
                 $a_reg = explode('-', $esquema);
                 $reg = $a_reg[0];
-                $dl = substr($a_reg[1], 0, -1); // quito la v o la f.
-                if ($reg == $dl) {
+                $dl = substr($a_reg[1], 0, -1);
+                if ($reg === $dl) {
                     continue;
                 }
             }
-            //elimino public, publicv, global
-            if ($esquema === 'global') {
+            if (in_array($esquema, ['global', 'public', 'publicv', 'restov'], true)) {
                 continue;
             }
-            if ($esquema === 'public') {
-                continue;
-            }
-            if ($esquema === 'publicv') {
-                continue;
-            }
-            if ($esquema === 'restov') {
-                continue;
-            }
-//			$esquema_slash = '"'.$esquema.'"';
-//			$oDBR->exec("SET search_path TO public,$esquema_slash");
-            // buscar en cada esquema
             $a_lista_orbix = $this->posiblesOrbix($id_nom_listas, $esquema);
-            if (!empty($a_lista_orbix)) {
-                $e++;
-                $a_posibles[$e] = $a_lista_orbix;
+            if ($a_lista_orbix !== []) {
+                $a_posibles[] = $a_lista_orbix;
             }
         }
+
         return $a_posibles;
     }
 
-    public function posiblesOrbix($id_nom_listas, $esquema = '')
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function posiblesOrbix(int $id_nom_listas, string $esquema = ''): array
     {
-        $PersonaBDURepository = new PgPersonaBDURepository();
-        $oPersonaBDU = $PersonaBDURepository->findById($id_nom_listas);
+        $oPersonaBDU = $this->personaBDURepository->findById($id_nom_listas);
+        if ($oPersonaBDU === null) {
+            return [];
+        }
 
         $apellido1_sinprep = $oPersonaBDU->getApellido1_sinprep();
-        // Si tiene más de una palabra cojo la primera
         $tokens = explode(' ', $apellido1_sinprep);
         $apellido1_sinprep_c = $tokens[0];
         $aWhere = [];
@@ -372,71 +348,65 @@ class SincroDB
         $aOperador['apellido1'] = 'sin_acentos';
         $aWhere['_ordre'] = 'apellido1, apellido2, nom';
 
-        $PersonaDlRepositoryFactory = $GLOBALS['container']->get(PersonaDlRepositoryFactoryInterface::class);
-        $PersonaDlRepository = $PersonaDlRepositoryFactory->create();
-        if (!empty($esquema)) {
+        $personaDlRepository = $this->personaDlRepositoryFactory->create();
+        $oDB = null;
+        if ($esquema !== '') {
             $oDB = $this->conexion($esquema);
-            $PersonaDlRepository = $PersonaDlRepositoryFactory->createWithConnection($oDB);
+            $personaDlRepository = $this->personaDlRepositoryFactory->createWithConnection($oDB);
         }
-        $cPersonasDl = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
-        $i = 0;
+        $cPersonasDl = $personaDlRepository->getPersonas($aWhere, $aOperador);
         $a_lista_orbix = [];
-        $IdMatchRepository = new PgIdMatchPersonaRepository();
         foreach ($cPersonasDl as $oPersonaDl) {
             $id_nom = $oPersonaDl->getId_nom();
-            $cIdMatch = $IdMatchRepository->getIdMatchPersonas(array('id_orbix' => $id_nom));
-            if (!empty($cIdMatch[0]) and count($cIdMatch) > 0) {
+            $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_orbix' => $id_nom]);
+            if ($cIdMatch !== []) {
                 continue;
             }
-            $ape_nom = $oPersonaDl->getPrefApellidosNombre();
-            $nombre = $oPersonaDl->getNom();
-            $dl_persona = $oPersonaDl->getDl();
-            $apellido1 = $oPersonaDl->getApellido1();
-            $apellido2 = $oPersonaDl->getApellido2();
-            $f_nacimiento = empty($oPersonaDl->getF_nacimiento()?->getFromLocal()) ? '??' : $oPersonaDl->getF_nacimiento()?->getFromLocal();
-            $a_lista_orbix[$i] = array('esquema' => $esquema,
+            $f_nacimiento = $oPersonaDl->getF_nacimiento()?->getFromLocal();
+            $a_lista_orbix[] = [
+                'esquema' => $esquema,
                 'id_nom' => $id_nom,
-                'ape_nom' => $ape_nom,
-                'nombre' => $nombre,
-                'dl_persona' => $dl_persona,
-                'apellido1' => $apellido1,
-                'apellido2' => $apellido2,
-                'f_nacimiento' => $f_nacimiento);
-            $i++;
+                'ape_nom' => $oPersonaDl->getPrefApellidosNombre(),
+                'nombre' => $oPersonaDl->getNom(),
+                'dl_persona' => $oPersonaDl->getDl(),
+                'apellido1' => $oPersonaDl->getApellido1(),
+                'apellido2' => $oPersonaDl->getApellido2(),
+                'f_nacimiento' => empty($f_nacimiento) ? '??' : $f_nacimiento,
+            ];
         }
-        if (!empty($esquema)) {
+        if ($oDB !== null) {
             $this->restaurarConexion($oDB);
         }
+
         return $a_lista_orbix;
     }
 
-
-    function syncro($oPersonaListas, $id_orbix)
+    /**
+     * @return string|array{error: string}
+     */
+    public function syncro(PersonaBDU $oPersonaListas, int $id_orbix): string|array
     {
         $msg = '';
         $oHoy = new DateTimeLocal();
-        $a_ctr = $GLOBALS['a_centros'];
+        $a_ctr = $this->aCentros;
 
         $id_nom_listas = $oPersonaListas->getIdentif();
         $ape_nom = $oPersonaListas->getApenom();
         $nombre = $oPersonaListas->getNombre();
-        $apellido1 = $oPersonaListas->getApellido1();
         $nx1 = $oPersonaListas->getNx1();
         $apellido1_sinprep = $oPersonaListas->getApellido1_sinprep();
         $nx2 = $oPersonaListas->getNx2();
-        $apellido2 = $oPersonaListas->getApellido2();
         $apellido2_sinprep = $oPersonaListas->getApellido2_sinprep();
         $f_nacimiento_raw = $oPersonaListas->getFecha_Naci();
         $lugar_nacimiento = $oPersonaListas->getLugar_Naci();
 
         $dl_listas = $oPersonaListas->getDl();
         $Ctr = $oPersonaListas->getCtr();
-        //por alguna razón puede no existir el centro en la lista
         if (!empty($a_ctr[$Ctr])) {
             $id_ubi = $a_ctr[$Ctr];
         } else {
             $id_ubi = 0;
-            if (empty($Ctr)) {
+            if ($Ctr === '') {
                 $msg = sprintf(_("parece que %s no tiene puesto el ctr en la BDU"), $ape_nom);
             } else {
                 $msg = sprintf(_("no se encuentra el ctr %s en la lista de ctr"), $Ctr);
@@ -446,46 +416,39 @@ class SincroDB
         $Email = $oPersonaListas->getEmail();
         $Tfno_Movil = $oPersonaListas->getTfno_Movil();
 
-        $ce_num = $this->toNullableInt($oPersonaListas->getCe_num());
+        $ce_num = $this->toNullableIntFromCe($oPersonaListas->getCe_num());
         $ce_lugar = $oPersonaListas->getCe_lugar();
-        $ce_ini = $this->toNullableInt($oPersonaListas->getCe_ini());
-        $ce_fin = $this->toNullableInt($oPersonaListas->getCe_fin());
+        $ce_ini = $this->toNullableIntFromCe($oPersonaListas->getCe_ini());
+        $ce_fin = $this->toNullableIntFromCe($oPersonaListas->getCe_fin());
 
         $inc = $oPersonaListas->getInc();
         $f_inc = $oPersonaListas->getF_inc();
         $encargos = $oPersonaListas->getEncargos();
         $profesion = $oPersonaListas->getProfesion_cargo();
-        $estudios = $oPersonaListas->getTitulo_estudios();
 
-
-        $id_tipo_persona = substr($id_nom_listas, 0, 1);
-        switch ($id_tipo_persona) {
-            case '4': // sssc
-                $obj_pau = 'PersonaSSSC';
-                break;
-            case '3': // supernumerarios
-                $obj_pau = 'PersonaS';
-                break;
-            case '1': // numerarios
-                $obj_pau = 'PersonaN';
-                break;
-            case '2': // agregados
-                $obj_pau = 'PersonaAgd';
-                break;
-            case "p_nax":
-                $obj_pau = 'PersonaNax';
-                break;
+        $id_tipo_persona = substr((string)$id_nom_listas, 0, 1);
+        $obj_pau = match ($id_tipo_persona) {
+            '4' => 'PersonaSSSC',
+            '3' => 'PersonaS',
+            '1' => 'PersonaN',
+            '2' => 'PersonaAgd',
+            default => '',
+        };
+        if ($obj_pau === '') {
+            return ['error' => _("No existe la clase de la persona")];
         }
-        $resolver = new PersonaRepositoryResolver();
+
         try {
-            $repoPersona = $resolver->repositorio($obj_pau);
+            $repoPersona = $this->personaRepositoryResolver->repositorio($obj_pau);
         } catch (\InvalidArgumentException) {
             return ['error' => _("No existe la clase de la persona")];
         }
 
         $oPersona = $repoPersona->findById($id_orbix);
+        if (!($oPersona instanceof PersonaGlobal)) {
+            return ['error' => _("No se encontró la persona en Orbix")];
+        }
 
-        //Las personas en listas siempre están en situación 'A'
         if ($oPersona->getSituacion() !== 'A') {
             $oPersona->setSituacion('A');
             $oPersona->setF_situacion($oHoy);
@@ -495,14 +458,12 @@ class SincroDB
         $oPersona->setApellido1($apellido1_sinprep);
         $oPersona->setNx2($nx2);
         $oPersona->setApellido2($apellido2_sinprep);
-        $f_nacimiento_vo = DateTimeLocal::createFromLocal($f_nacimiento_raw);
+        $f_nacimiento_local = $f_nacimiento_raw;
+        $f_nacimiento_vo = DateTimeLocal::createFromLocal($f_nacimiento_local);
         $oPersona->setF_nacimiento($f_nacimiento_vo instanceof DateTimeLocal ? $f_nacimiento_vo : null);
         $oPersona->setLugar_nacimiento($lugar_nacimiento);
-        if ($id_tipo_persona != 4) {
-            $oPersona->setCe($ce_num);
-            $oPersona->setCe_lugar($ce_lugar);
-            $oPersona->setCe_ini($ce_ini);
-            $oPersona->setCe_fin($ce_fin);
+        if ($id_tipo_persona !== '4') {
+            $this->aplicarCe($oPersona, $ce_num, $ce_lugar, $ce_ini, $ce_fin);
         }
         $oPersona->setInc($inc);
         $f_inc_vo = DateTimeLocal::createFromLocal($f_inc);
@@ -511,103 +472,127 @@ class SincroDB
         $oPersona->setEap($encargos);
 
         $dl_orbix = $this->dlListas2Orbix($dl_listas);
-        $oPersona->setDl($dl_orbix);
+        if ($dl_orbix !== false) {
+            $oPersona->setDl($dl_orbix);
+        }
 
-        $oPersona->setId_ctr($id_ubi);
-
+        if ($oPersona instanceof PersonaN || $oPersona instanceof PersonaAgd || $oPersona instanceof PersonaS || $oPersona instanceof PersonaNax) {
+            $oPersona->setId_ctr($id_ubi);
+        }
 
         if ($repoPersona->Guardar($oPersona) === false) {
             exit(_("hay un error, no se ha guardado"));
         }
 
-        //Dossiers
-        $TelecoPersonaDlRepository = $GLOBALS['container']->get(TelecoPersonaDlRepositoryInterface::class);
-        // Telf movil  --particular(5)
-        if (!empty($Tfno_Movil)) {
-            $cTelecos = $TelecoPersonaDlRepository->getTelecosPersona(array('id_nom' => $id_orbix, 'id_tipo_teleco' => 2, 'id_desc_teleco' => 5));
-            if (!empty($cTelecos) && count($cTelecos) > 0) {
-                $oTeleco = $cTelecos[0];
-                $oTeleco->setNum_teleco($Tfno_Movil);
-                $oTeleco->setObserv('de listas');
-            } else {
-                $newIdItem = $TelecoPersonaDlRepository->getNewId();
-                $oTeleco = new TelecoPersona();
-                $oTeleco->setId_item($newIdItem);
-                $oTeleco->setId_nom($id_orbix);
-                $oTeleco->setId_tipo_teleco(2); // 2 -> móvil
-                $oTeleco->setId_desc_teleco(5);
-                $oTeleco->setNum_teleco($Tfno_Movil);
-                $oTeleco->setObserv('de listas');
-            }
-            if ($TelecoPersonaDlRepository->Guardar($oTeleco) === false) {
-                echo(_("hay un error, no se ha guardado"));
-            }
+        if ($Tfno_Movil !== '') {
+            $this->guardarTeleco($id_orbix, 2, 5, $Tfno_Movil);
         }
-        // e-mail   --principal(13)
-        if (!empty($Email)) {
-            $cTelecos = $TelecoPersonaDlRepository->getTelecosPersona(array('id_nom' => $id_orbix, 'id_tipo_teleco' => 3, 'id_desc_teleco' => 13));
-            if (!empty($cTelecos) && count($cTelecos) > 0) {
-                $oTeleco = $cTelecos[0];
-                $oTeleco->setNum_teleco($Email);
-                $oTeleco->setObserv('de listas');
-            } else {
-                $newIdItem = $TelecoPersonaDlRepository->getNewId();
-                $oTeleco = new TelecoPersona();
-                $oTeleco->setId_item($newIdItem);
-                $oTeleco->setId_nom($id_orbix);
-                $oTeleco->setId_tipo_teleco(3); // 3 -> email
-                $oTeleco->setId_desc_teleco(13);
-                $oTeleco->setNum_teleco($Email);
-                $oTeleco->setObserv('de listas');
-            }
-            if ($TelecoPersonaDlRepository->Guardar($oTeleco) === false) {
-                echo(_("hay un error, no se ha guardado"));
-            }
+        if ($Email !== '') {
+            $this->guardarTeleco($id_orbix, 3, 13, $Email);
+        }
 
-        }
         return $msg;
     }
 
-    public function buscarEnOrbix($id_orbix)
+    private function guardarTeleco(int $id_orbix, int $id_tipo_teleco, int $id_desc_teleco, string $num_teleco): void
     {
-        $oTrasladoDl = new Trasladar();
-        $a_esquemas = $oTrasladoDl->getEsquemas($id_orbix, $this->tipo_persona);
+        $cTelecos = $this->telecoPersonaDlRepository->getTelecosPersona([
+            'id_nom' => $id_orbix,
+            'id_tipo_teleco' => $id_tipo_teleco,
+            'id_desc_teleco' => $id_desc_teleco,
+        ]);
+        if ($cTelecos !== []) {
+            $oTeleco = $cTelecos[0];
+            $oTeleco->setNum_teleco($num_teleco);
+            $oTeleco->setObserv('de listas');
+        } else {
+            $newIdItem = $this->telecoPersonaDlRepository->getNewId();
+            $oTeleco = new TelecoPersona();
+            $oTeleco->setId_item($newIdItem);
+            $oTeleco->setId_nom($id_orbix);
+            $oTeleco->setId_tipo_teleco($id_tipo_teleco);
+            $oTeleco->setId_desc_teleco($id_desc_teleco);
+            $oTeleco->setNum_teleco($num_teleco);
+            $oTeleco->setObserv('de listas');
+        }
+        if ($this->telecoPersonaDlRepository->Guardar($oTeleco) === false) {
+            echo(_("hay un error, no se ha guardado"));
+        }
+    }
+
+    public function buscarEnOrbix(int $id_orbix): string
+    {
+        $this->trasladar->setId_nom($id_orbix);
+        $a_esquemas = $this->trasladar->getEsquemas($id_orbix, $this->tipo_persona);
         $esquema = '';
         foreach ($a_esquemas as $info_eschema) {
-            // array(schemaName,id_schema,situacion,f_situacion)
-            if ($info_eschema['situacion'] === 'A') {
-                $esquema = $info_eschema['schemaname'];
+            if (($info_eschema['situacion'] ?? '') === 'A') {
+                $schemaName = $info_eschema['schemaname'] ?? '';
+                $esquema = is_string($schemaName) ? $schemaName : '';
             }
         }
+
         return $esquema;
     }
 
-    public function conexion($esquema)
+    private function aplicarCe(
+        PersonaGlobal $oPersona,
+        ?int $ce_num,
+        string $ce_lugar,
+        ?int $ce_ini,
+        ?int $ce_fin,
+    ): void {
+        if ($oPersona instanceof PersonaN) {
+            $oPersona->setCe($ce_num);
+            $oPersona->setCe_lugar($ce_lugar);
+            $oPersona->setCe_ini($ce_ini);
+            $oPersona->setCe_fin($ce_fin);
+        } elseif ($oPersona instanceof PersonaAgd) {
+            $oPersona->setCe($ce_num);
+            $oPersona->setCe_lugar($ce_lugar);
+            $oPersona->setCe_ini($ce_ini);
+            $oPersona->setCe_fin($ce_fin);
+        } elseif ($oPersona instanceof PersonaS) {
+            $oPersona->setCe($ce_num);
+            $oPersona->setCe_lugar($ce_lugar);
+            $oPersona->setCe_ini($ce_ini);
+            $oPersona->setCe_fin($ce_fin);
+        } elseif ($oPersona instanceof PersonaNax) {
+            $oPersona->setCe($ce_num);
+            $oPersona->setCe_lugar($ce_lugar);
+            $oPersona->setCe_ini($ce_ini);
+            $oPersona->setCe_fin($ce_fin);
+        }
+    }
+
+    public function conexion(string $esquema): PDO
     {
-        $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
-        //Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
         if (ConfigGlobal::mi_region_dl() === $esquema) {
-            //Utilizo la conexión oDB para cambiar momentáneamente el search_path.
-            $oDB = $GLOBALS['oDB'];
+            $oDB = GlobalPdo::get('oDB');
         } else {
-            // Sólo funciona con la conexión oDBR porque el usuario es orbixv que
-            // tiene permiso de lectura para todos los esquemas
-            $oDB = $GLOBALS['oDBR'];
+            $oDB = GlobalPdo::get('oDBR');
         }
         $qRs = $oDB->query('SHOW search_path');
+        if ($qRs === false) {
+            return $oDB;
+        }
         $aPath = $qRs->fetch(PDO::FETCH_ASSOC);
-        $this->path_ini = $aPath['search_path'];
+        if (is_array($aPath) && array_key_exists('search_path', $aPath) && is_string($aPath['search_path'])) {
+            $this->path_ini = $aPath['search_path'];
+        } else {
+            $this->path_ini = '';
+        }
         $oDB->exec('SET search_path TO public,"' . $esquema . '"');
+
         return $oDB;
     }
 
-    public function restaurarConexion($oDB)
+    public function restaurarConexion(PDO $oDB): void
     {
-        // Volver oDBR a su estado original:
         $oDB->exec("SET search_path TO $this->path_ini");
     }
 
-    private function toNullableInt(mixed $value): ?int
+    private function toNullableIntFromCe(string|int|null $value): ?int
     {
         if ($value === null || $value === '') {
             return null;

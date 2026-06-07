@@ -3,23 +3,34 @@
 namespace src\procesos\application;
 
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use function src\shared\domain\helpers\input_int;
 
 /**
- * Caso de uso: guarda una tarea_proceso (fase/tarea/responsable/status
- * y fases_previas) del proceso.
+ * Caso de uso: guarda una tarea_proceso del proceso.
  */
 class ProcesosUpdate
 {
+    public function __construct(
+        private readonly TareaProcesoRepositoryInterface $tareaProcesoRepository,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(array $input): string
     {
-        $Qid_item = (int)($input['id_item'] ?? 0);
-        $Qid_tipo_proceso = (int)($input['id_tipo_proceso'] ?? 0);
-        $Qstatus = (int)($input['status'] ?? 0);
-        $Qid_of_responsable = (int)($input['id_of_responsable'] ?? 0);
-        $Qid_fase = (int)($input['id_fase'] ?? 0);
-        $Qid_tarea = (int)($input['id_tarea'] ?? 0);
+        $Qid_item = input_int($input, 'id_item');
+        $Qid_tipo_proceso = input_int($input, 'id_tipo_proceso');
+        $Qstatus = input_int($input, 'status');
+        $Qid_of_responsable = input_int($input, 'id_of_responsable');
+        $Qid_fase = input_int($input, 'id_fase');
+        $Qid_tarea = input_int($input, 'id_tarea');
+        /** @var list<mixed> $Qid_fase_previa */
         $Qid_fase_previa = (array)($input['id_fase_previa'] ?? []);
+        /** @var list<mixed> $Qid_tarea_previa */
         $Qid_tarea_previa = (array)($input['id_tarea_previa'] ?? []);
+        /** @var list<mixed> $Qmensaje_requisito */
         $Qmensaje_requisito = (array)($input['mensaje_requisito'] ?? []);
 
         $aFases_previas = [];
@@ -34,20 +45,22 @@ class ProcesosUpdate
                 'mensaje' => $Qmensaje_requisito[$i] ?? '',
             ];
         }
-        if (empty($Qid_tarea)) {
+        if ($Qid_tarea === 0) {
             $Qid_tarea = 0;
         }
 
-        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
-        $oTareaProceso = $TareaProcesoRepository->findById($Qid_item);
+        $oTareaProceso = $this->tareaProcesoRepository->findById($Qid_item);
+        if ($oTareaProceso === null) {
+            return _('no se encuentra la tarea del proceso');
+        }
         $oTareaProceso->setId_tipo_proceso($Qid_tipo_proceso);
         $oTareaProceso->setStatus($Qstatus);
         $oTareaProceso->setId_of_responsable($Qid_of_responsable);
         $oTareaProceso->setId_fase($Qid_fase);
         $oTareaProceso->setId_tarea($Qid_tarea);
         $oTareaProceso->setJson_fases_previas($aFases_previas);
-        if ($TareaProcesoRepository->Guardar($oTareaProceso) === false) {
-            return _("hay un error, no se ha guardado") . "\n" . $TareaProcesoRepository->getErrorTxt();
+        if ($this->tareaProcesoRepository->Guardar($oTareaProceso) === false) {
+            return _("hay un error, no se ha guardado") . "\n" . $this->tareaProcesoRepository->getErrorTxt();
         }
 
         return '';

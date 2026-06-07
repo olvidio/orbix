@@ -8,7 +8,14 @@ use src\actividades\domain\entity\TiposActividades;
 
 final class CalendarioPeriodosGet2Data
 {
-    public static function execute(int $idUbi, int $year): array
+    public function __construct(
+        private CasaPeriodoRepositoryInterface $casaPeriodoRepository,
+    ) {
+    }
+    /**
+     * @return array<string, mixed>
+     */
+    public function execute(int $idUbi, int $year): array
     {
         $cCasaPeriodos = [];
         if ($idUbi > 0 && $year > 0) {
@@ -24,7 +31,7 @@ final class CalendarioPeriodosGet2Data
                 'f_ini' => '>=',
                 'f_fin' => '<=',
             ];
-            $repo = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
+            $repo = $this->casaPeriodoRepository;
             $cCasaPeriodos = $repo->getCasaPeriodos($aWhere, $aOperador);
         }
 
@@ -42,9 +49,12 @@ final class CalendarioPeriodosGet2Data
             $id_item = $oCasaPeriodo->getId_item();
             $oF_ini = $oCasaPeriodo->getF_ini();
             $oF_fin = $oCasaPeriodo->getF_fin();
+            if ($oF_ini === null || $oF_fin === null) {
+                continue;
+            }
             $f_ini = $oF_ini->getFromLocal();
             $f_fin = $oF_fin->getFromLocal();
-            $sfsv = $oCasaPeriodo->getSfsv();
+            $sfsv = $oCasaPeriodo->getSfsv() ?? 0;
 
             $cPeriodos[] = ['inicio' => $oF_ini, 'fin' => $oF_fin, 'desc' => 'periodo cdc'];
 

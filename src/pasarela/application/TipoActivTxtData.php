@@ -11,7 +11,10 @@ use src\actividades\domain\entity\TiposActividades;
  */
 final class TipoActivTxtData
 {
-    public static function execute(string $id_tipo_activ): array
+    /**
+     * @return array{tipo_txt: string}
+     */
+    public function execute(string $id_tipo_activ): array
     {
         $tipo_txt = '';
         if ($id_tipo_activ !== '') {

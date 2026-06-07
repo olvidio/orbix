@@ -13,24 +13,25 @@ use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
  */
 final class EncargoComprobacionesCtr
 {
+
+    public function __construct(
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroEllasRepositoryInterface $centroEllasRepository,
+        private EncargoRepositoryInterface $encargoRepository,
+        private EncargoSacdRepositoryInterface $encargoSacdRepository
+    ) {
+    }
+
     /**
      * @return array{texto: string}
      */
-    public static function ejecutar(): array
+    public function ejecutar(): array
     {
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-
         $ctrsv = 0;
         $ctrsf = 0;
         $aWhere = ['id_ubi' => 'x'];
         $aOperador = ['id_ubi' => 'IS NOT NULL'];
-        $cEncargosCtr = $EncargoRepository->getEncargos($aWhere, $aOperador);
-        if (!is_array($cEncargosCtr)) {
-            $cEncargosCtr = [];
-        }
+        $cEncargosCtr = $this->encargoRepository->getEncargos($aWhere, $aOperador);
         foreach ($cEncargosCtr as $oEncargo) {
             $id_ubi = $oEncargo->getId_ubi();
             if (empty($id_ubi)) {
@@ -38,24 +39,24 @@ final class EncargoComprobacionesCtr
             }
             $pref = substr((string)$id_ubi, 0, 1);
             if ($pref === '1') {
-                $oCentroDl = $CentroDlRepository->findById($id_ubi);
+                $oCentroDl = $this->centroDlRepository->findById($id_ubi);
                 if ($oCentroDl === null) {
                     continue;
                 }
                 $status = $oCentroDl->isActive();
                 if ($status === false) {
                     $ctrsv++;
-                    $EncargoRepository->Eliminar($oEncargo);
+                    $this->encargoRepository->Eliminar($oEncargo);
                 }
             } else {
-                $oCentroSf = $CentroEllasRepository->findById($id_ubi);
+                $oCentroSf = $this->centroEllasRepository->findById($id_ubi);
                 if ($oCentroSf === null) {
                     continue;
                 }
                 $status = $oCentroSf->isActive();
                 if ($status === false) {
                     $ctrsf++;
-                    $EncargoRepository->Eliminar($oEncargo);
+                    $this->encargoRepository->Eliminar($oEncargo);
                 }
             }
         }
@@ -63,14 +64,14 @@ final class EncargoComprobacionesCtr
         $msg .= sprintf(_("se han eliminado %s encargos de centros sv \n"), $ctrsv);
         $msg .= sprintf(_("se han eliminado %s encargos de centros sf \n"), $ctrsf);
         // borrar los encargos de los sacd. No se puede hacer desde la DB porque se ha pasado a la DB comun.
-        // $msg .= $EncargoSacdRepository->deleteEncargos();
-        $cEncargos = $EncargoRepository->getEncargos();
+        // $msg .= $this->encargoSacdRepository->deleteEncargos();
+        $cEncargos = $this->encargoRepository->getEncargos();
         $a_Id_enc = [];
         foreach ($cEncargos as $oEncargo) {
             $id_enc = $oEncargo->getId_enc();
             $a_Id_enc[] = $id_enc;
         }
-        $msg .= $EncargoSacdRepository->deleteEncargos($a_Id_enc);
+        $msg .= $this->encargoSacdRepository->deleteEncargos($a_Id_enc);
 
         return ['texto' => $msg];
     }

@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use src\actividadessacd\application\SacdsEncargadosData;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\permisos\domain\PermisosActividades;
 use src\procesos\domain\PermAccion;
 
 final class SacdsEncargadosDataTest extends TestCase
@@ -45,7 +46,10 @@ final class SacdsEncargadosDataTest extends TestCase
             }
         };
 
-        $out = SacdsEncargadosData::execute(['id_activ' => 0]);
+        $out = (new SacdsEncargadosData(
+            $this->createMock(CargoRepositoryInterface::class),
+            $this->createMock(ActividadCargoRepositoryInterface::class)
+        ))->execute(['id_activ' => 0]);
         $this->assertSame([
             'id_activ' => 0,
             'permite_ver' => false,
@@ -58,29 +62,22 @@ final class SacdsEncargadosDataTest extends TestCase
     {
         $_SESSION['config']['a_apps']['procesos'] = 42;
         $_SESSION['config']['app_installed'] = [42];
-        $_SESSION['oPermActividades'] = new class {
-            public function setActividad(int $id_activ, string $id_tipo_activ, string $dl_org): void {}
-
-            public function getPermisoActual(string $sAfecta): PermAccion
-            {
-                if ($sAfecta === 'sacd') {
-                    return new PermAccion(0);
-                }
-                return new PermAccion(15);
+        $oPerm = $this->createMock(PermisosActividades::class);
+        $oPerm->method('setActividad')->willReturnSelf();
+        $oPerm->method('getPermisoActual')->willReturnCallback(static function (string $sAfecta): PermAccion {
+            if ($sAfecta === 'sacd') {
+                return new PermAccion(0);
             }
-        };
+            return new PermAccion(15);
+        });
+        $_SESSION['oPermActividades'] = $oPerm;
 
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->expects($this->never())->method('getArrayCargos');
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
         $activCargoRepo->expects($this->never())->method('getActividadCargos');
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-        ]);
-
-        $out = SacdsEncargadosData::execute([
+        $out = (new \src\actividadessacd\application\SacdsEncargadosData($cargoRepo, $activCargoRepo))->execute([
             'id_activ' => 77,
             'id_tipo_activ' => '160000',
             'dl_org' => 'dl',
@@ -91,20 +88,14 @@ final class SacdsEncargadosDataTest extends TestCase
         $this->assertSame([], $out['sacds']);
     }
 
-    public function test_con_permiso_ver_y_lista_cargos_vacia_sacds_vacio(): void
-    {
+    public function test_con_permiso_ver_y_lista_cargos_vacia_sacds_vacio(): void {
         $cargoRepo = $this->createMock(CargoRepositoryInterface::class);
         $cargoRepo->method('getArrayCargos')->with('sacd')->willReturn([88 => 'sacd1']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
         $activCargoRepo->method('getActividadCargos')->willReturn([]);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            CargoRepositoryInterface::class => $cargoRepo,
-            ActividadCargoRepositoryInterface::class => $activCargoRepo,
-        ]);
-
-        $out = SacdsEncargadosData::execute([
+        $out = (new \src\actividadessacd\application\SacdsEncargadosData($cargoRepo, $activCargoRepo))->execute([
             'id_activ' => 77,
             'id_tipo_activ' => '160000',
             'dl_org' => 'dl',

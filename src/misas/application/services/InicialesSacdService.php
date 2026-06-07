@@ -5,11 +5,10 @@ namespace src\misas\application\services;
 use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\PersonaSacd;
-use src\personas\domain\entity\PersonaPub;
 
 class InicialesSacdService
 {
-    private PersonaSacd|PersonaPub|null $persona = null;
+    private ?PersonaSacd $persona = null;
 
     public function __construct(
         private InicialesSacdRepositoryInterface $inicialesRepo,
@@ -35,7 +34,7 @@ class InicialesSacdService
 
             // iniciales (campos pueden ser null en BD)
             $nom = mb_substr($this->persona->getNom() ?? '', 0, 1);
-            $ap1 = mb_substr($this->persona->getApellido1() ?? '', 0, 1);
+            $ap1 = mb_substr($this->persona->getApellido1(), 0, 1);
             $ap2 = mb_substr($this->persona->getApellido2() ?? '', 0, 1);
             return strtoupper($nom . $ap1 . $ap2);
         }

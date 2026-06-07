@@ -1,39 +1,56 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use src\shared\infrastructure\DependencyResolver;
+
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\web\ContestarJson;
 
-$Qid_tipo_doc = (string)filter_input(INPUT_POST, 'id_tipo_doc');
-$Qnumerado = (string)filter_input(INPUT_POST, 'numerado');
-$Qstr_selected_id = (string)filter_input(INPUT_POST, 'str_selected_id');
-$Qf_recibido = (string)filter_input(INPUT_POST, 'f_recibido');
-$Qf_asignado = (string)filter_input(INPUT_POST, 'f_asignado');
+$Qid_tipo_doc = input_string($_POST, 'id_tipo_doc');
+$Qnumerado = input_string($_POST, 'numerado');
+$Qstr_selected_id = input_string($_POST, 'str_selected_id');
+$Qf_recibido = input_string($_POST, 'f_recibido');
+$Qf_asignado = input_string($_POST, 'f_asignado');
 
-$selected_id = json_decode(rawurldecode($Qstr_selected_id));
+$selected_id = json_decode(rawurldecode($Qstr_selected_id), true);
+if (!is_array($selected_id)) {
+    $selected_id = [];
+}
 $error_txt = '';
 
-$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
-$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+/** @var DocumentoRepositoryInterface $DocumentoRepository */
+$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
+/** @var LugarRepositoryInterface $LugarRepository */
+$LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
 $i = 0;
-foreach ($selected_id as $id_lugar) {
+foreach ($selected_id as $id_lugar_raw) {
+    if (!is_numeric($id_lugar_raw)) {
+        continue;
+    }
+    $id_lugar = (int) $id_lugar_raw;
     $oLugar = $LugarRepository->findById($id_lugar);
+    if ($oLugar === null) {
+        continue;
+    }
     $id_ubi = $oLugar->getId_ubi();
-    $var_num = "num_" . $id_lugar;
-    $num = $_POST[$var_num];
+    $var_num = 'num_' . $id_lugar;
+    $numRaw = $_POST[$var_num] ?? 0;
+    $num = is_numeric($numRaw) ? (int) $numRaw : 0;
     $aWhere = ['id_ubi' => $id_ubi,
         'id_lugar' => $id_lugar,
         'id_tipo_doc' => $Qid_tipo_doc
     ];
     $cDocumentos = $DocumentoRepository->getDocumentos($aWhere);
-    if (count($cDocumentos) === 1) {
-        $oDocumento = $cDocumentos[0];
-    } else {
+    if (count($cDocumentos) !== 1) {
         $error_txt .= _("No se encuentra el documento");
         $error_txt .= "\\n";
+        continue;
     }
-    if (!empty($numerado)) {
+    $oDocumento = $cDocumentos[0];
+    if (!empty($Qnumerado)) {
         $oDocumento->setNum_reg($num);
     } else {
         $oDocumento->setNum_ejemplares($num);

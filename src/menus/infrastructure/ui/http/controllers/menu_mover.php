@@ -1,18 +1,23 @@
 <?php
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use src\menus\application\MenuMover;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_menu = (integer)filter_input(INPUT_POST, 'id_menu');
-$Qgm_new = (string)filter_input(INPUT_POST, 'gm_new');
+$Qid_menu = input_int($_POST, 'id_menu');
+$Qgm_new = input_string($_POST, 'gm_new');
 
 $error_txt = '';
 
 if (empty($Qgm_new)) {
     $error_txt .= _("hay un error. Debe indicar el destino");
 } else {
-    $MenuMover = new MenuMover();
-    $error_txt = $MenuMover($Qid_menu, $Qgm_new);
+    /** @var MenuMover $menuMover */
+    $menuMover = DependencyResolver::get(MenuMover::class);
+    $error_txt = $menuMover($Qid_menu, $Qgm_new);
 }
 
 ContestarJson::enviar($error_txt, 'ok');

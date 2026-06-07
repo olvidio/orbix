@@ -2,7 +2,7 @@
 
 namespace src\certificados\application;
 
-use src\personas\domain\entity\Persona;
+use src\personas\application\services\PersonaFinderService;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\RegionStgrAviso;
 
@@ -11,15 +11,20 @@ use src\ubis\domain\RegionStgrAviso;
  */
 final class CertificadoRecibidoAdjuntarFormData
 {
+    public function __construct(
+        private readonly PersonaFinderService $personaFinderService,
+    ) {
+    }
+
     /**
      * @return array{nom: string, f_recibido: string}
      */
-    public static function execute(int $id_nom): array
+    public function execute(int $id_nom): array
     {
         if ($id_nom <= 0) {
             throw new \RuntimeException(RegionStgrAviso::mensajePersonaNoValida());
         }
-        $oPersona = Persona::findPersonaEnGlobal($id_nom);
+        $oPersona = $this->personaFinderService->findPersonaEnGlobal($id_nom);
         if ($oPersona === null) {
             throw new \RuntimeException(_('persona no encontrada'));
         }

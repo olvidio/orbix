@@ -13,10 +13,11 @@ use src\utils_database\domain\entity\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ServerConf::DIR . "/src/usuarios/db";
+    private string $dir_base;
 
-    public function __construct($esquema_sfsv = NULL)
+    public function __construct(?string $esquema_sfsv = null)
     {
+        $this->dir_base = ServerConf::DIR . "/src/usuarios/db";
         if (empty($esquema_sfsv)) {
             $esquema_sfsv = ConfigGlobal::mi_region_dl();
         }
@@ -25,7 +26,7 @@ class DBEsquema extends DBAbstract
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->eliminar_aux_usuarios_ctr_perm();
         // eliminar las tablas en la DBSelect para la sincronización.
@@ -35,7 +36,7 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->create_aux_usuarios_ctr_perm();
         // crear las tablas en la DBSelect para la sincronización.
@@ -45,14 +46,20 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function llenarAll()
+    public function llenarAll(): void
     {
     }
 
-    protected function infoTable($tabla)
+    /**
+     * @return array{tabla: string, nom_tabla: string, campo_seq: string, id_seq: string, filename: string}
+     */
+    protected function infoTable(string $tabla): array
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
+        $nom_tabla = '';
+        $campo_seq = '';
+        $id_seq = '';
         switch ($tabla) {
             case "aux_usuarios_ctr_perm":
                 $nom_tabla = $this->getNomTabla($tabla);
@@ -60,9 +67,9 @@ class DBEsquema extends DBAbstract
                 $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
                 break;
         }
-        $datosTabla['nom_tabla'] = $nom_tabla;
-        $datosTabla['campo_seq'] = $campo_seq;
-        $datosTabla['id_seq'] = $id_seq;
+        $datosTabla['nom_tabla'] = (string) $nom_tabla;
+        $datosTabla['campo_seq'] = (string) $campo_seq;
+        $datosTabla['id_seq'] = (string) $id_seq;
         $datosTabla['filename'] = $this->dir_base . "/$tabla.csv";
         return $datosTabla;
     }
@@ -70,7 +77,7 @@ class DBEsquema extends DBAbstract
     /**
      * En la BD sf-e/sv-e [exterior] (esquema).
      */
-    public function create_aux_usuarios_ctr_perm()
+    public function create_aux_usuarios_ctr_perm(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -83,9 +90,9 @@ class DBEsquema extends DBAbstract
         $tabla = "aux_usuarios_ctr_perm";
         $datosTabla = $this->infoTable($tabla);
 
-        $nom_tabla = $datosTabla['nom_tabla'];
-        $campo_seq = $datosTabla['campo_seq'];
-        $id_seq = $datosTabla['id_seq'];
+        $nom_tabla = (string) $datosTabla['nom_tabla'];
+        $campo_seq = (string) $datosTabla['campo_seq'];
+        $id_seq = (string) $datosTabla['id_seq'];
         $nompkey = $tabla . '_pkey';
         /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
          *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
@@ -121,7 +128,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function eliminar_aux_usuarios_ctr_perm()
+    public function eliminar_aux_usuarios_ctr_perm(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;

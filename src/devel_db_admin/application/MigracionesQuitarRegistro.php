@@ -44,10 +44,14 @@ final class MigracionesQuitarRegistro
             }
 
             $migracion = $migraciones[$id];
-            $lines[] = sprintf('Migracion %s_%s', $migracion['prefijo'], $migracion['descripcion']);
+            $lines[] = sprintf(
+                'Migracion %s_%s',
+                $this->toScalarString($migracion['prefijo'] ?? null),
+                $this->toScalarString($migracion['descripcion'] ?? null),
+            );
             $eliminadosGrupo = 0;
 
-            foreach ((array) $migracion['aplicaciones'] as $aplicacion) {
+            foreach ($this->normalizeRows($migracion['aplicaciones'] ?? []) as $aplicacion) {
                 $aplicada = $aplicacion['aplicada'] ?? null;
                 if (!$aplicada instanceof MigracionAplicada) {
                     continue;
@@ -58,14 +62,14 @@ final class MigracionesQuitarRegistro
                     $eliminadosGrupo++;
                     $lines[] = sprintf(
                         '  - registro eliminado en %s (%s)',
-                        (string) $aplicacion['database'],
-                        (string) $aplicacion['file'],
+                        is_scalar($aplicacion['database'] ?? null) ? (string) $aplicacion['database'] : '',
+                        is_scalar($aplicacion['file'] ?? null) ? (string) $aplicacion['file'] : '',
                     );
                 } else {
                     $lines[] = sprintf(
                         '  - no se pudo eliminar el registro en %s (%s)',
-                        (string) $aplicacion['database'],
-                        (string) $aplicacion['file'],
+                        is_scalar($aplicacion['database'] ?? null) ? (string) $aplicacion['database'] : '',
+                        is_scalar($aplicacion['file'] ?? null) ? (string) $aplicacion['file'] : '',
                     );
                 }
             }
@@ -101,9 +105,43 @@ final class MigracionesQuitarRegistro
     {
         $index = [];
         foreach ($migraciones as $migracion) {
-            $index[(string) $migracion['id']] = $migracion;
+            $idVal = $migracion['id'] ?? '';
+            $id = is_scalar($idVal) ? (string) $idVal : '';
+            if ($id === '') {
+                continue;
+            }
+            $index[$id] = $migracion;
         }
 
         return $index;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function toScalarString(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
+    }
+
+    /**
+     * @param mixed $rows
+     * @return list<array<string, mixed>>
+     */
+    private function normalizeRows(mixed $rows): array
+    {
+        if (!is_array($rows)) {
+            return [];
+        }
+
+        $normalized = [];
+        foreach ($rows as $row) {
+            if (is_array($row)) {
+                /** @var array<string, mixed> $row */
+                $normalized[] = $row;
+            }
+        }
+
+        return $normalized;
     }
 }

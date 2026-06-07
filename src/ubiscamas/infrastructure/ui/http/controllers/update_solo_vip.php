@@ -1,10 +1,13 @@
 <?php
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
-$ctxRaw = (string)filter_input(INPUT_POST, 'ctx');
+$ctxRaw = input_string($_POST, 'ctx');
 try {
     $opened = HashB::open($ctxRaw, 'update_solo_vip');
 } catch (HashBInvalidException $e) {
@@ -13,20 +16,21 @@ try {
     exit;
 }
 
-$Qid_activ = (int)($opened['id_activ'] ?? 0);
+$Qid_activ = input_int($opened, 'id_activ');
 if ($Qid_activ <= 0) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'mensaje' => _('Operación no autorizada')]);
     exit;
 }
 
-$Qsolo_vip = (string)filter_input(INPUT_POST, 'solo_vip'); // 'true' or 'false' as string from JS
+$Qsolo_vip = input_string($_POST, 'solo_vip');
 
 $jsondata = [];
 
 try {
-    $ActividadRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-    $oActividad = $ActividadRepository->findById($Qid_activ);
+    /** @var ActividadAllRepositoryInterface $actividadRepository */
+    $actividadRepository = DependencyResolver::get(ActividadAllRepositoryInterface::class);
+    $oActividad = $actividadRepository->findById($Qid_activ);
 
     if ($oActividad === null) {
         throw new \Exception("Actividad no encontrada con id $Qid_activ.");
@@ -35,8 +39,8 @@ try {
     $desc_activ = ($Qsolo_vip === 'true') ? 'camasVIP' : '';
     $oActividad->setDesc_activ($desc_activ);
 
-    if ($ActividadRepository->Guardar($oActividad) === FALSE) {
-        throw new \Exception("Error al guardar el estado VIP de la actividad: " . $ActividadRepository->getErrorTxt());
+    if ($actividadRepository->Guardar($oActividad) === false) {
+        throw new \Exception('Error al guardar el estado VIP de la actividad: ' . $actividadRepository->getErrorTxt());
     }
 
     $jsondata['success'] = true;

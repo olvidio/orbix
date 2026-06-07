@@ -11,22 +11,19 @@ use function src\shared\domain\helpers\is_true;
 
 class HabitacionesCamaLista
 {
-    private ActividadAllRepositoryInterface $actividadAllRepository;
-    private AsistenteActividadService $asistenteActividadService;
-    private HabitacionDlRepositoryInterface $habitacionRepository;
-    private CamaDlRepositoryInterface $camaRepository;
-
-    public function __construct()
-    {
-        $this->actividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $this->asistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
-        $this->habitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
-        $this->camaRepository = $GLOBALS['container']->get(CamaDlRepositoryInterface::class);
+    public function __construct(
+        private ActividadAllRepositoryInterface $actividadAllRepository,
+        private AsistenteActividadService $asistenteActividadService,
+        private HabitacionDlRepositoryInterface $habitacionRepository,
+        private CamaDlRepositoryInterface $camaRepository,
+    ) {
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function __invoke(int $id_activ): array
     {
-        // 1. Get Ubi ID from Activity
         $oActividad = $this->actividadAllRepository->findById($id_activ);
         if ($oActividad === null) {
             return ['error' => 'Actividad not found'];
@@ -38,11 +35,10 @@ class HabitacionesCamaLista
             return ['error' => 'No Ubi assigned to activity'];
         }
 
-        // 2. Fetch Rooms and Beds
         $cHabitaciones = $this->habitacionRepository->getHabitaciones(['id_ubi' => $id_ubi, '_ordre' => 'orden, planta']);
 
         $aIdsHabitacion = array_map(fn($h) => "'" . $h->getIdHabitacionVo()->value() . "'", $cHabitaciones);
-        if (empty($aIdsHabitacion)) {
+        if ($aIdsHabitacion === []) {
             $cCamas = [];
         } else {
             $cCamas = $this->camaRepository->getCamas(
@@ -51,7 +47,6 @@ class HabitacionesCamaLista
             );
         }
 
-        // Structure beds by room
         $camasPorHabitacion = [];
         foreach ($cHabitaciones as $oHabitacion) {
             $id_hab = $oHabitacion->getIdHabitacionVo()->value();
@@ -68,10 +63,8 @@ class HabitacionesCamaLista
             }
         }
 
-        // 3. Fetch Assistants
         $cAsistentes = $this->asistenteActividadService->getAsistentesDeActividad($id_activ);
 
-        // 4. Match Assistants to Beds
         $asistentesSinCama = [];
         $camasConAsistentes = [];
 
@@ -90,7 +83,6 @@ class HabitacionesCamaLista
             }
         }
 
-        // 5. Prepare Table Data (a_valores)
         $a_cabeceras = [
             _("nombre"),
             _("planta"),
@@ -111,21 +103,15 @@ class HabitacionesCamaLista
         $arrayTiposLavabo = TipoLavabo::getArrayTipoLavabo();
         foreach ($camasPorHabitacion as $roomData) {
             $oHabitacion = $roomData['habitacion'];
-            $aHabitacion = $oHabitacion->toArrayForDatabase();
-
             foreach ($roomData['camas'] as $oCama) {
                 if ($solo_vip && !$oCama->isVip()) {
                     continue;
                 }
                 $i++;
-                $aCama = $oCama->toArrayForDatabase();
-
-                // Combine room and bed data
-                //$aRow = array_merge($aHabitacion, $aCama);
-
                 $id_cama = $oCama->getIdCamaVo()->value();
                 $id_habitacion = $oHabitacion->getIdHabitacionVo()->value();
-                $tipo_lavabo = $arrayTiposLavabo[$oHabitacion->getTipoLavaboVo()?->value()] ?? '';
+                $tipo_lavabo = $arrayTiposLavabo[$oHabitacion->getTipoLavaboVo()?->value() ?? 0] ?? '';
+                $aRow = [];
                 $aRow['sel'] = "$id_habitacion#$id_cama";
                 $aRow['id_cama'] = $id_cama;
 
@@ -155,7 +141,6 @@ class HabitacionesCamaLista
             }
         }
 
-        // 6. Final preparation (convert objects to arrays for frontend)
         $habitacionesConCamasParaJson = [];
         foreach ($camasPorHabitacion as $id_hab => $roomData) {
             $habitacionesConCamasParaJson[$id_hab] = [
@@ -164,7 +149,7 @@ class HabitacionesCamaLista
             ];
         }
 
-        $result = [
+        return [
             'success' => true,
             'id_activ' => $id_activ,
             'id_ubi' => $id_ubi,
@@ -176,7 +161,5 @@ class HabitacionesCamaLista
             'a_botones' => $a_botones,
             'a_valores' => $a_valores,
         ];
-
-        return $result;
     }
 }

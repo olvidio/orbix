@@ -19,6 +19,18 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
  */
 class BuscarPlanCtrData
 {
+
+    public function __construct(
+        private readonly UsuarioRepositoryInterface $usuarioRepository,
+        private readonly RoleRepositoryInterface $roleRepository,
+        private readonly ZonaRepositoryInterface $zonaRepository,
+        private readonly CentroEllosRepositoryInterface $centroEllosRepository,
+        private readonly CentroEllasRepositoryInterface $centroEllasRepository,
+        private readonly EncargoSacdRepositoryInterface $encargoSacdRepository,
+        private readonly EncargoRepositoryInterface $encargoRepository,
+        private readonly IdNomJefeResolver $idNomJefeResolver,
+    ) {
+    }
     /**
      * @return array{
      *   view: 'sacd'|'centro'|'none',
@@ -29,30 +41,45 @@ class BuscarPlanCtrData
      *   id_ubi_centro: string
      * }
      */
-    public static function getData(int $id_zona): array
+    public function getData(int $id_zona): array
     {
-        $container = $GLOBALS['container'];
+        $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        if ($oMiUsuario === null) {
+            return [
+                'view' => 'none',
+                'zonas_opciones' => [],
+                'zonas_selected' => 0,
+                'centros_opciones' => [],
+                'centros_selected' => '',
+                'id_ubi_centro' => '',
+            ];
+        }
 
-        $UsuarioRepository = $container->get(UsuarioRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         $id_role = $oMiUsuario->getId_role();
-
-        $RoleRepository = $container->get(RoleRepositoryInterface::class);
-        $aRoles = $RoleRepository->getArrayRoles();
+        $aRoles = $this->roleRepository->getArrayRoles();
 
         $role_nom = $aRoles[$id_role] ?? '';
+        /** @var array<int|string, string> $aCentros */
         $aCentros = [];
-        $id_nom_jefe = null;
-        $id_sacd = '';
         $id_ubi = '';
 
         $zonas_opciones = [-1 => 'centros encargos'];
         $zonas_selected = $id_zona;
 
         if ($role_nom === 'Centro sv' || $role_nom === 'Centro sf') {
-            $id_ubi = $oMiUsuario->getCsvIdPauVo()?->value();
-            $oCentro = Ubi::newUbi($id_ubi);
-            $nombre_ubi = $oCentro->getNombreUbiVo()->value();
+            $id_ubi = $oMiUsuario->getCsvIdPauVo()?->value() ?? '';
+            if ($id_ubi === '') {
+                return [
+                    'view' => 'none',
+                    'zonas_opciones' => [],
+                    'zonas_selected' => 0,
+                    'centros_opciones' => [],
+                    'centros_selected' => '',
+                    'id_ubi_centro' => '',
+                ];
+            }
+            $oCentro = Ubi::NewUbi($id_ubi);
+            $nombre_ubi = $oCentro !== null ? $oCentro->getNombreUbiVo()->value() : '';
             $aCentros[$id_ubi] = $nombre_ubi;
 
             return [
@@ -66,7 +93,7 @@ class BuscarPlanCtrData
         }
 
         //if ($role_nom === 'p-sacd') {
-            $jefe = IdNomJefeResolver::resolve();
+            $jefe = $this->idNomJefeResolver->resolve();
             if ($jefe['error'] !== '') {
                 return [
                     'view' => 'none',
@@ -78,71 +105,77 @@ class BuscarPlanCtrData
                 ];
             }
             $id_nom_jefe = $jefe['id_nom_jefe'];
+            if ($id_nom_jefe === null) {
+                return [
+                    'view' => 'none',
+                    'zonas_opciones' => [],
+                    'zonas_selected' => 0,
+                    'centros_opciones' => [],
+                    'centros_selected' => '',
+                    'id_ubi_centro' => '',
+                ];
+            }
 
             if ($id_zona === 0) {
                 $id_zona = -1;
             }
             $zonas_selected = $id_zona;
-
-            $ZonaRepository = $container->get(ZonaRepositoryInterface::class);
-            $aOpcionesZona = $ZonaRepository->getArrayZonas($id_nom_jefe);
+            $aOpcionesZona = $this->zonaRepository->getArrayZonas($id_nom_jefe);
             $aOpcionesZona[-1] = 'centros encargos';
 
-            $id_ubi = null;
+            $id_ubi = '';
             if ($id_zona > 0) {
                 $aWhere = [];
                 $aWhere['active'] = 't';
                 $aWhere['id_zona'] = $id_zona;
                 $aWhere['_ordre'] = 'nombre_ubi';
-                $CentroEllosRepository = $container->get(CentroEllosRepositoryInterface::class);
-                $cCentrossv = $CentroEllosRepository->getCentros($aWhere);
-                $CentroEllasRepository = $container->get(CentroEllasRepositoryInterface::class);
-                $cCentrosSf = $CentroEllasRepository->getCentros($aWhere);
+                $cCentrossv = $this->centroEllosRepository->getCentros($aWhere);
+                $cCentrosSf = $this->centroEllasRepository->getCentros($aWhere);
                 $cCentrosList = array_merge($cCentrossv, $cCentrosSf);
                 foreach ($cCentrosList as $oCentro) {
-                    $idu = $oCentro->getId_ubi();
+                    $idu = (string) $oCentro->getId_ubi();
                     $id_ubi = $idu;
                     $aCentros[$idu] = $oCentro->getNombre_ubi();
                 }
             } else {
                 $id_sacd = $oMiUsuario->getCsvIdPauAsString();
-                $EncargosSacdRepository = $container->get(EncargoSacdRepositoryInterface::class);
                 $aWhereES = [];
                 $aOperadorES = [];
                 $aWhereES['id_nom'] = $id_sacd;
                 $aWhereES['f_fin'] = 'x';
                 $aOperadorES['f_fin'] = 'IS NULL';
                 $aWhereES['_ordre'] = 'modo, f_ini DESC';
-                $cEncargosSacd1 = $EncargosSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
+                $cEncargosSacd1 = $this->encargoSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
 
                 $oF_hoy = new DateTimeLocal(date('Y-m-d'));
                 $hoy = $oF_hoy->getIso();
 
                 $aWhereES['f_fin'] = "'$hoy'";
                 $aOperadorES['f_fin'] = '>';
-                $cEncargosSacd2 = $EncargosSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
+                $cEncargosSacd2 = $this->encargoSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
 
                 $cEncargosSacd = $cEncargosSacd1 + $cEncargosSacd2;
-
-                $EncargoRepository = $container->get(EncargoRepositoryInterface::class);
                 foreach ($cEncargosSacd as $oEncargoSacd) {
                     $id_enc = $oEncargoSacd->getId_enc();
-                    $oEncargo = $EncargoRepository->findById($id_enc);
+                    $oEncargo = $this->encargoRepository->findById($id_enc);
                     if ($oEncargo === null) {
                         continue;
                     }
                     $id_tipo_enc = $oEncargo->getId_tipo_enc();
                     if (substr((string)$id_tipo_enc, 0, 1) <= 3) {
                         $idu = $oEncargo->getId_ubi();
-                        $id_ubi = $idu;
-                        $oCentroU = Ubi::newUbi($idu);
-                        $nombre_ubi = $oCentroU->getNombre_ubi();
+                        if ($idu === null) {
+                            continue;
+                        }
+                        $id_ubi = (string) $idu;
+                        $oCentroU = Ubi::NewUbi($idu);
+                        $nombre_ubi = $oCentroU !== null ? $oCentroU->getNombre_ubi() : '';
                         $aCentros[$idu] = $nombre_ubi;
                     }
                 }
             }
 
-            $centros_selected = isset($id_ubi) ? (string)$id_ubi : '';
+            $centros_selected = $id_ubi;
 
             return [
                 'view' => 'sacd',

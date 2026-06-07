@@ -1,6 +1,7 @@
 <?php
 
 use src\notas\application\ActividadesBuscarData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 /**
@@ -8,5 +9,5 @@ use src\shared\web\ContestarJson;
  * que abre `frontend/notas/controller/actividad_buscar_form.php` desde
  * `form_notas_de_una_persona.phtml` al modificar una nota asociada a una actividad.
  */
-$data = ActividadesBuscarData::execute($_POST);
+$data = (DependencyResolver::get(ActividadesBuscarData::class))->execute($_POST);
 ContestarJson::enviar('', $data);

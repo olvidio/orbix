@@ -1,12 +1,15 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\misas\application\ZonaSacdDatosPut;
 use src\shared\web\ContestarJson;
 
-$Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
-$Qid_sacd = (int)filter_input(INPUT_POST, 'id_sacd');
+$Qid_zona = (int)filter_input(INPUT_POST, 'id_zona', FILTER_VALIDATE_INT);
+$Qid_sacd = (int)filter_input(INPUT_POST, 'id_sacd', FILTER_VALIDATE_INT);
 
-$result = ZonaSacdDatosPut::execute($Qid_zona, $Qid_sacd, [
+/** @var ZonaSacdDatosPut $useCase */
+$useCase = DependencyResolver::get(ZonaSacdDatosPut::class);
+$result = $useCase->execute($Qid_zona, $Qid_sacd, [
     'dw1' => (string)filter_input(INPUT_POST, 'dw1'),
     'dw2' => (string)filter_input(INPUT_POST, 'dw2'),
     'dw3' => (string)filter_input(INPUT_POST, 'dw3'),
@@ -16,4 +19,4 @@ $result = ZonaSacdDatosPut::execute($Qid_zona, $Qid_sacd, [
     'dw7' => (string)filter_input(INPUT_POST, 'dw7'),
 ]);
 
-ContestarJson::enviar((string)($result['error'] ?? ''));
+ContestarJson::enviar($result['error']);

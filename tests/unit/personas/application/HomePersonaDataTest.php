@@ -6,33 +6,24 @@ namespace Tests\unit\personas\application;
 
 use PHPUnit\Framework\TestCase;
 use src\personas\application\HomePersonaData;
+use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaPubRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use src\personas\domain\services\TelecoPersonaService;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 final class HomePersonaDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_obj_pau_desconocido(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([]);
+        $useCase = $this->makeUseCase($this->makeResolver());
 
-        $out = HomePersonaData::build(['id_nom' => 1, 'obj_pau' => 'PersonaZ']);
+        $out = $useCase->execute(['id_nom' => 1, 'obj_pau' => 'PersonaZ']);
         $this->assertArrayHasKey('error', $out);
     }
 
@@ -41,29 +32,36 @@ final class HomePersonaDataTest extends TestCase
         $repo = $this->createMock(PersonaNRepositoryInterface::class);
         $repo->method('findById')->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
+        $useCase = $this->makeUseCase($this->makeResolver([
             PersonaNRepositoryInterface::class => $repo,
-        ]);
+        ]));
 
-        $out = HomePersonaData::build(['id_nom' => 8, 'obj_pau' => 'PersonaN']);
+        $out = $useCase->execute(['id_nom' => 8, 'obj_pau' => 'PersonaN']);
         $this->assertArrayHasKey('error', $out);
     }
 
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
+    private function makeUseCase(PersonaRepositoryResolver $resolver): HomePersonaData
     {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
+        return new HomePersonaData(
+            $resolver,
+            $this->createMock(PersonaPubRepositoryInterface::class),
+            $this->createMock(CentroDlRepositoryInterface::class),
+            $this->createMock(TelecoPersonaService::class),
+        );
+    }
 
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+    /**
+     * @param array<class-string, object> $overrides
+     */
+    private function makeResolver(array $overrides = []): PersonaRepositoryResolver
+    {
+        return new PersonaRepositoryResolver(
+            $overrides[PersonaNRepositoryInterface::class] ?? $this->createMock(PersonaNRepositoryInterface::class),
+            $overrides[PersonaAgdRepositoryInterface::class] ?? $this->createMock(PersonaAgdRepositoryInterface::class),
+            $overrides[PersonaNaxRepositoryInterface::class] ?? $this->createMock(PersonaNaxRepositoryInterface::class),
+            $overrides[PersonaSRepositoryInterface::class] ?? $this->createMock(PersonaSRepositoryInterface::class),
+            $overrides[PersonaSSSCRepositoryInterface::class] ?? $this->createMock(PersonaSSSCRepositoryInterface::class),
+            $overrides[PersonaExRepositoryInterface::class] ?? $this->createMock(PersonaExRepositoryInterface::class),
+        );
     }
 }

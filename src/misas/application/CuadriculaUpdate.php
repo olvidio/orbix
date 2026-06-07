@@ -39,10 +39,21 @@ use src\actividades\domain\entity\TiposActividades;
  */
 class CuadriculaUpdate
 {
+
+    public function __construct(
+        private readonly EncargoDiaRepositoryInterface $encargoDiaRepository,
+        private readonly ZonaSacdRepositoryInterface $zonaSacdRepository,
+        private readonly ActividadRepositoryInterface $actividadRepository,
+        private readonly ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private readonly EncargoRepositoryInterface $encargoRepository,
+        private readonly EncargoSacdHorarioRepositoryInterface $encargoSacdHorarioRepository,
+        private readonly InicialesSacdService $inicialesSacdService,
+    ) {
+    }
     /**
-     * @return array{error: string, meta: array}
+     * @return array{error: string, meta: array<string, mixed>}
      */
-    public static function execute(
+    public function execute(
         string $uuid_item,
         string $key,
         string $tstart,
@@ -57,16 +68,8 @@ class CuadriculaUpdate
             return ['error' => _('Falta el id_item'), 'meta' => []];
         }
 
-        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
-        $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-        $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
-        $InicialesSacdService = $GLOBALS['container']->get(InicialesSacdService::class);
-
         $Uuid = new EncargoDiaId($uuid_item);
-        $oEncargoDia = $EncargoDiaRepository->findById($Uuid);
+        $oEncargoDia = $this->encargoDiaRepository->findById($Uuid);
         if ($oEncargoDia === null) {
             $oEncargoDia = new EncargoDia();
             $oEncargoDia->setUuidItemVo($Uuid);
@@ -90,33 +93,34 @@ class CuadriculaUpdate
         }
 
         $error_txt = '';
-        $id_nom = '';
+        $id_nom_int = null;
         if (empty($key)) {
             // Sin sacd → eliminar la asignacion.
-            if ($EncargoDiaRepository->Eliminar($oEncargoDia) === false) {
-                $error_txt .= $EncargoDiaRepository->getErrorTxt();
+            if ($this->encargoDiaRepository->Eliminar($oEncargoDia) === false) {
+                $error_txt .= $this->encargoDiaRepository->getErrorTxt();
             }
         } else {
             // `key` = "iniciales#id_nom".
             $porciones = explode('#', $key);
-            $id_nom = $porciones[1] ?? '';
-            $oEncargoDia->setId_nom($id_nom);
+            $id_nom_raw = $porciones[1] ?? '';
+            $id_nom_int = $id_nom_raw !== '' ? (int) $id_nom_raw : null;
+            $oEncargoDia->setId_nom($id_nom_int);
             $oEncargoDia->setTstart(new EncargoDiaTstart($dia_iso, $tstart));
             $oEncargoDia->setTend(new EncargoDiaTend($dia_iso, $tend));
             $oEncargoDia->setObserv($observ);
 
-            if ($EncargoDiaRepository->Guardar($oEncargoDia) === false) {
-                $error_txt .= $EncargoDiaRepository->getErrorTxt();
+            if ($this->encargoDiaRepository->Guardar($oEncargoDia) === false) {
+                $error_txt .= $this->encargoDiaRepository->getErrorTxt();
             }
         }
 
         // Datos de la zona: sacds y en que dias de la semana estan.
-        $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_zona' => $id_zona], []);
+        $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_zona' => $id_zona], []);
         $lista_sacd = [];
         $esta_en_zona = [];
         foreach ($cZonaSacd as $oZonaSacd) {
             $id_nom_aux = $oZonaSacd->getId_nom();
-            $lista_sacd[$id_nom_aux] = $InicialesSacdService->obtenerNombreConIniciales($id_nom_aux);
+            $lista_sacd[$id_nom_aux] = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom_aux);
             $esta_en_zona[$id_nom_aux] = [
                 '',
                 $oZonaSacd->isDw1(),
@@ -130,21 +134,13 @@ class CuadriculaUpdate
         }
 
         // Disponibilidad del sacd anterior y del nuevo segun actividades y ausencias.
-        [$esta_sacd_anterior, $donde_esta_sacd_anterior] = self::computeDisponibilidadSacd(
+        [$esta_sacd_anterior, $donde_esta_sacd_anterior] = $this->computeDisponibilidadSacd(
             $id_sacd_anterior,
             $dia_iso,
-            $ActividadCargoRepository,
-            $ActividadRepository,
-            $EncargoSacdHorarioRepository,
-            $EncargoRepository,
         );
-        [$esta_sacd, $donde_esta_sacd] = self::computeDisponibilidadSacd(
-            $id_nom,
+        [$esta_sacd, $donde_esta_sacd] = $this->computeDisponibilidadSacd(
+            $id_nom_int,
             $dia_iso,
-            $ActividadCargoRepository,
-            $ActividadRepository,
-            $EncargoSacdHorarioRepository,
-            $EncargoRepository,
         );
 
         // Dia de la semana (ISO 1-7) del dia afectado.
@@ -153,7 +149,7 @@ class CuadriculaUpdate
 
         // Conteo de misas del dia para el sacd anterior (para pintar el
         // estado final de la fila del sacd anterior).
-        [$texto_anterior, $color_fondo_anterior, $texto_sacd_anterior, $comprobacion_prev] = self::computeMetaSacdDia(
+        [$texto_anterior, $color_fondo_anterior, $texto_sacd_anterior, $comprobacion_prev] = $this->computeMetaSacdDia(
             $id_sacd_anterior,
             $dia_iso,
             $id_zona,
@@ -161,21 +157,16 @@ class CuadriculaUpdate
             $esta_en_zona,
             $esta_sacd_anterior,
             $donde_esta_sacd_anterior,
-            $EncargoDiaRepository,
-            $EncargoRepository,
         );
 
-        // Idem para el sacd nuevo (ya asignado).
-        [$texto, $color_fondo, $texto_sacd, $comprobacion_new] = self::computeMetaSacdDia(
-            $id_nom,
+        [$texto, $color_fondo, $texto_sacd, $comprobacion_new] = $this->computeMetaSacdDia(
+            $id_nom_int,
             $dia_iso,
             $id_zona,
             $dws,
             $esta_en_zona,
             $esta_sacd,
             $donde_esta_sacd,
-            $EncargoDiaRepository,
-            $EncargoRepository,
         );
 
         $comprobacion = trim($comprobacion_prev . ' ----- ' . $comprobacion_new);
@@ -214,15 +205,11 @@ class CuadriculaUpdate
      *   El valor final es el ultimo asignado para ese dia (los bucles solo
      *   sobreescriben, igual que en el original).
      */
-    private static function computeDisponibilidadSacd(
-        string $id_sacd,
+    private function computeDisponibilidadSacd(
+        ?int $id_sacd,
         string $dia_iso,
-        ActividadCargoRepositoryInterface $ActividadCargoRepository,
-        ActividadRepositoryInterface $ActividadRepository,
-        EncargoSacdHorarioRepositoryInterface $EncargoSacdHorarioRepository,
-        EncargoRepositoryInterface $EncargoRepository,
     ): array {
-        if (empty($id_sacd)) {
+        if ($id_sacd === null || $id_sacd === 0) {
             return [1, ''];
         }
 
@@ -239,7 +226,7 @@ class CuadriculaUpdate
             'f_ini' => '<=',
             'f_fin' => '>=',
         ];
-        $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad(
+        $cAsistentes = $this->actividadCargoRepository->getAsistenteCargoDeActividad(
             ['id_nom' => $id_sacd],
             [],
             $aWhereAct,
@@ -248,8 +235,8 @@ class CuadriculaUpdate
         foreach ($cAsistentes as $aAsistente) {
             $id_activ = $aAsistente['id_activ'];
             $aWhereAct['id_activ'] = $id_activ;
-            $cActividades = $ActividadRepository->getActividades($aWhereAct, $aOperadorAct);
-            if (!is_array($cActividades) || count($cActividades) === 0) {
+            $cActividades = $this->actividadRepository->getActividades($aWhereAct, $aOperadorAct);
+            if ($cActividades === []) {
                 continue;
             }
             $oActividad = $cActividades[0];
@@ -261,7 +248,7 @@ class CuadriculaUpdate
         }
 
         // Ausencias (encargos horario) del sacd en el dia.
-        $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios(
+        $cAusencias = $this->encargoSacdHorarioRepository->getEncargoSacdHorarios(
             [
                 'id_nom' => $id_sacd,
                 'f_ini' => "'$dia_iso'",
@@ -274,19 +261,22 @@ class CuadriculaUpdate
         );
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc_aux = $oTareaHorarioSacd->getId_enc();
-            $oEncargo = $EncargoRepository->findById($id_enc_aux);
+            $oEncargo = $this->encargoRepository->findById($id_enc_aux);
             if ($oEncargo === null) {
                 continue;
             }
             // Solo consideramos tipos 7 y 4 (los que bloquean).
             $id_tipo = (string)$oEncargo->getId_tipo_enc();
-            if ($id_tipo === '' || ((int)$id_tipo[0] !== 7 && (int)$id_tipo[0] !== 4)) {
+            if ((int)$id_tipo[0] !== 7 && (int)$id_tipo[0] !== 4) {
                 continue;
             }
             $oF_ini = $oTareaHorarioSacd->getF_ini();
             $oF_fin = $oTareaHorarioSacd->getF_fin();
-            $ini = (string)$oF_ini->getFromLocal();
-            $fi = (string)$oF_fin->getFromLocal();
+            if ($oF_ini === null || $oF_fin === null) {
+                continue;
+            }
+            $ini = (string) $oF_ini->getFromLocal();
+            $fi = (string) $oF_fin->getFromLocal();
             $nom = $oEncargo->getDesc_enc();
             $nom .= ($ini !== $fi) ? " ($ini-$fi)" : " ($ini)";
 
@@ -300,28 +290,26 @@ class CuadriculaUpdate
     /**
      * Calcula color + texto + contador de misas para una celda (sacd, dia).
      *
+     * @param array<int, array<int, bool|string|null>> $esta_en_zona
      * @return array{0: string, 1: string, 2: string, 3: string}
-     *   [$texto, $color_fondo, $texto_sacd, $comprobacion]
      */
-    private static function computeMetaSacdDia(
-        string $id_sacd,
+    private function computeMetaSacdDia(
+        ?int $id_sacd,
         string $dia_iso,
         int $id_zona,
         int $dws,
         array $esta_en_zona,
         int $esta_sacd,
         string $donde_esta_sacd,
-        EncargoDiaRepositoryInterface $EncargoDiaRepository,
-        EncargoRepositoryInterface $EncargoRepository,
     ): array {
-        if (empty($id_sacd)) {
+        if ($id_sacd === null || $id_sacd === 0) {
             return ['', 'verdeclaro', '--', ''];
         }
 
         $inicio_dia = $dia_iso . ' 00:00:00';
         $fin_dia = $dia_iso . ' 23:59:59';
 
-        $cEncargosDia = $EncargoDiaRepository->getEncargoDias(
+        $cEncargosDia = $this->encargoDiaRepository->getEncargoDias(
             [
                 'id_nom' => $id_sacd,
                 'tstart' => "'$inicio_dia', '$fin_dia'",
@@ -335,7 +323,11 @@ class CuadriculaUpdate
         $misas_dia_zona = 0;
         $misas_1a_hora_zona = 0;
         foreach ($cEncargosDia as $oEncargoDia) {
-            $oEncargo = $EncargoRepository->findById($oEncargoDia->getId_enc());
+            $id_enc = $oEncargoDia->getId_enc();
+            if ($id_enc === null) {
+                continue;
+            }
+            $oEncargo = $this->encargoRepository->findById($id_enc);
             if ($oEncargo === null) {
                 continue;
             }
@@ -371,12 +363,9 @@ class CuadriculaUpdate
         } elseif ($misas_dia === 2) {
             $texto = _('Este día tiene dos Misas');
             $color_fondo = 'amarillo';
-        } elseif ($misas_dia === 0 && $esta_en_zona_flag) {
+        } elseif ($misas_dia === 0) {
             $texto = _('Este día no tiene ninguna Misa');
-            $color_fondo = 'verde';
-        } elseif ($misas_dia === 0 && !$esta_en_zona_flag) {
-            $texto = _('Este día no tiene ninguna Misa');
-            $color_fondo = 'azulclaro';
+            $color_fondo = $esta_en_zona_flag ? 'verde' : 'azulclaro';
         }
 
         if ($misas_1a_hora === 2) {

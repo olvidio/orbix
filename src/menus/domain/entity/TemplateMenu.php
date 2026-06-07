@@ -40,7 +40,7 @@ class TemplateMenu
         return $this->nombre?->value();
     }
 
-    public function getNombreVo(): TemplateMenuName
+    public function getNombreVo(): ?TemplateMenuName
     {
         return $this->nombre;
     }
@@ -61,10 +61,13 @@ class TemplateMenu
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_template_menu';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

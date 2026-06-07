@@ -10,11 +10,16 @@ use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
  */
 final class CasaPeriodosForPlanning
 {
+    public function __construct(
+        private CasaPeriodoRepositoryInterface $casaPeriodoRepository,
+    ) {
+    }
+
     /**
-     * @param array<string, array<int, array<string, array>>> $a_actividades
+     * @param array<int|string, array<string, list<array<string, mixed>>>> $a_actividades
      * @return array<int, array<int, array{iso_ini: string, iso_fin: string, sfsv: int}>>
      */
-    public static function collect(array $a_actividades, DateTimeLocal $oIni, DateTimeLocal $oFin): array
+    public function collect(array $a_actividades, DateTimeLocal $oIni, DateTimeLocal $oFin): array
     {
         $ids = [];
         foreach ($a_actividades as $ww) {
@@ -25,10 +30,9 @@ final class CasaPeriodosForPlanning
                 }
             }
         }
-        $repo = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
         $map = [];
         foreach (array_keys($ids) as $id_ubi) {
-            $map[$id_ubi] = $repo->getArrayCasaPeriodos($id_ubi, $oIni, $oFin);
+            $map[$id_ubi] = $this->casaPeriodoRepository->getArrayCasaPeriodos($id_ubi, $oIni, $oFin);
         }
 
         return $map;

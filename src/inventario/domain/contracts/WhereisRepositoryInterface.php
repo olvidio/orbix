@@ -17,6 +17,10 @@ use src\inventario\domain\value_objects\WhereisItemId;
 interface WhereisRepositoryInterface
 {
 
+    /**
+     * @param array<int, int|string> $aEgms
+     * @return array<int|string, string>
+     */
     public function getArrayIdFromIdEgms(array $aEgms): array;
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -24,9 +28,9 @@ interface WhereisRepositoryInterface
 	/**
 	 * devuelve una colección (array) de objetos de tipo Whereis
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo Whereis
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<Whereis> Una colección de objetos de tipo Whereis
 	
 	 */
 	public function getWhereare(array $aWhere=[], array $aOperators=[]): array;
@@ -48,10 +52,10 @@ interface WhereisRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param int $id_item_whereis
-     * @return array|bool
+     * @return array<string, mixed>|false
 	
      */
-    public function datosById(int $id_item_whereis): array|bool;
+    public function datosById(int $id_item_whereis): array|false;
 	
     /**
      * Busca la clase con id_item_whereis en el repositorio.
@@ -59,5 +63,5 @@ interface WhereisRepositoryInterface
      */
     public function findById(int $id_item_whereis): ?Whereis;
 	
-    public function getNewId();
+    public function getNewId(): int;
 }

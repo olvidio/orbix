@@ -6,7 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\entity\PersonaN;
-use src\shared\traits\HandlesPdoErrors;
+use src\shared\infrastructure\GlobalPdo;
 use src\utils_database\domain\GenerateIdGlobal;
 
 
@@ -23,13 +23,13 @@ class PgPersonaNRepository extends PgPersonaDlRepositoryBase implements PersonaN
 {
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
-        $this->setoDbl($oDbl);
+        $this->setoDbl(GlobalPdo::get('oDB'));
         $this->setNomTabla('p_numerarios');
     }
     /**
      * Crea una entidad PersonaN desde un array de datos
      */
+    /** @param array<string, mixed> $aDatos */
     protected function createEntityFromArray(array $aDatos): PersonaN
     {
         return PersonaN::fromArray($aDatos);
@@ -91,6 +91,9 @@ class PgPersonaNRepository extends PgPersonaDlRepositoryBase implements PersonaN
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -110,23 +113,29 @@ class PgPersonaNRepository extends PgPersonaDlRepositoryBase implements PersonaN
     public function findById(int $id_nom): ?PersonaN
     {
         $aDatos = $this->datosById($id_nom);
-        if (empty($aDatos)) {
+        if ($aDatos === false) {
             return null;
         }
         return PersonaN::fromArray($aDatos);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('p_numerarios_id_auto_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 
     /**
      * @throws \Exception
      */
-    public function getNewIdNom($id): int
+    public function getNewIdNom(int $id): int
     {
         $miRegionDl = ConfigGlobal::mi_region_dl();
         return GenerateIdGlobal::generateIdGlobal($miRegionDl, $this->getNomTabla(), $id);

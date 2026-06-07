@@ -22,13 +22,17 @@ final class DbLugarDropdown
         }
         $cDelegaciones = $repoDl->getDelegaciones($aWhere, ['_ordre' => 'dl']);
         $aOpciones = [];
-        if (is_array($cDelegaciones)) {
-            foreach ($cDelegaciones as $oDeleg) {
-                $dl = $oDeleg->getDlVo()->value();
-                $aOpciones[$dl] = $dl;
+        foreach ($cDelegaciones as $oDeleg) {
+            $dlValue = $oDeleg->getDlVo()->value();
+            if (!is_string($dlValue) || $dlValue === '') {
+                continue;
             }
+            $dl = $dlValue;
+            $aOpciones[$dl] = $dl;
         }
-        $aOpciones[$region] = _("para gestión global");
+        if ($region !== '') {
+            $aOpciones[$region] = (string) _("para gestión global");
+        }
 
         return $aOpciones;
     }

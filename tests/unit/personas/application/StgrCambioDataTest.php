@@ -6,42 +6,30 @@ namespace Tests\unit\personas\application;
 
 use PHPUnit\Framework\TestCase;
 use src\personas\application\StgrCambioData;
+use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\PersonaN;
 
 final class StgrCambioDataTest extends TestCase
 {
-    private mixed $previousContainer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     public function test_id_tabla_vacio(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([]);
+        $useCase = new StgrCambioData($this->makeResolver());
 
-        $out = StgrCambioData::build(['id_nom' => 1, 'id_tabla' => '']);
+        $out = $useCase->execute(['id_nom' => 1, 'id_tabla' => '']);
         $this->assertArrayHasKey('error', $out);
     }
 
     public function test_id_tabla_desconocido(): void
     {
-        $GLOBALS['container'] = $this->containerFromMap([]);
+        $useCase = new StgrCambioData($this->makeResolver());
 
-        $out = StgrCambioData::build(['id_nom' => 1, 'id_tabla' => 'zzz']);
+        $out = $useCase->execute(['id_nom' => 1, 'id_tabla' => 'zzz']);
         $this->assertArrayHasKey('error', $out);
     }
 
@@ -50,11 +38,11 @@ final class StgrCambioDataTest extends TestCase
         $repo = $this->createMock(PersonaNRepositoryInterface::class);
         $repo->method('findById')->willReturn(null);
 
-        $GLOBALS['container'] = $this->containerFromMap([
+        $useCase = new StgrCambioData($this->makeResolver([
             PersonaNRepositoryInterface::class => $repo,
-        ]);
+        ]));
 
-        $out = StgrCambioData::build(['id_nom' => 99, 'id_tabla' => 'n']);
+        $out = $useCase->execute(['id_nom' => 99, 'id_tabla' => 'n']);
         $this->assertArrayHasKey('error', $out);
     }
 
@@ -62,16 +50,16 @@ final class StgrCambioDataTest extends TestCase
     {
         $p = $this->createMock(PersonaN::class);
         $p->method('getNombreApellidos')->willReturn('Nom Ap');
-        $p->method('getNivel_stgr')->willReturn('2');
+        $p->method('getNivel_stgr')->willReturn(2);
 
         $repo = $this->createMock(PersonaNRepositoryInterface::class);
         $repo->method('findById')->with(5)->willReturn($p);
 
-        $GLOBALS['container'] = $this->containerFromMap([
+        $useCase = new StgrCambioData($this->makeResolver([
             PersonaNRepositoryInterface::class => $repo,
-        ]);
+        ]));
 
-        $out = StgrCambioData::build(['id_nom' => 5, 'id_tabla' => 'n']);
+        $out = $useCase->execute(['id_nom' => 5, 'id_tabla' => 'n']);
         $this->assertArrayNotHasKey('error', $out);
         $this->assertSame('Nom Ap', $out['nom']);
         $this->assertSame('2', $out['nivel_stgr']);
@@ -81,20 +69,17 @@ final class StgrCambioDataTest extends TestCase
     }
 
     /**
-     * @param array<class-string, object> $services
+     * @param array<class-string, object> $overrides
      */
-    private function containerFromMap(array $services): object
+    private function makeResolver(array $overrides = []): PersonaRepositoryResolver
     {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
+        return new PersonaRepositoryResolver(
+            $overrides[PersonaNRepositoryInterface::class] ?? $this->createMock(PersonaNRepositoryInterface::class),
+            $overrides[PersonaAgdRepositoryInterface::class] ?? $this->createMock(PersonaAgdRepositoryInterface::class),
+            $overrides[PersonaNaxRepositoryInterface::class] ?? $this->createMock(PersonaNaxRepositoryInterface::class),
+            $overrides[PersonaSRepositoryInterface::class] ?? $this->createMock(PersonaSRepositoryInterface::class),
+            $overrides[PersonaSSSCRepositoryInterface::class] ?? $this->createMock(PersonaSSSCRepositoryInterface::class),
+            $overrides[PersonaExRepositoryInterface::class] ?? $this->createMock(PersonaExRepositoryInterface::class),
+        );
     }
 }

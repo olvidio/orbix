@@ -4,33 +4,35 @@ namespace src\procesos\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
-use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
+use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
 
 /**
- * Caso de uso: devuelve el listado estructurado de tipos de actividad
- * con el proceso propio / no-propio asignado. El frontend renderiza la
- * tabla con `frontend\shared\web\Lista`.
+ * Caso de uso: listado de tipos de actividad con proceso propio / no-propio.
  */
 class TipoActivProcesoLista
 {
+    public function __construct(
+        private readonly TipoDeActividadRepositoryInterface $tipoDeActividadRepository,
+        private readonly ProcesoTipoRepositoryInterface $procesoTipoRepository,
+    ) {
+    }
+
     /**
      * @return array{
-     *     a_cabeceras:array<int,string>,
-     *     a_tipos:array<int,array{id_tipo_activ:string,nom:string,id_tipo_proceso:int,nom_proceso_propio:string,id_tipo_proceso_ex:int,nom_proceso_no_propio:string}>
+     *     a_cabeceras: list<string>,
+     *     a_tipos: list<array<string, mixed>>
      * }
      */
-    public static function execute(): array
+    public function execute(): array
     {
         $aWhere = ['_ordre' => 'id_tipo_activ'];
-        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-        $cTiposDeActividades = $TipoDeActividadRepository->getTiposDeActividades($aWhere);
+        $cTiposDeActividades = $this->tipoDeActividadRepository->getTiposDeActividades($aWhere);
 
-        $ProcesoTipoRepository = $GLOBALS['container']->get(ProcesoTipoRepositoryInterface::class);
-        $cProcesosTipo = $ProcesoTipoRepository->getProcesoTipos();
+        $cProcesosTipo = $this->procesoTipoRepository->getProcesoTipos();
         $a_procesos_tipo = [];
         foreach ($cProcesosTipo as $oProcesoTipo) {
-            $id_tipo = $oProcesoTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
+            $id_tipo = $oProcesoTipo->getId_tipo_proceso();
             $a_procesos_tipo[$id_tipo] = $oProcesoTipo->getNom_proceso();
         }
 
@@ -44,7 +46,7 @@ class TipoActivProcesoLista
         $a_tipos = [];
         foreach ($cTiposDeActividades as $oTipo) {
             $id_tipo_activ = $oTipo->getId_tipo_activ();
-            $id_tipo_proceso = (int)$oTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
+            $id_tipo_proceso = (int) ($oTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv()) ?? 0);
             $id_tipo_proceso_ex = (int)$oTipo->getId_tipo_proceso_ex(ConfigGlobal::mi_sfsv());
             $oTiposActividades = new TiposActividades($id_tipo_activ);
             $nom_proceso_propio = empty($a_procesos_tipo[$id_tipo_proceso]) ? '----' : $a_procesos_tipo[$id_tipo_proceso];

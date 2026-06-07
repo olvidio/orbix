@@ -3,7 +3,7 @@
 namespace src\personas\infrastructure\persistence\postgresql;
 
 use src\personas\domain\contracts\TelecoPersonaExRepositoryInterface;
-use src\shared\traits\HandlesPdoErrors;
+use src\shared\infrastructure\GlobalPdo;
 
 
 /**
@@ -17,22 +17,24 @@ use src\shared\traits\HandlesPdoErrors;
  */
 class PgTelecoPersonaExRepository extends PgTelecoPersonaRepository implements TelecoPersonaExRepositoryInterface
 {
-    use HandlesPdoErrors;
-
     public function __construct()
     {
-        parent::__construct();
-        $oDbl = $GLOBALS['oDBR'];
-        $this->setoDbl($oDbl);
+        $this->setoDbl(GlobalPdo::get('oDBR'));
         $this->setNomTabla('d_teleco_personas_ex');
     }
 
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('d_teleco_personas_ex_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 
 }

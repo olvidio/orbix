@@ -1,6 +1,7 @@
 <?php
 
 namespace src\notas\infrastructure\persistence\postgresql;
+use src\shared\infrastructure\GlobalPdo;
 
 use src\notas\domain\contracts\ActaTribunalExRepositoryInterface;
 
@@ -18,15 +19,21 @@ class PgActaTribunalExRepository extends PgActaTribunalRepository implements Act
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDBR'];
+        $oDbl = GlobalPdo::get('oDBR');
         $this->setoDbl($oDbl);
         $this->setNomTabla('e_actas_tribunal_ex');
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('e_actas_tribunal_id_item_seq'::regclass)";
-        return $oDbl->query($sQuery)->fetchColumn();
+        $stmt = $oDbl->query($sQuery);
+        if ($stmt === false) {
+            return 0;
+        }
+        $id = $stmt->fetchColumn();
+
+        return is_numeric($id) ? (int) $id : 0;
     }
 }

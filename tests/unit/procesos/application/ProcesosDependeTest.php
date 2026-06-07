@@ -10,41 +10,20 @@ use src\procesos\application\ProcesosDepende;
 use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
 
 /**
- * Tests unitarios para el caso de uso ProcesosDepende centrados en el
- * camino de retorno temprano, donde no se debe interactuar con la BD.
- *
- * {@see ProcesosDepende::execute} devuelve un array JSON-serializable (`opciones`, `blanco`),
- * no una cadena vacía.
+ * Tests unitarios para ProcesosDepende (early return sin BD).
  */
 final class ProcesosDependeTest extends TestCase
 {
-    private mixed $previousContainer;
-
     private const PAYLOAD_SIN_OPCIONES = [
         'opciones' => [],
         'blanco' => true,
     ];
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->previousContainer = $GLOBALS['container'] ?? null;
-    }
-
-    protected function tearDown(): void
-    {
-        if ($this->previousContainer === null) {
-            unset($GLOBALS['container']);
-        } else {
-            $GLOBALS['container'] = $this->previousContainer;
-        }
-        parent::tearDown();
-    }
-
     #[DataProvider('inputsEarlyReturnProvider')]
     public function test_early_return_sin_bd_devuelve_opciones_vacias(array $input): void
     {
-        $out = (new ProcesosDepende())->execute($input);
+        $useCase = new ProcesosDepende($this->createMock(ActividadTareaRepositoryInterface::class));
+        $out = $useCase->execute($input);
         $this->assertSame(self::PAYLOAD_SIN_OPCIONES, $out);
     }
 
@@ -67,11 +46,7 @@ final class ProcesosDependeTest extends TestCase
             ->with(12)
             ->willReturn(['1' => 'T1']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadTareaRepositoryInterface::class => $repo,
-        ]);
-
-        $out = (new ProcesosDepende())->execute([
+        $out = (new ProcesosDepende($repo))->execute([
             'acc' => '#id_tarea',
             'valor_depende' => '12',
         ]);
@@ -88,34 +63,12 @@ final class ProcesosDependeTest extends TestCase
             ->with(3)
             ->willReturn(['2' => 'Prev']);
 
-        $GLOBALS['container'] = $this->containerFromMap([
-            ActividadTareaRepositoryInterface::class => $repo,
-        ]);
-
-        $out = (new ProcesosDepende())->execute([
+        $out = (new ProcesosDepende($repo))->execute([
             'acc' => '#id_tarea_previa',
             'valor_depende' => '3',
         ]);
 
         $this->assertSame(['2' => 'Prev'], $out['opciones']);
         $this->assertTrue($out['blanco']);
-    }
-
-    /**
-     * @param array<class-string, object> $services
-     */
-    private function containerFromMap(array $services): object
-    {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
-
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-                return $this->services[$id];
-            }
-        };
     }
 }

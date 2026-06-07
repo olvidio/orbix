@@ -9,13 +9,18 @@ use src\pasarela\domain\Activacion;
  */
 final class ActivacionExcepcionEliminar
 {
-    public static function execute(string $id_tipo_activ): string
+    public function __construct(
+        private readonly Activacion $activacion,
+    ) {
+    }
+
+    public function execute(string $id_tipo_activ): string
     {
         if ($id_tipo_activ === '') {
             return _('Falta id_tipo_activ');
         }
-        $oActivacion = new Activacion();
-        $oActivacion->delActivacion($id_tipo_activ);
+        
+        $this->activacion->delActivacion($id_tipo_activ);
         return '';
     }
 }

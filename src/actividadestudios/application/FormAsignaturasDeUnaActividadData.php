@@ -36,6 +36,7 @@ final class FormAsignaturasDeUnaActividadData
         private ProfesorAsignaturaService $profesorAsignaturaService,
         private AsignaturaRepositoryInterface $asignaturaRepository,
         private ProfesoresDesplegableData $profesoresDesplegableData,
+        private ProfesorActividad $profesorActividad,
     ) {
     }
 
@@ -120,8 +121,7 @@ final class FormAsignaturasDeUnaActividadData
             $mod = 'nuevo';
             $nombreCorto = '';
             $idProfesorSel = -1;
-            $profesorActividad = new ProfesorActividad();
-            $aOpciones = $profesorActividad->getArrayProfesoresActividad([$idActiv]);
+            $aOpciones = $this->profesorActividad->getArrayProfesoresActividad([$idActiv]);
             $fIni = '';
             $fFin = '';
             if (empty($idActiv)) {

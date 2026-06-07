@@ -1,4 +1,5 @@
 <?php
+use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
@@ -21,12 +22,13 @@ $isDocker = FALSE;
 if  (preg_match('/(.*?)\.docker/',ServerConf::SERVIDOR )) {
     $isDocker = TRUE;
 }
-if (ServerConf::WEBDIR !== 'pruebas' && !$isDocker ) {
+$webdir = getenv('WEBDIR') !== false ? (string)getenv('WEBDIR') : ServerConf::WEBDIR;
+if ($webdir !== 'pruebas' && !$isDocker) {
     ContestarJson::enviar(_("Sólo se puede borrar en la base de datos de pruebas"), $data);
     return; // no continuar
 }
 $oConfigDB = new ConfigDB('sv-e');
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 
 $actualizados = 0;
 $error_txt = '';
@@ -41,8 +43,7 @@ foreach ($a_posibles_esquemas as $esquema) {
     $oConexion = new DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
-    $UsuarioRepository->setoDbl($oDevelPC);
-    $UsuarioRepository->setoDbl_Select($oDevelPC);
+    $UsuarioRepository->setoDbl_select($oDevelPC);
 
     // No cambiar el superusuario (id_role = 1).
     $aWhere = ['id_role' => 1];

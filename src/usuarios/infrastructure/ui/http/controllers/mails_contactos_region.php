@@ -1,16 +1,15 @@
 <?php
 
+use src\shared\infrastructure\DependencyResolver;
 use src\usuarios\application\usuariosRegionContactos;
 use src\shared\web\ContestarJson;
 
-$Qregion = (string)filter_input(INPUT_POST, 'region');
+use function src\shared\domain\helpers\input_string;
 
-$error_txt = '';
+$Qregion = input_string($_POST, 'region');
 
-$MailsRegion = new usuariosRegionContactos();
-$data = $MailsRegion->usuariosRegionContactos($Qregion);
+/** @var usuariosRegionContactos $useCase */
+$useCase = DependencyResolver::get(usuariosRegionContactos::class);
+$result = $useCase->execute($Qregion);
 
-$error_txt = $data['error_txt'] ?? '';
-
-// envía una Response
-ContestarJson::enviar($error_txt, $data);
+ContestarJson::enviar($result['error'], $result['data']);

@@ -3,17 +3,18 @@
 namespace src\inventario\domain;
 
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\entity\TipoDoc;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
 
 class InfoTipoDoc extends DatosInfoRepo
 {
-
-    public function __construct()
-    {
-        $this->setTxtTitulo(_("tipo de documentos"));
-        $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta tipo de documento?"));
+    public function __construct(
+        private TipoDocRepositoryInterface $tipoDocRepository,
+    ) {
+        $this->setTxtTitulo(_('tipo de documentos'));
+        $this->setTxtEliminar(_('¿Está seguro que desea eliminar esta tipo de documento?'));
         $this->setTxtBuscar(_("buscar en 'detalle'"));
         $this->setTxtExplicacion();
 
@@ -24,21 +25,19 @@ class InfoTipoDoc extends DatosInfoRepo
         $this->setRepositoryInterface(TipoDocRepositoryInterface::class);
     }
 
-    public function getColeccion()
+    /**
+     * @return list<TipoDoc>
+     */
+    public function getColeccion(): array
     {
-        // para el datos_sql.php
-        // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere['_ordre'] = 'nom_doc';
+            $aWhere = ['_ordre' => 'nom_doc'];
             $aOperador = [];
         } else {
-            $aWhere['nom_doc'] = $this->k_buscar;
-            $aOperador['nom_doc'] = 'sin_acentos';
+            $aWhere = ['nom_doc' => $this->k_buscar];
+            $aOperador = ['nom_doc' => 'sin_acentos'];
         }
 
-        $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $ColeccionRepository->getTipoDocs($aWhere, $aOperador);
-
-        return $Coleccion;
+        return $this->tipoDocRepository->getTipoDocs($aWhere, $aOperador);
     }
 }

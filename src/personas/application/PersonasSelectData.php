@@ -10,12 +10,16 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
+
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/personas_select_data`.
@@ -30,49 +34,52 @@ use src\usuarios\domain\value_objects\PauType;
  */
 final class PersonasSelectData
 {
+    public function __construct(
+        private PersonaDlRepositoryInterface $personaDlRepository,
+        private PersonaSSSCRepositoryInterface $personaSSSCRepository,
+        private PersonaSRepositoryInterface $personaSRepository,
+        private PersonaNRepositoryInterface $personaNRepository,
+        private PersonaNaxRepositoryInterface $personaNaxRepository,
+        private PersonaAgdRepositoryInterface $personaAgdRepository,
+        private PersonaPubRepositoryInterface $personaPubRepository,
+        private CentroDlRepositoryInterface $centroDlRepository,
+        private CentroRepositoryInterface $centroRepository,
+        private PreferenciaRepositoryInterface $preferenciaRepository,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $input habitualmente `$_POST`
-     * @return array{
-     *     error?: string,
-     *     tabla?: string,
-     *     obj_pau?: string,
-     *     id_tabla?: string,
-     *     permiso?: int,
-     *     sPrefs?: string,
-     *     aviso?: string,
-     *     total?: int,
-     *     personas?: list<array{
-     *         id_nom: int,
-     *         id_tabla: string,
-     *         nom: string,
-     *         nombre_ubi: string,
-     *         nivel_stgr: string,
-     *         situacion: string,
-     *         f_situacion: string
-     *     }>
-     * }
+     * @return array<string, mixed>
      */
-    public static function build(array $input): array
+    public function execute(array $input): array
     {
-        $tabla = (string)($input['tabla'] ?? '');
-        $Qna = (string)($input['na'] ?? '');
-        $tipo = (string)($input['tipo'] ?? '');
-        $Qes_sacd = (int)($input['es_sacd'] ?? 0);
-        $Qexacto = (string)($input['exacto'] ?? '');
-        $Qcmb = (string)($input['cmb'] ?? '');
-        $Qnombre = (string)($input['nombre'] ?? '');
-        $Qapellido1 = (string)($input['apellido1'] ?? '');
-        $Qapellido2 = (string)($input['apellido2'] ?? '');
-        $Qcentro = (string)($input['centro'] ?? '');
+        $tabla = input_string($input, 'tabla');
+        $Qna = input_string($input, 'na');
+        $tipo = input_string($input, 'tipo');
+        $Qes_sacd = input_int($input, 'es_sacd');
+        $Qexacto = input_string($input, 'exacto');
+        $Qcmb = input_string($input, 'cmb');
+        $Qnombre = input_string($input, 'nombre');
+        $Qapellido1 = input_string($input, 'apellido1');
+        $Qapellido2 = input_string($input, 'apellido2');
+        $Qcentro = input_string($input, 'centro');
 
         $aWhere = [];
         $aOperador = [];
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        $tienePermOficina = static fn (string $perm): bool => $oPerm instanceof XPermisos
+            && $oPerm->have_perm_oficina($perm);
 
         if (ConfigGlobal::mi_role_pau() === PauType::PAU_NOM) {
-            $oMiUsuario = $_SESSION['session_auth']['MiUsuario'];
-            $id_nom = $oMiUsuario->getCsv_id_pau();
+            $sessionAuth = $_SESSION['session_auth'] ?? null;
+            $oMiUsuario = is_array($sessionAuth) ? ($sessionAuth['MiUsuario'] ?? null) : null;
+            if (!is_object($oMiUsuario) || !method_exists($oMiUsuario, 'getCsv_id_pau')) {
+                return ['error' => _('No se encuentra el usuario')];
+            }
+            $id_nom = (int) $oMiUsuario->getCsv_id_pau();
             $aWhere = ['id_nom' => $id_nom];
-            $PersonaDlrepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+            $PersonaDlrepository = $this->personaDlRepository;
             $oPersona = $PersonaDlrepository->findById($id_nom);
             $tabla = match ($oPersona?->getId_tabla()) {
                 'n' => 'p_numerarios',
@@ -119,7 +126,7 @@ final class PersonasSelectData
             }
             if (empty($Qcmb)) {
                 $aWhere['situacion'] = 'A';
-            } elseif (!$_SESSION['oPerm']->have_perm_oficina('dtor')) {
+            } elseif (!$tienePermOficina('dtor')) {
                 $aWhere['situacion'] = 'B';
                 $aOperador['situacion'] = '!=';
             }
@@ -128,7 +135,7 @@ final class PersonasSelectData
             }
 
             if (!empty($aWhereCtr)) {
-                $gesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                $gesCentros = $this->centroDlRepository;
                 $cCentros = $gesCentros->getCentros($aWhereCtr, $aOperadorCtr);
                 $aId_ctrs = [];
                 foreach ($cCentros as $oCentro) {
@@ -152,30 +159,39 @@ final class PersonasSelectData
         switch ($tabla) {
             case 'p_sssc':
                 $obj_pau = 'PersonaSSSC';
-                $cPersonas = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class)->getPersonas($aWhere, $aOperador);
-                if ($_SESSION['oPerm']->have_perm_oficina('des')) $permiso = 3;
+                $cPersonas = $this->personaSSSCRepository->getPersonas($aWhere, $aOperador);
+                if ($tienePermOficina('des')) {
+                    $permiso = 3;
+                }
                 break;
             case 'p_supernumerarios':
                 $obj_pau = 'PersonaS';
-                $cPersonas = $GLOBALS['container']->get(PersonaSRepositoryInterface::class)->getPersonas($aWhere, $aOperador);
-                if ($_SESSION['oPerm']->have_perm_oficina('sg')) $permiso = 3;
+                $cPersonas = $this->personaSRepository->getPersonas($aWhere, $aOperador);
+                if ($tienePermOficina('sg')) {
+                    $permiso = 3;
+                }
                 break;
             case 'p_numerarios':
                 $obj_pau = 'PersonaN';
-                $cPersonas = $GLOBALS['container']->get(PersonaNRepositoryInterface::class)->getPersonas($aWhere, $aOperador);
-                if ($_SESSION['oPerm']->have_perm_oficina('sm')) $permiso = 3;
+                $cPersonas = $this->personaNRepository->getPersonas($aWhere, $aOperador);
+                if ($tienePermOficina('sm')) {
+                    $permiso = 3;
+                }
                 break;
             case 'p_nax':
                 $obj_pau = 'PersonaNax';
-                $repoNax = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
+                $repoNax = $this->personaNaxRepository;
                 $cPersonas = $repoNax->getPersonas($aWhere, $aOperador);
-                if ($cPersonas === false) $cPersonas = [];
-                if ($_SESSION['oPerm']->have_perm_oficina('nax')) $permiso = 3;
+                if ($tienePermOficina('nax')) {
+                    $permiso = 3;
+                }
                 break;
             case 'p_agregados':
                 $obj_pau = 'PersonaAgd';
-                $cPersonas = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class)->getPersonas($aWhere, $aOperador);
-                if ($_SESSION['oPerm']->have_perm_oficina('agd')) $permiso = 3;
+                $cPersonas = $this->personaAgdRepository->getPersonas($aWhere, $aOperador);
+                if ($tienePermOficina('agd')) {
+                    $permiso = 3;
+                }
                 break;
             case 'p_de_paso':
             case 'p_de_paso_ex':
@@ -184,14 +200,14 @@ final class PersonasSelectData
                     $id_tabla = 'p' . $Qna;
                 }
                 $obj_pau = 'PersonaEx';
-                $cPersonas = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class)
+                $cPersonas = $this->personaPubRepository
                     ->getPersonasParaListado($aWhere, $aOperador, $problemasRegionStgr, $sinRegionStgrPorIdNom);
                 if (
-                    $_SESSION['oPerm']->have_perm_oficina('sm')
-                    || $_SESSION['oPerm']->have_perm_oficina('agd')
-                    || $_SESSION['oPerm']->have_perm_oficina('des')
-                    || $_SESSION['oPerm']->have_perm_oficina('sg')
-                    || $_SESSION['oPerm']->have_perm_oficina('est')
+                    $tienePermOficina('sm')
+                    || $tienePermOficina('agd')
+                    || $tienePermOficina('des')
+                    || $tienePermOficina('sg')
+                    || $tienePermOficina('est')
                 ) {
                     $permiso = 3;
                 }
@@ -201,21 +217,24 @@ final class PersonasSelectData
         }
 
         $sPrefs = '';
-        $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
-        $oPreferencia = $PreferenciaRepository->findById((int)($_SESSION['session_auth']['id_usuario'] ?? 0), 'tabla_presentacion');
+        $PreferenciaRepository = $this->preferenciaRepository;
+        $sessionAuth = $_SESSION['session_auth'] ?? null;
+        /** @var array<string, mixed>|null $sessionAuthTyped */
+        $sessionAuthTyped = is_array($sessionAuth) ? $sessionAuth : null;
+        $idUsuario = $sessionAuthTyped !== null ? input_int($sessionAuthTyped, 'id_usuario') : 0;
+        $oPreferencia = $PreferenciaRepository->findById($idUsuario, 'tabla_presentacion');
         if ($oPreferencia !== null) {
             $sPrefs = (string)$oPreferencia->getPreferencia();
         }
 
         $aNivelStgr = NivelStgrId::getArrayNivelStgr();
         $ambito = ConfigGlobal::mi_ambito();
-        $centroRepoIface = $ambito === 'rstgr'
-            ? CentroRepositoryInterface::class
-            : CentroDlRepositoryInterface::class;
+        $centroRepository = $ambito === 'rstgr'
+            ? $this->centroRepository
+            : $this->centroDlRepository;
 
         $a_personas = [];
-        if (is_iterable($cPersonas)) {
-            foreach ($cPersonas as $oPersona) {
+        foreach ($cPersonas as $oPersona) {
                 $id_tabla_persona = (string)$oPersona->getId_tabla();
                 $id_nom = (int)$oPersona->getId_nom();
                 $nom = (string)$oPersona->getPrefApellidosNombre();
@@ -224,7 +243,7 @@ final class PersonasSelectData
                 if ($obj_pau !== 'PersonaEx') {
                     $id_ctr = $oPersona->getId_ctr();
                     if ($id_ctr !== null) {
-                        $oCentroDl = $GLOBALS['container']->get($centroRepoIface)->findById($id_ctr);
+                        $oCentroDl = $centroRepository->findById($id_ctr);
                         $nombre_ubi = (string)($oCentroDl?->getNombre_ubi() ?? '');
                     }
                 } else {
@@ -256,7 +275,6 @@ final class PersonasSelectData
                     );
                 }
                 $a_personas[$nom . '_' . $id_nom] = $fila;
-            }
         }
         uksort($a_personas, 'src\shared\domain\helpers\strsinacentocmp');
 

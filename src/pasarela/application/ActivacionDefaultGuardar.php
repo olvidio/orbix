@@ -9,13 +9,18 @@ use src\pasarela\domain\Activacion;
  */
 final class ActivacionDefaultGuardar
 {
-    public static function execute(string $default): string
+    public function __construct(
+        private readonly Activacion $activacion,
+    ) {
+    }
+
+    public function execute(string $default): string
     {
         if ($default === '') {
             return _('Falta valor por defecto');
         }
-        $oActivacion = new Activacion();
-        $oActivacion->setDefault($default);
+        
+        $this->activacion->setDefault($default);
         return '';
     }
 }

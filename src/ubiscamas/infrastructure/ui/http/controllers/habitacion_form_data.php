@@ -1,7 +1,9 @@
 <?php
 
-use src\ubiscamas\application\HabitacionFormData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\ubiscamas\application\HabitacionFormData;
 
-$data = HabitacionFormData::build($_POST);
-ContestarJson::enviar('', $data);
+/** @var HabitacionFormData $useCase */
+$useCase = DependencyResolver::get(HabitacionFormData::class);
+ContestarJson::enviar('', $useCase->execute($_POST));

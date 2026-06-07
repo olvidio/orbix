@@ -48,7 +48,7 @@ class ProfesorStgr
     {
         $this->id_departamento = $valor instanceof DepartamentoId
             ? $valor
-            : DepartamentoId::fromNullableInt($valor);
+            : (DepartamentoId::fromNullableInt($valor) ?? throw new \InvalidArgumentException('id_departamento cannot be null'));
     }
 
     /**
@@ -64,7 +64,7 @@ class ProfesorStgr
      */
     public function setId_departamento(?int $valor = null): void
     {
-        $this->id_departamento = DepartamentoId::fromNullableInt($valor);
+        $this->id_departamento = (DepartamentoId::fromNullableInt($valor) ?? throw new \InvalidArgumentException('id_departamento cannot be null'));
     }
 
     public function getEscritoNombramientoVo(): ?EscritoNombramiento
@@ -196,6 +196,9 @@ class ProfesorStgr
     {
         return 'id_item';
     }
+
+    /** @return array<string, mixed> */
+
 
     public function getDatosCampos(): array
     {

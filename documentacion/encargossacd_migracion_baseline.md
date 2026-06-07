@@ -126,3 +126,74 @@ Cambios sin impacto funcional, centrados en coherencia con `refactor.md` y reduc
 ## URLs canónicas (nuevos enlaces)
 
 Prefijo: `frontend/encargossacd/controller/<script>.php`. API JSON: `/src/encargossacd/<acción>` (rutas en `src/encargossacd/config/routes.php`).
+
+---
+
+## Inventario inicial (antes del cierre DI en `src/encargossacd/`)
+
+| Capa | Ficheros con `$GLOBALS['container']` | Ocurrencias |
+|------|--------------------------------------|------------:|
+| `infrastructure/ui/http/controllers/` | ~34 | ~34 |
+| `application/` | ~34 | ~34 |
+| `domain/` | ~6 | ~18 |
+| **Total container** | **~36 ficheros** | **~86** |
+
+| Capa | Ficheros con `$GLOBALS['oDB*']` |
+|------|--------------------------------:|
+| `infrastructure/persistence/postgresql/` | 7 |
+
+| Frontend `use src\` | Ficheros |
+|--------------------|----------|
+| — | **0** |
+
+PHPStan (`phpstan-nobaseline.neon`): **~700** errores en `src/encargossacd/`.
+
+---
+
+## Cierre DI (2026-06-06)
+
+### Patrón aplicado
+
+- HTTP controllers (`34`): `DependencyResolver::get()` + métodos de instancia (sin `::execute()` / `new` use cases).
+- Application (`~40` casos de uso / servicios): constructor DI, métodos de instancia.
+- Repos Pg* (`7`): `GlobalPdo::get('oDB'|'oDBC'|'oDBC_Select')` + guards `$stmt === false`.
+- Cross-module: repos y servicios (`CentroDl`, `Zona`, `PersonaSacd`, `Local`, etc.) inyectados por constructor.
+- Facade `EncargoFunciones`: delegación a `EncargoAplicacionService` / `EncargoDominioService` vía DI.
+
+### `src/encargossacd/config/dependencies.php`
+
+Registra **7** repositorios + **~40** entradas `autowire()` (use cases `*Data`, `*Update`, `EncargoAplicacionService`, `EncargoDominioService`, `EncargoFunciones`, `CentrosPorFiltroOpciones`, `InfoEncargoTipo`, etc.).
+
+---
+
+## Resultado del cierre DI
+
+| Criterio | Antes | Después |
+|----------|------:|--------:|
+| `$GLOBALS['container']` en `src/encargossacd/` | ~86 | **0** |
+| `$GLOBALS['oDB*']` en repos | 7 | **0** |
+| Controllers HTTP con `DependencyResolver::get()` | 0/34 | **34/34** |
+| Casos de uso en `dependencies.php` | 0 | **~47** |
+| Frontend `use src\` | 0 | **0** |
+
+---
+
+## PHPStan incremental (`phpstan-nobaseline.neon`)
+
+| Fecha | Comando | Errores |
+|-------|---------|--------:|
+| 2026-06-06 (pre-cierre) | `composer phpstan:file -- src/encargossacd/` | **~700** |
+| 2026-06-06 (cierre DI) | idem | **0** |
+
+Correcciones principales: contratos con tipos de retorno, repos Pg* con guards PDO, entidades con PHPDoc/`getDatosCampos`, application con `input_int`/`input_string` y `ConfigSnapshot` en listados, `DBEsquema::infoTable()` tipado como en `actividadessacd`, duck-typing de `$_SESSION['oPerm']` sin `$GLOBALS['container']`.
+
+---
+
+## Tests
+
+```bash
+php libs/vendor/bin/phpunit tests/unit/encargossacd/
+php libs/vendor/bin/phpunit tests/integration/encargossacd/
+```
+
+Resultado cierre: **208** tests unitarios OK, **62** tests integración OK.

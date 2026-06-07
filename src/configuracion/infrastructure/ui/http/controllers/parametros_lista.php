@@ -1,11 +1,12 @@
 <?php
 
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-
-$ConfigRepository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
+/** @var ConfigSchemaRepositoryInterface $ConfigRepository */
+$ConfigRepository = DependencyResolver::get(ConfigSchemaRepositoryInterface::class);
 
 // ----------- Periodo Curso crt -------------------
 $parametro = 'curso_crt';
@@ -24,7 +25,15 @@ if (empty($valor)) {
     $valor = json_encode($aCursoCrt);
 }
 
-$aCursoCrt = json_decode($valor, TRUE);
+$aCursoCrt = json_decode((string)$valor, true);
+if (!is_array($aCursoCrt)) {
+    $aCursoCrt = [
+        'ini_dia' => 1,
+        'ini_mes' => 9,
+        'fin_dia' => 31,
+        'fin_mes' => 8,
+    ];
+}
 $a_campos['aCursoCrt'] = $aCursoCrt;
 
 // ----------- Periodo Curso stgr -------------------
@@ -44,7 +53,15 @@ if (empty($valor)) {
     $valor = json_encode($aCursoStgr);
 }
 
-$aCursoStgr = json_decode($valor, TRUE);
+$aCursoStgr = json_decode((string)$valor, true);
+if (!is_array($aCursoStgr)) {
+    $aCursoStgr = [
+        'ini_dia' => 1,
+        'ini_mes' => 10,
+        'fin_dia' => 30,
+        'fin_mes' => 9,
+    ];
+}
 
 $a_campos['aCursoStgr'] = $aCursoStgr;
 
@@ -158,7 +175,8 @@ $parametro = 'idioma_default';
 $oConfigSchema = $ConfigRepository->findById($parametro);
 $valor = $oConfigSchema?->getValorVo()?->value();
 
-$LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
+/** @var LocalRepositoryInterface $LocalRepository */
+$LocalRepository = DependencyResolver::get(LocalRepositoryInterface::class);
 $a_locales = $LocalRepository->getArrayLocales();
 
 $a_campos['a_locales'] = $a_locales;
