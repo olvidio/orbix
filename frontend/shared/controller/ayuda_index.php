@@ -1,9 +1,9 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
-use src\shared\config\ConfigGlobal;
 require_once __DIR__ . '/../global_header_front.inc';
 
 /**
@@ -19,14 +19,14 @@ function ayudaEnlace(string $path): array
     ];
 }
 
-$pruebas = (ConfigGlobal::$web_path === '/pruebas' || ConfigGlobal::$web_path === '/pruebassf') ? 1 : 0;
-$webPublic = ConfigGlobal::getWeb_public();
+$pruebas = OrbixRuntime::isPruebasWebPath() ? 1 : 0;
+$webPublic = OrbixRuntime::getWebPublic();
 
 $enlaceManual = ayudaEnlace('/frontend/shared/controller/manual.php');
 $enlaceTraducciones = ayudaEnlace('/public/ayuda/traducciones.php');
 
 $urlContactos = HashFront::cmdSinParametros(
-    ConfigGlobal::getWeb() . 'frontend/usuarios/controller/mails_contactos_region.php'
+    OrbixRuntime::getWeb() . 'frontend/usuarios/controller/mails_contactos_region.php'
 );
 $oHashRegion = new HashFront();
 $oHashRegion->setUrl($urlContactos);
@@ -53,7 +53,7 @@ if ($standalone) {
 <head>
     <meta charset="utf-8">
     <title><?= _('Ayuda') ?> — Orbix</title>
-    <?php include_once ConfigGlobal::$dir_estilos . '/todo_en_uno.css.php'; ?>
+    <?php include_once OrbixRuntime::dirEstilos() . '/todo_en_uno.css.php'; ?>
 </head>
 <body class="otro">
 <?php

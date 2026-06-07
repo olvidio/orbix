@@ -6,8 +6,8 @@
  */
 
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\helpers\MultipartUploadHelper;
 use frontend\shared\security\HashFront;
-use src\shared\infrastructure\ui\http\MultipartUploadGuard;
 
 // para que funcione bien la seguridad
 $_POST = $_REQUEST;
@@ -48,8 +48,8 @@ case "comprobar":
     echo "$rta";
     break;
 case "upload":
-    if (MultipartUploadGuard::isPostTooLarge()) {
-        echo htmlspecialchars(MultipartUploadGuard::textPostMaxExceededPhp(), ENT_QUOTES, 'UTF-8');
+    if (MultipartUploadHelper::isPostTooLarge()) {
+        echo htmlspecialchars(MultipartUploadHelper::textPostMaxExceededPhp(), ENT_QUOTES, 'UTF-8');
         break;
     }
     if (!isset($_FILES['userfile'])) {
@@ -60,7 +60,7 @@ case "upload":
     if ($uploadErr !== UPLOAD_ERR_OK) {
         $nomFile = (string) ($_FILES['userfile']['name'] ?? '');
         echo htmlspecialchars(
-            MultipartUploadGuard::messageForPhpUploadError($uploadErr, $nomFile),
+            MultipartUploadHelper::messageForPhpUploadError($uploadErr, $nomFile),
             ENT_QUOTES,
             'UTF-8'
         );

@@ -5,6 +5,7 @@ namespace src\shared\infrastructure\persistence\postgresql;
 use PDO;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
@@ -662,13 +663,13 @@ class DBTrasvase extends DBAbstract
                 } else {
                     $dl_org = $dl;
                 }
-                $ActividadExRepository = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
+                $ActividadExRepository = DependencyResolver::get(ActividadExRepositoryInterface::class);
                 $cActividades = $ActividadExRepository->getActividades(['dl_org' => $dl_org]);
                 $error = '';
                 if (!empty($cActividades)) {
-                    $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
+                    $MapIdRepository = DependencyResolver::get(MapIdRepositoryInterface::class);
                     $this->configurarMapIdRepository($MapIdRepository);
-                    $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+                    $ActividadDlRepository = DependencyResolver::get(ActividadDlRepositoryInterface::class);
                     foreach ($cActividades as $oActividad) {
                         //TODO: $oActividadDl->setNoGenerarProceso(TRUE);
                         if ($ActividadDlRepository->Guardar($oActividad, false) === false) { // Pongo el param registrarCambios=false para que no anote cambios.
@@ -690,12 +691,12 @@ class DBTrasvase extends DBAbstract
                     return true;
                 }
 
-                $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+                $ActividadDlRepository = DependencyResolver::get(ActividadDlRepositoryInterface::class);
                 $ActividadDlRepository->setoDbl($oDbl);
                 $cActividades = $ActividadDlRepository->getActividades(['dl_org' => $dl]);
                 $error = '';
                 if (!empty($cActividades)) {
-                    $ActividadExRepository = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
+                    $ActividadExRepository = DependencyResolver::get(ActividadExRepositoryInterface::class);
                     foreach ($cActividades as $oActividad) {
                         // TODO: $oActividadEx->setNoGenerarProceso(TRUE);
 
@@ -731,7 +732,7 @@ class DBTrasvase extends DBAbstract
         $region = $this->getRegion();
         $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => comisión, dl => delegación, ci => centro interregional.
 
-        $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
+        $MapIdRepository = DependencyResolver::get(MapIdRepositoryInterface::class);
         switch ($que) {
             case 'resto2dl':
                 $this->configurarMapIdRepository($MapIdRepository);
@@ -742,12 +743,12 @@ class DBTrasvase extends DBAbstract
                     $aWhere = ['dl' => $dl, 'region' => $region];
                     $aOperador = [];
                 }
-                $CasaExRepository = $GLOBALS['container']->get(CasaExRepositoryInterface::class);
+                $CasaExRepository = DependencyResolver::get(CasaExRepositoryInterface::class);
                 $cCasasEx = $CasaExRepository->getCasas($aWhere, $aOperador);
                 $error = '';
-                $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
-                $RelacionCasaDlDireccion = $GLOBALS['container']->get(RelacionCasaDlDireccionRepositoryInterface::class);
-                $RelacionCasaExDireccion = $GLOBALS['container']->get(RelacionCasaExDireccionRepositoryInterface::class);
+                $CasaDlRepository = DependencyResolver::get(CasaDlRepositoryInterface::class);
+                $RelacionCasaDlDireccion = DependencyResolver::get(RelacionCasaDlDireccionRepositoryInterface::class);
+                $RelacionCasaExDireccion = DependencyResolver::get(RelacionCasaExDireccionRepositoryInterface::class);
                 foreach ($cCasasEx as $oCasaEx) {
                     $aDades = $oCasaEx->toArrayForDatabase();
                     $oCasaDl = Casa::fromArray($aDades);
@@ -770,10 +771,10 @@ class DBTrasvase extends DBAbstract
                         $MapIdRepository->Guardar($oMapId);
                         // Buscar la dirección
                         $aIdDirecciones = $RelacionCasaExDireccion->getDireccionesPorUbi($id_ubi_old);
-                        $DireccionCasaDlRepository = $GLOBALS['container']->get(DireccionCasaDlRepositoryInterface::class);
+                        $DireccionCasaDlRepository = DependencyResolver::get(DireccionCasaDlRepositoryInterface::class);
                         $DireccionCasaDlRepository->setoDbl($oDbl);
                         $RelacionCasaDlDireccion->setoDbl($oDbl);
-                        $DireccionCasaExRepository = $GLOBALS['container']->get(DireccionCasaExRepositoryInterface::class);
+                        $DireccionCasaExRepository = DependencyResolver::get(DireccionCasaExRepositoryInterface::class);
                         foreach ($aIdDirecciones as $aDireccion) {
                             $id_direccion_old = $aDireccion['id_direccion'];
                             $principal = $aDireccion['principal'];
@@ -805,9 +806,9 @@ class DBTrasvase extends DBAbstract
                             $RelacionCasaExDireccion->desasociarDireccion($id_ubi_old, $id_direccion_old);
                         }
                         // Buscar las telecos
-                        $TelecoCdcExRepository = $GLOBALS['container']->get(TelecoCdcExRepositoryInterface::class);
+                        $TelecoCdcExRepository = DependencyResolver::get(TelecoCdcExRepositoryInterface::class);
                         $cTelecos = $TelecoCdcExRepository->getTelecos(['id_ubi' => $id_ubi_old]);
-                        $TelecoCdcDlRepository = $GLOBALS['container']->get(TelecoCdcDlRepositoryInterface::class);
+                        $TelecoCdcDlRepository = DependencyResolver::get(TelecoCdcDlRepositoryInterface::class);
                         foreach ($cTelecos as $oTelecoCdcEx) {
                             $newId = $TelecoCdcDlRepository->getNewId();
                             $oTelecoCdcDl = clone $oTelecoCdcEx;
@@ -872,7 +873,7 @@ class DBTrasvase extends DBAbstract
         $region = $this->getRegion();
         $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => cominsión, dl => delegacion, ci => centro interregional.
 
-        $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
+        $MapIdRepository = DependencyResolver::get(MapIdRepositoryInterface::class);
         switch ($que) {
             case 'resto2dl':
                 $this->configurarMapIdRepository($MapIdRepository);
@@ -883,14 +884,14 @@ class DBTrasvase extends DBAbstract
                     $aWhere = ['dl' => $dl, 'region' => $region];
                     $aOperador = [];
                 }
-                $CentroExRepository = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
+                $CentroExRepository = DependencyResolver::get(CentroExRepositoryInterface::class);
                 $cCentroEx = $CentroExRepository->getCentros($aWhere, $aOperador);
                 $error = '';
-                $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-                $CentroEllosRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
-                $RelacionCentroDlDireccion = $GLOBALS['container']->get(RelacionCentroDlDireccionRepositoryInterface::class);
-                $RelacionCentroExDireccion = $GLOBALS['container']->get(RelacionCentroExDireccionRepositoryInterface::class);
+                $CentroDlRepository = DependencyResolver::get(CentroDlRepositoryInterface::class);
+                $CentroEllasRepository = DependencyResolver::get(CentroEllasRepositoryInterface::class);
+                $CentroEllosRepository = DependencyResolver::get(CentroEllosRepositoryInterface::class);
+                $RelacionCentroDlDireccion = DependencyResolver::get(RelacionCentroDlDireccionRepositoryInterface::class);
+                $RelacionCentroExDireccion = DependencyResolver::get(RelacionCentroExDireccionRepositoryInterface::class);
                 foreach ($cCentroEx as $oCentroEx) {
                     $aDades = $oCentroEx->toArrayForDatabase();
                     // actualizar el tipo_ubi.
@@ -931,10 +932,10 @@ class DBTrasvase extends DBAbstract
                         }
                         // Buscar la dirección
                         $aIdDirecciones = $RelacionCentroExDireccion->getDireccionesPorUbi($id_ubi_old);
-                        $DireccionCentroDlRepository = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
+                        $DireccionCentroDlRepository = DependencyResolver::get(DireccionCentroDlRepositoryInterface::class);
                         $DireccionCentroDlRepository->setoDbl($oDbl);
                         $RelacionCentroDlDireccion->setoDbl($oDbl);
-                        $DireccionCentroExRepository = $GLOBALS['container']->get(DireccionCentroExRepositoryInterface::class);
+                        $DireccionCentroExRepository = DependencyResolver::get(DireccionCentroExRepositoryInterface::class);
                         foreach ($aIdDirecciones as $aIdDireccion) {
                             $id_direccion_old = $aIdDireccion ['id_direccion'];
                             $propietario = $aIdDireccion ['propietario'];
@@ -968,9 +969,9 @@ class DBTrasvase extends DBAbstract
                             $RelacionCentroExDireccion->desasociarDireccion($id_ubi_old, $id_direccion_old);
                         }
                         // Buscar las telecos
-                        $TelecoCtrExRepository = $GLOBALS['container']->get(TelecoCtrExRepositoryInterface::class);
+                        $TelecoCtrExRepository = DependencyResolver::get(TelecoCtrExRepositoryInterface::class);
                         $cTelecos = $TelecoCtrExRepository->getTelecos(['id_ubi' => $id_ubi_old]);
-                        $TelecoCtrDlRepository = $GLOBALS['container']->get(TelecoCtrDlRepositoryInterface::class);
+                        $TelecoCtrDlRepository = DependencyResolver::get(TelecoCtrDlRepositoryInterface::class);
                         foreach ($cTelecos as $oTelecoCtrEx) {
                             $newId = $TelecoCtrDlRepository->getNewId();
                             $oTelecoCtrDl = clone $oTelecoCtrEx;

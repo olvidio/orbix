@@ -12,6 +12,7 @@ namespace frontend\shared\config;
  * - {@see \src\shared\config\ConfigGlobal::$dir_libs} → {@see self::dirLibs()}
  * - {@see \src\shared\config\ConfigGlobal::$dir_languages} → {@see self::gettextLanguagesDir()}
  * - {@see \src\shared\config\ConfigGlobal::getWeb()} → {@see self::getWeb()}
+ * - {@see \src\shared\config\ConfigGlobal::getWeb_public()} → {@see self::getWebPublic()}
  * - {@see \src\shared\config\ConfigGlobal::getWeb_NodeScripts()} → {@see self::getWebNodeScripts()}
  * - {@see \src\shared\config\ConfigGlobal::getWeb_scripts()} → {@see self::getWebScripts()}
  * - {@see \src\shared\config\ConfigGlobal::$dir_scripts} → {@see self::dirScripts()}
@@ -90,6 +91,14 @@ final class OrbixRuntime
         return (string)\src\shared\config\ConfigGlobal::$web_path;
     }
 
+    /** Entorno de pruebas (`/pruebas` o `/pruebassf`). Equiv. comprobación histórica sobre `$web_path`. */
+    public static function isPruebasWebPath(): bool
+    {
+        $path = self::webPath();
+
+        return $path === '/pruebas' || $path === '/pruebassf';
+    }
+
     public static function webServer(): string
     {
         return (string)\src\shared\config\ConfigGlobal::$web_server;
@@ -106,6 +115,12 @@ final class OrbixRuntime
     public static function getWeb(): string
     {
         return (string)\src\shared\config\ConfigGlobal::getWeb();
+    }
+
+    /** URL base HTTP + `/public`. Equiv. {@see \src\shared\config\ConfigGlobal::getWeb_public()}. */
+    public static function getWebPublic(): string
+    {
+        return (string)\src\shared\config\ConfigGlobal::getWeb_public();
     }
 
     /**

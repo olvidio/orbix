@@ -5,7 +5,7 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 
 **Normas canónicas (no duplicar aquí):** [`agents.md`](../agents.md)
 
-**Última actualización de inventarios:** 2026-06-06
+**Última actualización de inventarios:** 2026-06-07
 
 ---
 
@@ -27,9 +27,9 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 ## Estado global (junio 2026)
 
 - **`apps/<modulo>/` de negocio:** eliminados; solo persisten `apps/core/` y `apps/web/`.
-- **Frontend con `use src\...` en controladores:** **18** ficheros en **10** ámbulos (actividadescentro cerrado; inventario en [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md)).
+- **Frontend con `use src\...` en controladores:** **3** ficheros en **2** ámbulos (excepciones documentadas; ver [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md)).
 - **PHPStan:** nivel 9; ~18.500 ocurrencias en baseline (A=629, B=9368, C=8520).
-- **`$GLOBALS['container']` en `src/`:** ~523 ficheros repartidos por módulo (ver matriz).
+- **`$GLOBALS['container']` en `src/` (módulos de negocio):** **0** en runtime (solo comentarios en `configuracion/`; `.bak` en `menus/`). Deuda restante concentrada en **`src/shared/`** (bootstrap + infra transversal).
 
 ---
 
@@ -48,9 +48,9 @@ Columnas:
 | **actividadcargos** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadcargos_migracion_baseline.md) |
 | **actividades** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividades_migracion_baseline.md) |
 | **actividadescentro** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadescentro_migracion_baseline.md) |
-| actividadessacd | ✓ | 2 | 0 | **Cierre DI + PHPStan** (2026-06-06); 2 controladores frontend pendientes; ver [baseline](actividadessacd_migracion_baseline.md) |
+| actividadessacd | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadessacd_migracion_baseline.md) |
 | **actividadestudios** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadestudios_migracion_baseline.md) |
-| actividadplazas | ✓ | 2 | 0 | **Cierre DI + PHPStan** (2026-06-06); 2 controladores frontend pendientes; ver [baseline](actividadplazas_migracion_baseline.md) |
+| actividadplazas | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadplazas_migracion_baseline.md) |
 | **actividadtarifas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](actividadtarifas_migracion_baseline.md) |
 | **asignaturas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](asignaturas_migracion_baseline.md) |
 | **cambios** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](cambios_migracion_baseline.md) |
@@ -59,12 +59,12 @@ Columnas:
 | **certificados** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](certificados_migracion_baseline.md) |
 | **configuracion** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); `ConfigSnapshot` cross-modulo; ver [baseline](configuracion_migracion_baseline.md) |
 | **dbextern** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](dbextern_migracion_baseline.md) |
-| devel_codegen | — | 2 | 0 | Herramienta interna; excepción tolerable |
+| devel_codegen | — | 1 | 0 | Herramienta interna; `factory.php` excepción documentada |
 | **devel_db_admin** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); herramienta interna; ver [baseline](devel_db_admin_migracion_baseline.md) |
 | **dossiers** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](dossiers_migracion_baseline.md) |
 | encargossacd | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](encargossacd_migracion_baseline.md#cierre-di-2026-06-06) |
 | **inventario** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](inventario_migracion_baseline.md) |
-| **menus** | ✓ | 1 | 0 | **Cierre DI + PHPStan** (2026-06-06); `menus_importar_de_ficheros_a_ref` excepcion frontend; ver [baseline](menus_migracion_baseline.md) |
+| **menus** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); `menus_importar_de_ficheros_a_ref` en src; ver [baseline](menus_migracion_baseline.md) |
 | **misas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](misas_migracion_baseline.md#cierre-di-junio-2026) |
 | notas | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](notas_migracion_baseline.md#cierre-di-2026-06-06) |
 | **pasarela** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](pasarela_migracion_baseline.md) |
@@ -74,13 +74,13 @@ Columnas:
 | **procesos** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](procesos_migracion_baseline.md#cierre-di--phpstan-2026-06-06) |
 | **profesores** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](profesores_migracion_baseline.md#cierre-di-junio-2026) |
 | **tablonanuncios** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](tablonanuncios_migracion_baseline.md) |
-| **ubis** | ✓ | 1 | 0 | **Cierre DI + PHPStan** (2026-06-07 verificado, 433→0); `plano_bytea.php` excepción frontend; ver [baseline](ubis_migracion_baseline.md) |
+| **ubis** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-07 verificado, 433→0); ver [baseline](ubis_migracion_baseline.md) |
 | **ubiscamas** | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](ubiscamas_migracion_baseline.md) |
 | **usuarios** | ✓ | 2 | 0 | **Cierre DI + PHPStan** (2026-06-06); `login`/`recovery` excepciones frontend; ver [baseline](usuarios_migracion_baseline.md) |
 | utils_database | — | 0 | 0 | — |
 | zonassacd | ✓ | 0 | 0 | **Cierre DI + PHPStan** (2026-06-06); ver [baseline](zonassacd_migracion_baseline.md) |
 
-**Módulos sin fila:** solo `src/shared/` (infra transversal; no es un módulo de negocio).
+**Módulos sin fila:** `src/shared/` (infra transversal; migración DI en curso — ver Fase 2b).
 
 ---
 
@@ -92,22 +92,26 @@ Columnas:
 - Añadir sección **«Deuda post-refactor»** en baselines de módulos ya migrados (plantilla: [asistentes](asistentes_migracion_baseline.md#deuda-post-refactor), [notas](notas_migracion_baseline.md#deuda-tecnica-pendiente-post-refactor)).
 - Crear baselines mínimos para módulos sin documento (`actividades`, `inventario`, `ubis`, …) cuando se abra trabajo allí.
 
-### Fase 1 — Cerrar los 19 controladores frontend
+### Fase 1 — Cerrar controladores frontend con `use src\` ✓ (completada 2026-06-07)
 
-Eliminar `use src\...` en controladores listados en [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md): sustituir por `PostRequest::getDataFromUrl('/src/...')` + endpoints `*Data` si faltan.
+De **8** a **3** excepciones documentadas en [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md):
 
-Excepciones a documentar explícitamente en el inventario: `login.php`, `recovery.php`, `devel_codegen/*`.
+- **shared:** `OrbixRuntime` en ayuda/manual
+- **ubis:** `MultipartUploadHelper` en `plano_bytea.php`
+- **menus:** `menus_importar_de_ficheros_a_ref` movido a `src/menus/.../controllers/`
+- **devel_codegen:** `factory_mvc.php` sin `use src\`
 
-### Fase 2 — Cierre por módulo (piloto → resto)
+Excepciones permanentes: `login.php`, `recovery.php`, `devel_codegen/factory.php`.
 
-Orden sugerido por madurez y volumen de `$GLOBALS`:
+### Fase 2 — Cierre DI por módulo de negocio ✓ (completada 2026-06-07)
 
-1. **asistentes** (piloto de referencia; 0 deuda frontend)
-2. dossiers
-3. actividadcargos, zonassacd, actividadplazas, actividadescentro, **actividadestudios**
-4. profesores, certificados, asistentes-adyacentes (personas, cambios, casas)
-5. encargossacd, misas, **procesos** ✓, notas
-6. inventario, ubis (mayor `$GLOBALS` restante)
+Todos los módulos en `src/<modulo>/` (excl. `shared`) tienen **0** `$GLOBALS['container']` en runtime. Piloto: **asistentes**; cierre masivo verificado junio 2026.
+
+### Fase 2b — Cierre DI en `src/shared/` (en curso)
+
+Migrar infra transversal de `$GLOBALS['container']` a `DependencyResolver::get()` / inyección por constructor. Prioridad: `DatosInfoRepo` y repos relacionados (`DatosUpdateRepo`, `DatosFormRepo`, `DatosTablaRepo`), luego `DBTrasvase`, `global_object.inc` (bootstrap).
+
+**Excepción esperada:** `DependencyResolver.php` (wrapper fino sobre el contenedor).
 
 ### Fase 3 — PHPStan incremental (no global de golpe)
 

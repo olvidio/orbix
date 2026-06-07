@@ -3,6 +3,7 @@
 namespace src\shared\domain;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\DependencyResolver;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -83,7 +84,7 @@ class DatosFormRepo
                     $acc = $oDatosCampo->getAccion();
                     $var_3 = $oDatosCampo->getArgument3();
 
-                    $RepoRelacionado = $GLOBALS['container']->get($var_1);
+                    $RepoRelacionado = DependencyResolver::get($var_1);
                     $a_opciones = $RepoRelacionado->$var_3();
 
                     $field['accion'] = $acc;

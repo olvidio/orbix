@@ -117,7 +117,7 @@ trait ProvidesRepositories
 
     protected function getRepository(string $entityType): object
     {
-        return $GLOBALS['container']->get($this->getRepositoryClass($entityType));
+        return DependencyResolver::get($this->getRepositoryClass($entityType));
     }
 
     protected function getMetodo(string $entityType): string
@@ -140,7 +140,7 @@ trait ProvidesRepositories
 
     protected function getDireccionRepository(string $entityType): object
     {
-        return $GLOBALS['container']->get($this->getDireccionRepositoryClass($entityType));
+        return DependencyResolver::get($this->getDireccionRepositoryClass($entityType));
     }
 
     protected function getTelecoRepositoryClass(string $entityType): string
@@ -154,7 +154,7 @@ trait ProvidesRepositories
 
     protected function getTelecoRepository(string $entityType): object
     {
-        return $GLOBALS['container']->get($this->getTelecoRepositoryClass($entityType));
+        return DependencyResolver::get($this->getTelecoRepositoryClass($entityType));
     }
 
     protected function getEntityTypeByRepositoryClass(string $repositoryClass): string

@@ -2,8 +2,7 @@
 
 namespace frontend\devel_codegen\controller;
 
-use src\shared\config\ConfigGlobal;
-use src\shared\config\ServerConf;
+use frontend\shared\config\OrbixRuntime;
 
 /**
  * programa per generar les classes a partir de la taula
@@ -814,7 +813,7 @@ $txt .= '
 ';
 
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = ServerConf::DIR . '/apps/' . $grupo . '/model/entity/' . $Qclase . '.php';
+$filename = OrbixRuntime::dir() . '/apps/' . $grupo . '/model/entity/' . $Qclase . '.php';
 
 if (!$handle = fopen($filename, 'w')) {
 	echo "Cannot open file ($filename)";
@@ -966,7 +965,7 @@ $txt2 .= '
 }
 ';
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = ServerConf::DIR . '/apps/' . $grupo . '/model/entity/Gestor' . $Qclase . '.php';
+$filename = OrbixRuntime::dir() . '/apps/' . $grupo . '/model/entity/Gestor' . $Qclase . '.php';
 
 
 if (!$handle = fopen($filename, 'w')) {

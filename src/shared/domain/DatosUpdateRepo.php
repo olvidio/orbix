@@ -3,6 +3,7 @@
 namespace src\shared\domain;
 
 use src\configuracion\domain\entity\ModuloInstalado;
+use src\shared\infrastructure\DependencyResolver;
 use src\profesores\domain\entity\ProfesorLatin;
 use src\shared\domain\value_objects\DateTimeLocal;
 use function src\shared\domain\helpers\is_true;
@@ -18,7 +19,7 @@ class DatosUpdateRepo
     public function eliminar()
     {
         $oFicha = $this->getFicha();
-        $oRepository = $GLOBALS['container']->get($this->RepositoryInterface);
+        $oRepository = DependencyResolver::get($this->RepositoryInterface);
         if ($oRepository->Eliminar($oFicha) === false) {
             $error_txt = $oRepository->getErrorTxt();
             return $error_txt;
@@ -72,7 +73,7 @@ class DatosUpdateRepo
             }
         }
 
-        $oRepository = $GLOBALS['container']->get($this->RepositoryInterface);
+        $oRepository = DependencyResolver::get($this->RepositoryInterface);
         // Casos especiales que no tienen getNewId
         $NoNewId = false;
         if ($oFicha instanceof ProfesorLatin) {
@@ -145,7 +146,7 @@ class DatosUpdateRepo
             }
         }
 
-        $oRepository = $GLOBALS['container']->get($this->RepositoryInterface);
+        $oRepository = DependencyResolver::get($this->RepositoryInterface);
         if ($oRepository->Guardar($oFicha) === false) {
             $error_txt = $oRepository->getErrorTxt();
             return $error_txt;

@@ -2,6 +2,7 @@
 
 namespace src\shared\domain;
 
+use src\shared\infrastructure\DependencyResolver;
 use function src\shared\domain\helpers\is_true;
 use function src\shared\domain\helpers\urlsafe_b64encode;
 
@@ -178,7 +179,7 @@ class DatosTablaRepo
                         break;
                     case 'depende':
                     case 'opciones':
-                        $RepoRelacionado = $GLOBALS['container']->get($var_1);
+                        $RepoRelacionado = DependencyResolver::get($var_1);
                         $oRelacionado = $RepoRelacionado->findById($valor_camp);
                         if ($oRelacionado !== null) {
                             if (substr($var_2,-2) === 'Vo') {

@@ -2,6 +2,8 @@
 
 namespace src\shared\domain;
 
+use src\shared\infrastructure\DependencyResolver;
+
 /* No vale el underscore en el nombre */
 
 abstract class DatosInfoRepo
@@ -211,7 +213,7 @@ abstract class DatosInfoRepo
         }
 
         $oFicha = null;
-        $oRepository = $GLOBALS['container']->get($RepositoryInterface);
+        $oRepository = DependencyResolver::get($RepositoryInterface);
         switch ($this->mod) {
             case 'nuevo':
                 $oFicha = new $this->obj($this->getKeyCollection());
@@ -232,7 +234,7 @@ abstract class DatosInfoRepo
         /* Debe sobreescribirse el método, esto es un ejemlpo
         $valor_depende = empty($valor_depende) ? 0 : $valor_depende;
         //caso de actualizar el campo depende
-        $LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+        $LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
         $aOpciones = $LugarRepository->getArrayLugares($valor_depende);
         $opciones_txt = '<option></option>';
         foreach ($aOpciones as $key => $val) {

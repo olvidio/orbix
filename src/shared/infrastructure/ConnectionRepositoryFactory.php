@@ -10,7 +10,7 @@ class ConnectionRepositoryFactory implements ConnectionRepositoryFactoryInterfac
 {
     public function createWithConnection(string $repositoryId, PDO $oDbl, ?PDO $oDblSelect = null): object
     {
-        $repository = $GLOBALS['container']->get($repositoryId);
+        $repository = DependencyResolver::get($repositoryId);
 
         if (!is_object($repository)) {
             throw new RuntimeException(sprintf('El repositorio %s no es un objeto válido', $repositoryId));

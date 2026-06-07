@@ -3,6 +3,7 @@
 namespace src\shared\infrastructure\persistence\postgresql;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -250,7 +251,7 @@ class DBView
     private function getIdSchemasGrupStgr()
     {
         $RegionStgr = $this->sRegionStgr;
-        $gesDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        $gesDl = DependencyResolver::get(DelegacionRepositoryInterface::class);
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
         return $gesDl->getArrayIdSchemaRegionStgr($RegionStgr, $mi_sfsv);
@@ -259,7 +260,7 @@ class DBView
     private function getSchemasGrupStgr()
     {
         $RegionStgr = $this->sRegionStgr;
-        $gesDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        $gesDl = DependencyResolver::get(DelegacionRepositoryInterface::class);
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
         $a_schemas = $gesDl->getArraySchemasRegionStgr($RegionStgr, $mi_sfsv);
@@ -278,7 +279,7 @@ class DBView
     private function getSchemasComunGrupStgr()
     {
         $RegionStgr = $this->sRegionStgr;
-        $gesDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        $gesDl = DependencyResolver::get(DelegacionRepositoryInterface::class);
 
         $a_schemas = $gesDl->getArraySchemasRegionStgr($RegionStgr);
 

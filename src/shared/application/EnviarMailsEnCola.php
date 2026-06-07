@@ -4,6 +4,7 @@ namespace src\shared\application;
 
 use DateInterval;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
@@ -26,7 +27,7 @@ final class EnviarMailsEnCola
     public function __construct(?ColaMailRepositoryInterface $ColaMailRepository = null)
     {
         $this->ColaMailRepository = $ColaMailRepository
-            ?? $GLOBALS['container']->get(ColaMailRepositoryInterface::class);
+            ?? DependencyResolver::get(ColaMailRepositoryInterface::class);
     }
 
     /**

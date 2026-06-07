@@ -1,13 +1,13 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
-use src\shared\config\ConfigGlobal;
 
 require_once __DIR__ . '/../global_header_front.inc';
 
-$manualDir = realpath(ConfigGlobal::$directorio . '/docs/manual');
+$manualDir = realpath(OrbixRuntime::dir() . '/docs/manual');
 if ($manualDir === false) {
     http_response_code(500);
     die('No se encuentra la carpeta de documentación del manual.');
@@ -136,14 +136,14 @@ $html = $oView->renderizar('manual.phtml', $a_campos, false);
 
 $standalone = !empty($GLOBALS['manual_standalone_shell']);
 if ($standalone) {
-    $pruebas = (ConfigGlobal::$web_path === '/pruebas' || ConfigGlobal::$web_path === '/pruebassf') ? 1 : 0;
+    $pruebas = OrbixRuntime::isPruebasWebPath() ? 1 : 0;
     ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8">
     <title><?= $documento !== null ? htmlspecialchars($documento['titulo'], ENT_QUOTES, 'UTF-8') : 'Manual de usuario' ?> — Ayuda Orbix</title>
-    <?php include_once ConfigGlobal::$dir_estilos . '/todo_en_uno.css.php'; ?>
+    <?php include_once OrbixRuntime::dirEstilos() . '/todo_en_uno.css.php'; ?>
 </head>
 <body class="otro">
 <?php if ($pruebas === 1) { ?>

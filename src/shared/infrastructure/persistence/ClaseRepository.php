@@ -4,6 +4,7 @@ namespace src\shared\infrastructure\persistence;
 
 use PDO;
 use src\shared\domain\traits\Hydratable;
+use src\shared\infrastructure\DependencyResolver;
 
 abstract class ClaseRepository
 {
@@ -135,7 +136,7 @@ abstract class ClaseRepository
 
             $a_ord[$repoName] = [];
             $a_ord_cond[$repoName] = [];
-            $Repository = $GLOBALS['container']->get($repoInterface);
+            $Repository = DependencyResolver::get($repoInterface);
             $cClasses = $Repository->$get($aWhere, $aOperators);
             if (is_array($cClasses)) {
                 $cClassesTot = array_merge($cClassesTot, $cClasses);

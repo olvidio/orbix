@@ -1,12 +1,14 @@
 <?php
 
 use frontend\shared\config\OrbixRuntime;
-use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use frontend\shared\security\HashFront;
+use src\shared\infrastructure\GlobalPdo;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
-$oDB = $GLOBALS['oDBE'];
-$oDBPC = $GLOBALS['oDBPC'];
+$oDBPC = GlobalPdo::get('oDBPC');
 
 $Qseguro = filter_input(INPUT_POST, 'seguro', FILTER_VALIDATE_INT);
 if ($Qseguro === false || $Qseguro === null) {
@@ -65,14 +67,15 @@ if ($Qseguro === 1) {
         $sec = substr($esquema, -1); // la 'v' o la 'f'.
         echo ">>>$sec>>actualizando menus para $esquema<br>";
         if ($sec === 'v') {
-            $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('sv-e');
-        }
-        if ($sec === 'f') {
-            $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('sf-e');
-
+            $oConfigDB = new ConfigDB('sv-e');
+        } elseif ($sec === 'f') {
+            $oConfigDB = new ConfigDB('sf-e');
+        } else {
+            echo "esquema desconocido: $esquema<br>";
+            continue;
         }
         $config = $oConfigDB->getEsquema($esquema);
-        $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
+        $oConexion = new DBConnection($config);
         $oDB = $oConexion->getPDO();
 
         echo "actualizando menus para $esquema<br>";
