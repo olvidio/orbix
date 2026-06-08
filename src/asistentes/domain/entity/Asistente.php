@@ -17,7 +17,6 @@ use src\shared\domain\contracts\AggregateRoot;
 use src\shared\domain\DatosCampo;
 use src\shared\domain\entity\Entity;
 use src\shared\domain\traits\Hydratable;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\domain\value_objects\Uuid;
 use src\ubis\domain\value_objects\DelegacionCode;
 use src\ubiscamas\domain\entity\Cama;
@@ -492,15 +491,14 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getDatosCampos(): array
     {
-        $set = new Set();
-        $set->add($this->datosCampoIdNomHidden());
-        $set->add($this->datosCampoNomActividad());
-        $set->add($this->datosCampoPropio());
-        $set->add($this->datosCampoEstOk());
-        $set->add($this->datosCampoFalta());
-        $set->add($this->datosCampoObserv());
-
-        return array_values($set->getTot());
+        return [
+            $this->datosCampoIdNomHidden(),
+            $this->datosCampoNomActividad(),
+            $this->datosCampoPropio(),
+            $this->datosCampoEstOk(),
+            $this->datosCampoFalta(),
+            $this->datosCampoObserv(),
+        ];
     }
 
     private function datosCampoIdNomHidden(): DatosCampo
@@ -573,7 +571,7 @@ class Asistente extends Entity implements AggregateRoot
         $c->setMetodoSet('setObserv');
         $c->setEtiqueta(_('observ.'));
         $c->setTipo('texto');
-        $c->setArgument(40);
+        $c->setArgument('40');
 
         return $c;
     }

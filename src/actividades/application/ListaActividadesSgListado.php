@@ -244,7 +244,8 @@ final class ListaActividadesSgListado
                 if ($oPermSacd->have_perm_action('ver') === true) {
                     $ActividadCargoRepository = $this->actividadCargoRepository;
                     foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
-                        $sacds .= $oPersona->getPrefApellidosNombre() . "# ";
+                        $nom = method_exists($oPersona, 'getPrefApellidosNombre') ? $oPersona->getPrefApellidosNombre() : '';
+                        $sacds .= $nom . "# ";
                     }
                     $sacds = substr($sacds, 0, -2);
                 }

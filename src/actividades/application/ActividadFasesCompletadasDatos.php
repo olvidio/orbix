@@ -29,6 +29,6 @@ final class ActividadFasesCompletadasDatos
         $repo = $this->actividadProcesoTareaRepository;
         $fases = $repo->getFasesCompletadas($idActiv);
 
-        return ['fases_completadas' => array_values(array_map(static fn ($id) => (int) $id, $fases))];
+        return ['fases_completadas' => array_map(static fn ($id) => (int) $id, $fases)];
     }
 }

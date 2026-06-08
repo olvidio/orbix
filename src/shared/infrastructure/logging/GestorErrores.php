@@ -18,6 +18,24 @@ class GestorErrores
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
+    /**
+     * Propiedades heredadas de sesiones serializadas anteriores a la refactorización.
+     * Se mantienen para que PHP pueda deserializar sin avisos E_DEPRECATED.
+     *
+     * @var array<string, mixed>|null
+     */
+    private ?array $aDades = null;
+
+    private bool $bLoaded = false;
+
+    public function __wakeup(): void
+    {
+        $legacyData = $this->aDades;
+        $wasLoaded = $this->bLoaded;
+        $this->aDades = is_array($legacyData) ? $legacyData : null;
+        $this->bLoaded = $wasLoaded;
+    }
+
     private string $filename;
 
     /**

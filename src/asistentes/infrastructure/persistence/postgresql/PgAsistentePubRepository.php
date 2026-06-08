@@ -50,7 +50,6 @@ class PgAsistentePubRepository extends PgAsistenteRepository implements Asistent
             /** @var \src\shared\infrastructure\logging\GestorErrores $oGestorErrores */
             $oGestorErrores = $_SESSION['oGestorErrores'];
             $oGestorErrores->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
-            return false;
         }
         $aId_nom = [];
         foreach ($oDblSt as $aDades) {

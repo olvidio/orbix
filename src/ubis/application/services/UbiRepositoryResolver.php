@@ -74,6 +74,28 @@ final class UbiRepositoryResolver
         };
     }
 
+    /**
+     * Carga el ubi para comprobar permisos de edición (incluye fallback ctrsf/cdcsf en tabla general).
+     */
+    public function findUbiForPermisos(string $obj, int $idUbi): ?object
+    {
+        $objPau = UbiPermisos::normalizeObjPau($obj);
+        if (!in_array($objPau, ['CentroDl', 'CasaDl', 'CentroEx', 'CasaEx'], true)) {
+            return null;
+        }
+
+        $oUbi = $this->getRepository($objPau)->findById($idUbi);
+        if ($oUbi !== null) {
+            return $oUbi;
+        }
+
+        return match ($objPau) {
+            'CentroDl' => $this->centroRepository->findById($idUbi),
+            'CasaDl' => $this->casaRepository->findById($idUbi),
+            default => null,
+        };
+    }
+
     public function getMetodo(string $entityType): string
     {
         return match ($entityType) {

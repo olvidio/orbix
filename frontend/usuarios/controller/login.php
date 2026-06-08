@@ -6,6 +6,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use frontend\shared\model\ViewNewPhtml;
+use src\shared\application\HydratePermisosActividades;
 use src\usuarios\application\LoginProcesar;
 
 /**
@@ -20,7 +21,10 @@ use src\usuarios\application\LoginProcesar;
  *   - Si no hay sesion y llega POST con username/password -> invoca
  *     `src\usuarios\application\LoginProcesar` para validar y, si todo va
  *     bien, rellena `$_SESSION['session_auth']` y `$_SESSION['config']`,
- *     pone cookies y deja que la request continue.
+ *     pone cookies y deja que la request continue. Los permisos de menú
+ *     (`iPermMenus`, `oPerm`, `oPermActividades`) los calcula el backend
+ *     una vez por sesión (tras login) via `HydratePermisosActividades` en
+ *     `global_object.inc`; en peticiones siguientes usa la caché de sesión.
  *   - Si la validacion da error o no hay POST -> dibuja el form de login y
  *     mata la request.
  *
@@ -159,12 +163,9 @@ if (!isset($_SESSION['session_auth'])) {
         }
 
         // Login OK: rellenar sesion y cookies.
-        if (!isset($_SESSION['session_auth'])) {
-            $_SESSION['session_auth'] = $result['session_auth'];
-        }
-        if (!isset($_SESSION['config'])) {
-            $_SESSION['config'] = $result['session_config'];
-        }
+        HydratePermisosActividades::invalidateSessionCache();
+        $_SESSION['session_auth'] = $result['session_auth'];
+        $_SESSION['config'] = $result['session_config'];
 
         cambiar_idioma();
 

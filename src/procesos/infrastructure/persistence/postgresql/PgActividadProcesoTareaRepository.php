@@ -129,7 +129,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             $id_fase = isset($aDades['id_fase']) && is_numeric($aDades['id_fase']) ? (int) $aDades['id_fase'] : 0;
             $id_tarea = isset($aDades['id_tarea']) && is_numeric($aDades['id_tarea']) ? (int) $aDades['id_tarea'] : 0;
             $f = $id_fase . '#' . $id_tarea;
-            $aFasesEstado[$f] = is_true($aDades['completado'] ?? false);
+            $aFasesEstado[$f] = is_true($aDades['completado'] ?? false) ?? false;
         }
         return $aFasesEstado;
     }
@@ -336,7 +336,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 if (!is_array($aDades)) {
                     continue;
                 }
-                return is_true($aDades['completado']);
+                return is_true($aDades['completado']) ?? false;
             }
         } else {
             // no existe el proceso:
@@ -674,14 +674,19 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<ActividadProcesoTarea> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $ActividadProcesoTarea = ActividadProcesoTarea::fromArray($aDatos);
-            $ActividadProcesoTareaSet->add($ActividadProcesoTarea);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = ActividadProcesoTarea::fromArray($normalized);
         }
-        return array_values($ActividadProcesoTareaSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

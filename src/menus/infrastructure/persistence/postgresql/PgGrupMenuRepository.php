@@ -124,14 +124,19 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<GrupMenu> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $GrupMenu = GrupMenu::fromArray($aDatos);
-            $GrupMenuSet->add($GrupMenu);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = GrupMenu::fromArray($normalized);
         }
-        return array_values($GrupMenuSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

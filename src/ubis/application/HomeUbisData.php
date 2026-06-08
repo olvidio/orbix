@@ -2,7 +2,7 @@
 
 namespace src\ubis\application;
 
-use src\shared\config\ConfigGlobal;
+use src\ubis\application\services\UbiPermisos;
 use src\ubis\application\services\UbiTelecoService;
 
 final class HomeUbisData
@@ -49,11 +49,11 @@ final class HomeUbisData
         $id_pau = $id_ubi;
         $pau = "u";
 
-        $mi_dele = ConfigGlobal::mi_delef();
+        $es_mi_delegacion = UbiPermisos::dlPerteneceAMiDelegacion($dl);
         switch ($tipo_ubi) {
             case "ctrsf":
             case "ctrdl":
-                if ($dl != $mi_dele) {
+                if (!$es_mi_delegacion) {
                     $obj_pau = "Centro";
                     $obj_dir = "DireccionCentro";
                 } else {
@@ -68,7 +68,7 @@ final class HomeUbisData
                 $ubi = _("centro");
                 break;
             case "cdcdl":
-                if ($dl != $mi_dele) {
+                if (!$es_mi_delegacion) {
                     $obj_pau = "Casa";
                     $obj_dir = "DireccionCdc";
                 } else {

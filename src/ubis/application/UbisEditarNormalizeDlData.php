@@ -18,7 +18,7 @@ final class UbisEditarNormalizeDlData
 
     public function execute(int $id_ubi, string $tipo_ubi, string $nombre_ubi, string $Qobj_pau): string
     {
-        if ($tipo_ubi === 'ctrdl') {
+        if ($tipo_ubi === 'ctrdl' || $tipo_ubi === 'ctrsf') {
             $oUbi_new = $this->centroDlRepository->findById($id_ubi);
             if ($oUbi_new === null) {
                 return $Qobj_pau;

@@ -46,7 +46,17 @@ class PasarelaConfig
      */
     public function getJson_valor(bool $returnArray = false): array|stdClass|null
     {
-        return (new ConverterJson($this->json_valor, $returnArray))->fromPg();
+        $value = (new ConverterJson($this->json_valor, $returnArray))->fromPg();
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        $normalized = [];
+        foreach ($value as $key => $item) {
+            $normalized[(string) $key] = $item;
+        }
+
+        return $normalized;
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
@@ -55,8 +56,9 @@ $obj_pau = $data['obj_pau'];
 $obj_dir = $data['obj_dir'];
 $ubi = $data['ubi'];
 
-$gohome = HashFront::link('frontend/ubis/controller/home_ubis.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau)));
-$godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query(array('pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $obj_pau)));
+$base = AppUrlConfig::getPublicAppBaseUrl();
+$gohome = HashFront::link($base . '/frontend/ubis/controller/home_ubis.php?' . http_build_query(['id_ubi' => $id_ubi, 'obj_pau' => $obj_pau]));
+$godossiers = HashFront::link($base . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query(['pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $obj_pau]));
 
 $go_ubi = HashFront::link('frontend/ubis/controller/ubis_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau, 'bloque' => $bloque)));
 $go_dir = HashFront::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'id_direccion' => $id_direccion, 'obj_dir' => $obj_dir, 'bloque' => $bloque)));
@@ -70,6 +72,9 @@ $titulo = $nombre_ubi;
 $telfs = $data['telfs'];
 $fax = $data['fax'];
 $mails = $data['mails'];
+
+require_once __DIR__ . '/../../dossiers/controller/lista_dossiers.php';
+$lista_dossiers_html = orbix_render_lista_dossiers($pau, $id_pau, $obj_pau);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'godossiers' => $godossiers,
@@ -91,7 +96,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'go_tel' => $go_tel,
     'pau' => $pau,
     'id_pau' => $id_pau,
-    'Qobj_pau' => $obj_pau
+    'Qobj_pau' => $obj_pau,
+    'lista_dossiers_html' => $lista_dossiers_html,
 ];
 
 $oView = new ViewNewPhtml('frontend\ubis\controller');

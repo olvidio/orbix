@@ -95,14 +95,13 @@ class GrupMenu
         return 'id_grupmenu';
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
     public function getDatosCampos(): array
     {
-        $oMetamenuSet = new Set();
-
-        $oMetamenuSet->add($this->getDatosGrupMenu());
-        $oMetamenuSet->add($this->getDatosOrden());
-        return $oMetamenuSet->getTot();
+        return [
+            $this->getDatosGrupMenu(),
+            $this->getDatosOrden(),
+        ];
     }
 
     private function getDatosGrupMenu(): DatosCampo
@@ -113,7 +112,7 @@ class GrupMenu
         $oDatosCampo->setMetodoSet('setGrup_menu');
         $oDatosCampo->setEtiqueta(_("Grup Menu"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 
@@ -125,7 +124,7 @@ class GrupMenu
         $oDatosCampo->setMetodoSet('setOrden');
         $oDatosCampo->setEtiqueta(_("orden"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(10);
+        $oDatosCampo->setArgument('10');
         return $oDatosCampo;
     }
 }

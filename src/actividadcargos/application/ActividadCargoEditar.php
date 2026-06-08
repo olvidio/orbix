@@ -73,7 +73,7 @@ final class ActividadCargoEditar
         $oActividadCargo->setId_cargo($id_cargo);
         $oActividadCargo->setId_nom($id_nom);
         $oActividadCargo->setObserv($observ !== '' ? $observ : null);
-        $oActividadCargo->setPuede_agd(is_true($puede_agd));
+        $oActividadCargo->setPuede_agd(is_true($puede_agd) ?? false);
 
         if ($this->actividadCargoRepository->Guardar($oActividadCargo) === false) {
             $error = $this->lastSessionError();

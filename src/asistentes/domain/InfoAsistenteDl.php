@@ -5,6 +5,7 @@ namespace src\asistentes\domain;
 use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\asistentes\domain\entity\Asistente;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\domain\DatosInfoRepo;
 use function src\shared\domain\helpers\curso_est;
@@ -42,10 +43,11 @@ class InfoAsistenteDl extends DatosInfoRepo
 
     /**
      * Alineado con {@see Select_actividades_de_una_persona::cursoWhereFromModo()} modo por defecto (1).
-     *
-     * @return list<\src\asistentes\domain\entity\Asistente>|array<mixed,mixed>
      */
-    public function getColeccion()
+    /**
+     * @return list<Asistente>
+     */
+    public function getColeccion(): array
     {
         if (empty($this->id_pau)) {
             return [];
@@ -76,30 +78,31 @@ class InfoAsistenteDl extends DatosInfoRepo
     /**
      * PK compuesta `(id_activ, id_nom)`: {@see DatosInfoRepo::getFicha} base llama {@see AsistenteRepositoryInterface::findById} con un solo argumento.
      */
-    /**
-     * @return \src\asistentes\domain\entity\Asistente|null
-     */
-    public function getFicha(): ?\src\asistentes\domain\entity\Asistente
+    public function getFicha(): ?Asistente
     {
-        $oFicha = null;
         switch ($this->mod) {
             case 'nuevo':
-                return parent::getFicha();
+                $ficha = parent::getFicha();
+                return $ficha instanceof Asistente ? $ficha : null;
             case 'eliminar':
             case 'editar':
                 $pkRaw = $this->a_pkey;
                 if (empty($pkRaw)) {
                     return null;
                 }
-                $pk = is_array($pkRaw) ? $pkRaw : json_decode((string)$pkRaw, true);
+                if (is_array($pkRaw)) {
+                    $pk = $pkRaw;
+                } elseif (is_string($pkRaw)) {
+                    $pk = json_decode($pkRaw, true);
+                } else {
+                    return null;
+                }
                 if (!is_array($pk) || !isset($pk['id_activ'], $pk['id_nom'])) {
                     return null;
                 }
-                $oFicha = $this->asistenteDlRepository->findById((int)$pk['id_activ'], (int)$pk['id_nom']);
-                break;
+                return $this->asistenteDlRepository->findById((int) $pk['id_activ'], (int) $pk['id_nom']);
             default:
-                break;
+                return null;
         }
-        return $oFicha;
     }
 }

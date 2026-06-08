@@ -9,6 +9,35 @@ function orbixLayoutMenuConfig() {
     return (window.orbixLayout && window.orbixLayout.menuConfig) || {};
 }
 
+function pills2SyncChromeOffset() {
+    const shell = document.getElementById('orbixPills2Shell');
+    if (!shell) {
+        return;
+    }
+    const height = Math.ceil(shell.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--pills2-chrome-offset', height + 'px');
+}
+
+function pills2InitChromeOffsetObserver() {
+    const shell = document.getElementById('orbixPills2Shell');
+    if (!shell || shell.dataset.pills2ChromeBound === '1') {
+        return;
+    }
+    shell.dataset.pills2ChromeBound = '1';
+
+    const sync = () => {
+        window.requestAnimationFrame(pills2SyncChromeOffset);
+    };
+
+    if (typeof ResizeObserver !== 'undefined') {
+        const observer = new ResizeObserver(sync);
+        observer.observe(shell);
+    }
+
+    window.addEventListener('resize', sync);
+    sync();
+}
+
 function pills2CreateMenuItem(item, level = 0, crumbPrefix = []) {
     const li = document.createElement('li');
 
@@ -242,6 +271,7 @@ function pills2SetActiveGroup(element, groupName, fromUserClick) {
 
     pills2AddHorizontalMenuEventListeners();
     pills2UpdateBreadcrumb(groupName, pills2GetActiveMenuPath());
+    pills2SyncChromeOffset();
 }
 
 function pills2SyncBreadcrumbFromAnchor(anchor) {
@@ -354,6 +384,8 @@ function showPortada(groupName) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    pills2InitChromeOffsetObserver();
+
     const workspaceTrigger = document.getElementById('pills2WorkspaceTrigger');
     if (workspaceTrigger) {
         workspaceTrigger.addEventListener('click', pills2ToggleWorkspacePanel);

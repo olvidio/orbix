@@ -81,15 +81,13 @@ class ProcesoTipo
         return 'id_tipo_proceso';
     }
 
-  /** @return array<string, mixed> */
-
-
-  public function getDatosCampos(): array
+    /** @return list<DatosCampo> */
+    public function getDatosCampos(): array
     {
-        $oActividadFaseSet = new Set();
-        $oActividadFaseSet->add($this->getDatosNom_proceso());
-        $oActividadFaseSet->add($this->getDatosSfsv());
-        return $oActividadFaseSet->getTot();
+        return [
+            $this->getDatosNom_proceso(),
+            $this->getDatosSfsv(),
+        ];
     }
 
     private function getDatosNom_proceso(): DatosCampo

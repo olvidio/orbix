@@ -184,17 +184,20 @@ class PgCasaPeriodoRepository extends ClaseRepository implements CasaPeriodoRepo
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $casaPeriodos = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            // para las fechas del postgres (texto iso)
-            $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
-            $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
-            $CasaPeriodo = CasaPeriodo::fromArray($aDatos);
-            $CasaPeriodoSet->add($CasaPeriodo);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $normalized['f_ini'] = (new ConverterDate('date', $normalized['f_ini']))->fromPg();
+            $normalized['f_fin'] = (new ConverterDate('date', $normalized['f_fin']))->fromPg();
+            $casaPeriodos[] = CasaPeriodo::fromArray($normalized);
         }
-        return array_values($CasaPeriodoSet->getTot());
+        return $casaPeriodos;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

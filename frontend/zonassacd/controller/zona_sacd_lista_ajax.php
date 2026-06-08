@@ -12,5 +12,6 @@ $oTabla = new Lista();
 $oTabla->setId_tabla($data['id_tabla']);
 $oTabla->setCabeceras($data['a_cabeceras']);
 $oTabla->setBotones($data['a_botones']);
+$oTabla->setConSel(!empty($data['con_sel']));
 $oTabla->setDatos($data['a_valores']);
 echo $oTabla->mostrar_tabla();

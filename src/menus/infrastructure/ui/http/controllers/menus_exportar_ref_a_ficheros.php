@@ -48,24 +48,28 @@ if ($Qaccion === 'importar') {
     $txt_comun = str_replace("DIRBASE", $dir_base, $txt_base);
     file_put_contents($filename, $txt_comun);
 
-    $host = $config['host'];
-    $port = $config['port'];
-    $dbname = $config['dbname'];
-    $user = $config['user'];
-    $password = $config['password'];
+    $host = is_string($config['host'] ?? null) ? $config['host'] : '';
+    $port = is_string($config['port'] ?? null) || is_int($config['port'] ?? null) ? (string) $config['port'] : '';
+    $dbname = is_string($config['dbname'] ?? null) ? $config['dbname'] : '';
+    $user = is_string($config['user'] ?? null) ? $config['user'] : '';
+    $password = is_string($config['password'] ?? null) ? $config['password'] : '';
     //opcionales
     $strParts = [];
-    if (!empty($config['sslmode'])) {
-        $strParts[] = 'sslmode=' . $config['sslmode'];
+    $sslmode = is_string($config['sslmode'] ?? null) ? $config['sslmode'] : '';
+    if ($sslmode !== '') {
+        $strParts[] = 'sslmode=' . $sslmode;
     }
-    if (!empty($config['sslcert'])) {
-        $strParts[] = 'sslcert=' . $config['sslcert'];
+    $sslcert = is_string($config['sslcert'] ?? null) ? $config['sslcert'] : '';
+    if ($sslcert !== '') {
+        $strParts[] = 'sslcert=' . $sslcert;
     }
-    if (!empty($config['sslkey'])) {
-        $strParts[] = 'sslkey=' . $config['sslkey'];
+    $sslkey = is_string($config['sslkey'] ?? null) ? $config['sslkey'] : '';
+    if ($sslkey !== '') {
+        $strParts[] = 'sslkey=' . $sslkey;
     }
-    if (!empty($config['sslrootcert'])) {
-        $strParts[] = 'sslrootcert=' . $config['sslrootcert'];
+    $sslrootcert = is_string($config['sslrootcert'] ?? null) ? $config['sslrootcert'] : '';
+    if ($sslrootcert !== '') {
+        $strParts[] = 'sslrootcert=' . $sslrootcert;
     }
     $strConexio = $strParts !== [] ? '?' . implode('&', $strParts) : '';
 

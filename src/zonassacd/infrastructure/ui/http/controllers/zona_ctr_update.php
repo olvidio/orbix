@@ -13,4 +13,7 @@ $input = [
 
 /** @var ZonaCtrUpdate $useCase */
 $useCase = DependencyResolver::get(ZonaCtrUpdate::class);
-ContestarJson::enviar('', $useCase->execute($input['id_zona_new'], $input['sel']));
+$resultado = $useCase->execute($input['id_zona_new'], $input['sel']);
+
+$mensaje = $resultado['mensaje'] ?? '';
+ContestarJson::enviar(is_string($mensaje) ? $mensaje : '', 'ok');

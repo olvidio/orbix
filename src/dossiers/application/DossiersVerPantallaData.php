@@ -119,7 +119,7 @@ class DossiersVerPantallaData
         }
 
         $Qid_activ = 0;
-        $Qmodo_curso = 0;
+        $Qmodo_curso = input_int($post, 'modo_curso');
 
         switch ($QqueSel) {
             case 'activ':

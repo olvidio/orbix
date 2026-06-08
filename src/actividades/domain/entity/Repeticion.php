@@ -234,7 +234,7 @@ class Repeticion
         $oDatosCampo->setMetodoSet('setRepeticion'); // legacy para UI
         $oDatosCampo->setEtiqueta(_("repetición"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(50);
+        $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
 
@@ -252,7 +252,7 @@ class Repeticion
         $oDatosCampo->setMetodoSet('setTemporada'); // legacy para UI
         $oDatosCampo->setEtiqueta(_("temporada"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(1);
+        $oDatosCampo->setArgument('1');
         return $oDatosCampo;
     }
 
@@ -270,7 +270,7 @@ class Repeticion
         $oDatosCampo->setMetodoSet('setTipo'); // legacy para UI
         $oDatosCampo->setEtiqueta(_("tipo"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(1);
+        $oDatosCampo->setArgument('1');
         return $oDatosCampo;
     }
 }

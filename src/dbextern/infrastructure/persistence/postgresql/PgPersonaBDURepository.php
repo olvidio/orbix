@@ -32,16 +32,22 @@ class PgPersonaBDURepository extends ClaseRepository implements PersonaBDUReposi
         $oDbl = $this->getoDbl();
         $oPersonaBDUSet = new Set();
         $stmt = $oDbl->query($sQuery);
+        /** @var list<PersonaBDU> $personas */
+        $personas = [];
         if ($stmt instanceof PDOStatement) {
             foreach ($stmt as $aDatos) {
                 if (!is_array($aDatos)) {
                     continue;
                 }
-                $oPersonaBDUSet->add(PersonaBDU::fromArray($aDatos));
+                $normalized = [];
+                foreach ($aDatos as $key => $value) {
+                    $normalized[(string) $key] = $value;
+                }
+                $personas[] = PersonaBDU::fromArray($normalized);
             }
         }
 
-        return array_values($oPersonaBDUSet->getTot());
+        return $personas;
     }
 
     /**
@@ -92,11 +98,20 @@ class PgPersonaBDURepository extends ClaseRepository implements PersonaBDUReposi
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<PersonaBDU> $personas */
+        $personas = [];
         foreach ($filas as $aDatos) {
-            $PersonaBDUSet->add(PersonaBDU::fromArray($aDatos));
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $personas[] = PersonaBDU::fromArray($normalized);
         }
 
-        return array_values($PersonaBDUSet->getTot());
+        return $personas;
     }
 
     public function Eliminar(PersonaBDU $PersonaBDU): bool

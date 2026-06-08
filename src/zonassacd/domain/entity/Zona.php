@@ -3,7 +3,6 @@
 namespace src\zonassacd\domain\entity;
 
 use src\shared\domain\DatosCampo;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\traits\Hydratable;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
@@ -112,12 +111,12 @@ class Zona
      */
     public function getDatosCampos(): array
     {
-        $oProfesorSet = new Set();
-        $oProfesorSet->add($this->getDatosNombre_zona());
-        $oProfesorSet->add($this->getDatosOrden());
-        $oProfesorSet->add($this->getDatosId_grupo());
-        $oProfesorSet->add($this->getDatosId_nom());
-        return array_values($oProfesorSet->getTot());
+        return [
+            $this->getDatosNombre_zona(),
+            $this->getDatosOrden(),
+            $this->getDatosId_grupo(),
+            $this->getDatosId_nom(),
+        ];
     }
 
     /**

@@ -26,8 +26,9 @@ class TrasladarPersonaUseCase
         $aEsquemas = $this->trasladar->getEsquemas($id_nom_orbix, $tipo_persona);
         $esq_org = '';
         foreach ($aEsquemas as $esquema) {
-            if ($esquema['situacion'] === 'A') {
-                $esq_org = $esquema['schemaname'];
+            if (($esquema['situacion'] ?? null) === 'A') {
+                $schemaName = $esquema['schemaname'] ?? '';
+                $esq_org = is_string($schemaName) ? $schemaName : '';
             }
         }
         $mi_esquema = ConfigGlobal::mi_region_dl();

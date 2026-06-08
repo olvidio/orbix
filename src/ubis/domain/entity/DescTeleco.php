@@ -123,15 +123,6 @@ class DescTeleco
     /**
 
 
-     * @return array<string, mixed>
-
-
-     */
-
-
-    /**
-
-
 
      * @return array<string, mixed>
 
@@ -345,16 +336,18 @@ class DescTeleco
 
 
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
-        $oDescTelecoSet = new Set();
-
-        $oDescTelecoSet->add($this->getDatosOrden());
-        $oDescTelecoSet->add($this->getDatosId_tipo_teleco());
-        $oDescTelecoSet->add($this->getDatosDesc_teleco());
-        $oDescTelecoSet->add($this->getDatosUbi());
-        $oDescTelecoSet->add($this->getDatosPersona());
-        return $oDescTelecoSet->getTot();
+        return [
+            $this->getDatosOrden(),
+            $this->getDatosId_tipo_teleco(),
+            $this->getDatosDesc_teleco(),
+            $this->getDatosUbi(),
+            $this->getDatosPersona(),
+        ];
     }
 
     /**
@@ -371,7 +364,7 @@ class DescTeleco
         $oDatosCampo->setMetodoSet('setOrden');
         $oDatosCampo->setEtiqueta(_("orden"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(2);
+        $oDatosCampo->setArgument('2');
         return $oDatosCampo;
     }
 
@@ -409,7 +402,7 @@ class DescTeleco
         $oDatosCampo->setMetodoSet('setDesc_teleco');
         $oDatosCampo->setEtiqueta(_("descripción"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(20);
+        $oDatosCampo->setArgument('20');
         return $oDatosCampo;
     }
 

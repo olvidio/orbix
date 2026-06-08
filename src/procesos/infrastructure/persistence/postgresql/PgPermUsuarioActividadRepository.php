@@ -100,14 +100,19 @@ class PgPermUsuarioActividadRepository extends ClaseRepository implements PermUs
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<PermUsuarioActividad> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $PermUsuarioActividad = PermUsuarioActividad::fromArray($aDatos);
-            $PermUsuarioActividadSet->add($PermUsuarioActividad);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = PermUsuarioActividad::fromArray($normalized);
         }
-        return array_values($PermUsuarioActividadSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

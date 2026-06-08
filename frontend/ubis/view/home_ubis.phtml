@@ -4,7 +4,7 @@ use frontend\shared\config\OrbixRuntime;
 
 ?>
 <?= $oPosicion->mostrar_left_slide(1); ?>
-<div id="top" name="top">
+<div id="top">
     <table>
         <tr>
             <td>
@@ -43,10 +43,8 @@ use frontend\shared\config\OrbixRuntime;
         </tr>
     </table>
 </div>
-<div id="ficha" name="ficha">
-    <?php
-    include("frontend/dossiers/controller/lista_dossiers.php");
-    ?>
+<div id="ficha">
+    <?= $lista_dossiers_html ?? '' ?>
 </div>
 <script>
     fnjs_left_side_show();

@@ -82,10 +82,14 @@ $telfs = (string)($payload['telfs'] ?? '');
 $mails = (string)($payload['mails'] ?? '');
 
 $a_parametros = ['pau' => $pau, 'id_nom' => $id_nom, 'obj_pau' => $Qobj_pau];
-$gohome = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
-$go_ficha = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/personas_editar.php?' . http_build_query($a_parametros));
+$base = AppUrlConfig::getPublicAppBaseUrl();
+$gohome = HashFront::link($base . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
+$go_ficha = HashFront::link($base . '/frontend/personas/controller/personas_editar.php?' . http_build_query($a_parametros));
 $a_parametros_dossier = ['pau' => $pau, 'id_pau' => $id_nom, 'obj_pau' => $Qobj_pau];
-$godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
+$godossiers = HashFront::link($base . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
+
+require_once __DIR__ . '/../../dossiers/controller/lista_dossiers.php';
+$lista_dossiers_html = orbix_render_lista_dossiers($pau, $id_nom, $Qobj_pau);
 
 $a_campos = [
     'oPosicion' => $oPosicion,
@@ -106,6 +110,7 @@ $a_campos = [
     'id_pau' => $id_nom,
     'Qobj_pau' => $Qobj_pau,
     'aviso' => $aviso,
+    'lista_dossiers_html' => $lista_dossiers_html,
 ];
 
 $oView = new ViewNewPhtml('frontend\personas\controller');

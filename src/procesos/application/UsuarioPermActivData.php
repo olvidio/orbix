@@ -68,7 +68,7 @@ class UsuarioPermActivData
             $perm_jefe = true;
         }
 
-        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, is_true($Qdl_propia));
+        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, is_true($Qdl_propia) ?? false);
         $a_fases = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
 
         $aPerm = [];

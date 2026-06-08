@@ -99,14 +99,18 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $regiones = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Region = Region::fromArray($aDatos);
-            $RegionSet->add($Region);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $regiones[] = Region::fromArray($normalized);
         }
-        return array_values($RegionSet->getTot());
+        return $regiones;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

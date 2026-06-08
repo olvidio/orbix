@@ -251,7 +251,9 @@ class ActividadesPorZonasService
         foreach ($cAsistentes as $aAsistente) {
             $id_activRaw = $aAsistente['id_activ'] ?? null;
             $id_activ = is_numeric($id_activRaw) ? (int)$id_activRaw : 0;
-            $propio = is_bool($aAsistente['propio']) ? $aAsistente['propio'] : is_true($aAsistente['propio']);
+            $propio = is_bool($aAsistente['propio'])
+                ? $aAsistente['propio']
+                : (is_true($aAsistente['propio']) ?? false);
             $plazaRaw = $aAsistente['plaza'] ?? null;
             $plaza = is_int($plazaRaw) || is_string($plazaRaw) ? $plazaRaw : null;
             $idCargoRaw = $aAsistente['id_cargo'] ?? null;

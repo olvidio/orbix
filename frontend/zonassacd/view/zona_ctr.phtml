@@ -10,9 +10,11 @@ fnjs_busca_ctrs=function(){
 }
 fnjs_guardar=function(formulario){
     let datos = $(formulario).serialize();
-    $.ajax({ url: '<?= $url_ajax_update ?>', type: 'post', data: datos })
-        .done(function (rta_txt) {
-            if (rta_txt !== '' && rta_txt !== '\n') { alert (<?= json_encode(_("respuesta") . ": ") ?>+rta_txt); }
+    $.ajax({ url: '<?= $url_ajax_update ?>', type: 'post', data: datos, dataType: 'json' })
+        .done(function (json) {
+            if (!json || json.success !== true) {
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + (json ? json.mensaje : ''));
+            }
             fnjs_busca_ctrs();
         });
 }

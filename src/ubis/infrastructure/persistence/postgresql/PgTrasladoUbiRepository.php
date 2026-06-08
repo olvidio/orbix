@@ -16,9 +16,6 @@ class PgTrasladoUbiRepository extends ClaseRepository implements TrasladoUbiRepo
     public function trasladoCdc(int $id_ubi, string $esquema_org, string $esquema_dst): bool
     {
         $db = $this->importConnection('public');
-        if ($db === null) {
-            return false;
-        }
 
         $aInserts = [
             ['tabla' => 'du_gastos_dl', 'campos' => 'id_ubi, f_gasto, tipo, cantidad'],
@@ -39,9 +36,6 @@ class PgTrasladoUbiRepository extends ClaseRepository implements TrasladoUbiRepo
     public function trasladoCtr(int $id_ubi, string $esquema_org, string $esquema_dst): bool
     {
         $db = $this->importConnection('publicv');
-        if ($db === null) {
-            return false;
-        }
 
         $aInserts = [
             ['tabla' => 'd_teleco_ctr_dl', 'campos' => 'id_ubi, tipo_teleco, id_desc_teleco, num_teleco, observ'],
@@ -57,7 +51,7 @@ class PgTrasladoUbiRepository extends ClaseRepository implements TrasladoUbiRepo
         return $this->executeDirecciones($db, $id_ubi, $esquema_org, $esquema_dst, 'v');
     }
 
-    private function importConnection(string $schemaKey): ?PDO
+    private function importConnection(string $schemaKey): PDO
     {
         $oConfigDB = new ConfigDB('importar');
         $config = $oConfigDB->getEsquema($schemaKey);

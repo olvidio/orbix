@@ -15,6 +15,6 @@ final class AppInstalled
         }
         $id_app = $_SESSION['config']['a_apps'][$nomApp];
 
-        return in_array($id_app, $_SESSION['config']['app_installed']);
+        return in_array($id_app, $_SESSION['config']['app_installed'], true);
     }
 }

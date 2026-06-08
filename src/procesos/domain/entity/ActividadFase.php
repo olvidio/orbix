@@ -90,16 +90,14 @@ class ActividadFase
         return 'id_fase';
     }
 
-    /** @return array<string, mixed> */
-
-
+    /** @return list<DatosCampo> */
     public function getDatosCampos(): array
     {
-        $oActividadFaseSet = new Set();
-        $oActividadFaseSet->add($this->getDatosDesc_fase());
-        $oActividadFaseSet->add($this->getDatosSf());
-        $oActividadFaseSet->add($this->getDatosSv());
-        return $oActividadFaseSet->getTot();
+        return [
+            $this->getDatosDesc_fase(),
+            $this->getDatosSf(),
+            $this->getDatosSv(),
+        ];
     }
 
     /**

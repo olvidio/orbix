@@ -259,7 +259,7 @@ final class UbisGuardar
         $oUbi->setNombre_ubi(input_string($input, 'nombre_ubi'));
         $oUbi->setDl(input_string($input, 'dl'));
         $oUbi->setRegion(input_string($input, 'region'));
-        $oUbi->setActive(is_true($active ?? input_string($input, 'active')));
+        $oUbi->setActive(is_true($active ?? input_string($input, 'active')) ?? false);
 
         $svVal = $sv ?? input_string($input, 'sv');
         $sfVal = $sf ?? input_string($input, 'sf');

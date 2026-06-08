@@ -1,4 +1,9 @@
 <?php
+
+use frontend\shared\config\OrbixRuntime;
+
+$iconsBase = (string)($web_icons ?? OrbixRuntime::getWebIcons());
+$a_filas = is_array($a_filas ?? null) ? $a_filas : [];
 ?>
 <table border="1" aria-describedby="relación de dossiers">
     <tr>
@@ -7,14 +12,15 @@
         </th>
     </tr>
     <?php
-    $pencil = $web_icons . '/pencil.png';
-    $eye = $web_icons . '/eye.png';
-    $deny = $web_icons . '/deny.png';
+    $pencil = $iconsBase . '/pencil.png';
+    $eye = $iconsBase . '/eye.png';
+    $deny = $iconsBase . '/deny.png';
     foreach ($a_filas as $fila) {
+        $perm_a = (int)($fila['perm_a'] ?? 0);
         ?>
-        <tr class="<?= $fila['clase'] ?>">
+        <tr class="<?= $fila['clase'] ?? '' ?>">
             <?php
-            switch ($fila['perm_a']) {
+            switch ($perm_a) {
                 case 1: //no tiene permisos
                     ?>
                     <td><img class="dossier" src='<?= $fila['imagen'] ?>' alt="<?= _("dossier sin permisos") ?>"></td>
@@ -26,7 +32,7 @@
                     ?>
                     <td><img class="dossier" src='<?= $fila['imagen'] ?>' alt="<?= _("dossier de sólo lectura") ?>">
                     </td>
-                    <td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');">
+                    <td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?? '' ?>');">
 				<span style="color:green"><?= $fila['descripcion'] ?></span>
 			    <img class="dossier" src='<?= $eye ?>' alt="<?= _("dossier de sólo lectura") ?>">
 			</span></td>
@@ -34,13 +40,17 @@
                 case 3: //lectura y escritura
                     ?>
                     <td><img class="dossier" src='<?= $fila['imagen'] ?>' alt="<?= _("dossier modificable") ?>"></td>
-                    <td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');">
+                    <td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?? '' ?>');">
 				<?= $fila['descripcion'] ?>
 			    <img class="dossier" src='<?= $pencil ?>' alt="<?= _("dossier modificable") ?>">
 			</span></td>
                     <?php break;
                 default:
-                    exit (_("No sé que permiso tiene"));
+                    ?>
+                    <td><img class="dossier" src='<?= $fila['imagen'] ?? '' ?>' alt=""></td>
+                    <td><?= $fila['descripcion'] ?? '' ?></td>
+                    <?php
+                    break;
             }
             ?>
         </tr>

@@ -4,7 +4,6 @@ namespace src\asistentes\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
@@ -55,7 +54,6 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $AsistenteSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -105,11 +103,19 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $asistentes = [];
         foreach ($filas as $aDatos) {
-            $Asistente = Asistente::fromArray($aDatos);
-            $AsistenteSet->add($Asistente);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $asistentes[] = Asistente::fromArray($normalized);
         }
-        return array_values($AsistenteSet->getTot());
+
+        return $asistentes;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -196,8 +202,7 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         }
 
         if ($bInsert && $requiere_id_schema) {
-            $sid = ConfigGlobal::mi_id_schema();
-            $idSchema = is_numeric($sid) ? (int) $sid : (int) filter_var((string) $sid, FILTER_VALIDATE_INT);
+            $idSchema = ConfigGlobal::mi_id_schema();
             if ($idSchema < 1) {
                 throw new \RuntimeException(_('Falta id_schema de sesión (mi_id_schema) para persistir el asistente.'));
             }

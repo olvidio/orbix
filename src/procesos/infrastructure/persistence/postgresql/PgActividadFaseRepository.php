@@ -428,14 +428,19 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<ActividadFase> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $ActividadFase = ActividadFase::fromArray($aDatos);
-            $ActividadFaseSet->add($ActividadFase);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = ActividadFase::fromArray($normalized);
         }
-        return array_values($ActividadFaseSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

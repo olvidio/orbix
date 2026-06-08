@@ -80,16 +80,22 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<Anuncio> $anuncios */
+        $anuncios = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
             $aDatos['t_anotado'] = (new ConverterDate('timestamp', $aDatos['t_anotado'] ?? null))->fromPg();
             $aDatos['t_eliminado'] = (new ConverterDate('timestamp', $aDatos['t_eliminado'] ?? null))->fromPg();
-            $Anuncio = Anuncio::fromArray($aDatos);
-            $AnuncioSet->add($Anuncio);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $anuncios[] = Anuncio::fromArray($normalized);
         }
-        return array_values($AnuncioSet->getTot());
+
+        return $anuncios;
     }
 
     public function Eliminar(Anuncio $Anuncio): bool

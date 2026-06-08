@@ -133,15 +133,6 @@ class TipoTeleco
     /**
 
 
-     * @return array<string, mixed>
-
-
-     */
-
-
-    /**
-
-
 
      * @return array<string, mixed>
 
@@ -355,15 +346,17 @@ class TipoTeleco
 
 
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
-        $oAsignaturaSet = new Set();
-
-        $oAsignaturaSet->add($this->getDatosTipo_teleco());
-        $oAsignaturaSet->add($this->getDatosNombre_teleco());
-        $oAsignaturaSet->add($this->getDatosUbi());
-        $oAsignaturaSet->add($this->getDatosPersona());
-        return $oAsignaturaSet->getTot();
+        return [
+            $this->getDatosTipo_teleco(),
+            $this->getDatosNombre_teleco(),
+            $this->getDatosUbi(),
+            $this->getDatosPersona(),
+        ];
     }
 
     private function getDatosTipo_teleco(): DatosCampo
@@ -374,7 +367,7 @@ class TipoTeleco
         $oDatosCampo->setMetodoSet('setTipo_teleco');
         $oDatosCampo->setEtiqueta(_("tipo teleco"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(10);
+        $oDatosCampo->setArgument('10');
         return $oDatosCampo;
     }
 
@@ -386,7 +379,7 @@ class TipoTeleco
         $oDatosCampo->setMetodoSet('setNombre_teleco');
         $oDatosCampo->setEtiqueta(_("nombre teleco"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(20);
+        $oDatosCampo->setArgument('20');
         return $oDatosCampo;
     }
 

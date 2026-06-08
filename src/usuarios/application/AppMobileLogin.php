@@ -189,16 +189,7 @@ final class AppMobileLogin
         $a_mods = self::getModsPosibles();
         $a_apps = self::getAppsPosibles();
         $a_mods_installed = self::getModsInstalados($oDB_Select);
-        $app_installed = [];
-        foreach ($a_mods_installed as $id_mod => $param) {
-            foreach (self::getAppsMods($id_mod) as $appName) {
-                $app_installed[] = $appName;
-            }
-            foreach (self::getApps($id_mod) as $appName) {
-                $app_installed[] = $appName;
-            }
-        }
-        $app_installed = array_values(array_unique($app_installed));
+        $app_installed = self::buildInstalledAppIds($a_apps, $a_mods_installed);
 
         $query_idioma = sprintf(
             "select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ",
@@ -456,6 +447,47 @@ final class AppMobileLogin
         }
 
         return $apps;
+    }
+
+    /**
+     * @param array<string, int> $a_apps nom → id_app
+     * @param array<int, string> $a_mods_installed
+     * @return list<int>
+     */
+    private static function buildInstalledAppIds(array $a_apps, array $a_mods_installed): array
+    {
+        $app_installed = [];
+        foreach ($a_mods_installed as $id_mod => $param) {
+            foreach (self::getAppsMods($id_mod) as $appRef) {
+                $id = self::resolveInstalledAppId($a_apps, $appRef);
+                if ($id !== null) {
+                    $app_installed[] = $id;
+                }
+            }
+            foreach (self::getApps($id_mod) as $appRef) {
+                $id = self::resolveInstalledAppId($a_apps, $appRef);
+                if ($id !== null) {
+                    $app_installed[] = $id;
+                }
+            }
+        }
+
+        return array_values(array_unique($app_installed));
+    }
+
+    /**
+     * @param array<string, int> $a_apps
+     */
+    private static function resolveInstalledAppId(array $a_apps, string $appRef): ?int
+    {
+        if ($appRef !== '' && ctype_digit($appRef)) {
+            return (int) $appRef;
+        }
+        if (isset($a_apps[$appRef])) {
+            return $a_apps[$appRef];
+        }
+
+        return null;
     }
 
     private static function logPdoError(\PDO $db, string $key): void

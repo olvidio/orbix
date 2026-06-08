@@ -3,12 +3,14 @@
 namespace src\ubis\application;
 
 use src\ubis\application\services\UbiPermisos;
+use src\ubis\application\services\UbiRepositoryResolver;
 use function src\shared\domain\helpers\is_true;
 
 final class DireccionesEditarData
 {
     public function __construct(
         private DireccionesResolver $direccionesResolver,
+        private UbiRepositoryResolver $ubiRepositoryResolver,
     ) {
     }
     /**
@@ -17,12 +19,14 @@ final class DireccionesEditarData
     public function execute(int $id_ubi, string $mod, string $obj_dir, string $id_direccion_csv, int $idx, string $inc): array
     {
         $repoUbi = $this->direccionesResolver->ubiRepo($obj_dir);
-        $oUbi = $repoUbi->findById($id_ubi);
+        $oUbi = $repoUbi->findById($id_ubi)
+            ?? $this->ubiRepositoryResolver->findUbiForPermisos($obj_dir, $id_ubi);
         if ($oUbi === null) {
             $data['sin_direccion'] = true;
             return $data;
         }
         $data = [
+            'dl' => (string)($oUbi->getDl() ?? ''),
             'sin_direccion' => false,
             'msg_sin_direccion' => _("este ubi no dispone de una dirección. Compruebe primero si existe, en este caso, asígnesela. En caso contrario cree una nueva."),
             'idx' => $idx,
@@ -98,7 +102,7 @@ final class DireccionesEditarData
             $data['menos'] = ($idx < 1) ? 0 : 1;
         }
 
-        if (UbiPermisos::puedeModificar($obj_dir, $oUbi)) {
+        if (UbiPermisos::puedeModificarPorObjeto($obj_dir, (string)($oUbi->getDl() ?? ''))) {
             $data['botones'] = '1,4,5';
         }
 

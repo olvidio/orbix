@@ -277,9 +277,6 @@ class ActividadNuevoCurso
             $CentroEncargadoRepository = $this->centroEncargadoRepository;
             $cEncargados = $CentroEncargadoRepository->getCentrosEncargados(array('id_activ' => $oActividadOrigen->getId_activ()));
             foreach ($cEncargados as $oCentroEncargado) {
-                if (!($oCentroEncargado instanceof CentroEncargado)) {
-                    continue;
-                }
                 $newEncargado = clone $oCentroEncargado;
                 $newEncargado->setId_activ($id_actividad_new);
                 if ($CentroEncargadoRepository->Guardar($newEncargado, $this->registrarCambios) === false) {

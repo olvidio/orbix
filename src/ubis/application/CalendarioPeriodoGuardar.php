@@ -30,10 +30,12 @@ final class CalendarioPeriodoGuardar
             $oCasaPeriodo->setId_ubi($idUbi);
         }
         if ($fIni !== '') {
-            $oCasaPeriodo->setF_ini(DateTimeLocal::createFromLocal($fIni));
+            $dtIni = DateTimeLocal::createFromLocal($fIni);
+            $oCasaPeriodo->setF_ini($dtIni instanceof DateTimeLocal ? $dtIni : null);
         }
         if ($fFin !== '') {
-            $oCasaPeriodo->setF_fin(DateTimeLocal::createFromLocal($fFin));
+            $dtFin = DateTimeLocal::createFromLocal($fFin);
+            $oCasaPeriodo->setF_fin($dtFin instanceof DateTimeLocal ? $dtFin : null);
         }
         if ($sfsv > 0) {
             $oCasaPeriodo->setSfsv($sfsv);

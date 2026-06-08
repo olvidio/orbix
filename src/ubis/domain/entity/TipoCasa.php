@@ -83,15 +83,6 @@ class TipoCasa
     /**
 
 
-     * @return array<string, mixed>
-
-
-     */
-
-
-    /**
-
-
 
      * @return array<string, mixed>
 
@@ -305,13 +296,15 @@ class TipoCasa
 
 
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
-        $oTipoDeCasaSet = new Set();
-
-        $oTipoDeCasaSet->add($this->getDatosTipo_casa());
-        $oTipoDeCasaSet->add($this->getDatosNombre_tipo_casa());
-        return $oTipoDeCasaSet->getTot();
+        return [
+            $this->getDatosTipo_casa(),
+            $this->getDatosNombre_tipo_casa(),
+        ];
     }
 
     /**
@@ -328,7 +321,7 @@ class TipoCasa
         $oDatosCampo->setMetodoSet('setTipo_casa');
         $oDatosCampo->setEtiqueta(_("tipo de casa"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(6);
+        $oDatosCampo->setArgument('6');
         return $oDatosCampo;
     }
 
@@ -346,7 +339,7 @@ class TipoCasa
         $oDatosCampo->setMetodoSet('setNombre_tipo_casa');
         $oDatosCampo->setEtiqueta(_("nombre del tipo de casa"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 }

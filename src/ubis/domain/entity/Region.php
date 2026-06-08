@@ -140,15 +140,6 @@ class Region
     /**
 
 
-     * @return array<string, mixed>
-
-
-     */
-
-
-    /**
-
-
 
      * @return array<string, mixed>
 
@@ -362,15 +353,16 @@ class Region
 
 
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
-        $oRegionSet = new Set();
-
-        //$oRegionSet->add($this->getDatosId_region());
-        $oRegionSet->add($this->getDatosRegion());
-        $oRegionSet->add($this->getDatosNombre_region());
-        $oRegionSet->add($this->getDatosStatus());
-        return $oRegionSet->getTot();
+        return [
+            $this->getDatosRegion(),
+            $this->getDatosNombre_region(),
+            $this->getDatosStatus(),
+        ];
     }
 
     /**
@@ -387,7 +379,7 @@ class Region
         $oDatosCampo->setMetodoSet('setRegion');
         $oDatosCampo->setEtiqueta(_("sigla"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(6);
+        $oDatosCampo->setArgument('6');
         return $oDatosCampo;
     }
 
@@ -405,7 +397,7 @@ class Region
         $oDatosCampo->setMetodoSet('setNombre_region');
         $oDatosCampo->setEtiqueta(_("nombre de la región"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 

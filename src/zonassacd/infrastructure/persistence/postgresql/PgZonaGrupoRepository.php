@@ -6,7 +6,6 @@ use PDO;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
 use src\zonassacd\domain\entity\ZonaGrupo;
@@ -59,7 +58,6 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $ZonaGrupoSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -110,14 +108,19 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $zonasGrupo = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $ZonaGrupo = ZonaGrupo::fromArray($aDatos);
-            $ZonaGrupoSet->add($ZonaGrupo);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $zonasGrupo[] = ZonaGrupo::fromArray($normalized);
         }
-        return array_values($ZonaGrupoSet->getTot());
+
+        return $zonasGrupo;
     }
 
     public function Eliminar(ZonaGrupo $ZonaGrupo): bool

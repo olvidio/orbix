@@ -133,14 +133,19 @@ public function getArrayProcesoTipos(): array
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<ProcesoTipo> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $ProcesoTipo = ProcesoTipo::fromArray($aDatos);
-            $ProcesoTipoSet->add($ProcesoTipo);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = ProcesoTipo::fromArray($normalized);
         }
-        return array_values($ProcesoTipoSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

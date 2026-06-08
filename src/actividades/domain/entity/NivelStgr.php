@@ -214,7 +214,7 @@ class NivelStgr
         $oDatosCampo->setMetodoSet('setDesc_nivel'); // legacy para UI
         $oDatosCampo->setEtiqueta(_("descripción nivel"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(25);
+        $oDatosCampo->setArgument('25');
         return $oDatosCampo;
     }
 
@@ -231,7 +231,7 @@ class NivelStgr
         $oDatosCampo->setMetodoSet('setDesc_breve'); // legacy para UI
         $oDatosCampo->setEtiqueta(_("breve"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(2);
+        $oDatosCampo->setArgument('2');
         return $oDatosCampo;
     }
 
@@ -248,7 +248,7 @@ class NivelStgr
         $oDatosCampo->setMetodoSet('setOrden'); // legacy para UI
         $oDatosCampo->setEtiqueta(_("orden"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(3);
+        $oDatosCampo->setArgument('3');
         return $oDatosCampo;
     }
 }

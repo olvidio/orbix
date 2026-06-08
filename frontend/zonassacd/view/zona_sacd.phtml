@@ -68,10 +68,20 @@
         }
     }
     fnjs_guardar = function (formulario, n) {
+        if (! $('#id_zona_new').val()) {
+            alert(<?= json_encode(_("debe seleccionar una zona destino")) ?>);
+            return;
+        }
+        if (! $('#' + $(formulario).attr('id') + ' input.sel:checked').length) {
+            alert(<?= json_encode(_("debe seleccionar algún sacd de la lista")) ?>);
+            return;
+        }
         $('#acumular').val(n);
         let datos = $(formulario).serialize();
-        $.ajax({ url: '<?= $url_ajax_update ?>', type: 'post', data: datos }).done(function (rta_txt) {
-                if (rta_txt !== '' && rta_txt !== '\n') { alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt); }
+        $.ajax({ url: '<?= $url_ajax_update ?>', type: 'post', data: datos, dataType: 'json' }).done(function (json) {
+                if (!json || json.success !== true) {
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + (json ? json.mensaje : ''));
+                }
                 fnjs_busca_sacds();
         });
     }

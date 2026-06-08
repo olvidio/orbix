@@ -176,7 +176,7 @@ final class ActividadSelectListado
         }
 
         $oMiUsuario = ConfigGlobal::MiUsuario();
-        $id_role = $oMiUsuario->getId_role();
+        $id_role = $oMiUsuario?->getId_role() ?? 0;
 
         $RoleRepository = $this->roleRepository;
         $aRolesPau = $RoleRepository->getArrayRolesPau();
@@ -358,14 +358,13 @@ final class ActividadSelectListado
                         $aFasesCompletadas = $ActividadProcesoTareaRepository->getFasesCompletadas($id_activ);
                         if (!empty($Qfases_on)) {
                             foreach ($Qfases_on as $id_fase) {
-                                if (!in_array($id_fase, $aFasesCompletadas, true)) {
+                                if (!in_array((int) $id_fase, $aFasesCompletadas, true)) {
                                     continue 2;
                                 }
                             }
-                        }
-                        if (!empty($Qfases_off)) {
+                        } else {
                             foreach ($Qfases_off as $id_fase) {
-                                if (in_array($id_fase, $aFasesCompletadas, true)) {
+                                if (in_array((int) $id_fase, $aFasesCompletadas, true)) {
                                     continue 2;
                                 }
                             }
@@ -429,7 +428,8 @@ final class ActividadSelectListado
                         || ($oPermSacd->have_perm_activ('ver') === true && $aprobado)) {
                         $ActividadCargoRepository = $this->actividadCargoRepository;
                         foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
-                            $sacds .= $oPersona->getPrefApellidosNombre() . "# ";
+                            $nom = method_exists($oPersona, 'getPrefApellidosNombre') ? $oPersona->getPrefApellidosNombre() : '';
+                            $sacds .= $nom . "# ";
                         }
                         $sacds = substr($sacds, 0, -2);
                     }

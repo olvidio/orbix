@@ -19,4 +19,8 @@ if ($id_nom_orbix > 0) {
     $data = $useCase($region, $tipo_persona);
 }
 
-ContestarJson::enviar('', $data);
+$payload = [];
+foreach ($data as $key => $value) {
+    $payload[(string) $key] = $value;
+}
+ContestarJson::enviar('', $payload);

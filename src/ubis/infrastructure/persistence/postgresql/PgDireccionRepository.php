@@ -149,18 +149,20 @@ public function getArrayPaises(string $sCondicion = ''): array
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $direcciones = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            // para los bytea: (resources)
-            $aDatos['plano_doc'] = $this->normalizeBytea($this->readByteaField($aDatos['plano_doc']));
-            // para las fechas del postgres (texto iso)
-            $aDatos['f_direccion'] = (new ConverterDate('date', $aDatos['f_direccion']))->fromPg();
-            $Direccion = Direccion::fromArray($aDatos);
-            $DireccionSet->add($Direccion);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $normalized['plano_doc'] = $this->normalizeBytea($this->readByteaField($normalized['plano_doc']));
+            $normalized['f_direccion'] = (new ConverterDate('date', $normalized['f_direccion']))->fromPg();
+            $direcciones[] = Direccion::fromArray($normalized);
         }
-        return array_values($DireccionSet->getTot());
+        return $direcciones;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

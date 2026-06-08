@@ -10,7 +10,6 @@ use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 
 /**
@@ -36,7 +35,6 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $UbiGastoSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -84,14 +82,20 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $ubisGastos = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $aDatos['f_gasto'] = (new ConverterDate('date', $aDatos['f_gasto']))->fromPg();
-            $UbiGastoSet->add(UbiGasto::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $normalized['f_gasto'] = (new ConverterDate('date', $normalized['f_gasto']))->fromPg();
+            $ubisGastos[] = UbiGasto::fromArray($normalized);
         }
-        return array_values($UbiGastoSet->getTot());
+
+        return $ubisGastos;
     }
 
     public function getSumaGastos(int $id_ubi, int $tipo, DateTimeLocal $oInicio, DateTimeLocal $oFin): float

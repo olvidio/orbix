@@ -21,7 +21,6 @@ final class TelecoEditarData
     public function execute(string $obj_pau, string $mod, int $id_ubi, int $pkey): array
     {
         $repoTeleco = $this->ubiRepositoryResolver->getTelecoRepository($obj_pau);
-        $repoUbi = $this->ubiRepositoryResolver->getRepository($obj_pau);
         $repoName = $this->ubiRepositoryResolver->getTelecoRepositoryClass($obj_pau);
 
         $desc_teleco = '';
@@ -38,8 +37,9 @@ final class TelecoEditarData
             }
         }
 
-        $oUbi = str_contains($obj_pau, 'Dl') ? $repoUbi->findById($id_ubi) : null;
-        $botones = UbiPermisos::puedeModificar($obj_pau, $oUbi) ? '1,3' : '0';
+        $oUbi = $this->ubiRepositoryResolver->findUbiForPermisos($obj_pau, $id_ubi);
+        $dl = ($oUbi !== null && method_exists($oUbi, 'getDl')) ? (string)($oUbi->getDl() ?? '') : '';
+        $botones = UbiPermisos::puedeModificarPorObjeto($obj_pau, $dl) ? '1,3' : '0';
 
         $a_tipos = $this->tipoTelecoRepository->getArrayTiposTelecoUbi();
         $a_desc = [];
@@ -49,6 +49,7 @@ final class TelecoEditarData
 
         return [
             'obj' => $repoName,
+            'dl' => $dl,
             'botones' => $botones,
             'id_tipo_teleco' => $id_tipo_teleco,
             'id_desc_teleco' => $desc_teleco,

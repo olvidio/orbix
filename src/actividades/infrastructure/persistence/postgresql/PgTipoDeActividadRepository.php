@@ -311,11 +311,19 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
             return [];
         }
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<TipoDeActividad> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
-            $TipoDeActividad = TipoDeActividad::fromArray($aDatos);
-            $TipoDeActividadSet->add($TipoDeActividad);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = TipoDeActividad::fromArray($normalized);
         }
-        return array_values($TipoDeActividadSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

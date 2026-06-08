@@ -182,14 +182,18 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $tiposTeleco = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $TipoTeleco = TipoTeleco::fromArray($aDatos);
-            $TipoTelecoSet->add($TipoTeleco);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $tiposTeleco[] = TipoTeleco::fromArray($normalized);
         }
-        return array_values($TipoTelecoSet->getTot());
+        return $tiposTeleco;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

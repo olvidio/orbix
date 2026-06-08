@@ -142,18 +142,15 @@ class MetaMenu
         return 'id_metamenu';
     }
 
-    /** @return array<string, mixed> */
-
-
+    /** @return list<DatosCampo> */
     public function getDatosCampos(): array
     {
-        $oMetamenuSet = new Set();
-
-        $oMetamenuSet->add($this->getDatosModulo());
-        $oMetamenuSet->add($this->getDatosUrl());
-        $oMetamenuSet->add($this->getDatosParametros());
-        $oMetamenuSet->add($this->getDatosDescripcion());
-        return $oMetamenuSet->getTot();
+        return [
+            $this->getDatosModulo(),
+            $this->getDatosUrl(),
+            $this->getDatosParametros(),
+            $this->getDatosDescripcion(),
+        ];
     }
 
     private function getDatosModulo(): DatosCampo
@@ -178,7 +175,7 @@ class MetaMenu
         $oDatosCampo->setMetodoSet('setUrl');
         $oDatosCampo->setEtiqueta(_("url"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(60);
+        $oDatosCampo->setArgument('60');
         return $oDatosCampo;
     }
 
@@ -190,7 +187,7 @@ class MetaMenu
         $oDatosCampo->setMetodoSet('setParametros');
         $oDatosCampo->setEtiqueta(_("parametros"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 
@@ -202,7 +199,7 @@ class MetaMenu
         $oDatosCampo->setMetodoSet('setDescripcion');
         $oDatosCampo->setEtiqueta(_("descripción"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(50);
+        $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
 

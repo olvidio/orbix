@@ -302,6 +302,9 @@ class ListCtrData
 
         $oDBPropiedades = new DBPropiedades();
         $opciones_loc = $oDBPropiedades->array_posibles_esquemas();
+        if (!is_array($opciones_loc)) {
+            $opciones_loc = [];
+        }
         $opciones_loc['ex'] = _("otras");
 
         if ($Qloc !== 'ex') {

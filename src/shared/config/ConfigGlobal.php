@@ -158,7 +158,7 @@ class ConfigGlobal extends ServerConf
         if (!is_array($aApps) || empty($aApps[$nom_app])) {
             return false;
         }
-        $id_app = $aApps[$nom_app];
+        $id_app = (int) $aApps[$nom_app];
         $appInstalled = $config['app_installed'] ?? null;
         if (!is_array($appInstalled)) {
             return false;

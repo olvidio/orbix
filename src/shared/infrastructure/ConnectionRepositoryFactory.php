@@ -10,8 +10,8 @@ class ConnectionRepositoryFactory implements ConnectionRepositoryFactoryInterfac
 {
     public function createWithConnection(string $repositoryId, PDO $oDbl, ?PDO $oDblSelect = null): object
     {
-        if (!class_exists($repositoryId)) {
-            throw new RuntimeException(sprintf('El repositorio %s no es una clase válida', $repositoryId));
+        if (!class_exists($repositoryId) && !interface_exists($repositoryId)) {
+            throw new RuntimeException(sprintf('El repositorio %s no es una clase o interfaz válida', $repositoryId));
         }
 
         $repository = DependencyResolver::get($repositoryId);

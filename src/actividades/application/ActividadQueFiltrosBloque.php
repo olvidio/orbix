@@ -107,7 +107,7 @@ final class ActividadQueFiltrosBloque
     {
         $oUsuario = ConfigGlobal::MiUsuario();
         $oRole = new Role();
-        $oRole->setId_role($oUsuario->getId_role());
+        $oRole->setId_role($oUsuario?->getId_role() ?? 0);
         return !$oRole->isRolePau('ctr');
     }
 }

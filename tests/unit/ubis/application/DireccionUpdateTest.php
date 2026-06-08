@@ -9,12 +9,16 @@ use src\ubis\application\DireccionUpdate;
 use src\ubis\application\DireccionesResolver;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 
 final class DireccionUpdateTest extends TestCase
 {
@@ -24,12 +28,16 @@ final class DireccionUpdateTest extends TestCase
     {
         parent::setUp();
         $resolver = new DireccionesResolver(
+            $this->createMock(DireccionCentroRepositoryInterface::class),
             $this->createMock(DireccionCentroDlRepositoryInterface::class),
             $this->createMock(DireccionCentroExRepositoryInterface::class),
+            $this->createMock(DireccionCasaRepositoryInterface::class),
             $this->createMock(DireccionCasaDlRepositoryInterface::class),
             $this->createMock(DireccionCasaExRepositoryInterface::class),
+            $this->createMock(CentroRepositoryInterface::class),
             $this->createMock(CentroDlRepositoryInterface::class),
             $this->createMock(CentroExRepositoryInterface::class),
+            $this->createMock(CasaRepositoryInterface::class),
             $this->createMock(CasaDlRepositoryInterface::class),
             $this->createMock(CasaExRepositoryInterface::class),
         );

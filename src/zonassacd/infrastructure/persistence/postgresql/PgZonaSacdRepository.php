@@ -6,7 +6,6 @@ use PDO;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\zonassacd\domain\entity\ZonaSacd;
@@ -59,7 +58,6 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $ZonaSacdSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -110,14 +108,19 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $zonasSacds = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $ZonaSacd = ZonaSacd::fromArray($aDatos);
-            $ZonaSacdSet->add($ZonaSacd);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $zonasSacds[] = ZonaSacd::fromArray($normalized);
         }
-        return array_values($ZonaSacdSet->getTot());
+
+        return $zonasSacds;
     }
 
     public function Eliminar(ZonaSacd $ZonaSacd): bool

@@ -6,7 +6,6 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
@@ -99,7 +98,6 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $DbSchemaSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -149,11 +147,19 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $dbSchemas = [];
         foreach ($filas as $aDatos) {
-            $DbSchema = DbSchema::fromArray($aDatos);
-            $DbSchemaSet->add($DbSchema);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $dbSchemas[] = DbSchema::fromArray($normalized);
         }
-        return array_values($DbSchemaSet->getTot());
+
+        return $dbSchemas;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -305,9 +311,6 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf(_('Base de datos no soportada: %s'), $database));
-        }
-        if ($oDB === null) {
-            throw new \RuntimeException(sprintf(_('No se pudo conectar a la base de datos: %s'), $database));
         }
         return $oDB;
     }

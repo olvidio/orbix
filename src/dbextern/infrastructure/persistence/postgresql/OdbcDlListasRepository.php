@@ -75,12 +75,20 @@ class OdbcDlListasRepository extends ClaseRepository
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<DlListas> $dlListas */
+        $dlListas = [];
         foreach ($filas as $aDatos) {
-            $DlListas = DlListas::fromArray($aDatos);
-            $DlListaSet->add($DlListas);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $dlListas[] = DlListas::fromArray($normalized);
         }
 
-        return array_values($DlListaSet->getTot());
+        return $dlListas;
     }
 
     public function Eliminar(DlListas $DlListas): bool

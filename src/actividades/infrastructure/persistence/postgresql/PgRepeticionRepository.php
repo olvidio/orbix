@@ -121,11 +121,19 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
             return [];
         }
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<Repeticion> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
-            $Repeticion = Repeticion::fromArray($aDatos);
-            $RepeticionSet->add($Repeticion);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = Repeticion::fromArray($normalized);
         }
-        return array_values($RepeticionSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -224,7 +224,9 @@ body.layout-pills .slick-cell {
     font-size: 0.8125rem;
 }
 
-body.layout-pills #top > table {
+body.layout-pills #top > table,
+body.layout-pills #ficha > table,
+body.layout-pills #ficha_otra > table {
     width: 100%;
     box-sizing: border-box;
 }

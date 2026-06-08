@@ -81,9 +81,9 @@ final class ActividadCambiarTipo
         $oActividad->setId_ubi($Qid_ubi);
         $oActividad->setDesc_activ($Qdesc_activ);
         $oF_ini = $Qf_ini === '' ? null : DateTimeLocal::createFromLocal($Qf_ini);
-        $oActividad->setF_ini($oF_ini);
+        $oActividad->setF_ini($oF_ini instanceof DateTimeLocal ? $oF_ini : null);
         $oF_fin = $Qf_fin === '' ? null : DateTimeLocal::createFromLocal($Qf_fin);
-        $oActividad->setF_fin($oF_fin);
+        $oActividad->setF_fin($oF_fin instanceof DateTimeLocal ? $oF_fin : null);
         $oActividad->setPrecioVo(Dinero::fromInput($input['precio'] ?? null));
         $oActividad->setNum_asistentes($Qnum_asistentes);
         $oActividad->setStatus($Qstatus);

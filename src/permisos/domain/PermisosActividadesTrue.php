@@ -139,7 +139,17 @@ class PermisosActividadesTrue
 
     public function setPropia(bool|string $bpropia): void
     {
-        $this->bpropia = is_true($bpropia);
+        $this->bpropia = is_true($bpropia) ?? false;
+    }
+
+    /**
+     * Compatibilidad con {@see PermisosActividades::setFasesCompletadas}.
+     * Sin módulo procesos los permisos son siempre totales; no se usan las fases.
+     *
+     * @param list<int> $aFases
+     */
+    public function setFasesCompletadas(array $aFases = []): void
+    {
     }
 
     /**

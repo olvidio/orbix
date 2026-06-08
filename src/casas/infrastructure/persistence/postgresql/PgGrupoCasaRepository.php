@@ -8,7 +8,6 @@ use src\casas\domain\entity\GrupoCasa;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 
 /**
@@ -34,7 +33,6 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $GrupoCasaSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -82,13 +80,19 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $grupoCasas = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $GrupoCasaSet->add(GrupoCasa::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $grupoCasas[] = GrupoCasa::fromArray($normalized);
         }
-        return array_values($GrupoCasaSet->getTot());
+
+        return $grupoCasas;
     }
 
     public function Eliminar(GrupoCasa $GrupoCasa): bool

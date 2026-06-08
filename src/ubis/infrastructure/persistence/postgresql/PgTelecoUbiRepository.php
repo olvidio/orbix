@@ -88,14 +88,18 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $telecos = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $TelecoCdc = TelecoUbi::fromArray($aDatos);
-            $TelecoCdcSet->add($TelecoCdc);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $telecos[] = TelecoUbi::fromArray($normalized);
         }
-        return array_values($TelecoCdcSet->getTot());
+        return $telecos;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

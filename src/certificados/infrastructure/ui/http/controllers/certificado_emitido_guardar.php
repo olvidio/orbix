@@ -62,9 +62,9 @@ $oCertificadoEmitido->setNom($Qnom);
 $oCertificadoEmitido->setIdiomaVo(LocaleCode::fromNullableString($Qidioma));
 $oCertificadoEmitido->setDestino($Qdestino);
 $oCertificadoEmitido->setCertificado($Qcertificado);
-$oCertificadoEmitido->setFirmado(is_true($Qfirmado));
+$oCertificadoEmitido->setFirmado(is_true($Qfirmado) ?? false);
 $oCertificadoEmitido->setEsquema_emisor(ConfigGlobal::mi_region_dl());
-$oCertificadoEmitido->setF_certificado($oF_certificado);
+$oCertificadoEmitido->setF_certificado($oF_certificado instanceof DateTimeLocal ? $oF_certificado : null);
 if ($oF_enviado instanceof DateTimeLocal) {
     $oCertificadoEmitido->setF_enviado($oF_enviado);
 }

@@ -71,6 +71,8 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<CertificadoRecibido> $certificados */
+        $certificados = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
@@ -85,10 +87,14 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
             }
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado'] ?? null))->fromPg();
             $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido'] ?? null))->fromPg();
-            $CertificadoSet->add(CertificadoRecibido::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $certificados[] = CertificadoRecibido::fromArray($normalized);
         }
 
-        return array_values($CertificadoSet->getTot());
+        return $certificados;
     }
 
     public function Eliminar(CertificadoRecibido $Certificado): bool

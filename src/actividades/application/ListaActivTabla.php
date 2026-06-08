@@ -306,7 +306,8 @@ class ListaActivTabla
             if ($ver_sacd === 1) {
                 $sacds = '';
                 foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
-                    $sacds .= $oPersona->getPrefApellidosNombre() . '# '; // la coma es separador de apellidos, nombre.
+                    $nom = method_exists($oPersona, 'getPrefApellidosNombre') ? $oPersona->getPrefApellidosNombre() : '';
+                    $sacds .= $nom . '# '; // la coma es separador de apellidos, nombre.
                 }
                 $sacds = substr($sacds, 0, -2);
                 $a_valores[$i][13] = $sacds;

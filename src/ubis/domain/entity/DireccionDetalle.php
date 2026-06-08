@@ -9,7 +9,7 @@ class DireccionDetalle
     private ?bool $propietario = null;
 
     /**
-     * @param array{direccion?: Direccion, principal?: bool, propietario?: bool}|null $data
+     * @param array{direccion?: Direccion, principal?: bool|null, propietario?: bool|null}|null $data
      */
     public function __construct(?array $data = null)
     {

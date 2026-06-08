@@ -9,7 +9,7 @@ use frontend\shared\config\OrbixRuntime;
     <div style="margin: 0;"><?= $aviso ?></div>
 </div>
 <?php endif; ?>
-<div id="top" name="top">
+<div id="top">
     <table>
         <tr>
             <td class="esquerra" nowrap></td>
@@ -49,5 +49,5 @@ use frontend\shared\config\OrbixRuntime;
     </table>
 </div>
 <div id="ficha_otra" style="margin-top: 1em">
-    <?php include("frontend/dossiers/controller/lista_dossiers.php"); ?>
+    <?= $lista_dossiers_html ?? '' ?>
 </div>

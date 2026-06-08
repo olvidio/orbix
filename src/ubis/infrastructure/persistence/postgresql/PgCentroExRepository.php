@@ -129,16 +129,20 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
             return [];
         }
 
+        $centrosEx = [];
         foreach ($stmt as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
             // para las fechas del postgres (texto iso)
-            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
-            $CentroEx = CentroEx::fromArray($aDatos);
-            $CentroExSet->add($CentroEx);
+            $normalized['f_active'] = (new ConverterDate('date', $normalized['f_active']))->fromPg();
+            $centrosEx[] = CentroEx::fromArray($normalized);
         }
-        return array_values($CentroExSet->getTot());
+        return $centrosEx;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

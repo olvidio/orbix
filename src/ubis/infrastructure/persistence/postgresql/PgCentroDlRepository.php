@@ -130,16 +130,19 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $centrosDl = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            // para las fechas del postgres (texto iso)
-            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
-            $CentroDl = CentroDl::fromArray($aDatos);
-            $CentroDlSet->add($CentroDl);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $normalized['f_active'] = (new ConverterDate('date', $normalized['f_active']))->fromPg();
+            $centrosDl[] = CentroDl::fromArray($normalized);
         }
-        return array_values($CentroDlSet->getTot());
+        return $centrosDl;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

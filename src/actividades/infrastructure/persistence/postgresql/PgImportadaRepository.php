@@ -98,11 +98,19 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
             return [];
         }
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<Importada> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
-            $Importada = Importada::fromArray($aDatos);
-            $ImportadaSet->add($Importada);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = Importada::fromArray($normalized);
         }
-        return array_values($ImportadaSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

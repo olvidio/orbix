@@ -62,7 +62,7 @@ $oCertificadoRecibido->setDestino($Qdestino);
 $oCertificadoRecibido->setCertificado($Qcertificado);
 $oCertificadoRecibido->setFirmado(is_true($Qfirmado));
 $oCertificadoRecibido->setEsquema_emisor(ConfigGlobal::mi_region_dl());
-$oCertificadoRecibido->setF_certificado($oF_certificado);
+$oCertificadoRecibido->setF_certificado($oF_certificado instanceof DateTimeLocal ? $oF_certificado : null);
 if ($oF_recibido instanceof DateTimeLocal) {
     $oCertificadoRecibido->setF_recibido($oF_recibido);
 }

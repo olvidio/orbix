@@ -110,10 +110,10 @@ final class AsistenteGuardar
         $oAsistente->setEncargo(input_string($input, 'encargo'));
         $oAsistente->setObserv(input_string($input, 'observ'));
         $oAsistente->setObservEstVo(input_string($input, 'observ_est'));
-        $oAsistente->setPropio(is_true(input_string($input, 'propio')));
-        $oAsistente->setEst_ok(is_true(input_string($input, 'est_ok')));
-        $oAsistente->setCfi(is_true(input_string($input, 'cfi')));
-        $oAsistente->setFalta(is_true(input_string($input, 'falta')));
+        $oAsistente->setPropio(is_true(input_string($input, 'propio')) ?? false);
+        $oAsistente->setEst_ok(is_true(input_string($input, 'est_ok')) ?? false);
+        $oAsistente->setCfi(is_true(input_string($input, 'cfi')) ?? false);
+        $oAsistente->setFalta(is_true(input_string($input, 'falta')) ?? false);
         $oAsistente->setCfi_con(input_int($input, 'cfi_con'));
 
         if ($mod === 'mover') {

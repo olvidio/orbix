@@ -44,9 +44,9 @@ if ($tmpFilePath === '') {
                 (string) $contenido_doc,
                 input_string($_POST, 'idioma'),
                 input_string($_POST, 'certificado'),
-                is_true(input_string($_POST, 'firmado')),
-                $oF_certificado,
-                $oF_recibido,
+                is_true(input_string($_POST, 'firmado')) ?? false,
+                $oF_certificado instanceof DateTimeLocal ? $oF_certificado : null,
+                $oF_recibido instanceof DateTimeLocal ? $oF_recibido : null,
                 input_string($_POST, 'destino') ?: null,
             );
             if (!is_object($oCertificadoRecibido)) {

@@ -59,7 +59,7 @@ class Select_cargos_personas_en_actividad
 
     private int $permiso = 0;
 
-    private int $modo_curso = 0;
+    private int $modo_curso = 1;
 
     /** @var int|string|null */
     private $Qid_sel;
@@ -252,7 +252,11 @@ class Select_cargos_personas_en_actividad
     public function setObj_pau(string|int|float|bool|null $obj_pau = null): void { $this->obj_pau = $obj_pau === null ? '' : (string) $obj_pau; }
     public function setId_pau(string|int|float|bool|null $id_pau = null): void { $this->id_pau = (int) ($id_pau ?? 0); }
     public function setPermiso(string|int|float|bool|null $permiso = null): void { $this->permiso = (int) ($permiso ?? 0); }
-    public function setModo_curso(string|int|float|bool|null $modo_curso = null): void { $this->modo_curso = (int) ($modo_curso ?? 0); }
+    public function setModo_curso(string|int|float|bool|null $modo_curso = null): void
+    {
+        $modo = (int) ($modo_curso ?? 0);
+        $this->modo_curso = $modo === 0 ? 1 : $modo;
+    }
     public function setQid_sel(int|string|null $Qid_sel): void { $this->Qid_sel = $Qid_sel; }
     public function setQscroll_id(int|string|null $Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
     public function setBloque(string|int|float|bool|null $bloque = null): void { $this->bloque = $bloque === null ? '' : (string) $bloque; }

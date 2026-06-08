@@ -21,11 +21,12 @@ final class TelecoTablaData
     public function execute(string $obj_pau, int $id_ubi): array
     {
         $repoTeleco = $this->ubiRepositoryResolver->getTelecoRepository($obj_pau);
-        $repoUbi = $this->ubiRepositoryResolver->getRepository($obj_pau);
 
         /** @var list<TelecoUbi> $coleccion */
         $coleccion = $repoTeleco->getTelecos(['id_ubi' => $id_ubi]) ?: [];
-        $botones = $this->getPermisosBotones($obj_pau, $id_ubi, $repoUbi);
+        $oUbi = $this->ubiRepositoryResolver->findUbiForPermisos($obj_pau, $id_ubi);
+        $dl = ($oUbi !== null && method_exists($oUbi, 'getDl')) ? (string)($oUbi->getDl() ?? '') : '';
+        $botones = UbiPermisos::puedeModificarPorObjeto($obj_pau, $dl) ? '1' : '0';
 
         $a_cabeceras = [];
         $a_valores = [];
@@ -37,11 +38,8 @@ final class TelecoTablaData
             $pks = urlsafe_b64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
             $a_valores[$c]['sel'] = $pks;
             foreach ($oFila->getDatosCampos() as $oDatosCampo) {
-                if (!$oDatosCampo instanceof DatosCampo) {
-                    continue;
-                }
                 if ($c === 0) {
-                    $a_cabeceras[] = ucfirst($oDatosCampo->getEtiqueta());
+                    $a_cabeceras[] = ucfirst($oDatosCampo->getEtiqueta() ?? '');
                 }
                 $v++;
                 $metodoRaw = $oDatosCampo->getMetodoGet();
@@ -62,16 +60,18 @@ final class TelecoTablaData
                         break;
                     case 'array':
                         $lista = $oDatosCampo->getLista();
-                        $a_valores[$c][$v] = $lista[$valor_camp];
+                        $a_valores[$c][$v] = (is_array($lista) && array_key_exists($valor_camp, $lista))
+                            ? $lista[$valor_camp]
+                            : '';
                         break;
                     case 'depende':
                     case 'opciones':
                         $oRelacionado = null;
-                        if ($var_1 !== '' && class_exists($var_1)) {
+                        if (is_string($var_1) && $var_1 !== '' && class_exists($var_1)) {
                             $repoRelacionado = $this->ubiRepositoryResolver->getDireccionRepositoryByInterface($var_1);
                             $oRelacionado = $repoRelacionado->findById((int) $valor_camp);
                         }
-                        if (substr($var_2, -2) === 'Vo') {
+                        if (is_string($var_2) && substr($var_2, -2) === 'Vo') {
                             $a_valores[$c][$v] = $oRelacionado?->$var_2()?->value() ?: $valor_camp;
                         } else {
                             $a_valores[$c][$v] = $oRelacionado?->$var_2() ?: $valor_camp;
@@ -89,6 +89,7 @@ final class TelecoTablaData
 
         return [
             'botones' => $botones,
+            'dl' => $dl,
             'tit_txt' => _("telecomunicaciones de un centro o casa"),
             'ficha' => 'ficha',
             'a_cabeceras' => $a_cabeceras,
@@ -100,12 +101,4 @@ final class TelecoTablaData
         ];
     }
 
-    private function getPermisosBotones(string $obj_pau, int $id_ubi, object $repoUbi): string
-    {
-        $oUbi = null;
-        if (str_contains($obj_pau, 'Dl') && method_exists($repoUbi, 'findById')) {
-            $oUbi = $repoUbi->findById($id_ubi);
-        }
-        return UbiPermisos::puedeModificar($obj_pau, $oUbi) ? '1' : '0';
-    }
 }

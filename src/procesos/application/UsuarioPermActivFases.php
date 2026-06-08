@@ -27,7 +27,7 @@ class UsuarioPermActivFases
         $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
         $Qdl_propia = input_string($input, 'dl_propia');
 
-        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, is_true($Qdl_propia));
+        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, is_true($Qdl_propia) ?? false);
         $aOpciones = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
 
         return ['opciones' => $aOpciones];

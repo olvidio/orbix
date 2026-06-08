@@ -449,17 +449,24 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<ActividadAll> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para las fechas del postgres (texto iso)
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['h_ini'] = (new ConverterDate('time', $aDatos['h_ini']))->fromPg();
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
             $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
-            // Usa el método fromArray() del trait Hydratable
-            $ActividadAll = ActividadAll::fromArray($aDatos);
-            $ActividadAllSet->add($ActividadAll);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = ActividadAll::fromArray($normalized);
         }
-        return array_values($ActividadAllSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

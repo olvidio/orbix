@@ -70,7 +70,8 @@ final class DireccionUpdate
         $Qlatitud = input_string($input, 'latitud');
         $Qlongitud = input_string($input, 'longitud');
 
-        $oF_direccion = $Qf_direccion === '' ? null : DateTimeLocal::createFromLocal($Qf_direccion);
+        $rawF_direccion = $Qf_direccion === '' ? null : DateTimeLocal::createFromLocal($Qf_direccion);
+        $oF_direccion = $rawF_direccion instanceof DateTimeLocal ? $rawF_direccion : null;
         $cp_dcha = is_true(input_string($input, 'cp_dcha'));
         $propietario = is_true(input_string($input, 'propietario'));
         $principal = is_true(input_string($input, 'principal'));
@@ -91,9 +92,9 @@ final class DireccionUpdate
         $DireccionRepository->Guardar($oDireccion);
 
         if ($Qidx === 'nuevo') {
-            $oUbi->addDireccion($id_direccion, $principal, $propietario);
+            $oUbi->addDireccion($id_direccion, $principal ?? false, $propietario ?? false);
         }
-        $oUbi->cambiarEstadoPropietario($id_direccion, $propietario);
+        $oUbi->cambiarEstadoPropietario($id_direccion, $propietario ?? false);
         if ($principal) {
             $oUbi->establecerDireccionPrincipal($id_direccion);
         }

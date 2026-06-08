@@ -102,15 +102,13 @@ class ActividadTarea
         return 'id_tarea';
     }
 
-    /** @return array<string, mixed> */
-
-
+    /** @return list<DatosCampo> */
     public function getDatosCampos(): array
     {
-        $oActividadFaseSet = new Set();
-        $oActividadFaseSet->add($this->getDatosId_fase());
-        $oActividadFaseSet->add($this->getDatosDesc_tarea());
-        return $oActividadFaseSet->getTot();
+        return [
+            $this->getDatosId_fase(),
+            $this->getDatosDesc_tarea(),
+        ];
     }
 
 

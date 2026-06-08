@@ -4,7 +4,6 @@ namespace src\actividadcargos\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\Cargo;
@@ -96,7 +95,6 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $CargoSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -141,14 +139,19 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $cargos = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Cargo = Cargo::fromArray($aDatos);
-            $CargoSet->add($Cargo);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $cargos[] = Cargo::fromArray($normalized);
         }
-        return array_values($CargoSet->getTot());
+
+        return $cargos;
     }
 
     public function Eliminar(Cargo $Cargo): bool

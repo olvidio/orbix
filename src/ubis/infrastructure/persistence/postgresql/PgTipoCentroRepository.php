@@ -50,10 +50,10 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
 
         $aOpciones = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            if (!is_array($row) || !isset($row['id'], $row['nombre_teleco'])) {
+            if (!is_array($row) || !isset($row['tipo_ctr'], $row['nombre_tipo_ctr'])) {
                 continue;
             }
-            $aOpciones[(string) $row['id']] = (string) $row['nombre_teleco'];
+            $aOpciones[(string) $row['tipo_ctr']] = (string) $row['nombre_tipo_ctr'];
         }
         return $aOpciones;
     }
@@ -122,14 +122,18 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $tiposCentro = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $TipoCentro = TipoCentro::fromArray($aDatos);
-            $TipoCentroSet->add($TipoCentro);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $tiposCentro[] = TipoCentro::fromArray($normalized);
         }
-        return array_values($TipoCentroSet->getTot());
+        return $tiposCentro;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

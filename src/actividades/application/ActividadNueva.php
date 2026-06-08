@@ -65,6 +65,9 @@ class ActividadNueva
             $Qpublicado = true;
             $oDBPropiedades = new DBPropiedades();
             $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE, TRUE);
+            if (!is_array($a_posibles_esquemas)) {
+                $a_posibles_esquemas = [];
+            }
             $is_dl_in_orbix = FALSE;
             foreach ($a_posibles_esquemas as $esquema) {
                 $row = explode('-', $esquema);
@@ -132,8 +135,10 @@ class ActividadNueva
             $oActividad->setLugar_esp($Qlugar_esp);
         }
         $oActividad->setDesc_activ($Qdesc_activ);
-        $oActividad->setF_ini(DateTimeLocal::createFromLocal($Qf_ini));
-        $oActividad->setF_fin(DateTimeLocal::createFromLocal($Qf_fin));
+        $oF_ini = DateTimeLocal::createFromLocal($Qf_ini);
+        $oActividad->setF_ini($oF_ini instanceof DateTimeLocal ? $oF_ini : null);
+        $oF_fin = DateTimeLocal::createFromLocal($Qf_fin);
+        $oActividad->setF_fin($oF_fin instanceof DateTimeLocal ? $oF_fin : null);
         $oActividad->setPrecioVo(Dinero::fromInput($Qprecio));
         $oActividad->setNum_asistentes($Qnum_asistentes);
         $oActividad->setStatus($Qstatus);

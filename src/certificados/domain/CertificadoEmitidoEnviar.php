@@ -79,6 +79,9 @@ class CertificadoEmitidoEnviar
 
         $oDBPropiedades = new DBPropiedades();
         $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(true, true);
+        if (!is_array($a_posibles_esquemas)) {
+            $a_posibles_esquemas = [];
+        }
         $is_dl_in_orbix = false;
         foreach ($a_posibles_esquemas as $esquema) {
             $row = explode('-', (string) $esquema);

@@ -14,6 +14,10 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     if (!empty($_COOKIE["PHPSESSID"])) {
         session_id($_COOKIE['PHPSESSID']);
         session_start();
+        if (!isset($_SESSION['session_auth'])) {
+            $_SESSION = [];
+            session_regenerate_id(true);
+        }
     } else {
         // Configure timeout to 30 minutes
         $timeout = 1800;

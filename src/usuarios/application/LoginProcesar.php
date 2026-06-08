@@ -152,16 +152,7 @@ final class LoginProcesar
         $a_apps = $this->getAppsPosibles();
         $a_mods_installed = $this->getModsInstalados($oDB_Select);
 
-        $app_installed = [];
-        foreach ($a_mods_installed as $id_mod => $param) {
-            foreach ($this->getAppsMods($id_mod) as $appName) {
-                $app_installed[] = $appName;
-            }
-            foreach ($this->getApps($id_mod) as $appName) {
-                $app_installed[] = $appName;
-            }
-        }
-        $app_installed = array_values(array_unique($app_installed));
+        $app_installed = $this->buildInstalledAppIds($a_apps, $a_mods_installed);
 
         $perms_activ = '';
         $mi_oficina = '';
@@ -410,6 +401,49 @@ final class LoginProcesar
         }
 
         return $apps;
+    }
+
+    /**
+     * @param array<string, int> $a_apps nom → id_app
+     * @param array<int, string> $a_mods_installed
+     * @return list<int>
+     */
+    private function buildInstalledAppIds(array $a_apps, array $a_mods_installed): array
+    {
+        $app_installed = [];
+        foreach ($a_mods_installed as $id_mod => $param) {
+            foreach ($this->getAppsMods($id_mod) as $appRef) {
+                $id = $this->resolveInstalledAppId($a_apps, $appRef);
+                if ($id !== null) {
+                    $app_installed[] = $id;
+                }
+            }
+            foreach ($this->getApps($id_mod) as $appRef) {
+                $id = $this->resolveInstalledAppId($a_apps, $appRef);
+                if ($id !== null) {
+                    $app_installed[] = $id;
+                }
+            }
+        }
+
+        return array_values(array_unique($app_installed));
+    }
+
+    /**
+     * m0_modulos.apps_req guarda id_app (enteros), no nombres lógicos.
+     *
+     * @param array<string, int> $a_apps
+     */
+    private function resolveInstalledAppId(array $a_apps, string $appRef): ?int
+    {
+        if ($appRef !== '' && ctype_digit($appRef)) {
+            return (int) $appRef;
+        }
+        if (isset($a_apps[$appRef])) {
+            return $a_apps[$appRef];
+        }
+
+        return null;
     }
 
     private function logPdoError(\PDO $db, string $key): void

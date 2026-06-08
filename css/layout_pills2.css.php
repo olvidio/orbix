@@ -11,7 +11,7 @@
     --pills2-bar-bg: color-mix(in srgb, <?= $GLOBALS['muy_oscuro1'] ?> 92%, white);
     --pills2-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
     --pills2-radius: 10px;
-    --pills2-chrome-offset: 120px;
+    --pills2-chrome-offset: 108px;
     --pills2-dropdown-min-width: 320px;
     --pills2-dropdown-max-width: min(92vw, 520px);
 }
@@ -48,7 +48,7 @@ body.layout-pills2.otro {
     flex-direction: column;
     background: var(--pills2-surface);
     border-bottom: 1px solid var(--pills2-border);
-    box-shadow: var(--pills2-shadow);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.07);
 }
 
 /* --- App bar --- */
@@ -407,10 +407,12 @@ body.layout-pills2.otro {
 
 /* --- Breadcrumb --- */
 .pills2-contextbar {
-    padding: 7px 14px;
+    padding: 1px 14px 2px;
     background: color-mix(in srgb, var(--pills2-surface) 70%, var(--pills2-canvas));
     border-top: 1px solid var(--pills2-border);
-    font-size: 0.8125rem;
+    font-family: "Courier New", Courier, "Liberation Mono", monospace;
+    font-size: 0.72rem;
+    line-height: 1.2;
 }
 
 @supports not (color: color-mix(in srgb, black 50%, white)) {
@@ -423,11 +425,13 @@ body.layout-pills2.otro {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     margin: 0;
     padding: 0;
     list-style: none;
     color: var(--pills2-muted);
+    font-family: inherit;
+    letter-spacing: 0.01em;
 }
 
 .pills2-breadcrumb__segment {
@@ -449,13 +453,14 @@ body.layout-pills2 #contenido_sin_menus {
     position: relative;
     margin-left: 0 !important;
     margin-top: var(--pills2-chrome-offset);
-    padding-top: 6px;
+    padding: 0 5px 5px;
+    height: calc(100vh - var(--pills2-chrome-offset));
     background: var(--pills2-canvas);
 }
 
 @media (max-width: 768px) {
     :root {
-        --pills2-chrome-offset: 104px;
+        --pills2-chrome-offset: 96px;
     }
 
     .pills2-appbar__user-meta {
@@ -475,7 +480,7 @@ body.layout-pills2 #contenido_sin_menus {
 
 @media (max-width: 480px) {
     :root {
-        --pills2-chrome-offset: 96px;
+        --pills2-chrome-offset: 88px;
     }
 }
 </style>

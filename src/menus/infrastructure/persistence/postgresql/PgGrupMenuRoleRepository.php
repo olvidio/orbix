@@ -97,14 +97,19 @@ class PgGrupMenuRoleRepository extends ClaseRepository implements GrupMenuRoleRe
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<GrupMenuRole> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $GrupMenuRole = GrupMenuRole::fromArray($aDatos);
-            $GrupMenuRoleSet->add($GrupMenuRole);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = GrupMenuRole::fromArray($normalized);
         }
-        return array_values($GrupMenuRoleSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

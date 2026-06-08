@@ -123,16 +123,19 @@ public function getArrayCasas(string $sCondicion = ''): array
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $casas = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            // para las fechas del postgres (texto iso)
-            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
-            $Casa = Casa::fromArray($aDatos);
-            $CasaSet->add($Casa);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $normalized['f_active'] = (new ConverterDate('date', $normalized['f_active']))->fromPg();
+            $casas[] = Casa::fromArray($normalized);
         }
-        return array_values($CasaSet->getTot());
+        return $casas;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

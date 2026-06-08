@@ -101,6 +101,8 @@ class PgMenuDbRepository extends ClaseRepository implements MenuDbRepositoryInte
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<MenuDb> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
@@ -109,10 +111,13 @@ class PgMenuDbRepository extends ClaseRepository implements MenuDbRepositoryInte
             if (isset($aDatos['orden']) && is_string($aDatos['orden'])) {
                 $aDatos['orden'] = array_pgInteger2php($aDatos['orden']);
             }
-            $MenuDb = MenuDb::fromArray($aDatos);
-            $MenuDbSet->add($MenuDb);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = MenuDb::fromArray($normalized);
         }
-        return array_values($MenuDbSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

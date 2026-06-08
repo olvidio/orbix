@@ -3,7 +3,6 @@
 namespace src\actividadcargos\domain\entity;
 
 use src\shared\domain\DatosCampo;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use src\actividadcargos\domain\value_objects\{CargoCode, OrdenCargo, TipoCargoCode};
 use src\shared\domain\traits\Hydratable;
 
@@ -185,14 +184,13 @@ class Cargo
      */
     public function getDatosCampos(): array
     {
-        $oCargoSet = new Set();
-
-        $oCargoSet->add($this->getDatosCargo());
-        $oCargoSet->add($this->getDatosOrden_cargo());
-        $oCargoSet->add($this->getDatosSf());
-        $oCargoSet->add($this->getDatosSv());
-        $oCargoSet->add($this->getDatosTipo_cargo());
-        return array_values($oCargoSet->getTot());
+        return [
+            $this->getDatosCargo(),
+            $this->getDatosOrden_cargo(),
+            $this->getDatosSf(),
+            $this->getDatosSv(),
+            $this->getDatosTipo_cargo(),
+        ];
     }
 
     /**
@@ -208,7 +206,7 @@ class Cargo
         $oDatosCampo->setMetodoSet('setCargo');
         $oDatosCampo->setEtiqueta(_("cargo"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(8);
+        $oDatosCampo->setArgument('8');
         return $oDatosCampo;
     }
 
@@ -225,7 +223,7 @@ class Cargo
         $oDatosCampo->setMetodoSet('setOrden_cargo');
         $oDatosCampo->setEtiqueta(_("orden cargo"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(2);
+        $oDatosCampo->setArgument('2');
         return $oDatosCampo;
     }
 
@@ -274,7 +272,7 @@ class Cargo
         $oDatosCampo->setMetodoSet('setTipo_Cargo');
         $oDatosCampo->setEtiqueta(_("tipo de cargo"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(8);
+        $oDatosCampo->setArgument('8');
         return $oDatosCampo;
     }
 }

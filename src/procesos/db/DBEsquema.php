@@ -610,6 +610,9 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos para importar tipos de actividad.'));
+        }
         $oDbl->pgsqlCopyFromFile($tabla_tmp, $filename, $delimiter, $null_as, $fields);
 
         $a_sql = [];
@@ -648,6 +651,9 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos para importar tipos de proceso.'));
+        }
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
@@ -684,6 +690,9 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos para importar tareas.'));
+        }
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         // Fix sequences
@@ -720,6 +729,9 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos para importar fases.'));
+        }
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         // Fix sequences
@@ -755,6 +767,9 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos para importar tareas de proceso.'));
+        }
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         // Fix sequences
@@ -802,6 +817,9 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos para importar permisos de usuario.'));
+        }
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         // Fix sequences

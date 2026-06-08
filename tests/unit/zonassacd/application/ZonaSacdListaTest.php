@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\unit\zonassacd\application;
 
 use PHPUnit\Framework\TestCase;
+use src\permisos\domain\XPermisos;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\PersonaDl;
@@ -196,6 +197,20 @@ final class ZonaSacdListaTest extends TestCase
         $this->assertStringContainsString('999', $first[1]);
     }
 
+    public function test_con_sel_solo_con_permiso_des_o_vcsd(): void
+    {
+        $lista = new ZonaSacdLista(
+            $this->createStub(PersonaSacdRepositoryInterface::class),
+            $this->createStub(ZonaSacdRepositoryInterface::class),
+            $this->createStub(ZonaRepositoryInterface::class),
+        );
+        $this->assertFalse($lista->execute('')['con_sel']);
+        $this->assertSame([], $lista->execute('')['a_botones']);
+
+        $_SESSION['oPerm'] = $this->oPermStub(['des' => true]);
+        $this->assertTrue($lista->execute('')['con_sel']);
+    }
+
     public function test_zona_concreta_sin_vinculos_sacds_devuelve_filas_vacias(): void
     {
         $zonaRepo = $this->createStub(ZonaRepositoryInterface::class);
@@ -215,6 +230,15 @@ final class ZonaSacdListaTest extends TestCase
         $out = $lista->execute('3');
 
         $this->assertSame([], $out['a_valores']);
+    }
+
+    private function oPermStub(array $perms): XPermisos
+    {
+        $stub = $this->createStub(XPermisos::class);
+        $stub->method('have_perm_oficina')->willReturnCallback(
+            static fn (string $perm): bool => !empty($perms[$perm]),
+        );
+        return $stub;
     }
 
     private function personaSacdStub(int $id_nom, string $pref, string $id_tabla): PersonaSacd

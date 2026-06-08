@@ -4,7 +4,6 @@ namespace src\utils_database\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use PDOException;
 use src\shared\infrastructure\GlobalPdo;
@@ -47,7 +46,6 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $MapIdSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -97,11 +95,19 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $mapIdes = [];
         foreach ($filas as $aDatos) {
-            $MapId = MapId::fromArray($aDatos);
-            $MapIdSet->add($MapId);
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $mapIdes[] = MapId::fromArray($normalized);
         }
-        return array_values($MapIdSet->getTot());
+
+        return $mapIdes;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

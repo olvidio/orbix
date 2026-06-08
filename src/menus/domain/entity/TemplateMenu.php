@@ -66,15 +66,12 @@ class TemplateMenu
         return 'id_template_menu';
     }
 
-    /** @return array<string, mixed> */
-
-
+    /** @return list<DatosCampo> */
     public function getDatosCampos(): array
     {
-        $oSet = new Set();
-
-        $oSet->add($this->getDatosNombre());
-        return $oSet->getTot();
+        return [
+            $this->getDatosNombre(),
+        ];
     }
 
     private function getDatosNombre(): DatosCampo

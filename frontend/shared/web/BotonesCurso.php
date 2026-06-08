@@ -14,9 +14,9 @@ class BotonesCurso
     private string $chk_2 = '';
     private string $chk_3 = '';
 
-    public function __construct($modo_curso)
+    public function __construct(int|string $modo_curso)
     {
-        $this->modo_curso = $modo_curso;
+        $this->modo_curso = (int) $modo_curso;
         $this->getDades();
     }
 

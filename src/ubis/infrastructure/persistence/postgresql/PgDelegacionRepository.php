@@ -346,14 +346,18 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $delegaciones = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Delegacion = Delegacion::fromArray($aDatos);
-            $DelegacionSet->add($Delegacion);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $delegaciones[] = Delegacion::fromArray($normalized);
         }
-        return array_values($DelegacionSet->getTot());
+        return $delegaciones;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

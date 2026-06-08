@@ -79,7 +79,7 @@ class PostRequest
 
         // Store the cookies from the response in the cookie jar
         $cookieJar = new CookieJar();
-        $cookies = $_COOKIE;
+        $cookies = self::cookiesForInternalRequest();
         foreach ($cookies as $name => $value) {
             $setCookie = new SetCookie(['name' => $name, 'value' => $value]);
             $cookieJar->setCookie($setCookie);
@@ -315,6 +315,35 @@ class PostRequest
     }
 
     /**
+     * Cookies para POST internos al backend (/src/...).
+     *
+     * En el mismo request del login, el navegador aún no ha enviado PHPSESSID en
+     * $_COOKIE aunque session_start() ya creó sesión autenticada; sin session_id()
+     * la llamada Guzzle recibe HTML del formulario de login en lugar de JSON.
+     *
+     * @return array<string, string>
+     */
+    private static function cookiesForInternalRequest(): array
+    {
+        $cookies = [];
+        foreach ($_COOKIE as $name => $value) {
+            if (is_string($name) && (is_string($value) || is_numeric($value))) {
+                $cookies[$name] = (string) $value;
+            }
+        }
+        $sessionName = session_name();
+        if ($sessionName === '') {
+            $sessionName = 'PHPSESSID';
+        }
+        $sid = session_id();
+        if ($sid !== '') {
+            $cookies[$sessionName] = $sid;
+        }
+
+        return $cookies;
+    }
+
+    /**
      * @param string $url
      * @param array<string, mixed> $hash_params
      * @return array<int|string, mixed>
@@ -324,7 +353,7 @@ class PostRequest
     {
         // Store the cookies from the response in the cookie jar
         $cookieJar = new CookieJar();
-        $cookies = $_COOKIE;
+        $cookies = self::cookiesForInternalRequest();
         foreach ($cookies as $name => $value) {
             $setCookie = new SetCookie(['name' => $name, 'value' => $value]);
             $cookieJar->setCookie($setCookie);
@@ -441,7 +470,7 @@ class PostRequest
 
         // Store the cookies from the response in the cookie jar
         $cookieJar = new CookieJar();
-        $cookies = $_COOKIE;
+        $cookies = self::cookiesForInternalRequest();
         foreach ($cookies as $name => $value) {
             $setCookie = new SetCookie(['name' => $name, 'value' => $value]);
             $cookieJar->setCookie($setCookie);
@@ -478,7 +507,7 @@ class PostRequest
     {
         $url = self::absoluteHttpUrlFromAppRelative($relativeUrl);
 
-        $cookies = $_COOKIE;
+        $cookies = self::cookiesForInternalRequest();
         $parts = parse_url($url);
         $host_original = $parts['host'] ?? '';
         $host_nuevo = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host_original);
@@ -553,6 +582,6 @@ class PostRequest
     {
         return '<br><strong>' . _('Procedencia') . ':</strong> '
             . '<code>' . htmlspecialchars(self::class . '::getData', ENT_QUOTES, 'UTF-8') . '</code>'
-            . ' — ' . _('POST interno firmado (HashFront) con cookies de sesión.');
+            . ' — ' . _('POST interno firmado (HashFront) con PHPSESSID (cookie o session_id()).');
     }
 }

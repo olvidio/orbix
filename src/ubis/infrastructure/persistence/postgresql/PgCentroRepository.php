@@ -158,16 +158,19 @@ public function getArrayCentros(string $condicion = ''): array
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $centros = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            // para las fechas del postgres (texto iso)
-            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
-            $Centro = Centro::fromArray($aDatos);
-            $CentroSet->add($Centro);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $normalized['f_active'] = (new ConverterDate('date', $normalized['f_active']))->fromPg();
+            $centros[] = Centro::fromArray($normalized);
         }
-        return array_values($CentroSet->getTot());
+        return $centros;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

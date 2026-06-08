@@ -60,6 +60,9 @@ if ($Qseguro === 1) {
         $mi_region_dl = OrbixRuntime::miRegionDl();
         $aEsquemas[] = $mi_region_dl;
     }
+    if (!is_array($aEsquemas)) {
+        $aEsquemas = [];
+    }
 
     foreach ($aEsquemas as $esquema) {
         if ($esquema === "H-Hv") {

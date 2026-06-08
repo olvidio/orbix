@@ -71,11 +71,20 @@ class PgIdMatchPersonaRepository extends ClaseRepository implements IdMatchPerso
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<IdMatchPersona> $idMatchPersonas */
+        $idMatchPersonas = [];
         foreach ($filas as $aDatos) {
-            $IdMatchPersonaSet->add(IdMatchPersona::fromArray($aDatos));
+            if (!is_array($aDatos)) {
+                continue;
+            }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $idMatchPersonas[] = IdMatchPersona::fromArray($normalized);
         }
 
-        return array_values($IdMatchPersonaSet->getTot());
+        return $idMatchPersonas;
     }
 
     public function Eliminar(IdMatchPersona $IdMatchPersona): bool

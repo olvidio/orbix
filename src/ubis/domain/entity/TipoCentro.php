@@ -87,15 +87,6 @@ class TipoCentro
     /**
 
 
-     * @return array<string, mixed>
-
-
-     */
-
-
-    /**
-
-
 
      * @return array<string, mixed>
 
@@ -273,13 +264,15 @@ class TipoCentro
 
 
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
-        $oTipoCentroSet = new Set();
-
-        $oTipoCentroSet->add($this->getDatosTipo_ctr());
-        $oTipoCentroSet->add($this->getDatosNombre_tipo_ctr());
-        return $oTipoCentroSet->getTot();
+        return [
+            $this->getDatosTipo_ctr(),
+            $this->getDatosNombre_tipo_ctr(),
+        ];
     }
 
     /**
@@ -296,7 +289,7 @@ class TipoCentro
         $oDatosCampo->setMetodoSet('setTipo_ctr');
         $oDatosCampo->setEtiqueta(_("tipo de centro"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(5);
+        $oDatosCampo->setArgument('5');
         return $oDatosCampo;
     }
 
@@ -314,7 +307,7 @@ class TipoCentro
         $oDatosCampo->setMetodoSet('setNombre_tipo_ctr');
         $oDatosCampo->setEtiqueta(_("nombre de tipo centro"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 }

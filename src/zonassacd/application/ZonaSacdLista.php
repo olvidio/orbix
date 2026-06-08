@@ -2,6 +2,7 @@
 
 namespace src\zonassacd\application;
 
+use src\permisos\domain\XPermisos;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
@@ -88,16 +89,21 @@ final class ZonaSacdLista
     }
 
     /**
-     * @param array<int, array<string, mixed>> $a_valores
+     * @param array<int, array<int|string, mixed>> $a_valores
      * @return array<string, mixed>
      */
     private function buildTablaResponse(array $a_valores): array
     {
+        $oPerm = $_SESSION['oPerm'] ?? null;
+        $tienePermDes = $oPerm instanceof XPermisos
+            && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'));
+
         return [
             'tipo' => 'tabla',
             'id_tabla' => 'zona_sacd_ajax',
             'a_cabeceras' => [_("sacd"), _("zona"), _("propia"), _("L"), _("M"), _("X"), _("J"), _("V"), _("S"), _("D")],
-            'a_botones' => [['txt' => _("modificar"), 'click' => "fnjs_modificar(this.form)"]],
+            'a_botones' => [],
+            'con_sel' => $tienePermDes,
             'a_valores' => $a_valores,
             'error' => '',
         ];

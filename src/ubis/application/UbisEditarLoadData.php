@@ -2,17 +2,20 @@
 
 namespace src\ubis\application;
 
-use src\permisos\domain\XPermisos;
-
 use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\input_int;
 
 use src\shared\config\ConfigGlobal;
+use src\ubis\application\services\UbiPermisos;
+use src\ubis\application\services\UbiRepositoryResolver;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\entity\Casa;
+use src\ubis\domain\entity\Centro;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEx;
 use src\ubis\domain\CuadrosLaborBits;
@@ -27,10 +30,7 @@ use function src\shared\domain\helpers\is_true;
 final class UbisEditarLoadData
 {
     public function __construct(
-        private CentroDlRepositoryInterface $centroDlRepository,
-        private CentroExRepositoryInterface $centroExRepository,
-        private CasaDlRepositoryInterface $casaDlRepository,
-        private CasaExRepositoryInterface $casaExRepository,
+        private UbiRepositoryResolver $ubiRepositoryResolver,
         private UbisEditarNormalizeDlData $ubisEditarNormalizeDlData,
     ) {
     }
@@ -66,26 +66,20 @@ final class UbisEditarLoadData
         $region = (string)($oUbi->getRegion() ?? '');
         $nombre_ubi = (string)$oUbi->getNombre_ubi();
 
-        $es_de_dl = false;
-        if (str_contains($tipo_ubi, 'ctr')) {
-            if ($dl === ConfigGlobal::mi_delef()) {
-                $es_de_dl = true;
-            } else {
-                $tipo_ubi = 'ctrex';
-            }
+        $es_de_dl = UbiPermisos::dlPerteneceAMiDelegacion($dl);
+        if (str_contains($tipo_ubi, 'ctr') && !$es_de_dl) {
+            $tipo_ubi = 'ctrex';
+            $Qobj_pau = 'CentroEx';
         }
-        if (str_contains($tipo_ubi, 'cdc')) {
-            if ($dl === ConfigGlobal::mi_dele()) {
-                $es_de_dl = true;
-            } else {
-                $tipo_ubi = 'cdcex';
-            }
+        if (str_contains($tipo_ubi, 'cdc') && !$es_de_dl) {
+            $tipo_ubi = 'cdcex';
+            $Qobj_pau = 'CasaEx';
         }
         if ($es_de_dl) {
             $Qobj_pau = $this->ubisEditarNormalizeDlData->execute($id_ubi, $tipo_ubi, $nombre_ubi, $Qobj_pau);
         }
 
-        $botones = self::computeBotones($Qobj_pau, '', $es_de_dl);
+        $botones = self::computeBotones($Qobj_pau, '', $oUbi);
 
         $base = [
             'tipo_ubi' => $tipo_ubi,
@@ -99,12 +93,17 @@ final class UbisEditarLoadData
         $laborMap = CuadrosLaborBits::labeledMap(ConfigGlobal::mi_sfsv());
 
         return match ($tipo_ubi) {
-            'ctrdl', 'ctrsf' => array_merge($base, self::serializeCentroDlFields(
-                $oUbi instanceof CentroDl ? $oUbi : throw new \RuntimeException(_('tipo de entidad inesperado para centro dl'))
-            ), ['tipo_labor_bit_map' => $laborMap]),
-            'ctrex' => array_merge($base, self::serializeCentroExFields(
-                $oUbi instanceof CentroEx ? $oUbi : throw new \RuntimeException(_('tipo de entidad inesperado para centro ex'))
-            ), ['tipo_labor_bit_map' => $laborMap]),
+            'ctrdl', 'ctrsf' => array_merge($base, match (true) {
+                $oUbi instanceof CentroDl => self::serializeCentroDlFields($oUbi),
+                $oUbi instanceof Centro => self::serializeCentroFields($oUbi),
+                default => throw new \RuntimeException(_('tipo de entidad inesperado para centro dl')),
+            }, ['tipo_labor_bit_map' => $laborMap]),
+            'ctrex' => array_merge($base, match (true) {
+                $oUbi instanceof CentroEx => self::serializeCentroExFields($oUbi),
+                $oUbi instanceof CentroDl => self::serializeCentroDlFields($oUbi),
+                $oUbi instanceof Centro => self::serializeCentroFields($oUbi),
+                default => throw new \RuntimeException(_('tipo de entidad inesperado para centro ex')),
+            }, ['tipo_labor_bit_map' => $laborMap]),
             'cdcdl', 'cdcex' => array_merge($base, self::serializeCasaFields(
                 $oUbi instanceof Casa ? $oUbi : throw new \RuntimeException(_('tipo de entidad inesperado para casa'))
             )),
@@ -149,7 +148,7 @@ final class UbisEditarLoadData
             $region = ConfigGlobal::mi_region();
         }
 
-        $botones = self::computeBotones($Qobj_pau, input_string($post, 'nuevo'), false);
+        $botones = self::computeBotones($Qobj_pau, input_string($post, 'nuevo'), null, $dl);
 
         $base = [
             'tipo_ubi' => $tipo_ubi_in,
@@ -217,35 +216,26 @@ final class UbisEditarLoadData
         };
     }
 
-    private static function computeBotones(string $Qobj_pau, string $Qnuevo, bool $es_de_dl): int|string
+    private static function computeBotones(string $Qobj_pau, string $Qnuevo, ?object $oUbi, string $dlOverride = ''): int|string
     {
-        $botones = 0;
-        if (str_contains($Qobj_pau, 'Dl')) {
-            if ($Qnuevo !== '' || $es_de_dl) {
-                $oPerm = $_SESSION['oPerm'] ?? null;
-        if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('scdl')) {
-                    $botones = '1,2';
-                }
+        if ($Qnuevo !== '') {
+            $dl = $dlOverride;
+            $obj = UbiPermisos::normalizeObjPau($Qobj_pau);
+            if ($dl === '' && in_array($obj, ['CentroDl', 'CasaDl'], true)) {
+                $dl = str_contains($obj, 'Centro') ? ConfigGlobal::mi_delef() : ConfigGlobal::mi_dele();
             }
-        } elseif (str_contains($Qobj_pau, 'Ex')) {
-            $oPerm = $_SESSION['oPerm'] ?? null;
-        if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('scdl')) {
-                $botones = '1,2';
-            }
+
+            return UbiPermisos::puedeModificarPorObjeto($Qobj_pau, $dl) ? '1,2' : 0;
         }
 
-        return $botones;
+        $dl = ($oUbi !== null && method_exists($oUbi, 'getDl')) ? (string)($oUbi->getDl() ?? '') : '';
+
+        return UbiPermisos::puedeModificarPorObjeto($Qobj_pau, $dl) ? '1,2' : 0;
     }
 
-    private function repositoryFor(string $obj_pau): CentroDlRepositoryInterface|CentroExRepositoryInterface|CasaDlRepositoryInterface|CasaExRepositoryInterface
+    private function repositoryFor(string $obj_pau): CentroRepositoryInterface|CentroDlRepositoryInterface|CentroExRepositoryInterface|CasaRepositoryInterface|CasaDlRepositoryInterface|CasaExRepositoryInterface
     {
-        return match ($obj_pau) {
-            'CentroDl' => $this->centroDlRepository,
-            'CentroEx' => $this->centroExRepository,
-            'CasaDl' => $this->casaDlRepository,
-            'CasaEx' => $this->casaExRepository,
-            default => throw new \InvalidArgumentException('obj_pau ubi no válido: ' . $obj_pau),
-        };
+        return $this->ubiRepositoryResolver->getRepository($obj_pau);
     }
 
     /**
@@ -269,6 +259,25 @@ final class UbisEditarLoadData
             'plazas' => $o->getPlazas(),
             'n_buzon' => $o->getN_buzon(),
             'observ' => $o->getObserv(),
+        ];
+    }
+
+    /**
+     * Ficha centro legacy (`obj_pau` = Centro) en vista sv/sf, sin campos numéricos de CentroDl.
+     *
+     * @return array<string, mixed>
+     */
+    private static function serializeCentroFields(Centro $o): array
+    {
+        return [
+            'chk' => $o->isActive() ? 'checked' : '',
+            'dl' => $o->getDl(),
+            'region' => $o->getRegion(),
+            'nombre_ubi' => $o->getNombre_ubi(),
+            'chk_cdc' => is_true($o->isCdc()) ? 'checked' : '',
+            'tipo_labor' => $o->getTipo_labor(),
+            'id_ctr_padre' => $o->getId_ctr_padre(),
+            'tipo_ctr' => $o->getTipo_ctr(),
         ];
     }
 

@@ -99,14 +99,18 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $tarifaUbis = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $TarifaUbi = TarifaUbi::fromArray($aDatos);
-            $TarifaUbiSet->add($TarifaUbi);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $tarifaUbis[] = TarifaUbi::fromArray($normalized);
         }
-        return array_values($TarifaUbiSet->getTot());
+        return $tarifaUbis;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

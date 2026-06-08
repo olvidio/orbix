@@ -8,7 +8,6 @@ use src\casas\domain\entity\Ingreso;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 
 /**
@@ -34,7 +33,6 @@ class PgIngresoRepository extends ClaseRepository implements IngresoRepositoryIn
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $IngresoSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -82,13 +80,19 @@ class PgIngresoRepository extends ClaseRepository implements IngresoRepositoryIn
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $ingresos = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $IngresoSet->add(Ingreso::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $ingresos[] = Ingreso::fromArray($normalized);
         }
-        return array_values($IngresoSet->getTot());
+
+        return $ingresos;
     }
 
     public function Eliminar(Ingreso $Ingreso): bool

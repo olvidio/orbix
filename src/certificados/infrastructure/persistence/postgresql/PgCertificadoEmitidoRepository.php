@@ -73,6 +73,8 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<CertificadoEmitido> $certificados */
+        $certificados = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
@@ -80,10 +82,14 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
             $aDatos['documento'] = $this->normalizeBytea($this->readByteaField($aDatos['documento'] ?? null));
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado'] ?? null))->fromPg();
             $aDatos['f_enviado'] = (new ConverterDate('date', $aDatos['f_enviado'] ?? null))->fromPg();
-            $CertificadoSet->add(CertificadoEmitido::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $certificados[] = CertificadoEmitido::fromArray($normalized);
         }
 
-        return array_values($CertificadoSet->getTot());
+        return $certificados;
     }
 
     public function Eliminar(CertificadoEmitido $Certificado): bool

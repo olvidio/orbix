@@ -160,11 +160,11 @@ final class ExportarActividadesData
             $h_fin_raw = $oActividad->getH_fin()?->format('H:i');
 
             $h_ini = $h_ini_raw;
-            if ($h_ini !== null && $h_ini !== '') {
+            if ($h_ini !== null) {
                 $h_ini = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_ini);
             }
             $h_fin = $h_fin_raw;
-            if ($h_fin !== null && $h_fin !== '') {
+            if ($h_fin !== null) {
                 $h_fin = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_fin);
             }
 

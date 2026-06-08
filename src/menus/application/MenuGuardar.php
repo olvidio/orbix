@@ -45,7 +45,7 @@ class MenuGuardar
 
         $oMiUsuario = ConfigGlobal::MiUsuario();
         $oRole = new Role();
-        $oRole->setId_role($oMiUsuario->getId_role());
+        $oRole->setId_role($oMiUsuario?->getId_role() ?? 0);
 
         //if ($oRole->isRole('SuperAdmin')) {
             $ok = is_true($ok);

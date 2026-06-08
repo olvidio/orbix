@@ -121,14 +121,19 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<TemplateMenu> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $TemplateMenu = TemplateMenu::fromArray($aDatos);
-            $TemplateMenuSet->add($TemplateMenu);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = TemplateMenu::fromArray($normalized);
         }
-        return array_values($TemplateMenuSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -242,7 +247,11 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         if (!is_array($aDatos)) {
             return null;
         }
-        return TemplateMenu::fromArray($aDatos);
+        $normalized = [];
+        foreach ($aDatos as $key => $value) {
+            $normalized[(string) $key] = $value;
+        }
+        return TemplateMenu::fromArray($normalized);
     }
 
     public function getNewId(): int

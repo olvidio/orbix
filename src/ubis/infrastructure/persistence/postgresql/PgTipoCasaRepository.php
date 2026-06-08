@@ -49,10 +49,10 @@ public function getArrayTiposCasa(): array
 
         $aOpciones = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            if (!is_array($row) || !isset($row['id'], $row['nombre_teleco'])) {
+            if (!is_array($row) || !isset($row['tipo_casa'], $row['nombre_tipo_casa'])) {
                 continue;
             }
-            $aOpciones[(string) $row['id']] = (string) $row['nombre_teleco'];
+            $aOpciones[(string) $row['tipo_casa']] = (string) $row['nombre_tipo_casa'];
         }
         return $aOpciones;
     }
@@ -122,14 +122,18 @@ public function getArrayTiposCasa(): array
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $tiposCasa = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $TipoCasa = TipoCasa::fromArray($aDatos);
-            $TipoCasaSet->add($TipoCasa);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $tiposCasa[] = TipoCasa::fromArray($normalized);
         }
-        return array_values($TipoCasaSet->getTot());
+        return $tiposCasa;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

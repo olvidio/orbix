@@ -2,7 +2,6 @@
 
 namespace core;
 
-use src\shared\application\HydrateMenuPermissions;
 use src\shared\application\HydratePermisosActividades;
 use src\shared\application\HydrateSessionConfig;
 use src\shared\application\RefreshCrStgrMaterializedViews;
@@ -18,6 +17,10 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     if (!empty($_COOKIE["PHPSESSID"])) {
         session_id($_COOKIE['PHPSESSID']);
         session_start();
+        if (!isset($_SESSION['session_auth'])) {
+            $_SESSION = [];
+            session_regenerate_id(true);
+        }
     } else {
         // Configure timeout to 30 minutes
         $timeout = 1800;
@@ -59,12 +62,12 @@ DiContainerBootstrap::ensureBuilt();
     $connectionBootstrap->esquemaf
 );
 
-(new HydrateMenuPermissions())->execute();
 (new HydrateSessionConfig())->execute();
 
 // func_tablas. Es necesaria para permisos\PermisosActividades->carregar()...
 include_once(__DIR__ . '/../../src/shared/domain/helpers/func_tablas.php');
 
+// Permisos en sesión: carga completa solo la primera vez tras login; luego caché.
 (new HydratePermisosActividades())->execute();
 
 require_once __DIR__ . '/../../frontend/shared/bootstrap/after_global_object.inc';

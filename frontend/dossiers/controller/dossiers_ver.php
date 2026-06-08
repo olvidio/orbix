@@ -1,5 +1,6 @@
 <?php
 
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFrontSignedLink;
@@ -34,9 +35,23 @@ if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
-$data = PostRequest::getDataFromUrl('/src/dossiers/dossiers_ver_pantalla_data', $requestPayload);
+$apiPayload = PostRequest::requestPayloadForHash();
+$idDossierReq = trim((string)($apiPayload['id_dossier'] ?? ''));
+$claseInfoReq = trim((string)($apiPayload['clase_info'] ?? ''));
+if ($idDossierReq === '' && $claseInfoReq === '') {
+    foreach (['queSel', 'que', 'mod', 'sel', 'clase_info', 'bloque', 'permiso', 'depende', 'id_dossier'] as $extraKey) {
+        unset($apiPayload[$extraKey]);
+    }
+}
+
+$data = PostRequest::getDataFromUrl('/src/dossiers/dossiers_ver_pantalla_data', $apiPayload, false);
 if (!is_array($data)) {
-    exit;
+    echo _('No se pudo cargar la pantalla de dossiers.');
+    return;
+}
+if (!empty($data['error'])) {
+    echo PostRequest::stripInternalCallProvenance((string) $data['error']);
+    return;
 }
 
 $avisoRegionStgr = (string)($data['aviso'] ?? '');
@@ -76,7 +91,7 @@ if (($data['modo'] ?? '') === 'lista') {
     $oView = new ViewNewPhtml('frontend\\dossiers\\controller');
     $oView->renderizar('lista_dossiers.phtml', [
         'a_filas' => $a_filas,
-        'web_icons' => (string) ($topData['web_icons'] ?? ''),
+        'web_icons' => (string)($topData['web_icons'] ?? OrbixRuntime::getWebIcons()),
     ]);
     echo "</div>";
 } else {

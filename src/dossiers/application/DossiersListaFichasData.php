@@ -4,6 +4,7 @@ namespace src\dossiers\application;
 
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\dossiers\domain\entity\TipoDossier;
 use src\dossiers\domain\value_objects\DossierPk;
 use src\shared\config\ConfigGlobal;
 
@@ -35,12 +36,13 @@ class DossiersListaFichasData
         foreach ($cTipoDossier as $oTipoDossier) {
             $id_tipo_dossier = $oTipoDossier->getId_tipo_dossier();
             $tabla_to = $oTipoDossier->getTabla_to() ?? '';
-            $app = $oTipoDossier->getApp() ?? '';
             $descripcion = $oTipoDossier->getDescripcion() ?? '';
-            $depende_modificar = 1;
+            $permiso_lectura = $oTipoDossier->getPermiso_lectura();
+            $permiso_escritura = $oTipoDossier->getPermiso_escritura() ?? 0;
+            $depende_modificar = $oTipoDossier->isDepende_modificar();
             $id_dossier = $id_tipo_dossier;
 
-            if (!ConfigGlobal::is_app_installed($app)) {
+            if (!$this->isTipoDossierDisponible($oTipoDossier)) {
                 continue;
             }
             if (ConfigGlobal::mi_ambito() === 'rstgr') {
@@ -66,7 +68,13 @@ class DossiersListaFichasData
             }
             $a_filas[$i]['clase'] = $i % 2 ? 'imp' : 'par';
             $a_filas[$i]['descripcion'] = $descripcion;
-            $perm_a = 3;
+            $perm_a = PermDossier::permiso(
+                $permiso_lectura,
+                $permiso_escritura,
+                $depende_modificar,
+                $pau,
+                $id_pau
+            );
 
             $a_filas[$i]['href_ver_link_spec'] = [
                 'path' => 'frontend/dossiers/controller/dossiers_ver.php',
@@ -98,5 +106,36 @@ class DossiersListaFichasData
             'a_filas' => array_values($a_filas),
             'web_icons' => ConfigGlobal::getWeb_icons(),
         ];
+    }
+
+    /**
+     * - Habitaciones CDC (2006): solo con app `ubiscamas` instalada.
+     * - Resto con `app` en BD: según esa app.
+     * - Sin `app`: visible (comportamiento legacy).
+     */
+    private function isTipoDossierDisponible(TipoDossier $tipo): bool
+    {
+        if ($this->esDossierUbiscamas($tipo)) {
+            return ConfigGlobal::is_app_installed('ubiscamas');
+        }
+
+        $app = $tipo->getApp() ?? '';
+        if ($app === '') {
+            return true;
+        }
+
+        return ConfigGlobal::is_app_installed($app);
+    }
+
+    private function esDossierUbiscamas(TipoDossier $tipo): bool
+    {
+        if (($tipo->getCodigo() ?? '') === 'habitaciones_cdc') {
+            return true;
+        }
+        if ($tipo->getId_tipo_dossier() === 2006) {
+            return true;
+        }
+
+        return ($tipo->getTabla_to() ?? '') === 'du_habitaciones_dl';
     }
 }

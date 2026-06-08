@@ -220,27 +220,6 @@ class Delegacion
     /**
 
 
-     * @return array<string, mixed>
-
-
-     */
-
-
-    /**
-
-
-
-     * @return array<string, mixed>
-
-
-
-     */
-
-
-
-    /**
-
-
 
 
      * @return array<string, mixed>
@@ -406,18 +385,19 @@ class Delegacion
 
 
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
-        $oDelegacionSet = new Set();
-
-        //$oDelegacionSet->add($this->getDatosId_dl());
-        $oDelegacionSet->add($this->getDatosRegion());
-        $oDelegacionSet->add($this->getDatosDl());
-        $oDelegacionSet->add($this->getDatosNombre_dl());
-        $oDelegacionSet->add($this->getDatosGrupo_estudios());
-        $oDelegacionSet->add($this->getDatosRegion_stgr());
-        $oDelegacionSet->add($this->getDatosactive());
-        return $oDelegacionSet->getTot();
+        return [
+            $this->getDatosRegion(),
+            $this->getDatosDl(),
+            $this->getDatosNombre_dl(),
+            $this->getDatosGrupo_estudios(),
+            $this->getDatosRegion_stgr(),
+            $this->getDatosactive(),
+        ];
     }
 
     /**
@@ -447,7 +427,7 @@ class Delegacion
         $oDatosCampo->setMetodoSet('setNombre_dl');
         $oDatosCampo->setEtiqueta(_("nombre de la delegación"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 
@@ -478,7 +458,7 @@ class Delegacion
         $oDatosCampo->setMetodoSet('setGrupo_estudios');
         $oDatosCampo->setEtiqueta(_("grupo del stgr"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(3);
+        $oDatosCampo->setArgument('3');
         return $oDatosCampo;
     }
 
@@ -494,7 +474,7 @@ class Delegacion
         $oDatosCampo->setMetodoSet('setRegion_stgr');
         $oDatosCampo->setEtiqueta(_("región del stgr"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(5);
+        $oDatosCampo->setArgument('5');
         return $oDatosCampo;
     }
 

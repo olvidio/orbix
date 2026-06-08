@@ -267,8 +267,16 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
                 continue;
             }
             $i++;
-            $aDatos['json_fases_previas'] = (new ConverterJson($aDatos['json_fases_previas'], true))->fromPg();
-            $aTareaProceso[] = TareaProceso::fromArray($aDatos);
+            $jsonFasesPrevias = $aDatos['json_fases_previas'] ?? null;
+            if (!is_string($jsonFasesPrevias) && !is_array($jsonFasesPrevias) && !($jsonFasesPrevias instanceof \stdClass)) {
+                $jsonFasesPrevias = null;
+            }
+            $aDatos['json_fases_previas'] = (new ConverterJson($jsonFasesPrevias, true))->fromPg();
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $aTareaProceso[] = TareaProceso::fromArray($normalized);
         }
         if ($i === 0) {
             $txt = _("No se puede encontrar una fase independiente (que no tenga fase previa) para el proceso: %s");
@@ -298,7 +306,8 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $TareaProcesoSet = new Set();
+        /** @var list<TareaProceso> $items */
+        $items = [];
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -355,11 +364,18 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
                 continue;
             }
             // para los json
-            $aDatos['json_fases_previas'] = (new ConverterJson($aDatos['json_fases_previas'], true))->fromPg();
-            $TareaProceso = TareaProceso::fromArray($aDatos);
-            $TareaProcesoSet->add($TareaProceso);
+            $jsonFasesPrevias = $aDatos['json_fases_previas'] ?? null;
+            if (!is_string($jsonFasesPrevias) && !is_array($jsonFasesPrevias) && !($jsonFasesPrevias instanceof \stdClass)) {
+                $jsonFasesPrevias = null;
+            }
+            $aDatos['json_fases_previas'] = (new ConverterJson($jsonFasesPrevias, true))->fromPg();
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = TareaProceso::fromArray($normalized);
         }
-        return array_values($TareaProcesoSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -464,7 +480,11 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
             return false;
         }
         // para los json
-        $aDatos['json_fases_previas'] = (new ConverterJson($aDatos['json_fases_previas'], true))->fromPg();
+        $jsonFasesPrevias = $aDatos['json_fases_previas'] ?? null;
+        if (!is_string($jsonFasesPrevias) && !is_array($jsonFasesPrevias) && !($jsonFasesPrevias instanceof \stdClass)) {
+            $jsonFasesPrevias = null;
+        }
+        $aDatos['json_fases_previas'] = (new ConverterJson($jsonFasesPrevias, true))->fromPg();
         $result = [];
         foreach ($aDatos as $key => $value) {
             $result[(string) $key] = $value;

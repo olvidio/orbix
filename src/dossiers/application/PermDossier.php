@@ -62,8 +62,7 @@ class PermDossier
             // busco el id_tabla para saber de quién se trata y ver si es de mi oficina.
             $oPersona = Persona::findPersonaEnGlobal($id_pau);
             if (!is_object($oPersona)) {
-                $msg_err = "<br>No encuentro a nadie con id_nom: $id_pau en  " . __FILE__ . ": line " . __LINE__;
-                exit($msg_err);
+                return 2;
             }
             $id_tabla = $oPersona->getId_tabla();
             switch ($id_tabla) {

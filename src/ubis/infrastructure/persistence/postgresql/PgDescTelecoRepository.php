@@ -138,14 +138,18 @@ public function getArrayDescTelecoUbis(string $sdepende): array
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $descsTeleco = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $DescTeleco = DescTeleco::fromArray($aDatos);
-            $DescTelecoSet->add($DescTeleco);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $descsTeleco[] = DescTeleco::fromArray($normalized);
         }
-        return array_values($DescTelecoSet->getTot());
+        return $descsTeleco;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

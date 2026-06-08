@@ -128,14 +128,19 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<MetaMenu> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $MetaMenu = MetaMenu::fromArray($aDatos);
-            $MetaMenuSet->add($MetaMenu);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = MetaMenu::fromArray($normalized);
         }
-        return array_values($MetaMenuSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

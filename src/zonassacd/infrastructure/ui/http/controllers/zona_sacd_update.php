@@ -16,9 +16,13 @@ $input = [
 
 /** @var ZonaSacdUpdate $useCase */
 $useCase = DependencyResolver::get(ZonaSacdUpdate::class);
-ContestarJson::enviar('', $useCase->execute(
+$resultado = $useCase->execute(
     $input['id_zona'],
     $input['id_zona_new'],
     $input['acumular'],
     $input['sel'],
-));
+);
+
+// Errores parciales de persistencia van en `mensaje`; vacío = éxito (`data: "ok"`).
+$mensaje = $resultado['mensaje'] ?? '';
+ContestarJson::enviar(is_string($mensaje) ? $mensaje : '', 'ok');

@@ -42,7 +42,7 @@ class TablonAnunciosParaGM
 
             $a_valores[$i]['sel'] = $uuid_item;
             $a_valores[$i][1] = $esquema_emisor;
-            $a_valores[$i][2] = $t_anotado->getFromLocal();
+            $a_valores[$i][2] = $t_anotado instanceof DateTimeLocal ? $t_anotado->getFromLocal() : '';
             $a_valores[$i][3] = $texto_anuncio;
 
             $a_FechaIni[$i] = $t_anotado instanceof DateTimeLocal ? $t_anotado->getIso() : '';

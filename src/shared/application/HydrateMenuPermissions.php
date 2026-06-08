@@ -21,10 +21,12 @@ final class HydrateMenuPermissions
 {
     public function execute(): void
     {
-        if (!ConfigGlobal::is_app_installed('menus')) {
-            return;
-        }
-        if (!empty($_SESSION['iPermMenus'])) {
+        if (array_key_exists('iPermMenus', $_SESSION)) {
+            if (empty($_SESSION['oPerm'])) {
+                $_SESSION['oPerm'] = new PermDl();
+                $_SESSION['oPerm']->setAccion((int) $_SESSION['iPermMenus']);
+            }
+
             return;
         }
 

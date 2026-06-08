@@ -65,13 +65,16 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
             $oCargoOAsistente = new CargoOAsistente($id_activ);
             $oCargoOAsistente->setId_nom($iid_nom);
             if (isset($aDades['propio'])) {
-                $oCargoOAsistente->setPropio(is_true($aDades['propio']));
+                $oCargoOAsistente->setPropio(is_true($aDades['propio']) ?? false);
             }
             $oCargoOAsistenteSet->add($oCargoOAsistente);
             $aRepe[] = $id_activ;
             $c++;
         }
-        return array_values($oCargoOAsistenteSet->getTot());
+        /** @var list<CargoOAsistente> $result */
+        $result = array_values($oCargoOAsistenteSet->getTot());
+
+        return $result;
     }
 
     /**
@@ -112,7 +115,7 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
             foreach ($cActividades as $oActividad) {
                 $fIni = $oActividad->getF_ini();
                 $fFin = $oActividad->getF_fin();
-                if ($fIni === null || $fFin === null || !method_exists($fIni, 'getIso') || !method_exists($fFin, 'getIso')) {
+                if ($fIni === null || $fFin === null) {
                     continue;
                 }
                 $aDadesActiv = [

@@ -131,14 +131,19 @@ public function getArrayActividadTareas(int $iid_fase): array
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<ActividadTarea> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $ActividadTarea = ActividadTarea::fromArray($aDatos);
-            $ActividadTareaSet->add($ActividadTarea);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = ActividadTarea::fromArray($normalized);
         }
-        return array_values($ActividadTareaSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -28,7 +28,7 @@ class FasesActivCambioGet
         $Qdl_propia = input_string($input, 'dl_propia');
         $Qid_fase_sel = input_string($input, 'id_fase_sel');
 
-        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, is_true($Qdl_propia));
+        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, is_true($Qdl_propia) ?? false);
         $aOpciones = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos, true);
 
         return [

@@ -174,15 +174,6 @@ class TelecoUbi
     /**
 
 
-     * @return array<string, mixed>
-
-
-     */
-
-
-    /**
-
-
 
      * @return array<string, mixed>
 
@@ -396,16 +387,18 @@ class TelecoUbi
 
 
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
-        $oTelecoUbiSet = new Set();
-
-        $oTelecoUbiSet->add($this->getDatosId_ubi());
-        $oTelecoUbiSet->add($this->getDatosTipo_teleco());
-        $oTelecoUbiSet->add($this->getDatosDesc_teleco());
-        $oTelecoUbiSet->add($this->getDatosNum_teleco());
-        $oTelecoUbiSet->add($this->getDatosObserv());
-        return $oTelecoUbiSet->getTot();
+        return [
+            $this->getDatosId_ubi(),
+            $this->getDatosTipo_teleco(),
+            $this->getDatosDesc_teleco(),
+            $this->getDatosNum_teleco(),
+            $this->getDatosObserv(),
+        ];
     }
 
     private function getDatosId_ubi(): DatosCampo
