@@ -4,7 +4,6 @@ namespace src\misas\application;
 
 use src\misas\application\support\MisasBuildInput;
 use src\misas\domain\contracts\PlantillaRepositoryInterface;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class QuitarHorarioPlantilla
 {
@@ -30,9 +29,8 @@ class QuitarHorarioPlantilla
             return ['error' => sprintf(_('No se encuentra la plantilla %d'), $id_item)];
         }
 
-        $oNull = new NullDateTimeLocal();
-        $oPlantilla->setT_start($oNull);
-        $oPlantilla->setT_end($oNull);
+        $oPlantilla->setT_start(null);
+        $oPlantilla->setT_end(null);
 
         if ($this->plantillaRepository->Guardar($oPlantilla) === false) {
             return ['error' => $this->plantillaRepository->getErrorTxt()];

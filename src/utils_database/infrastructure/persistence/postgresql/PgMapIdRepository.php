@@ -7,6 +7,7 @@ use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use PDOException;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\utils_database\domain\contracts\MapIdRepositoryInterface;
 use src\utils_database\domain\entity\MapId;
@@ -26,9 +27,9 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBRC'];
+        $oDbl = GlobalPdo::get('oDBRC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBRC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBRC_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('map_id');
     }
@@ -38,9 +39,9 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
     /**
      * devuelve una colección (array) de objetos de tipo MapId
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo MapId
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<MapId>
      */
     public function getMapIdes(array $aWhere = [], array $aOperators = []): array
     {
@@ -77,13 +78,13 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+        if (isset($aWhere['_ordre']) && is_string($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
             $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && (string) $aWhere['_limit'] !== '') {
             $sLimit = ' LIMIT ' . $aWhere['_limit'];
         }
         if (isset($aWhere['_limit'])) {
@@ -91,13 +92,16 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $MapId = MapId::fromArray($aDatos);
             $MapIdSet->add($MapId);
         }
-        return $MapIdSet->getTot();
+        return array_values($MapIdSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -140,6 +144,9 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -149,6 +156,9 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE objeto = '$objeto' AND id_resto = $id_resto";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -160,16 +170,29 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $objeto
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $objeto, int $id_resto): array |bool
+    public function datosById(string $objeto, int $id_resto): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE objeto = '$objeto' AND id_resto = $id_resto";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
 
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+
+        $row = [];
+        foreach ($aDatos as $key => $value) {
+            $row[(string) $key] = $value;
+        }
+
+        return $row;
     }
 
     /**
@@ -178,7 +201,7 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
     public function findById(string $objeto, int $id_resto): ?MapId
     {
         $aDatos = $this->datosById($objeto, $id_resto);
-        if (empty($aDatos)) {
+        if (!is_array($aDatos)) {
             return null;
         }
         return MapId::fromArray($aDatos);

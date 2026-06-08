@@ -4,24 +4,21 @@ namespace src\shared\infrastructure\persistence\postgresql;
 
 use PDO;
 use src\shared\config\ServerConf;
+use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 
 class DBPropiedades
 {
 
-    var $Blanco = FALSE;
+    private bool $Blanco = false;
 
-    public function setBlanco($blanco = FALSE)
+    public function setBlanco(mixed $blanco = false): void
     {
-        if ($blanco) {
-            $this->Blanco = TRUE;
-        } else {
-            $this->Blanco = FALSE;
-        }
+        $this->Blanco = (bool) $blanco;
     }
 
-    public function posibles_esquemas($default = '', $comun = FALSE)
+    public function posibles_esquemas(string $default = '', bool $comun = false): string
     {
         $txt = "<select id=\"esquema\" name=\"esquema\" >";
         if ($this->Blanco) {
@@ -32,7 +29,7 @@ class DBPropiedades
         return $txt;
     }
 
-    public function opciones_posibles_esquemas($default = '', $comun = FALSE)
+    public function opciones_posibles_esquemas(string $default = '', bool $comun = false): string
     {
         /* Para el caso de sf, entrando como en el directorio orbixsf, al redirigir
          * a orbix, la ubicación acaba siendo sv.
@@ -59,58 +56,71 @@ class DBPropiedades
         $oDBP = $oConexion->getPDO();
 
         $sQuery = "select nspname from pg_namespace where nspowner > 1000 AND nspname !~ '^zz' ORDER BY nspname";
-        if (($oDblSt = $oDBP->query($sQuery)) === false) {
+        $oDblSt = $oDBP->query($sQuery);
+        if ($oDblSt === false) {
             $sClauError = 'Schemas.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-            return false;
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDBP, $sClauError, (string) __LINE__, __FILE__);
+            }
+            return '';
         }
-        if (is_object($oDblSt)) {
-            $oDblSt->execute();
-            foreach ($oDblSt as $row) {
-                if (!isset($row[1])) {
-                    $a = 0;
+        foreach ($oDblSt as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $nspname = $this->pdoCellToString($row[0] ?? null);
+            if ($nspname === '') {
+                continue;
+            }
+            if ($nspname === 'public') {
+                continue;
+            }
+            if ($nspname === 'resto') {
+                continue;
+            }
+            if ($nspname === 'global') {
+                continue;
+            }
+            if ($nspname === 'bucardo') {
+                continue;
+            }
+            if ($comun) {
+                $sv = $nspname;
+                if (!empty($default) && $sv == $default) {
+                    $sel_sv = 'selected';
                 } else {
-                    $a = 1;
-                } // para el caso de sólo tener un valor.
-                if ($row[0] == 'public') continue;
-                if ($row[0] == 'resto') continue;
-                if ($row[0] == 'global') continue;
-                if ($row[0] == 'bucardo') continue;
-                if ($comun) {
-                    $sv = $row[0];
+                    $sel_sv = '';
+                }
+                $txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
+            } else {
+                if ($ubicacion == 'sv') {
+                    $sv = $nspname . 'v';
                     if (!empty($default) && $sv == $default) {
                         $sel_sv = 'selected';
                     } else {
                         $sel_sv = '';
                     }
                     $txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
-                } else {
-                    if ($ubicacion == 'sv') {
-                        $sv = $row[0] . 'v';
-                        if (!empty($default) && $sv == $default) {
-                            $sel_sv = 'selected';
-                        } else {
-                            $sel_sv = '';
-                        }
-                        $txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
+                }
+                // 7.3.2019 Parece que sf va por su lado.
+                if ($ubicacion == 'sf') {
+                    $sf = $nspname . 'f';
+                    if (!empty($default) && $sf == $default) {
+                        $sel_sf = 'selected';
+                    } else {
+                        $sel_sf = '';
                     }
-                    // 7.3.2019 Parece que sf va por su lado.
-                    if ($ubicacion == 'sf') {
-                        $sf = $row[0] . 'f';
-                        if (!empty($default) && $sf == $default) {
-                            $sel_sf = 'selected';
-                        } else {
-                            $sel_sf = '';
-                        }
-                        $txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
-                    }
+                    $txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
                 }
             }
         }
         return $txt;
     }
 
-    public function array_posibles_esquemas($comun = FALSE, $rstgr = FALSE)
+    /**
+     * @return array<string, string>|false
+     */
+    public function array_posibles_esquemas(bool $comun = false, bool $rstgr = false): array|false
     {
         /* Para el caso de sf, entrando como en el directorio orbixsf, al redirigir
          * a orbix, la ubicación acaba siendo sv.
@@ -138,71 +148,89 @@ class DBPropiedades
         $oDBP = $oConexion->getPDO();
 
         $sQuery = "select nspname from pg_namespace where nspowner > 1000 AND nspname !~ '^zz' ORDER BY nspname";
-        if (($oDblSt = $oDBP->query($sQuery)) === false) {
+        $oDblSt = $oDBP->query($sQuery);
+        if ($oDblSt === false) {
             $sClauError = 'Schemas.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDBP, $sClauError, (string) __LINE__, __FILE__);
+            }
             return false;
         }
-        if (is_object($oDblSt)) {
-            $oDblSt->execute();
-            foreach ($oDblSt as $row) {
-                if ($row[0] === 'public') {
+        foreach ($oDblSt as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $nspname = $this->pdoCellToString($row[0] ?? null);
+            if ($nspname === '') {
+                continue;
+            }
+            if ($nspname === 'public') {
+                continue;
+            }
+            if ($nspname === 'resto') {
+                continue;
+            }
+            if ($nspname === 'global') {
+                continue;
+            }
+            if ($nspname === 'bucardo') {
+                continue;
+            }
+            // Para los esquemas tipo 'H-H' o 'H-Hf',
+            if (!$rstgr) {
+                $a_reg = explode('-', $nspname);
+                if (isset($a_reg[1]) && $a_reg[0] === $a_reg[1]) {
                     continue;
                 }
-                if ($row[0] === 'resto') {
-                    continue;
-                }
-                if ($row[0] === 'global') {
-                    continue;
-                }
-                if ($row[0] === 'bucardo') {
-                    continue;
-                }
-                // Para los esquemas tipo 'H-H' o 'H-Hf',
-                if (!$rstgr) {
-                    $a_reg = explode('-', $row[0]);
-                    if ($a_reg[0] === $a_reg[1]) {
-                        continue;
-                    }
-                }
-                if ($comun) {
-                    $sv = $row[0];
+            }
+            if ($comun) {
+                $sv = $nspname;
+                $a_esquemas[$sv] = $sv;
+            } else {
+                if ($ubicacion === 'sv') {
+                    $sv = $nspname . 'v';
                     $a_esquemas[$sv] = $sv;
-                } else {
-                    if ($ubicacion === 'sv') {
-                        $sv = $row[0] . 'v';
-                        $a_esquemas[$sv] = $sv;
-                    }
-                    // 7.3.2019 Parece que sf va por su lado.
-                    if ($ubicacion === 'sf') {
-                        $sf = $row[0] . 'f';
-                        $a_esquemas[$sf] = $sf;
-                    }
+                }
+                // 7.3.2019 Parece que sf va por su lado.
+                if ($ubicacion === 'sf') {
+                    $sf = $nspname . 'f';
+                    $a_esquemas[$sf] = $sf;
                 }
             }
         }
         return $a_esquemas;
     }
 
-    public function array_posibles_dl_de_esquemas($comun = FALSE, $rstgr = FALSE)
+    /**
+     * @return array<string, string>
+     */
+    public function array_posibles_dl_de_esquemas(bool $comun = false, bool $rstgr = false): array
     {
         $a_posibles_esquemas = $this->array_posibles_esquemas($comun, $rstgr);
         $a_dl = [];
+        if (!is_array($a_posibles_esquemas)) {
+            return $a_dl;
+        }
         foreach ($a_posibles_esquemas as $esquema) {
             $region = strtok($esquema, '-');
             $dl = strtok('-');
-            $a_dl[$dl] = $dl;
+            if (is_string($dl)) {
+                $a_dl[$dl] = $dl;
+            }
         }
         return $a_dl;
     }
 
-    public function posibles_tablas($default = '')
+    public function posibles_tablas(string $default = ''): string
     {
         $txt = "<select id=\"tabla\" name=\"tabla\" >";
         if ($this->Blanco) {
             $txt .= "<option></option>";
         }
         $a_tablas = $this->array_posibles_tablas();
+        if (!is_array($a_tablas)) {
+            $a_tablas = [];
+        }
         foreach ($a_tablas as $tabla) {
             if (!empty($default) && $tabla == $default) {
                 $sel_tabla = 'selected';
@@ -215,7 +243,10 @@ class DBPropiedades
         return $txt;
     }
 
-    public function array_posibles_tablas()
+    /**
+     * @return list<string>|false
+     */
+    public function array_posibles_tablas(): array|false
     {
         $esquema = "H-dlbv";
         $a_tablas = [];
@@ -225,22 +256,30 @@ class DBPropiedades
         $oConexion = new DBConnection($config);
         $oDBP = $oConexion->getPDO();
         $sQuery = "SELECT table_name FROM information_schema.tables WHERE table_schema ='$esquema' ORDER BY table_name";
-        if (($oDblSt = $oDBP->query($sQuery)) === false) {
+        $oDblSt = $oDBP->query($sQuery);
+        if ($oDblSt === false) {
             $sClauError = 'Schemas.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDBP, $sClauError, (string) __LINE__, __FILE__);
+            }
             return false;
         }
-        if (is_object($oDblSt)) {
-            $oDblSt->execute();
-            foreach ($oDblSt as $row) {
-                $tabla = $row[0];
+        foreach ($oDblSt as $row) {
+            if (!is_array($row) || !isset($row[0])) {
+                continue;
+            }
+            $tabla = $this->pdoCellToString($row[0]);
+            if ($tabla !== '') {
                 $a_tablas[] = $tabla;
             }
         }
         return $a_tablas;
     }
 
-    public function array_esquemas_con_tabla($tabla)
+    /**
+     * @return list<string>|false
+     */
+    public function array_esquemas_con_tabla(string $tabla): array|false
     {
         $a_esquemas = [];
         // Lista de posibles tablas (en sv)
@@ -249,47 +288,68 @@ class DBPropiedades
         $oConexion = new DBConnection($config);
         $oDBP = $oConexion->getPDO();
         $sQuery = "SELECT table_schema FROM information_schema.tables WHERE table_name ='$tabla' ORDER BY table_schema";
-        if (($oDblSt = $oDBP->query($sQuery)) === false) {
+        $oDblSt = $oDBP->query($sQuery);
+        if ($oDblSt === false) {
             $sClauError = 'Schemas.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDBP, $sClauError, (string) __LINE__, __FILE__);
+            }
             return false;
         }
-        if (is_object($oDblSt)) {
-            $oDblSt->execute();
-            foreach ($oDblSt as $row) {
-                if ($row[0] == 'public') continue;
-                if ($row[0] == 'resto') continue;
-                if ($row[0] == 'global') continue;
-                if ($row[0] == 'bucardo') continue;
-                $esquema = $row[0];
-                $a_esquemas[] = $esquema;
+        foreach ($oDblSt as $row) {
+            if (!is_array($row) || !isset($row[0])) {
+                continue;
             }
+            $schema = $this->pdoCellToString($row[0]);
+            if ($schema === '') {
+                continue;
+            }
+            if ($schema === 'public') {
+                continue;
+            }
+            if ($schema === 'resto') {
+                continue;
+            }
+            if ($schema === 'global') {
+                continue;
+            }
+            if ($schema === 'bucardo') {
+                continue;
+            }
+            $a_esquemas[] = $schema;
         }
         return $a_esquemas;
     }
 
-    public function getIdSchema($esquema)
+    /**
+     * @return string|false
+     */
+    public function getIdSchema(string $esquema): string|false
     {
         $oConfigDB = new ConfigDB('comun');
         $config = $oConfigDB->getEsquema('public');
         $oConexion = new DBConnection($config);
         $oDBP = $oConexion->getPDO();
         $sQuery = "SELECT idschema('$esquema'::text) ";
-        if (($oDblSt = $oDBP->query($sQuery)) === false) {
+        $oDblSt = $oDBP->query($sQuery);
+        if ($oDblSt === false) {
             $sClauError = 'Schemas.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDBP, $sClauError, (string) __LINE__, __FILE__);
+            }
             return false;
         }
-        $oDblSt->execute();
         $id_esquema = '';
         foreach ($oDblSt as $row) {
-            $id_esquema = $row[0];
+            if (is_array($row)) {
+                $id_esquema = $this->pdoCellToString($row[0] ?? null);
+            }
         }
         if (!empty($id_esquema)) {
             return $id_esquema;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -354,13 +414,32 @@ class DBPropiedades
             return $out;
         }
         foreach ($oDblSt as $row) {
-            if ($row[0] === 'public' || $row[0] === 'resto' || $row[0] === 'global' || $row[0] === 'bucardo') {
+            if (!is_array($row)) {
                 continue;
             }
-            $out[] = (string) $row[0];
+            $nspname = $this->pdoCellToString($row[0] ?? null);
+            if ($nspname === '') {
+                continue;
+            }
+            if ($nspname === 'public' || $nspname === 'resto' || $nspname === 'global' || $nspname === 'bucardo') {
+                continue;
+            }
+            $out[] = $nspname;
         }
 
         return $out;
+    }
+
+    private function pdoCellToString(mixed $value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+
+        return '';
     }
 
 }

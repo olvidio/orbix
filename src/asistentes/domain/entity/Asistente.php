@@ -2,6 +2,7 @@
 
 namespace src\asistentes\domain\entity;
 
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
@@ -34,7 +35,7 @@ class Asistente extends Entity implements AggregateRoot
      *
      * @return boolean
      */
-    public function perm_modificar()
+    public function perm_modificar(): bool
     {
         return $this->getDl_responsable() === ConfigGlobal::mi_delef();
     }
@@ -46,15 +47,15 @@ class Asistente extends Entity implements AggregateRoot
 
     private int $id_nom;
 
-    private ?bool $propio;
+    private bool $propio = false;
 
-    private ?bool $est_ok = false;
+    private bool $est_ok = false;
 
-    private ?bool $cfi = false;
+    private bool $cfi = false;
 
     private ?int $cfi_con = null;
 
-    private ?bool $falta = false;
+    private bool $falta = false;
 
     private ?AsistenteEncargo $encargo = null;
 
@@ -74,7 +75,7 @@ class Asistente extends Entity implements AggregateRoot
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getAsistentePk()
+    public function getAsistentePk(): AsistentePk
     {
         return AsistentePk::fromArray([
             'id_activ' => $this->id_activ,
@@ -306,7 +307,9 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getPlaza(): ?string
     {
-        return $this->plaza?->value();
+        $value = $this->plaza?->value();
+
+        return $value !== null ? (string) $value : null;
     }
 
     /**
@@ -361,7 +364,7 @@ class Asistente extends Entity implements AggregateRoot
     ): string {
         $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
         $iplaza = $oPlazaId instanceof PlazaId
-            ? $oPlazaId?->value()
+            ? $oPlazaId->value()
             : $oPlazaId;
         $iplaza = (int) $iplaza;
         $this->plaza = PlazaId::fromNullableInt($iplaza);
@@ -484,6 +487,9 @@ class Asistente extends Entity implements AggregateRoot
         ];
     }
 
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos(): array
     {
         $set = new Set();
@@ -494,7 +500,7 @@ class Asistente extends Entity implements AggregateRoot
         $set->add($this->datosCampoFalta());
         $set->add($this->datosCampoObserv());
 
-        return $set->getTot();
+        return array_values($set->getTot());
     }
 
     private function datosCampoIdNomHidden(): DatosCampo

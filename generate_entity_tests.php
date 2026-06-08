@@ -146,7 +146,7 @@ function analyzeEntity(string $content, string $modulo, string $entityName): arr
         }
 
         // Detectar si es DateTimeLocal o fecha
-        $isDateTime = ($type === 'DateTimeLocal' || $type === 'NullDateTimeLocal' || preg_match('/^f_/', $name));
+        $isDateTime = ($type === 'DateTimeLocal' || preg_match('/^f_/', $name));
 
         // Detectar si es value object
         $isVO = in_array($type, $analysis['valueObjects']);

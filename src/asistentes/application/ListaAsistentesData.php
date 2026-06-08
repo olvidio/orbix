@@ -31,14 +31,17 @@ final class ListaAsistentesData
 
     /**
      * @param array<string, mixed> $input
-     * @return array{nom_activ: string, queSel: string, aAsistentes: array<string|int, array{nombre: string, a_datos_cl: array<string, string>}>}
+     * @return array{nom_activ: string, queSel: string, aAsistentes: array<string, array{nombre: string, a_datos_cl: array<string, string>}>}
      */
     public function build(array $input): array
     {
         $a_sel = (array)($input['sel'] ?? []);
-        if (!empty($a_sel)) {
-            $id_pau = (int)strtok($a_sel[0], '#');
-            $nom_activ = (string)strtok('#');
+        if ($a_sel !== []) {
+            $sel0 = $a_sel[0];
+            $selKey = is_string($sel0) ? $sel0 : (is_scalar($sel0) ? (string)$sel0 : '');
+            $id_pau = (int)strtok($selKey, '#');
+            $nomPart = strtok('#');
+            $nom_activ = is_string($nomPart) ? $nomPart : '';
         } else {
             $id_pau = input_int($input, 'id_pau', 0);
             $oActividad = $this->actividadAllRepository->findById($id_pau);
@@ -60,6 +63,9 @@ final class ListaAsistentesData
                 $c++;
                 $num++;
                 $id_nom = $oActividadCargo->getId_nom();
+                if ($id_nom === null) {
+                    continue;
+                }
                 $aListaCargos[] = $id_nom;
                 $id_cargo = $oActividadCargo->getId_cargo();
                 $oCargo = $this->cargoRepository->findById($id_cargo);
@@ -84,8 +90,8 @@ final class ListaAsistentesData
 
                 $aWhere = ['id_activ' => $id_pau, 'id_nom' => $id_nom];
                 $aOperador = [];
-                if (!empty($id_nom) && $cAsistente = $this->asistenteRepository->getAsistentes($aWhere, $aOperador)) {
-                    if (is_array($cAsistente) && count($cAsistente) > 1) {
+                if ($id_nom !== 0 && ($cAsistente = $this->asistenteRepository->getAsistentes($aWhere, $aOperador)) !== []) {
+                    if (count($cAsistente) > 1) {
                         $tabla = '';
                         foreach ($cAsistente as $Asistente) {
                             $tabla .= '<li>' . $Asistente->getNomTabla() . '</li>';
@@ -190,7 +196,7 @@ final class ListaAsistentesData
             $a_datos_cl = [];
             if ($queSel === 'listcl') {
                 $a_datos_cl = $this->datosPersona($oPersona);
-                $a_datos_cl['observ'] = $a_valores[$k][6];
+                $a_datos_cl['observ'] = (string) ($a_valores[$k][6] ?? '');
             }
 
             $aAsistentes[$c] = [
@@ -207,7 +213,7 @@ final class ListaAsistentesData
     }
 
     /**
-     * @return array{estudios: string, profesion: string, edad: string, inc_f_inc: string, eap: string, observ: string}
+     * @return array{estudios: string, profesion: string, edad: string, inc_f_inc: string, eap: string, observ: string|null}
      */
     private function datosPersona(PersonaDl|PersonaPub $oPersona): array
     {
@@ -240,7 +246,7 @@ final class ListaAsistentesData
             if (!empty($inc)) {
                 $inc_f_inc = $inc . ' : ' . $f_inc;
             }
-            $eap = empty($oPersona->getEap()) ? '?' : ($oPersona->getEap() ?? '?');
+            $eap = empty($oPersona->getEap()) ? '?' : $oPersona->getEap();
         }
 
         return [
@@ -249,7 +255,7 @@ final class ListaAsistentesData
             'edad' => (string)$edad,
             'inc_f_inc' => $inc_f_inc,
             'eap' => $eap,
-            'observ' => $observ,
+            'observ' => (string) $observ,
         ];
     }
 }

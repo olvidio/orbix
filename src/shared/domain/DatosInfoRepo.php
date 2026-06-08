@@ -2,253 +2,259 @@
 
 namespace src\shared\domain;
 
+use src\shared\domain\contracts\DatosFichaInterface;
+use src\shared\domain\contracts\DatosLookupRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
 
 /* No vale el underscore en el nombre */
 
 abstract class DatosInfoRepo
 {
+    protected ?string $accion = null;
+    /** @var class-string<DatosFichaInterface>|string|null */
+    protected ?string $obj = null;
 
-    protected $accion;
-    protected $obj;
+    protected ?string $txt_explicacion = null;
+    protected ?string $txt_titulo = null;
+    protected ?string $txt_eliminar = null;
+    protected ?string $txt_buscar = null;
+    protected ?string $metodo_gestor = null;
 
-    protected $txt_explicacion;
-    protected $txt_titulo;
-    protected $txt_eliminar;
-    protected $txt_buscar;
-    protected $metodo_gestor;
+    protected mixed $id_pau = null;
+    protected ?string $mod = null;
+    /** @var array<string, mixed>|mixed */
+    protected mixed $a_pkey = null;
 
-    protected $id_pau;
-    protected $mod;
-    protected $a_pkey;
-
-    protected string $k_buscar;
+    protected string $k_buscar = '';
     protected bool $exacto = false;
 
-    protected $pau;
-    protected $repoInterface;
+    protected ?string $pau = null;
+    /** @var class-string|null */
+    protected ?string $repoInterface = null;
 
     /**
      * Ruta relativa al namespace
      * Para sobreescribir por la clase que si tenga
-     * @return string empty
      */
-    public function getBuscar_view()
+    public function getBuscar_view(): string
     {
         return '';
     }
 
-    public function getBuscar_namespace()
+    public function getBuscar_namespace(): string
     {
         return '';
     }
 
-    public function addCamposFormBuscar()
+    public function addCamposFormBuscar(): string
     {
         return '';
     }
 
-    public function addCampos(array $a_campos = [])
+    /**
+     * @param array<string, mixed> $a_campos
+     * @return array<string, mixed>
+     */
+    public function addCampos(array $a_campos = []): array
     {
         return $a_campos;
     }
 
-    public function getMetodoGestor()
+    public function getMetodoGestor(): ?string
     {
         return $this->metodo_gestor;
     }
 
-    public function setMetodoGestor($metodo_gestor)
+    public function setMetodoGestor(?string $metodo_gestor): void
     {
         $this->metodo_gestor = $metodo_gestor;
     }
 
-    public function setId_pau($id_pau)
+    public function setId_pau(mixed $id_pau): void
     {
         $this->id_pau = $id_pau;
     }
 
-    public function setMod($mod)
+    public function setMod(?string $mod): void
     {
         $this->mod = $mod;
     }
 
-    public function setA_pkey($a_pkey)
+    public function setA_pkey(mixed $a_pkey): void
     {
         $this->a_pkey = $a_pkey;
     }
 
-    public function setK_buscar($k_buscar)
+    public function setK_buscar(string $k_buscar): void
     {
         $this->k_buscar = $k_buscar;
     }
 
-    public function setTxtExplicacion($txt_explicacion = '')
+    public function setTxtExplicacion(string $txt_explicacion = ''): void
     {
         $this->txt_explicacion = $txt_explicacion;
     }
 
-    public function setTxtTitulo($txt_titulo = '')
+    public function setTxtTitulo(string $txt_titulo = ''): void
     {
         $this->txt_titulo = $txt_titulo;
     }
 
-    public function setTxtEliminar($txt_eliminar = '')
+    public function setTxtEliminar(string $txt_eliminar = ''): void
     {
         $this->txt_eliminar = $txt_eliminar;
     }
 
-    public function setTxtBuscar($txt_buscar = '')
+    public function setTxtBuscar(string $txt_buscar = ''): void
     {
         $this->txt_buscar = $txt_buscar;
     }
 
-    public function getTxtExplicacion()
+    public function getTxtExplicacion(): string
     {
-        if (!isset($this->txt_explicacion)) {
-            return '';
-        } else {
-            return $this->txt_explicacion;
-        }
+        return $this->txt_explicacion ?? '';
     }
 
-    public function getTxtTitulo()
+    public function getTxtTitulo(): string
     {
-        if (!isset($this->txt_titulo)) {
-            return '';
-        } else {
-            return $this->txt_titulo;
-        }
+        return $this->txt_titulo ?? '';
     }
 
-    public function getTxtEliminar()
+    public function getTxtEliminar(): string
     {
-        if (!isset($this->txt_eliminar)) {
-            return '';
-        } else {
-            return $this->txt_eliminar;
-        }
+        return $this->txt_eliminar ?? '';
     }
 
-    public function getTxtBuscar()
+    public function getTxtBuscar(): string
     {
-        if (!isset($this->txt_buscar)) {
-            return '';
-        } else {
-            return $this->txt_buscar;
-        }
+        return $this->txt_buscar ?? '';
     }
 
-    public function setRepositoryInterface($repoInterface)
+    /**
+     * @param class-string|null $repoInterface
+     */
+    public function setRepositoryInterface(?string $repoInterface): void
     {
         $this->repoInterface = $repoInterface;
     }
 
-    public function getRepositoryInterface()
+    /**
+     * @return class-string|null
+     */
+    public function getRepositoryInterface(): ?string
     {
         return $this->repoInterface;
     }
 
-    public function setClase($obj)
+    /**
+     * @param class-string<DatosFichaInterface>|string $obj
+     */
+    public function setClase(string $obj): void
     {
         $this->obj = $obj;
     }
 
-    public function getClase()
+    /**
+     * @return class-string<DatosFichaInterface>|string|null
+     */
+    public function getClase(): ?string
     {
         return $this->obj;
     }
 
-    public function setPau($pau)
+    public function setPau(?string $pau): void
     {
         $this->pau = $pau;
     }
 
-    public function getPau()
+    public function getPau(): ?string
     {
         return $this->pau;
     }
 
-    public function getKeyCollection()
+    /**
+     * @return array<string, mixed>|string
+     */
+    public function getKeyCollection(): array|string
     {
         $key_collection = '';
         if (isset($this->pau)) {
             switch ($this->pau) {
                 case 'p':
-                    $key_collection = array('id_nom' => $this->id_pau);
+                    $key_collection = ['id_nom' => $this->id_pau];
                     break;
                 case 'a':
-                    $key_collection = array('id_activ' => $this->id_pau);
+                    $key_collection = ['id_activ' => $this->id_pau];
                     break;
                 case 'u':
-                    $key_collection = array('id_ubi' => $this->id_pau);
+                    $key_collection = ['id_ubi' => $this->id_pau];
                     break;
             }
         }
+
         return $key_collection;
     }
 
-    /*
-    public function getColeccion()
-    {
-        // para el datos_sql.php
-        $gestor = preg_replace('/\\\(\w*)$/', '\Gestor\1', $this->obj);
-        $oLista = new $gestor();
-        $metodo = $this->getMetodoGestor();
-        $key = $this->getKeyCollection();
-        $Coleccion = $oLista->$metodo($key);
-
-        return $Coleccion;
-    }
-    */
-
-    public function getFicha()
+    /**
+     * @return object|null
+     */
+    public function getFicha(): ?object
     {
         $obj = $this->obj;
+        if ($obj === null || $obj === '') {
+            return null;
+        }
 
-        $RepositoryInterface = $this->getRepositoryInterface();
-        if (empty($RepositoryInterface)) {
+        $repositoryInterface = $this->getRepositoryInterface();
+        if (empty($repositoryInterface)) {
             $repo = str_replace('domain\entity', 'domain\contracts', $obj);
-            $RepositoryInterface = $repo . 'RepositoryInterface';
+            $repositoryInterface = $repo . 'RepositoryInterface';
+        }
+        if (!interface_exists($repositoryInterface) && !class_exists($repositoryInterface)) {
+            return null;
         }
 
         $oFicha = null;
-        $oRepository = DependencyResolver::get($RepositoryInterface);
+        /** @var DatosLookupRepositoryInterface $oRepository */
+        $oRepository = DependencyResolver::get($repositoryInterface);
+
         switch ($this->mod) {
             case 'nuevo':
-                $oFicha = new $this->obj($this->getKeyCollection());
+                /** @var DatosFichaInterface $oFicha */
+                $oFicha = new $obj($this->getKeyCollection());
                 break;
             case 'eliminar':
             case 'editar':
                 if (!empty($this->a_pkey)) {
+                    /** @var DatosFichaInterface|null $oFicha */
                     $oFicha = $oRepository->findById($this->a_pkey);
                 }
                 break;
         }
+
         return $oFicha;
     }
 
-    public function getOpcionesParaCondicion($pKeyRepository, $valor_depende, $opcion_sel = null)
-    {
-        //caso de actualizar el campo depende
-        /* Debe sobreescribirse el método, esto es un ejemlpo
-        $valor_depende = empty($valor_depende) ? 0 : $valor_depende;
-        //caso de actualizar el campo depende
-        $LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
-        $aOpciones = $LugarRepository->getArrayLugares($valor_depende);
-        $opciones_txt = '<option></option>';
-        foreach ($aOpciones as $key => $val) {
-            $sel = ((string)$key === (string)$opcion_sel) ? 'selected' : '';
-            $opciones_txt .= "<option value=\"$key\" $sel>$val</option>";
-        }
-        return $opciones_txt;
-        */
+    public function getOpcionesParaCondicion(
+        mixed $pKeyRepository,
+        mixed $valor_depende,
+        mixed $opcion_sel = null
+    ): ?string {
+        return null;
     }
 
-    public function getArrayCamposDepende()
+    /**
+     * @return array<string, string>
+     */
+    public function getArrayCamposDepende(): array
     {
-        // key -> campo pKeyRepository (campo llave del repository)
-        // value -> campo que se debe llenar con valores del repository
         return [];
     }
+
+    /**
+     * Colección de filas para tablaDB (lista / buscar).
+     *
+     * @return iterable<DatosFichaInterface>
+     */
+    abstract public function getColeccion(): iterable;
 }

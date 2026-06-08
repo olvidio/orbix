@@ -8,7 +8,8 @@ use PDO;
 use RuntimeException;
 
 /**
- * Acceso tipado a conexiones PDO registradas en `$GLOBALS` por el bootstrap.
+ * Acceso tipado a conexiones PDO del bootstrap (`ConnectionBootstrap` → `BootstrapPdoGlobals`).
+ * El código de aplicación/repos debe usar {@see self::get()} en lugar de `$GLOBALS['oDB*']`.
  */
 final class GlobalPdo
 {

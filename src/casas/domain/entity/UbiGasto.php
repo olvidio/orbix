@@ -6,7 +6,6 @@ use src\casas\domain\value_objects\UbiGastoCantidad;
 use src\casas\domain\value_objects\UbiGastoTipo;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class UbiGasto
 {
@@ -48,9 +47,9 @@ class UbiGasto
     }
 
 
-    public function getF_gasto(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_gasto(): DateTimeLocal|null
     {
-        return $this->f_gasto ?? new NullDateTimeLocal;
+        return $this->f_gasto;
     }
 
 

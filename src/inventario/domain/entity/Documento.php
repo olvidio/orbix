@@ -20,7 +20,6 @@ use src\inventario\domain\value_objects\{DocumentoId,
     UbiInventarioId};
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class Documento
 {

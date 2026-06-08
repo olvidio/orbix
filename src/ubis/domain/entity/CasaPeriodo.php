@@ -4,7 +4,6 @@ namespace src\ubis\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\shared\domain\value_objects\SfsvOtrosId;
 
 class CasaPeriodo
@@ -18,9 +17,9 @@ class CasaPeriodo
 
     private int $id_ubi;
 
-    private DateTimeLocal|NullDateTimeLocal $f_ini;
+    private DateTimeLocal|null $f_ini;
 
-    private DateTimeLocal|NullDateTimeLocal $f_fin;
+    private DateTimeLocal|null $f_fin;
 
     private ?SfsvOtrosId $sfsv = null;
 
@@ -50,27 +49,27 @@ class CasaPeriodo
     }
 
 
-    public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_ini(): DateTimeLocal|null
     {
-        return $this->f_ini ?? new NullDateTimeLocal;
+        return $this->f_ini;
     }
 
 
     public function setF_ini(DateTimeLocal|null $f_ini = null): void
     {
-        $this->f_ini = $f_ini ?? new NullDateTimeLocal();
+        $this->f_ini = $f_ini;
     }
 
 
-    public function getF_fin(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_fin(): DateTimeLocal|null
     {
-        return $this->f_fin ?? new NullDateTimeLocal;
+        return $this->f_fin;
     }
 
 
     public function setF_fin(DateTimeLocal|null $f_fin = null): void
     {
-        $this->f_fin = $f_fin ?? new NullDateTimeLocal();
+        $this->f_fin = $f_fin;
     }
 
     /**

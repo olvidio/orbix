@@ -152,7 +152,7 @@ final class ListaUltimaActivData
                 ];
                 $aOperadorUltima = ['f_ini' => '<'];
                 $cActividades = $this->actividadDlRepository->getActividades($aWhereUltima, $aOperadorUltima);
-                if (is_array($cActividades) && !empty($cActividades)) {
+                if ($cActividades !== []) {
                     /** @var \src\actividades\domain\entity\ActividadAll $oActividadU */
                     $oActividadU = $cActividades[0];
                     $oFiniAct = $oActividadU->getF_fin();
@@ -171,7 +171,7 @@ final class ListaUltimaActivData
                 break;
             case 'cv_jovenes':
                 $titulo_actividad = _('s jóvenes (<30) que no han asistido a cv de s');
-                $f_joven = date('Y-m-d', mktime(0, 0, 0, 1, 1, $any - 30));
+                $f_joven = date('Y-m-d', (int) mktime(0, 0, 0, 1, 1, $any - 30));
                 $aWhereP['f_nacimiento'] = $f_joven;
                 $aOperadorP['f_nacimiento'] = '>';
                 $aWhereP['ce_ini'] = 'x';
@@ -202,7 +202,7 @@ final class ListaUltimaActivData
                 $nombre_ubi = '';
                 $id_ctr = $oPersona->getId_ctr();
                 $cCentros = $this->centroDlRepository->getCentros(['id_ubi' => $id_ctr]);
-                if (is_array($cCentros) && !empty($cCentros)) {
+                if ($cCentros !== []) {
                     /** @var \src\ubis\domain\entity\CentroDl $oCentro */
                     $oCentro = $cCentros[0];
                     $nombre_ubi = $oCentro->getNombre_ubi();

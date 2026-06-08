@@ -21,12 +21,11 @@ interface MapIdRepositoryInterface
 	/**
 	 * devuelve una colección (array) de objetos de tipo MapId
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo MapId
-	
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<MapId>
 	 */
-	public function getMapIdes(array $aWhere=[], array $aOperators=[]): array;
+	public function getMapIdes(array $aWhere = [], array $aOperators = []): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
@@ -45,10 +44,9 @@ interface MapIdRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param string $objeto
-     * @return array|bool
-	
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $objeto, int $id_resto): array|bool;
+    public function datosById(string $objeto, int $id_resto): array|false;
 	
     /**
      * Busca la clase con objeto en el repositorio.

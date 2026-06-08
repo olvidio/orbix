@@ -35,27 +35,33 @@ class Select_actividades_de_una_persona
     ) {
     }
 
+    /** @var array<string, array{perm: mixed, nom: mixed}> */
     private array $ref_perm = [];
-    private mixed $msg_err = '';
-    private mixed $a_valores = null;
-    private mixed $txt_eliminar = null;
-    private mixed $bloque = null;
+    private string $msg_err = '';
+
+    /** @var array<int|string, mixed> */
+    private array $a_valores = [];
+
+    private string $txt_eliminar = '';
+    private string $bloque = '';
 
     private string $queSel = '';
-    /** @var mixed */
-    private $id_dossier;
-    /** @var mixed */
-    private $pau;
-    /** @var mixed */
-    private $obj_pau;
-    /** @var mixed */
-    private $id_pau;
-    /** @var mixed */
-    private $permiso;
-    private mixed $modo_curso = 1;
 
+    /** @var int|string */
+    private $id_dossier;
+
+    private string $pau = '';
+    private string $obj_pau = '';
+    private int $id_pau = 0;
+    private int $permiso = 0;
+    private int $modo_curso = 1;
+
+    /** @var int|string|null */
     private $Qid_sel;
+
+    /** @var int|string|null */
     private $Qscroll_id;
+
     // Clave actual de la pila de navegación, inyectada desde el controller frontend.
     private int $stackActual = 0;
 
@@ -67,9 +73,7 @@ class Select_actividades_de_una_persona
 
     private mixed $status;
 
-    /**
-     * @return array{0: array<string, mixed>, 1: array<string, mixed>}
-     */
+    /** @return array{0: array<string, mixed>, 1: array<string, string>} */
     private function cursoWhereFromModo(int $modo_curso): array
     {
         $mes = date('m');
@@ -80,7 +84,9 @@ class Select_actividades_de_una_persona
         $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
         $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
 
+        /** @var array<string, mixed> $aWhere */
         $aWhere = ['_ordre' => 'f_ini'];
+        /** @var array<string, string> $aOperator */
         $aOperator = [];
         switch ($modo_curso) {
             case 2:
@@ -100,6 +106,7 @@ class Select_actividades_de_una_persona
         return [$aWhere, $aOperator];
     }
 
+    /** @return array<int, array{txt: string, click: string}> */
     private function getBotones(): array
     {
         return [
@@ -108,6 +115,7 @@ class Select_actividades_de_una_persona
         ];
     }
 
+    /** @return array<int, string|array{name: string, width: int}> */
     private function getCabeceras(): array
     {
         return [
@@ -120,13 +128,14 @@ class Select_actividades_de_una_persona
         ];
     }
 
-    private function getValores()
+    /** @return array<int|string, mixed> */
+    private function getValores(): array
     {
-        if (empty($this->a_valores) && empty($this->msg_err)) {
+        if (empty($this->a_valores) && $this->msg_err === '') {
             $this->getTabla();
         }
 
-        return $this->a_valores ?? [];
+        return $this->a_valores;
     }
 
     private function getTabla(): void
@@ -136,11 +145,11 @@ class Select_actividades_de_una_persona
         /** @var XPermisos $oPerm */
         $oPerm = $_SESSION['oPerm'];
 
-        [$aWhere, $aOperator] = $this->cursoWhereFromModo((int) $this->modo_curso);
+        [$aWhere, $aOperator] = $this->cursoWhereFromModo($this->modo_curso);
 
         $oPersona = Persona::findPersonaEnGlobal($this->id_pau);
         if (!is_object($oPersona)) {
-            $this->msg_err = "<br>No encuentro a ninguna persona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
+            $this->msg_err = "<br>No encuentro a ninguna persona con id_nom: {$this->id_pau} en  " . __FILE__ . ": line " . __LINE__;
             $this->a_valores = [];
             $this->ref_perm = [];
 
@@ -148,7 +157,14 @@ class Select_actividades_de_una_persona
         }
         $id_tabla = $oPersona->getId_tabla();
         $oPermDossier = new PermDossier();
-        $this->ref_perm = $oPermDossier->perm_activ_pers($id_tabla);
+        $rawRefPerm = $oPermDossier->perm_activ_pers($id_tabla);
+        $this->ref_perm = [];
+        foreach ($rawRefPerm as $key => $value) {
+            $this->ref_perm[(string) $key] = [
+                'perm' => $value['perm'] ?? null,
+                'nom' => $value['nom'] ?? null,
+            ];
+        }
 
         $i = 0;
         $a_valores = [];
@@ -185,9 +201,9 @@ class Select_actividades_de_una_persona
                 $sactividad = $oTipoActividad->getActividadText();
                 $nom_activ = "$ssfsv $sactividad";
             }
-            $id_tipo = substr($id_tipo_activ, 0, 3);
-            $act = !empty($this->ref_perm[$id_tipo]) ? $this->ref_perm[$id_tipo] : '';
-            $permiso = !empty($act["perm"]) ? 3 : 1;
+            $id_tipo = substr((string) $id_tipo_activ, 0, 3);
+            $act = $this->ref_perm[$id_tipo] ?? [];
+            $permiso = !empty($act['perm']) ? 3 : 1;
 
             is_true($propio) ? $chk_propio = "si" : $chk_propio = "no";
             is_true($falta) ? $chk_falta = "si" : $chk_falta = "no";
@@ -224,11 +240,11 @@ class Select_actividades_de_una_persona
 
         return [
             'segment_tipo' => 'select_actividades_de_una_persona',
-            'modo_curso' => (int) $this->modo_curso,
-            'msg_err' => is_string($this->msg_err) ? $this->msg_err : '',
+            'modo_curso' => $this->modo_curso,
+            'msg_err' => $this->msg_err,
             'wrapper' => [
-                'txt_eliminar' => is_string($this->txt_eliminar) ? $this->txt_eliminar : '',
-                'bloque' => is_string($this->bloque) ? $this->bloque : '',
+                'txt_eliminar' => $this->txt_eliminar,
+                'bloque' => $this->bloque,
                 'url_form_relative' => DossierTipoPublicUrls::relativeFormController(self::ID_TIPO_DOSSIER),
                 'url_eliminar_path' => 'src/asistentes/asistente_eliminar',
             ],
@@ -270,7 +286,8 @@ class Select_actividades_de_una_persona
             if (empty($val["perm"])) {
                 continue;
             }
-            $nom = $val["nom"];
+            $nomTxt = $val['nom'] ?? '';
+            $nom = is_scalar($nomTxt) ? (string) $nomTxt : '';
             $aQuery = [
                 'mod' => 'nuevo',
                 'que_dl' => $mi_dele,
@@ -284,10 +301,11 @@ class Select_actividades_de_una_persona
         }
         reset($ref_perm);
         foreach ($ref_perm as $clave => $val) {
-            if (empty($val["perm"])) {
+            if (empty($val['perm'])) {
                 continue;
             }
-            $nom = $val["nom"];
+            $nomTxt = $val['nom'] ?? '';
+            $nom = is_scalar($nomTxt) ? (string) $nomTxt : '';
             $aQuery = [
                 'mod' => 'nuevo',
                 'pau' => $this->pau,
@@ -300,30 +318,28 @@ class Select_actividades_de_una_persona
         }
     }
 
-    public function setModo_curso($modo_curso): void
+    public function setModo_curso(string|int|float|bool|null $modo_curso = null): void
     {
-        if (empty($modo_curso)) {
-            $modo_curso = 1;
-        }
-        $this->modo_curso = $modo_curso;
+        $modo = (int) ($modo_curso ?? 0);
+        $this->modo_curso = $modo === 0 ? 1 : $modo;
     }
 
-    public function getId_dossier() { return $this->id_dossier; }
-    public function getPau() { return $this->pau; }
-    public function getObj_pau() { return $this->obj_pau; }
-    public function getId_pau() { return $this->id_pau; }
-    public function getPermiso() { return $this->permiso; }
-    public function getStatus() { return $this->status; }
+    public function getId_dossier(): int|string { return $this->id_dossier; }
+    public function getPau(): string { return $this->pau; }
+    public function getObj_pau(): string { return $this->obj_pau; }
+    public function getId_pau(): int { return $this->id_pau; }
+    public function getPermiso(): int { return $this->permiso; }
+    public function getStatus(): mixed { return $this->status; }
 
-    public function setId_dossier($Qid_dossier): void { $this->id_dossier = $Qid_dossier; }
-    public function setPau($Qpau): void { $this->pau = $Qpau; }
-    public function setObj_pau($Qobj_pau): void { $this->obj_pau = $Qobj_pau; }
-    public function setId_pau($Qid_pau): void { $this->id_pau = $Qid_pau; }
-    public function setPermiso($Qpermiso): void { $this->permiso = $Qpermiso; }
-    public function setStatus($Qstatus): void { $this->status = $Qstatus; }
-    public function setQid_sel($Qid_sel): void { $this->Qid_sel = $Qid_sel; }
-    public function setQscroll_id($Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
-    public function setBloque($bloque): void { $this->bloque = $bloque; }
-    public function setQueSel($queSel): void { $this->queSel = (string) $queSel; }
+    public function setId_dossier(int|string $Qid_dossier): void { $this->id_dossier = $Qid_dossier; }
+    public function setPau(string|int|float|bool|null $Qpau = null): void { $this->pau = $Qpau === null ? '' : (string) $Qpau; }
+    public function setObj_pau(string|int|float|bool|null $Qobj_pau = null): void { $this->obj_pau = $Qobj_pau === null ? '' : (string) $Qobj_pau; }
+    public function setId_pau(string|int|float|bool|null $Qid_pau = null): void { $this->id_pau = (int) ($Qid_pau ?? 0); }
+    public function setPermiso(string|int|float|bool|null $Qpermiso = null): void { $this->permiso = (int) ($Qpermiso ?? 0); }
+    public function setStatus(mixed $Qstatus): void { $this->status = $Qstatus; }
+    public function setQid_sel(int|string|null $Qid_sel): void { $this->Qid_sel = $Qid_sel; }
+    public function setQscroll_id(int|string|null $Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
+    public function setBloque(string|int|float|bool|null $bloque = null): void { $this->bloque = $bloque === null ? '' : (string) $bloque; }
+    public function setQueSel(string|int|float|bool|null $queSel = null): void { $this->queSel = $queSel === null ? '' : (string) $queSel; }
     public function setStackActual(int $stack): void { $this->stackActual = $stack; }
 }

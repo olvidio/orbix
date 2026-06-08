@@ -2,6 +2,9 @@
 
 namespace src\utils_database\domain\entity;
 
+use PDO;
+use src\shared\infrastructure\GlobalPdo;
+use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ReplicaSelectPolicy;
@@ -15,17 +18,17 @@ use src\shared\infrastructure\persistence\postgresql\DBRefresh;
 abstract class DBAbstract
 {
 
-    protected $esquema;
-    protected $vf;
-    protected $role;
-    protected $role_vf;
-    protected $oDbl;
-    protected $user_orbix;
+    protected string $esquema = '';
+    protected string $vf = '';
+    protected string $role = '';
+    protected string $role_vf = '';
+    protected ?PDO $oDbl = null;
+    protected string $user_orbix = '';
 
     /** true mientras se repiten operaciones globales en comun_select / sv-e_select */
     protected bool $operacionEnReplica = false;
 
-    public static function hasServerSelect()
+    public static function hasServerSelect(): bool
     {
         return ReplicaSelectPolicy::incluirSelect();
     }
@@ -33,20 +36,20 @@ abstract class DBAbstract
     /**
      * Define el objeto PDO de la base de datos
      */
-    protected function setConexion($db)
+    protected function setConexion(string $db): void
     {
         switch ($db) {
             case 'comun':
                 // Conexi?n Comun esquema, para entrar como usuario H-dlb.
-                $this->oDbl = $GLOBALS['oDBC'];
+                $this->oDbl = GlobalPdo::get('oDBC');
                 break;
             case 'sfsv':
                 // Conexi?n sv esquema, para entrar como usuario H-dlbv.
-                $this->oDbl = $GLOBALS['oDB'];
+                $this->oDbl = GlobalPdo::get('oDB');
                 break;
             case 'sfsv-e':
                 // Conexi?n sv-e esquema, para entrar como usuario H-dlbv.
-                $this->oDbl = $GLOBALS['oDBE'];
+                $this->oDbl = GlobalPdo::get('oDBE');
                 break;
         }
     }
@@ -56,20 +59,28 @@ abstract class DBAbstract
      * Al ser de la DB comun, puede ser que al intentar crear como sf, las
      * tablas ya se hayan creado como sv (o al rev?s).
      *
-     * @param string  nombre de la tabla sin schema
-     * @return boolean
+     * @param string $nom_tabla nombre de la tabla sin schema
+     * @return bool
      */
-    protected function tableExists($nom_tabla)
+    protected function tableExists(string $nom_tabla): bool
     {
         $oDbl = $this->oDbl;
+        if ($oDbl === null) {
+            return false;
+        }
         $sql = "SELECT to_regclass('$nom_tabla');";
 
         if (($oDblSt = $oDbl->query($sql)) === FALSE) {
             $sClauError = 'comprobar';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+            }
             return FALSE;
         }
-        $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+        $aDades = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDades)) {
+            return false;
+        }
         if ($aDades['to_regclass'] === $nom_tabla) {
             return TRUE;
         } else {
@@ -80,7 +91,7 @@ abstract class DBAbstract
     /**
      * Quita el permiso (orbix u orbixv/f) para acceder a global.
      */
-    protected function delPermisoGlobal($db)
+    protected function delPermisoGlobal(string $db): void
     {
         if (empty($this->role) && empty($this->role_vf)) {
             return;
@@ -93,7 +104,7 @@ abstract class DBAbstract
         }
     }
 
-    private function delPermisoGlobalConexion($db): void
+    private function delPermisoGlobalConexion(string $db): void
     {
         $role_target = (empty($this->role)) ? $this->role_vf : $this->role;
         $role_target = str_replace('"', '', $role_target);
@@ -194,7 +205,7 @@ abstract class DBAbstract
      *
      * @param  $db 'comun'|'sfsv'
      */
-    protected function addPermisoGlobal(string $db)
+    protected function addPermisoGlobal(string $db): void
     {
         if (empty($this->role) && empty($this->role_vf)) {
             return;
@@ -326,7 +337,7 @@ abstract class DBAbstract
         return $role_target;
     }
 
-    protected function addPermisoRole(string $db, string $role_to_grant)
+    protected function addPermisoRole(string $db, string $role_to_grant): void
     {
         if (empty($this->role) && empty($this->role_vf)) {
             return;
@@ -367,7 +378,7 @@ abstract class DBAbstract
         }
     }
 
-    protected function delPermisoRole(string $db, string $role_to_grant)
+    protected function delPermisoRole(string $db, string $role_to_grant): void
     {
         if (empty($this->role) && empty($this->role_vf)) {
             return;
@@ -462,7 +473,7 @@ abstract class DBAbstract
         ];
     }
 
-    protected function getNomTabla($tabla)
+    protected function getNomTabla(string $tabla): string
     {
         if ($this->esquema === 'public') {
             $public_vf = $this->esquema . $this->vf;
@@ -473,7 +484,10 @@ abstract class DBAbstract
         return $nom_tabla;
     }
 
-    protected function executeSql($a_sql)
+    /**
+     * @param list<string> $a_sql
+     */
+    protected function executeSql(array $a_sql): bool
     {
         $oDbl = $this->oDbl;
         if ($oDbl === null) {
@@ -484,7 +498,9 @@ abstract class DBAbstract
         foreach ($a_sql as $sql) {
             if ($oDbl->exec($sql) === false) {
                 $sClauError = 'Procesos.DBEsquema.query';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+                }
                 $oDbl->rollback();
                 throw new \RuntimeException(_('Error ejecutando SQL en base de datos.'));
             }
@@ -498,15 +514,19 @@ abstract class DBAbstract
      */
     private function conectarImportarReplica(string $claveImportar): void
     {
+        if ($claveImportar !== 'public_select' && $claveImportar !== 'publicv-e_select') {
+            throw new \InvalidArgumentException(sprintf(_('Clave de réplica no soportada: %s'), $claveImportar));
+        }
         $oConfigDB = new ConfigDB('importar');
         $config = $oConfigDB->getConexionImportarReplica($claveImportar);
         $oConexion = new DBConnection($config);
-        $this->oDbl = $oConexion->getPDO();
+        $pdo = $oConexion->getPDO();
+        $this->oDbl = $pdo;
         // public_select no es un schema PG; usar public (como MigracionesEjecutar).
-        $this->oDbl->exec('SET search_path TO public');
+        $pdo->exec('SET search_path TO public');
     }
 
-    protected function eliminar($nom_tabla)
+    protected function eliminar(string $nom_tabla): bool
     {
         $a_sql = [];
         // solo borrar todo si estoy en pruebas
@@ -519,15 +539,16 @@ abstract class DBAbstract
         return $this->executeSql($a_sql);
     }
 
-    protected function eliminarDeComunSelect($nom_tabla)
+    protected function eliminarDeComunSelect(string $nom_tabla): bool
     {
         // (debe estar despu?s de fijar el role)
         $this->addPermisoGlobal('comun_select');
-        $this->eliminar($nom_tabla);
+        $result = $this->eliminar($nom_tabla);
         $this->delPermisoGlobal('comun_select');
+        return $result;
     }
 
-    protected function eliminarDeSVESelect($tabla_sin_esquema)
+    protected function eliminarDeSVESelect(string $tabla_sin_esquema): bool
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -537,14 +558,26 @@ abstract class DBAbstract
 
         $datosTabla = $this->infoTable($tabla_sin_esquema);
         $nom_tabla = $datosTabla['nom_tabla'];
+        if (!is_string($nom_tabla) || $nom_tabla === '') {
+            throw new \RuntimeException(sprintf(_('No se pudo resolver nombre de tabla para: %s'), $tabla_sin_esquema));
+        }
 
         $this->addPermisoGlobal('sfsv-e_select');
-        $this->eliminar($nom_tabla);
+        $result = $this->eliminar($nom_tabla);
         $this->delPermisoGlobal('sfsv-e_select');
 
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
+        return $result;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function infoTable(string $tabla): array
+    {
+        throw new \RuntimeException(sprintf(_('infoTable no implementado para la tabla: %s'), $tabla));
     }
 
     /**

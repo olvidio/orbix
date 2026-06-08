@@ -8,6 +8,7 @@ $Qclase_info_encoded = filter_input(INPUT_POST, 'clase_info');
 $a_pkey = filter_input(INPUT_POST, 'a_pkey');
 $Qobj_pau = filter_input(INPUT_POST, 'obj_pau');
 $Qmod = filter_input(INPUT_POST, 'mod');
+$mod = is_string($Qmod) ? $Qmod : '';
 
 // Tiene que ser en dos pasos.
 $obj = urldecode((string) $Qclase_info_encoded);
@@ -15,13 +16,13 @@ $oInfoClase = DatosInfoRepoResolver::resolve($obj);
 if (method_exists($oInfoClase, 'setObj_pau')) {
     $oInfoClase->setObj_pau($Qobj_pau);
 }
-$oInfoClase->setMod($Qmod);
+$oInfoClase->setMod($mod !== '' ? $mod : null);
 $oInfoClase->setA_pkey($a_pkey);
 $oFicha = $oInfoClase->getFicha();
 $aCamposDepende = $oInfoClase->getArrayCamposDepende();
 $aOpciones_txt = [];
 foreach ($aCamposDepende as $pKeyRepository => $campoDepende) {
-    if ($Qmod === 'nuevo') {
+    if ($mod === 'nuevo') {
        $id_pau = '';
        $valor_campo_depende = '';
     } else {
@@ -30,13 +31,14 @@ foreach ($aCamposDepende as $pKeyRepository => $campoDepende) {
         $aaa = 'get' . ucfirst($campoDepende);
         $valor_campo_depende = $oFicha->$aaa();
     }
-    $aOpciones_txt[$campoDepende] = $oInfoClase->getOpcionesParaCondicion($campoDepende,$id_pau,$valor_campo_depende);
+    $opciones = $oInfoClase->getOpcionesParaCondicion($campoDepende, $id_pau, $valor_campo_depende);
+    $aOpciones_txt[$campoDepende] = $opciones ?? '';
 }
 
 $oDatosFormRepo = new DatosFormRepo();
 $oDatosFormRepo->setFicha($oFicha);
 $oDatosFormRepo->setArrayOpcionesTxt($aOpciones_txt);
-$oDatosFormRepo->setMod($Qmod);
+$oDatosFormRepo->setMod($mod);
 
 $tit_txt = $oInfoClase->getTxtTitulo();
 $explicacion_txt = $oInfoClase->getTxtExplicacion();
@@ -49,8 +51,8 @@ if (!empty($oFicha)) {
     $oDatosFormRepo->setFicha($oFicha);
 }
 
-if (!empty($Qmod)) {
-    $oDatosFormRepo->setMod($Qmod);
+if ($mod !== '') {
+    $oDatosFormRepo->setMod($mod);
 }
 
 // Get the form data

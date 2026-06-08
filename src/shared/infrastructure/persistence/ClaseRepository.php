@@ -9,21 +9,12 @@ use src\shared\infrastructure\DependencyResolver;
 abstract class ClaseRepository
 {
     use Hydratable;
-    /**
-     * @var PDO
-     */
-    protected $oDbl;
-    protected $oDbl_Select;
-    /**
-     * @var string
-     */
-    protected $sNomTabla = '';
-    /**
-     * @var string
-     */
-    protected $sErrorTxt;
+    protected PDO $oDbl;
+    protected PDO $oDbl_Select;
+    protected string $sNomTabla = '';
+    protected string $sErrorTxt = '';
 
-    protected $iid_schema;
+    protected int $iid_schema = 0;
 
     /**
      *
@@ -115,18 +106,18 @@ abstract class ClaseRepository
     /**
      * Serveix per juntar en un conjunt una serie de col·leccions separades
      *
-     * @param array $a_Clases nom de les classes
-     * @param string $namespace nom del namespace
-     * @param array $aWhere associatiu amb els valors de les variables amb les quals farem la query
-     * @param array $aOperators aOperators associate amb els valors dels operadors que cal aplicar a cada variable
+     * @param list<array{repo: class-string, get: string}> $a_Clases nom de les classes
+     * @param array<string, mixed> $aWhere associatiu amb els valors de les variables amb les quals farem la query
+     * @param array<string, string> $aOperators aOperators associate amb els valors dels operadors que cal aplicar a cada variable
+     * @return list<object>
      */
     public function getConjunt(array $a_Clases, string $namespace, array $aWhere, array $aOperators): array
     {
         $cClassesTot = [];
 
         $paraOrdenar = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
-            $paraOrdenar = $aWhere['_ordre'];
+        if (isset($aWhere['_ordre']) && is_scalar($aWhere['_ordre']) && (string) $aWhere['_ordre'] !== '') {
+            $paraOrdenar = (string) $aWhere['_ordre'];
             unset($aWhere['_ordre']);
         }
         foreach ($a_Clases as $aClasse) {
@@ -137,6 +128,9 @@ abstract class ClaseRepository
             $a_ord[$repoName] = [];
             $a_ord_cond[$repoName] = [];
             $Repository = DependencyResolver::get($repoInterface);
+            if (!method_exists($Repository, $get)) {
+                continue;
+            }
             $cClasses = $Repository->$get($aWhere, $aOperators);
             if (is_array($cClasses)) {
                 $cClassesTot = array_merge($cClassesTot, $cClasses);
@@ -154,8 +148,8 @@ abstract class ClaseRepository
                     $aa_ordre = explode(' ', $ordre);
                     $ordreCamp = $aa_ordre[0];
                     $get = 'get' . ucfirst($ordreCamp);
-                    if (method_exists($oClass, $get)) {
-                        $a_ord[$key_o][$key_c] = strtolower($oClass->$get() ?? '');
+                    if (is_object($oClass) && method_exists($oClass, $get)) {
+                        $a_ord[$key_o][$key_c] = strtolower((string) ($oClass->$get() ?? ''));
                         $a_ord_cond[$key_o] = SORT_ASC;
                         if (count($aa_ordre) > 1 && $aa_ordre[1] === 'DESC') {
                             $a_ord_cond[$key_o] = SORT_DESC;
@@ -174,7 +168,14 @@ abstract class ClaseRepository
             $multisort_args[] = &$cClassesTot;   // finally add the source array, by reference
             call_user_func_array("array_multisort", $multisort_args);
         }
-        return $cClassesTot;
+        $result = [];
+        foreach ($cClassesTot as $item) {
+            if (is_object($item)) {
+                $result[] = $item;
+            }
+        }
+
+        return $result;
     }
 
 

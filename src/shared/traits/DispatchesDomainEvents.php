@@ -15,6 +15,8 @@ trait DispatchesDomainEvents
 
     /**
      * Marca una entidad como nueva y registra sus eventos
+     *
+     * @param array<string, mixed> $datosActuales
      */
     protected function markAsNew(object $entity, array $datosActuales = []): void
     {
@@ -26,6 +28,8 @@ trait DispatchesDomainEvents
 
     /**
      * Marca una entidad como modificada y registra sus eventos
+     *
+     * @param array<string, mixed> $datosActuales
      */
     protected function markAsModified(object $entity, array $datosActuales = []): void
     {
@@ -37,6 +41,8 @@ trait DispatchesDomainEvents
 
     /**
      * Marca una entidad como eliminada y registra sus eventos
+     *
+     * @param array<string, mixed> $datosActuales
      */
     protected function markAsDeleted(object $entity, array $datosActuales): void
     {

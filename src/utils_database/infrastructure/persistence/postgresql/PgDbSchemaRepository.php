@@ -8,6 +8,7 @@ use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use src\utils_database\domain\entity\DbSchema;
@@ -29,9 +30,9 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
         // Siempre en esquema public (sv/sv-e usan search_path hacia publicv; nombre sin calificar no resuelve).
         $this->setNomTabla('public.db_idschema');
@@ -43,7 +44,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
      * cambiar el nombre de un esquema existente: mantener el número.
      *     las tablas de las tres bases de datos (comun, sv, sf)
      */
-    public function cambiarNombre($old, $new, $database): void
+    public function cambiarNombre(string $old, string $new, string $database): void
     {
         $this->DBCambiarNombre($old, $new, $database);
         $this->DBCambiarNombre($old . 'f', $new . 'f', $database);
@@ -53,7 +54,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     /**
      * llenar con los nuevos id, las tablas de las tres bases de datos (comun, sv, sf)
      */
-    public function llenarNuevo($schema, $database): void
+    public function llenarNuevo(string $schema, string $database): void
     {
         $Id = $this->getNext($schema);
         $newId = new DbSchemaId($Id);
@@ -90,9 +91,9 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     /**
      * devuelve una colección (array) de objetos de tipo DbSchema
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo DbSchema
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<DbSchema>
      */
     public function getDbSchemas(array $aWhere = [], array $aOperators = []): array
     {
@@ -129,13 +130,13 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+        if (isset($aWhere['_ordre']) && is_string($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
             $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && (string) $aWhere['_limit'] !== '') {
             $sLimit = ' LIMIT ' . $aWhere['_limit'];
         }
         if (isset($aWhere['_limit'])) {
@@ -143,13 +144,16 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $DbSchema = DbSchema::fromArray($aDatos);
             $DbSchemaSet->add($DbSchema);
         }
-        return $DbSchemaSet->getTot();
+        return array_values($DbSchemaSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -189,6 +193,9 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+        if ($stmt === false) {
+            return false;
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -198,6 +205,9 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE schema = '$schema'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -209,16 +219,29 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param string $schema
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $schema): array |bool
+    public function datosById(string $schema): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE schema = '$schema'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($stmt === false) {
+            return false;
+        }
 
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+
+        $row = [];
+        foreach ($aDatos as $key => $value) {
+            $row[(string) $key] = $value;
+        }
+
+        return $row;
     }
 
     /**
@@ -227,7 +250,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     public function findById(string $schema): ?DbSchema
     {
         $aDatos = $this->datosById($schema);
-        if (empty($aDatos)) {
+        if (!is_array($aDatos)) {
             return null;
         }
         return DbSchema::fromArray($aDatos);
@@ -239,6 +262,9 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT COALESCE(MAX(id), 2999) + 1 FROM $nom_tabla";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            throw new \RuntimeException(_('Error obteniendo nuevo id de db_idschema.'));
+        }
         return (int) $stmt->fetchColumn();
     }
 
@@ -290,10 +316,10 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
      *  retorna el id_schema següent per un esquema.
      *  primer mira si ja hi és
      *
-     * @param string schema
-     * @return integer id_schema
+     * @param string $schema
+     * @return int id_schema
      */
-    private function getNext($schema)
+    private function getNext(string $schema): int
     {
         // comprobar si existe
         $cSchema = $this->getDbSchemas(['schema' => $schema]);
@@ -313,7 +339,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
      *
      * @return integer id_schema
      */
-    private function getLast()
+    private function getLast(): int
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -323,8 +349,12 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
             LIMIT 1";
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
         $lastId = null;
-        foreach ($stmt as $aDades) {
-            $lastId = $aDades['id'];
+        if ($stmt !== false) {
+            foreach ($stmt as $aDades) {
+                if (is_array($aDades) && isset($aDades['id']) && is_numeric($aDades['id'])) {
+                    $lastId = (int) $aDades['id'];
+                }
+            }
         }
         if ($lastId === null) {
             throw new \RuntimeException(_('No se encuentra ningún id_schema en el rango 3000-4000'));
@@ -341,7 +371,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
      *   para no violar la PK (un UPDATE antigua→nueva fallaría con «duplicate key»).
      * - Si solo existe la antigua: UPDATE a `new`.
      */
-    private function DBCambiarNombre($old, $new, $database): bool
+    private function DBCambiarNombre(string $old, string $new, string $database): bool
     {
         if ($old === $new || $old === '' || $new === '') {
             return true;

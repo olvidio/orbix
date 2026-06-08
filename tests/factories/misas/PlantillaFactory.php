@@ -5,7 +5,6 @@ namespace Tests\factories\misas;
 use Faker\Factory;
 use src\misas\domain\entity\Plantilla;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 
 /**

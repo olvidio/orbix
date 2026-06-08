@@ -7,7 +7,6 @@ use src\personas\domain\entity\UltimaAsistencia;
 use src\actividades\domain\value_objects\ActividadTipoId;
 use src\personas\domain\value_objects\AsistenciaDescripcionText;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Factory para crear instancias de UltimaAsistencia para tests

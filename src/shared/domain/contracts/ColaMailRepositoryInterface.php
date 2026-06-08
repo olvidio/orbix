@@ -22,9 +22,9 @@ interface ColaMailRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo ColaMail
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ColaMail
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array<int, ColaMail>
      */
     public function getColaMails(array $aWhere = [], array $aOperators = []): array;
 
@@ -46,13 +46,12 @@ interface ColaMailRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param  $uuid_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById($uuid_item): array|bool;
+    public function datosById(string $uuid_item): array|false;
 
     /**
      * Busca la clase con uuid_item en el repositorio.
      */
-    public function findById($uuid_item): ?ColaMail;
+    public function findById(string $uuid_item): ?ColaMail;
 }

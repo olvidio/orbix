@@ -5,7 +5,6 @@ namespace src\shared\domain\entity;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\ColaMailId;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 
 class ColaMail
@@ -104,9 +103,9 @@ class ColaMail
     }
 
 
-    public function getSended(): DateTimeLocal|NullDateTimeLocal|null
+    public function getSended(): DateTimeLocal|null
     {
-        return $this->sended ?? new NullDateTimeLocal;
+        return $this->sended;
     }
 
 

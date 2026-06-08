@@ -49,9 +49,6 @@ final class GrupoCasaFormData
 
         $opciones_casas = [];
         foreach ($this->casaDlRepository->getArrayCasas("WHERE active = 't'") as $id => $nombre) {
-            if (!is_string($nombre)) {
-                continue;
-            }
             $opciones_casas[is_numeric($id) ? (int) $id : (string) $id] = $nombre;
         }
 

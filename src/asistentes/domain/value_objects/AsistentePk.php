@@ -11,20 +11,19 @@ final class AsistentePk
     public function __construct(
         private int $idActiv,
         private int $idNom
-    )
-    {
-        if (!is_numeric($idActiv)) {
-            throw new \InvalidArgumentException('id_activ debe ser numérico');
-        }
-        // puede ser negativo para los ex
-        if (!is_numeric($idNom)) {
-            throw new \InvalidArgumentException('id_nom debe numérico');
-        }
+    ) {
     }
 
+    /**
+     * @param array{id_activ: mixed, id_nom: mixed} $pk
+     */
     public static function fromArray(array $pk): self
     {
-        return new self((int)$pk['id_activ'], (int)$pk['id_nom']);
+        if (!isset($pk['id_activ'], $pk['id_nom']) || !is_numeric($pk['id_activ']) || !is_numeric($pk['id_nom'])) {
+            throw new \InvalidArgumentException('PK de asistente inválida');
+        }
+
+        return new self((int) $pk['id_activ'], (int) $pk['id_nom']);
     }
 
     public function idActiv(): int

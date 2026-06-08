@@ -6,7 +6,6 @@ use Faker\Factory;
 use src\encargossacd\domain\entity\EncargoSacd;
 use src\encargossacd\domain\value_objects\EncargoModoId;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Factory para crear instancias de EncargoSacd para tests

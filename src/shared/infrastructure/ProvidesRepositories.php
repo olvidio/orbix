@@ -39,6 +39,9 @@ use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
  */
 trait ProvidesRepositories
 {
+    /**
+     * @return array<string, class-string>
+     */
     protected function getRepositoryMap(): array
     {
         return [
@@ -60,6 +63,9 @@ trait ProvidesRepositories
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function getMetodoMap(): array
     {
         return [
@@ -72,6 +78,9 @@ trait ProvidesRepositories
         ];
     }
 
+    /**
+     * @return array<string, class-string>
+     */
     protected function getDireccionRepositoryMap(): array
     {
         return [
@@ -94,6 +103,9 @@ trait ProvidesRepositories
         ];
     }
 
+    /**
+     * @return array<string, class-string>
+     */
     protected function getTelecoRepositoryMap(): array
     {
         return [
@@ -163,6 +175,7 @@ trait ProvidesRepositories
         if ($entityType === false) {
             throw new \InvalidArgumentException("Entity type for repository class '$repositoryClass' not found");
         }
-        return $entityType;
+
+        return (string) $entityType;
     }
 }

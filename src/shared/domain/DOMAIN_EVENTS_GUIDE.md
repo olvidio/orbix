@@ -335,7 +335,7 @@ class PgMiEntidadRepository {
 
     public function __construct(UnitOfWorkInterface $unitOfWork) {
         $this->unitOfWork = $unitOfWork;
-        $oDbl = $GLOBALS['oDBE'];
+        $oDbl = GlobalPdo::get('oDBE');
         $this->setoDbl($oDbl);
     }
 }

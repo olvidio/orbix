@@ -5,7 +5,6 @@ namespace Tests\factories\certificados;
 use Faker\Factory;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Factory para crear instancias de CertificadoRecibido para tests

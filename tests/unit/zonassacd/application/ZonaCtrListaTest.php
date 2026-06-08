@@ -140,6 +140,24 @@ final class ZonaCtrListaTest extends TestCase
         $this->assertSame('tono2', $vals[1]['clase']);
     }
 
+    public function test_con_sel_solo_con_permiso_des_o_vcsd(): void
+    {
+        $oCentro = $this->centroDlStub(1042, 'Centro DL', 9);
+
+        $centroDlRepo = $this->createStub(CentroDlRepositoryInterface::class);
+        $centroDlRepo->method('getCentros')->willReturn([$oCentro]);
+        $centroEllasRepo = $this->createStub(CentroEllasRepositoryInterface::class);
+        $centroEllasRepo->method('getCentros')->willReturn([]);
+        $zonaRepo = $this->createStub(ZonaRepositoryInterface::class);
+        $zonaRepo->method('findById')->willReturn($this->zonaStub('Zona 9'));
+
+        $lista = new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo);
+        $this->assertFalse($lista->execute('9')['con_sel']);
+
+        $_SESSION['oPerm'] = $this->oPermStub(['des' => true]);
+        $this->assertTrue((new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo))->execute('9')['con_sel']);
+    }
+
     public function test_sin_permisos_descarta_centros_con_id_ubi_empezando_por_2(): void
     {
         $oCentroDl = $this->centroDlStub(1042, 'Centro DL', 9);

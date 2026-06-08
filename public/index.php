@@ -2,8 +2,8 @@
 // Front Controller con FastRoute + fallback legacy para /src
 
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\DiContainerBootstrap;
 use src\shared\infrastructure\logging\GestorErrores;
-use DI\ContainerBuilder;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
@@ -37,28 +37,7 @@ function bootstrapAnonymousSrcRequest(): void
         $_SESSION['oGestorErrores'] = new GestorErrores();
     }
 
-    if (!isset($GLOBALS['container'])) {
-        $builder = new ContainerBuilder();
-        $dependenciesFiles = glob(__DIR__ . '/../src/*/config/dependencies.php');
-        if (is_array($dependenciesFiles)) {
-            foreach ($dependenciesFiles as $dependenciesFile) {
-                $builder->addDefinitions($dependenciesFile);
-            }
-        }
-
-        if (class_exists(ConfigGlobal::class) && !ConfigGlobal::is_debug_mode()) {
-            $cacheDir = __DIR__ . '/../var/cache/php-di';
-            if (!is_dir($cacheDir)) {
-                if (!mkdir($cacheDir, 0775, true) && !is_dir($cacheDir)) {
-                    throw new RuntimeException(sprintf('Directory "%s" was not created', $cacheDir));
-                }
-            }
-            $builder->enableCompilation($cacheDir);
-            $builder->writeProxiesToFile(true, $cacheDir . '/proxies');
-        }
-
-        $GLOBALS['container'] = $builder->build();
-    }
+    DiContainerBootstrap::ensureBuilt();
 }
 
 // 1) Detectar si la petición es una ruta pública de recuperación.

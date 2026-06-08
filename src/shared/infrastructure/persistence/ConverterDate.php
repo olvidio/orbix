@@ -19,23 +19,23 @@ use src\shared\infrastructure\persistence\postgresql\PgTimestamp;
 class ConverterDate
 {
 
-    var $Converter;
-    var $type;
+    private PgTimestamp $Converter;
+    private string $type;
 
-    public function __construct($type, $data)
+    public function __construct(string $type, mixed $data)
     {
         $this->type = $type;
         switch ($type) {
             case 'time':
-                $this->Converter = new PgTimestamp($data, $type);
+                $this->Converter = new PgTimestamp($data);
                 break;
             case 'date':
             case 'datetime':
-                $this->Converter = new PgTimestamp($data, $type);
+                $this->Converter = new PgTimestamp($data);
                 break;
             case 'timestamp':
             case 'timestamptz':
-                $this->Converter = new PgTimestamp($data, $type);
+                $this->Converter = new PgTimestamp($data);
                 break;
             default:
                 $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
@@ -43,18 +43,18 @@ class ConverterDate
         }
     }
 
-    public function fromPg()
+    public function fromPg(): mixed
     {
         return $this->Converter->fromPg($this->type);
     }
 
-    public function toCal()
+    public function toCal(): string
     {
         $f_iso = $this->Converter->toPg($this->type);
-        return str_replace('-', '', $f_iso);
+        return str_replace('-', '', (string) $f_iso);
     }
 
-    public function toPg()
+    public function toPg(): ?string
     {
         return $this->Converter->toPg($this->type);
     }

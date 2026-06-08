@@ -5,7 +5,6 @@ namespace Tests\factories\ubis;
 use Faker\Factory;
 use src\ubis\domain\entity\CasaPeriodo;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\shared\domain\value_objects\SfsvOtrosId;
 
 /**

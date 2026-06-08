@@ -2,6 +2,8 @@
 
 namespace src\utils_database\domain;
 
+use src\shared\infrastructure\GlobalPdo;
+
 class GenerateIdGlobal
 {
 
@@ -47,12 +49,14 @@ class GenerateIdGlobal
         $info = $config[$tabla];
         $idx = $info['idx'];
 
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
 
         // 4. Obtener el ID del esquema (variable 'n' en el SQL original)
         $sqlSchema = "SELECT id FROM public.db_idschema WHERE schema = '$r_dl'";
         $stmt = $oDbl->query($sqlSchema);
-        // Asumiendo fetchColumn() o similar para obtener un solo valor escalar
+        if ($stmt === false) {
+            throw new \Exception("Error consultando ID para el esquema: $r_dl");
+        }
         $n = $stmt->fetchColumn();
 
         if ($n === false) {

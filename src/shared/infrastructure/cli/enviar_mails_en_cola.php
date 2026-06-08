@@ -33,8 +33,8 @@ if (!empty($argv[1])) {
     putenv("DB_SERVER=$argv[6]");
     putenv("ESQUEMA=$argv[7]");
 }
-$document_root = $_SERVER['DOCUMENT_ROOT'];
-$dir_web = $_SERVER['DIRWEB'];
+$document_root = is_string($_SERVER['DOCUMENT_ROOT'] ?? null) ? $_SERVER['DOCUMENT_ROOT'] : '';
+$dir_web = is_string($_SERVER['DIRWEB'] ?? null) ? $_SERVER['DIRWEB'] : '';
 $path = "$document_root/$dir_web";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 

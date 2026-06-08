@@ -12,6 +12,8 @@ class ContestarJson
      * JSON_FORCE_OBJECT) para que arrays sigan siendo `[]` en el payload.
      * Así el envelope sigue siendo `{ "data": "<string JSON>" }` y el cliente
      * puede seguir usando `JSON.parse(rta.data)` donde ya lo hace.
+     *
+     * @param array<string, mixed> $jsondata
      */
     public static function send(array $jsondata): void
     {
@@ -28,6 +30,7 @@ class ContestarJson
      * {@see \frontend\shared\PostRequest::getDataFromUrl} decodifica siempre a `array`
      * (p. ej. ack `'ok'` sin JSON interno → `[]`; ver `frontend/shared/PostRequest.php`).
      *
+     * @param string|array<string, mixed> $data
      * @param int $httpStatusOnError Código HTTP si hay error (`$error_txt` no vacío). Por defecto 200 por compatibilidad.
      */
     public static function enviar(string $error_txt = '', string|array $data = 'ok', int $httpStatusOnError = 200): void
@@ -48,6 +51,8 @@ class ContestarJson
      *
      * No usar con {@see \frontend\shared\PostRequest::getData}: después del
      * `json_decode` del cuerpo hace otro sobre `data`, que debe ser string.
+     *
+     * @param string|array<string, mixed> $data
      */
     public static function enviarDataAnidado(string $error_txt = '', string|array $data = 'ok'): void
     {
@@ -57,13 +62,16 @@ class ContestarJson
 
     /**
      * forma un array con las claves 'success', 'mensaje' y 'data' sin codificar!
+     *
+     * @param string|array<string, mixed> $data
+     * @return array<string, mixed>
      */
     public static function respuestaPhp(string $error_txt = '', string|array $data = 'ok'): array
     {
         if (!empty($error_txt)) {
             $jsondata['success'] = false;
             $jsondata['mensaje'] = $error_txt;
-            $jsondata['data'] = $data ?? 'none';
+            $jsondata['data'] = $data;
         } else {
             $jsondata['success'] = true;
             $jsondata['data'] = $data;

@@ -17,7 +17,7 @@ use src\notas\domain\value_objects\PersonaNotaPk;
 interface PersonaNotaOtraRegionStgrRepositoryInterface
 {
 
-    public function addCertificado(int $id_nom, string $certificado, \src\shared\domain\value_objects\DateTimeLocal|\src\shared\domain\value_objects\NullDateTimeLocal|null $oF_certificado): void;
+    public function addCertificado(int $id_nom, string $certificado, \src\shared\domain\value_objects\DateTimeLocal|null $oF_certificado): void;
 
     public function deleteCertificado(?string $certificado): void;
 

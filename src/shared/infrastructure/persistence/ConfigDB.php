@@ -159,18 +159,38 @@ class ConfigDB
         return self::mensajeEsquemaConexionFaltante($this->baseLogico, $esquema);
     }
 
-    public function getEsquema($esquema)
+    /**
+     * @return array<string, mixed>
+     */
+    public function getEsquema(string $esquema): array
     {
-        $data = $this->data['default'];
+        $default = $this->data['default'] ?? null;
+        if (!is_array($default)) {
+            throw new RuntimeException(sprintf(_('Falta el bloque default en %s.'), $this->baseLogico));
+        }
+        $data = $default;
         $data['schema'] = $esquema;
         if (!$this->tieneEsquema($esquema)) {
-            throw new RunTimeException($this->mensajeEsquemaFaltante((string) $esquema));
+            throw new RunTimeException($this->mensajeEsquemaFaltante($esquema));
         }
-        foreach ($this->data[$esquema] as $key => $value) {
-            $data[$key] = $value;
+        $esquemaData = $this->data[$esquema] ?? null;
+        if (!is_array($esquemaData)) {
+            throw new RuntimeException($this->mensajeEsquemaFaltante($esquema));
+        }
+        foreach ($esquemaData as $key => $value) {
+            if (is_string($key)) {
+                $data[$key] = $value;
+            }
         }
 
-        return $data;
+        $out = [];
+        foreach ($data as $key => $value) {
+            if (is_string($key)) {
+                $out[$key] = $value;
+            }
+        }
+
+        return $out;
     }
 
     /**
@@ -280,13 +300,22 @@ class ConfigDB
      */
     private function connReplicaAmbigua(array $config, array $default): bool
     {
-        $hostConfig = (string) ($config['host'] ?? '');
-        $hostDefault = (string) ($default['host'] ?? '');
-        $dbConfig = (string) ($config['dbname'] ?? '');
-        $dbDefault = (string) ($default['dbname'] ?? '');
+        $hostConfig = self::stringConfigValue($config['host'] ?? null);
+        $hostDefault = self::stringConfigValue($default['host'] ?? null);
+        $dbConfig = self::stringConfigValue($config['dbname'] ?? null);
+        $dbDefault = self::stringConfigValue($default['dbname'] ?? null);
 
         return ($hostConfig === '' || $hostConfig === $hostDefault)
             && ($dbConfig === '' || $dbConfig === $dbDefault);
+    }
+
+    private static function stringConfigValue(mixed $value): string
+    {
+        if (is_string($value) || is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+
+        return '';
     }
 
     /**
@@ -326,11 +355,18 @@ class ConfigDB
         }
 
         $conn = self::cargarArrayInc($connPath);
-        if (!is_array($conn[$claveImportar] ?? null)) {
+        $overlayBlock = $conn[$claveImportar] ?? null;
+        if (!is_array($overlayBlock)) {
             return $config;
         }
+        $overlay = [];
+        foreach ($overlayBlock as $clave => $valor) {
+            if (is_string($clave)) {
+                $overlay[$clave] = $valor;
+            }
+        }
 
-        return $this->fusionarConnPrefer($config, $conn[$claveImportar]);
+        return $this->fusionarConnPrefer($config, $overlay);
     }
 
     /**
@@ -409,7 +445,7 @@ class ConfigDB
         }
 
         $archivo = $base;
-        if (ConfigGlobal::WEBDIR === 'pruebas' && !str_starts_with($archivo, 'pruebas-')) {
+        if (ConfigGlobal::esEntornoPruebas() && !str_starts_with($archivo, 'pruebas-')) {
             $archivo = 'pruebas-' . $archivo;
         }
         $path = self::dirPwd() . '/' . $archivo . '.inc';
@@ -425,7 +461,7 @@ class ConfigDB
             return self::ficheroRolesNombre($baseSinExtension);
         }
 
-        if (ConfigGlobal::WEBDIR === 'pruebas') {
+        if (ConfigGlobal::esEntornoPruebas()) {
             return 'pruebas-' . $baseSinExtension . '.inc';
         }
 
@@ -434,7 +470,7 @@ class ConfigDB
 
     public static function ficheroConnNombre(string $baseSinExtension): string
     {
-        $prefijo = ConfigGlobal::WEBDIR === 'pruebas' ? 'pruebas-' : '';
+        $prefijo = ConfigGlobal::esEntornoPruebas() ? 'pruebas-' : '';
 
         return $prefijo . $baseSinExtension . '.conn.inc';
     }
@@ -464,7 +500,7 @@ class ConfigDB
         }
 
         $archivo = $ficheroBase;
-        if (ConfigGlobal::WEBDIR === 'pruebas') {
+        if (ConfigGlobal::esEntornoPruebas()) {
             $archivo = 'pruebas-' . $archivo;
         }
 
@@ -474,7 +510,7 @@ class ConfigDB
     /**
      * Añade usuario/password del esquema. En formato partido: un solo `.roles.inc` (cluster compartido).
      */
-    public function addEsquemaEnFicheroPasswords($database, $esquema, $esquema_pwd): void
+    public function addEsquemaEnFicheroPasswords(string $database, string $esquema, string $esquema_pwd): void
     {
         $base = self::normalizarBaseLogico((string) $database);
         if (self::usaFormatoPartido($base)) {
@@ -492,7 +528,7 @@ class ConfigDB
     /**
      * Quita usuario/password del esquema en los mismos ficheros que {@see addEsquemaEnFicheroPasswords}.
      */
-    public function removeEsquemaEnFicheroPasswords($database, string $esquema): void
+    public function removeEsquemaEnFicheroPasswords(string $database, string $esquema): void
     {
         $base = self::normalizarBaseLogico((string) $database);
         if (self::usaFormatoPartido($base)) {
@@ -510,7 +546,7 @@ class ConfigDB
     /**
      * Renombra clave de esquema en `.roles.inc` (formato partido) o en ambos monolitos prod/pruebas (legado).
      */
-    public function renombrarListaEsquema($database, $esquema_old, $esquema_new): void
+    public function renombrarListaEsquema(string $database, string $esquema_old, string $esquema_new): void
     {
         $base = self::normalizarBaseLogico((string) $database);
         if (self::usaFormatoPartido($base)) {
@@ -638,14 +674,14 @@ class ConfigDB
     private static function rutasMonoliticoComplementarias(string $baseLogico): array
     {
         $paths = [self::dirPwd() . '/' . $baseLogico . '.inc'];
-        if (ConfigGlobal::WEBDIR === 'pruebas') {
+        if (ConfigGlobal::esEntornoPruebas()) {
             $paths[] = self::dirPwd() . '/pruebas-' . $baseLogico . '.inc';
         }
 
         $baseRoles = self::baseRolesParaFichero($baseLogico);
         if ($baseRoles !== $baseLogico) {
             $paths[] = self::dirPwd() . '/' . $baseRoles . '.inc';
-            if (ConfigGlobal::WEBDIR === 'pruebas') {
+            if (ConfigGlobal::esEntornoPruebas()) {
                 $paths[] = self::dirPwd() . '/pruebas-' . $baseRoles . '.inc';
             }
         }
@@ -691,8 +727,18 @@ class ConfigDB
             if ($clave === 'default' || !is_array($valor)) {
                 continue;
             }
-            if (isset($valor['password']) || isset($valor['user'])) {
-                $out[$clave] = $valor;
+            if (!isset($valor['password']) && !isset($valor['user'])) {
+                continue;
+            }
+            $entry = [];
+            if (isset($valor['user']) && is_string($valor['user'])) {
+                $entry['user'] = $valor['user'];
+            }
+            if (isset($valor['password']) && is_string($valor['password'])) {
+                $entry['password'] = $valor['password'];
+            }
+            if ($entry !== []) {
+                $out[$clave] = $entry;
             }
         }
 
@@ -719,7 +765,7 @@ class ConfigDB
     private static function rutaMonolitico(string $baseLogico): string
     {
         $archivo = $baseLogico;
-        if (ConfigGlobal::WEBDIR === 'pruebas') {
+        if (ConfigGlobal::esEntornoPruebas()) {
             $archivo = 'pruebas-' . $archivo;
         }
 
@@ -750,8 +796,8 @@ class ConfigDB
         $data = self::cargarArrayInc($path);
         $keys = [];
         foreach (array_keys($data) as $clave) {
-            if ($clave !== 'default' && is_string($clave)) {
-                $keys[] = $clave;
+            if ($clave !== 'default') {
+                $keys[] = (string) $clave;
             }
         }
 

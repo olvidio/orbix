@@ -191,7 +191,7 @@ final class Tesera
      *   `nombre_corto`, `fecha` (`DateTimeLocal`), `id_situacion`,
      *   `bAprobada` (`'t'|'f'`), `nota` (string), `acta` (string|null).
      *
-     * @return array<int, array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_asignatura: string, nombre_corto: string, fecha: \src\shared\domain\value_objects\DateTimeLocal|\src\shared\domain\value_objects\NullDateTimeLocal|null, id_situacion: int, bAprobada: bool|string, nota: string|null, acta: string|null}>
+     * @return array<int, array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_asignatura: string, nombre_corto: string, fecha: \src\shared\domain\value_objects\DateTimeLocal|null, id_situacion: int, bAprobada: bool|string, nota: string|null, acta: string|null}>
      */
     public function getAsignaturasAprobadas(int $idNom, int $plan = self::PLAN_NUEVO): array
     {
@@ -359,7 +359,7 @@ final class Tesera
     }
 
     /**
-     * @param array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_corto: string, fecha: \src\shared\domain\value_objects\DateTimeLocal|\src\shared\domain\value_objects\NullDateTimeLocal|null, nota: string|null, bAprobada: bool|string} $row
+     * @param array{id_nivel_asig: int, id_nivel: int, id_asignatura: int, nombre_corto: string, fecha: \src\shared\domain\value_objects\DateTimeLocal|null, nota: string|null, bAprobada: bool|string} $row
      * @return array{id_nivel: int, asignatura: string, nota: string, fecha: string, bAprobada: string}
      */
     private function filaAprobada(Asignatura $oAsig, array $row): array

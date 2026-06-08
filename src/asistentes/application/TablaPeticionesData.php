@@ -57,7 +57,7 @@ final class TablaPeticionesData
         $Qscroll_id = null;
         if (isset($input['stack'])) {
             $stack = filter_var($input['stack'], FILTER_SANITIZE_NUMBER_INT);
-            if ($stack !== 0) {
+            if ($stack !== false && $stack !== '' && $stack !== '0') {
                 if (array_key_exists('restored_id_sel', $input)) {
                     $Qid_sel = $input['restored_id_sel'];
                 }
@@ -131,7 +131,7 @@ final class TablaPeticionesData
                     if ($ocupadas < 0) {
                         $libres = '-';
                     } else {
-                        $libres = $concedidas - $ocupadas;
+                        $libres = (int) $concedidas - $ocupadas;
                     }
                     if (!empty($concedidas)) {
                         $nom_activ_i .= " ($libres/$concedidas)";

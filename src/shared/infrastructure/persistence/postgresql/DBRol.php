@@ -2,8 +2,11 @@
 
 namespace src\shared\infrastructure\persistence\postgresql;
 
+use PDO;
 use PDOException;
+use PDOStatement;
 use src\shared\config\ServerConf;
+use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 
@@ -11,30 +14,10 @@ class DBRol
 {
     /** @var list<string> Avisos no fatales (p. ej. rol destino eliminado antes de renombrar). */
     private array $avisosRenameRol = [];
-    /**
-     * oDbl de Grupo
-     *
-     * @var object
-     */
-    protected $oDbl;
-    /**
-     * Password de DBRol
-     *
-     * @var string
-     */
-    protected $sPwd;
-    /**
-     * Usuario a Crear de DBRol
-     *
-     * @var string
-     */
-    protected $sUser;
-    /**
-     * Opciones para a Crear el Role de DBRol
-     *
-     * @var string
-     */
-    protected $sOptions;
+    protected ?PDO $oDbl = null;
+    protected string $sPwd = '';
+    protected string $sUser = '';
+    protected string $sOptions = '';
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -48,50 +31,44 @@ class DBRol
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
-    public function setDbConexion($oDbl)
+    public function setDbConexion(PDO $oDbl): void
     {
         $this->setoDbl($oDbl);
     }
 
-    /**
-     * Recupera el atributo oDbl de Grupo
-     *
-     * @return object oDbl
-     */
-    protected function setoDbl($oDbl)
+    protected function setoDbl(PDO $oDbl): void
     {
         $this->oDbl = $oDbl;
     }
 
-    /**
-     * Recupera el atributo oDbl de Grupo
-     *
-     * @return object oDbl
-     */
-    protected function getoDbl()
+    protected function getoDbl(): PDO
     {
+        if ($this->oDbl === null) {
+            throw new \RuntimeException('DBRol: conexión PDO no inicializada');
+        }
+
         return $this->oDbl;
     }
 
-    public function setUser($user)
+    public function setUser(string $user): void
     {
         $this->sUser = $user;
     }
 
-    public function setPwd($password)
+    public function setPwd(string $password): void
     {
         //$password_encoded = urlencode ($password);
         $this->sPwd = $password;
     }
 
-    public function setOptions($options)
+    public function setOptions(string $options): void
     {
         $this->sOptions = $options;
     }
 
 
     // usuarios:
-    public function addGrupo($grupo)
+    public function addGrupo(string $grupo): bool
     {
         $oDbl = $this->getoDbl();
         $sql = "GRANT \"$grupo\" TO \"$this->sUser\"";
@@ -99,69 +76,77 @@ class DBRol
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBRol.addGrupo.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBRol.addGrupo.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
                 return false;
             }
         }
+
+        return true;
     }
 
-    public function delGrupo($grupo)
+    public function delGrupo(string $grupo): bool
     {
         $oDbl = $this->getoDbl();
         $sql = "REVOKE \"$grupo\" FROM \"$this->sUser\"";
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBRol.delGrupo.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBRol.delGrupo.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
                 return false;
             }
         }
+
+        return true;
     }
 
-    public function crearSchema()
+    public function crearSchema(): bool
     {
         $oDbl = $this->getoDbl();
         $sql = "CREATE SCHEMA IF NOT EXISTS \"$this->sUser\" AUTHORIZATION \"$this->sUser\";";
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBRol.crearSchema.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBRol.crearSchema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
                 return false;
             }
         }
+
+        return true;
     }
 
-    public function renombrarSchema($esquema_old)
+    public function renombrarSchema(string $esquema_old): bool
     {
         $oDbl = $this->getoDbl();
         $sql = "ALTER SCHEMA \"$esquema_old\" RENAME TO \"$this->sUser\";";
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBRol.crearSchema.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBRol.crearSchema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
                 return false;
             }
         }
+
+        return true;
     }
 
     /**
@@ -178,21 +163,21 @@ class DBRol
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBRol.asegurarPropietarioEsquema.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
 
             return false;
         }
         try {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBRol.asegurarPropietarioEsquema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
 
                 return false;
             }
         } catch (PDOException $e) {
             $sClauError = 'DBRol.asegurarPropietarioEsquema.execute';
             $sClauError .= ' ' . ($e->errorInfo[2] ?? $e->getMessage());
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
 
             return false;
         }
@@ -247,15 +232,19 @@ class DBRol
         );
         if ($st === false) {
             $sClauError = 'DBRol.realignarPropietariosObjetosEnEsquema.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
 
             return false;
         }
         $st->execute(['s' => $esquemaNombre]);
         $qs = '"' . str_replace('"', '""', $esquemaNombre) . '"';
-        foreach ($st->fetchAll(\PDO::FETCH_ASSOC) as $row) {
-            $rel = (string) ($row['relname'] ?? '');
-            $kind = (string) ($row['relkind'] ?? '');
+        $rows = $st->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($rows as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $rel = is_scalar($row['relname'] ?? null) ? (string) $row['relname'] : '';
+            $kind = is_scalar($row['relkind'] ?? null) ? (string) $row['relkind'] : '';
             if ($rel === '') {
                 continue;
             }
@@ -272,14 +261,10 @@ class DBRol
                 $msg = ($e->errorInfo[2] ?? $e->getMessage());
                 $sClauError = 'DBRol.realignarPropietariosObjetosEnEsquema.exec '
                     . $esquemaNombre . '.' . $rel . ' (' . $kind . '): ' . $msg;
-                if (isset($_SESSION['oGestorErrores']) && is_object($_SESSION['oGestorErrores'])) {
-                    $_SESSION['oGestorErrores']->addErrorAppLastErrorNoThrowText(
-                        $sClauError,
-                        'DBRol.realignarPropietariosObjetosEnEsquema',
-                        __LINE__,
-                        __FILE__,
-                    );
-                }
+                $this->reportErrorText(
+                    $sClauError,
+                    'DBRol.realignarPropietariosObjetosEnEsquema',
+                );
                 // Vistas/MV/FT pueden fallar sin bloquear tablas; tablas/secuencias se validan después.
                 if (in_array($kind, ['r', 'p', 'S'], true)) {
                     return false;
@@ -300,24 +285,25 @@ class DBRol
         );
         if ($stV === false) {
             $sClauError = 'DBRol.realignarPropietariosObjetosEnEsquema.verifyPrepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
 
             return false;
         }
         $stV->execute(['s' => $esquemaNombre, 'want' => $esquemaNombre]);
         $pend = $stV->fetchAll(\PDO::FETCH_ASSOC);
         if ($pend !== []) {
-            $nombres = implode(', ', array_map(static fn (array $r): string => (string) ($r['relname'] ?? '') . '(' . (string) ($r['relkind'] ?? '') . ')', $pend));
+            $nombres = implode(', ', array_map(static function (array $r): string {
+                $rel = is_scalar($r['relname'] ?? null) ? (string) $r['relname'] : '';
+                $kind = is_scalar($r['relkind'] ?? null) ? (string) $r['relkind'] : '';
+
+                return $rel . '(' . $kind . ')';
+            }, $pend));
             $sClauError = 'DBRol.realignarPropietariosObjetosEnEsquema.verify Aún con dueño distinto de «'
                 . $esquemaNombre . '»: ' . $nombres;
-            if (isset($_SESSION['oGestorErrores']) && is_object($_SESSION['oGestorErrores'])) {
-                $_SESSION['oGestorErrores']->addErrorAppLastErrorNoThrowText(
-                    $sClauError,
-                    'DBRol.realignarPropietariosObjetosEnEsquema',
-                    __LINE__,
-                    __FILE__,
-                );
-            }
+            $this->reportErrorText(
+                $sClauError,
+                'DBRol.realignarPropietariosObjetosEnEsquema',
+            );
 
             return false;
         }
@@ -349,7 +335,7 @@ class DBRol
         }
     }
 
-    public function crearUsuario()
+    public function crearUsuario(): bool
     {
         $oDbl = $this->getoDbl();
         // comprobar antes si existe.
@@ -357,7 +343,7 @@ class DBRol
 
         if (($res = $oDbl->query($sql)) === false) {
             $sClauError = 'DBRol.query.exists';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
         if ($res->fetchColumn() === 0) {
@@ -366,23 +352,25 @@ class DBRol
 
             if (($oDblSt = $oDbl->prepare($sql)) === false) {
                 $sClauError = 'DBRol.crear.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
             }
             try {
                 $oDblSt->execute();
             } catch (\PDOException $e) {
                 $sClauError = 'DBRol.crear.execute';
-                $sClauError .= ' ' . $e->errorInfo[2];
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $sClauError .= ' ' . ($e->errorInfo[2] ?? $e->getMessage());
+                $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
                 return false;
             }
         } else {
             $this->cambiarPassword();
         }
+
+        return true;
     }
 
-    public function renombrarUsuario($usuario_old)
+    public function renombrarUsuario(string $usuario_old): bool
     {
         $oDbl = $this->getoDbl();
         $this->sOptions = empty($this->sOptions) ? 'NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN' : $this->sOptions;
@@ -391,7 +379,7 @@ class DBRol
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBRol.crear.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
 
@@ -400,7 +388,7 @@ class DBRol
             try {
                 if ($oDblSt->execute() === false) {
                     $sClauError = 'DBRol.renombrarUsuario.execute';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                    $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
                     return false;
                 }
                 break;
@@ -416,27 +404,17 @@ class DBRol
                         $usuario_old
                     );
                     $this->avisosRenameRol[] = $msgAviso;
-                    if (isset($_SESSION['oGestorErrores']) && is_object($_SESSION['oGestorErrores'])
-                        && method_exists($_SESSION['oGestorErrores'], 'addErrorAppLastErrorNoThrowText')) {
-                        $_SESSION['oGestorErrores']->addErrorAppLastErrorNoThrowText(
-                            $msgAviso,
-                            'DBRol.renombrarUsuario.rol_duplicado_remediado',
-                            __LINE__,
-                            __FILE__,
-                        );
-                    }
+                    $this->reportErrorText(
+                        $msgAviso,
+                        'DBRol.renombrarUsuario.rol_duplicado_remediado',
+                    );
                     $reintentoTrasConflicto = true;
                     $oDblSt = $oDbl->prepare($sql);
-                    if ($oDblSt === false) {
-                        $sClauError = 'DBRol.renombrarUsuario.prepare_reintento';
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                        return false;
-                    }
                     continue;
                 }
                 $sClauError = 'DBRol.crear.execute';
                 $sClauError .= ' ' . ($e->errorInfo[2] ?? $e->getMessage());
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
                 return false;
             }
         }
@@ -450,19 +428,19 @@ class DBRol
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBRol.crear.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
         try {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBRol.renombrarUsuario.search_path';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
                 return false;
             }
         } catch (PDOException $e) {
             $sClauError = 'DBRol.crear.execute';
             $sClauError .= ' ' . ($e->errorInfo[2] ?? $e->getMessage());
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
             return false;
         }
 
@@ -540,30 +518,32 @@ class DBRol
         }
     }
 
-    public function eliminarSchema()
+    public function eliminarSchema(): bool
     {
         $oDbl = $this->getoDbl();
         $sql = "DROP SCHEMA IF EXISTS \"$this->sUser\" CASCADE";
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBRol.eliminarSchema.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBRol.eliminarSchema.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
                 return false;
             }
         }
+
+        return true;
     }
 
-    public function eliminarUsuario()
+    public function eliminarUsuario(): void
     {
         $error = $this->intentarEliminarUsuario();
         if ($error !== null) {
             $sClauError = 'DBRol.eliminar.execute ' . $error;
-            $_SESSION['oGestorErrores']->addErrorAppLastError($this->getoDbl(), $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($this->getoDbl(), $sClauError, __LINE__, __FILE__);
         }
     }
 
@@ -619,6 +599,9 @@ class DBRol
     private function rolExisteEnConexion(\PDO $pdo): bool
     {
         $st = $pdo->prepare('SELECT 1 FROM pg_roles WHERE rolname = :rol LIMIT 1');
+        if ($st === false) {
+            return false;
+        }
         $st->execute(['rol' => $this->sUser]);
 
         return (bool) $st->fetchColumn();
@@ -724,7 +707,7 @@ class DBRol
         return $claves;
     }
 
-    private function cambiarPassword()
+    private function cambiarPassword(): bool
     {
         $oDbl = $this->getoDbl();
 
@@ -732,14 +715,39 @@ class DBRol
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
             $sClauError = 'DBRol.pwd.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $this->reportPdoError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         } else {
             if ($oDblSt->execute() === false) {
                 $sClauError = 'DBRol.pwd.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $this->reportPdoError($oDblSt, $sClauError, __LINE__, __FILE__);
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    private function gestorErrores(): ?GestorErrores
+    {
+        $gestor = $_SESSION['oGestorErrores'] ?? null;
+
+        return $gestor instanceof GestorErrores ? $gestor : null;
+    }
+
+    private function reportPdoError(PDO|PDOStatement $source, string $key, int|string $line, string $file): void
+    {
+        $gestor = $this->gestorErrores();
+        if ($gestor !== null) {
+            $gestor->addErrorAppLastError($source, $key, (string) $line, $file);
+        }
+    }
+
+    private function reportErrorText(string $text, string $key): void
+    {
+        $gestor = $this->gestorErrores();
+        if ($gestor !== null) {
+            $gestor->addErrorAppLastErrorNoThrowText($text, $key, (string) __LINE__, __FILE__);
         }
     }
 }

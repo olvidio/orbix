@@ -2,75 +2,28 @@
 
 namespace src\shared\infrastructure\persistence\postgresql;
 
+use PDO;
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
-
-
 use src\utils_database\domain\entity\DBAbstract;
 
 class DBTabla extends DBAbstract
 {
-    /**
-     * oDbl de Esquema
-     *
-     * @var object
-     */
-    protected $oDbl;
-    /**
-     * Tablas de Esquema
-     *
-     * @var array
-     */
-    private $aTablas;
-    /**
-     * Esquema de Referencia de Esquema
-     *
-     * @var string
-     */
-    private $sRef;
-    /**
-     * Esquema a Crear de Esquema
-     *
-     * @var string
-     */
-    private $sNew;
-    /**
-     * Directorio donde poner los logs de Esquema
-     *
-     * @var string
-     */
-    private $sdir;
-    /**
-     * Fichero con el volcado del esquema de referencia de Esquema
-     *
-     * @var string
-     */
-    private $sfileRef;
-    /**
-     * Fichero con el volcado del nuevo esquema de Esquema
-     *
-     * @var string
-     */
-    private $sfileNew;
-    /**
-     * Fichero con el log de la accion de Esquema
-     *
-     * @var string
-     */
-    private $sfileLogR;
-    /**
-     * Fichero con el log de la accion de Esquema
-     *
-     * @var string
-     */
-    private $sfileLogW;
-
-    private $Host;
-    private $ssh_user;
-
-    private $sDb;
-    private mixed $dbname;
+    /** @var array<string, array<string, mixed>> */
+    private array $aTablas = [];
+    private string $sRef = '';
+    private string $sNew = '';
+    private string $sdir = '';
+    private string $sfileRef = '';
+    private string $sfileNew = '';
+    private string $sfileLogR = '';
+    private string $sfileLogW = '';
+    private string $Host = '';
+    private string $ssh_user = '';
+    private string $sDb = '';
+    private mixed $dbname = null;
 
     /**
      * Constructor de la classe.
@@ -100,82 +53,91 @@ class DBTabla extends DBAbstract
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
-    public function setConfig($config)
+    /**
+     * @param array<string, mixed> $config
+     */
+    public function setConfig(array $config): void
     {
-        $this->setDb($config['dbname']);
-        $this->setHost($config['host']);
-        $this->setSsh_user($config['ssh_user']);
+        $this->setDb(self::stringConfigValue($config['dbname'] ?? null));
+        $this->setHost(self::stringConfigValue($config['host'] ?? null));
+        $this->setSsh_user(self::stringConfigValue($config['ssh_user'] ?? null));
     }
 
-    public function getDir()
+    public function getDir(): string
     {
         $this->sdir = empty($this->sdir) ? ConfigGlobal::$directorio . '/log/db' : $this->sdir;
         return $this->sdir;
     }
 
-    public function setDir($dir)
+    public function setDir(string $dir): void
     {
         $this->sdir = $dir;
     }
 
-    public function getTablas()
+    /**
+     * @return array<string, array<string, mixed>>
+     */
+    public function getTablas(): array
     {
         return $this->aTablas;
     }
 
-    public function setTablas($tablas)
+    /**
+     * @param array<string, array<string, mixed>> $tablas
+     */
+    public function setTablas(array $tablas): void
     {
         $this->aTablas = $tablas;
     }
 
-    public function getNew()
+    public function getNew(): string
     {
         return $this->sNew;
     }
 
-    public function setNew($esquema)
+    public function setNew(string $esquema): void
     {
         $this->sNew = $esquema;
         $this->sfileNew = '';
     }
 
-    public function getRef()
+    public function getRef(): string
     {
         return $this->sRef;
     }
 
-    public function setRef($esquema)
+    public function setRef(string $esquema): void
     {
         $this->sRef = $esquema;
         $this->sfileRef = '';
     }
 
-    public function getHost()
+    public function getHost(): string
     {
         return $this->Host;
     }
 
-    public function setHost($host)
+    public function setHost(string $host): void
     {
         $this->Host = $host;
     }
 
-    public function getSsh_user()
+    public function getSsh_user(): string
     {
         return $this->ssh_user;
     }
 
-    public function setSsh_user($ssh_user)
+    public function setSsh_user(string $ssh_user): void
     {
         $this->ssh_user = $ssh_user;
     }
 
-    public function getDb()
+    public function getDb(): string
     {
         return $this->sDb;
     }
 
-    public function setDb($db)
+    public function setDb(string $db): void
     {
         $this->sDb = $db;
     }
@@ -194,29 +156,29 @@ class DBTabla extends DBAbstract
         return $this->getDir() . '/dbRef' . $this->getRef() . '.' . $this->getDb() . '.sql';
     }
 
-    public function setFileRef($fileRef)
+    public function setFileRef(string $fileRef): void
     {
         $this->sfileRef = $fileRef;
     }
 
-    public function getFileLogR()
+    public function getFileLogR(): string
     {
         $this->sfileLogR = empty($this->sfileLogR) ? $this->getDir() . '/pg_error_read.' . $this->getDb() . '.sql' : $this->sfileLogR;
         return $this->sfileLogR;
     }
 
-    public function setFileLogR($fileLog)
+    public function setFileLogR(string $fileLog): void
     {
         $this->sfileLogR = $fileLog;
     }
 
-    public function getFileLogW()
+    public function getFileLogW(): string
     {
         $this->sfileLogW = empty($this->sfileLogW) ? $this->getDir() . '/pg_error_write.' . $this->getDb() . '.sql' : $this->sfileLogW;
         return $this->sfileLogW;
     }
 
-    public function setFileLogW($fileLog)
+    public function setFileLogW(string $fileLog): void
     {
         $this->sfileLogW = $fileLog;
     }
@@ -235,7 +197,7 @@ class DBTabla extends DBAbstract
         return $this->getDir() . '/dbNew' . $this->getNew() . '.' . $this->getDb() . '.sql';
     }
 
-    public function setFileNew($fileNew)
+    public function setFileNew(string $fileNew): void
     {
         $this->sfileNew = $fileNew;
     }
@@ -245,7 +207,11 @@ class DBTabla extends DBAbstract
      * para la base de datos sv-e, que está en otro servidor y además con otra versión,
      * No sirve el pg_dump (solo funciona con versiones iguales en los dos extremos)
      */
-    public function mover($configRef, $configNew)
+    /**
+     * @param array<string, mixed> $configRef
+     * @param array<string, mixed> $configNew
+     */
+    public function mover(array $configRef, array $configNew): bool
     {
 
 
@@ -264,7 +230,7 @@ class DBTabla extends DBAbstract
      * Para la base de datos comun, que está en otro servidor y además con otra versión,
      * No sirve el pg_dump (solo funciona con versiones iguales en los dos extremos)
      */
-    public function copiar()
+    public function copiar(): void
     {
         if ($this->getHost() === 'db' ||
             $this->getHost() === '/var/run/postgresql' ||
@@ -277,7 +243,7 @@ class DBTabla extends DBAbstract
         }
     }
 
-    private function copiar_remote()
+    private function copiar_remote(): void
     {
         $this->prepararFicherosVolcadoCopiar();
         $this->leer_remote();
@@ -287,7 +253,7 @@ class DBTabla extends DBAbstract
         $this->actualizar_schema();
     }
 
-    private function copiar_local()
+    private function copiar_local(): void
     {
         $this->prepararFicherosVolcadoCopiar();
         $this->leer_local();
@@ -308,10 +274,10 @@ class DBTabla extends DBAbstract
         }
     }
 
-    public function cambiar_nombre()
+    public function cambiar_nombre(): void
     {
-        $partesRef = explode('-', $this->getRef() ?? '', 2);
-        $partesNew = explode('-', $this->getNew() ?? '', 2);
+        $partesRef = explode('-', $this->getRef(), 2);
+        $partesNew = explode('-', $this->getNew(), 2);
         if (count($partesRef) < 2 || count($partesNew) < 2) {
             throw new \InvalidArgumentException(_('Esquema ref o destino con formato región-dl no válido.'));
         }
@@ -336,7 +302,7 @@ class DBTabla extends DBAbstract
         }
     }
 
-    public function cambiar_nombre_fichero()
+    public function cambiar_nombre_fichero(): void
     {
         $dump = file_get_contents($this->getFileRef());
         $d = file_put_contents($this->getFileNew(), $dump);
@@ -350,7 +316,7 @@ class DBTabla extends DBAbstract
      *
      * Para poder ejecutar el ssh, se debe autorizar via id_rsa al usuario aquinate.
      */
-    private function leer_remote()
+    private function leer_remote(): void
     {
         $sTablas = '';
         foreach ($this->aTablas as $tabla => $param) {
@@ -404,7 +370,7 @@ class DBTabla extends DBAbstract
         return '"' . $schema . '".' . $tabla;
     }
 
-    public function eliminarTabla($nom_tabla)
+    public function eliminarTabla(string $nom_tabla): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         /*
@@ -432,7 +398,7 @@ class DBTabla extends DBAbstract
         //$this->role = $role_org;
     }
 
-    public function importarAsAdmin()
+    public function importarAsAdmin(): bool
     {
         $dsn = $this->getConexionAdmin('publicv-e');
         $logFile = $this->getFileLogW();
@@ -515,7 +481,7 @@ class DBTabla extends DBAbstract
     /**
      * Para actualizar el campo id_schema
      */
-    public function actualizar_schema()
+    public function actualizar_schema(): bool
     {
         $oDbl = $this->getConexionPDO('new');
         foreach ($this->aTablas as $tabla => $param) {
@@ -523,21 +489,29 @@ class DBTabla extends DBAbstract
                 $sqlSchema = "UPDATE $tabla SET id_schema = DEFAULT;";
                 if ($oDbl->query($sqlSchema) === false) {
                     $sClauError = 'DBTabla.schema.execute';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                    if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+                    }
                     return false;
                 }
             }
         }
+
+        return true;
     }
 
-    private function getConfigConexion($esq = 'ref')
+    /**
+     * @return array<string, mixed>
+     */
+    private function getConfigConexion(string $esq = 'ref'): array
     {
         // No he conseguido que funcione con ~/.pgpass.
         if ($esq === 'ref') {
             $esquema = $this->getRef();
-        } elseif ($esq === 'new') {
+        } else {
             $esquema = $this->getNew();
         }
+        $config = [];
         switch ($this->sDb) {
             case 'pruebas-comun':
             case 'comun':
@@ -568,7 +542,7 @@ class DBTabla extends DBAbstract
         return $config;
     }
 
-    private function getConexionAdmin($esquema = 'ref')
+    private function getConexionAdmin(string $esquema = 'ref'): string
     {
         $oConfigDB = new ConfigDB('importar');
         $config = $oConfigDB->getEsquema($esquema);
@@ -580,7 +554,7 @@ class DBTabla extends DBAbstract
         return $dsn;
     }
 
-    private function getConexion($esquema = 'ref')
+    private function getConexion(string $esquema = 'ref'): string
     {
         $config = $this->getConfigConexion($esquema);
         $this->dbname = $config['dbname'];
@@ -591,13 +565,14 @@ class DBTabla extends DBAbstract
         return $dsn;
     }
 
-    private function getDbName()
+    private function getDbName(): string
     {
         $this->getConexion('ref');
-        return $this->dbname;
+
+        return self::stringConfigValue($this->dbname);
     }
 
-    private function getConexionPDO($esquema = 'ref')
+    private function getConexionPDO(string $esquema = 'ref'): PDO
     {
         $config = $this->getConfigConexion($esquema);
 
@@ -702,9 +677,21 @@ class DBTabla extends DBAbstract
         ));
     }
 
-    private function deleteFile($file)
+    private function deleteFile(string $file): void
     {
         $command = '/bin/rm -f ' . escapeshellarg($file);
         passthru($command);
+    }
+
+    private static function stringConfigValue(mixed $value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+
+        return '';
     }
 }

@@ -57,10 +57,10 @@ final class ZonaCtrLista
         foreach ($cCentros as $oCentro) {
             $i++;
             $id_ubi = (string) $oCentro->getId_ubi();
-            if ($id_ubi !== '' && $id_ubi[0] === '2' && !$tienePermDes) {
+            if ($id_ubi[0] === '2' && !$tienePermDes) {
                 continue;
             }
-            if ($id_ubi !== '' && $id_ubi[0] === '2') {
+            if ($id_ubi[0] === '2') {
                 $a_valores[$i]['clase'] = 'tono2';
             }
             $idZonaCentro = $oCentro->getId_zona();
@@ -75,6 +75,7 @@ final class ZonaCtrLista
             'id_tabla' => 'zona_ctr_ajax',
             'a_cabeceras' => [_("centro"), _("zona")],
             'a_botones' => [],
+            'con_sel' => $tienePermDes,
             'a_valores' => $a_valores,
             'error' => '',
         ];

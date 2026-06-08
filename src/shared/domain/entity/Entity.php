@@ -80,8 +80,7 @@ abstract class Entity
      *
      * Usar este método en el repositorio después de crear una nueva entidad en BD.
      *
-     * @param array $datosActuales Datos actuales para comparación (normalmente vacío en INSERT)
-     * @return void
+     * @param array<string, mixed> $datosActuales Datos actuales para comparación (normalmente vacío en INSERT)
      */
     public function marcarComoNueva(array $datosActuales = []): void
     {
@@ -99,8 +98,7 @@ abstract class Entity
      *
      * Usar este método en el repositorio después de actualizar una entidad en BD.
      *
-     * @param array $datosActuales Datos anteriores antes de la modificación
-     * @return void
+     * @param array<string, mixed> $datosActuales Datos anteriores antes de la modificación
      */
     public function marcarComoModificada(array $datosActuales): void
     {
@@ -118,8 +116,7 @@ abstract class Entity
      *
      * Usar este método en el repositorio antes de eliminar una entidad de BD.
      *
-     * @param array $datosActuales Datos de la entidad antes de ser eliminada
-     * @return void
+     * @param array<string, mixed> $datosActuales Datos de la entidad antes de ser eliminada
      */
     public function marcarComoEliminada(array $datosActuales): void
     {

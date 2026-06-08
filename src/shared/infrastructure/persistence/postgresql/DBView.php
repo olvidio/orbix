@@ -2,8 +2,10 @@
 
 namespace src\shared\infrastructure\persistence\postgresql;
 
+use PDO;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -11,43 +13,23 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 class DBView
 {
-    /**
-     * oDbl de Grupo
-     *
-     * @var object
-     */
-    protected $oDbl;
-    /**
-     * /**
-     * Schema de la region stgr
-     *
-     * @var string
-     */
-    protected $sSchema;
-    /**
-     * RegionStgr de DBRol
-     *
-     * @var string
-     */
-    protected $sRegionStgr;
-    /**
-     * Nombre de la tabla para crear la vista
-     *
-     * @var string
-     */
-    protected $sView;
+    protected PDO $oDbl;
+    protected string $sSchema = '';
+    protected string $sRegionStgr = '';
+    protected string $sView = '';
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
     /**
      * Constructor de la classe.
      */
-    function __construct($schema, $mi_sfsv, $db)
+    function __construct(string $schema, ?int $mi_sfsv, string $db)
     {
         // Necesito permisos de superusuario para poder acceder a los distintos esquemas
         // que pertenecen a la region del stgr.
 
         $oConfigDB = new ConfigDB('importar');
+        $config = null;
         switch ($db) {
             case 'interior':
                 if ($mi_sfsv === 1) {
@@ -77,6 +59,9 @@ class DBView
                 $config = $oConfigDB->getEsquema('public');
                 break;
         }
+        if ($config === null) {
+            throw new \InvalidArgumentException(sprintf(_('Conexión DBView no válida: %s'), $db));
+        }
         $oConexion = new DBConnection($config);
         $oDbl = $oConexion->getPDO();
 
@@ -91,50 +76,40 @@ class DBView
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
-    public function setDbConexion($oDbl)
+    public function setDbConexion(PDO $oDbl): void
     {
         $this->setoDbl($oDbl);
     }
 
-    public function setSchema($schema)
+    public function setSchema(string $schema): void
     {
         $this->sSchema = $schema;
     }
 
-    public function setRegionStgr($regionStgr)
+    public function setRegionStgr(string $regionStgr): void
     {
         $this->sRegionStgr = $regionStgr;
     }
 
-    public function setView($view)
+    public function setView(string $view): void
     {
         $this->sView = $view;
     }
 
-    /**
-     * Recupera el atributo oDbl de Grupo
-     *
-     * @return object oDbl
-     */
-    protected function setoDbl($oDbl)
+    protected function setoDbl(PDO $oDbl): void
     {
         $this->oDbl = $oDbl;
     }
 
-    /**
-     * Recupera el atributo oDbl de Grupo
-     *
-     * @return object oDbl
-     */
-    protected function getoDbl()
+    protected function getoDbl(): PDO
     {
         return $this->oDbl;
     }
 
 
-    public function normalizarTexto($str)
+    public function normalizarTexto(mixed $str): string
     {
-        $str = trim($str);
+        $str = trim(is_scalar($str) ? (string) $str : '');
         // saltos de linea y tabuladores
         $search = ["\n", "\t", "\r"];
         $replace = ' ';
@@ -145,10 +120,10 @@ class DBView
 
         $string = preg_replace('/[^[:print:]]/', '', $lower);
 
-        return $string;
+        return (string) $string;
     }
 
-    public function ExisteYEsIgual($comun = FALSE)
+    public function ExisteYEsIgual(bool $comun = false): bool
     {
         // definición teórica
         $defNew = $this->getDefView($this->sView, $comun);
@@ -159,16 +134,16 @@ class DBView
         $defActual = $this->normalizarTexto($defActual);
 
         if ($defActual == $defNew) {
-            return TRUE;
-        } else {
-            if (!empty($defActual)) { // SI existe, pero es distinta: la borro
-                $this->Drop();
-            }
-            return FALSE;
+            return true;
         }
+        if (!empty($defActual)) { // SI existe, pero es distinta: la borro
+            $this->Drop();
+        }
+
+        return false;
     }
 
-    public function Create($comun = FALSE)
+    public function Create(bool $comun = false): bool
     {
         /*
          * OJO, hay que dar permisos...
@@ -179,18 +154,19 @@ class DBView
         $sql = "CREATE MATERIALIZED VIEW $nameView AS ";
         $sql .= $this->getDefView($this->sView, $comun);
 
-        if (($oDbl->exec($sql)) === false) {
+        if ($oDbl->exec($sql) === false) {
             $sClauError = 'Refresh';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return FALSE;
-        } else {
-            $this->setOwnerToSchema($nameView);
-            return TRUE;
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+            }
+            return false;
         }
+        $this->setOwnerToSchema($nameView);
 
+        return true;
     }
 
-    public function Drop()
+    public function Drop(): bool
     {
         $oDbl = $this->getoDbl();
         $nameView = " \"$this->sSchema\".$this->sView";
@@ -199,17 +175,18 @@ class DBView
         $this->setOwnerToSuperuser($nameView);
         $sql = "DROP MATERIALIZED VIEW IF EXISTS $nameView CASCADE ";
 
-        if (($oDbl->exec($sql)) === false) {
+        if ($oDbl->exec($sql) === false) {
             $sClauError = 'Drop';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return FALSE;
-        } else {
-            return TRUE;
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+            }
+            return false;
         }
 
+        return true;
     }
 
-    public function Refresh()
+    public function Refresh(): bool
     {
         $oDbl = $this->getoDbl();
         $nameView = " \"$this->sSchema\".$this->sView";
@@ -218,37 +195,46 @@ class DBView
         $this->setOwnerToSuperuser($nameView);
 
         $sql = "REFRESH MATERIALIZED VIEW $nameView";
-        if (($oDbl->exec($sql)) === false) {
+        if ($oDbl->exec($sql) === false) {
             $sClauError = 'Refresh';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return FALSE;
-        } else {
-            $this->setOwnerToSchema($nameView);
-            return TRUE;
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+            }
+            return false;
         }
+        $this->setOwnerToSchema($nameView);
+
+        return true;
     }
 
-    private function setOwnerToSuperuser($nameView)
+    private function setOwnerToSuperuser(string $nameView): void
     {
         $oDbl = $this->getoDbl();
         $sql = "ALTER MATERIALIZED VIEW $nameView OWNER TO \"orbix_admindb\"";
-        if (($oDbl->exec($sql)) === false) {
+        if ($oDbl->exec($sql) === false) {
             $sClauError = 'Refresh';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+            }
         }
     }
 
-    private function setOwnerToSchema($nameView)
+    private function setOwnerToSchema(string $nameView): void
     {
         $oDbl = $this->getoDbl();
         $sql = "ALTER MATERIALIZED VIEW $nameView OWNER TO \"$this->sSchema\"";
-        if (($oDbl->exec($sql)) === false) {
+        if ($oDbl->exec($sql) === false) {
             $sClauError = 'Refresh';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+            }
         }
     }
 
-    private function getIdSchemasGrupStgr()
+    /**
+     * @return array<int|string, mixed>
+     */
+    private function getIdSchemasGrupStgr(): array
     {
         $RegionStgr = $this->sRegionStgr;
         $gesDl = DependencyResolver::get(DelegacionRepositoryInterface::class);
@@ -257,7 +243,10 @@ class DBView
         return $gesDl->getArrayIdSchemaRegionStgr($RegionStgr, $mi_sfsv);
     }
 
-    private function getSchemasGrupStgr()
+    /**
+     * @return list<string>
+     */
+    private function getSchemasGrupStgr(): array
     {
         $RegionStgr = $this->sRegionStgr;
         $gesDl = DependencyResolver::get(DelegacionRepositoryInterface::class);
@@ -272,11 +261,13 @@ class DBView
             unset($a_schemas[$key]);
         }
 
-        return $a_schemas;
-
+        return array_values($a_schemas);
     }
 
-    private function getSchemasComunGrupStgr()
+    /**
+     * @return list<string>
+     */
+    private function getSchemasComunGrupStgr(): array
     {
         $RegionStgr = $this->sRegionStgr;
         $gesDl = DependencyResolver::get(DelegacionRepositoryInterface::class);
@@ -291,10 +282,10 @@ class DBView
             unset($a_schemas[$key]);
         }
 
-        return $a_schemas;
+        return array_values($a_schemas);
     }
 
-    private function getDefView($view, $comun = FALSE)
+    private function getDefView(string $view, bool $comun = false): string
     {
         // Excepciones
         switch ($view) {
@@ -319,7 +310,10 @@ class DBView
                 }
 
                 $schema1 = current($a_schemas);
-                $columns = $this->getNameColumns($schema1, $view);
+                if ($schema1 === false) {
+                    return '';
+                }
+                $columns = $this->getNameColumns((string) $schema1, $view);
 
                 $sql_def_view = '';
                 foreach ($a_schemas as $id_dl => $schema) {
@@ -327,10 +321,11 @@ class DBView
                     $sql_def_view .= "SELECT $columns, $id_dl AS id_dl FROM \"$schema\".$view ";
                 }
         }
+
         return $sql_def_view;
     }
 
-    private function getDefViewActividades()
+    private function getDefViewActividades(): string
     {
         $a_schemas = $this->getSchemasComunGrupStgr();
         $columns = $this->getNameColumns('public', "av_actividades_pub");
@@ -345,7 +340,7 @@ class DBView
         return "SELECT $columns FROM public.av_actividades_pub WHERE ($where)";
     }
 
-    private function getDefViewAsistentesOut()
+    private function getDefViewAsistentesOut(): string
     {
         $a_schemas = $this->getIdSchemasGrupStgr();
         $columns = $this->getNameColumns('publicv', "d_asistentes_de_paso");
@@ -353,13 +348,13 @@ class DBView
         $list_dl = '';
         foreach ($a_schemas as $id) {
             $list_dl .= empty($list_dl) ? '' : ", ";
-            $list_dl .= "$id";
+            $list_dl .= is_scalar($id) ? (string) $id : '';
         }
         $where = "d_asistentes_de_paso.id_schema = any (array[$list_dl])";
         return "SELECT $columns FROM publicv.d_asistentes_de_paso WHERE ($where)";
     }
 
-    private function getDefViewAsistentesDl()
+    private function getDefViewAsistentesDl(): string
     {
         $a_schemas = $this->getIdSchemasGrupStgr();
         $columns = $this->getNameColumns('global', "d_asistentes_dl");
@@ -367,13 +362,13 @@ class DBView
         $list_dl = '';
         foreach ($a_schemas as $id) {
             $list_dl .= empty($list_dl) ? '' : ", ";
-            $list_dl .= "$id";
+            $list_dl .= is_scalar($id) ? (string) $id : '';
         }
         $where = "d_asistentes_dl.id_schema = any (array[$list_dl])";
         return "SELECT $columns FROM global.d_asistentes_dl WHERE ($where)";
     }
 
-    private function getDefViewCargosActivDl()
+    private function getDefViewCargosActivDl(): string
     {
         $a_schemas = $this->getIdSchemasGrupStgr();
         $columns = $this->getNameColumns('global', "d_cargos_activ");
@@ -381,13 +376,13 @@ class DBView
         $list_dl = '';
         foreach ($a_schemas as $id) {
             $list_dl .= empty($list_dl) ? '' : ", ";
-            $list_dl .= "$id";
+            $list_dl .= is_scalar($id) ? (string) $id : '';
         }
         $where = "d_cargos_activ.id_schema = any (array[$list_dl])";
         return "SELECT $columns FROM global.d_cargos_activ WHERE ($where)";
     }
 
-    private function getNameColumns($schema1, $view)
+    private function getNameColumns(string $schema1, string $view): string
     {
         $oDbl = $this->getoDbl();
         // coger la primera dl como referencia para el nombre de los campos
@@ -399,17 +394,29 @@ class DBView
 	               WHERE table_schema = '$schema1'
 	               AND table_name = '$view' ";
 
-        foreach ($oDbl->query($sQuery) as $row) {
-            $column_name = $row['column_name'];
-            //if ($column_name == 'id_schema') { continue; }
+        $st = $oDbl->query($sQuery);
+        if ($st === false) {
+            return '';
+        }
+        foreach ($st as $row) {
+            if (!is_array($row) || !isset($row['column_name'])) {
+                continue;
+            }
+            $column_name = is_scalar($row['column_name']) ? (string) $row['column_name'] : '';
+            if ($column_name === '') {
+                continue;
+            }
             $definicion .= "$view.$column_name, ";
         }
         // borrar la última coma
-        $definicion = substr($definicion, 0, -2);
-        return $definicion;
+        if ($definicion === '') {
+            return '';
+        }
+
+        return substr($definicion, 0, -2);
     }
 
-    private function getSqlView($view)
+    private function getSqlView(string $view): string
     {
         $oDbl = $this->getoDbl();
         $schemaName = "$this->sSchema";
@@ -420,12 +427,20 @@ class DBView
                 FROM pg_matviews 
                 WHERE schemaname='$schemaName' AND matviewname='$view'; 
                 ";
-        foreach ($oDbl->query($sQuery) as $row) {
-            $definicion = $row['definition'];
+        $st = $oDbl->query($sQuery);
+        if ($st === false) {
+            return '';
+        }
+        foreach ($st as $row) {
+            if (is_array($row) && isset($row['definition']) && is_scalar($row['definition'])) {
+                $definicion = (string) $row['definition'];
+            }
         }
 
+        if ($definicion === '') {
+            return '';
+        }
         // borrar el último punto y coma
-        $definicion = substr($definicion, 0, -1);
-        return $definicion;
+        return substr($definicion, 0, -1);
     }
 }

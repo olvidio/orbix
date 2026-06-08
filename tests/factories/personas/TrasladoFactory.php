@@ -8,7 +8,6 @@ use src\personas\domain\value_objects\NombreCentroText;
 use src\personas\domain\value_objects\ObservText;
 use src\personas\domain\value_objects\TrasladoTipoCmbCode;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Factory para crear instancias de Traslado para tests

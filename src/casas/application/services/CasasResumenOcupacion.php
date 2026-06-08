@@ -6,7 +6,6 @@ use DateInterval;
 use DateTime;
 use src\actividades\domain\entity\ActividadAll;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 
 /**
@@ -193,9 +192,9 @@ final class CasasResumenOcupacion
         ];
     }
 
-    private static function fmtTime(TimeLocal|NullTimeLocal|null $h): string
+    private static function fmtTime(TimeLocal|null $h): string
     {
-        if ($h === null || $h instanceof NullTimeLocal) {
+        if ($h === null ) {
             return '';
         }
 

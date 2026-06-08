@@ -7,8 +7,6 @@ use src\encargossacd\domain\value_objects\MasMenosCode;
 use src\encargossacd\domain\value_objects\MesNum;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
-use src\shared\domain\value_objects\NullTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 
 
@@ -68,9 +66,9 @@ class EncargoHorario
     }
 
 
-    public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_ini(): DateTimeLocal|null
     {
-        return $this->f_ini ?? new NullDateTimeLocal;
+        return $this->f_ini;
     }
 
 
@@ -80,9 +78,9 @@ class EncargoHorario
     }
 
 
-    public function getF_fin(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_fin(): DateTimeLocal|null
     {
-        return $this->f_fin ?? new NullDateTimeLocal;
+        return $this->f_fin;
     }
 
 
@@ -172,7 +170,7 @@ class EncargoHorario
     }
 
 
-    public function getH_ini(): TimeLocal|NullTimeLocal|null
+    public function getH_ini(): TimeLocal|null
     {
         return $this->h_ini;
     }
@@ -184,7 +182,7 @@ class EncargoHorario
     }
 
 
-    public function getH_fin(): TimeLocal|NullTimeLocal|null
+    public function getH_fin(): TimeLocal|null
     {
         return $this->h_fin;
     }

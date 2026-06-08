@@ -7,7 +7,6 @@ use src\casas\domain\entity\UbiGasto;
 use src\casas\domain\value_objects\UbiGastoCantidad;
 use src\casas\domain\value_objects\UbiGastoTipo;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Factory para crear instancias de UbiGasto para tests

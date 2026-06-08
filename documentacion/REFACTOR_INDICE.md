@@ -107,11 +107,11 @@ Excepciones permanentes: `login.php`, `recovery.php`, `devel_codegen/factory.php
 
 Todos los módulos en `src/<modulo>/` (excl. `shared`) tienen **0** `$GLOBALS['container']` en runtime. Piloto: **asistentes**; cierre masivo verificado junio 2026.
 
-### Fase 2b — Cierre DI en `src/shared/` (en curso)
+### Fase 2b — Cierre DI en `src/shared/` ✓ (completada 2026-06-07)
 
-Migrar infra transversal de `$GLOBALS['container']` a `DependencyResolver::get()` / inyección por constructor. Prioridad: `DatosInfoRepo` y repos relacionados (`DatosUpdateRepo`, `DatosFormRepo`, `DatosTablaRepo`), luego `DBTrasvase`, `global_object.inc` (bootstrap).
+Infra transversal migrada a `DependencyResolver` / bootstrap tipado. **`global_object.inc`:** orquestador fino (~70 líneas) → `ConnectionBootstrap`, `BootstrapPdoGlobals`, `DiContainerBootstrap`, hidratación en `src/shared/application/`.
 
-**Excepción esperada:** `DependencyResolver.php` (wrapper fino sobre el contenedor).
+**Excepciones esperadas:** `DependencyResolver.php` y `DiContainerBootstrap.php` (creación de `$GLOBALS['container']`).
 
 ### Fase 3 — PHPStan incremental (no global de golpe)
 

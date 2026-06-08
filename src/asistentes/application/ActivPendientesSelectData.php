@@ -184,6 +184,9 @@ final class ActivPendientesSelectData
             $id_nom = $aDatos['id_nom'];
             $id_ubi = $aDatos['id_ubi'];
             $nivel_stgr = $aDatos['nivel_stgr'];
+            if ($id_ubi === null) {
+                continue;
+            }
 
             $oCentroDl = $this->centroDlRepository->findById($id_ubi);
             $nombre_ubi = '?';
@@ -243,6 +246,9 @@ final class ActivPendientesSelectData
             $id_nom = $aDatos['id_nom'];
             $id_ubi = $aDatos['id_ubi'];
             $nivel_stgr = $aDatos['nivel_stgr'];
+            if ($id_ubi === null) {
+                continue;
+            }
 
             $oCentroDl = $this->centroDlRepository->findById($id_ubi);
             $nombre_ubi = $oCentroDl !== null ? $oCentroDl->getNombre_ubi() : '?';

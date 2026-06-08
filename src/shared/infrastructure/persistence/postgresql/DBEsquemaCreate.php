@@ -8,24 +8,9 @@ use src\shared\infrastructure\persistence\DBConnection;
 
 class DBEsquemaCreate
 {
-    /**
-     * Esquema de Referencia de Esquema
-     *
-     * @var string
-     */
-    private $sRef;
-    /**
-     * Esquema a Crear de Esquema
-     *
-     * @var string
-     */
-    private $sNew;
-    /**
-     * Directorio donde poner los logs de Esquema
-     *
-     * @var string
-     */
-    private $sdir;
+    private string $sRef = '';
+    private string $sNew = '';
+    private string $sdir = '';
     /**
      * Fichero con el volcado del esquema de referencia de Esquema
      *
@@ -51,20 +36,17 @@ class DBEsquemaCreate
      */
     private string $sfileSeq = '';
 
-    private $sDb;
-    private $user;
-    private $password;
-
-    private $dbname;
-    private $Host;
-    private $ssh_user;
+    private string $sDb = '';
+    private mixed $dbname = null;
+    private string $Host = '';
+    private string $ssh_user = '';
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
     private ?string $sRegionRef = null;
     private ?string $sDlRef = null;
     private ?string $sDlNew = null;
     private ?string $sRegionNew = null;
-    private mixed $sDbRef = null;
+    private ?string $sDbRef = null;
     /** Nombre PG del esquema en curso (p. ej. tras `eliminar('B-crBv')`). */
     private ?string $sEsquemaNombre = null;
     /** @var array<string, mixed> */
@@ -91,7 +73,7 @@ class DBEsquemaCreate
             return;
         }
         foreach ([$this->sfileNew, $this->sfileRef, $this->sfileLog, $this->sfileSeq] as $path) {
-            if (is_string($path) && $path !== '') {
+            if ($path !== '') {
                 $this->deleteFile($path);
             }
         }
@@ -99,67 +81,70 @@ class DBEsquemaCreate
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
-    public function setConfig($config)
+    /**
+     * @param array<string, mixed> $config
+     */
+    public function setConfig(array $config): void
     {
         $this->config = $config;
 
-        $this->setDb($config['dbname']);
-        $this->setHost($config['host']);
-        $this->setSsh_user($config['ssh_user']);
+        $this->setDb(self::stringConfigValue($config['dbname'] ?? null));
+        $this->setHost(self::stringConfigValue($config['host'] ?? null));
+        $this->setSsh_user(self::stringConfigValue($config['ssh_user'] ?? null));
     }
 
-    public function getDir()
+    public function getDir(): string
     {
         $this->sdir = empty($this->sdir) ? ConfigGlobal::$directorio . '/log/db' : $this->sdir;
         return $this->sdir;
     }
 
-    public function setDir($dir)
+    public function setDir(string $dir): void
     {
         $this->sdir = $dir;
     }
 
-    public function getRegionRef()
+    public function getRegionRef(): ?string
     {
         return $this->sRegionRef;
     }
 
-    public function setRegionRef($region)
+    public function setRegionRef(?string $region): void
     {
         $this->sRegionRef = $region;
     }
 
-    public function getDlRef()
+    public function getDlRef(): ?string
     {
         return $this->sDlRef;
     }
 
-    public function setDlRef($dl)
+    public function setDlRef(?string $dl): void
     {
         $this->sDlRef = $dl;
     }
 
-    public function getRegionNew()
+    public function getRegionNew(): ?string
     {
         return $this->sRegionNew;
     }
 
-    public function setRegionNew($region)
+    public function setRegionNew(?string $region): void
     {
         $this->sRegionNew = $region;
     }
 
-    public function getDlNew()
+    public function getDlNew(): ?string
     {
         return $this->sDlNew;
     }
 
-    public function setDlNew($dl)
+    public function setDlNew(?string $dl): void
     {
         $this->sDlNew = $dl;
     }
 
-    public function getNew()
+    public function getNew(): string
     {
         $this->sNew = $this->resolverNombreEsquema();
 
@@ -227,12 +212,12 @@ class DBEsquemaCreate
         return '';
     }
 
-    public function setNew($esquema)
+    public function setNew(string $esquema): void
     {
         $this->sNew = $esquema;
     }
 
-    public function getRef()
+    public function getRef(): string
     {
         if ($this->sRegionRef === null || $this->sDlRef === null
             || $this->sRegionRef === '' || $this->sDlRef === '') {
@@ -262,66 +247,66 @@ class DBEsquemaCreate
         return $this->sRef;
     }
 
-    public function setRef($esquema)
+    public function setRef(string $esquema): void
     {
         $this->sRef = $esquema;
     }
 
-    public function getHost()
+    public function getHost(): string
     {
         return $this->Host;
     }
 
-    public function setHost($Host)
+    public function setHost(string $Host): void
     {
         $this->Host = $Host;
     }
 
-    public function getSsh_user()
+    public function getSsh_user(): string
     {
         return $this->ssh_user;
     }
 
-    public function setSsh_user($ssh_user)
+    public function setSsh_user(string $ssh_user): void
     {
         $this->ssh_user = $ssh_user;
     }
 
-    public function getDb()
+    public function getDb(): string
     {
         return $this->sDb;
     }
 
-    public function setDb($db)
+    public function setDb(string $db): void
     {
         $this->sDb = $db;
     }
 
-    public function getDbRef()
+    public function getDbRef(): string
     {
-        if (empty($this->sDbRef)) {
+        if ($this->sDbRef === null || $this->sDbRef === '') {
             $this->sDbRef = $this->sDb;
         }
         return $this->sDbRef;
     }
 
-    public function setDbRef($db)
+    public function setDbRef(string $db): void
     {
         $this->sDbRef = $db;
     }
 
-    public function getFileRef()
+    public function getFileRef(): string
     {
         $this->sfileRef = empty($this->sfileRef) ? $this->getDir() . '/' . $this->getRef() . '.' . $this->getDb() . '.sql' : $this->sfileRef;
         return $this->sfileRef;
     }
 
-    public function setFileRef($fileRef)
+    public function setFileRef(string $fileRef): void
     {
         $this->sfileRef = $fileRef;
     }
 
-    public function getFileLog()
+    public function getFileLog(): string
     {
         if ($this->sfileLog === '') {
             $nombre = $this->resolverNombreEsquema();
@@ -331,18 +316,18 @@ class DBEsquemaCreate
         return $this->sfileLog;
     }
 
-    public function setFileLog($fileLog)
+    public function setFileLog(string $fileLog): void
     {
         $this->sfileLog = $fileLog;
     }
 
-    public function getFileNew()
+    public function getFileNew(): string
     {
         $this->sfileNew = empty($this->sfileNew) ? $this->getDir() . '/' . $this->getNew() . '.' . $this->getDb() . '.sql' : $this->sfileNew;
         return $this->sfileNew;
     }
 
-    public function setFileNew($fileNew)
+    public function setFileNew(string $fileNew): void
     {
         $this->sfileNew = $fileNew;
         $nombre = $this->nombreEsquemaDesdeRutaVolcado($fileNew);
@@ -351,18 +336,18 @@ class DBEsquemaCreate
         }
     }
 
-    public function getFileSeq()
+    public function getFileSeq(): string
     {
         $this->sfileSeq = empty($this->sfileSeq) ? $this->getDir() . '/' . $this->getNew() . '.reset_seq.sql' : $this->sfileSeq;
         return $this->sfileSeq;
     }
 
-    public function setFileSeq($fileSeq)
+    public function setFileSeq(string $fileSeq): void
     {
         $this->sfileSeq = $fileSeq;
     }
 
-    public function cambiar_nombre()
+    public function cambiar_nombre(): void
     {
         $dump = file_get_contents($this->getFileRef());
         if ($dump === false) {
@@ -373,12 +358,14 @@ class DBEsquemaCreate
         // comentar "CREATE SCHEMA; que ya está creado
         $dump_nou = str_replace('CREATE SCHEMA', '-- CREATE SCHEMA', $dump_nou);
         // cambiar nombre por defecto de la dl i r
-        $pattern = "/(SET DEFAULT\s*')" . preg_quote($this->getRegionRef(), '/') . "(')/";
-        $replacement = '$1' . $this->getRegionNew() . '$2';
-        $dump_nou = preg_replace($pattern, $replacement, $dump_nou);
-        $pattern = "/(SET DEFAULT\s*')" . preg_quote($this->getDlRef(), '/') . "(')/";
-        $replacement = '$1' . $this->getDlNew() . '$2';
-        $dump_nou = preg_replace($pattern, $replacement, $dump_nou);
+        $pattern = "/(SET DEFAULT\s*')" . preg_quote((string) $this->getRegionRef(), '/') . "(')/";
+        $replacement = '$1' . (string) $this->getRegionNew() . '$2';
+        $reemplazado = preg_replace($pattern, $replacement, $dump_nou);
+        $dump_nou = is_string($reemplazado) ? $reemplazado : $dump_nou;
+        $pattern = "/(SET DEFAULT\s*')" . preg_quote((string) $this->getDlRef(), '/') . "(')/";
+        $replacement = '$1' . (string) $this->getDlNew() . '$2';
+        $reemplazado = preg_replace($pattern, $replacement, $dump_nou);
+        $dump_nou = is_string($reemplazado) ? $reemplazado : $dump_nou;
 
         $dump_nou = self::normalizarVolcadoPgDumpParaPsql($dump_nou);
         $dump_nou = self::repararVolcadoHeredadoYCompatibilidad($dump_nou);
@@ -465,7 +452,7 @@ class DBEsquemaCreate
                 }
 
                 if ($conInherits) {
-                    $inherits = rtrim($m[3]);
+                    $inherits = rtrim($m[3] ?? '');
                     if (!str_ends_with($inherits, ';')) {
                         $inherits .= ';';
                     }
@@ -597,7 +584,8 @@ class DBEsquemaCreate
         ];
         $out = $dump;
         foreach ($reemplazos as $patron => $sustituto) {
-            $out = preg_replace($patron, $sustituto, $out);
+            $reemplazado = preg_replace($patron, $sustituto, $out);
+            $out = is_string($reemplazado) ? $reemplazado : $out;
         }
 
         return $out;
@@ -609,7 +597,11 @@ class DBEsquemaCreate
             $oConfigDB = new ConfigDB('importar');
             $config = $oConfigDB->getEsquema($this->claveEsquemaImportar());
             $pdo = (new DBConnection($config))->getPDO();
-            $version = $pdo->query('SHOW server_version')->fetchColumn();
+            $st = $pdo->query('SHOW server_version');
+            if ($st === false) {
+                return null;
+            }
+            $version = $st->fetchColumn();
             if (is_string($version) && preg_match('/^(\d+)/', $version, $m) === 1) {
                 return (int) $m[1];
             }
@@ -640,7 +632,7 @@ class DBEsquemaCreate
         return self::rutaBinarioPostgres($herramienta, $this->majorVersionPostgresServidor());
     }
 
-    public function crear()
+    public function crear(): void
     {
         if ($this->getHost() === 'db' ||
             $this->getHost() === '/var/run/postgresql' ||
@@ -686,7 +678,7 @@ class DBEsquemaCreate
             $db,
             $dsn,
             $refreshLog,
-            (string) ($this->config['dbname'] ?? ''),
+            self::stringConfigValue($this->config['dbname'] ?? null),
         );
     }
 
@@ -706,7 +698,7 @@ class DBEsquemaCreate
 
         $this->asegurarVolcadoCompatibleAntesDeImportar();
 
-        $host = (string) ($this->config['host'] ?? $this->getHost());
+        $host = self::stringConfigValue($this->config['host'] ?? $this->getHost());
         $this->ejecutarPsqlArchivo(
             $sqlPath,
             $logFile,
@@ -720,7 +712,7 @@ class DBEsquemaCreate
             throw new \RuntimeException(sprintf(
                 _('Tras importar en réplica (%1$s / %2$s) el esquema «%3$s» no tiene tablas. Revise %4$s y pruebas-importar.conn.inc (dbname de public_select).'),
                 $this->claveEsquemaImportar(),
-                (string) ($this->config['dbname'] ?? ''),
+                self::stringConfigValue($this->config['dbname'] ?? null),
                 $this->getNew(),
                 $logFile,
             ));
@@ -776,7 +768,7 @@ class DBEsquemaCreate
         return (int) $st->fetchColumn();
     }
 
-    private function crear_local()
+    private function crear_local(): void
     {
         $this->leer_local();
         $this->cambiar_nombre();
@@ -787,12 +779,11 @@ class DBEsquemaCreate
      * Para la base de datos comun, que está en otro servidor y además con otra versión,
      * No sirve el pg_dump (solo funciona con versiones iguales en los dos extremos)
      */
-    private function crear_remote()
+    private function crear_remote(): void
     {
         $this->leer_remote();
         $this->cambiar_nombre();
         // Por el momento ya no tengo el otro servidor
-        //$this->eliminar_sync();
         $this->importar();
     }
 
@@ -804,7 +795,7 @@ class DBEsquemaCreate
      *
      * Para poder ejecutar el ssh, se debe autorizar via id_rsa al usuario aquinate.
      */
-    private function leer_remote()
+    private function leer_remote(): void
     {
         //ssh user@remote_machine "pg_dump -U dbuser -h localhost -C --column-inserts" \
         //    > backup_file_on_your_local_machine.sql
@@ -901,7 +892,7 @@ class DBEsquemaCreate
     private function eliminarEsquemaPorPdo(string $esquema): void
     {
         $config = (new ConfigDB('importar'))->getConexionMantenimiento($this->claveEsquemaImportar());
-        $host = (string) ($config['host'] ?? $this->getHost());
+        $host = self::stringConfigValue($config['host'] ?? $this->getHost());
 
         if ($this->esHostPostgresLocal($host)) {
             $this->eliminarEsquemaEnConexionMantenimiento($esquema, $config);
@@ -914,7 +905,7 @@ class DBEsquemaCreate
                 _('El esquema «%1$s» sigue existiendo en %2$s (%3$s) tras DROP SCHEMA. Revise propietario (p. ej. orbix_admindb) y %4$s.'),
                 $esquema,
                 $this->claveEsquemaImportar(),
-                (string) ($config['dbname'] ?? ''),
+                self::stringConfigValue($config['dbname'] ?? null),
                 $this->getFileLog(),
             ));
         }
@@ -961,7 +952,7 @@ class DBEsquemaCreate
      */
     private function eliminarEsquemaPorSsh(string $esquema, array $config): void
     {
-        $sshUser = (string) ($config['ssh_user'] ?? $this->getSsh_user() ?? '');
+        $sshUser = self::stringConfigValue($config['ssh_user'] ?? $this->getSsh_user());
         if ($sshUser === '') {
             throw new \RuntimeException(sprintf(
                 _('Falta ssh_user para eliminar el esquema en el servidor interior («%s»).'),
@@ -969,7 +960,7 @@ class DBEsquemaCreate
             ));
         }
 
-        $dbname = (string) ($config['dbname'] ?? '');
+        $dbname = self::stringConfigValue($config['dbname'] ?? null);
         if ($dbname === '') {
             throw new \RuntimeException(sprintf(
                 _('Falta dbname en la conexión de mantenimiento «%s».'),
@@ -977,7 +968,7 @@ class DBEsquemaCreate
             ));
         }
 
-        $host = (string) ($config['host'] ?? $this->getHost());
+        $host = self::stringConfigValue($config['host'] ?? $this->getHost());
         $logFile = $this->getFileLog();
         $sql = $this->sqlReasignarPropietarioYBorrarEsquema($esquema);
         $hostLocal = '/var/run/postgresql';
@@ -1045,9 +1036,9 @@ class DBEsquemaCreate
      */
     private function existeEsquemaPorSsh(string $esquema, array $config): bool
     {
-        $sshUser = (string) ($config['ssh_user'] ?? $this->getSsh_user() ?? '');
-        $dbname = (string) ($config['dbname'] ?? '');
-        $host = (string) ($config['host'] ?? $this->getHost());
+        $sshUser = self::stringConfigValue($config['ssh_user'] ?? $this->getSsh_user());
+        $dbname = self::stringConfigValue($config['dbname'] ?? null);
+        $host = self::stringConfigValue($config['host'] ?? $this->getHost());
         if ($sshUser === '' || $dbname === '' || $host === '') {
             return false;
         }
@@ -1156,29 +1147,17 @@ class DBEsquemaCreate
     }
 
     /**
-     * Eliminar los triggers de bucardo. (si existen)
-     * La definición de si hay que sincronizar se hará desde otro sitio.
+     * @return array<string, mixed>
      */
-    private function eliminar_sync()
-    {
-        $dump = file_get_contents($this->getFileNew());
-
-        $pattern = "/^.*bucardo.*$/im";
-        $replacement = '';
-        $dump_nou = preg_replace($pattern, $replacement, $dump);
-
-        $d = file_put_contents($this->getFileNew(), $dump_nou);
-        if ($d === false) printf(_("error al escribir el fichero"));
-    }
-
-    protected function getConfigConexion($esq = 'ref')
+    protected function getConfigConexion(string $esq = 'ref'): array
     {
         // No he conseguido que funcione con ~/.pgpass.
         if ($esq === 'ref') {
             $esquema = $this->getRef();
-        } elseif ($esq === 'new') {
+        } else {
             $esquema = $this->getNew();
         }
+        $config = [];
         switch ($this->sDb) {
             case 'pruebas-comun':
             case 'comun':
@@ -1210,10 +1189,10 @@ class DBEsquemaCreate
         return $config;
     }
 
-    private function getConexion($esquema = 'ref')
+    private function getConexion(string $esquema = 'ref'): string
     {
         $config = $this->getConfigConexion($esquema);
-        $this->dbname = $config['dbname'];
+        $this->dbname = $config['dbname'] ?? null;
 
         $oConnection = new DBConnection($config);
         $dsn = $oConnection->getURI();
@@ -1221,15 +1200,28 @@ class DBEsquemaCreate
         return $dsn;
     }
 
-    private function getDbName()
+    private function getDbName(): string
     {
         $this->getConexion();
-        return $this->dbname;
+
+        return self::stringConfigValue($this->dbname);
     }
 
-    private function deleteFile($file)
+    private function deleteFile(string $file): void
     {
-        $command = "/bin/rm -f " . $file;
+        $command = '/bin/rm -f ' . escapeshellarg($file);
         passthru($command); // no output to capture so no need to store it
+    }
+
+    private static function stringConfigValue(mixed $value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+
+        return '';
     }
 }

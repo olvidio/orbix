@@ -12,7 +12,9 @@ use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\asistentes\domain\entity\Asistente;
 use src\personas\domain\entity\Persona;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 
 /**
@@ -34,7 +36,6 @@ class AsistenteActividadService
     public function __construct(
         ActividadRepositoryInterface $actividadRepository,
         ActividadAllRepositoryInterface $actividadAllRepository,
-        AsistenteRepositoryInterface $asistenteRepository,
         ConnectionRepositoryFactoryInterface $connectionRepositoryFactory,
         private ContainerInterface $container,
     ) {
@@ -43,8 +44,8 @@ class AsistenteActividadService
         /** @var AsistenteRepositoryInterface $configuredRepository */
         $configuredRepository = $connectionRepositoryFactory->createWithConnection(
             AsistenteRepositoryInterface::class,
-            $GLOBALS['oDBE'],
-            $GLOBALS['oDBE_Select']
+            GlobalPdo::get('oDBE'),
+            GlobalPdo::get('oDBE_Select')
         );
         $this->asistenteRepository = $configuredRepository;
     }
@@ -52,10 +53,10 @@ class AsistenteActividadService
     /**
      * Obtiene las actividades de un asistente
      *
-     * @param array $aWhereNom asociativo con los valores de las variables para el nombre
-     * @param array $aOperadorNom asociativo con los operadores para cada variable del nombre
-     * @param array $aWhereActividad asociativo con los valores de las variables para la actividad
-     * @param array $aOperadorActividad asociativo con los operadores para cada variable de la actividad
+     * @param array<string, mixed> $aWhereNom asociativo con los valores de las variables para el nombre
+     * @param array<string, string> $aOperadorNom asociativo con los operadores para cada variable del nombre
+     * @param array<string, mixed> $aWhereActividad asociativo con los valores de las variables para la actividad
+     * @param array<string, string> $aOperadorActividad asociativo con los operadores para cada variable de la actividad
      * @param bool $reverse TRUE para ordenar de nuevo a viejo
      * @return list<\src\asistentes\domain\entity\Asistente>
      */
@@ -90,7 +91,7 @@ class AsistenteActividadService
      * Obtiene las asistencias de una persona a determinadas actividades
      *
      * @param int $id_nom ID de la persona
-     * @param array $a_id_activ_f_ini Array de actividades con fecha de inicio
+     * @param array<int|string, int> $a_id_activ_f_ini Array de actividades con fecha de inicio
      * @param bool $reverse TRUE para ordenar de nuevo a viejo
      * @return list<\src\asistentes\domain\entity\Asistente>
      */
@@ -115,10 +116,9 @@ class AsistenteActividadService
     /**
      * Ordena las asistencias por fecha de actividad
      *
-     * @param array $cAsistencias Colección de asistentes
-     * @param array $a_id_activ_f_ini Array de IDs de actividad ordenados por fecha
-     * @param bool $reverse TRUE para ordenar de nuevo a viejo
-     * @return array Asistencias ordenadas
+     * @param list<Asistente> $cAsistencias Colección de asistentes
+     * @param array<int|string, int> $a_id_activ_f_ini Array de IDs de actividad ordenados por fecha
+     * @return list<Asistente> Asistencias ordenadas
      */
     private function ordenarAsistenciasPorFecha(array $cAsistencias, array $a_id_activ_f_ini, bool $reverse): array
     {
@@ -147,7 +147,7 @@ class AsistenteActividadService
             ksort($cActividadesOk);
         }
 
-        return $cActividadesOk;
+        return array_values($cActividadesOk);
     }
 
     /**
@@ -257,7 +257,7 @@ class AsistenteActividadService
      * Obtiene todos los asistentes de una actividad
      *
      * @param int $iid_activ ID de la actividad
-     * @return array Una colección de objetos de tipo Asistente ordenados por apellidos
+     * @return array<string, Asistente> Una colección de objetos de tipo Asistente ordenados por apellidos
      */
     public function getAsistentesDeActividad(int $iid_activ): array
     {
@@ -319,16 +319,16 @@ class AsistenteActividadService
         return $cAsistentesOk;
     }
 
-    public function buscarAsistencia($id_nom, $id_activ)
+    public function buscarAsistencia(int $id_nom, int $id_activ): Asistente|false
     {
         /** @var AsistenteRepositoryInterface $AsistenteRepository */
         $AsistenteRepository = $this->container->get(AsistenteRepositoryInterface::class);
         $cAsistentes = $AsistenteRepository->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
-        if (is_array($cAsistentes) && !empty($cAsistentes)) {
+        if ($cAsistentes !== []) {
             return $cAsistentes[0];
-        } else {
-            return FALSE;
         }
+
+        return false;
     }
 
     /**
@@ -397,7 +397,6 @@ class AsistenteActividadService
             // comprobar que es una actividad de mi dl, si no no tiene permiso
             if ($dl_org !== ConfigGlobal::mi_dele() && $claseActividad !== 'ActividadEx') {
                 exit (_("No puede modificar los datos de asistencia de una persona de otra dl"));
-                exit (_("los datos de asistencia los modifica la dl del asistente"));
             }
 
         }

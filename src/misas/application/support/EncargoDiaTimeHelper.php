@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace src\misas\application\support;
 
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 final class EncargoDiaTimeHelper
 {
-    public static function hora(DateTimeLocal|NullDateTimeLocal $dt): string
+    public static function hora(DateTimeLocal|null $dt): string
     {
         if ($dt instanceof DateTimeLocal) {
             return $dt->getHora() ?? '';
@@ -18,7 +17,7 @@ final class EncargoDiaTimeHelper
         return '';
     }
 
-    public static function format(DateTimeLocal|NullDateTimeLocal $dt, string $format): string
+    public static function format(DateTimeLocal|null $dt, string $format): string
     {
         if ($dt instanceof DateTimeLocal) {
             return $dt->format($format);

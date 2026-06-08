@@ -24,6 +24,9 @@ final class ZonaSacdLista
     public function execute(string $id_zona): array
     {
         $a_valores = [];
+        if ($id_zona === '') {
+            return $this->buildTablaResponse($a_valores);
+        }
         if ($id_zona === 'no') {
             $mi_dl = ConfigGlobal::mi_delef();
             $aWhere = [
@@ -47,9 +50,13 @@ final class ZonaSacdLista
                 }
             }
         } else {
-            $oZona = $this->zonaRepository->findById((int) $id_zona);
+            $idZona = (int) $id_zona;
+            if ($idZona <= 0) {
+                return $this->buildTablaResponse($a_valores);
+            }
+            $oZona = $this->zonaRepository->findById($idZona);
             $nombre_zona = $oZona?->getNombre_zona() ?? '';
-            $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_zona' => $id_zona], []);
+            $cZonaSacd = $this->zonaSacdRepository->getZonasSacds(['id_zona' => $idZona], []);
             $i = 0;
             $aAp1 = [];
             foreach ($cZonaSacd as $oZonaSacd) {
@@ -77,6 +84,15 @@ final class ZonaSacdLista
             }
         }
 
+        return $this->buildTablaResponse($a_valores);
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $a_valores
+     * @return array<string, mixed>
+     */
+    private function buildTablaResponse(array $a_valores): array
+    {
         return [
             'tipo' => 'tabla',
             'id_tabla' => 'zona_sacd_ajax',

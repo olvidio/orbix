@@ -4,6 +4,7 @@ namespace src\shared\application;
 
 use DateInterval;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
+use src\shared\domain\entity\ColaMail;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\value_objects\DateTimeLocal;
 
@@ -49,7 +50,9 @@ final class EnviarMailsEnCola
     {
         $ahora = new DateTimeLocal();
         $ahora->sub(new DateInterval(self::PURGE_INTERVAL));
-        return $this->ColaMailRepository->deleteColaMails($ahora->getIso()) !== false;
+        $this->ColaMailRepository->deleteColaMails($ahora->getIso());
+
+        return true;
     }
 
     public function enviar(): int
@@ -58,10 +61,10 @@ final class EnviarMailsEnCola
         while ($cMails = $this->seleccionar(self::BATCH_SIZE)) {
             $ahora = new DateTimeLocal();
             foreach ($cMails as $oMail) {
-                $mail_to = $oMail->getMail_to();
-                $subject = $oMail->getSubject();
-                $message = $oMail->getMessage();
-                $headers = $oMail->getHeaders();
+                $mail_to = $oMail->getMail_to() ?? '';
+                $subject = $oMail->getSubject() ?? '';
+                $message = $oMail->getMessage() ?? '';
+                $headers = $oMail->getHeaders() ?? '';
                 mail($mail_to, $subject, $message, $headers);
                 $oMail->setSended($ahora);
                 $this->ColaMailRepository->Guardar($oMail);
@@ -71,6 +74,9 @@ final class EnviarMailsEnCola
         return $enviados;
     }
 
+    /**
+     * @return array<int, ColaMail>
+     */
     private function seleccionar(int $limit): array
     {
         $aWhere = ['sended' => 'x', '_limit' => $limit];

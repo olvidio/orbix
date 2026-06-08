@@ -4,7 +4,6 @@ namespace Tests\factories\tablonanuncios;
 
 use Faker\Factory;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\tablonanuncios\domain\entity\Anuncio;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
 
@@ -49,7 +48,7 @@ class AnunciosFactory
                 $f_eliminado = $faker->dateTimeBetween()->format('Y-m-dTH:i:s'); // a date between -30 years ago, and now
                 $t_eliminado = new DateTimeLocal($f_eliminado); // a date between -30 years ago, and now
             } else {
-                $t_eliminado = new NullDateTimeLocal();
+                $t_eliminado = null;
             }
             $texto_anuncio = $faker->sentence(3);
             $categoria = $faker->numberBetween(1, 2);

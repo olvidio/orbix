@@ -9,7 +9,6 @@ use src\personas\domain\value_objects\ObservText;
 use src\personas\domain\value_objects\TrasladoTipoCmbCode;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 
 class Traslado
@@ -59,9 +58,9 @@ class Traslado
     }
 
 
-    public function getF_traslado(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_traslado(): DateTimeLocal|null
     {
-        return $this->f_traslado ?? new NullDateTimeLocal;
+        return $this->f_traslado;
     }
     public function setF_traslado(DateTimeLocal|null $f_traslado = null): void
     {

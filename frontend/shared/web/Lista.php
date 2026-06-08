@@ -25,6 +25,8 @@ class Lista
     private bool $bColVis = true;
     private string $formato_tabla = '';
     private bool $bMultiSort = false;
+    /** Checkbox por fila sin botones de acción en la cabecera (p. ej. zona_ctr). */
+    private bool $bConSel = false;
 
     public function __construct()
     {
@@ -344,7 +346,7 @@ class Lista
         $sColumnsVisible = '[';
         $sColFilters = '[';
         $aFields = [];
-        if ($b !== 0 || $b === 'x') {
+        if ($b !== 0 || $b === 'x' || $this->bConSel) {
             $c++;
             $width = $aColsWidth['sel'] ?? 30;
             $sColumns .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter}";
@@ -429,7 +431,7 @@ class Lista
                     continue;
                 }
                 if ($col === "sel") {
-                    if (empty($b)) {
+                    if (empty($b) && !$this->bConSel) {
                         continue;
                     }
                     if (is_array($valor)) {
@@ -1075,7 +1077,7 @@ class Lista
                 $cab++;
             }
         }
-        if (!empty($b) && $b !== 'x') {
+        if ((!empty($b) && $b !== 'x') || $this->bConSel) {
             $cabecera = "<th class=cabecera tipo='notext' width='20' ></th>\n" . $cabecera;
             $cab++;
         }
@@ -1102,7 +1104,7 @@ class Lista
             }
             $tbody .= "<tr id='$id_fila' class='$clase' onclick='fnjs_clic_fila(this, event)' data-json='" . htmlspecialchars(json_encode($fila), ENT_QUOTES, 'UTF-8') . "'>";
 
-            if (!empty($b) && $b !== 'x') {
+            if ((!empty($b) && $b !== 'x') || $this->bConSel) {
                 if (isset($fila['sel'])) {
                     $valor = $fila['sel'];
                     if (is_array($valor)) {
@@ -1342,6 +1344,11 @@ class Lista
     public function setBotones(array $aBotones): void
     {
         $this->aBotones = $aBotones;
+    }
+
+    public function setConSel(bool $bConSel): void
+    {
+        $this->bConSel = $bConSel;
     }
 
     public function setId_tabla(string $sid_tabla): void

@@ -16,12 +16,14 @@ $Qgo_to = (string)filter_input(INPUT_POST, 'go_to');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $stack = '';
 if (!empty($a_sel)) { //vengo de un checkbox
-    $Qs_pkey = explode('#', $a_sel[0]);
+    $sel0 = $a_sel[0] ?? '';
+    $Qs_pkey = explode('#', (string) $sel0);
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
 }
 
-$a_pkey = json_decode(src\shared\domain\helpers\urlsafe_b64decode($Qs_pkey));
+$pkeyJson = src\shared\domain\helpers\urlsafe_b64decode($Qs_pkey);
+$a_pkey = $pkeyJson !== '' ? json_decode($pkeyJson) : null;
 
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info_encoded);

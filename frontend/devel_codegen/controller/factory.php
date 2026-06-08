@@ -267,12 +267,10 @@ foreach ($oDbl->query($sql) as $row) {
         case 'timestamp':
         case 'timestamptz';
             $a_use_txt['DateTimeLocal'] = "use src\shared\domain\value_objects\DateTimeLocal";
-            $a_use_txt['NullDateTimeLocal'] = "use src\shared\domain\value_objects\NullDateTimeLocal";
             $a_use_txt['ConverterDate'] = "use src\shared\infrastructure\persistence\ConverterDate";
             break;
         case 'time':
             $a_use_txt['TimeLocal'] = "use src\shared\domain\value_objects\TimeLocal";
-            $a_use_txt['NullTimeLocal'] = "use src\shared\domain\value_objects\NullTimeLocal";
             $a_use_txt['ConverterDate'] = "use src\shared\infrastructure\persistence\ConverterDate";
             break;
         case 'bool':
@@ -490,11 +488,11 @@ foreach ($oDbl->query($sql) as $row) {
             $gets .= '
 	/**
 	 *
-	 * @return DateTimeLocal|NullDateTimeLocal|null' . ' $' . $tip . $nomcamp;
+	 * @return DateTimeLocal|null' . ' $' . $tip . $nomcamp;
             $gets .= "\n\t" . ' */
-	public function get' . $NomCamp . '(): DateTimeLocal|NullDateTimeLocal|null
+	public function get' . $NomCamp . '(): DateTimeLocal|null
 	{
-        return $this->' . $tip . $nomcamp . '?? new NullDateTimeLocal;
+        return $this->' . $tip . $nomcamp . ';
 	}';
             break;
         case 'time':
@@ -502,11 +500,11 @@ foreach ($oDbl->query($sql) as $row) {
             $gets .= '
 	/**
 	 *
-	 * @return TimeLocal|NullTimeLocal|null' . ' $' . $tip . $nomcamp;
+	 * @return TimeLocal|null' . ' $' . $tip . $nomcamp;
             $gets .= "\n\t" . ' */
-	public function get' . $NomCamp . '(): TimeLocal|NullTimeLocal|null
+	public function get' . $NomCamp . '(): TimeLocal|null
 	{
-        return $this->' . $tip . $nomcamp . '?? new NullTimeLocal;
+        return $this->' . $tip . $nomcamp . ';
 	}';
             break;
         default:
@@ -707,14 +705,8 @@ if (!empty($a_use_txt['is_true'])) {
 if (!empty($a_use_txt['DateTimeLocal'])) {
     $txt_entidad .= "\n\t" . 'use src\shared\domain\value_objects\DateTimeLocal;';
 }
-if (!empty($a_use_txt['NullDateTimeLocal'])) {
-    $txt_entidad .= "\n\t" . 'use src\shared\domain\value_objects\NullDateTimeLocal;';
-}
 if (!empty($a_use_txt['TimeLocal'])) {
     $txt_entidad .= "\n\t" . 'use src\shared\domain\value_objects\TimeLocal;';
-}
-if (!empty($a_use_txt['NullTimeLocal'])) {
-    $txt_entidad .= "\n\t" . 'use src\shared\domain\value_objects\NullTimeLocal;';
 }
 if (!empty($a_use_txt['stdClass'])) {
     $txt_entidad .= "\n\t" . 'use stdClass;';

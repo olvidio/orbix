@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace src\shared\infrastructure;
 
+use DI\Container;
+
 /**
  * Acceso centralizado al contenedor PHP-DI del bootstrap.
  * Evita dispersar `$GLOBALS['container']` fuera de `src/`.
@@ -17,7 +19,13 @@ final class DependencyResolver
      */
     public static function get(string $id): object
     {
-        return $GLOBALS['container']->get($id);
+        $resolved = self::container()->get($id);
+        if (!is_object($resolved)) {
+            throw new \RuntimeException(sprintf('Service "%s" did not resolve to an object', $id));
+        }
+
+        /** @var T $resolved */
+        return $resolved;
     }
 
     /**
@@ -25,6 +33,16 @@ final class DependencyResolver
      */
     public static function make(string $name, array $parameters = []): mixed
     {
-        return $GLOBALS['container']->make($name, $parameters);
+        return self::container()->make($name, $parameters);
+    }
+
+    private static function container(): Container
+    {
+        $container = $GLOBALS['container'] ?? null;
+        if (!$container instanceof Container) {
+            throw new \RuntimeException('DI container not initialized');
+        }
+
+        return $container;
     }
 }

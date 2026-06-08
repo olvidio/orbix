@@ -326,7 +326,7 @@ foreach ($oDbl->query($sql) as $row) {
 			$this->DBCarregar();
 		}
 		if (empty($this->' . $tip . $nomcamp . ')) {
-			return new src\shared\domain\value_objects\NullDateTimeLocal();
+			return null;
 		}
         $oConverter = new core\Converter(\'date\', $this->' . $tip . $nomcamp . ');
 		return $oConverter->fromPg();

@@ -16,7 +16,7 @@ namespace src\shared\infrastructure\persistence\postgresql;
 class Condicion
 {
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
-    public function getCondicion($campo, $operador, $valor): string
+    public function getCondicion(string $campo, ?string $operador, mixed $valor): string
     {
         if (isset($operador) && $operador !== '') {
             switch ($operador) {
@@ -29,14 +29,14 @@ class Condicion
                     break;
                 case 'OR':
                     $sCondi = '';
-                    $aVal = explode(',', $valor);
+                    $aVal = explode(',', is_scalar($valor) ? (string) $valor : '');
                     foreach ($aVal as $val) {
                         $sCondi .= empty($sCondi) ? "$campo = $val" : " OR $campo = $val";
                     }
                     $sCondi = "($sCondi)";
                     break;
                 case 'BETWEEN':
-                    $val1 = strtok($valor, ',');
+                    $val1 = strtok(is_scalar($valor) ? (string) $valor : '', ',');
                     $val2 = strtok(',');
                     $sCondi = "$campo >= $val1 AND $campo <= $val2";
                     break;
@@ -77,7 +77,7 @@ class Condicion
                     $sCondi = "$campo $operador (" . self::normalizeSqlInList($valor) . ')';
                     break;
                 case 'TXT':
-                    $sCondi = "$valor";
+                    $sCondi = is_scalar($valor) ? (string) $valor : '';
                     break;
                 default:
                     $sCondi = "$campo $operador :$campo";
@@ -97,7 +97,7 @@ class Condicion
     private static function normalizeSqlInList(mixed $valor): string
     {
         if (!is_array($valor)) {
-            return (string) $valor;
+            return is_scalar($valor) ? (string) $valor : '';
         }
         $keys = array_keys($valor);
         $isZeroBasedList = $keys === range(0, count($valor) - 1);

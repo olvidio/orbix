@@ -5,7 +5,6 @@ namespace src\certificados\domain\entity;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\LocaleCode;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class CertificadoEmitido
 {
@@ -26,7 +25,7 @@ class CertificadoEmitido
 
     private ?string $certificado = null;
 
-    private DateTimeLocal|NullDateTimeLocal|null $f_certificado;
+    private DateTimeLocal|null $f_certificado;
 
     private ?string $esquema_emisor = null;
 
@@ -34,7 +33,7 @@ class CertificadoEmitido
 
     private ?string $documento = null;
 
-    private DateTimeLocal|NullDateTimeLocal|null $f_enviado;
+    private DateTimeLocal|null $f_enviado;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -111,12 +110,12 @@ class CertificadoEmitido
         $this->certificado = $certificado;
     }
 
-    public function getF_certificado(): DateTimeLocal|NullDateTimeLocal
+    public function getF_certificado(): DateTimeLocal|null
     {
-        return $this->f_certificado ?? new NullDateTimeLocal;
+        return $this->f_certificado;
     }
 
-    public function setF_certificado(DateTimeLocal|NullDateTimeLocal|null $f_certificado): void
+    public function setF_certificado(DateTimeLocal|null $f_certificado): void
     {
         $this->f_certificado = $f_certificado;
     }
@@ -157,12 +156,12 @@ class CertificadoEmitido
         $this->documento = $documento;
     }
 
-    public function getF_enviado(): DateTimeLocal|NullDateTimeLocal
+    public function getF_enviado(): DateTimeLocal|null
     {
-        return $this->f_enviado ?? new NullDateTimeLocal;
+        return $this->f_enviado;
     }
 
-    public function setF_enviado(DateTimeLocal|NullDateTimeLocal|null $f_enviado): void
+    public function setF_enviado(DateTimeLocal|null $f_enviado): void
     {
         $this->f_enviado = $f_enviado;
     }

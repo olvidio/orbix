@@ -22,7 +22,6 @@ use src\personas\domain\value_objects\{ApelFamText,
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\LocaleCode;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -358,9 +357,9 @@ class PersonaGlobal
             : PersonaApellido2Text::fromNullableString($apellido2);
     }
 
-    public function getF_nacimiento(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_nacimiento(): DateTimeLocal|null
     {
-        return $this->f_nacimiento ?? new NullDateTimeLocal;
+        return $this->f_nacimiento;
     }
 
     public function setF_nacimiento(DateTimeLocal|null $f_nacimiento = null): void
@@ -430,9 +429,9 @@ class PersonaGlobal
         }
     }
 
-    public function getF_situacion(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_situacion(): DateTimeLocal|null
     {
-        return $this->f_situacion ?? new NullDateTimeLocal;
+        return $this->f_situacion;
     }
 
     public function setF_situacion(DateTimeLocal|null $f_situacion = null): void
@@ -497,9 +496,9 @@ class PersonaGlobal
             : IncCode::fromNullableString($inc);
     }
 
-    public function getF_inc(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_inc(): DateTimeLocal|null
     {
-        return $this->f_inc ?? new NullDateTimeLocal;
+        return $this->f_inc;
     }
 
     public function setF_inc(DateTimeLocal|null $f_inc = null): void

@@ -5,7 +5,6 @@ namespace src\ubis\domain\entity;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\application\services\UbiContactsTrait;
 use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
@@ -252,15 +251,15 @@ class CentroEllas
     }
 
 
-    public function getF_active(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_active(): DateTimeLocal|null
     {
-        return $this->f_active ?? new NullDateTimeLocal;
+        return $this->f_active;
     }
 
 
-    public function setF_active(DateTimeLocal|NullDateTimeLocal|null $f_active = null): void
+    public function setF_active(DateTimeLocal|null $f_active = null): void
     {
-        $this->f_active = $f_active instanceof NullDateTimeLocal ? null : $f_active;
+        $this->f_active = $f_active;
     }
 
 

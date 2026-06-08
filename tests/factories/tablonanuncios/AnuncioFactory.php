@@ -5,7 +5,6 @@ namespace Tests\factories\tablonanuncios;
 use Faker\Factory;
 use src\tablonanuncios\domain\entity\Anuncio;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
 use src\tablonanuncios\domain\value_objects\Categoria;
 use src\tablonanuncios\domain\value_objects\EsquemaDestino;

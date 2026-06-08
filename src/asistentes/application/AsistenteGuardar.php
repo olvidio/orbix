@@ -2,6 +2,10 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
+
 use src\shared\config\ConfigGlobal;
 use src\asistentes\application\services\AsistenteApplicationService;
 use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
@@ -31,30 +35,34 @@ final class AsistenteGuardar
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(array $input): string
     {
-        $mod = (string) ($input['mod'] ?? '');
+        $mod = input_string($input, 'mod');
         if (!in_array($mod, ['nuevo', 'editar', 'mover'], true)) {
             return sprintf(_("mod no soportado: %s"), $mod);
         }
 
-        $Qpau = (string) ($input['pau'] ?? '');
-        $a_sel = (array) ($input['sel'] ?? []);
+        $Qpau = input_string($input, 'pau');
+        $a_sel = input_string_list($input, 'sel');
         $id_activ = 0;
         $id_nom = 0;
-        if (!empty($a_sel)) {
+        if ($a_sel !== []) {
+            $selKey = $a_sel[0];
             if ($Qpau === 'p') {
-                $id_activ = (int) strtok($a_sel[0], '#');
-                $id_nom = (int) ($input['id_pau'] ?? 0);
+                $id_activ = (int) strtok($selKey, '#');
+                $id_nom = input_int($input, 'id_pau');
             } elseif ($Qpau === 'a') {
-                $id_nom = (int) strtok($a_sel[0], '#');
-                $id_activ = (int) ($input['id_pau'] ?? 0);
+                $id_nom = (int) strtok($selKey, '#');
+                $id_activ = input_int($input, 'id_pau');
             }
         } else {
-            $id_activ = (int) ($input['id_activ'] ?? 0);
-            $id_nom = (int) ($input['id_nom'] ?? 0);
+            $id_activ = input_int($input, 'id_activ');
+            $id_nom = input_int($input, 'id_nom');
         }
-        $id_activ_old = (int) ($input['id_activ_old'] ?? 0);
+        $id_activ_old = input_int($input, 'id_activ_old');
 
         if ($id_activ === 0 || $id_nom === 0) {
             return _("faltan parametros id_activ / id_nom");
@@ -82,6 +90,9 @@ final class AsistenteGuardar
         return $this->guardar($id_activ, $id_nom, $mod, $input);
     }
 
+    /**
+     * @param array<string, mixed> $input
+     */
     private function guardar(int $id_activ, int $id_nom, string $mod, array $input): string
     {
         $asistenteAppService = $this->asistenteApplicationService;
@@ -96,27 +107,27 @@ final class AsistenteGuardar
             return _("los datos de asistencia los modifica la dl del asistente");
         }
 
-        $oAsistente->setEncargo((string) ($input['encargo'] ?? ''));
-        $oAsistente->setObserv((string) ($input['observ'] ?? ''));
-        $oAsistente->setObservEstVo((string) ($input['observ_est'] ?? ''));
-        $oAsistente->setPropio(is_true((string) ($input['propio'] ?? '')));
-        $oAsistente->setEst_ok(is_true((string) ($input['est_ok'] ?? '')));
-        $oAsistente->setCfi(is_true((string) ($input['cfi'] ?? '')));
-        $oAsistente->setFalta(is_true((string) ($input['falta'] ?? '')));
-        $oAsistente->setCfi_con((int) ($input['cfi_con'] ?? 0));
+        $oAsistente->setEncargo(input_string($input, 'encargo'));
+        $oAsistente->setObserv(input_string($input, 'observ'));
+        $oAsistente->setObservEstVo(input_string($input, 'observ_est'));
+        $oAsistente->setPropio(is_true(input_string($input, 'propio')));
+        $oAsistente->setEst_ok(is_true(input_string($input, 'est_ok')));
+        $oAsistente->setCfi(is_true(input_string($input, 'cfi')));
+        $oAsistente->setFalta(is_true(input_string($input, 'falta')));
+        $oAsistente->setCfi_con(input_int($input, 'cfi_con'));
 
         if ($mod === 'mover') {
-            $oAsistente->setPropio('t');
+            $oAsistente->setPropio(true);
         }
         $oAsistente->setDlResponsableVo(ConfigGlobal::mi_delef());
 
-        $Qpropietario = (string) ($input['propietario'] ?? '');
+        $Qpropietario = input_string($input, 'propietario');
         if ($Qpropietario === 'xxx') {
             $Qpropietario = '';
         }
         $oAsistente->setPropietarioVo($Qpropietario);
         $err_plaza = $oAsistente->setPlazaVoComprobando(
-            (int) ($input['plaza'] ?? 0),
+            input_int($input, 'plaza'),
             $this->plazaPropietarioAsignacion,
         );
         if ($err_plaza !== '') {

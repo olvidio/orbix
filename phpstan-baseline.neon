@@ -5071,30 +5071,6 @@ parameters:
 			path: frontend/menus/controller/menus_get.php
 
 		-
-			message: '#^Cannot call method addError\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: frontend/menus/controller/menus_importar_de_ficheros_a_ref.php
-
-		-
-			message: '#^Cannot call method query\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: frontend/menus/controller/menus_importar_de_ficheros_a_ref.php
-
-		-
-			message: '#^Offset 2 might not exist on array\|null\.$#'
-			identifier: offsetAccess.notFound
-			count: 3
-			path: frontend/menus/controller/menus_importar_de_ficheros_a_ref.php
-
-		-
-			message: '#^Variable \$oConfigDB might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: frontend/menus/controller/menus_importar_de_ficheros_a_ref.php
-
-		-
 			message: '#^Variable \$oPosicion might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1

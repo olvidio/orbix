@@ -3,37 +3,52 @@
 namespace src\shared\domain;
 
 use src\configuracion\domain\entity\ModuloInstalado;
-use src\shared\infrastructure\DependencyResolver;
 use src\profesores\domain\entity\ProfesorLatin;
+use src\shared\domain\contracts\DatosCrudRepositoryInterface;
+use src\shared\domain\contracts\DatosFichaInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\DependencyResolver;
 use function src\shared\domain\helpers\is_true;
 
 class DatosUpdateRepo
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    private $oFicha;
-    private $Campos;
-    private mixed $RepositoryInterface;
+    private ?object $oFicha = null;
+    /** @var array<string, mixed> */
+    private array $Campos = [];
+    private ?string $RepositoryInterface = null;
 
-    public function eliminar()
+    public function eliminar(): bool|string
     {
-        $oFicha = $this->getFicha();
-        $oRepository = DependencyResolver::get($this->RepositoryInterface);
-        if ($oRepository->Eliminar($oFicha) === false) {
-            $error_txt = $oRepository->getErrorTxt();
-            return $error_txt;
+        /** @var DatosFichaInterface|null $ficha */
+        $ficha = $this->getFicha();
+        if ($ficha === null || $this->RepositoryInterface === null) {
+            return 'Ficha o repositorio no configurado';
         }
+
+        $oRepository = $this->resolveRepository();
+        if ($oRepository->Eliminar($ficha) === false) {
+            return $oRepository->getErrorTxt();
+        }
+
         return true;
     }
 
-    public function nuevo()
+    public function nuevo(): bool|string
     {
         $aCampos = $this->getCampos();
-        $oFicha = $this->getFicha();
-        foreach ($oFicha->getDatosCampos() as $oDatosCampo) {
+        /** @var DatosFichaInterface|null $ficha */
+        $ficha = $this->getFicha();
+        if ($ficha === null) {
+            return 'Ficha no configurada';
+        }
+
+        foreach ($ficha->getDatosCampos() as $oDatosCampo) {
             $nom_camp = $oDatosCampo->getNom_camp();
-            // si es un checkbox y está vacío, no pasa nada
+            if ($nom_camp === null) {
+                continue;
+            }
             $tipo = $oDatosCampo->getTipo();
             if ($tipo === 'check') {
                 if (empty($aCampos[$nom_camp])) {
@@ -44,16 +59,17 @@ class DatosUpdateRepo
             }
             if ($tipo === 'fecha') {
                 if (empty($aCampos[$nom_camp])) {
-                    //$aCampos[$nom_camp] = new NullDateTimeLocal();
                     $aCampos[$nom_camp] = null;
                 } else {
                     $aCampos[$nom_camp] = DateTimeLocal::createFromLocal($aCampos[$nom_camp]);
                 }
             }
-            // si es con decimales, cambio coma por punto
-            if ($tipo === 'decimal' && !empty($aCampos[$nom_camp])) $aCampos[$nom_camp] = str_replace(',', '.', $aCampos[$nom_camp]);
+            if ($tipo === 'decimal' && !empty($aCampos[$nom_camp])) {
+                $decimalValue = $aCampos[$nom_camp];
+                $aCampos[$nom_camp] = str_replace(',', '.', is_scalar($decimalValue) ? (string) $decimalValue : '');
+            }
 
-            if (empty($aCampos[$nom_camp])) { // En general mejor null, por el tipado. puede venir '' para un integer
+            if (empty($aCampos[$nom_camp])) {
                 $aCampos[$nom_camp] = null;
             }
 
@@ -61,26 +77,25 @@ class DatosUpdateRepo
                 $aCampos[$nom_camp] = $this->Campos['id_pau'];
             }
 
-            $metodo = $oDatosCampo->getMetodoSet();
-            // uso el método legacy
+            $metodo = $oDatosCampo->getMetodoSet() ?? '';
             if (substr($metodo, -2) === 'Vo') {
                 $metodo = substr($metodo, 0, -2);
             }
             try {
-                $oFicha->$metodo($aCampos[$nom_camp]);
+                $ficha->$metodo($aCampos[$nom_camp]);
             } catch (\Throwable $e) {
                 return 'Error al ejecutar ' . $metodo . ' para el campo ' . $nom_camp . ': ' . $e->getMessage();
             }
         }
 
-        $oRepository = DependencyResolver::get($this->RepositoryInterface);
-        // Casos especiales que no tienen getNewId
+        $oRepository = $this->resolveRepository();
         $NoNewId = false;
-        if ($oFicha instanceof ProfesorLatin) {
+        $new_id = 0;
+        if ($ficha instanceof ProfesorLatin) {
             $new_id = $this->Campos['id_pau'];
             $NoNewId = true;
         }
-        if ($oFicha instanceof ModuloInstalado) {
+        if ($ficha instanceof ModuloInstalado) {
             $new_id = $this->Campos['id_mod'];
             $NoNewId = true;
         }
@@ -89,24 +104,34 @@ class DatosUpdateRepo
             $new_id = $oRepository->getNewId();
         }
 
-        $pks1 = 'set' . ucfirst($oFicha->getPrimary_key() ?? '');
-        $oFicha->$pks1($new_id);
+        $primaryKey = $ficha->getPrimary_key();
+        $pkName = is_string($primaryKey) ? $primaryKey : '';
+        $pks1 = 'set' . ucfirst($pkName);
+        $ficha->$pks1($new_id);
 
         try {
-            $oRepository->Guardar($oFicha);
+            $oRepository->Guardar($ficha);
         } catch (\Throwable $e) {
             return 'Error al guardar: ' . $e->getMessage();
         }
+
         return true;
     }
 
-    public function editar()
+    public function editar(): bool|string
     {
         $aCampos = $this->getCampos();
-        $oFicha = $this->getFicha();
-        foreach ($oFicha->getDatosCampos() as $oDatosCampo) {
+        /** @var DatosFichaInterface|null $ficha */
+        $ficha = $this->getFicha();
+        if ($ficha === null) {
+            return 'Ficha no configurada';
+        }
+
+        foreach ($ficha->getDatosCampos() as $oDatosCampo) {
             $nom_camp = $oDatosCampo->getNom_camp();
-            // si es un checkbox y está vacío, no pasa nada
+            if ($nom_camp === null) {
+                continue;
+            }
             $tipo = $oDatosCampo->getTipo();
             if ($tipo === 'check') {
                 if (empty($aCampos[$nom_camp])) {
@@ -117,65 +142,83 @@ class DatosUpdateRepo
             }
             if ($tipo === 'fecha') {
                 if (empty($aCampos[$nom_camp])) {
-                    //$aCampos[$nom_camp] = new NullDateTimeLocal();
                     $aCampos[$nom_camp] = null;
                 } else {
                     $aCampos[$nom_camp] = DateTimeLocal::createFromLocal($aCampos[$nom_camp]);
                 }
             }
-            // si es con decimales, cambio coma por punto
             if ($tipo === 'decimal' && !empty($aCampos[$nom_camp])) {
-                $aCampos[$nom_camp] = str_replace(',', '.', $aCampos[$nom_camp]);
+                $decimalValue = $aCampos[$nom_camp];
+                $aCampos[$nom_camp] = str_replace(',', '.', is_scalar($decimalValue) ? (string) $decimalValue : '');
             }
 
-            $metodo = $oDatosCampo->getMetodoSet();
-            // uso el método legacy
+            $metodo = $oDatosCampo->getMetodoSet() ?? '';
             if (substr($metodo, -2) === 'Vo') {
                 $metodo = substr($metodo, 0, -2);
             }
 
-            // cambiar las cadenas vacías por null (va bien cuando el dato que se espera en un integer)
-            // pero en el caso de los check, espera false (no null)
             if ($tipo !== 'check' && empty($aCampos[$nom_camp])) {
                 $aCampos[$nom_camp] = null;
             }
             try {
-                $oFicha->$metodo($aCampos[$nom_camp]);
+                $ficha->$metodo($aCampos[$nom_camp]);
             } catch (\Throwable $e) {
                 return 'Error al ejecutar ' . $metodo . ' para el campo ' . $nom_camp . ': ' . $e->getMessage();
             }
         }
 
-        $oRepository = DependencyResolver::get($this->RepositoryInterface);
-        if ($oRepository->Guardar($oFicha) === false) {
-            $error_txt = $oRepository->getErrorTxt();
-            return $error_txt;
+        $oRepository = $this->resolveRepository();
+        if ($oRepository->Guardar($ficha) === false) {
+            return $oRepository->getErrorTxt();
         }
+
         return true;
     }
 
-    public function getFicha()
+    public function getFicha(): ?object
     {
         return $this->oFicha;
     }
 
-    public function getCampos()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getCampos(): array
     {
         return $this->Campos;
     }
 
-    public function setFicha($oFicha)
+    public function setFicha(?object $oFicha): void
     {
         $this->oFicha = $oFicha;
     }
 
-    public function setCampos($Campos)
+    /**
+     * @param array<string, mixed> $Campos
+     */
+    public function setCampos(array $Campos): void
     {
         $this->Campos = $Campos;
     }
 
-    public function setRepositoryInterface($repository)
+    public function setRepositoryInterface(?string $repository): void
     {
         $this->RepositoryInterface = $repository;
+    }
+
+    private function resolveRepository(): DatosCrudRepositoryInterface
+    {
+        $repositoryId = $this->RepositoryInterface;
+        if ($repositoryId === null || $repositoryId === '') {
+            throw new \RuntimeException('RepositoryInterface no configurado');
+        }
+        if (!interface_exists($repositoryId) && !class_exists($repositoryId)) {
+            throw new \RuntimeException('RepositoryInterface invalido: ' . $repositoryId);
+        }
+
+        /** @var DatosCrudRepositoryInterface $repository */
+        $repository = DependencyResolver::get($repositoryId);
+
+        return $repository;
     }
 }

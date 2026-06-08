@@ -136,8 +136,11 @@ final class FormActividadesDeUnaPersonaData
 
             $dl_de_paso = false;
             if ($obj_pau === 'PersonaEx' && $Qid_nom !== 0) {
-                $oPersona = $this->personaExRepository->findById($Qid_nom);
-                $dl_de_paso = $oPersona !== null ? $oPersona->getDl() : false;
+                $oPersonaEx = $this->personaExRepository->findById($Qid_nom);
+                if ($oPersonaEx !== null) {
+                    $dlPersona = $oPersonaEx->getDl();
+                    $dl_de_paso = ($dlPersona !== null && $dlPersona !== '') ? $dlPersona : false;
+                }
             }
             if ($id_activ_edit !== 0) {
                 $this->resumenPlazasService->setId_activ($id_activ_edit);
@@ -159,7 +162,7 @@ final class FormActividadesDeUnaPersonaData
             'obj_pau' => $obj_pau,
             'mod' => $mod,
         ];
-        if ($id_activ_real !== '' && $id_activ_real !== 0) {
+        if ($id_activ_edit !== 0) {
             $a_camposHidden['id_activ'] = $id_activ_real;
         } else {
             $camposForm .= '!id_activ';

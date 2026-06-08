@@ -50,9 +50,6 @@ final class PostgresCriteriaRenderer
         }
         if ($criteria instanceof OrCriteria) {
             $n = count($criteria->children);
-            if ($n === 0) {
-                return '';
-            }
             if ($n === 1) {
                 return $this->build($criteria->children[0], $ctx);
             }
@@ -126,12 +123,15 @@ final class PostgresCriteriaRenderer
                 $list = implode(', ', $ph);
                 return "$campo $operador ($list)";
             case 'TXT':
-                return (string) $valor;
+                return is_scalar($valor) ? (string) $valor : '';
         }
         $p = $ctx->bind($valor);
         return "$campo $operador :$p";
     }
 
+    /**
+     * @return array{0: mixed, 1: mixed}
+     */
     private function parseBetweenValue(mixed $valor): array
     {
         if (is_array($valor) && count($valor) === 2) {

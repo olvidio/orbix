@@ -25,7 +25,6 @@ use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\PersonaNotaPk;
 use src\notas\domain\value_objects\TipoActa;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\shared\traits\HandlesPdoErrors;
 use stdClass;
 
@@ -66,7 +65,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         $this->setNomTabla('e_notas_otra_region_stgr');
     }
 
-    public function addCertificado(int $id_nom, string $certificado, \src\shared\domain\value_objects\DateTimeLocal|\src\shared\domain\value_objects\NullDateTimeLocal|null $oF_certificado): void
+    public function addCertificado(int $id_nom, string $certificado, \src\shared\domain\value_objects\DateTimeLocal|null $oF_certificado): void
     {
         $cPersonaNotaOtraRegionStgr = $this->getPersonaNotas(['id_nom' => $id_nom]);
         foreach ($cPersonaNotaOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
@@ -159,7 +158,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
                     $oPersonaNotaDB = $personaNotasDB[0] ?? null;
                     if ($oPersonaNotaDB instanceof PersonaNota) {
                         $oPersonaNotaDB->setIdSituacionVo(new NotaSituacion(NotaSituacion::FALTA_CERTIFICADO));
-                        $oPersonaNotaDB->setF_acta(new NullDateTimeLocal());
+                        $oPersonaNotaDB->setF_acta(null);
                         $oPersonaNotaDB->setActaVo(_("falta certificado"));
                         $PersonaNotaDBRepository->Guardar($oPersonaNotaDB);
                     }

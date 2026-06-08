@@ -23,9 +23,13 @@ trait HandlesPgBytea
         if (is_resource($field)) {
             $contents = stream_get_contents($field);
             fclose($field);
-            return $contents;
+            return $contents === false ? null : $contents;
         }
-        return $field;
+        if (is_string($field)) {
+            return $field;
+        }
+
+        return null;
     }
 
     /**
@@ -44,7 +48,9 @@ trait HandlesPgBytea
             return $data;
         }
         if (ctype_xdigit($data)) {
-            return hex2bin($data);
+            $decoded = hex2bin($data);
+
+            return $decoded === false ? null : $decoded;
         }
         return $data;
     }

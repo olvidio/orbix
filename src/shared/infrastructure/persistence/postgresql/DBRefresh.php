@@ -29,10 +29,10 @@ class DBRefresh
         if (!isset($config)) {
             return null;
         }
-        $host = $config['host'];
+        $host = self::stringConfigValue($config['host'] ?? null);
         $oConnection = new DBConnection($config);
         $dsn = $oConnection->getURI();
-        $nombreBd = (string) ($config['dbname'] ?? '');
+        $nombreBd = self::stringConfigValue($config['dbname'] ?? null);
 
         return $this->refreshSubscription($host, $db, $dsn, $fileLog, $nombreBd);
     }
@@ -49,7 +49,7 @@ class DBRefresh
      *
      * @return string|null Aviso si falla; null si OK o no aplica
      */
-    public function refreshSubscription($host, string $db, string $dsn, $fileLog, string $nombreBd = ''): ?string
+    public function refreshSubscription(string $host, string $db, string $dsn, string $fileLog, string $nombreBd = ''): ?string
     {
         $subNombre = $this->nombreSuscripcion($db);
         if ($subNombre === null) {
@@ -58,7 +58,7 @@ class DBRefresh
 
         $psql = self::rutaPsql();
         if ($nombreBd === '') {
-            $nombreBd = ServerConf::WEBDIR === 'pruebas' ? 'pruebas-' . $db : $db;
+            $nombreBd = ServerConf::esEntornoPruebas() ? 'pruebas-' . $db : $db;
         }
         $sql = 'ALTER SUBSCRIPTION ' . $subNombre . ' REFRESH PUBLICATION;';
 
@@ -89,10 +89,10 @@ class DBRefresh
     private function nombreSuscripcion(string $db): ?string
     {
         if ($db === 'comun') {
-            return ServerConf::WEBDIR === 'pruebas' ? 'subpruebascomun' : 'subcomun';
+            return ServerConf::esEntornoPruebas() ? 'subpruebascomun' : 'subcomun';
         }
         if ($db === 'sv-e') {
-            return ServerConf::WEBDIR === 'pruebas' ? 'subpruebassve' : 'subsve';
+            return ServerConf::esEntornoPruebas() ? 'subpruebassve' : 'subsve';
         }
 
         return null;
@@ -113,5 +113,14 @@ class DBRefresh
         }
 
         return '/usr/bin/psql';
+    }
+
+    private static function stringConfigValue(mixed $value): string
+    {
+        if (is_string($value) || is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+
+        return '';
     }
 }

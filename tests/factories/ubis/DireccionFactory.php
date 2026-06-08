@@ -5,7 +5,6 @@ namespace Tests\factories\ubis;
 use Faker\Factory;
 use src\ubis\domain\entity\Direccion;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\domain\value_objects\DireccionId;
 use src\ubis\domain\value_objects\DireccionText;
 use src\ubis\domain\value_objects\CodigoPostalText;

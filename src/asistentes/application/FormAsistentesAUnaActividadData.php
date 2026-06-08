@@ -180,8 +180,9 @@ final class FormAsistentesAUnaActividadData
             $plaza_opciones = PlazaId::getArrayPosiblesPlazas();
 
             $dl_de_paso = false;
-            if ($obj_pau === 'PersonaEx' && $Qid_nom !== 0 && $oPersona !== null) {
-                $dl_de_paso = $oPersona->getDl();
+            if ($obj_pau === 'PersonaEx' && $Qid_nom !== 0) {
+                $dlPersona = $oPersona->getDl();
+                $dl_de_paso = $dlPersona !== null && $dlPersona !== '' ? $dlPersona : false;
             }
             $this->resumenPlazasService->setId_activ($Qid_activ);
             $propietario_opciones = $this->resumenPlazasService->getPosiblesPropietariosOpciones($dl_de_paso);

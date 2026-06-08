@@ -10,8 +10,6 @@ use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\encargossacd\domain\services\EncargoDominioService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
-use src\shared\domain\value_objects\NullTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 
 /**
@@ -164,9 +162,7 @@ final class EncargoSacdHorarioVerData
         if ($d instanceof DateTimeLocal) {
             return $d->getFromLocal();
         }
-        if ($d instanceof NullDateTimeLocal) {
-            return '';
-        }
+        
 
         return '';
     }
@@ -179,9 +175,7 @@ final class EncargoSacdHorarioVerData
         if ($t instanceof TimeLocal) {
             return $t->toDatabaseString();
         }
-        if ($t instanceof NullTimeLocal) {
-            return '';
-        }
+        
 
         return '';
     }

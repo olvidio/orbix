@@ -16,8 +16,6 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadtarifas\domain\value_objects\TarifaId;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\Dinero;
-use src\shared\domain\value_objects\NullDateTimeLocal;
-use src\shared\domain\value_objects\NullTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 use src\ubis\domain\value_objects\DelegacionCode;
 use src\ubis\domain\value_objects\Plazas;

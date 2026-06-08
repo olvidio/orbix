@@ -2,6 +2,7 @@
 
 namespace src\shared\domain\helpers;
 
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\domain\value_objects\DateTimeLocal;
 use function base64_decode;
 use function mb_strtoupper;
@@ -22,20 +23,27 @@ use function strnatcasecmp;
 /**
  * para convertir los arrays de php para introducir en el postgresql.
  *
- * @param array
- * @return string pg_array
+ * @param array<int|string, mixed> $phpArray
  */
-function array_php2pg($phpArray = [])
+function array_php2pg(array $phpArray = []): string
 {
-    if (!empty($phpArray) && is_array($phpArray)) {
-        $phpArray_filtered = array_filter($phpArray);
+    $phpArray_filtered = [];
+    if ($phpArray !== []) {
+        $phpArray_filtered = array_filter($phpArray, static fn (mixed $v): bool => $v !== null && $v !== '');
     }
     // el join no va si el array esta vacío
-    if (empty($phpArray_filtered)) {
-        return "{}";
-    } else {
-        return "{" . implode(",", $phpArray_filtered) . "}";
+    if ($phpArray_filtered === []) {
+        return '{}';
     }
+
+    $parts = [];
+    foreach ($phpArray_filtered as $value) {
+        if (is_scalar($value)) {
+            $parts[] = (string) $value;
+        }
+    }
+
+    return '{' . implode(',', $parts) . '}';
 }
 
 /**
@@ -45,7 +53,10 @@ function array_php2pg($phpArray = [])
  * @param string $postgresArray
  * @return array
  */
-function array_pgInteger2php($postgresArray): array
+/**
+ * @return list<int>
+ */
+function array_pgInteger2php(string $postgresArray): array
 {
     if (empty($postgresArray)) {
         return [];
@@ -60,17 +71,19 @@ function array_pgInteger2php($postgresArray): array
     return $phpArray;
 }
 
-function urlsafe_b64encode($string)
+function urlsafe_b64encode(string $string): string
 {
     $data = base64_encode($string);
     $data = str_replace(array('+', '/', '='), array('-', '_', '.'), $data);
     return $data;
 }
 
-function urlsafe_b64decode($string)
+function urlsafe_b64decode(string $string): string
 {
     $data = str_replace(array('-', '_', '.'), array('+', '/', '='), $string);
-    return base64_decode($data);
+    $decoded = base64_decode($data, true);
+
+    return is_string($decoded) ? $decoded : '';
 }
 
 /**
@@ -81,19 +94,21 @@ function urlsafe_b64decode($string)
  * @since        23/3/2020.
  *
  */
-function is_true($val)
+function is_true(mixed $val): ?bool
 {
     if (is_string($val)) {
         $val = ($val === 't') ? 'true' : $val;
-        $boolval = filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-    } else {
-        $boolval = $val;
+
+        return filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    }
+    if (is_bool($val)) {
+        return $val;
     }
 
-    return $boolval;
+    return null;
 }
 
-function is_true_txt($val)
+function is_true_txt(mixed $val): string
 {
     return is_true($val) ? _("si") : _("no");
 }
@@ -106,7 +121,7 @@ function is_true_txt($val)
  * @since        28/10/09.
  *
  */
-function poner_null(&$valor)
+function poner_null(mixed &$valor): void
 {
     if (!$valor && $valor !== 0 && $valor !== '0') { //admito que sea 0 o '0'.
         $valor = NULL;
@@ -122,7 +137,7 @@ function poner_null(&$valor)
  * @since        26/10/18.
  *
  */
-function poner_empty_on_null(&$valor)
+function poner_empty_on_null(mixed &$valor): void
 {
     if ($valor === NULL) {
         $valor = '';
@@ -135,7 +150,7 @@ function poner_empty_on_null(&$valor)
  * Función para corregir la del php strnatcasecmp. Compara sin tener en cuenta los acentos. La uso para ordenar arrays.
  *
  */
-function strsinacentocmp($str1, $str2): int
+function strsinacentocmp(string $str1, string $str2): int
 {
     $acentos = array('Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Â', 'Ê', 'Î', 'Ô', 'Û', 'Ñ',
         'á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'â', 'ê', 'î', 'ô', 'û', 'ñ'
@@ -176,7 +191,7 @@ function usort_profesores_por_apellidos(array &$filas): void
  * 18-8-2022 corregido con la función mb_strtoupper. Ignoro porque no estaba así?¿
  *
  */
-function strtoupper_dlb($texto)
+function strtoupper_dlb(string $texto): string
 {
     //$texto=strtoupper($texto);
     $texto = mb_strtoupper($texto, 'UTF-8');
@@ -192,8 +207,10 @@ function strtoupper_dlb($texto)
  * @param array<string, int>|null $calendario Payload de `PeriodoCalendarioEscolarData` (o compatible).
  *   Si se pasa, no hace falta `$_SESSION['oConfig']` en este helper.
  */
-function curso_est($que, $any, $tipo = 'est', ?array $calendario = null)
+function curso_est(string $que, int|string $any, string $tipo = 'est', ?array $calendario = null): DateTimeLocal
 {
+    $any = (int) $any;
+    $oConfig = null;
     if ($calendario !== null) {
         switch ($tipo) {
             case 'est':
@@ -213,31 +230,36 @@ function curso_est($que, $any, $tipo = 'est', ?array $calendario = null)
                 exit($err_switch);
         }
     } else {
+        $oConfig = $_SESSION['oConfig'] ?? null;
+        if (!$oConfig instanceof ConfigSnapshot) {
+            $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+            exit($err_switch);
+        }
         switch ($tipo) {
-            case "est":
-                $ini_d = $_SESSION['oConfig']->getDiaIniStgr();
-                $ini_m = $_SESSION['oConfig']->getMesIniStgr();
-                $fin_d = $_SESSION['oConfig']->getDiaFinStgr();
-                $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+            case 'est':
+                $ini_d = $oConfig->getDiaIniStgr();
+                $ini_m = $oConfig->getMesIniStgr();
+                $fin_d = $oConfig->getDiaFinStgr();
+                $fin_m = $oConfig->getMesFinStgr();
                 break;
-            case "crt":
-                $ini_d = $_SESSION['oConfig']->getDiaIniCrt();
-                $ini_m = $_SESSION['oConfig']->getMesIniCrt();
-                $fin_d = $_SESSION['oConfig']->getDiaFinCrt();
-                $fin_m = $_SESSION['oConfig']->getMesFinCrt();
+            case 'crt':
+                $ini_d = $oConfig->getDiaIniCrt();
+                $ini_m = $oConfig->getMesIniCrt();
+                $fin_d = $oConfig->getDiaFinCrt();
+                $fin_m = $oConfig->getMesFinCrt();
                 break;
             default:
                 $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
-                exit ($err_switch);
+                exit($err_switch);
         }
     }
-    if (empty($any)) {
+    if ($any === 0) {
         if ($calendario !== null) {
             $any = $tipo === 'crt'
                 ? (int)($calendario['any_final_crt'] ?? 0)
                 : (int)($calendario['any_final_est'] ?? 0);
-        } else {
-            $any = $_SESSION['oConfig']->any_final_curs($tipo === 'crt' ? 'crt' : 'est');
+        } elseif ($oConfig instanceof ConfigSnapshot) {
+            $any = $oConfig->any_final_curs($tipo === 'crt' ? 'crt' : 'est');
         }
     }
     $any0 = $any - 1;

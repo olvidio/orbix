@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 class TimeLocal extends DateTimeLocal
 {
-    private ?DateTimeImmutable $time = null;
+    private DateTimeImmutable $time;
 
     /**
      * @param string $timeString Una cadena en formato HH:MM:SS (o similar).

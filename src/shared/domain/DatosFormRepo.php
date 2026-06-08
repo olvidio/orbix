@@ -3,6 +3,7 @@
 namespace src\shared\domain;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\contracts\DatosFichaInterface;
 use src\shared\infrastructure\DependencyResolver;
 use function src\shared\domain\helpers\is_true;
 
@@ -19,31 +20,50 @@ class DatosFormRepo
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    private $camposForm;
-    private $camposNo;
+    private ?string $camposForm = null;
+    private ?string $camposNo = null;
 
-    private $oFicha;
-    private array $aOpciones_txt;
-    private $mod = '';
+    private ?object $oFicha = null;
+    /** @var array<string, string> */
+    private array $aOpciones_txt = [];
+    private string $mod = '';
+    /** @var array<int|string, mixed> */
+    private array $aOpcion_no = [];
 
-    public function getFormularioData()
+    /**
+     * @return array{fields: list<array<string, mixed>>, camposForm: string, camposNo: string}
+     */
+    public function getFormularioData(): array
     {
         $camposForm = '';
         $camposNo = '';
+        /** @var list<array<string, mixed>> $formData */
         $formData = [];
 
-        $oFicha = $this->getFicha();
-        foreach ($oFicha->getDatosCampos() as $oDatosCampo) {
-            //$tabla=$oDatosCampo->getNom_tabla();	// Para usarlo a la hora de comprobar los campos.
-            $metodo = $oDatosCampo->getMetodoGet();
+        $ficha = $this->getFicha();
+        if ($ficha === null) {
+            return [
+                'fields' => [],
+                'camposForm' => '',
+                'camposNo' => '',
+            ];
+        }
+        /** @var DatosFichaInterface $typedFicha */
+        $typedFicha = $ficha;
+
+        foreach ($typedFicha->getDatosCampos() as $oDatosCampo) {
+            $metodo = $oDatosCampo->getMetodoGet() ?? '';
             $nom_camp = $oDatosCampo->getNom_camp();
+            if ($nom_camp === null) {
+                continue;
+            }
 
             if ($this->mod === 'nuevo') {
                 $valor_camp = '';
-            } else if (substr($metodo, -2) === 'Vo') {
-                $valor_camp = $oFicha->$metodo()->value();
+            } elseif (substr($metodo, -2) === 'Vo') {
+                $valor_camp = $typedFicha->$metodo()->value();
             } else {
-                $valor_camp = $oFicha->$metodo();
+                $valor_camp = $typedFicha->$metodo();
             }
             $var_1 = $oDatosCampo->getArgument();
             $eti = $oDatosCampo->getEtiqueta();
@@ -56,14 +76,11 @@ class DatosFormRepo
                 'nombre' => $nom_camp,
                 'etiqueta' => $eti,
                 'valor' => $valor_camp,
-                'argument' => $var_1
+                'argument' => $var_1,
             ];
 
             switch ($tipo) {
                 case "ver":
-                    if ($this->mod !== 'nuevo') {
-                        // No additional data needed for "ver" type
-                    }
                     $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
                     break;
                 case "decimal":
@@ -73,7 +90,6 @@ class DatosFormRepo
                 case "fecha":
                     $locale_us = ConfigGlobal::is_locale_us();
                     if (!empty($valor_camp)) {
-                        // el valor_camp debe ser un objeto DateTimeLocal
                         $field['valor_txt'] = $valor_camp->getFromLocal();
                     } else {
                         $field['valor_txt'] = $valor_camp;
@@ -82,14 +98,17 @@ class DatosFormRepo
                     break;
                 case "opciones":
                     $acc = $oDatosCampo->getAccion();
-                    $var_3 = $oDatosCampo->getArgument3();
+                    $var_3 = $oDatosCampo->getArgument3() ?? '';
 
-                    $RepoRelacionado = DependencyResolver::get($var_1);
-                    $a_opciones = $RepoRelacionado->$var_3();
+                    if (is_string($var_1) && $var_1 !== '' && (interface_exists($var_1) || class_exists($var_1))) {
+                        $RepoRelacionado = DependencyResolver::get($var_1);
+                        $field['opciones'] = $RepoRelacionado->$var_3();
+                    } else {
+                        $field['opciones'] = [];
+                    }
 
                     $field['accion'] = $acc;
-                    $field['opciones'] = $a_opciones;
-                    $field['aOpcion_no'] = $this->aOpcion_no ?? [];
+                    $field['aOpcion_no'] = $this->aOpcion_no;
                     break;
                 case "depende":
                     $field['opciones_txt'] = $this->aOpciones_txt[$nom_camp] ?? '';
@@ -98,11 +117,10 @@ class DatosFormRepo
                     $acc = $oDatosCampo->getAccion();
                     $field['accion'] = $acc;
                     $field['opciones'] = self::opcionesDesdeLista($oDatosCampo->getLista());
-                    $field['aOpcion_no'] = $this->aOpcion_no ?? [];
+                    $field['aOpcion_no'] = $this->aOpcion_no;
                     break;
                 case "check":
                     $field['checked'] = is_true($valor_camp);
-                    //los check a falso no se pueden comprobar.
                     $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
                     break;
             }
@@ -115,95 +133,103 @@ class DatosFormRepo
         return [
             'fields' => $formData,
             'camposForm' => $camposForm,
-            'camposNo' => $camposNo
+            'camposNo' => $camposNo,
         ];
     }
 
-    public function getFormulario()
+    public function getFormulario(): string
     {
-        // For backward compatibility, generate HTML from the data
         $formData = $this->getFormularioData();
         $formulario = '';
 
         foreach ($formData['fields'] as $field) {
-            $tipo = $field['tipo'];
-            $nom_camp = $field['nombre'];
-            $eti = $field['etiqueta'];
-            $valor_camp = $field['valor'];
+            $tipo = self::mixedToString($field['tipo'] ?? null);
+            $nom_camp = self::mixedToString($field['nombre'] ?? null);
+            $eti = self::mixedToString($field['etiqueta'] ?? null);
+            $valor_camp = $field['valor'] ?? null;
+            $valorCampStr = self::mixedToString($valor_camp);
 
             switch ($tipo) {
                 case "ver":
                     if ($this->mod !== 'nuevo') {
                         $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-                        $formulario .= "<td class=contenido>" . htmlspecialchars($valor_camp ?? '') . "</td></tr>";
-                        $formulario .= "<input type='hidden' name='$nom_camp' value=\"" . htmlspecialchars($valor_camp ?? '') . "\"></td></tr>";
+                        $formulario .= "<td class=contenido>" . htmlspecialchars($valorCampStr) . "</td></tr>";
+                        $formulario .= "<input type='hidden' name='$nom_camp' value=\"" . htmlspecialchars($valorCampStr) . "\"></td></tr>";
                     }
                     break;
                 case "decimal":
                 case "texto":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-                    $size = $field['size'];
-                    $formulario .= "<td class=contenido><input type='text' name='$nom_camp' value=\"" . htmlspecialchars($valor_camp ?? '') . "\" size='$size'></td></tr>";
+                    $size = self::mixedToString($field['size'] ?? null);
+                    $formulario .= "<td class=contenido><input type='text' name='$nom_camp' value=\"" . htmlspecialchars($valorCampStr) . "\" size='$size'></td></tr>";
                     break;
                 case "fecha":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-                    $locale_us = $field['locale_us'];
-                    $valor_camp_txt = $field['valor_txt'];
+                    $locale_us = (bool) ($field['locale_us'] ?? false);
+                    $valor_camp_txt = self::mixedToString($field['valor_txt'] ?? null);
                     $formulario .= "<td class=contenido><input class=\"fecha\" type=\"text\" id=\"$nom_camp\" name=\"$nom_camp\" value=\"$valor_camp_txt\" 
 									onchange='fnjs_comprobar_fecha(\"#$nom_camp\",$locale_us)'>";
                     break;
                 case "opciones":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-                    $acc = $field['accion'];
-                    $a_opciones = $field['opciones'];
-                    $aOpcion_no = $field['aOpcion_no'];
+                    $acc = self::mixedToString($field['accion'] ?? null);
+                    $a_opciones = is_array($field['opciones'] ?? null) ? $field['opciones'] : [];
+                    $aOpcion_no = is_array($field['aOpcion_no'] ?? null) ? $field['aOpcion_no'] : [];
 
                     $accion = empty($acc) ? '' : "onchange=\"fnjs_actualizar_depende('$nom_camp','$acc');\" ";
                     $formulario .= "<td class=contenido><select id=\"$nom_camp\" name=\"$nom_camp\" $accion>";
                     $formulario .= "<option></option>";
                     foreach ($a_opciones as $key => $val) {
-                        if ((string)$key === (string)$valor_camp) {
+                        $keyStr = self::mixedToString($key);
+                        $valStr = self::mixedToString($val);
+                        if ($keyStr === $valorCampStr) {
                             $sel = 'selected';
                         } else {
                             $sel = '';
                         }
-                        if (!empty($aOpcion_no) && is_array($aOpcion_no) && in_array($key, $aOpcion_no)) continue;
-                        $formulario .= "<option value=\"$key\" $sel>$val</option>";
+                        if (!empty($aOpcion_no) && in_array($key, $aOpcion_no, true)) {
+                            continue;
+                        }
+                        $formulario .= "<option value=\"$keyStr\" $sel>$valStr</option>";
                     }
                     $formulario .= "</select></td></tr>";
                     break;
                 case "depende":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $formulario .= "<td class=contenido><select id=\"$nom_camp\" name=\"$nom_camp\">";
-                    $formulario .= $field['opciones_txt'];  // solo útil en el caso de nuevo. En el resto se actualiza desde el campo del que depende.
+                    $formulario .= self::mixedToString($field['opciones_txt'] ?? null);
                     $formulario .= "</select></td></tr>";
                     break;
                 case "array":
-                    $acc = $field['accion'];
-                    $a_opciones = $field['opciones'];
-                    $aOpcion_no = $field['aOpcion_no'];
+                    $acc = self::mixedToString($field['accion'] ?? null);
+                    $a_opciones = is_array($field['opciones'] ?? null) ? $field['opciones'] : [];
+                    $aOpcion_no = is_array($field['aOpcion_no'] ?? null) ? $field['aOpcion_no'] : [];
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $accion = empty($acc) ? '' : "onchange=\"fnjs_actualizar_depende('$nom_camp','$acc');\" ";
                     $formulario .= "<td class=contenido><select id=\"$nom_camp\" name=\"$nom_camp\" $accion>";
                     $formulario .= "<option></option>";
                     foreach ($a_opciones as $key => $val) {
-                        if ((string)$key === (string)$valor_camp) {
+                        $keyStr = self::mixedToString($key);
+                        $valStr = self::mixedToString($val);
+                        if ($keyStr === $valorCampStr) {
                             $sel = 'selected';
                         } else {
                             $sel = '';
                         }
-                        if (!empty($aOpcion_no) && is_array($aOpcion_no) && in_array($key, $aOpcion_no)) continue;
-                        $formulario .= "<option value=\"$key\" $sel>$val</option>";
+                        if (!empty($aOpcion_no) && in_array($key, $aOpcion_no, true)) {
+                            continue;
+                        }
+                        $formulario .= "<option value=\"$keyStr\" $sel>$valStr</option>";
                     }
                     $formulario .= "</select></td></tr>";
                     break;
                 case "check":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-                    $chk = $field['checked'] ? "checked" : "";
+                    $chk = !empty($field['checked']) ? "checked" : "";
                     $formulario .= "<td class=contenido><input type='checkbox' name='$nom_camp' $chk>";
                     break;
                 case "hidden":
-                    $formulario .= "<input type='hidden' name='$nom_camp' value ='$valor_camp'>";
+                    $formulario .= "<input type='hidden' name='$nom_camp' value ='$valorCampStr'>";
                     break;
             }
         }
@@ -211,69 +237,81 @@ class DatosFormRepo
         return $formulario;
     }
 
-    public function getCamposForm()
+    public function getCamposForm(): string
     {
         if (!isset($this->camposForm)) {
             $camposForm = '';
-            $oFicha = $this->getFicha();
-            foreach ($oFicha->getDatosCampos() as $oDatosCampo) {
-                $nom_camp = $oDatosCampo->getNom_camp();
-                $camposForm .= empty($camposForm) ? $nom_camp : '!' . $nom_camp;
+            $ficha = $this->getFicha();
+            if ($ficha !== null) {
+                /** @var DatosFichaInterface $typedFicha */
+                $typedFicha = $ficha;
+                foreach ($typedFicha->getDatosCampos() as $oDatosCampo) {
+                    $nom_camp = $oDatosCampo->getNom_camp();
+                    if ($nom_camp === null) {
+                        continue;
+                    }
+                    $camposForm .= empty($camposForm) ? $nom_camp : '!' . $nom_camp;
+                }
             }
             $this->camposForm = $camposForm;
         }
-        return $this->camposForm;
+
+        return $this->camposForm ?? '';
     }
 
-    public function getCamposNo()
+    public function getCamposNo(): string
     {
         if (!isset($this->camposNo)) {
             $camposNo = '';
-            $oFicha = $this->getFicha();
-            foreach ($oFicha->getDatosCampos() as $oDatosCampo) {
-                $nom_camp = $oDatosCampo->getNom_camp();
-                switch ($oDatosCampo->getTipo()) {
-                    case "ver":
-                        $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
-                        break;
-                    case "check":
-                        //los check a falso no se pueden comprobar.
-                        $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
-                        break;
+            $ficha = $this->getFicha();
+            if ($ficha !== null) {
+                /** @var DatosFichaInterface $typedFicha */
+                $typedFicha = $ficha;
+                foreach ($typedFicha->getDatosCampos() as $oDatosCampo) {
+                    $nom_camp = $oDatosCampo->getNom_camp();
+                    if ($nom_camp === null) {
+                        continue;
+                    }
+                    switch ($oDatosCampo->getTipo()) {
+                        case "ver":
+                            $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
+                            break;
+                        case "check":
+                            $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
+                            break;
+                    }
                 }
             }
             $this->camposNo = $camposNo;
         }
-        return $this->camposNo;
+
+        return $this->camposNo ?? '';
     }
 
-    public function setFicha($oFicha)
+    public function setFicha(?object $oFicha): void
     {
         $this->oFicha = $oFicha;
     }
 
-    public function getFicha()
+    public function getFicha(): ?object
     {
         return $this->oFicha;
     }
 
-    public function setArrayOpcionesTxt($aOpciones_txt)
+    /**
+     * @param array<string, string> $aOpciones_txt
+     */
+    public function setArrayOpcionesTxt(array $aOpciones_txt): void
     {
         $this->aOpciones_txt = $aOpciones_txt;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getMod()
+    public function getMod(): string
     {
         return $this->mod;
     }
 
-    /**
-     * @param mixed $mod
-     */
-    public function setMod(mixed $mod): void
+    public function setMod(string $mod): void
     {
         $this->mod = $mod;
     }
@@ -304,5 +342,10 @@ class DatosFormRepo
         }
 
         return $a_options;
+    }
+
+    private static function mixedToString(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
     }
 }

@@ -2,6 +2,10 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\input_string_list;
+
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asistentes\application\services\AsistenteApplicationService;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
@@ -21,24 +25,28 @@ final class AsistenteEliminar
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(array $input): string
     {
-        $Qpau = (string) ($input['pau'] ?? '');
-        $a_sel = (array) ($input['sel'] ?? []);
+        $Qpau = input_string($input, 'pau');
+        $a_sel = input_string_list($input, 'sel');
 
         $id_activ = 0;
         $id_nom = 0;
-        if (!empty($a_sel)) {
+        if ($a_sel !== []) {
+            $selKey = $a_sel[0];
             if ($Qpau === 'p') {
-                $id_activ = (int) strtok($a_sel[0], '#');
-                $id_nom = (int) ($input['id_pau'] ?? 0);
+                $id_activ = (int) strtok($selKey, '#');
+                $id_nom = input_int($input, 'id_pau');
             } elseif ($Qpau === 'a') {
-                $id_nom = (int) strtok($a_sel[0], '#');
-                $id_activ = (int) ($input['id_pau'] ?? 0);
+                $id_nom = (int) strtok($selKey, '#');
+                $id_activ = input_int($input, 'id_pau');
             }
         } else {
-            $id_activ = (int) ($input['id_activ'] ?? 0);
-            $id_nom = (int) ($input['id_nom'] ?? 0);
+            $id_activ = input_int($input, 'id_activ');
+            $id_nom = input_int($input, 'id_nom');
         }
 
         if ($id_activ === 0 || $id_nom === 0) {
@@ -64,7 +72,7 @@ final class AsistenteEliminar
 
         $MatriculaRepository = $this->matriculaRepository;
         foreach ($MatriculaRepository->getMatriculas(['id_activ' => $id_activ, 'id_nom' => $id_nom]) as $oMatricula) {
-            if ($oMatricula->DBEliminar() === false) {
+            if ($MatriculaRepository->Eliminar($oMatricula) === false) {
                 $msg_err .= _("hay un error, no se ha eliminado");
             }
         }

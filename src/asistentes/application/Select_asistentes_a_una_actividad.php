@@ -46,49 +46,122 @@ class Select_asistentes_a_una_actividad
     ) {
     }
 
-    private $a_ref_perm;
-    private $msg_err;
-    private $a_valores;
-    private $a_asistentes;
-    private $mi_dele;
-    private $plazas_txt;
-    private $plazas_totales;
-    private $id_tipo_activ;
-    private $dl_org;
-    private $id_ubi;
-    private $num;
-    private $aListaCargos;
-    private $publicado;
-    private $leyenda_html;
-    private $resumen_plazas;
-    private $resumen_plazas2;
-    private $aLinks_dl;
-    private $a_plazas_resumen;
-    private $a_plazas_conseguidas;
+    /** @var array<string, array{perm: mixed, obj: mixed, nom: mixed}> */
+    private array $a_ref_perm = [];
 
-    private $txt_eliminar;
-    private $bloque;
+    private string $msg_err = '';
+
+    /** @var array<int|string, mixed> */
+    private array $a_valores = [];
+
+    /** @var array<string, array<int|string, mixed>> */
+    private array $a_asistentes = [];
+
+    private string $mi_dele = '';
+    private string $plazas_txt = '';
+    private mixed $plazas_totales = null;
+    private int $id_tipo_activ = 0;
+    private string $dl_org = '';
+    private int $id_ubi = 0;
+    private int $num = 0;
+
+    /** @var list<int> */
+    private array $aListaCargos = [];
+
+    private bool $publicado = false;
+    private string $leyenda_html = '';
+    private string $resumen_plazas = '';
+    private string $resumen_plazas2 = '';
+
+    /** @var array<string, array{path: string, query: array<string, mixed>}> */
+    private array $aLinks_dl = [];
+
+    /** @var array<int|string, mixed> */
+    private array $a_plazas_resumen = [];
+
+    /** @var array<int|string, mixed> */
+    private array $a_plazas_conseguidas = [];
+
+    private string $txt_eliminar = '';
+    private string $bloque = '';
 
     private string $queSel = '';
+
+    /** @var int|string */
     private $id_dossier;
-    private $pau;
-    private $obj_pau;
-    private $id_pau;
-    private $permiso;
 
+    private string $pau = '';
+    private string $obj_pau = '';
+    private int $id_pau = 0;
+    private int $permiso = 0;
+
+    /** @var int|string|null */
     private $Qid_sel;
-    private $Qscroll_id;
-    private mixed $status;
 
-    private function incrementa(&$var): void
+    /** @var int|string|null */
+    private $Qscroll_id;
+
+    private mixed $status = null;
+
+    private function bumpPlazaResumen(string|false $padre, string|false $dl, int|string $plaza): void
     {
-        if (empty($var)) {
-            $var = 1;
-        } else {
-            $var++;
+        if ($padre === false || $padre === '' || $dl === false || $dl === '') {
+            return;
         }
+        $padreKey = (string) $padre;
+        $dlKey = (string) $dl;
+        $entry = $this->a_plazas_resumen[$padreKey] ?? [];
+        if (!is_array($entry)) {
+            $entry = [];
+        }
+        $dlEntry = $entry[$dlKey] ?? [];
+        if (!is_array($dlEntry)) {
+            $dlEntry = [];
+        }
+        $ocupadas = $dlEntry['ocupadas'] ?? [];
+        if (!is_array($ocupadas)) {
+            $ocupadas = [];
+        }
+        $current = $ocupadas[$plaza] ?? 0;
+        $ocupadas[$plaza] = empty($current) ? 1 : (is_numeric($current) ? (int) $current + 1 : 1);
+        $dlEntry['ocupadas'] = $ocupadas;
+        $entry[$dlKey] = $dlEntry;
+        $this->a_plazas_resumen[$padreKey] = $entry;
     }
 
+    private function bumpPlazaConseguida(string|false $child, string|false $padre, string|false $dl, int|string $plaza): void
+    {
+        if ($child === false || $child === '' || $padre === false || $padre === '' || $dl === false || $dl === '') {
+            return;
+        }
+        $childKey = (string) $child;
+        $padreKey = (string) $padre;
+        $dlKey = (string) $dl;
+        $entry = $this->a_plazas_conseguidas[$childKey] ?? [];
+        if (!is_array($entry)) {
+            $entry = [];
+        }
+        $padreEntry = $entry[$padreKey] ?? [];
+        if (!is_array($padreEntry)) {
+            $padreEntry = [];
+        }
+        $ocupadas = $padreEntry['ocupadas'] ?? [];
+        if (!is_array($ocupadas)) {
+            $ocupadas = [];
+        }
+        $dlEntry = $ocupadas[$dlKey] ?? [];
+        if (!is_array($dlEntry)) {
+            $dlEntry = [];
+        }
+        $current = $dlEntry[$plaza] ?? 0;
+        $dlEntry[$plaza] = empty($current) ? 1 : (is_numeric($current) ? (int) $current + 1 : 1);
+        $ocupadas[$dlKey] = $dlEntry;
+        $padreEntry['ocupadas'] = $ocupadas;
+        $entry[$padreKey] = $padreEntry;
+        $this->a_plazas_conseguidas[$childKey] = $entry;
+    }
+
+    /** @return array<int, array{txt: string, click: string}> */
     private function getBotones(): array
     {
         $a_botones = [];
@@ -110,6 +183,7 @@ class Select_asistentes_a_una_actividad
         return $a_botones;
     }
 
+    /** @return array<int, string|array{name: string, width: int}> */
     private function getCabeceras(): array
     {
         return [
@@ -138,10 +212,10 @@ class Select_asistentes_a_una_actividad
             return;
         }
         $this->id_tipo_activ = $oActividad->getId_tipo_activ();
-        $this->dl_org = $oActividad->getDl_org();
+        $this->dl_org = $oActividad->getDl_org() ?? '';
         $this->plazas_totales = $oActividad->getPlazas();
-        $this->id_ubi = $oActividad->getId_ubi();
-        $this->publicado = $oActividad->isPublicado();
+        $this->id_ubi = $oActividad->getId_ubi() ?? 0;
+        $this->publicado = $oActividad->isPublicado() ?? false;
     }
 
     private function getTituloPlazas(): void
@@ -159,11 +233,13 @@ class Select_asistentes_a_una_actividad
                 $plazas_min = '';
             }
             $plazas_txt = _("plazas casa (max - min)") . ": ";
-            $plazas_txt .= !empty($plazas_max) ? $plazas_max : '?';
-            $plazas_txt .= !empty($plazas_min) ? ' - ' . $plazas_min : '';
+            $plazas_txt .= !empty($plazas_max) ? (string) $plazas_max : '?';
+            $plazas_txt .= !empty($plazas_min) ? ' - ' . (string) $plazas_min : '';
         } else {
             $plazas_txt = _("plazas actividad") . ": ";
-            $plazas_txt .= !empty($this->plazas_totales) ? $this->plazas_totales : '?';
+            $plazas_txt .= !empty($this->plazas_totales) && is_scalar($this->plazas_totales)
+                ? (string) $this->plazas_totales
+                : '?';
         }
         $this->plazas_txt = $plazas_txt;
     }
@@ -186,7 +262,18 @@ class Select_asistentes_a_una_actividad
         $dl_org = $oActividad->getDl_org();
         $dl_propia = (ConfigGlobal::mi_delef() === $dl_org);
         $oPermDossier = new PermDossier();
-        $this->a_ref_perm = $oPermDossier->perm_pers_activ($this->id_tipo_activ,$dl_propia);
+        $rawRefPerm = $oPermDossier->perm_pers_activ($this->id_tipo_activ, $dl_propia);
+        $this->a_ref_perm = [];
+        foreach ($rawRefPerm as $key => $value) {
+            if (!is_array($value)) {
+                continue;
+            }
+            $this->a_ref_perm[(string) $key] = [
+                'perm' => $value['perm'] ?? null,
+                'obj' => $value['obj'] ?? null,
+                'nom' => $value['nom'] ?? null,
+            ];
+        }
 
         $c = 0;
         $num = 0;
@@ -202,7 +289,11 @@ class Select_asistentes_a_una_actividad
             $id_schema = $oActividadCargo->getId_schema();
             $id_item_cargo = $oActividadCargo->getId_item();
             $id_nom = $oActividadCargo->getId_nom();
-            $this->aListaCargos[] = $id_nom;
+            if ($id_nom === null) {
+                continue;
+            }
+            $id_nom_int = (int) $id_nom;
+            $this->aListaCargos[] = $id_nom_int;
             $id_cargo = $oActividadCargo->getId_cargo();
             $oCargo = $this->cargoRepository->findById($id_cargo);
             if ($oCargo === null) {
@@ -215,12 +306,12 @@ class Select_asistentes_a_una_actividad
             }
 
             if ($this->dl_org !== $this->mi_dele) {
-                $oPersona = $this->personaFinderService->findPersonaEnDl($id_nom);
+                $oPersona = $this->personaFinderService->findPersonaEnDl($id_nom_int);
                 if ($oPersona === null) {
                     continue;
                 }
             } else {
-                $oPersona = $this->personaFinderService->findPersonaEnGlobal($id_nom);
+                $oPersona = $this->personaFinderService->findPersonaEnGlobal($id_nom_int);
             }
 
             if ($oPersona === null) {
@@ -234,31 +325,31 @@ class Select_asistentes_a_una_actividad
             $apellidos = $oPersona->getApellidos();
             $sacd = ($oPersona->isSacd()) ? _("sí") : '';
             $telfs = '';
-            $telfs_fijo = $this->telecoPersonaService->getTelecosPorTipo($id_nom, "telf", " / ", "*", false);
-            $telfs_movil = $this->telecoPersonaService->getTelecosPorTipo($id_nom, "móvil", " / ", "*", false);
+            $telfs_fijo = $this->telecoPersonaService->getTelecosPorTipo($id_nom_int, "telf", " / ", "*", false);
+            $telfs_movil = $this->telecoPersonaService->getTelecosPorTipo($id_nom_int, "móvil", " / ", "*", false);
             if (!empty($telfs_fijo) && !empty($telfs_movil)) {
                 $telfs = $telfs_fijo . " / " . $telfs_movil;
             } else {
-                $telfs .= $telfs_fijo ?? '';
-                $telfs .= $telfs_movil ?? '';
+                $telfs .= $telfs_fijo;
+                $telfs .= $telfs_movil;
             }
-            $mails = $this->telecoPersonaService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", false);
+            $mails = $this->telecoPersonaService->getTelecosPorTipo($id_nom_int, "e-mail", " / ", "*", false);
 
             $observ_cargo = $oActividadCargo->getObserv();
             $dl_asistente = $oPersona->getDl();
             $ctr_dl = $oPersona->getCentro_o_dl();
             if ($id_tabla = $oPersona->getId_tabla()) {
-                $a_act = $this->a_ref_perm[$id_tabla];
-                $this->permiso = $a_act["perm"] ? 3 : 1;
+                $a_act = $this->a_ref_perm[(string) $id_tabla] ?? [];
+                $this->permiso = !empty($a_act['perm']) ? 3 : 1;
             } else {
                 $this->permiso = 3;
             }
 
             $plaza = PlazaId::PEDIDA;
-            $aWhere = ['id_activ' => $this->id_pau, 'id_nom' => $id_nom];
+            $aWhere = ['id_activ' => $this->id_pau, 'id_nom' => $id_nom_int];
             $aOperador = ['id_activ' => '=', 'id_nom' => '='];
-            if (!empty($id_nom) && $cAsistente = $this->asistenteRepository->getAsistentes($aWhere, $aOperador)) {
-                if (is_array($cAsistente) && count($cAsistente) > 1) {
+            if ($cAsistente = $this->asistenteRepository->getAsistentes($aWhere, $aOperador)) {
+                if (count($cAsistente) > 1) {
                     $tabla = '';
                     foreach ($cAsistente as $Asistente) {
                         $tabla .= "<li>" . $Asistente->getNomTabla() . "</li>";
@@ -282,13 +373,13 @@ class Select_asistentes_a_una_actividad
                     $dl = $child;
                     if ($padre != $this->mi_dele) {
                         if ($plaza > PlazaId::DENEGADA) {
-                            $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
+                            $this->bumpPlazaResumen($padre, $dl, $plaza);
                             if (!empty($child) && $child != $padre) {
-                                $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
+                                $this->bumpPlazaConseguida($child, $padre, $dl, $plaza);
                             }
                         } else {
                             if (!empty($child) && $child == $this->mi_dele) {
-                                $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
+                                $this->bumpPlazaConseguida($child, $padre, $dl, $plaza);
                             } elseif (!empty($padre)) {
                                 continue;
                             }
@@ -298,11 +389,11 @@ class Select_asistentes_a_una_actividad
                             if ($plaza < PlazaId::ASIGNADA) {
                                 continue;
                             } else {
-                                $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
-                                $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
+                                $this->bumpPlazaConseguida($child, $padre, $dl, $plaza);
+                                $this->bumpPlazaResumen($padre, $dl, $plaza);
                             }
                         } else {
-                            $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
+                            $this->bumpPlazaResumen($padre, $dl, $plaza);
                         }
                     }
                 }
@@ -321,7 +412,7 @@ class Select_asistentes_a_una_actividad
                     $eliminar = 1;
                 }
 
-                $a_valores[$c]['sel'] = $this->permiso == 3 ? "$id_nom#$id_item_cargo#$eliminar#$id_schema" : "";
+                $a_valores[$c]['sel'] = $this->permiso == 3 ? "$id_nom_int#$id_item_cargo#$eliminar#$id_schema" : "";
                 $a_valores[$c][4] = $chk_propio;
                 $a_valores[$c][5] = $chk_est_ok;
                 $a_valores[$c][6] = $chk_falta;
@@ -332,7 +423,7 @@ class Select_asistentes_a_una_actividad
                 $asis = "f";
             }
 
-            $a_valores[$c]['clase'] = !empty($plaza) ? 'plaza' . $plaza : 'plaza1';
+            $a_valores[$c]['clase'] = 'plaza' . $plaza;
             $a_valores[$c][1] = $cargo;
             $a_valores[$c][2] = "$nom  ($ctr_dl)";
             $a_valores[$c][3] = $dl_asistente;
@@ -388,8 +479,8 @@ class Select_asistentes_a_una_actividad
             if (!empty($telfs_fijo) && !empty($telfs_movil)) {
                 $telfs = $telfs_fijo . " / " . $telfs_movil;
             } else {
-                $telfs .= $telfs_fijo ?? '';
-                $telfs .= $telfs_movil ?? '';
+                $telfs .= $telfs_fijo;
+                $telfs .= $telfs_movil;
             }
             $mails = $this->telecoPersonaService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", false);
 
@@ -417,13 +508,13 @@ class Select_asistentes_a_una_actividad
                 }
                 if ($padre != $this->mi_dele) {
                     if ($plaza > PlazaId::DENEGADA) {
-                        $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
+                        $this->bumpPlazaResumen($padre, $dl, $plaza);
                         if (!empty($child) && $child != $padre) {
-                            $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
+                            $this->bumpPlazaConseguida($child, $padre, $dl, $plaza);
                         }
                     } else {
                         if (!empty($child) && $child == $this->mi_dele) {
-                            $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
+                            $this->bumpPlazaConseguida($child, $padre, $dl, $plaza);
                         } elseif (!empty($padre)) {
                             continue;
                         }
@@ -433,11 +524,11 @@ class Select_asistentes_a_una_actividad
                         if ($plaza < PlazaId::ASIGNADA) {
                             continue;
                         } else {
-                            $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
-                            $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
+                            $this->bumpPlazaConseguida($child, $padre, $dl, $plaza);
+                            $this->bumpPlazaResumen($padre, $dl, $plaza);
                         }
                     } else {
-                        $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
+                        $this->bumpPlazaResumen($padre, $dl, $plaza);
                     }
                 }
             }
@@ -448,7 +539,7 @@ class Select_asistentes_a_una_actividad
 
             $a_val = [];
             $a_val['sel'] = $this->permiso == 3 ? "$id_nom" : "";
-            $a_val['clase'] = !empty($plaza) ? 'plaza' . $plaza : 'plaza1';
+            $a_val['clase'] = 'plaza' . $plaza;
             $a_val[2] = "$nom  ($ctr_dl)";
             $a_val[3] = $dl_asistente;
             $a_val[4] = $chk_propio;
@@ -501,26 +592,24 @@ class Select_asistentes_a_una_actividad
             if ($this->publicado === true) {
                 if (array_key_exists($this->mi_dele, $this->a_plazas_resumen)) {
                     foreach ($this->a_plazas_resumen as $padre => $aa) {
-                        if ($padre === 'total') {
+                        if ($padre === 'total' || !is_array($aa)) {
                             continue;
                         }
                         if ($padre != $this->mi_dele && $this->mi_dele != $this->dl_org) {
                             continue;
                         }
-                        $a_conseguidas = empty($aa['conseguidas']) ? [] : $aa['conseguidas'];
-                        $total_cedidas = empty($aa['total_cedidas']) ? 0 : $aa['total_cedidas'];
-                        $total_disponibles = empty($aa['total_disponibles']) ? 0 : $aa['total_disponibles'];
-                        $a_cedidas = empty($aa['cedidas']) ? [] : $aa['cedidas'];
+                        $a_conseguidas = is_array($aa['conseguidas'] ?? null) ? $aa['conseguidas'] : [];
+                        $total_cedidas = is_numeric($aa['total_cedidas'] ?? null) ? (int) $aa['total_cedidas'] : 0;
+                        $total_disponibles = is_numeric($aa['total_disponibles'] ?? null) ? (int) $aa['total_disponibles'] : 0;
+                        $a_cedidas = is_array($aa['cedidas'] ?? null) ? $aa['cedidas'] : [];
                         $json_cedidas = (count($a_cedidas) > 0) ? json_encode($a_cedidas) : '';
-                        $a_ocupadas = empty($aa['ocupadas']) ? [] : $aa['ocupadas'];
+                        $a_ocupadas = is_array($aa['ocupadas'] ?? null) ? $aa['ocupadas'] : [];
                         $total = $total_disponibles;
 
-                        $decidir = 0;
-                        $espera = 0;
                         $ocupadas = 0;
                         $continuacion = false;
-                        $resumen_plazas .= "$padre: ";
-                        $ocupadas_calendario = empty($a_ocupadas[$padre]) ? 0 : $a_ocupadas[$padre];
+                        $resumen_plazas .= (string) $padre . ': ';
+                        $ocupadas_calendario = is_numeric($a_ocupadas[$padre] ?? null) ? (int) $a_ocupadas[$padre] : 0;
                         if ($ocupadas_calendario > 0) {
                             $resumen_plazas .= "$ocupadas_calendario($padre)";
                         }
@@ -530,16 +619,23 @@ class Select_asistentes_a_una_actividad
                         $ocupadas_dl = 0;
                         foreach ($a_cedidas as $dl2 => $numCedidas) {
                             $i++;
-                            if (!empty($ocupadas_dl)) {
-                                $resumen_plazas .= ($continuacion) ? ' + ' : '';
-                                $resumen_plazas .= "$ocupadas_dl($dl2)";
+                            $dl2Key = (string) $dl2;
+                            $ocupadas_dl = is_numeric($a_ocupadas[$dl2Key] ?? null) ? (int) $a_ocupadas[$dl2Key] : 0;
+                            if ($ocupadas_dl > 0) {
+                                $resumen_plazas .= $continuacion ? ' + ' : '';
+                                $resumen_plazas .= "$ocupadas_dl($dl2Key)";
+                                $continuacion = true;
                             }
-                            $this->a_plazas_resumen[$padre]['cedidas'][$dl2] = ['ocupadas' => $ocupadas_dl];
-                            if ($this->mi_dele != $dl2 && $dl2 != $this->dl_org) {
-                                $pl = empty($numCedidas) ? 0 : $numCedidas;
-                                if (!array_key_exists($dl2, $this->a_plazas_resumen)) {
+                            $rawCedidas = $aa['cedidas'] ?? null;
+                            $cedidasEntry = is_array($rawCedidas) ? $rawCedidas : [];
+                            $cedidasEntry[$dl2Key] = ['ocupadas' => $ocupadas_dl];
+                            $aa['cedidas'] = $cedidasEntry;
+                            $this->a_plazas_resumen[$padre] = $aa;
+                            if ($this->mi_dele != $dl2Key && $dl2Key != $this->dl_org) {
+                                $pl = is_numeric($numCedidas) ? (int) $numCedidas : 0;
+                                if (!array_key_exists($dl2Key, $this->a_plazas_resumen)) {
                                     for ($i = $ocupadas_dl + 1; $i <= $pl; $i++) {
-                                        $nom = "$dl2----$i";
+                                        $nom = "$dl2Key----$i";
                                         $a_val = [];
                                         $a_val['sel'] = '';
                                         $a_val['clase'] = 'plaza4';
@@ -554,12 +650,12 @@ class Select_asistentes_a_una_actividad
                             }
                         }
                         $ocupadas += $ocupadas_dl;
-                        if (!empty($a_conseguidas)) {
+                        if ($a_conseguidas !== []) {
                             $ocupadas_otra = 0;
                             foreach ($a_conseguidas as $dl => $pl) {
-                                $pl_ocu = $a_ocupadas[$dl];
+                                $pl_ocu = is_numeric($a_ocupadas[(string) $dl] ?? null) ? (int) $a_ocupadas[(string) $dl] : 0;
                                 $resumen_plazas .= ($continuacion) ? ' + ' : '';
-                                $txt = sprintf(_("(de las %s cedidas por %s)"), $pl, $dl);
+                                $txt = sprintf(_("(de las %s cedidas por %s)"), is_scalar($pl) ? (string) $pl : '', (string) $dl);
                                 $resumen_plazas .= $pl_ocu . " " . $txt;
                                 $ocupadas_otra += $pl_ocu;
                                 $continuacion = true;
@@ -576,14 +672,6 @@ class Select_asistentes_a_una_actividad
                             $resumen_plazas .= "<span style='background-color: red'> libres= $libres</span>";
                         } else {
                             $resumen_plazas .= " libres=$libres";
-                        }
-                        if ($this->mi_dele == $padre) {
-                            if (!empty($espera)) {
-                                $resumen_plazas .= " " . sprintf(_("(%s en espera)"), $espera);
-                            }
-                            if (!empty($decidir)) {
-                                $resumen_plazas .= " " . sprintf(_("(%s por decidir)"), $decidir);
-                            }
                         }
                         $resumen_plazas .= ";<br>";
                         if ($this->mi_dele != $padre && $padre != $this->dl_org) {
@@ -604,28 +692,39 @@ class Select_asistentes_a_una_actividad
                     }
                 } elseif (array_key_exists($this->mi_dele, $this->a_plazas_conseguidas)) {
                     $a_dl_plazas = $this->a_plazas_conseguidas[$this->mi_dele];
+                    if (!is_array($a_dl_plazas)) {
+                        $a_dl_plazas = [];
+                    }
                     $resumen_plazas2 = "$this->mi_dele: ";
                     $p = 0;
                     foreach ($a_dl_plazas as $dl2 => $pla) {
-                        $plazas = empty($pla['ocupadas']) ? [] : $pla['ocupadas'];
-                        $pla['cedidas'] = empty($pla['cedidas']) ? '?' : $pla['cedidas'];
+                        if (!is_array($pla)) {
+                            continue;
+                        }
+                        $plazas = is_array($pla['ocupadas'] ?? null) ? $pla['ocupadas'] : [];
+                        $cedidasTxt = $pla['cedidas'] ?? '?';
+                        $cedidasLabel = is_scalar($cedidasTxt) ? (string) $cedidasTxt : '?';
                         foreach ($plazas as $dl => $pl) {
+                            if (!is_array($pl)) {
+                                continue;
+                            }
                             $p++;
                             $decidir = 0;
                             $espera = 0;
                             $ocupadas_dl = 0;
                             foreach ($pl as $plaza => $num) {
+                                $numInt = is_numeric($num) ? (int) $num : 0;
                                 if ($plaza == PlazaId::PEDIDA) {
-                                    $decidir += $num;
+                                    $decidir += $numInt;
                                 }
                                 if ($plaza == PlazaId::EN_ESPERA) {
-                                    $espera += $num;
+                                    $espera += $numInt;
                                 }
                                 if ($plaza > PlazaId::DENEGADA) {
-                                    $ocupadas_dl += $num;
+                                    $ocupadas_dl += $numInt;
                                 }
                             }
-                            $txt = sprintf(_("(de las %s cedidas por %s)"), $pla['cedidas'], $dl2);
+                            $txt = sprintf(_("(de las %s cedidas por %s)"), $cedidasLabel, (string) $dl2);
                             $resumen_plazas2 .= ($p > 1) ? ' + ' : '';
                             $resumen_plazas2 .= $ocupadas_dl . " " . $txt;
                             if (!empty($espera)) {
@@ -645,7 +744,8 @@ class Select_asistentes_a_una_actividad
         $this->resumen_plazas2 = $resumen_plazas2;
     }
 
-    public function getValores()
+    /** @return array<int|string, mixed> */
+    public function getValores(): array
     {
         return $this->a_valores;
     }
@@ -707,15 +807,15 @@ class Select_asistentes_a_una_actividad
         return [
             'segment_tipo' => 'select_asistentes_a_una_actividad',
             'id_pau' => $this->id_pau,
-            'plazas_txt' => $this->plazas_txt ?? '',
-            'resumen_plazas' => $this->resumen_plazas ?? '',
-            'resumen_plazas2' => $this->resumen_plazas2 ?? '',
-            'leyenda_html' => $this->leyenda_html ?? '',
-            'msg_err' => (string) ($this->msg_err ?? ''),
+            'plazas_txt' => $this->plazas_txt,
+            'resumen_plazas' => $this->resumen_plazas,
+            'resumen_plazas2' => $this->resumen_plazas2,
+            'leyenda_html' => $this->leyenda_html,
+            'msg_err' => $this->msg_err,
             'plazas_installed' => ConfigGlobal::is_app_installed('actividadplazas'),
             'wrapper' => [
-                'txt_eliminar' => (string) $this->txt_eliminar,
-                'bloque' => (string) ($this->bloque ?? ''),
+                'txt_eliminar' => $this->txt_eliminar,
+                'bloque' => $this->bloque,
                 'url_form_relative' => DossierTipoPublicUrls::relativeFormController(self::ID_TIPO_DOSSIER),
                 'url_form_cargos_relative' => DossierTipoPublicUrls::relativeFormController(3102),
                 'url_mover_path' => 'frontend/asistentes/controller/asistente_mover.php',
@@ -778,13 +878,14 @@ class Select_asistentes_a_una_actividad
             if (empty($val["perm"])) {
                 continue;
             }
-            $obj_pau = $val["obj"];
-            $nom = $val["nom"];
+            $obj_pau = $val['obj'] ?? '';
+            $nomTxt = $val['nom'] ?? '';
+            $nom = is_scalar($nomTxt) ? (string) $nomTxt : '';
             $aQuery = [
                 'mod' => 'nuevo',
                 'que_dl' => $mi_dele,
                 'pau' => $this->pau,
-                'obj_pau' => $obj_pau,
+                'obj_pau' => is_scalar($obj_pau) ? (string) $obj_pau : '',
                 'id_dossier' => $this->id_dossier,
                 'id_pau' => $this->id_pau,
             ];
@@ -792,26 +893,26 @@ class Select_asistentes_a_una_actividad
         }
     }
 
-    public function getId_dossier() { return $this->id_dossier; }
-    public function getPau() { return $this->pau; }
-    public function getObj_pau() { return $this->obj_pau; }
-    public function getId_pau() { return $this->id_pau; }
-    public function getPermiso() { return $this->permiso; }
-    public function getStatus() { return $this->status; }
+    public function getId_dossier(): int|string { return $this->id_dossier; }
+    public function getPau(): string { return $this->pau; }
+    public function getObj_pau(): string { return $this->obj_pau; }
+    public function getId_pau(): int { return $this->id_pau; }
+    public function getPermiso(): int { return $this->permiso; }
+    public function getStatus(): mixed { return $this->status; }
 
-    public function setId_dossier($Qid_dossier): void { $this->id_dossier = $Qid_dossier; }
-    public function setPau($Qpau): void { $this->pau = $Qpau; }
-    public function setObj_pau($Qobj_pau): void { $this->obj_pau = $Qobj_pau; }
-    public function setId_pau($Qid_pau): void
+    public function setId_dossier(int|string $Qid_dossier): void { $this->id_dossier = $Qid_dossier; }
+    public function setPau(string|int|float|bool|null $Qpau = null): void { $this->pau = $Qpau === null ? '' : (string) $Qpau; }
+    public function setObj_pau(string|int|float|bool|null $Qobj_pau = null): void { $this->obj_pau = $Qobj_pau === null ? '' : (string) $Qobj_pau; }
+    public function setId_pau(string|int|float|bool|null $Qid_pau = null): void
     {
-        $this->id_pau = $Qid_pau;
+        $this->id_pau = (int) ($Qid_pau ?? 0);
         $this->mi_dele = ConfigGlobal::mi_delef();
         $this->getDatosActividad();
     }
-    public function setPermiso($Qpermiso): void { $this->permiso = $Qpermiso; }
-    public function setStatus($Qstatus): void { $this->status = $Qstatus; }
-    public function setQid_sel($Qid_sel): void { $this->Qid_sel = $Qid_sel; }
-    public function setQscroll_id($Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
-    public function setBloque($bloque): void { $this->bloque = $bloque; }
-    public function setQueSel($queSel): void { $this->queSel = (string) $queSel; }
+    public function setPermiso(string|int|float|bool|null $Qpermiso = null): void { $this->permiso = (int) ($Qpermiso ?? 0); }
+    public function setStatus(mixed $Qstatus): void { $this->status = $Qstatus; }
+    public function setQid_sel(int|string|null $Qid_sel): void { $this->Qid_sel = $Qid_sel; }
+    public function setQscroll_id(int|string|null $Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
+    public function setBloque(string|int|float|bool|null $bloque = null): void { $this->bloque = $bloque === null ? '' : (string) $bloque; }
+    public function setQueSel(string|int|float|bool|null $queSel = null): void { $this->queSel = $queSel === null ? '' : (string) $queSel; }
 }

@@ -63,6 +63,24 @@ final class ZonaSacdListaTest extends TestCase
         parent::tearDown();
     }
 
+    public function test_id_zona_vacio_no_consulta_repositorio(): void
+    {
+        $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
+        $zonaSacdRepo->expects($this->never())->method('getZonasSacds');
+
+        $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
+        $zonaRepo->expects($this->never())->method('findById');
+
+        $lista = new ZonaSacdLista(
+            $this->createStub(PersonaSacdRepositoryInterface::class),
+            $zonaSacdRepo,
+            $zonaRepo,
+        );
+        $out = $lista->execute('');
+
+        $this->assertSame([], $out['a_valores']);
+    }
+
     public function test_no_lista_solo_sacds_sin_zona_asignada(): void
     {
         $oPersona1 = $this->personaSacdStub(101, 'Alvarez, Ana', 'n');
@@ -104,7 +122,7 @@ final class ZonaSacdListaTest extends TestCase
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->expects($this->once())
             ->method('getZonasSacds')
-            ->with(['id_zona' => '5'], [])
+            ->with(['id_zona' => 5], [])
             ->willReturn([$oZonaSacdA, $oZonaSacdB]);
 
         // `Persona::findPersonaEnGlobal` resuelve `PersonaFinderService`
@@ -181,12 +199,12 @@ final class ZonaSacdListaTest extends TestCase
     public function test_zona_concreta_sin_vinculos_sacds_devuelve_filas_vacias(): void
     {
         $zonaRepo = $this->createStub(ZonaRepositoryInterface::class);
-        $zonaRepo->method('findById')->with('3')->willReturn($this->zonaStub('Sin sacds'));
+        $zonaRepo->method('findById')->with(3)->willReturn($this->zonaStub('Sin sacds'));
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
         $zonaSacdRepo->expects($this->once())
             ->method('getZonasSacds')
-            ->with(['id_zona' => '3'], [])
+            ->with(['id_zona' => 3], [])
             ->willReturn([]);
 
         $lista = new ZonaSacdLista(

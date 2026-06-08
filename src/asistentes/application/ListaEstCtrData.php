@@ -114,7 +114,7 @@ final class ListaEstCtrData
             $aWhere['situacion'] = 'A';
             $aWhere['id_ctr'] = $id_ubi;
             $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-            $tipo_ctr = $oCentroDl->getTipo_ctr();
+            $tipo_ctr = $oCentroDl->getTipo_ctr() ?? '';
             if (strpos($tipo_ctr, 'n') === 0) {
                 $aWhere['sacd'] = 'f';
                 $aWhere['nivel_stgr'] = NivelStgrId::N;

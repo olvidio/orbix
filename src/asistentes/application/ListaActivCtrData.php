@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use frontend\shared\web\Periodo;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -29,9 +32,13 @@ final class ListaActivCtrData
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $input
+     * @return array{aCentros: array<int|string, array{nombre_ubi: string, personas: array<int, array{ap_nom: string, actividades: list<string>}>}>}
+     */
     public function build(array $input): array
     {
-        $Qssfsv = (string)($input['ssfsv'] ?? '');
+        $Qssfsv = input_string($input, 'ssfsv');
 
         if (ConfigGlobal::mi_sfsv() === 1) {
             /** @var XPermisos $oPerm */
@@ -50,13 +57,13 @@ final class ListaActivCtrData
             $ssfsv = 'sv';
         }
 
-        $Qsasistentes = (string)($input['sasistentes'] ?? '');
-        $Qsactividad = (string)($input['sactividad'] ?? '');
-        $Qn_agd = (string)($input['n_agd'] ?? '');
-        $Qyear = (int)($input['year'] ?? 0);
-        $Qperiodo = (string)($input['periodo'] ?? '');
-        $Qempiezamin = (string)($input['empiezamin'] ?? '');
-        $Qempiezamax = (string)($input['empiezamax'] ?? '');
+        $Qsasistentes = input_string($input, 'sasistentes');
+        $Qsactividad = input_string($input, 'sactividad');
+        $Qn_agd = input_string($input, 'n_agd');
+        $Qyear = input_int($input, 'year');
+        $Qperiodo = input_string($input, 'periodo');
+        $Qempiezamin = input_string($input, 'empiezamin');
+        $Qempiezamax = input_string($input, 'empiezamax');
 
         if ($Qn_agd === 'sss') {
             $Qsasistentes = 'sss+';
@@ -138,8 +145,7 @@ final class ListaActivCtrData
                 break;
             case 'c':
                 $tabla = 'p_n_agd';
-                $aWhere['id_ubi'] = (int)($input['id_ubi'] ?? 0);
-                $aOperador['tipo_ctr'] = [];
+                $aWhere['id_ubi'] = input_int($input, 'id_ubi');
                 break;
             default:
                 $tabla = 'p_n_agd';
@@ -177,7 +183,7 @@ final class ListaActivCtrData
 
                 $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
                 $aActividades = [];
-                if (is_array($cAsistencias) && count($cAsistencias) === 0) {
+                if (count($cAsistencias) === 0) {
                     $aActividades = [];
                 } else {
                     foreach ($cAsistencias as $oAsistente) {

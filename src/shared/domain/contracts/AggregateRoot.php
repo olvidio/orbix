@@ -16,7 +16,7 @@ interface AggregateRoot
     /**
      * Obtiene y limpia todos los eventos de dominio pendientes
      *
-     * @return array Lista de eventos de dominio
+     * @return list<object> Lista de eventos de dominio
      */
     public function pullDomainEvents(): array;
 }

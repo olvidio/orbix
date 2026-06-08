@@ -199,10 +199,8 @@ final class CasasResumenData
             $id_ubi_hijo = $oGrupoCasa->getId_ubi_hijo();
         }
 
+        /** @var list<array{iso_ini: string, iso_fin: string, sfsv: int}> $aPeriodos */
         $aPeriodos = $this->casaPeriodoRepository->getArrayCasaPeriodos($id_ubi, $oInicio, $oFin);
-
-        /** @var list<array{iso_ini: string, iso_fin: string, sfsv: int|string}> $aPeriodosList */
-        $aPeriodosList = array_values($aPeriodos);
 
         $row = [
             0 => ['nom' => $nombre_ubi, 'detalles' => [], 'gasto' => 0],
@@ -240,7 +238,7 @@ final class CasasResumenData
             if ($num_dias_real <= 0) { continue; }
             $factor_dias = ($num_dias / $num_dias_real);
 
-            $a_ocupacion = CasasResumenOcupacion::diasOcupacion($aPeriodosList, $oActividad, $oF_ini_act, $oF_fin_act);
+            $a_ocupacion = CasasResumenOcupacion::diasOcupacion($aPeriodos, $oActividad, $oF_ini_act, $oF_fin_act);
             if (!empty($a_ocupacion['avisos'])) {
                 $avisos = array_merge($avisos, $a_ocupacion['avisos']);
             }
@@ -308,7 +306,7 @@ final class CasasResumenData
         $row[2]['aportacion'] = (float)$this->ubiGastoRepository->getSumaGastos($id_ubi, 2, $oInicio, $oFin);
         $row[0]['gasto'] = (float)$this->ubiGastoRepository->getSumaGastos($id_ubi, 3, $oInicio, $oFin);
 
-        $a_repartoGastos = CasasResumenOcupacion::reparto($aPeriodosList);
+        $a_repartoGastos = CasasResumenOcupacion::reparto($aPeriodos);
         $sumReparto = (float)$a_repartoGastos[1] + (float)$a_repartoGastos[2];
         if ($sumReparto > 0) {
             $row[1]['gasto%'] = round(((float)$a_repartoGastos[1]) / $sumReparto * 100, 2);

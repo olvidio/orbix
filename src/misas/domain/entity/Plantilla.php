@@ -4,7 +4,6 @@ namespace src\misas\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Clase que implementa la entidad misa_plantillas_dl
@@ -32,8 +31,8 @@ class Plantilla
 
     private ?int $semana = null;
 
-    private DateTimeLocal|NullDateTimeLocal|null $t_start;
-    private DateTimeLocal|NullDateTimeLocal|null $t_end;
+    private DateTimeLocal|null $t_start;
+    private DateTimeLocal|null $t_end;
 
     private ?int $id_nom = null;
 
@@ -101,22 +100,22 @@ class Plantilla
         $this->semana = $isemana;
     }
 
-    public function getT_start(): DateTimeLocal|NullDateTimeLocal
+    public function getT_start(): DateTimeLocal|null
     {
-        return $this->t_start ?? new NullDateTimeLocal();
+        return $this->t_start;
     }
 
-    public function setT_start(DateTimeLocal|NullDateTimeLocal|null $tt_start): void
+    public function setT_start(DateTimeLocal|null $tt_start): void
     {
         $this->t_start = $tt_start;
     }
 
-    public function getT_end(): DateTimeLocal|NullDateTimeLocal
+    public function getT_end(): DateTimeLocal|null
     {
-        return $this->t_end ?? new NullDateTimeLocal();
+        return $this->t_end;
     }
 
-    public function setT_end(DateTimeLocal|NullDateTimeLocal|null $tt_end): void
+    public function setT_end(DateTimeLocal|null $tt_end): void
     {
         $this->t_end = $tt_end;
     }

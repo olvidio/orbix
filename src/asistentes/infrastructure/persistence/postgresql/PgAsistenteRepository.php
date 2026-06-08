@@ -10,6 +10,7 @@ use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\asistentes\domain\value_objects\AsistentePk;
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\traits\DispatchesDomainEvents;
 use src\shared\traits\HandlesPdoErrors;
@@ -34,9 +35,9 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
     public function __construct(UnitOfWorkInterface $unitOfWork)
     {
         $this->unitOfWork = $unitOfWork;
-        $oDbl = $GLOBALS['oDBEP'];
+        $oDbl = GlobalPdo::get('oDBEP');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBEP_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBEP_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('d_asistentes_all');
     }
@@ -46,9 +47,9 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
     /**
      * devuelve una colección (array) de objetos de tipo Asistente
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo Asistente
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return list<Asistente>
      */
     public function getAsistentes(array $aWhere = [], array $aOperators = []): array
     {
@@ -85,13 +86,13 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+        if (isset($aWhere['_ordre']) && is_string($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
             $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+        if (isset($aWhere['_limit']) && is_scalar($aWhere['_limit']) && (string) $aWhere['_limit'] !== '') {
             $sLimit = ' LIMIT ' . $aWhere['_limit'];
         }
         if (isset($aWhere['_limit'])) {
@@ -108,7 +109,7 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
             $Asistente = Asistente::fromArray($aDatos);
             $AsistenteSet->add($Asistente);
         }
-        return $AsistenteSet->getTot();
+        return array_values($AsistenteSet->getTot());
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -126,7 +127,7 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         $sql = "DELETE FROM $nom_tabla WHERE id_activ = $id_activ AND id_nom = $id_nom";
         $success = $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-        if ($registrarCambios && $success && $datosActuales) {
+        if ($registrarCambios && $success && is_array($datosActuales)) {
             // Marcar como eliminada
             $this->markAsDeleted($Asistente, $datosActuales);
         }
@@ -190,6 +191,10 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
 
+        if ($stmt === false) {
+            return false;
+        }
+
         if ($bInsert && $requiere_id_schema) {
             $sid = ConfigGlobal::mi_id_schema();
             $idSchema = is_numeric($sid) ? (int) $sid : (int) filter_var((string) $sid, FILTER_VALIDATE_INT);
@@ -233,9 +238,9 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_activ, int $id_nom): array|bool
+    public function datosById(int $id_activ, int $id_nom): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -246,10 +251,19 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         }
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        if (!is_array($aDatos)) {
+            return false;
+        }
+
+        $row = [];
+        foreach ($aDatos as $key => $value) {
+            $row[(string) $key] = $value;
+        }
+
+        return $row;
     }
 
-    public function datosByPk(AsistentePk $pk): array|bool
+    public function datosByPk(AsistentePk $pk): array|false
     {
         return $this->datosById($pk->IdActiv(), $pk->IdNom());
     }
@@ -261,7 +275,7 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
     public function findById(int $id_activ, int $id_nom): ?Asistente
     {
         $aDatos = $this->datosById($id_activ, $id_nom);
-        if (empty($aDatos)) {
+        if (!is_array($aDatos)) {
             return null;
         }
         return Asistente::fromArray($aDatos);

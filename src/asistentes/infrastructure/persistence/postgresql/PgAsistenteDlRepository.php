@@ -3,6 +3,7 @@
 namespace src\asistentes\infrastructure\persistence\postgresql;
 
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\traits\HandlesPdoErrors;
 
@@ -23,9 +24,9 @@ class PgAsistenteDlRepository extends PgAsistenteRepository implements Asistente
     public function __construct(UnitOfWorkInterface $unitOfWork)
     {
         parent::__construct($unitOfWork);
-        $oDbl = $GLOBALS['oDBE'];
+        $oDbl = GlobalPdo::get('oDBE');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBE_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('d_asistentes_dl');
     }

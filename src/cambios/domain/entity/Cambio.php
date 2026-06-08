@@ -10,7 +10,6 @@ use src\cambios\domain\value_objects\TipoCambioId;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\domain\value_objects\DelegacionCode;
 use stdClass;
 
@@ -421,9 +420,9 @@ class Cambio
     }
 
 
-    public function getTimestamp_cambio(): DateTimeLocal|NullDateTimeLocal|null
+    public function getTimestamp_cambio(): DateTimeLocal|null
     {
-        return $this->timestamp_cambio ?? new NullDateTimeLocal;
+        return $this->timestamp_cambio;
     }
 
 

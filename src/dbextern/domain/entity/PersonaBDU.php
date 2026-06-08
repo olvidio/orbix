@@ -5,7 +5,6 @@ namespace src\dbextern\domain\entity;
 use DateTime;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class PersonaBDU
 {
@@ -13,7 +12,7 @@ class PersonaBDU
 
     public function __construct()
     {
-        $this->dfecha_c_fic = new NullDateTimeLocal();
+        $this->dfecha_c_fic = null;
     }
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
@@ -127,7 +126,7 @@ class PersonaBDU
      * @var string
      */
     private string $scamb_fic = '';
-    private DateTimeLocal|NullDateTimeLocal $dfecha_c_fic;
+    private DateTimeLocal|null $dfecha_c_fic;
 
     /**
      * compartida_con_r de Listas
@@ -547,7 +546,7 @@ class PersonaBDU
         return $this->scamb_fic;
     }
 
-    public function getFecha_c_fic(): DateTimeLocal|NullDateTimeLocal|string
+    public function getFecha_c_fic(): DateTimeLocal|null|string
     {
         return $this->dfecha_c_fic;
     }
@@ -565,7 +564,7 @@ class PersonaBDU
     public function setFecha_c_fic(mixed $dfecha_c_fic): void
     {
         if ($dfecha_c_fic === null || $dfecha_c_fic === '') {
-            $this->dfecha_c_fic = new NullDateTimeLocal();
+            $this->dfecha_c_fic = null;
             return;
         }
         if ($dfecha_c_fic instanceof DateTimeLocal) {
@@ -573,11 +572,11 @@ class PersonaBDU
             return;
         }
         if (!is_string($dfecha_c_fic)) {
-            $this->dfecha_c_fic = new NullDateTimeLocal();
+            $this->dfecha_c_fic = null;
             return;
         }
         $vo = DateTimeLocal::createFromLocal($dfecha_c_fic);
-        $this->dfecha_c_fic = $vo instanceof DateTimeLocal ? $vo : new NullDateTimeLocal();
+        $this->dfecha_c_fic = $vo instanceof DateTimeLocal ? $vo : null;
     }
 
     public function getCompartida_con_r(): string

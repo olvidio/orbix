@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use Psr\Container\ContainerInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -47,13 +50,15 @@ final class AsistenteMoverData
     {
         $a_sel = (array)($input['sel'] ?? []);
         if (!empty($a_sel)) {
-            $Qid_nom = (int)strtok($a_sel[0], '#');
+            $sel0 = $a_sel[0];
+            $selKey = is_string($sel0) ? $sel0 : (is_scalar($sel0) ? (string)$sel0 : '');
+            $Qid_nom = (int)strtok($selKey, '#');
         } else {
-            $Qid_nom = (int)($input['id_nom'] ?? 0);
+            $Qid_nom = input_int($input, 'id_nom');
         }
 
-        $Qid_activ_old = (int)($input['id_activ'] ?? 0);
-        $Qid_nom = (int)($input['id_pau'] ?? $Qid_nom);
+        $Qid_activ_old = input_int($input, 'id_activ');
+        $Qid_nom = input_int($input, 'id_pau', $Qid_nom);
 
         $AsistenteRepositoryInterface = $this->asistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ_old);
         /** @var AsistenteRepositoryInterface $AsistenteRepository */
@@ -182,7 +187,7 @@ final class AsistenteMoverData
                         }
                     }
                     $ocupadas = $this->asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
-                    $libres = $ocupadas < 0 ? '-' : ($concedidas - $ocupadas);
+                    $libres = $ocupadas < 0 ? '-' : ((int) $concedidas - $ocupadas);
                     if (!empty($concedidas)) {
                         $txt_plazas = sprintf(_('plazas libres/concedidas: %s/%s'), $libres, $concedidas);
                     }

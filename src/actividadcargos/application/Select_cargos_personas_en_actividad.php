@@ -114,7 +114,14 @@ class Select_cargos_personas_en_actividad
 
         $id_tabla = $oPersona->getId_tabla();
         $oPermDossier = new PermDossier();
-        $this->ref_perm = $oPermDossier->perm_activ_pers($id_tabla);
+        $rawRefPerm = $oPermDossier->perm_activ_pers($id_tabla);
+        $this->ref_perm = [];
+        foreach ($rawRefPerm as $key => $value) {
+            $this->ref_perm[(string) $key] = [
+                'perm' => $value['perm'] ?? null,
+                'nom' => $value['nom'] ?? null,
+            ];
+        }
 
         $this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");
         $oPerm = $_SESSION['oPerm'] ?? null;

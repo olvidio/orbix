@@ -62,7 +62,9 @@ final class PlazaPropietarioAsignacion implements PlazaPropietarioAsignacionInte
 
         $obj_pau = str_replace('personas\\model\\entity\\', '', get_class($oPersona));
         if ($obj_pau === 'PersonaEx') {
-            return $oPersona->getDl();
+            $dl = $oPersona->getDl();
+
+            return $dl !== null && $dl !== '' ? $dl : false;
         }
 
         return false;

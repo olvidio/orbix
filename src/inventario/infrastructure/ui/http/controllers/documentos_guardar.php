@@ -6,7 +6,6 @@ use src\shared\infrastructure\DependencyResolver;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\shared\web\ContestarJson;
 use function src\shared\domain\helpers\is_true;
 
@@ -54,7 +53,7 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
 
         if (is_true($Qchk_f_recibido)) {
             if (empty($Qf_recibido)) {
-                $oF_recibido = new NullDateTimeLocal();
+                $oF_recibido = null;
             } else {
                 $oF_recibido = DateTimeLocal::createFromLocal($Qf_recibido);
             }
@@ -62,7 +61,7 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
         }
         if (is_true($Qchk_f_asignado)) {
             if (empty($Qf_asignado)) {
-                $oF_asignado = new NullDateTimeLocal();
+                $oF_asignado = null;
             } else {
                 $oF_asignado = DateTimeLocal::createFromLocal($Qf_asignado);
             }
@@ -77,7 +76,7 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
         }
         if (is_true($Qchk_f_eliminado)) {
             if (empty($Qf_eliminado)) {
-                $oF_eliminado = new NullDateTimeLocal();
+                $oF_eliminado = null;
             } else {
                 $oF_eliminado = DateTimeLocal::createFromLocal($Qf_eliminado);
             }

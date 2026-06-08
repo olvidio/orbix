@@ -18,23 +18,7 @@ class GestorErrores
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * aDades de Actividad
-     *
-     * @var array
-     */
-    private $aDades;
-
-    /**
-     * bLoaded
-     *
-     * @var boolean
-     */
-    private $bLoaded = FALSE;
-
-    private $filename;
-
-    private string|int|null $stack;
+    private string $filename;
 
     /**
      * Constructor de la classe.
@@ -51,35 +35,41 @@ class GestorErrores
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    private function limitar($n = 10)
+    private static function clientIp(): string
+    {
+        $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? null;
+
+        return is_string($remoteAddr) && $remoteAddr !== '' ? $remoteAddr : 'localhost';
+    }
+
+    private function limitar(int $n = 10): void
     {
         // Cuando hay el doble, borro $n.
-        if (isset($_SESSION['errores'])) { // No sé poruqe no deja poner todo junto
-            if (is_array($_SESSION['errores']) & (count($_SESSION['errores']) > 2 * $n)) {
-                $eee = 'a borrra!!';
-                array_splice($_SESSION['errores'], -$n); // negativo empieza por el final.
-                // hay que cambiar el indice stack
-                end($_SESSION['errores']);
-                $stack = key($_SESSION['errores']);
-                $this->stack = $stack;
-                //con los stack dentro de parammmmm
-            }
+        if (isset($_SESSION['errores']) && is_array($_SESSION['errores']) && count($_SESSION['errores']) > 2 * $n) {
+            array_splice($_SESSION['errores'], -$n); // negativo empieza por el final.
         }
     }
 
-    public function recordar($error)
+    public function recordar(mixed $error): void
     {
         // evitar que sea muy grande
         $this->limitar(10);
         if (isset($_SESSION['errores']) && is_array($_SESSION['errores'])) { //para la primera
             end($_SESSION['errores']);
         }
+        if (!isset($_SESSION['errores']) || !is_array($_SESSION['errores'])) {
+            $_SESSION['errores'] = [];
+        }
         $_SESSION['errores'][] = $error;
     }
 
-    function leerErrorAppLastError()
+    function leerErrorAppLastError(): mixed
     {
-        $a_errores = $_SESSION['errores'];
+        $a_errores = $_SESSION['errores'] ?? null;
+        if (!is_array($a_errores)) {
+            return false;
+        }
+
         return end($a_errores);
     }
 
@@ -91,10 +81,10 @@ class GestorErrores
      * @param string $line
      * @param string $file
      */
-    function addErrorAppLastError(PDOStatement|\PDO $oDBSt, string $sClauError, string $line, string $file)
+    function addErrorAppLastError(PDOStatement|\PDO $oDBSt, string $sClauError, string $line, string $file): never
     {
         // Cuando ejecuto algún controlador desde la linea de comandos, no existe la ip:
-        $ip = empty($_SERVER['REMOTE_ADDR']) ? 'localhost' : $_SERVER['REMOTE_ADDR'];
+        $ip = self::clientIp();
         $user = ConfigGlobal::mi_usuario();
         $esquema = ConfigGlobal::mi_region_dl();
         $ahora = date("Y/m/d H:i:s");
@@ -138,7 +128,7 @@ class GestorErrores
      */
     public function addErrorAppLastErrorNoThrowText(string $errorText, string $sClauError, string $line, string $file): void
     {
-        $ip = empty($_SERVER['REMOTE_ADDR']) ? 'localhost' : $_SERVER['REMOTE_ADDR'];
+        $ip = self::clientIp();
         $user = ConfigGlobal::mi_usuario();
         $esquema = ConfigGlobal::mi_region_dl();
         $ahora = date("Y/m/d H:i:s");

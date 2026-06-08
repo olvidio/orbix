@@ -45,7 +45,7 @@ $id_nom = (int) ($oCertificadoEmitido->getId_nom() ?? 0);
 $nom = (string) ($oCertificadoEmitido->getNom() ?? '');
 $idioma = (string) ($oCertificadoEmitido->getIdiomaVo()?->value() ?? '');
 $certificado = (string) ($oCertificadoEmitido->getCertificado() ?? '');
-$f_certificado = $oCertificadoEmitido->getF_certificado()->getFromLocal();
+$f_certificado = $oCertificadoEmitido->getF_certificado()?->getFromLocal() ?? '';
 $firmado = $oCertificadoEmitido->isFirmado();
 $chk_firmado = is_true($firmado) ? 'checked' : '';
 

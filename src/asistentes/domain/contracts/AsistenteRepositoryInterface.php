@@ -24,8 +24,8 @@ interface AsistenteRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Asistente
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return list<Asistente>
      */
     public function getAsistentes(array $aWhere = [], array $aOperators = []): array;
@@ -34,6 +34,8 @@ interface AsistenteRepositoryInterface
      * Une colecciones de varios repositorios de asistentes (Dl, Out, Ex…).
      *
      * @param list<array{repo: class-string, get: string}> $a_Clases
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
      * @return list<Asistente>
      */
     public function getConjunt(array $a_Clases, string $namespace, array $aWhere, array $aOperators): array;
@@ -53,11 +55,14 @@ interface AsistenteRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      *
      * @param int $id_activ
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById(int $id_activ, int $id_nom): array|bool;
+    public function datosById(int $id_activ, int $id_nom): array|false;
 
-    public function datosByPk(AsistentePk $pk): array|bool;
+    /**
+     * @return array<string, mixed>|false
+     */
+    public function datosByPk(AsistentePk $pk): array|false;
 
     /**
      * Busca la clase con id_activ en el repositorio.

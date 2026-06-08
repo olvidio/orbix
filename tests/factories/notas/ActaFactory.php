@@ -13,7 +13,6 @@ use src\notas\domain\value_objects\Observ;
 use src\notas\domain\value_objects\Pagina;
 use src\notas\domain\value_objects\Pdf;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Factory para crear instancias de Acta para tests

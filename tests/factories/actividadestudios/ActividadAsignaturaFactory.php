@@ -9,7 +9,6 @@ use src\actividadestudios\domain\value_objects\AvisProfesor;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Factory para crear instancias de ActividadAsignatura para tests

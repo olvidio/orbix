@@ -76,7 +76,10 @@ class InfoAsistenteDl extends DatosInfoRepo
     /**
      * PK compuesta `(id_activ, id_nom)`: {@see DatosInfoRepo::getFicha} base llama {@see AsistenteRepositoryInterface::findById} con un solo argumento.
      */
-    public function getFicha()
+    /**
+     * @return \src\asistentes\domain\entity\Asistente|null
+     */
+    public function getFicha(): ?\src\asistentes\domain\entity\Asistente
     {
         $oFicha = null;
         switch ($this->mod) {

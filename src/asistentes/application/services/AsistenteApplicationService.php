@@ -9,7 +9,6 @@ use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
-use src\shared\domain\contracts\AggregateRoot;
 use src\shared\domain\contracts\UnitOfWorkInterface;
 
 /**
@@ -45,11 +44,11 @@ class AsistenteApplicationService
     /**
      * Obtiene una lista de asistentes según criterios
      *
-     * @param array $aWhere
-     * @param array $aOperators
-     * @return array|bool
+     * @param array<string, mixed> $aWhere
+     * @param array<string, string> $aOperators
+     * @return list<Asistente>
      */
-    public function getAsistentes(array $aWhere = [], array $aOperators = []): array|bool
+    public function getAsistentes(array $aWhere = [], array $aOperators = []): array
     {
         return $this->repository->getAsistentes($aWhere, $aOperators);
     }
@@ -71,10 +70,10 @@ class AsistenteApplicationService
         // tabla destino segun la dl de la persona y la de la actividad.
         $this->repository = $this->resolverRepositorioDeAsistente($asistente)
             ?? $this->resolverRepositorioDestino($asistente);
-        return $this->unitOfWork->execute(function ($uow) use ($asistente) {
+        return (bool) $this->unitOfWork->execute(function ($uow) use ($asistente) {
             $success = $this->repository->Guardar($asistente);
 
-            if ($success && $asistente instanceof AggregateRoot) {
+            if ($success) {
                 $uow->registerEntity($asistente);
             }
 
@@ -94,8 +93,10 @@ class AsistenteApplicationService
         $actividadService = $this->container->get(AsistenteActividadService::class);
         $claseRepo = $actividadService->getRepoAsistente($asistente->getId_nom(), $asistente->getId_activ());
 
-        /** @var AsistenteRepositoryInterface $repository */
-        return $this->container->get($claseRepo);
+        /** @var AsistenteRepositoryInterface $resolvedRepository */
+        $resolvedRepository = $this->container->get($claseRepo);
+
+        return $resolvedRepository;
     }
 
     /**
@@ -118,10 +119,10 @@ class AsistenteApplicationService
             return false;
         }
         $this->repository = $repository;
-        return $this->unitOfWork->execute(function ($uow) use ($asistente) {
+        return (bool) $this->unitOfWork->execute(function ($uow) use ($asistente) {
             $success = $this->repository->Eliminar($asistente);
 
-            if ($success && $asistente instanceof AggregateRoot) {
+            if ($success) {
                 $uow->registerEntity($asistente);
             }
 

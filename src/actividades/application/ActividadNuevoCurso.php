@@ -13,7 +13,6 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\actividadescentro\domain\entity\CentroEncargado;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 
 /**
@@ -124,9 +123,9 @@ class ActividadNuevoCurso
         return $txt;
     }
 
-    private function horaComoTexto(TimeLocal|NullTimeLocal|null $hora, string $porDefecto): string
+    private function horaComoTexto(TimeLocal|null $hora, string $porDefecto): string
     {
-        if ($hora === null || $hora instanceof NullTimeLocal) {
+        if ($hora === null ) {
             return $porDefecto;
         }
         $txt = $hora->toDatabaseString();

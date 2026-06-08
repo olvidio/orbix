@@ -9,7 +9,6 @@ use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class CertificadoRecibidoUpload
 {
@@ -36,8 +35,8 @@ class CertificadoRecibidoUpload
         string $Qidioma,
         string $Qcertificado,
         bool $firmado,
-        DateTimeLocal|NullDateTimeLocal $oF_certificado,
-        DateTimeLocal|NullDateTimeLocal $oF_recibido,
+        DateTimeLocal|null $oF_certificado,
+        DateTimeLocal|null $oF_recibido,
         ?string $destino,
     ): string|CertificadoRecibido {
         $oPersona = Persona::findPersonaEnGlobal($Qid_nom);

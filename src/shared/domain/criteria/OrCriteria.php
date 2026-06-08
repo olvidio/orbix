@@ -11,7 +11,7 @@ use InvalidArgumentException;
  */
 final class OrCriteria implements Criteria
 {
-    /** @param non-empty-list<Criteria> $children */
+    /** @param list<Criteria> $children */
     public function __construct(
         public readonly array $children,
     ) {

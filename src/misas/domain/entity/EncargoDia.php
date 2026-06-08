@@ -6,7 +6,6 @@ use src\misas\domain\value_objects\EncargoDiaId;
 use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Clase que implementa la entidad misa_cuadricula_dl
@@ -26,8 +25,8 @@ class EncargoDia
     private EncargoDiaId $uuid_item;
     private ?int $id_enc = null;
 
-    private DateTimeLocal|NullDateTimeLocal|null $tstart;
-    private DateTimeLocal|NullDateTimeLocal|null $tend;
+    private DateTimeLocal|null $tstart;
+    private DateTimeLocal|null $tend;
 
     private ?int $id_nom = null;
     private ?string $observ = null;
@@ -80,22 +79,22 @@ class EncargoDia
         $this->id_enc = $id_enc;
     }
 
-    public function getTstart(): DateTimeLocal|NullDateTimeLocal
+    public function getTstart(): DateTimeLocal|null
     {
-        return $this->tstart ?? new NullDateTimeLocal();
+        return $this->tstart;
     }
 
-    public function setTstart(DateTimeLocal|NullDateTimeLocal|null $tstart): void
+    public function setTstart(DateTimeLocal|null $tstart): void
     {
         $this->tstart = $tstart;
     }
 
-    public function getTend(): DateTimeLocal|NullDateTimeLocal
+    public function getTend(): DateTimeLocal|null
     {
-        return $this->tend ?? new NullDateTimeLocal();
+        return $this->tend;
     }
 
-    public function setTend(DateTimeLocal|NullDateTimeLocal|null $tend): void
+    public function setTend(DateTimeLocal|null $tend): void
     {
         $this->tend = $tend;
     }

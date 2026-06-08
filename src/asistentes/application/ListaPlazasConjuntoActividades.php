@@ -45,67 +45,80 @@ class ListaPlazasConjuntoActividades
     ) {
     }
 
-    public function getMi_dele()
+    public function getMi_dele(): string
     {
         return $this->smi_dele;
     }
 
-    public function getWhere()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getWhere(): array
     {
         return $this->aWhere;
     }
 
-    public function getOperador()
+    /**
+     * @return array<string, string>
+     */
+    public function getOperador(): array
     {
         return $this->aOperador;
     }
 
-    public function setMi_dele($smi_dele)
+    public function setMi_dele(string $smi_dele): void
     {
         $this->smi_dele = $smi_dele;
     }
 
-    public function setWhere($aWhere)
+    /**
+     * @param array<string, mixed> $aWhere
+     */
+    public function setWhere(array $aWhere): void
     {
         $this->aWhere = $aWhere;
     }
 
-    public function setSacd($sacd)
+    public function setSacd(bool $sacd): void
     {
         $this->bsacd = $sacd;
     }
 
-    public function setOperador($aOperador)
+    /**
+     * @param array<string, string> $aOperador
+     */
+    public function setOperador(array $aOperador): void
     {
         $this->aOperador = $aOperador;
     }
 
-    public function getId_tipo_activ()
+    public function getId_tipo_activ(): string
     {
         return $this->iid_tipo_activ;
     }
 
-    public function setId_tipo_activ($iid_tipo_activ)
+    public function setId_tipo_activ(string $iid_tipo_activ): void
     {
         $this->iid_tipo_activ = $iid_tipo_activ;
     }
 
-    private $bsacd = FALSE;
-    private $smi_dele;
-    private $aWhere;
-    private $aOperador;
-    private $iid_tipo_activ;
+    private bool $bsacd = false;
+    private string $smi_dele = '';
+    /** @var array<string, mixed> */
+    private array $aWhere = [];
+    /** @var array<string, string> */
+    private array $aOperador = [];
+    private string $iid_tipo_activ = '';
 
-    public function getLista()
+    public function getLista(): Lista
     {
-
         $oTipoActiv = new TiposActividades($this->iid_tipo_activ);
         $sasistentes = $oTipoActiv->getAsistentesText();
         $sactividad = $oTipoActiv->getActividadText();
 
         $cActividades = $this->actividadRepository->getActividades($this->aWhere, $this->aOperador);
 
-        if (is_array($cActividades) && count($cActividades) < 1) {
+        if (count($cActividades) < 1) {
             // No hacer echo: esta clase participa en endpoints JSON (lista_asis_conjunto_activ_data).
             // Lista vacía bajo cada bloque de sección es el comportamiento esperado.
             $oLista = new Lista();
@@ -197,6 +210,9 @@ class ListaPlazasConjuntoActividades
                     $plazas_pedidas = 0; // plazas pedidas o 'en espera'
                     foreach ($cActividadCargos as $oActividadCargo) {
                         $id_nom = $oActividadCargo->getId_nom();
+                        if ($id_nom === null) {
+                            continue;
+                        }
                         $aIdCargos[] = $id_nom;
                         $id_cargo = $oActividadCargo->getId_cargo();
                         $cargo_cl = $this->cargoRepository->findById($id_cargo)?->getCargoVo()->value() ?? '';
@@ -218,7 +234,7 @@ class ListaPlazasConjuntoActividades
                         // ahora miro si también asiste:
                         $cAsistentes = $this->asistenteRepository->getAsistentes(array('id_activ' => $id_pau, 'id_nom' => $id_nom));
 
-                        if (is_array($cAsistentes) && count($cAsistentes) > 0) {
+                        if (count($cAsistentes) > 0) {
                             $asis = "t";
                             $texto = "";
                         } else {
@@ -288,11 +304,13 @@ class ListaPlazasConjuntoActividades
             if (!empty($num)) ksort($a_activ[$id_activ]);
 
             // Puede estar vacío
-            $pl_calendario = empty($a_plazas[$this->smi_dele]['calendario']) ? 0 : $a_plazas[$this->smi_dele]['calendario'];
-            $pl_cedidas = empty($a_plazas[$this->smi_dele]['total_cedidas']) ? 0 : $a_plazas[$this->smi_dele]['total_cedidas'];
-            $pl_conseguidas = empty($a_plazas[$this->smi_dele]['total_conseguidas']) ? 0 : $a_plazas[$this->smi_dele]['total_conseguidas'];
-            $pl_disponibles = empty($a_plazas[$this->smi_dele]['total_disponibles']) ? 0 : $a_plazas[$this->smi_dele]['total_disponibles'];
-            $pl_ocupadas = empty($a_plazas[$this->smi_dele]['total_ocupadas']) ? 0 : $a_plazas[$this->smi_dele]['total_ocupadas'];
+            $smi_dele = $this->smi_dele;
+            $a_plazas_dl = is_array($a_plazas[$smi_dele] ?? null) ? $a_plazas[$smi_dele] : [];
+            $pl_calendario = is_numeric($a_plazas_dl['calendario'] ?? null) ? (int) $a_plazas_dl['calendario'] : 0;
+            $pl_cedidas = is_numeric($a_plazas_dl['total_cedidas'] ?? null) ? (int) $a_plazas_dl['total_cedidas'] : 0;
+            $pl_conseguidas = is_numeric($a_plazas_dl['total_conseguidas'] ?? null) ? (int) $a_plazas_dl['total_conseguidas'] : 0;
+            $pl_disponibles = is_numeric($a_plazas_dl['total_disponibles'] ?? null) ? (int) $a_plazas_dl['total_disponibles'] : 0;
+            $pl_ocupadas = is_numeric($a_plazas_dl['total_ocupadas'] ?? null) ? (int) $a_plazas_dl['total_ocupadas'] : 0;
             /*
             A) Plazas totales:  XX;
             B) Plazas disponibles para la dl;
@@ -301,14 +319,14 @@ class ListaPlazasConjuntoActividades
             */
             $pl_ocupadas_pedidas = $pl_ocupadas + $plazas_pedidas;
             $pl_dif = $pl_disponibles - $pl_ocupadas_pedidas;
-            if (!empty($pl_dif) && $pl_dif < 0) {
+            if ($pl_dif !== 0 && $pl_dif < 0) {
                 $pl_dif_txt = "<span class=\"alert\">$pl_dif</span>";
             } else {
                 $pl_dif_txt = $pl_dif;
             }
 
             if ($publicado === true) {
-                $plazas_txt = sprintf(_("plazas (max-min): %s, para la dl: %s, ocupadas + pedidas: %s"), $plazas_casa, $pl_disponibles, $pl_ocupadas_pedidas);
+                $plazas_txt = sprintf(_("plazas (max-min): %s, para la dl: %s, ocupadas + pedidas: %s"), $plazas_casa, (string) $pl_disponibles, (string) $pl_ocupadas_pedidas);
                 // Nombre actividad y plazas:
                 $aGrupos[$id_activ] = $nom_activ;
                 //Si es sólo los sacd no tiene sentido el resumen de plazas.

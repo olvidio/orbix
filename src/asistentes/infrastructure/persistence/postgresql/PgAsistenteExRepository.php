@@ -9,6 +9,7 @@ use PDO;
 use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\traits\HandlesPdoErrors;
 use frontend\shared\web\Desplegable;
@@ -31,9 +32,9 @@ class PgAsistenteExRepository extends PgAsistenteRepository implements Asistente
     public function __construct(UnitOfWorkInterface $unitOfWork)
     {
         parent::__construct($unitOfWork);
-        $oDbl = $GLOBALS['oDBER'];
+        $oDbl = GlobalPdo::get('oDBER');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBER_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBER_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('d_asistentes_ex');
     }

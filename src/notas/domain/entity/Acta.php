@@ -16,7 +16,6 @@ use src\notas\domain\value_objects\Pagina;
 use src\notas\domain\value_objects\Pdf;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 
 class Acta
@@ -123,9 +122,9 @@ class Acta
     }
 
 
-    public function getF_acta(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_acta(): DateTimeLocal|null
     {
-        return $this->f_acta ?? new NullDateTimeLocal;
+        return $this->f_acta;
     }
 
 
@@ -320,7 +319,7 @@ class Acta
      * inventa el valor del acta, si no es correcto
      *
      */
-    public static function inventarActa(string $valor, DateTimeLocal|NullDateTimeLocal|string|null $fecha): string
+    public static function inventarActa(string $valor, DateTimeLocal|string|null $fecha): string
     {
         $valor = trim($valor);
         // comprobar si hace falta, o ya está bien el acta como está
@@ -328,7 +327,7 @@ class Acta
         if (!preg_match($reg_exp, $valor)) {
             // inventar acta.
             // Se puede usar la función desde personaNota, por eso se puede pasar la fecha.
-            if ($fecha === null || $fecha === '' || $fecha instanceof NullDateTimeLocal) {
+            if ($fecha === null || $fecha === '') {
                 $any = '?';
                 $num_acta = 'x';
             } else {

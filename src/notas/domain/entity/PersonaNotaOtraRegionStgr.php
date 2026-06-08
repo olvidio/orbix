@@ -18,7 +18,6 @@ use src\notas\domain\value_objects\TipoActa;
 use src\procesos\domain\value_objects\ActividadId;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use stdClass;
 
 class PersonaNotaOtraRegionStgr
@@ -299,15 +298,15 @@ class PersonaNotaOtraRegionStgr
     }
 
 
-    public function getF_acta(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_acta(): DateTimeLocal|null
     {
-        return $this->f_acta ?? new NullDateTimeLocal;
+        return $this->f_acta;
     }
 
 
-    public function setF_acta(DateTimeLocal|NullDateTimeLocal|null $f_acta = null): void
+    public function setF_acta(DateTimeLocal|null $f_acta = null): void
     {
-        $this->f_acta = $f_acta instanceof NullDateTimeLocal ? null : $f_acta;
+        $this->f_acta = $f_acta;
     }
 
 

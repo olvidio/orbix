@@ -5,7 +5,6 @@ namespace Tests\factories\ubis;
 use Faker\Factory;
 use src\ubis\domain\entity\CentroEllos;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\domain\value_objects\CentroId;
 use src\ubis\domain\value_objects\DelegacionCode;
 use src\ubis\domain\value_objects\PaisName;

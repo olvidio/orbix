@@ -9,7 +9,6 @@ use src\actividades\domain\value_objects\ActividadTipoId;
 use src\personas\domain\value_objects\AsistenciaDescripcionText;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 
 class UltimaAsistencia
@@ -76,9 +75,9 @@ class UltimaAsistencia
     }
 
 
-    public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_ini(): DateTimeLocal|null
     {
-        return $this->f_ini ?? new NullDateTimeLocal;
+        return $this->f_ini;
     }
 
     public function setF_ini(DateTimeLocal|null $f_ini = null): void

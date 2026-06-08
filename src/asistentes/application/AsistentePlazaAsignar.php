@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use src\asistentes\application\services\AsistenteApplicationService;
 use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 
@@ -19,14 +22,17 @@ final class AsistentePlazaAsignar
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $input
+     */
     public function execute(array $input): string
     {
-        $id_activ = (int) ($input['id_activ'] ?? 0);
+        $id_activ = input_int($input, 'id_activ');
         if ($id_activ === 0) {
             return _("falta id_activ");
         }
         $plaza = $input['plaza'] ?? null;
-        $lista_json = (string) ($input['lista_json'] ?? '');
+        $lista_json = input_string($input, 'lista_json');
         $arr = json_decode($lista_json);
         if (!is_array($arr) || empty($arr)) {
             return _("falta lista de seleccion");
@@ -35,6 +41,9 @@ final class AsistentePlazaAsignar
         $asistenteAppService = $this->asistenteApplicationService;
         $msg_err = '';
         foreach ($arr as $obj) {
+            if (!is_object($obj)) {
+                continue;
+            }
             $raw = $obj->value ?? '';
             $id_nom = (int) strtok((string) $raw, '#');
             if ($id_nom === 0) {
@@ -50,7 +59,7 @@ final class AsistentePlazaAsignar
                 continue;
             }
             if ($plaza !== null && $plaza !== '') {
-                $err_plaza = $oAsistente->setPlazaComprobando((int) $plaza, $this->plazaPropietarioAsignacion);
+                $err_plaza = $oAsistente->setPlazaComprobando(is_numeric($plaza) ? (int) $plaza : 0, $this->plazaPropietarioAsignacion);
                 if ($err_plaza !== '') {
                     $msg_err .= $err_plaza . "\n";
                     continue;

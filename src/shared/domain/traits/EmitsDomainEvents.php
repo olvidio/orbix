@@ -8,9 +8,7 @@ namespace src\shared\domain\traits;
  */
 trait EmitsDomainEvents
 {
-    /**
-     * @var array Lista de eventos de dominio pendientes
-     */
+    /** @var list<object> Lista de eventos de dominio pendientes */
     private array $domainEvents = [];
 
     /**
@@ -27,7 +25,7 @@ trait EmitsDomainEvents
     /**
      * Obtiene y limpia todos los eventos de dominio pendientes
      *
-     * @return array Lista de eventos de dominio
+     * @return list<object> Lista de eventos de dominio
      */
     public function pullDomainEvents(): array
     {

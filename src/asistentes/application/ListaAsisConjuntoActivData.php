@@ -2,6 +2,9 @@
 
 namespace src\asistentes\application;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 use frontend\shared\web\Periodo;
 use Psr\Container\ContainerInterface;
 use src\actividades\domain\entity\TiposActividades;
@@ -19,21 +22,25 @@ final class ListaAsisConjuntoActivData
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $input
+     * @return array{content_html: string}
+     */
     public function build(array $input): array
     {
-        $Qque = (string)($input['que'] ?? '');
+        $Qque = input_string($input, 'que');
 
-        $Qstatus = (int)($input['status'] ?? 0);
+        $Qstatus = input_int($input, 'status');
         $Qstatus = $Qstatus === 0 ? StatusId::ACTUAL : $Qstatus;
-        $Qid_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
-        $Qid_ubi = (int)($input['id_ubi'] ?? 0);
-        $Qnom_activ = (string)($input['nom_activ'] ?? '');
-        $Qperiodo = (string)($input['periodo'] ?? '');
-        $Qyear = (int)($input['year'] ?? 0);
+        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
+        $Qid_ubi = input_int($input, 'id_ubi');
+        $Qnom_activ = input_string($input, 'nom_activ');
+        $Qperiodo = input_string($input, 'periodo');
+        $Qyear = input_int($input, 'year');
         $Qyear = $Qyear === 0 ? (int)date('Y') : $Qyear;
-        $Qdl_org = (string)($input['dl_org'] ?? '');
-        $Qempiezamin = (string)($input['empiezamin'] ?? '');
-        $Qempiezamax = (string)($input['empiezamax'] ?? '');
+        $Qdl_org = input_string($input, 'dl_org');
+        $Qempiezamin = input_string($input, 'empiezamin');
+        $Qempiezamax = input_string($input, 'empiezamax');
 
         if ($Qperiodo === '') {
             $Qperiodo = 'actual';
@@ -47,10 +54,10 @@ final class ListaAsisConjuntoActivData
         }
 
         if ($Qid_tipo_activ === '') {
-            $Qsfsv = (string)($input['sfsv'] ?? '');
-            $Qsasistentes = (string)($input['sasistentes'] ?? '');
-            $Qsactividad = (string)($input['sactividad'] ?? '');
-            $Qsnom_tipo = (string)($input['snom_tipo'] ?? '');
+            $Qsfsv = input_string($input, 'sfsv');
+            $Qsasistentes = input_string($input, 'sasistentes');
+            $Qsactividad = input_string($input, 'sactividad');
+            $Qsnom_tipo = input_string($input, 'snom_tipo');
 
             $Qssfsv = $Qsfsv;
             $mi_sfsv = ConfigGlobal::mi_sfsv();
@@ -96,7 +103,7 @@ final class ListaAsisConjuntoActivData
 
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
-        if ($Qperiodo !== '' && $Qperiodo === 'desdeHoy') {
+        if ($Qperiodo === 'desdeHoy') {
             $aWhere['f_fin'] = "'$inicioIso','$finIso'";
             $aOperador['f_fin'] = 'BETWEEN';
         } else {
@@ -113,7 +120,7 @@ final class ListaAsisConjuntoActivData
             $aOperador['nom_activ'] = 'ILIKE';
         }
 
-        $Qmodo = (string)($input['modo'] ?? '');
+        $Qmodo = input_string($input, 'modo');
         if ($Qmodo !== '' && $Qmodo === 'publicar') {
             $aWhere['publicado'] = 'f';
         }

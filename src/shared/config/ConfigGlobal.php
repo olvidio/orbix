@@ -2,6 +2,12 @@
 
 namespace src\shared\config;
 
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\usuarios\domain\entity\Usuario;
+
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 class ConfigGlobal extends ServerConf
 {
 
@@ -12,21 +18,47 @@ class ConfigGlobal extends ServerConf
             'Pla' => ['u', 'par'],
         ];
 
-    public static function getWebPort()
+    /**
+     * @return array<string, mixed>
+     */
+    private static function sessionAuth(): array
     {
-        $private = empty($_SESSION['private'])? '' : $_SESSION['private'];
-        if (!empty($private) && $private === 'sf') {
-            return self::$web_port_sf;
-        } else {
-            return self::$web_port;
-        }
+        $auth = $_SESSION['session_auth'] ?? null;
+
+        return is_array($auth) ? $auth : [];
     }
 
-    public static function getWebPath()
+    /**
+     * @return array<string, mixed>
+     */
+    private static function sessionConfig(): array
+    {
+        $config = $_SESSION['config'] ?? null;
+
+        return is_array($config) ? $config : [];
+    }
+
+    public static function getWebPort(): string
+    {
+        $private = $_SESSION['private'] ?? '';
+        if (!is_string($private)) {
+            $private = '';
+        }
+        if ($private !== '' && $private === 'sf') {
+            return self::$web_port_sf;
+        }
+
+        return self::$web_port;
+    }
+
+    public static function getWebPath(): string
     {
         $path = self::$web_path;
         // `login.php` pone `$_SESSION['sfsv']` desde UBICACION (sv/sf). En CLI/phpunit puede faltar.
         $sfsv_ubicacion = $_SESSION['sfsv'] ?? '';
+        if (!is_string($sfsv_ubicacion)) {
+            $sfsv_ubicacion = '';
+        }
         if ($sfsv_ubicacion === 'sf') {
             $path .= 'sf';
         }
@@ -37,64 +69,64 @@ class ConfigGlobal extends ServerConf
         return $path;
     }
 
-    public static function getWeb()
+    public static function getWeb(): string
     {
         return self::$web_server . self::getWebPort() . self::getWebPath();
     }
 
-    public static function getWeb_scripts()
+    public static function getWeb_scripts(): string
     {
         return self::getWeb() . '/scripts';
     }
 
-    public static function getWeb_NodeScripts()
+    public static function getWeb_NodeScripts(): string
     {
         return self::getWeb() . '/node_modules';
     }
 
-    public static function getWeb_public()
+    public static function getWeb_public(): string
     {
         return self::getWeb() . '/public';
     }
 
-    public static function getWeb_icons()
+    public static function getWeb_icons(): string
     {
         return self::getWeb() . '/images';
     }
 
-    public static function getWeb_udm()
+    public static function getWeb_udm(): string
     {
         return self::getWeb() . '/scripts/udm4-php/udm-resources/';
     }
 
-    public static function is_dmz()
+    public static function is_dmz(): bool
     {
         $dmz = self::$dmz; // heredada de ServerConf (FALSE), TRUE En la instalación exterior
         if ($dmz) {
-            $private = $_SESSION['private'];
-            if (!empty($private) && $private === 'sf') {
-                $dmz = FALSE;
+            $private = $_SESSION['private'] ?? null;
+            if (is_string($private) && $private !== '' && $private === 'sf') {
+                $dmz = false;
             }
         }
         return $dmz;
     }
 
-    public static function is_debug_mode()
+    public static function is_debug_mode(): bool
     {
         return self::$debug;
     }
 
-    public static function setTest_mode(bool $test)
+    public static function setTest_mode(bool $test): void
     {
         self::$test = $test;
     }
 
-    public static function is_test_mode()
+    public static function is_test_mode(): bool
     {
         return self::$test;
     }
 
-    public static function getDIR_PWD()
+    public static function getDIR_PWD(): string
     {
         if (self::is_test_mode()) {
             return  self::DIR_PWD_TEST;
@@ -105,86 +137,97 @@ class ConfigGlobal extends ServerConf
 
     /**
      * devuelve true/false si está o no instalado el módulo.
-     *
-     * @param integer $id_mod
-     * @return boolean
      */
-    public static function is_mod_installed(int $id_mod)
+    public static function is_mod_installed(int $id_mod): bool
     {
-        return array_key_exists($id_mod, $_SESSION['config']['mod_installed']);
+        $modInstalled = self::sessionConfig()['mod_installed'] ?? null;
+        if (!is_array($modInstalled)) {
+            return false;
+        }
+
+        return array_key_exists($id_mod, $modInstalled);
     }
 
     /**
      * devuelve true/false si está o no instalada la app.
-     *
-     * @param integer $id_mod
-     * @return boolean
      */
-    public static function is_app_installed($nom_app)
+    public static function is_app_installed(string $nom_app): bool
     {
-        if (!empty($_SESSION['config']['a_apps'][$nom_app])) {
-            $id_app = $_SESSION['config']['a_apps'][$nom_app];
-            return in_array($id_app, $_SESSION['config']['app_installed']);
-        } else {
+        $config = self::sessionConfig();
+        $aApps = $config['a_apps'] ?? null;
+        if (!is_array($aApps) || empty($aApps[$nom_app])) {
             return false;
         }
+        $id_app = $aApps[$nom_app];
+        $appInstalled = $config['app_installed'] ?? null;
+        if (!is_array($appInstalled)) {
+            return false;
+        }
+
+        return in_array($id_app, $appInstalled, true);
     }
 
-    public static function MiUsuario()
+    public static function MiUsuario(): ?Usuario
     {
-        return $_SESSION['session_auth']['MiUsuario'];
+        $user = self::sessionAuth()['MiUsuario'] ?? null;
+
+        return $user instanceof Usuario ? $user : null;
     }
 
-    public static function mi_id_usuario()
+    public static function mi_id_usuario(): int
     {
-        return $_SESSION['session_auth']['id_usuario'];
+        return input_int(self::sessionAuth(), 'id_usuario');
     }
 
     /**
-     *
-     * @return integer  1: sv, 2 sf
+     * @return int 1: sv, 2 sf
      */
     public static function mi_sfsv(): int
     {
-        return $_SESSION['session_auth']['sfsv'];
+        return input_int(self::sessionAuth(), 'sfsv');
     }
 
-    public static function mi_id_role()
+    public static function mi_id_role(): int
     {
-        return $_SESSION['session_auth']['id_role'];
+        return input_int(self::sessionAuth(), 'id_role');
     }
 
-    public static function mi_role_pau()
+    public static function mi_role_pau(): string
     {
-        return $_SESSION['session_auth']['role_pau'];
+        return input_string(self::sessionAuth(), 'role_pau');
     }
 
-    public static function mi_usuario()
+    public static function mi_usuario(): string
     {
-        return $_SESSION['session_auth']['username'];
+        return input_string(self::sessionAuth(), 'username');
     }
 
-    public static function mi_pass()
+    public static function mi_pass(): string
     {
-        return $_SESSION['session_auth']['password'];
+        return input_string(self::sessionAuth(), 'password');
     }
 
-    public static function mi_id_schema()
+    public static function mi_id_schema(): int
     {
-        return $_SESSION['session_auth']['mi_id_schema'];
+        return input_int(self::sessionAuth(), 'mi_id_schema');
     }
 
-    public static function mi_region_dl()
+    public static function mi_region_dl(): string
     {
-        if (empty($_SESSION['session_auth']['esquema'])) {
-            return (string)getenv('ESQUEMA');
+        $auth = self::sessionAuth();
+        $esquema = $auth['esquema'] ?? null;
+        if (empty($esquema)) {
+            $envEsquema = getenv('ESQUEMA');
+
+            return is_string($envEsquema) ? $envEsquema : '';
         }
-        return $_SESSION['session_auth']['esquema'];
+
+        return input_string($auth, 'esquema');
     }
 
-    public static function mi_region()
+    public static function mi_region(): string
     {
-        $esq = (string) ($_SESSION['session_auth']['esquema'] ?? '');
+        $esq = input_string(self::sessionAuth(), 'esquema');
         if ($esq === '') {
             return '';
         }
@@ -193,12 +236,12 @@ class ConfigGlobal extends ServerConf
         // por si el nombre completo llegara a tener más guiones.
         $a_reg = explode('-', $esq, 2);
 
-        return $a_reg[0] ?? '';
+        return $a_reg[0];
     }
 
-    public static function mi_dele()
+    public static function mi_dele(): string
     {
-        $esq = (string) ($_SESSION['session_auth']['esquema'] ?? '');
+        $esq = input_string(self::sessionAuth(), 'esquema');
         if ($esq === '') {
             return '';
         }
@@ -227,7 +270,7 @@ class ConfigGlobal extends ServerConf
      * @param string $isfsv
      * @return string
      */
-    public static function mi_delef(string $isfsv = '')
+    public static function mi_delef(string $isfsv = ''): string
     {
         $dl = self::mi_dele();
         if (!empty($isfsv)) {
@@ -245,52 +288,54 @@ class ConfigGlobal extends ServerConf
     /**
      * Para los esquemas tipo 'H-H' o 'H-Hf', se tiene permiso
      * para consultar a todas las dl.
-     *
-     * @return string 'dl'|'r'|'rstgr'
      */
-    public static function mi_ambito()
+    public static function mi_ambito(): string
     {
-        return $_SESSION['oConfig']->getAmbito();
+        $oConfig = $_SESSION['oConfig'] ?? null;
+
+        return $oConfig instanceof ConfigSnapshot ? $oConfig->getAmbito() : '';
     }
 
-    public static function permisos()
+    public static function permisos(): void
     {
         //ja no val return $_SESSION['session_auth']['perms'];
     }
 
-    public static function mi_oficina_menu()
+    public static function mi_oficina_menu(): string
     {
-        return $_SESSION['session_auth']['mi_oficina_menu'];
+        return input_string(self::sessionAuth(), 'mi_oficina_menu');
     }
 
-    public static function mi_oficina()
+    public static function mi_oficina(): string
     {
-        return $_SESSION['session_auth']['mi_oficina'];
+        return input_string(self::sessionAuth(), 'mi_oficina');
     }
 
-    public static function mi_mail()
+    public static function mi_mail(): string
     {
-        return $_SESSION['session_auth']['mail'];
+        return input_string(self::sessionAuth(), 'mail');
     }
     // ----------- Idioma -------------------
     //es_ES.UTF-8
-    public static function mi_Idioma()
+    public static function mi_Idioma(): string
     {
-        return $_SESSION['session_auth']['idioma'];
+        return input_string(self::sessionAuth(), 'idioma');
     }
 
     //es
-    public static function mi_Idioma_short()
+    public static function mi_Idioma_short(): string
     {
-        return substr($_SESSION['session_auth']['idioma'], 0, 2);
+        return substr(input_string(self::sessionAuth(), 'idioma'), 0, 2);
     }
 
-    public static function is_locale_us()
+    public static function is_locale_us(): bool
     {
-        $idioma = $_SESSION['session_auth']['idioma'];
+        $auth = self::sessionAuth();
+        $idioma = $auth['idioma'] ?? null;
         # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
-        if (!isset($idioma)) {
-            $idioma = $_SESSION['oConfig']->getIdioma_default();
+        if (!is_string($idioma) || $idioma === '') {
+            $oConfig = $_SESSION['oConfig'] ?? null;
+            $idioma = $oConfig instanceof ConfigSnapshot ? $oConfig->getIdioma_default() : '';
         }
         $a_idioma = explode('.', $idioma);
         $code_lng = $a_idioma[0];
@@ -298,8 +343,8 @@ class ConfigGlobal extends ServerConf
     }
 
     // ----------- ordenApellidos -------------------
-    public static function mi_ordenApellidos()
+    public static function mi_ordenApellidos(): string
     {
-        return $_SESSION['session_auth']['ordenApellidos'];
+        return input_string(self::sessionAuth(), 'ordenApellidos');
     }
 }

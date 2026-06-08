@@ -14,14 +14,14 @@ final readonly class EntidadModificada
      * @param string $objeto Nombre del objeto/entidad modificada (ej: "Asistente", "ActividadCargoSacd", "Nota", "Usuario")
      * @param string $tipoCambio Tipo de cambio: 'INSERT', 'UPDATE', 'DELETE', 'FASE'
      * @param int|null $idActiv ID de la actividad relacionada (null si la entidad no está relacionada con actividades)
-     * @param array $datosNuevos Datos nuevos/modificados
-     * @param array $datosActuales Datos anteriores (para comparación en UPDATE)
+     * @param array<string, mixed> $datosNuevos Datos nuevos/modificados
+     * @param array<string, mixed> $datosActuales Datos anteriores (para comparación en UPDATE)
      */
     public function __construct(
         public string $objeto,
         public string $tipoCambio,
         public ?int $idActiv,
         public array $datosNuevos,
-        public array $datosActuales = []
+        public array $datosActuales = [],
     ) {}
 }

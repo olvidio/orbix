@@ -4,6 +4,7 @@ namespace src\asistentes\infrastructure\persistence\postgresql;
 
 use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\traits\HandlesPdoErrors;
 
@@ -24,13 +25,17 @@ class PgAsistentePubRepository extends PgAsistenteRepository implements Asistent
     public function __construct(UnitOfWorkInterface $unitOfWork)
     {
         parent::__construct($unitOfWork);
-        $oDbl = $GLOBALS['oDBEP'];
+        $oDbl = GlobalPdo::get('oDBEP');
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBEP_Select'];
+        $oDbl_Select = GlobalPdo::get('oDBEP_Select');
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('d_asistentes_de_paso');
     }
 
+    /**
+     * @param list<int> $aId_activ
+     * @return list<int>|false
+     */
     public function getListaAsistentesDistintos(array $aId_activ = []): array|false
     {
         $oDbl = $this->getoDbl_Select();
@@ -40,17 +45,23 @@ class PgAsistentePubRepository extends PgAsistenteRepository implements Asistent
             $where .= implode(' OR id_activ=', $aId_activ);
         }
         $sQuery = "SELECT DISTINCT id_nom from publicv.d_asistentes_de_paso $where";
-        //echo "qq: $sQuery<br>";
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorAsistentePub.lista.id_nom';
             /** @var \src\shared\infrastructure\logging\GestorErrores $oGestorErrores */
             $oGestorErrores = $_SESSION['oGestorErrores'];
-            $oGestorErrores->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            $oGestorErrores->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
             return false;
         }
         $aId_nom = [];
-        foreach ($oDbl->query($sQuery) as $aDades) {
-            $aId_nom[] = $aDades['id_nom'];
+        foreach ($oDblSt as $aDades) {
+            if (!is_array($aDades) || !array_key_exists('id_nom', $aDades)) {
+                continue;
+            }
+            $idNomRaw = $aDades['id_nom'];
+            if (!is_numeric($idNomRaw)) {
+                continue;
+            }
+            $aId_nom[] = (int) $idNomRaw;
         }
         return $aId_nom;
     }

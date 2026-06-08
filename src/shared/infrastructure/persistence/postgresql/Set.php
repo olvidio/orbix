@@ -9,7 +9,7 @@ class Set
     /**
      * getTot() Array de objetos
      *
-     * @var array
+     * @var array<int, mixed>
      */
     private array $aCollection = [];
     private int $count = 0;
@@ -18,22 +18,25 @@ class Set
 
 
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
-    public function add($oElement): void
+    public function add(mixed $oElement): void
     {
         $this->aCollection[$this->count++] = $oElement;
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     public function getTot(): array
     {
         return $this->aCollection;
     }
 
-    public function getElement($count)
+    public function getElement(int $count): mixed
     {
         return $this->aCollection[$count];
     }
 
-    public function setElement($count, $oElement): void
+    public function setElement(int $count, mixed $oElement): void
     {
         $this->aCollection[$count] = $oElement;
     }

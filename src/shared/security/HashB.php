@@ -162,7 +162,7 @@ final class HashB
      * caducidad. Sirve para logs y mensajes de error cuando queremos saber
      * qué había dentro de una cápsula rechazada.
      *
-     * @return array{a:string,c:array,s:string,x:int}|null null si está malformada.
+     * @return array{a: string, c: array<int|string, mixed>, s: string, x: int}|null null si está malformada.
      */
     public static function peekUnsafe(string $capsule): ?array
     {
@@ -178,11 +178,16 @@ final class HashB
         if (!is_array($payload)) {
             return null;
         }
+        $aRaw = $payload['a'] ?? '';
+        $sRaw = $payload['s'] ?? '';
+        $xRaw = $payload['x'] ?? 0;
+        $cRaw = $payload['c'] ?? null;
+
         return [
-            'a' => (string) ($payload['a'] ?? ''),
-            'c' => is_array($payload['c'] ?? null) ? $payload['c'] : [],
-            's' => (string) ($payload['s'] ?? ''),
-            'x' => (int) ($payload['x'] ?? 0),
+            'a' => is_string($aRaw) ? $aRaw : (is_scalar($aRaw) ? (string) $aRaw : ''),
+            'c' => is_array($cRaw) ? $cRaw : [],
+            's' => is_string($sRaw) ? $sRaw : (is_scalar($sRaw) ? (string) $sRaw : ''),
+            'x' => is_int($xRaw) ? $xRaw : (is_numeric($xRaw) ? (int) $xRaw : 0),
         ];
     }
 

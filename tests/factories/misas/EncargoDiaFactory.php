@@ -8,7 +8,6 @@ use src\misas\domain\value_objects\EncargoCtrId;
 use src\misas\domain\value_objects\EncargoDiaId;
 use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 
 /**

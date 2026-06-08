@@ -7,6 +7,7 @@ use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
 use src\shared\domain\entity\ColaMail;
 use src\shared\traits\HandlesPdoErrors;
@@ -26,7 +27,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBPC'];
+        $oDbl = GlobalPdo::get('oDBPC');
         $this->setoDbl($oDbl);
         $this->setNomTabla('cola_mails');
     }
@@ -36,9 +37,9 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
     /**
      * devuelve una colección (array) de objetos de tipo ColaMail
      *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array Una colección de objetos de tipo ColaMail
+     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array<int, ColaMail>
      */
     public function getColaMails(array $aWhere = [], array $aOperators = []): array
     {
@@ -75,32 +76,51 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         }
         $sOrdre = '';
         $sLimit = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+        if (isset($aWhere['_ordre']) && is_string($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
             $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
         }
         if (isset($aWhere['_ordre'])) {
             unset($aWhere['_ordre']);
         }
-        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
-            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        if (isset($aWhere['_limit']) && is_numeric($aWhere['_limit'])) {
+            $sLimit = ' LIMIT ' . (int) $aWhere['_limit'];
         }
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para las fechas del postgres (texto iso)
             $aDatos['sended'] = (new ConverterDate('timestamp', $aDatos['sended']))->fromPg();
-            $ColaMail = ColaMail::fromArray($aDatos);
+            $rowData = [];
+            foreach ($aDatos as $key => $value) {
+                if (is_string($key)) {
+                    $rowData[$key] = $value;
+                }
+            }
+            $ColaMail = ColaMail::fromArray($rowData);
             $ColaMailSet->add($ColaMail);
         }
-        return $ColaMailSet->getTot();
+        $result = [];
+        foreach ($ColaMailSet->getTot() as $mail) {
+            if ($mail instanceof ColaMail) {
+                $result[] = $mail;
+            }
+        }
+
+        return $result;
     }
 
-    public function deleteColaMails($date_iso): void
+    public function deleteColaMails(string $date_iso): void
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -153,15 +173,23 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+
+        if ($stmt === false) {
+            return false;
+        }
+
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
-    private function isNew($uuid_item): bool
+    private function isNew(string $uuid_item): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return true;
+        }
         if (!$stmt->rowCount()) {
             return TRUE;
         }
@@ -172,30 +200,41 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param  $uuid_item
-     * @return array|bool
+     * @return array<string, mixed>|false
      */
-    public function datosById($uuid_item): array|bool
+    public function datosById(string $uuid_item): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
-            $aDatos['sended'] = (new ConverterDate('timestamp', $aDatos['sended']))->fromPg();
+        if ($stmt === false) {
+            return false;
         }
-        return $aDatos;
+
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($aDatos)) {
+            return false;
+        }
+
+        // para las fechas del postgres (texto iso)
+        $aDatos['sended'] = (new ConverterDate('timestamp', $aDatos['sended']))->fromPg();
+
+        $row = [];
+        foreach ($aDatos as $key => $value) {
+            $row[(string) $key] = $value;
+        }
+
+        return $row;
     }
 
     /**
      * Busca la clase con uuid_item en la base de datos .
      */
-    public function findById($uuid_item): ?ColaMail
+    public function findById(string $uuid_item): ?ColaMail
     {
         $aDatos = $this->datosById($uuid_item);
-        if (empty($aDatos)) {
+        if (!is_array($aDatos)) {
             return null;
         }
         return ColaMail::fromArray($aDatos);

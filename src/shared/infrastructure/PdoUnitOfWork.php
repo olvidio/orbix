@@ -14,6 +14,7 @@ use Exception;
  */
 class PdoUnitOfWork implements UnitOfWorkInterface
 {
+    /** @var list<object> */
     private array $entities = [];
     private bool $inTransaction = false;
 
@@ -123,10 +124,15 @@ class PdoUnitOfWork implements UnitOfWorkInterface
     private function dispatchAllEvents(): void
     {
         foreach ($this->entities as $entity) {
-            if (method_exists($entity, 'pullDomainEvents')) {
-                foreach ($entity->pullDomainEvents() as $event) {
-                    $this->eventBus->dispatch($event);
-                }
+            if (!method_exists($entity, 'pullDomainEvents')) {
+                continue;
+            }
+            $events = $entity->pullDomainEvents();
+            if (!is_iterable($events)) {
+                continue;
+            }
+            foreach ($events as $event) {
+                $this->eventBus->dispatch($event);
             }
         }
 

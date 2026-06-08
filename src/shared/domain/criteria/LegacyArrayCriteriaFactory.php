@@ -8,7 +8,10 @@ namespace src\shared\domain\criteria;
  */
 final class LegacyArrayCriteriaFactory
 {
-    /** @param array<string, mixed> $where */
+    /**
+     * @param array<string, mixed> $where
+     * @param array<string, string> $operators
+     */
     public static function fromWhereAndOperatorArrays(
         array $where,
         array $operators = [],

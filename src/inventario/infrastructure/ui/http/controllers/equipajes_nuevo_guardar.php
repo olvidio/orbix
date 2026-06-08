@@ -7,7 +7,6 @@ use src\shared\infrastructure\DependencyResolver;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\entity\Equipaje;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\shared\web\ContestarJson;
 
 $Qid_ubi_activ = input_int($_POST, 'id_ubi_activ');
@@ -15,13 +14,13 @@ $Qnom_equipaje = input_string($_POST, 'nom_equipaje');
 $Qids_activ = input_string($_POST, 'ids_activ');
 $Qf_ini = input_string($_POST, 'f_ini');
 if (empty($Qf_ini)) {
-    $oF_ini = new NullDateTimeLocal();
+    $oF_ini = null;
 } else {
     $oF_ini = DateTimeLocal::createFromLocal($Qf_ini);
 }
 $Qf_fin = input_string($_POST, 'f_fin');
 if (empty($Qf_fin)) {
-    $oF_fin = new NullDateTimeLocal();
+    $oF_fin = null;
 } else {
     $oF_fin = DateTimeLocal::createFromLocal($Qf_fin);
 }

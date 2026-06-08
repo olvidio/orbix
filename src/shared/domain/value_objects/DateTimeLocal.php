@@ -17,9 +17,8 @@ use DateTimeZone;
  */
 class DateTimeLocal extends DateTime
 {
-    private $oData;
-
-    public static function Meses()
+    /** @return array<int|string, string> */
+    public static function Meses(): array
     {
         $aMeses = [
             '1' => _("enero"),
@@ -38,7 +37,8 @@ class DateTimeLocal extends DateTime
         return $aMeses;
     }
 
-    public static function Meses_latin()
+    /** @return array<int|string, string> */
+    public static function Meses_latin(): array
     {
         $aMes_latin = [
             '1' => 'ianuario',
@@ -57,7 +57,7 @@ class DateTimeLocal extends DateTime
         return $aMes_latin;
     }
 
-    public function getFechaLatin()
+    public function getFechaLatin(): string
     {
         $mes_latin = self::Meses_latin();
 
@@ -76,10 +76,17 @@ class DateTimeLocal extends DateTime
      */
     static public function getFormat(string $separador = '/'): string
     {
-        $idioma = $_SESSION['session_auth']['idioma'];
+        $sessionAuth = $_SESSION['session_auth'] ?? null;
+        $idioma = is_array($sessionAuth) ? ($sessionAuth['idioma'] ?? null) : null;
         # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
         if (!isset($idioma)) {
-            $idioma = $_SESSION['oConfig']->getIdioma_default();
+            $config = $_SESSION['oConfig'] ?? null;
+            if (is_object($config) && method_exists($config, 'getIdioma_default')) {
+                $idioma = $config->getIdioma_default();
+            }
+        }
+        if (!is_string($idioma) || $idioma === '') {
+            $idioma = 'es_ES';
         }
         $a_idioma = explode('.', $idioma);
         $code_lng = $a_idioma[0];
@@ -94,17 +101,24 @@ class DateTimeLocal extends DateTime
         return $format;
     }
 
-    static public function createFromLocal($data)
+    /**
+     * @return static|null|false
+     */
+    static public function createFromLocal(mixed $data): static|null|false
     {
         // para distinguir false de null. En caso de no tener, devuelve null
-        if (empty($data)) {
+        if ($data === null || $data === '' || $data === false) {
             return null;
+        }
+        if (!is_string($data)) {
+            return false;
         }
         // Cambiar '-' por '/':
         $data = str_replace('-', '/', $data);
         $format = self::getFormat();
 
-        $extnd_dt = new static();
+        $className = static::class;
+        $extnd_dt = new $className();
         $parent_dt = parent::createFromFormat($format, $data);
 
         if (!$parent_dt) {
@@ -127,12 +141,12 @@ class DateTimeLocal extends DateTime
         return $extnd_dt;
     }
 
-    public function getIsoTime()
+    public function getIsoTime(): string
     {
         return parent::format('Y-m-d H:i:s');
     }
 
-    public function getIso()
+    public function getIso(): string
     {
         return parent::format('Y-m-d');
     }
@@ -175,15 +189,10 @@ class DateTimeLocal extends DateTime
         return parent::format($format);
     }
 
-    /**
-     * @param string $format
-     * @param string $datetime
-     * @param DateTimeZone|NULL $timezone
-     * @return DateTime|false
-     */
     public static function createFromFormat(string $format='', string $datetime='', ?DateTimeZone $timezone = NULL): DateTimeLocal|false
     {
-        $extnd_dt = new static();
+        $className = static::class;
+        $extnd_dt = new $className();
         $parent_dt = parent::createFromFormat($format, $datetime, $timezone);
 
         if (!$parent_dt) {
@@ -193,10 +202,6 @@ class DateTimeLocal extends DateTime
         return $extnd_dt;
     }
 
-    /**
-     * @param string $format
-     * @return string|array
-     */
     public function format(string $format=''): string
     {
         $english = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
@@ -218,10 +223,10 @@ class DateTimeLocal extends DateTime
      * Calcula la diferencia (expresada en días) con la fecha que se le pasa como parámetro
      * Devuelve un número con dos decimales (p.ej. 2,43)
      *
-     * @param $oDateOtra
+     * @param \DateTimeInterface $oDateOtra
      * @return float
      */
-    public function duracion($oDateOtra): float
+    public function duracion(\DateTimeInterface $oDateOtra): float
     {
         /* Formato de DateInterval:
          * a 	Total number of days as a result of a DateTime::diff() or (unknown) otherwise
@@ -238,10 +243,10 @@ class DateTimeLocal extends DateTime
      * Calcula la diferencia (expresada en días) con la fecha que se le pasa como parámetro
      * Devuelve el número con un decimal redondeado a 0 o 0,5 (p.ej. 2,0 ó 2,5)
      *
-     * @param $oDateOtra
+     * @param \DateTimeInterface $oDateOtra
      * @return int
      */
-    public function duracionAjustada($oDateOtra): int
+    public function duracionAjustada(\DateTimeInterface $oDateOtra): int
     {
         /* Formato de DateInterval:
          * a 	Total number of days as a result of a DateTime::diff() or (unknown) otherwise
@@ -253,7 +258,7 @@ class DateTimeLocal extends DateTime
         $horas = (int)$interval->format('%a') * 24 + (int)$interval->format('%h') + (int)$interval->format('%i') / 60 + (int)$interval->format('%s') / 3600;
         $dias_con_decimales = $horas / 24;
         // si existe un decimal, redondea al entero superior.
-        return round(($dias_con_decimales));
+        return (int) round($dias_con_decimales);
     }
 
     /**
@@ -262,10 +267,9 @@ class DateTimeLocal extends DateTime
      * Calcula la diferencia (expresada en días) con la fecha que se le pasa como parámetro
      * Devuelve el número con un decimal redondeado a 0 o 0,5 (p.ej. 2,0 ó 2,5)
      *
-     * @param $oDateOtra
-     * @return float|int
+     * @param \DateTimeInterface $oDateOtra
      */
-    public function duracionAjustadaAumentada($oDateOtra)
+    public function duracionAjustadaAumentada(\DateTimeInterface $oDateOtra): float|int
     {
         /* Formato de DateInterval:
          * a 	Total number of days as a result of a DateTime::diff() or (unknown) otherwise
@@ -291,10 +295,10 @@ class DateTimeLocal extends DateTime
      * comprueba que no exista solape o vacíos entre periodos.
      * oInicio y oFin deben ser objetos DatetimeLocal.
      *
-     * @param array $cPeriodos ['oInicio','oFin','Descripcion']
-     * @return boolean|string
+     * @param array<int, array{inicio: self, fin: self, Descripcion?: string}> $cPeriodos
+     * @return bool|string
      */
-    public function comprobarSolapes(array $cPeriodos)
+    public function comprobarSolapes(array $cPeriodos): bool|string
     {
         $i = 0;
         $error_txt = '';

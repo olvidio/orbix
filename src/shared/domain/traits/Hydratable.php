@@ -36,7 +36,7 @@ trait Hydratable
      *
      * Este es el método recomendado para crear entidades desde datos de BD.
      *
-     * @param array $aDatos Array asociativo con los datos (ej: resultado de PDO::fetch)
+     * @param array<string, mixed> $aDatos Array asociativo con los datos (ej: resultado de PDO::fetch)
      * @return static Nueva instancia hidratada
      *
      * @example
@@ -47,7 +47,9 @@ trait Hydratable
      */
     public static function fromArray(array $aDatos): static
     {
-        return (new static())->setAllAttributes($aDatos);
+        $className = static::class;
+
+        return (new $className())->setAllAttributes($aDatos);
     }
 
     /**
@@ -68,7 +70,7 @@ trait Hydratable
      * - 'nom_activ' → setNomActiv() o setNomActivVo()
      * - 'dl_org' → setDlOrg() o setDlOrgVo()
      *
-     * @param array $aDatos Array asociativo con los datos
+     * @param array<string, mixed> $aDatos Array asociativo con los datos
      * @return $this Para encadenamiento fluido
      *
      * @example
@@ -127,7 +129,7 @@ trait Hydratable
      * Convierte la entidad a un array asociativo basándose en sus propiedades privadas.
      * Sigue la convención de prefijos: s (string), i (int), b (bool), d (date), o (object/vo).
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -174,12 +176,12 @@ trait Hydratable
      * 5. Convierte arrays PHP a formato PostgreSQL con array_php2pg()
      * 6. Aplica conversiones especiales definidas en $converters (JSON, timestamp, etc.)
      *
-     * @param array $converters Array opcional con conversiones especiales por campo
+     * @param array<string, callable(mixed): mixed> $converters Array opcional con conversiones especiales por campo
      *          Formato: ['campo' => callable] donde callable recibe el valor y devuelve convertido
      *          Ejemplo: ['timestamp_cambio' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
      *                    'json_fases_sv' => fn($v) => (new ConverterJson($v, false))->toPg(false),
      *                   ]);
-     * @return array Array con valores primitivos listos para INSERT/UPDATE
+     * @return array<string, mixed> Array con valores primitivos listos para INSERT/UPDATE
      *
      * @example
      * ```php
@@ -264,7 +266,7 @@ trait Hydratable
             }
 
             // Aplicar conversiones especiales primero (tienen prioridad máxima)
-            if (isset($converters[$name]) && is_callable($converters[$name])) {
+            if (isset($converters[$name])) {
                 $value = $converters[$name]($value);
             }
             // Para booleanos: null o false => 'false', true => 'true'
@@ -275,9 +277,8 @@ trait Hydratable
             elseif ($value instanceof \DateTimeInterface) {
                 $value = $value->format('Y-m-d H:i:s');
             }
-            // Para TimeLocal sin fecha
-            elseif (is_object($value) && method_exists($value, 'format') && !($value instanceof \DateTimeInterface)) {
-                // Asumir que es TimeLocal
+            // Para TimeLocal sin fecha (DateTimeInterface ya convertido arriba)
+            elseif (is_object($value) && method_exists($value, 'format')) {
                 $value = $value->format('H:i:s');
             }
             // Para arrays PHP, convertir a formato PostgreSQL

@@ -6,7 +6,6 @@ use src\dossiers\domain\value_objects\DossierPk;
 use src\dossiers\domain\value_objects\DossierTabla;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class Dossier
 {
@@ -110,9 +109,9 @@ class Dossier
     }
 
 
-    public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_ini(): DateTimeLocal|null
     {
-        return $this->f_ini ?? new NullDateTimeLocal;
+        return $this->f_ini;
     }
 
 
@@ -122,9 +121,9 @@ class Dossier
     }
 
 
-    public function getF_camb_dossier(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_camb_dossier(): DateTimeLocal|null
     {
-        return $this->f_camb_dossier ?? new NullDateTimeLocal;
+        return $this->f_camb_dossier;
     }
 
 
@@ -146,9 +145,9 @@ class Dossier
     }
 
 
-    public function getF_active(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_active(): DateTimeLocal|null
     {
-        return $this->f_active ?? new NullDateTimeLocal;
+        return $this->f_active;
     }
 
 

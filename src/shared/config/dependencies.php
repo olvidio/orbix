@@ -8,6 +8,7 @@ use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\domain\events\EntidadModificada;
 use src\shared\infrastructure\ConnectionRepositoryFactory;
 use src\shared\infrastructure\InMemoryEventBus;
+use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\PdoUnitOfWork;
 use src\shared\infrastructure\persistence\postgresql\PgColaMailRepository;
 use function DI\autowire;
@@ -35,7 +36,6 @@ return [
 
     // Unit of Work - Gestión de transacciones y eventos
     UnitOfWorkInterface::class => factory(function (EventBusInterface $eventBus) {
-        $pdo = $GLOBALS['oDBE'];
-        return new PdoUnitOfWork($pdo, $eventBus);
+        return new PdoUnitOfWork(GlobalPdo::get('oDBE'), $eventBus);
     }),
 ];

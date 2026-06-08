@@ -10,11 +10,12 @@ class ConnectionRepositoryFactory implements ConnectionRepositoryFactoryInterfac
 {
     public function createWithConnection(string $repositoryId, PDO $oDbl, ?PDO $oDblSelect = null): object
     {
+        if (!class_exists($repositoryId)) {
+            throw new RuntimeException(sprintf('El repositorio %s no es una clase válida', $repositoryId));
+        }
+
         $repository = DependencyResolver::get($repositoryId);
 
-        if (!is_object($repository)) {
-            throw new RuntimeException(sprintf('El repositorio %s no es un objeto válido', $repositoryId));
-        }
         // PHP-DI devuelve servicios shared por defecto. Clonamos para evitar
         // pisar la conexión cuando se usan repos de origen y destino a la vez.
         $repository = clone $repository;

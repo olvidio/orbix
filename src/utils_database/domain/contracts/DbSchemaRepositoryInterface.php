@@ -16,21 +16,20 @@ use src\utils_database\domain\entity\DbSchema;
 interface DbSchemaRepositoryInterface
 {
 
-    public function cambiarNombre($old, $new, $database): void;
+    public function cambiarNombre(string $old, string $new, string $database): void;
 
-    public function llenarNuevo($schema, $database): void;
+    public function llenarNuevo(string $schema, string $database): void;
 
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo DbSchema
 	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array Una colección de objetos de tipo DbSchema
-	
+	 * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return list<DbSchema>
 	 */
-	public function getDbSchemas(array $aWhere=[], array $aOperators=[]): array;
+	public function getDbSchemas(array $aWhere = [], array $aOperators = []): array;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
@@ -49,10 +48,9 @@ interface DbSchemaRepositoryInterface
      * Devuelve false si no existe la fila en la base de datos
      * 
      * @param string $schema
-     * @return array|bool
-	
+     * @return array<string, mixed>|false
      */
-    public function datosById(string $schema): array|bool;
+    public function datosById(string $schema): array|false;
 	
     /** Siguiente valor de `id` para insertar filas (usa MAX(id)+1 en `db_idschema`). */
     public function getNewId(): int;

@@ -109,7 +109,18 @@ class Select_cargos_de_actividad
         $dl_org = $oActividad->getDl_org();
         $dl_propia = (ConfigGlobal::mi_delef() === $dl_org);
         $oPermDossier = new PermDossier();
-        $this->a_ref_perm = $oPermDossier->perm_pers_activ($id_tipo_activ, $dl_propia);
+        $rawRefPerm = $oPermDossier->perm_pers_activ($id_tipo_activ, $dl_propia);
+        $this->a_ref_perm = [];
+        foreach ($rawRefPerm as $key => $value) {
+            if (!is_array($value)) {
+                continue;
+            }
+            $this->a_ref_perm[(string) $key] = [
+                'perm' => $value['perm'] ?? null,
+                'obj' => $value['obj'] ?? null,
+                'nom' => $value['nom'] ?? null,
+            ];
+        }
 
         $this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");
         $elim_asis_default = 1;

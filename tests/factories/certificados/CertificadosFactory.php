@@ -5,7 +5,6 @@ namespace Tests\factories\certificados;
 use Faker\Factory;
 use src\certificados\domain\entity\CertificadoEmitido;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class CertificadosFactory
 {
@@ -64,7 +63,7 @@ class CertificadosFactory
                 $oFEnviado = new DateTimeLocal($f_env_iso); // a date between -30 years ago, and now
                 $f_enviado = $oFEnviado;
             } else {
-                $f_enviado = new NullDateTimeLocal();
+                $f_enviado = null;
             }
 
             $Certificado = new CertificadoEmitido();

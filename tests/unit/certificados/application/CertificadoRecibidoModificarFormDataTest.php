@@ -7,7 +7,6 @@ use src\certificados\application\CertificadoRecibidoModificarFormData;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 
 final class CertificadoRecibidoModificarFormDataTest extends TestCase
@@ -40,7 +39,7 @@ final class CertificadoRecibidoModificarFormDataTest extends TestCase
         $oCert->setDestino('d1');
         $oCert->setCertificado('tipo-a');
         $oCert->setF_certificado(new DateTimeLocal('2024-03-15'));
-        $oCert->setF_recibido(new NullDateTimeLocal());
+        $oCert->setF_recibido(null);
         $oCert->setFirmado(true);
 
         $certRepo = $this->createMock(CertificadoRecibidoRepositoryInterface::class);
@@ -68,8 +67,8 @@ final class CertificadoRecibidoModificarFormDataTest extends TestCase
     {
         $oCert = new CertificadoRecibido();
         $oCert->setId_item(1);
-        $oCert->setF_certificado(new NullDateTimeLocal());
-        $oCert->setF_recibido(new NullDateTimeLocal());
+        $oCert->setF_certificado(null);
+        $oCert->setF_recibido(null);
         $oCert->setFirmado(false);
 
         $certRepo = $this->createMock(CertificadoRecibidoRepositoryInterface::class);

@@ -35,7 +35,7 @@ final class ListaUltimQueCtrData
         $aOpciones = [];
         $CentroDlRepository = $this->centroDlRepository;
         foreach ($aIdCentros as $id_ubi) {
-            $oCentroDl = $CentroDlRepository->findById($id_ubi);
+            $oCentroDl = $CentroDlRepository->findById((int) $id_ubi);
             if ($oCentroDl === null) {
                 continue;
             }

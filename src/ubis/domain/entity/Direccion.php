@@ -4,7 +4,6 @@ namespace src\ubis\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\domain\value_objects\{APText,
     CodigoPostalText,
     DireccionId,
@@ -268,21 +267,21 @@ class Direccion
 
 
     /**
-     * @return DateTimeLocal|NullDateTimeLocal|null $f_direccion
+     * @return DateTimeLocal|null $f_direccion
      * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
      */
-    public function getF_direccion(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_direccion(): DateTimeLocal|null
     {
-        return $this->f_direccion ?? new NullDateTimeLocal;
+        return $this->f_direccion;
     }
 
 
     /**
-     * @param DateTimeLocal|NullDateTimeLocal|null $f_direccion
+     * @param DateTimeLocal|null $f_direccion
      */
-    public function setF_direccion(DateTimeLocal|NullDateTimeLocal|null $f_direccion = null): void
+    public function setF_direccion(DateTimeLocal|null $f_direccion = null): void
     {
-        $this->f_direccion = $f_direccion instanceof NullDateTimeLocal ? null : $f_direccion;
+        $this->f_direccion = $f_direccion;
     }
 
 

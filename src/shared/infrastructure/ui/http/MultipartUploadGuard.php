@@ -6,6 +6,9 @@ namespace src\shared\infrastructure\ui\http;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 /**
  * Comprobaciones comunes para POST multipart: límites PHP (post_max_size / upload)
  * y errores {@see UPLOAD_ERR_*}.
@@ -45,7 +48,7 @@ final class MultipartUploadGuard
         if ($postMaxBytes <= 0) {
             return false;
         }
-        $contentLength = (int) ($_SERVER['CONTENT_LENGTH'] ?? 0);
+        $contentLength = self::serverContentLength();
 
         return $contentLength > $postMaxBytes;
     }
@@ -113,7 +116,7 @@ final class MultipartUploadGuard
     public static function requireUploadedFileOrExit(string $inputKey): array
     {
         $postMaxBytes = self::parseIniSizeToBytes('post_max_size');
-        $contentLength = (int) ($_SERVER['CONTENT_LENGTH'] ?? 0);
+        $contentLength = self::serverContentLength();
         if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && $postMaxBytes > 0 && $contentLength > $postMaxBytes) {
             self::respondJsonTooLargeAndExit(self::textPostMaxExceededPhp());
         }
@@ -123,8 +126,9 @@ final class MultipartUploadGuard
         };
 
         if (!isset($_FILES[$inputKey])) {
-            $isMultipart = isset($_SERVER['CONTENT_TYPE'])
-                && str_contains((string) $_SERVER['CONTENT_TYPE'], 'multipart/form-data');
+            $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+            $isMultipart = is_string($contentType)
+                && str_contains($contentType, 'multipart/form-data');
             if ($isMultipart && $postMaxBytes > 0 && $contentLength > $postMaxBytes) {
                 $respondTooLarge(self::textPostMaxExceededPhp());
             }
@@ -136,8 +140,23 @@ final class MultipartUploadGuard
             exit;
         }
 
-        $fileName = (string) $_FILES[$inputKey]['name'];
-        $uploadError = (int) ($_FILES[$inputKey]['error'] ?? UPLOAD_ERR_NO_FILE);
+        $fileEntry = $_FILES[$inputKey];
+        if (!is_array($fileEntry)) {
+            http_response_code(200);
+            echo json_encode([
+                'success' => false,
+                'mensaje' => _('No se ha recibido el archivo.'),
+            ], JSON_THROW_ON_ERROR);
+            exit;
+        }
+
+        $fileFields = [];
+        foreach ($fileEntry as $key => $value) {
+            $fileFields[(string) $key] = $value;
+        }
+
+        $fileName = input_string($fileFields, 'name');
+        $uploadError = input_int($fileFields, 'error', UPLOAD_ERR_NO_FILE);
 
         if ($uploadError !== UPLOAD_ERR_OK) {
             if ($uploadError === UPLOAD_ERR_INI_SIZE || $uploadError === UPLOAD_ERR_FORM_SIZE) {
@@ -153,8 +172,15 @@ final class MultipartUploadGuard
 
         return [
             'name' => $fileName,
-            'tmp_name' => (string) $_FILES[$inputKey]['tmp_name'],
+            'tmp_name' => input_string($fileFields, 'tmp_name'),
         ];
+    }
+
+    private static function serverContentLength(): int
+    {
+        $raw = $_SERVER['CONTENT_LENGTH'] ?? '0';
+
+        return is_numeric($raw) ? (int) $raw : 0;
     }
 
     private static function respondJsonTooLargeAndExit(string $mensaje): void

@@ -3,7 +3,6 @@
 namespace src\casas\application;
 
 use src\shared\config\ConfigGlobal;
-use src\shared\domain\value_objects\NullTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
@@ -215,9 +214,9 @@ final class CasaActividadesListaData
         ];
     }
 
-    private static function fmtTime(TimeLocal|NullTimeLocal|null $h): string
+    private static function fmtTime(TimeLocal|null $h): string
     {
-        if ($h === null || $h instanceof NullTimeLocal) {
+        if ($h === null ) {
             return '';
         }
 
