@@ -3,7 +3,6 @@
 namespace src\shared\infrastructure\persistence\postgresql;
 
 use src\shared\config\ConfigGlobal;
-use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 
@@ -58,7 +57,7 @@ class DBRefresh
 
         $psql = self::rutaPsql();
         if ($nombreBd === '') {
-            $nombreBd = ServerConf::esEntornoPruebas() ? 'pruebas-' . $db : $db;
+            $nombreBd = ConfigGlobal::esEntornoPruebas() ? 'pruebas-' . $db : $db;
         }
         $sql = 'ALTER SUBSCRIPTION ' . $subNombre . ' REFRESH PUBLICATION;';
 
@@ -89,10 +88,10 @@ class DBRefresh
     private function nombreSuscripcion(string $db): ?string
     {
         if ($db === 'comun') {
-            return ServerConf::esEntornoPruebas() ? 'subpruebascomun' : 'subcomun';
+            return ConfigGlobal::esEntornoPruebas() ? 'subpruebascomun' : 'subcomun';
         }
         if ($db === 'sv-e') {
-            return ServerConf::esEntornoPruebas() ? 'subpruebassve' : 'subsve';
+            return ConfigGlobal::esEntornoPruebas() ? 'subpruebassve' : 'subsve';
         }
 
         return null;

@@ -126,6 +126,20 @@ class ConfigGlobal extends ServerConf
         return self::$test;
     }
 
+    /**
+     * Entorno «pruebas» (prefijos pruebas- en ficheros .inc, suscripciones lógicas, etc.).
+     * Usa WEBDIR del entorno si está definido; si no, la constante de ServerConf.
+     */
+    public static function esEntornoPruebas(): bool
+    {
+        $webdir = getenv('WEBDIR');
+        if (is_string($webdir) && $webdir !== '') {
+            return $webdir === 'pruebas';
+        }
+
+        return self::WEBDIR === 'pruebas';
+    }
+
     public static function getDIR_PWD(): string
     {
         if (self::is_test_mode()) {
