@@ -7,6 +7,7 @@ use frontend\shared\config\OrbixRuntime;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use frontend\shared\model\ViewNewPhtml;
 use src\shared\application\HydratePermisosActividades;
+use src\shared\web\ContestarJson;
 use src\usuarios\application\LoginProcesar;
 
 /**
@@ -81,14 +82,42 @@ function cambiar_idioma($idioma = '')
 }
 
 /**
+ * Petición a un endpoint JSON bajo `/src/...` (p. ej. PostRequest server-to-server).
+ */
+function orbix_es_peticion_api_src(): bool
+{
+    if (isset($_GET['r']) && is_string($_GET['r']) && str_starts_with($_GET['r'], '/src/')) {
+        return true;
+    }
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
+    if (!is_string($uri) || $uri === '') {
+        return false;
+    }
+    $path = parse_url($uri, PHP_URL_PATH);
+
+    return is_string($path) && str_contains($path, '/src/');
+}
+
+/**
  * Indica al cliente AJAX que debe recargar la aplicación (login completo).
  */
 function orbix_marcar_respuesta_ajax_sin_sesion(): void
 {
-    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])
-        && strtolower((string) $_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+    $esAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+        && strtolower((string) $_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    if ($esAjax || orbix_es_peticion_api_src()) {
         header('X-Orbix-Auth-Required: 1');
     }
+}
+
+/**
+ * Respuesta JSON para endpoints `/src/...` cuando no hay sesión autenticada.
+ */
+function orbix_responder_login_api_sin_sesion(): void
+{
+    header('Content-Type: application/json; charset=UTF-8');
+    orbix_marcar_respuesta_ajax_sin_sesion();
+    ContestarJson::enviar(_('Sesión no autenticada'), ['code' => 'auth_required']);
 }
 
 /**
@@ -156,6 +185,9 @@ if (!isset($_SESSION['session_auth'])) {
         }
 
         if (!$result['ok']) {
+            if (orbix_es_peticion_api_src()) {
+                orbix_responder_login_api_sin_sesion();
+            }
             $error = $result['error'] ?? 1;
             $esquema_form = $_POST['esquema'] ?? $esquema_web;
             render_login_form($_POST['username'], $ubicacion, $idioma, $esquema_form, $error, $esquema_web);
@@ -180,6 +212,9 @@ if (!isset($_SESSION['session_auth'])) {
         setcookie('esquema', $result['esquema'], $arr_cookie_options);
         setcookie('idioma', $result['idioma'], $arr_cookie_options);
     } else {
+        if (orbix_es_peticion_api_src()) {
+            orbix_responder_login_api_sin_sesion();
+        }
         // Primera visita: pintar el form con cookies previas si existen.
         $esquema = $_COOKIE['esquema'] ?? '';
         $idioma = $_COOKIE['idioma'] ?? '';

@@ -4,8 +4,6 @@ namespace frontend\shared;
 
 use frontend\shared\config\OrbixRuntime;
 use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\CookieJar;
-use GuzzleHttp\Cookie\SetCookie;
 use frontend\shared\security\HashFront;
 
 class PostRequest
@@ -77,17 +75,7 @@ class PostRequest
         $url = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $url);
         $host_rewritten = (string) parse_url($url, PHP_URL_HOST);
 
-        // Store the cookies from the response in the cookie jar
-        $cookieJar = new CookieJar();
         $cookies = self::cookiesForInternalRequest();
-        foreach ($cookies as $name => $value) {
-            $setCookie = new SetCookie(['name' => $name, 'value' => $value]);
-            $cookieJar->setCookie($setCookie);
-        }
-
-        //$domain = 'docker.internal';
-        $domain = strtolower((string) parse_url($url, PHP_URL_HOST));
-        $jar = CookieJar::fromArray($cookies, $domain);
 
         // Use a specific cookie jar
         $client = new Client();
@@ -95,10 +83,9 @@ class PostRequest
             $host_original,
             $host_rewritten,
             $parts,
-            [
-            'cookies' => $jar,
-            'multipart' => $hash_params,
-            ]
+            array_merge(
+                self::internalGuzzleOptions($cookies, ['multipart' => $hash_params]),
+            )
         );
         $response2 = $client->request('POST', $url, $reqOpts);
 
@@ -336,11 +323,55 @@ class PostRequest
             $sessionName = 'PHPSESSID';
         }
         $sid = session_id();
+        if ($sid === '' && isset($_POST[$sessionName]) && is_string($_POST[$sessionName])
+            && preg_match('/^[a-zA-Z0-9,-]{16,128}$/', $_POST[$sessionName])) {
+            $sid = $_POST[$sessionName];
+        }
         if ($sid !== '') {
             $cookies[$sessionName] = $sid;
         }
 
         return $cookies;
+    }
+
+    /**
+     * Cabecera Cookie explícita para Guzzle.
+     *
+     * No usamos CookieJar: al reescribir *.docker → host.docker.internal y forzar
+     * Host público (orbix.docker), el jar no envía cookies por dominio distinto.
+     *
+     * @param array<string, string> $cookies
+     */
+    private static function buildCookieHeader(array $cookies): string
+    {
+        $parts = [];
+        foreach ($cookies as $name => $value) {
+            $parts[] = $name . '=' . $value;
+        }
+
+        return implode('; ', $parts);
+    }
+
+    /**
+     * @param array<string, string> $cookies
+     * @param array<string, mixed> $extra
+     * @return array<string, mixed>
+     */
+    private static function internalGuzzleOptions(array $cookies, array $extra = []): array
+    {
+        $options = $extra;
+        if ($cookies !== []) {
+            $options['headers'] = array_merge($options['headers'] ?? [], [
+                'Cookie' => self::buildCookieHeader($cookies),
+            ]);
+        }
+
+        return $options;
+    }
+
+    private static function looksLikeLoginHtml(string $content): bool
+    {
+        return preg_match('/id=["\']frm_login["\']|form-signin|class=["\']login["\']/i', $content) === 1;
     }
 
     /**
@@ -351,13 +382,7 @@ class PostRequest
      */
     private static function getDataInternal(string $url, array $hash_params): array
     {
-        // Store the cookies from the response in the cookie jar
-        $cookieJar = new CookieJar();
         $cookies = self::cookiesForInternalRequest();
-        foreach ($cookies as $name => $value) {
-            $setCookie = new SetCookie(['name' => $name, 'value' => $value]);
-            $cookieJar->setCookie($setCookie);
-        }
 
         $parts = parse_url($url);
         // 1. Canviem el host original (ex: orbix.docker) per l'intern de Docker
@@ -398,28 +423,18 @@ class PostRequest
         }
 
         //$domain = 'docker.internal';
-        $domain_org = parse_url($url_limpia, PHP_URL_HOST);
-        $domain = strtolower($domain_org);
-        $jar = CookieJar::fromArray($cookies, $domain);
-
-        // Use a specific cookie jar
         $client = new Client();
         $reqOpts = self::withPreservedHttpHostHeader(
             $host_original,
             $host_nuevo,
             $parts,
-            [
-            'cookies' => $jar,
-            'form_params' => $hash_params,
-            // Las llamadas server-to-server esperan JSON (ContestarJson::enviar).
-            // Si el endpoint redirige (p. ej. validatePost por hash inválido hace
-            // header('Location: /index.php')), NO queremos que Guzzle siga el redirect
-            // y acabe devolviendo la home HTML: se inyectaría en #main como respuesta.
-            // Preferimos detectar el 302 y devolver un error claro y diagnóstico.
-            'allow_redirects' => false,
-            // http_errors=false: 4xx/5xx no lanzan GuzzleException; los tratamos nosotros.
-            'http_errors' => false,
-            ]
+            array_merge(
+                self::internalGuzzleOptions($cookies, [
+                    'form_params' => $hash_params,
+                    'allow_redirects' => false,
+                    'http_errors' => false,
+                ]),
+            )
         );
         $response2 = $client->request('POST', $url_limpia, $reqOpts);
 
@@ -443,6 +458,15 @@ class PostRequest
         $content = $body->getContents();
         $rta_json = json_decode($content, TRUE);
         if (json_last_error() !== JSON_ERROR_NONE) {
+            if (self::looksLikeLoginHtml((string) $content)) {
+                $msg = sprintf(
+                    _('Sesión no autenticada en llamada interna a %s (status %d).'),
+                    $url_limpia,
+                    $code
+                );
+                $msg .= '<br>' . _('El backend ha devuelto el formulario de login en lugar de JSON. Vuelve a entrar en Orbix.');
+                return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
+            }
             $preview = mb_substr(trim((string)$content), 0, 500);
             $msg = sprintf(_("Respuesta no-JSON de %s (status %d)."), $url_limpia, $code);
             $msg .= '<br>' . htmlspecialchars($preview, ENT_QUOTES, 'UTF-8');
@@ -468,17 +492,7 @@ class PostRequest
         $url = preg_replace('/(.*?)\.docker/', 'host.docker.internal', (string) $url);
         $host_rewritten = (string) parse_url($url, PHP_URL_HOST);
 
-        // Store the cookies from the response in the cookie jar
-        $cookieJar = new CookieJar();
         $cookies = self::cookiesForInternalRequest();
-        foreach ($cookies as $name => $value) {
-            $setCookie = new SetCookie(['name' => $name, 'value' => $value]);
-            $cookieJar->setCookie($setCookie);
-        }
-
-        //$domain = 'docker.internal';
-        $domain = strtolower((string) parse_url($url, PHP_URL_HOST));
-        $jar = CookieJar::fromArray($cookies, $domain);
 
         // Use a specific cookie jar
         $client = new Client();
@@ -486,10 +500,9 @@ class PostRequest
             $host_original,
             $host_rewritten,
             $parts,
-            [
-            'cookies' => $jar,
-            'form_params' => $hash_params,
-            ]
+            array_merge(
+                self::internalGuzzleOptions($cookies, ['form_params' => $hash_params]),
+            )
         );
         $response2 = $client->request('POST', $url, $reqOpts);
 
@@ -538,19 +551,14 @@ class PostRequest
             $url_limpia .= '#' . $parts['fragment'];
         }
 
-        $domain_org = parse_url($url_limpia, PHP_URL_HOST);
-        $domain = strtolower((string)$domain_org);
-        $jar = CookieJar::fromArray($cookies, $domain);
-
         $client = new Client();
         $reqOpts = self::withPreservedHttpHostHeader(
             $host_original,
             $host_nuevo,
             $parts,
-            [
-            'cookies' => $jar,
-            'form_params' => $formParams,
-            ]
+            array_merge(
+                self::internalGuzzleOptions($cookies, ['form_params' => $formParams]),
+            )
         );
         $response = $client->request('POST', $url_limpia, $reqOpts);
 

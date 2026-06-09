@@ -4,25 +4,27 @@ $_POST = (empty($_POST)) ? $_GET : $_POST;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\PostRequest;
 use frontend\shared\web\UrlBaseProject;
 use frontend\shared\security\HashFront;
 
 /**
  * Formulario para cambiar el password por parte del usuario.
  */
-// Crea los objetos de uso global **********************************************
-require_once("frontend/shared/global_header_front.inc");
+// Capturar sesión antes de global_header (index.php ya hizo bootstrap vía global_object).
+$id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
+$usuario = (string)($_SESSION['session_auth']['username'] ?? '');
+$expire = $_SESSION['session_auth']['expire'] ?? null;
+
+if (!defined('ORBIX_INDEX_EMBED')) {
+    require_once('frontend/shared/global_header_front.inc');
+} else {
+    global $oPosicion;
+    if (!isset($oPosicion)) {
+        $oPosicion = new frontend\shared\web\Posicion($_SERVER['PHP_SELF'], $_POST);
+    }
+}
 
 // FIN de  Cabecera global de URL de controlador ********************************
-$id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
-
-//////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/usuario_info';
-$a_campos_backend = ['id_usuario' => $id_usuario];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-
-$usuario = $data['usuario'];
 
 $oHash = new HashFront();
 $oHash->setCamposForm('password!password1');
@@ -53,7 +55,7 @@ $a_campos = [
     'h2' => $h2,
     'txt_guardar' => $txt_guardar,
     'txt_ok' => $txt_ok,
-    'expire' => $_SESSION['session_auth']['expire'],
+    'expire' => $expire,
     'url_jquery' => $url_jquery,
     'url_usuario_chk' => $url_usuario_chk,
     'url_usuario_guardar' => $url_usuario_guardar,

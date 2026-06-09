@@ -14,13 +14,13 @@ require_once("frontend/shared/global_header_front.inc");
 
 $id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
 
-//////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/usuario_info';
-$a_campos_backend = [ 'id_usuario' => $id_usuario ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-
-$usuario = $data['usuario'];
-$email = $data['email'];
+$usuario = (string)($_SESSION['session_auth']['username'] ?? '');
+$email = (string)($_SESSION['session_auth']['mail'] ?? '');
+if ($usuario === '' && $id_usuario > 0) {
+    $data = PostRequest::getDataFromUrl('/src/usuarios/usuario_info', ['id_usuario' => $id_usuario]);
+    $usuario = (string)($data['usuario'] ?? '');
+    $email = (string)($data['email'] ?? '');
+}
 
 $oHash = new HashFront();
 $oHash->setCamposForm('email');

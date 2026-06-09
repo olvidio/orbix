@@ -267,6 +267,7 @@ $h = $oHash->linkSinValParams();
 ////////////// antes de enviar headers
 ob_start();
 if ($_SESSION['session_auth']['expire'] === 1) {
+    define('ORBIX_INDEX_EMBED', true);
     include("frontend/usuarios/controller/usuario_form_pwd.php");
 } else if (!empty($pag_ini)) {
     include($pag_ini);

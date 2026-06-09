@@ -18,14 +18,9 @@ require_once("frontend/shared/global_header_front.inc");
 
 $id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
 
-//////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/usuario_info';
-$a_campos_backend = [ 'id_usuario' => $id_usuario ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$usuario = (string)($_SESSION['session_auth']['username'] ?? '');
 
-$usuario = $data['usuario'];
-
-// Verificar si el usuario tiene 2FA habilitado
+//////////////////////// Datos 2FA del usuario ///////////////////////////////////////////////////
 $url_backend = '/src/usuarios/usuario_2fa_info';
 $a_campos_backend = [ 'id_usuario' => $id_usuario ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);

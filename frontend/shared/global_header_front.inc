@@ -11,8 +11,21 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     // Para detectar el error: "Headers already sent"
     //$file = $line = null; headers_sent($file, $line); die("$file:$line");
 
-    if (!empty($_COOKIE["PHPSESSID"])) {
-        session_id($_COOKIE['PHPSESSID']);
+    $sessionName = session_name();
+    if ($sessionName === '') {
+        $sessionName = 'PHPSESSID';
+    }
+    $sidFromRequest = '';
+    if (!empty($_COOKIE[$sessionName]) && is_string($_COOKIE[$sessionName])) {
+        $sidFromRequest = $_COOKIE[$sessionName];
+    } elseif (!empty($_POST[$sessionName]) && is_string($_POST[$sessionName])
+        && preg_match('/^[a-zA-Z0-9,-]{16,128}$/', $_POST[$sessionName])) {
+        // fnjs_link_submenu / fnjs_update_div envían PHPSESSID en el POST AJAX.
+        $sidFromRequest = $_POST[$sessionName];
+    }
+
+    if ($sidFromRequest !== '') {
+        session_id($sidFromRequest);
         session_start();
         if (!isset($_SESSION['session_auth'])) {
             $_SESSION = [];

@@ -55,18 +55,17 @@ class BuscarPlanSacdData
                 $id_zona = $oZona->getId_zona();
                 $a_id_nom = $this->zonaSacdRepository->getIdSacdsDeZona($id_zona);
                 foreach ($a_id_nom as $id_nom) {
-                    $sacd = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom);
-                    $iniciales = $this->inicialesSacdService->obtenerIniciales($id_nom);
-                    $key = $id_nom . '#' . $iniciales;
-                    $a_sacd[$key] = $sacd !== '' ? $sacd : '?';
+                    $this->addSacdOption($a_sacd, (int) $id_nom);
                 }
             }
-        } elseif ($id_sacd !== null && $id_sacd !== '' && is_numeric($id_sacd)) {
-            $id_sacd_int = (int) $id_sacd;
-            $sacd = $this->inicialesSacdService->obtenerNombreConIniciales($id_sacd_int);
-            $iniciales = $this->inicialesSacdService->obtenerIniciales($id_sacd_int);
-            $key = $id_sacd_int . '#' . $iniciales;
-            $a_sacd[$key] = $sacd !== '' ? $sacd : '?';
+        } elseif ($id_sacd !== null) {
+            // No es jefe de zona: solo puede ver su propio plan (legacy: !is_null($id_sacd)).
+            $this->addSacdOption($a_sacd, (int) $id_sacd);
+        }
+
+        $roleNom = $aRoles[$id_role] ?? '';
+        if ($a_sacd === [] && $roleNom === 'p-sacd' && $id_sacd !== null) {
+            $this->addSacdOption($a_sacd, (int) $id_sacd);
         }
 
         $oConfig = $_SESSION['oConfig'] ?? null;
@@ -74,7 +73,7 @@ class BuscarPlanSacdData
             && method_exists($oConfig, 'is_jefeCalendario')
             && $oConfig->is_jefeCalendario();
 
-        if ((($aRoles[$id_role] ?? '') === 'Oficial_dl') || $esJefeCalendario) {
+        if ($roleNom === 'Oficial_dl' || $esJefeCalendario) {
             $aWhere = [];
             $aOperador = [];
             $aWhere['sacd'] = 't';
@@ -84,11 +83,7 @@ class BuscarPlanSacdData
             $aWhere['_ordre'] = 'apellido1,apellido2,nom';
             $cPersonas = $this->personaSacdRepository->getPersonas($aWhere, $aOperador);
             foreach ($cPersonas as $oPersona) {
-                $id_nom = $oPersona->getId_nom();
-                $sacd = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom);
-                $iniciales = $this->inicialesSacdService->obtenerIniciales($id_nom);
-                $key = $id_nom . '#' . $iniciales;
-                $a_sacd[$key] = $sacd !== '' ? $sacd : '?';
+                $this->addSacdOption($a_sacd, (int) $oPersona->getId_nom());
             }
         }
 
@@ -102,5 +97,20 @@ class BuscarPlanSacdData
             'sacd_opciones' => $a_sacd,
             'sacd_selected' => $selected,
         ];
+    }
+
+    /**
+     * @param array<string, string> $a_sacd
+     */
+    private function addSacdOption(array &$a_sacd, int $id_nom): void
+    {
+        if ($id_nom <= 0) {
+            return;
+        }
+
+        $sacd = $this->inicialesSacdService->obtenerNombreConIniciales($id_nom);
+        $iniciales = $this->inicialesSacdService->obtenerIniciales($id_nom);
+        $key = $id_nom . '#' . $iniciales;
+        $a_sacd[$key] = $sacd !== '' ? $sacd : '?';
     }
 }
