@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\asistentes\helpers;
 
+require_once __DIR__ . '/asistentes_support.php';
+
 use frontend\shared\web\Lista;
 
 /**

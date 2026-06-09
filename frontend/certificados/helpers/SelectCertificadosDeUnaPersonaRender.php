@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\certificados\helpers;
 
+require_once __DIR__ . '/certificados_support.php';
+
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\model\ViewNewPhtml;
