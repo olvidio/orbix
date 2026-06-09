@@ -69,12 +69,12 @@ foreach (PermAfectadosBits::map() as $afecta_a) {
                 $oPermUsuarioActividad->setId_item($newId_item);
             }
             $oPermUsuarioActividad->setId_usuario($Qid_usuario);
-            $oPermUsuarioActividad->setId_tipo_activ_txt($id_tipo_activ_txt);
-            $oPermUsuarioActividad->setDl_propia($Qdl_propia);
+            $oPermUsuarioActividad->setId_tipo_activ_txt((string) $id_tipo_activ_txt);
+            $oPermUsuarioActividad->setDl_propia(is_true($Qdl_propia) === true);
             $oPermUsuarioActividad->setAfecta_a($afecta_a);
-            $oPermUsuarioActividad->setFaseRefVo($fase_ref);
-            $oPermUsuarioActividad->setperm_on($perm_on);
-            $oPermUsuarioActividad->setperm_off($perm_off);
+            $oPermUsuarioActividad->setFaseRefVo(is_numeric($fase_ref) ? (int) $fase_ref : null);
+            $oPermUsuarioActividad->setPerm_on(is_numeric($perm_on) ? (int) $perm_on : null);
+            $oPermUsuarioActividad->setPerm_off(is_numeric($perm_off) ? (int) $perm_off : null);
             if ($PermUsuarioActividadRepository->Guardar($oPermUsuarioActividad) === false) {
                 $error_txt .= _("hay un error, no se ha guardado");
                 $error_txt .= "\n" . $PermUsuarioActividadRepository->getErrorTxt();

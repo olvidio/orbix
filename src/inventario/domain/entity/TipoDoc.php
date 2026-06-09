@@ -182,7 +182,7 @@ class TipoDoc
         return 'id_tipo_doc';
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos(): array
@@ -196,7 +196,9 @@ class TipoDoc
         $oTipoDocSet->add($this->getDatosBajo_llave());
         $oTipoDocSet->add($this->getDatosVigente());
         $oTipoDocSet->add($this->getDatosNumerado());
-        return $oTipoDocSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oTipoDocSet->getTot());
+        return $campos;
     }
 
     private function getDatosNom_doc(): DatosCampo
@@ -207,7 +209,7 @@ class TipoDoc
         $oDatosCampo->setMetodoSet('setNom_doc');
         $oDatosCampo->setEtiqueta(_("detalle"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 
@@ -219,7 +221,7 @@ class TipoDoc
         $oDatosCampo->setMetodoSet('setSigla');
         $oDatosCampo->setEtiqueta(_("sigla/nombre"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 
@@ -231,7 +233,7 @@ class TipoDoc
         $oDatosCampo->setMetodoSet('setObserv');
         $oDatosCampo->setEtiqueta(_("observ"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(90);
+        $oDatosCampo->setArgument('90');
         return $oDatosCampo;
     }
 

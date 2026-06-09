@@ -79,7 +79,7 @@ class PeriodoDateRange
             default:
                 $oInicio = DateTimeLocal::createFromLocal($empiezamin);
                 $oFin = DateTimeLocal::createFromLocal($empiezamax);
-                if ($oInicio === false || $oFin === false) {
+                if (!($oInicio instanceof DateTimeLocal) || !($oFin instanceof DateTimeLocal)) {
                     return [
                         str_replace('/', '-', $empiezamin),
                         str_replace('/', '-', $empiezamax),

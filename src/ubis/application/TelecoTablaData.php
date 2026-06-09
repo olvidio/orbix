@@ -25,7 +25,7 @@ final class TelecoTablaData
         /** @var list<TelecoUbi> $coleccion */
         $coleccion = $repoTeleco->getTelecos(['id_ubi' => $id_ubi]) ?: [];
         $oUbi = $this->ubiRepositoryResolver->findUbiForPermisos($obj_pau, $id_ubi);
-        $dl = ($oUbi !== null && method_exists($oUbi, 'getDl')) ? (string)($oUbi->getDl() ?? '') : '';
+        $dl = $oUbi !== null ? (string) ($oUbi->getDl() ?? '') : '';
         $botones = UbiPermisos::puedeModificarPorObjeto($obj_pau, $dl) ? '1' : '0';
 
         $a_cabeceras = [];

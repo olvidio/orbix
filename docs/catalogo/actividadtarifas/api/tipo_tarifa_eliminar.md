@@ -36,6 +36,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `id_tarifa` | `integer` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
@@ -45,7 +47,6 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Efectos colaterales
 
 - Mutacion: elimina un `TipoTarifa`.
-- Sucesor de la rama `tar_eliminar` del dispatcher legacy `apps/actividadtarifas/controller/tarifa_ajax.php`.
 
 ## Errores conocidos
 

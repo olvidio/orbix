@@ -6,7 +6,7 @@ url: "/src/actividades/tipo_activ_nuevo"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividades/infrastructure/ui/http/controllers/tipo_activ_nuevo.php"
-entrada: []
+entrada: ["post.iactividad_val:string", "post.iasistentes_val:string", "post.id_nom_tipo_activ:string", "post.isfsv_val:string", "post.nom_tipo_activ:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -31,7 +31,13 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `iactividad_val` | `string` | application | No | application |
+| `iasistentes_val` | `string` | application | No | application |
+| `id_nom_tipo_activ` | `string` | application | No | application |
+| `isfsv_val` | `string` | application | No | application |
+| `nom_tipo_activ` | `string` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

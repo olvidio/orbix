@@ -42,11 +42,9 @@ final class ActaNueva
             return $err;
         }
 
-        $oF_acta = null;
-        $f_acta = input_string($input, 'f_acta');
-        if (!empty($f_acta)) {
-            $oF_acta = DateTimeLocal::createFromLocal($f_acta);
-        }
+        $rawF_acta = input_string($input, 'f_acta');
+        $parsedF_acta = $rawF_acta === '' ? null : DateTimeLocal::createFromLocal($rawF_acta);
+        $oF_acta = $parsedF_acta instanceof DateTimeLocal ? $parsedF_acta : null;
 
         $repo = $this->actaDlRepository;
         $oActa = new Acta();

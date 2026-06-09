@@ -6,7 +6,7 @@ url: "/src/misas/guardar_horario"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/guardar_horario.php"
-entrada: ["post.id_item_h:integer", "post.t_end:string", "post.t_start:string"]
+entrada: ["post.id_item_h:mixed", "post.t_end:mixed", "post.t_start:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_GuardarHorarioTareaData"
@@ -35,9 +35,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item_h` | `integer` | controller+application | No | controller+application |
-| `t_end` | `string` | controller+application | No | controller+application |
-| `t_start` | `string` | controller+application | No | controller+application |
+| `id_item_h` | `mixed` | controller | No | controller |
+| `t_end` | `mixed` | controller | No | controller |
+| `t_start` | `mixed` | controller | No | controller |
 
 ## Salida
 

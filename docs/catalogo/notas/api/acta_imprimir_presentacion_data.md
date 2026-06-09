@@ -6,7 +6,7 @@ url: "/src/notas/acta_imprimir_presentacion_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/notas/infrastructure/ui/http/controllers/acta_imprimir_presentacion_data.php"
-entrada: ["post.acta:mixed", "post.mode:mixed"]
+entrada: ["post.acta:string", "post.mode:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -33,8 +33,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `acta` | `mixed` | controller | No | controller |
-| `mode` | `mixed` | controller | No | controller |
+| `acta` | `string` | controller | No | controller |
+| `mode` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

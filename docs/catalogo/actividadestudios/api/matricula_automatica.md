@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Matricula Automatica
 
-Matricula masivamente a una o varias personas en las asignaturas del plan de estudios de su actividad vigente.
+Matricula automaticamente a una o varias personas en las asignaturas correspondientes a su plan de estudios vigente del curso actual. - Si se recibe `id_pau`/`sel`, trabaja sobre una persona concreta (y opcionalmente una actividad via `id_activ`). - Si no, recorre a todas las personas en situacion `A` (activos) de la dl. Para cada persona: 1. Determina la actividad de estudios activa (`ca-n`, `cv-agd`). 2. Borra las matriculas previas (si el plan no esta confirmado). 3. Recalcula las asignaturas matriculables, respetando las aprobadas y los topes de las opcionales por bienio/cuadrienio. Sustituye a `apps/actividadestudios/controller/matricular.php`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

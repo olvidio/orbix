@@ -9,6 +9,8 @@ controller: "src/actividades/infrastructure/ui/http/controllers/actividad_nuevo_
 entrada: ["post.ver_lista:string", "post.year:integer", "post.year_ref:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "actividades_ActividadNuevoCursoEjecutarData"
+respuesta_data: ["html:string, copiadas: int"]
 requiere_hashb: false
 frontend_referencias: ["frontend/actividades/controller/actividad_nuevo_curso.php"]
 casos_uso: ["src\\actividades\\application\\ActividadNuevoCursoEjecutar"]
@@ -42,6 +44,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `actividades_ActividadNuevoCursoEjecutarData`):
+  - `html` (`string, copiadas: int`)
 
 ## Casos De Uso
 

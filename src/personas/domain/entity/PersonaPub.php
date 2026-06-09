@@ -687,7 +687,7 @@ class PersonaPub
 
     public function getPrefApellidosNombre(): string
     {
-        $Pref_ordenApellidos = ConfigGlobal::mi_ordenApellidos() ?? '';
+        $Pref_ordenApellidos = ConfigGlobal::mi_ordenApellidos();
 
         if ($Pref_ordenApellidos === 'nom_ap') {
             $nom = $this->getNombreApellidos();

@@ -6,7 +6,7 @@ url: "/src/procesos/procesos_eliminar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/procesos_eliminar.php"
-entrada: []
+entrada: ["post.id_item:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -32,7 +32,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_item` | `integer` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

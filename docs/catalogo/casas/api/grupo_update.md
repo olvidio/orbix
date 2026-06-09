@@ -38,6 +38,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_ubi_hijo` | `integer` | controller+application | No | controller+application |
 | `id_ubi_padre` | `integer` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`

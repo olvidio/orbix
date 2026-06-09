@@ -28,7 +28,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `devel_db_admin.apptables_update`
 - Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/apptables_update.php`
-- Entrada: `post.accion:string`, `post.esquema:string`, `post.id_app:integer`
+- Entrada: ninguna detectada.
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/devel_db_admin/copiar_esquema`
@@ -70,7 +70,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `devel_db_admin.db_propiedades_data`
 - Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/db_propiedades_data.php`
-- Entrada: `post.default_esquema:string`, `post.op:string`, `post.tabla:string`
+- Entrada: `post.default_esquema:mixed`, `post.op:mixed`, `post.tabla:mixed`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/devel_db_admin/eliminar_esquema`
@@ -105,7 +105,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `devel_db_admin.mover_tabla`
 - Controller: `src/devel_db_admin/infrastructure/ui/http/controllers/mover_tabla.php`
-- Entrada: `post.tabla:string`
+- Entrada: `post.tabla:mixed`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/devel_db_admin/renombrar_esquema`

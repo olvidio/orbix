@@ -10,7 +10,7 @@ entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "inventario_TipoDocOpcionesDataData"
-respuesta_data: ["a_opciones:mixed"]
+respuesta_data: ["a_opciones:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/inventario/controller/docs_asignar_que.php", "frontend/inventario/controller/equipajes_form_add.php"]
 casos_uso: ["src\\inventario\\application\\TipoDocOpcionesData"]
@@ -41,7 +41,7 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `inventario_TipoDocOpcionesDataData`):
-  - `a_opciones` (`mixed`)
+  - `a_opciones` (`array`)
 
 ## Casos De Uso
 

@@ -46,8 +46,8 @@ final class PlazasCeder
 
         $id_dl = 0;
         $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dl_sigla]);
-        if ($cDelegaciones !== [] && isset($cDelegaciones[0])) {
-            $id_dl = (int)($cDelegaciones[0]->getIdDlVo()?->value() ?? 0);
+        if ($cDelegaciones !== []) {
+            $id_dl = (int) $cDelegaciones[0]->getIdDlVo()->value();
         }
 
         $oActividadPlazasDl = $this->plazasDlEdicion->obtenerOCrearDesdeCalendario($id_activ, $id_dl, $mi_dele);

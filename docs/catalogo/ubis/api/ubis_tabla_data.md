@@ -6,11 +6,11 @@ url: "/src/ubis/ubis_tabla_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/ubis_tabla_data.php"
-entrada: []
+entrada: ["post.error:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "ubis_UbisTablaDataData"
-respuesta_data: ["0:mixed, 1: string, 2: array"]
+respuesta_data: ["0:string|list<string>, 1: string, 2: array<string, mixed>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/ubis/controller/ubis_tabla.php"]
 casos_uso: ["src\\ubis\\application\\UbisTablaData"]
@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Ubis Tabla Data
 
-Normaliza los parámetros de entrada del request.
+Descripcion funcional pendiente de revisar.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -33,7 +33,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `error` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
@@ -43,7 +45,7 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `ubis_UbisTablaDataData`):
-  - `0` (`mixed, 1: string, 2: array`)
+  - `0` (`string|list<string>, 1: string, 2: array<string, mixed>`)
 
 ## Permisos
 

@@ -41,6 +41,7 @@ final class CartasPresentacionListaData
         private CentroRepositoryInterface $centroRepository,
         private DireccionCentroRepositoryInterface $direccionCentroRepository,
         private RelacionCentroDireccionRepositoryInterface $relacionCentroDireccionRepository,
+        private UbiTelecoService $ubiTelecoService,
     ) {
     }
 
@@ -160,7 +161,11 @@ final class CartasPresentacionListaData
                 $id_direccion = $oDireccion->getId_direccion();
                 $cId_ubis = $this->relacionCentroDireccionRepository->getUbisPorDireccion($id_direccion);
                 foreach ($cId_ubis as $aUbi) {
-                    $oCentro = $this->centroRepository->findById($aUbi['id_ubi']);
+                    $idUbiRaw = $aUbi['id_ubi'] ?? null;
+                    if (!is_numeric($idUbiRaw)) {
+                        continue;
+                    }
+                    $oCentro = $this->centroRepository->findById((int) $idUbiRaw);
                     if ($oCentro === null || !$oCentro->isActive()) {
                         continue;
                     }
@@ -261,8 +266,8 @@ final class CartasPresentacionListaData
         $a_p = '';
 
         $obj_pau_centro = $this->objPauFromCentro($oCentro);
-        $telf = UbiTelecoService::texto($obj_pau_centro, $id_ubi, 'telf', '*', ' / ');
-        $fax = UbiTelecoService::texto($obj_pau_centro, $id_ubi, 'fax', '*', ' / ');
+        $telf = $this->ubiTelecoService->texto($obj_pau_centro, $id_ubi, 'telf', '*', ' / ');
+        $fax = $this->ubiTelecoService->texto($obj_pau_centro, $id_ubi, 'fax', '*', ' / ');
         if ($fax !== '') {
             $fax = self::formatTelf($fax);
             $telf .= ' fax:' . $fax;
@@ -270,7 +275,7 @@ final class CartasPresentacionListaData
         // Si es una dl o r fuera de España, pongo el e-mail del centro.
         if ($region !== 'H' && (strpos($tipo_ctr, 'cr') !== false || strpos($tipo_ctr, 'dl') !== false)) {
             // 15 es el id para otros asuntos (20 es para asuntos de gobierno).
-            $mail = UbiTelecoService::texto($obj_pau_centro, $id_ubi, 'e-mail', '15', ' / ');
+            $mail = $this->ubiTelecoService->texto($obj_pau_centro, $id_ubi, 'e-mail', '15', ' / ');
             if ($mail !== '') {
                 $pres_mail .= 'mail casa: ' . $mail;
             }
@@ -285,7 +290,7 @@ final class CartasPresentacionListaData
                 if ($cDirecciones1 !== []) {
                     $oDireccion1 = $cDirecciones1[0];
                     $obj_pau_ctr_padre = $this->objPauFromCentro($oCentro1);
-                    $telf1 = UbiTelecoService::texto($obj_pau_ctr_padre, $id_ctr_padre, 'telf', '*', ' / ');
+                    $telf1 = $this->ubiTelecoService->texto($obj_pau_ctr_padre, $id_ctr_padre, 'telf', '*', ' / ');
                     $a_direccion[] = [
                         'direccion' => $oDireccion1->getDireccionVo()?->value() ?? '',
                         'a_p' => (string)$oDireccion1->getA_p(),
@@ -298,12 +303,16 @@ final class CartasPresentacionListaData
         }
         // Si hay una segunda direccion del centro que sea principal, se añade.
         $cCtrxDirecciones = $this->relacionCentroDireccionRepository->getDireccionesPorUbi($id_ubi);
-        if ($cCtrxDirecciones !== []) {
+        if ($cCtrxDirecciones !== false && $cCtrxDirecciones !== []) {
             foreach ($cCtrxDirecciones as $aCtrxDireccion) {
                 if (($aCtrxDireccion['principal'] ?? false) === false) {
                     continue;
                 }
-                $id_dir = (int)$aCtrxDireccion['id_direccion'];
+                $idDirRaw = $aCtrxDireccion['id_direccion'] ?? null;
+                if (!is_numeric($idDirRaw)) {
+                    continue;
+                }
+                $id_dir = (int) $idDirRaw;
                 if ($id_dir !== $id_direccion) {
                     $oDireccion2 = $this->direccionCentroRepository->findById($id_dir);
                     if ($oDireccion2 === null) {

@@ -73,8 +73,17 @@ final class CambioUsuarioObjetoPrefPropiedadesData
         }
 
         $oMiUsuario = ConfigGlobal::MiUsuario();
+        if ($oMiUsuario === null) {
+            $result['error'] = (string)_('Usuario no encontrado');
+            return $result;
+        }
+        $idRole = $oMiUsuario->getId_role();
+        if ($idRole === null) {
+            $result['error'] = (string)_('Usuario sin rol asignado');
+            return $result;
+        }
         $oRole = new Role();
-        $oRole->setId_role($oMiUsuario->getId_role());
+        $oRole->setId_role($idRole);
 
         if (!array_key_exists($objeto, AvisoObjetoCatalog::getArrayObjetosPosibles())) {
             $result['error'] = sprintf((string)_("objeto %s no encontrado"), $objeto);

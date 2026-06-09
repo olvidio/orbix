@@ -32,9 +32,9 @@ paths:
               type: object
               properties:
                 id_activ:
-                  type: "string"
+                  type: "integer"
                 id_asignatura:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -77,19 +77,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadestudios_ActaNotasDefinitivasGrabarDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadestudios_ActaNotasDefinitivasGrabarDataResponse"
   "/src/actividadestudios/acta_notas_matricula_guardar":
     post:
       operationId: "post_actividadestudios_acta_notas_matricula_guardar"
       summary: "Acta Notas Matricula Guardar"
       description: |
-        Guarda el borrador de notas sobre cada matricula (rama `que=1` del legacy `apps/actividadestudios/controller/acta_notas_update.php`).
+        Guarda las notas de cada matricula (borrador del acta de notas). Se invoca desde la pantalla `acta_notas` cuando el usuario pulsa "Grabar". Sustituye a la rama `que=1` del legacy `apps/actividadestudios/controller/acta_notas_update.php`.
         
         Operacion: `mutacion`.
         
@@ -498,7 +498,7 @@ paths:
       operationId: "post_actividadestudios_docencia_actualizar"
       summary: "Docencia Actualizar"
       description: |
-        Ejecuta {
+        Actualiza el dossier `d_docencia_stgr` con la informacion docente derivada de las actividades terminadas del periodo indicado. Para cada actividad terminada recorre sus asignaturas (con profesor asignado) y graba/actualiza la docencia correspondiente (`ProfesorDocenciaStgr`). Sustituye a la rama "continuar" del legacy `apps/actividadestudios/controller/actualizar_docencia.php`.
         
         Operacion: `mutacion`.
         
@@ -552,10 +552,12 @@ paths:
             schema:
               type: object
               properties:
+                append_blank_footer:
+                  type: "string"
                 id_activ:
-                  type: "string"
+                  type: "integer"
                 id_nom:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -588,10 +590,12 @@ paths:
             schema:
               type: object
               properties:
+                append_blank_footer:
+                  type: "string"
                 id_activ:
-                  type: "string"
+                  type: "integer"
                 id_nom:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -625,11 +629,11 @@ paths:
               type: object
               properties:
                 id_activ:
-                  type: "string"
+                  type: "integer"
                 id_asignatura:
-                  type: "string"
+                  type: "integer"
                 id_pau:
-                  type: "string"
+                  type: "integer"
                 pau:
                   type: "string"
                 sel:
@@ -667,11 +671,11 @@ paths:
               type: object
               properties:
                 id_activ:
-                  type: "string"
+                  type: "integer"
                 id_asignatura:
-                  type: "string"
-                id_pau:
-                  type: "string"
+                  type: "integer"
+                id_nom:
+                  type: "integer"
                 sel:
                   type: "string"
       responses:
@@ -707,7 +711,7 @@ paths:
               type: object
               properties:
                 id_activ:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -726,7 +730,7 @@ paths:
       operationId: "post_actividadestudios_matricula_automatica"
       summary: "Matricula Automatica"
       description: |
-        Matricula masivamente a una o varias personas en las asignaturas del plan de estudios de su actividad vigente.
+        Matricula automaticamente a una o varias personas en las asignaturas correspondientes a su plan de estudios vigente del curso actual. - Si se recibe `id_pau`/`sel`, trabaja sobre una persona concreta (y opcionalmente una actividad via `id_activ`). - Si no, recorre a todas las personas en situacion `A` (activos) de la dl. Para cada persona: 1. Determina la actividad de estudios activa (`ca-n`, `cv-agd`). 2. Borra las matriculas previas (si el plan no esta confirmado). 3. Recalcula las asignaturas matriculables, respetando las aprobadas y los topes de las opcionales por bienio/cuadrienio. Sustituye a `apps/actividadestudios/controller/matricular.php`.
         
         Operacion: `mutacion`.
         
@@ -766,7 +770,7 @@ paths:
       operationId: "post_actividadestudios_matricula_editar"
       summary: "Matricula Editar"
       description: |
-        Edita una matricula.
+        Edita una matricula existente (id_asignatura, id_nivel, id_situacion, preceptor, id_preceptor). Sustituye al case `editar` de `update_3103.php`.
         
         Operacion: `mutacion`.
         
@@ -814,7 +818,7 @@ paths:
       operationId: "post_actividadestudios_matricula_eliminar"
       summary: "Matricula Eliminar"
       description: |
-        Elimina una o varias matriculas.
+        Elimina una o varias matriculas y reajusta los dossiers 1303 / 3103 y las asignaturas impartidas (`ActividadAsignatura`). Sustituye al case `eliminar` del antiguo `update_3103.php` dispatcher.
         
         Operacion: `mutacion`.
         
@@ -860,7 +864,7 @@ paths:
       operationId: "post_actividadestudios_matricula_nueva"
       summary: "Matricula Nueva"
       description: |
-        Crea una matricula.
+        Crea una matricula (asignatura de una persona en una actividad) y ajusta los dossiers 1303 (persona) y 3103 (actividad) + la asignatura impartida (`ActividadAsignatura`). Sustituye al case `nuevo` de `update_3103.php`.
         
         Operacion: `mutacion`.
         
@@ -924,7 +928,11 @@ paths:
               properties:
                 finIso:
                   type: "string"
+                fin_iso:
+                  type: "string"
                 inicioIso:
+                  type: "string"
+                inicio_iso:
                   type: "string"
       responses:
         "200":
@@ -959,6 +967,10 @@ paths:
               type: object
               properties:
                 apellido1:
+                  type: "string"
+                esquema:
+                  type: "string"
+                esquema_region_stgr:
                   type: "string"
       responses:
         "200":
@@ -1028,7 +1040,7 @@ paths:
               type: object
               properties:
                 id_activ:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1062,7 +1074,7 @@ paths:
               type: object
               properties:
                 id_activ:
-                  type: "string"
+                  type: "integer"
                 nom_activ:
                   type: "string"
       responses:
@@ -1083,7 +1095,7 @@ paths:
       operationId: "post_actividadestudios_profesores_desplegable_data"
       summary: "Profesores Desplegable Data"
       description: |
-        Devuelve JSON con los datos para construir el desplegable de profesores.
+        Devuelve los datos (`id`, `opciones`, `selected`, `blanco`) para construir un `<select>` de profesores en el form de `ActividadAsignatura`.
         
         Operacion: `mutacion`.
         
@@ -1101,6 +1113,8 @@ paths:
                   type: "integer"
                 id_asignatura:
                   type: "integer"
+                id_profesor:
+                  type: "integer"
                 salida:
                   type: "string"
       responses:
@@ -1109,13 +1123,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadestudios_ProfesoresDesplegableDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadestudios_ProfesoresDesplegableDataDataResponse"
 components:
   securitySchemes:
     OrbixSession:
@@ -1169,6 +1183,21 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/actividadestudios_ActaNotasDataData"
+    actividadestudios_ActaNotasDefinitivasGrabarData:
+      type: object
+      properties:
+        success:
+          type: "string"
+    actividadestudios_ActaNotasDefinitivasGrabarDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_ActaNotasDefinitivasGrabarData"
     actividadestudios_CaPosiblesQueDataData:
       type: object
       properties:
@@ -1433,6 +1462,21 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/actividadestudios_PosiblesAsignaturasCaDataData"
+    actividadestudios_ProfesoresDesplegableDataData:
+      type: object
+      properties:
+        id:
+          type: "string"
+    actividadestudios_ProfesoresDesplegableDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadestudios_ProfesoresDesplegableDataData"
     OrbixStandardResponseStringData:
       type: object
       required:

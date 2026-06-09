@@ -10,7 +10,7 @@ entrada: ["post.dia:string", "post.id_enc:integer", "post.id_zona:integer", "pos
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_CuadriculaUpdateData"
-respuesta_data: ["error:string, meta: array"]
+respuesta_data: ["error:string, meta: array<string, mixed>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/support/CuadriculaZonaRenderer.php"]
 casos_uso: ["src\\misas\\application\\CuadriculaUpdate"]
@@ -51,7 +51,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `misas_CuadriculaUpdateData`):
-  - `error` (`string, meta: array`)
+  - `error` (`string, meta: array<string, mixed>`)
 
 ## Casos De Uso
 

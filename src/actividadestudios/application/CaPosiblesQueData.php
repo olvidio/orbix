@@ -59,10 +59,11 @@ final class CaPosiblesQueData
         $aListaCtr = $this->personaNRepository->getArrayIdCentros();
         $aCentrosOrden = [];
         foreach ($aListaCtr as $idUbi) {
-            if ($idUbi === null) {
+            $idUbiInt = (int) $idUbi;
+            if ($idUbiInt <= 0) {
                 continue;
             }
-            $oCentroDl = $this->centroDlRepository->findById($idUbi);
+            $oCentroDl = $this->centroDlRepository->findById($idUbiInt);
             if ($oCentroDl === null) {
                 continue;
             }
@@ -82,10 +83,11 @@ final class CaPosiblesQueData
         $aListaCtr = $this->personaAgdRepository->getArrayIdCentros();
         $aCentrosOrden = [];
         foreach ($aListaCtr as $idUbi) {
-            if ($idUbi === null) {
+            $idUbiInt = (int) $idUbi;
+            if ($idUbiInt <= 0) {
                 continue;
             }
-            $oCentroDl = $this->centroDlRepository->findById($idUbi);
+            $oCentroDl = $this->centroDlRepository->findById($idUbiInt);
             if ($oCentroDl === null) {
                 continue;
             }

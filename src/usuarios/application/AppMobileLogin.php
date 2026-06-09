@@ -32,7 +32,7 @@ final class AppMobileLogin
         if (!empty($esquema_web)) {
             $oDBPropiedades = new DBPropiedades();
             $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(false, true);
-            if (!in_array($esquema_web, $a_posibles_esquemas, true)) {
+            if (!is_array($a_posibles_esquemas) || !in_array($esquema_web, $a_posibles_esquemas, true)) {
                 return [
                     'ok' => false,
                     'code' => 'invalid_schema_env',
@@ -101,7 +101,11 @@ final class AppMobileLogin
             ];
         }
         $row['password'] = $password_db;
-        $MiUsuario = (new Usuario())->setAllAttributes($row);
+        $normalized = [];
+        foreach ($row as $key => $value) {
+            $normalized[(string) $key] = $value;
+        }
+        $MiUsuario = (new Usuario())->setAllAttributes($normalized);
 
         $oCrypt = new PasswordHasher();
         if ($oCrypt->encode($password, $password_db) !== $password_db) {

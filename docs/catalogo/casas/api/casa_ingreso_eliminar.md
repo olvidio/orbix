@@ -9,6 +9,8 @@ controller: "src/casas/infrastructure/ui/http/controllers/casa_ingreso_eliminar.
 entrada: ["post.id_activ:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "casas_CasaIngresoEliminarData"
+respuesta_data: ["ok:bool, mensaje: string, data: string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/casas/controller/casa.php"]
 casos_uso: ["src\\casas\\application\\CasaIngresoEliminar"]
@@ -35,11 +37,15 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `id_activ` | `integer` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `casas_CasaIngresoEliminarData`):
+  - `ok` (`bool, mensaje: string, data: string`)
 
 ## Efectos colaterales
 

@@ -4,66 +4,60 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/ver_plan_sacd_data"
 metodos: ["GET", "POST"]
-operacion: "consulta"
+operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/ver_plan_sacd_data.php"
-entrada: ["post.id_sacd:string", "post.periodo:string", "post.empiezamin:string", "post.empiezamax:string"]
-entrada_obligatoria: ["id_sacd"]
+entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.id_sacd:string", "post.periodo:string"]
+entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "misas_VerPlanSacdDataData"
 respuesta_data: ["rows:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/ver_plan_sacd.php"]
 casos_uso: ["src\\misas\\application\\VerPlanSacdData"]
-tags: ["misas", "ver", "plan", "sacd", "data", "cliente_movil"]
-estado_revision: "revisado"
+tags: ["misas", "ver", "plan", "sacd", "data"]
+estado_revision: "generado"
 ---
 
 # Ver Plan Sacd Data
 
-Filas del plan de misas de un sacerdote en un rango de fechas.
+Datos para la vista `ver_plan_sacd.phtml`: plan de misas de un sacerdote en un rango de fechas.
 
-Convenciones: [`_convenciones_api.md`](../_convenciones_api.md) · Previo: [`buscar_plan_sacd_data.md`](buscar_plan_sacd_data.md)
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Endpoint
 
 - URL: `/src/misas/ver_plan_sacd_data`
-- Métodos: `POST` (recomendado)
+- Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_plan_sacd_data.php`
 
 ## Entrada
 
-| Campo | Tipo | Obligatorio | Notas |
-|-------|------|-------------|-------|
-| `id_sacd` | string | **Sí** | Clave de `sacd_opciones` (`id_nom#iniciales`; solo `id_nom` antes de `#` se usa en backend) |
-| `periodo` | string | Recomendado | Ver tabla de periodos en [`ver_cuadricula_zona_data.md`](ver_cuadricula_zona_data.md) |
-| `empiezamin` | string | Condicional | Si `periodo=otro` |
-| `empiezamax` | string | Condicional | Si `periodo=otro` |
-
-Visibilidad por estado del plan: usuarios que no son jefe de zona no ven días en estado *propuesta*.
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `empiezamax` | `string` | controller | No | controller |
+| `empiezamin` | `string` | controller | No | controller |
+| `id_sacd` | `string` | controller | No | controller |
+| `periodo` | `string` | controller | No | controller |
 
 ## Salida
 
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| `rows` | array | `{ dia, encargo, observ }` por fila |
+- Helper: `ContestarJson::enviar`
+- Forma: `standard_envelope_string_data`
+- Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `misas_VerPlanSacdDataData`):
+  - `rows` (`array`)
 
-## Ejemplo
+## Casos De Uso
 
-```http
-POST /orbix/src/misas/ver_plan_sacd_data HTTP/1.1
-Accept: application/json
-Content-Type: application/x-www-form-urlencoded
-Cookie: PHPSESSID=...
+- `src\misas\application\VerPlanSacdData`
 
-id_sacd=42%23JP&periodo=esta_semana&empiezamin=&empiezamax=
-```
+## Frontend Relacionado
 
-```json
-{
-  "success": true,
-  "data": "{\"rows\":[{\"dia\":\"2026-05-26 10:00\",\"encargo\":\"Misa dominical\",\"observ\":\"\"}]}"
-}
-```
+- `frontend/misas/controller/ver_plan_sacd.php`
 
-## Cliente de referencia
+## Revision Manual
 
-- `orbix-android`: `fetchVerPlanSacd()` — lista en `SacdPlanList`.
+- Confirmar permisos/autorizacion de oficina.
+- Anadir ejemplos reales de request/response.
+- Marcar `estado_revision: "revisado"` cuando este validado.

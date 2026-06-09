@@ -6,7 +6,7 @@ url: "/src/ubiscamas/cama_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubiscamas/infrastructure/ui/http/controllers/cama_update.php"
-entrada: ["post.descripcion:string", "post.id_cama:string", "post.id_habitacion:string", "post.id_ubi:integer", "post.larga:mixed", "post.mod:string", "post.sel:array", "post.vip:mixed"]
+entrada: ["post.descripcion:string", "post.id_cama:string", "post.id_habitacion:string", "post.larga:string", "post.sel:array", "post.vip:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -36,11 +36,11 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `descripcion` | `string` | controller | No | controller |
 | `id_cama` | `string` | controller | No | controller |
 | `id_habitacion` | `string` | controller | No | controller |
-| `id_ubi` | `integer` | controller | No | controller |
-| `larga` | `mixed` | controller | No | controller |
-| `mod` | `string` | controller | No | controller |
+| `larga` | `string` | controller | No | controller |
 | `sel` | `array` | controller | No | controller |
-| `vip` | `mixed` | controller | No | controller |
+| `vip` | `string` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

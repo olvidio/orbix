@@ -48,7 +48,6 @@ class PgEncargoSacdHorarioRepository extends ClaseRepository implements EncargoS
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $EncargoSacdHorarioSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -100,6 +99,7 @@ class PgEncargoSacdHorarioRepository extends ClaseRepository implements EncargoS
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $encargoSacdHorarios = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
@@ -109,10 +109,13 @@ class PgEncargoSacdHorarioRepository extends ClaseRepository implements EncargoS
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
             $aDatos['h_ini'] = (new ConverterDate('time', $aDatos['h_ini']))->fromPg();
             $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
-            $EncargoSacdHorario = EncargoSacdHorario::fromArray($aDatos);
-            $EncargoSacdHorarioSet->add($EncargoSacdHorario);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $encargoSacdHorarios[] = EncargoSacdHorario::fromArray($normalized);
         }
-        return array_values($EncargoSacdHorarioSet->getTot());
+        return $encargoSacdHorarios;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

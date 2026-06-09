@@ -56,7 +56,7 @@ final class TipoDossierGuardar
         $oTipoDossier->setTabla_to($Qtabla_to);
         $oTipoDossier->setCampo_to($Qcampo_to);
         $oTipoDossier->setId_tipo_dossier_rel($Qid_tipo_dossier_rel);
-        $oTipoDossier->setDepende_modificar(is_true($Qdepende_modificar));
+        $oTipoDossier->setDepende_modificar(is_true($Qdepende_modificar) ?? false);
         $oTipoDossier->setApp($Qapp);
         $oTipoDossier->setClass($Qclass);
         $oTipoDossier->setCodigo(trim($Qcodigo) !== '' ? trim($Qcodigo) : null);

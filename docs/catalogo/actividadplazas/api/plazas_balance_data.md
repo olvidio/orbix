@@ -10,7 +10,7 @@ entrada: ["post.dl:string", "post.id_tipo_activ:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadplazas_PlazasBalanceDataData"
-respuesta_data: ["dlA:string", "dlB:string", "concedidasA2B:integer", "concedidasB2A:integer", "a_cabeceras:array", "a_valores:array"]
+respuesta_data: ["dlA:string", "dlB:string", "concedidasA2B:integer", "concedidasB2A:integer", "a_cabeceras:list<array<string, mixed>>", "a_valores:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/actividadplazas/controller/plazas_balance_dl.php"]
 casos_uso: ["src\\actividadplazas\\application\\PlazasBalanceData"]
@@ -38,6 +38,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `dl` | `string` | controller+application | No | controller+application |
 | `id_tipo_activ` | `string` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
@@ -48,7 +50,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
   - `dlB` (`string`)
   - `concedidasA2B` (`integer`)
   - `concedidasB2A` (`integer`)
-  - `a_cabeceras` (`array`)
+  - `a_cabeceras` (`list<array<string, mixed>>`)
   - `a_valores` (`array`)
 
 ## Casos De Uso

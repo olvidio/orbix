@@ -52,7 +52,7 @@ paths:
       operationId: "post_dbextern_sincro_baja"
       summary: "Sincro Baja"
       description: |
-        Da de baja a una persona (fallecido o traslado a otra región).
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -69,7 +69,7 @@ paths:
                 dl:
                   type: "string"
                 id_nom_orbix:
-                  type: "string"
+                  type: "integer"
                 tipo_persona:
                   type: "string"
       responses:
@@ -90,7 +90,7 @@ paths:
       operationId: "post_dbextern_sincro_crear"
       summary: "Sincro Crear"
       description: |
-        Crea una persona en Orbix desde la BDU y la vincula.
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -128,7 +128,7 @@ paths:
       operationId: "post_dbextern_sincro_crear_todos"
       summary: "Sincro Crear Todos"
       description: |
-        Crea una persona en Orbix desde la BDU y la vincula.
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -154,13 +154,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dbextern_CrearPersonaDesdeListasUseCaseDataResponse"
+                $ref: "#/components/schemas/dbextern_CrearTodosDesdeListasUseCaseDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dbextern_CrearPersonaDesdeListasUseCaseDataResponse"
+                $ref: "#/components/schemas/dbextern_CrearTodosDesdeListasUseCaseDataResponse"
   "/src/dbextern/sincro_desunir":
     post:
       operationId: "post_dbextern_sincro_desunir"
@@ -202,7 +202,7 @@ paths:
       operationId: "post_dbextern_sincro_index_datos"
       summary: "Sincro Index Datos"
       description: |
-        Calcula los 10 contadores del dashboard de sincronización.
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -236,7 +236,7 @@ paths:
       operationId: "post_dbextern_sincro_syncro"
       summary: "Sincro Syncro"
       description: |
-        Sincroniza todas las personas unidas de una DL.
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -274,7 +274,7 @@ paths:
       operationId: "post_dbextern_sincro_trasladar"
       summary: "Sincro Trasladar"
       description: |
-        Trasladar persona desde otra DL a la DL actual.
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -291,7 +291,7 @@ paths:
                 dl:
                   type: "string"
                 id_nom_orbix:
-                  type: "string"
+                  type: "integer"
                 tipo_persona:
                   type: "string"
       responses:
@@ -312,7 +312,7 @@ paths:
       operationId: "post_dbextern_sincro_trasladar_a"
       summary: "Sincro Trasladar A"
       description: |
-        Trasladar persona desde otra DL a la DL actual.
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -329,7 +329,7 @@ paths:
                 dl:
                   type: "string"
                 id_nom_orbix:
-                  type: "string"
+                  type: "integer"
                 tipo_persona:
                   type: "string"
       responses:
@@ -462,7 +462,7 @@ paths:
       operationId: "post_dbextern_ver_listas_datos"
       summary: "Ver Listas Datos"
       description: |
-        Obtiene la lista de personas BDU sin unir y los posibles matches Orbix.
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -504,7 +504,7 @@ paths:
       operationId: "post_dbextern_ver_orbix_datos"
       summary: "Ver Orbix Datos"
       description: |
-        Obtiene la lista de personas Orbix sin unir a la BDU.
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -580,7 +580,7 @@ paths:
       operationId: "post_dbextern_ver_traslados_datos"
       summary: "Ver Traslados Datos"
       description: |
-        Obtiene datos de personas a trasladar desde otras DL.
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -630,12 +630,12 @@ components:
           type: string
         data:
           description: "Ver schema concreto de cada operacion."
-    dbextern_CrearPersonaDesdeListasUseCaseData:
+    dbextern_CrearTodosDesdeListasUseCaseData:
       type: object
       properties:
         count:
           type: "string"
-    dbextern_CrearPersonaDesdeListasUseCaseDataResponse:
+    dbextern_CrearTodosDesdeListasUseCaseDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
         - type: object
@@ -644,7 +644,7 @@ components:
               oneOf:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/dbextern_CrearPersonaDesdeListasUseCaseData"
+                - $ref: "#/components/schemas/dbextern_CrearTodosDesdeListasUseCaseData"
     dbextern_SincroPersonasData:
       type: object
       properties:

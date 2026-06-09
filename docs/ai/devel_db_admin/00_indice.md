@@ -4,7 +4,7 @@ subtipo: "indice"
 modulo: "devel_db_admin"
 flujos: 15
 pantallas: 19
-endpoints: 15
+endpoints: 16
 estado_revision: "generado"
 ---
 

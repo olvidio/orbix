@@ -79,7 +79,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TipoTarifa. crea o actualiza un TipoTarifa. datos del formulario modificar/nuevo de TipoTarifa. elimina un TipoTarifa. listado del catalogo de tipos de tarifa.
+Mantener el catálogo maestro de tipos de tarifa (letra, modo, observaciones). Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Tipo Tarifa).
 
 ## Errores Documentados
 

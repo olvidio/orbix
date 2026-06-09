@@ -130,10 +130,13 @@ public function getArrayProfesorTipos(): array
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $ProfesorTipo = ProfesorTipo::fromArray($aDatos);
             $ProfesorTipoSet->add($ProfesorTipo);
         }
-        return array_values($ProfesorTipoSet->getTot());
+        /** @var list<ProfesorTipo> $result */
+        $result = array_values($ProfesorTipoSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

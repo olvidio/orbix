@@ -36,7 +36,7 @@ final class CambioUsuarioObjetoPrefFasesData
     {
         $objeto = (string)($input['objeto'] ?? '');
         $id_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
-        $dl_propia = is_true($input['dl_propia'] ?? true);
+        $dl_propia = is_true($input['dl_propia'] ?? true) ?? true;
 
         $result = [
             'error' => '',

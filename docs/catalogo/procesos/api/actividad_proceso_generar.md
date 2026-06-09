@@ -6,7 +6,7 @@ url: "/src/procesos/actividad_proceso_generar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/actividad_proceso_generar.php"
-entrada: []
+entrada: ["post.id_activ:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Actividad Proceso Generar
 
-Caso de uso: (re)genera las tareas del proceso asociado a un id_activ, conservando el estado actual segun el flag `force=true`.
+Caso de uso: (re)genera las tareas del proceso asociado a un id_activ.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -31,7 +31,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_activ` | `integer` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

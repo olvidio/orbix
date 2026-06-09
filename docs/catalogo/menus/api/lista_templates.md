@@ -9,6 +9,8 @@ controller: "src/menus/infrastructure/ui/http/controllers/lista_templates.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "menus_ListaTemplatesMenusData"
+respuesta_data: ["a_opciones:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/menus/controller/menus_importar_form.php"]
 casos_uso: ["src\\menus\\application\\ListaTemplatesMenus"]
@@ -38,6 +40,8 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `menus_ListaTemplatesMenusData`):
+  - `a_opciones` (`array`)
 
 ## Casos De Uso
 

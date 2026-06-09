@@ -84,8 +84,8 @@ final class GestionPlazasUpdate
         }
         $id_dl = 0;
         $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dl_sigla]);
-        if ($cDelegaciones !== [] && isset($cDelegaciones[0])) {
-            $id_dl = (int)($cDelegaciones[0]->getIdDlVo()?->value() ?? 0);
+        if ($cDelegaciones !== []) {
+            $id_dl = (int) $cDelegaciones[0]->getIdDlVo()->value();
         }
         // Lectura del cuadro en {@see GestionPlazasData}: da_plazas (calendario común).
         // Lo que edita esta dl se persiste en da_plazas_dl.

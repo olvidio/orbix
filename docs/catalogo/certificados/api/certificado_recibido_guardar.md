@@ -6,7 +6,7 @@ url: "/src/certificados/certificado_recibido_guardar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php"
-entrada: ["post.certificado:string", "post.certificado_old:string", "post.destino:string", "post.f_certificado:string", "post.f_enviado:string", "post.f_recibido:string", "post.firmado:string", "post.id_item:integer", "post.id_nom:integer", "post.idioma:string", "post.nom:string", "post.nuevo:integer"]
+entrada: ["post.certificado:string", "post.certificado_old:string", "post.destino:string", "post.f_certificado:string", "post.f_recibido:string", "post.firmado:string", "post.id_item:integer", "post.id_nom:integer", "post.idioma:string", "post.nom:string", "post.nuevo:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -37,7 +37,6 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `certificado_old` | `string` | controller | No | controller |
 | `destino` | `string` | controller | No | controller |
 | `f_certificado` | `string` | controller | No | controller |
-| `f_enviado` | `string` | controller | No | controller |
 | `f_recibido` | `string` | controller | No | controller |
 | `firmado` | `string` | controller | No | controller |
 | `id_item` | `integer` | controller | No | controller |
@@ -45,6 +44,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `idioma` | `string` | controller | No | controller |
 | `nom` | `string` | controller | No | controller |
 | `nuevo` | `integer` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

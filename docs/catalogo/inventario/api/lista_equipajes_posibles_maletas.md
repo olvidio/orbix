@@ -6,7 +6,7 @@ url: "/src/inventario/lista_equipajes_posibles_maletas"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/inventario/infrastructure/ui/http/controllers/lista_equipajes_posibles_maletas.php"
-entrada: ["post.id_equipaje:string"]
+entrada: ["post.id_equipaje:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -33,7 +33,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_equipaje` | `string` | controller | No | controller |
+| `id_equipaje` | `integer` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

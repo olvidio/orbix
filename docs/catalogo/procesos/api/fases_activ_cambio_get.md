@@ -6,11 +6,11 @@ url: "/src/procesos/fases_activ_cambio_get"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_get.php"
-entrada: []
+entrada: ["post.dl_propia:string", "post.id_fase_sel:string", "post.id_tipo_activ:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "procesos_FasesActivCambioGetData"
-respuesta_data: ["id:string", "opciones:array", "selected:string", "blanco:boolean", "action:string"]
+respuesta_data: ["id:string, opciones: array<int|string, string>, selected: string, blanco: bool, action: string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/procesos/controller/fases_activ_cambio.php"]
 casos_uso: ["src\\procesos\\application\\FasesActivCambioGet"]
@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Fases Activ Cambio Get
 
-Caso de uso: devuelve las fases posibles para el `id_tipo_activ` y la `dl_propia` actual, incluyendo la opcion seleccionada por `id_fase_sel`. Respuesta conforme al contrato de `refactor.md` para desplegables (payload JSON con `id`, `opciones`, `selected`, `blanco`, `action`). El frontend construye el `<select>` con el helper JS estandar.
+Caso de uso: fases posibles para id_tipo_activ y dl_propia (desplegable JSON).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -33,7 +33,11 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `dl_propia` | `string` | application | No | application |
+| `id_fase_sel` | `string` | application | No | application |
+| `id_tipo_activ` | `string` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
@@ -43,11 +47,7 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `procesos_FasesActivCambioGetData`):
-  - `id` (`string`)
-  - `opciones` (`array`)
-  - `selected` (`string`)
-  - `blanco` (`boolean`)
-  - `action` (`string`)
+  - `id` (`string, opciones: array<int|string, string>, selected: string, blanco: bool, action: string`)
 
 ## Casos De Uso
 

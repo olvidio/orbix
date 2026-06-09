@@ -47,7 +47,6 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $EncargoSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -99,14 +98,18 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $encargos = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Encargo = Encargo::fromArray($aDatos);
-            $EncargoSet->add($Encargo);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $encargos[] = Encargo::fromArray($normalized);
         }
-        return array_values($EncargoSet->getTot());
+        return $encargos;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Casa Ec Gastos Form Data
 
-Data builder: formulario anual con gastos y aportaciones (sv/sf) por mes de una casa. Sucesor de la rama `que=getGastos` de `apps/casas/controller/casa_ec_ajax.php`.
+Endpoint backend: formulario anual de gastos/aportaciones (`casa_ec_gastos_form`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -35,6 +35,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `id_cdc` | `array` | controller+application | No | controller+application |
 | `year` | `integer` | controller+application | No | controller+application |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

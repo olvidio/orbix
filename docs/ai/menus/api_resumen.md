@@ -35,7 +35,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `menus.grupmenu_info`
 - Controller: `src/menus/infrastructure/ui/http/controllers/grupmenu_info.php`
-- Entrada: `post.id_grupmenu:string`
+- Entrada: `post.id_grupmenu:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/menus/grupmenu_lista`
@@ -132,7 +132,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 ## `/src/menus/menus_importar_de_ficheros_a_ref`
 
 - Id: `menus.menus_importar_de_ficheros_a_ref`
-- Controller: `frontend/menus/controller/menus_importar_de_ficheros_a_ref.php`
+- Controller: `src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php`
 - Entrada: `post.seguro:mixed`, `post.todos:mixed`
 - Respuesta: `raw_response`
 
@@ -140,5 +140,5 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `menus.menus_legacy_layout_items_data`
 - Controller: `src/menus/infrastructure/ui/http/controllers/menus_legacy_layout_items_data.php`
-- Entrada: `post.id_grupmenu:mixed`
+- Entrada: `post.id_grupmenu:string`
 - Respuesta: `standard_envelope_string_data`

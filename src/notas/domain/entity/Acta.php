@@ -336,10 +336,15 @@ class Acta
                 } else {
                     $oData = DateTimeLocal::createFromLocal($fecha);
                 }
-                $any = $oData->format('y');
-                // inventar acta.
-                $ActaRepository = DependencyResolver::get(ActaRepositoryInterface::class);
-                $num_acta = 1 + $ActaRepository->getUltimaActa($any, $valor);
+                if (!($oData instanceof DateTimeLocal)) {
+                    $any = '?';
+                    $num_acta = 'x';
+                } else {
+                    $any = $oData->format('y');
+                    // inventar acta.
+                    $ActaRepository = DependencyResolver::get(ActaRepositoryInterface::class);
+                    $num_acta = 1 + $ActaRepository->getUltimaActa($any, $valor);
+                }
             }
             // no sé nada
             if ($valor === '?') {

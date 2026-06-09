@@ -53,13 +53,13 @@ $DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::cla
 
     // Si está vacío no hago nada (dejo lo que esté)
     if (!empty($Qf_recibido)) {
-        $oF_recibido = DateTimeLocal::createFromLocal($Qf_recibido);
-        $oDocumento->setF_recibido($oF_recibido);
+        $rawF_recibido = DateTimeLocal::createFromLocal($Qf_recibido);
+        $oDocumento->setF_recibido($rawF_recibido instanceof DateTimeLocal ? $rawF_recibido : null);
     }
 
     if (!empty($Qf_asignado)) {
-        $oF_asignado = DateTimeLocal::createFromLocal($Qf_asignado);
-        $oDocumento->setF_asignado($oF_asignado);
+        $rawF_asignado = DateTimeLocal::createFromLocal($Qf_asignado);
+        $oDocumento->setF_asignado($rawF_asignado instanceof DateTimeLocal ? $rawF_asignado : null);
     }
 
     if ($DocumentoRepository->Guardar($oDocumento) === false) {

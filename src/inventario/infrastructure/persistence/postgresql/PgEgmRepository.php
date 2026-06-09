@@ -141,10 +141,13 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $Egm = Egm::fromArray($aDatos);
             $EgmSet->add($Egm);
         }
-        return array_values($EgmSet->getTot());
+        /** @var list<Egm> $result */
+        $result = array_values($EgmSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

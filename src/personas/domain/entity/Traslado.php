@@ -203,7 +203,7 @@ class Traslado
         return ['id_item' => (string)$this->id_item];
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos(): array
@@ -218,7 +218,9 @@ class Traslado
         $oSet->add($this->getDatosIdCentroDestino());
         $oSet->add($this->getDatosObserv());
 
-        return $oSet->getTot();
+                /** @var list<DatosCampo> $campos */
+        $campos = array_values($oSet->getTot());
+        return $campos;
     }
 
     private function getDatosF_traslado(): DatosCampo
@@ -240,7 +242,7 @@ class Traslado
         $oDatosCampo->setMetodoSet('setTipo_cmb');
         $oDatosCampo->setEtiqueta(_("tipo de cambio"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(6);
+        $oDatosCampo->setArgument('6');
         return $oDatosCampo;
     }
 
@@ -252,7 +254,7 @@ class Traslado
         $oDatosCampo->setMetodoSet('setCtr_origen');
         $oDatosCampo->setEtiqueta(_("centro origen"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(35);
+        $oDatosCampo->setArgument('35');
         return $oDatosCampo;
     }
     private function getDatosIdCentroOrigen(): DatosCampo
@@ -263,7 +265,7 @@ class Traslado
         $oDatosCampo->setMetodoSet('setId_ctr_origen');
         $oDatosCampo->setEtiqueta(_("id centro origen"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(10);
+        $oDatosCampo->setArgument('10');
         return $oDatosCampo;
     }
     private function getDatosCentroDestino(): DatosCampo
@@ -274,7 +276,7 @@ class Traslado
         $oDatosCampo->setMetodoSet('setCtr_destino');
         $oDatosCampo->setEtiqueta(_("centro destino"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(35);
+        $oDatosCampo->setArgument('35');
         return $oDatosCampo;
     }
     private function getDatosIdCentroDestino(): DatosCampo
@@ -285,7 +287,7 @@ class Traslado
         $oDatosCampo->setMetodoSet('setId_ctr_destino');
         $oDatosCampo->setEtiqueta(_("id centro destino"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(10);
+        $oDatosCampo->setArgument('10');
         return $oDatosCampo;
     }
     private function getDatosObserv(): DatosCampo
@@ -296,7 +298,7 @@ class Traslado
         $oDatosCampo->setMetodoSet('setObserv');
         $oDatosCampo->setEtiqueta(_("observaciones"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(70);
+        $oDatosCampo->setArgument('70');
         return $oDatosCampo;
     }
 }

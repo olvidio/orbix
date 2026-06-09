@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Fases Activ Cambio Tipo Html
 
-Payload para {
+Payload para fases_activ_cambio: HTML del selector tipo actividad.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

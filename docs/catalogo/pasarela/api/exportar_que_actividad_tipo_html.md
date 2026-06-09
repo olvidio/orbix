@@ -9,6 +9,8 @@ controller: "src/pasarela/infrastructure/ui/http/controllers/exportar_que_activi
 entrada: ["post.id_tipo_activ:string", "post.sactividad:string", "post.sasistentes:string", "post.snom_tipo:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "pasarela_ExportarQueActividadTipoHtmlData"
+respuesta_data: ["html:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/pasarela/controller/exportar_que.php"]
 casos_uso: ["src\\pasarela\\application\\ExportarQueActividadTipoHtml"]
@@ -18,7 +20,7 @@ estado_revision: "generado"
 
 # Exportar Que Actividad Tipo Html
 
-HTML del selector de tipo de actividad para la pantalla «exportar qué». Replica la configuración que antes hacía {
+HTML del selector de tipo de actividad para la pantalla «exportar qué».
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -43,6 +45,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `pasarela_ExportarQueActividadTipoHtmlData`):
+  - `html` (`string`)
 
 ## Permisos
 

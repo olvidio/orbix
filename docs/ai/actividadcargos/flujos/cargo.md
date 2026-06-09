@@ -53,7 +53,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActividadCargo. Crea un ActividadCargo. Elimina un ActividadCargo y, si procede, su Asistente.
+Ver, añadir y quitar cargos de personas en una actividad (dossier 3102). Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Cargo).
 
 ## Errores Documentados
 

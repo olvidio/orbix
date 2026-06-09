@@ -86,9 +86,16 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
             if (!is_array($aDatos)) {
                 continue;
             }
-            $CartaPresentacionSet->add(CartaPresentacion::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $CartaPresentacionSet->add(CartaPresentacion::fromArray($normalized));
         }
-        return array_values($CartaPresentacionSet->getTot());
+        /** @var list<CartaPresentacion> $result */
+        $result = array_values($CartaPresentacionSet->getTot());
+
+        return $result;
     }
 
     public function Eliminar(CartaPresentacion $CartaPresentacion): bool

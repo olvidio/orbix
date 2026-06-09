@@ -16,13 +16,15 @@ $Qf_ini = input_string($_POST, 'f_ini');
 if (empty($Qf_ini)) {
     $oF_ini = null;
 } else {
-    $oF_ini = DateTimeLocal::createFromLocal($Qf_ini);
+    $rawF_ini = DateTimeLocal::createFromLocal($Qf_ini);
+    $oF_ini = $rawF_ini instanceof DateTimeLocal ? $rawF_ini : null;
 }
 $Qf_fin = input_string($_POST, 'f_fin');
 if (empty($Qf_fin)) {
     $oF_fin = null;
 } else {
-    $oF_fin = DateTimeLocal::createFromLocal($Qf_fin);
+    $rawF_fin = DateTimeLocal::createFromLocal($Qf_fin);
+    $oF_fin = $rawF_fin instanceof DateTimeLocal ? $rawF_fin : null;
 }
 $Qlugar = input_string($_POST, 'lugar');
 

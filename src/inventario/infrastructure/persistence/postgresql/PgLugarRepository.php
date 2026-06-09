@@ -128,10 +128,13 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $Lugar = Lugar::fromArray($aDatos);
             $LugarSet->add($Lugar);
         }
-        return array_values($LugarSet->getTot());
+        /** @var list<Lugar> $result */
+        $result = array_values($LugarSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

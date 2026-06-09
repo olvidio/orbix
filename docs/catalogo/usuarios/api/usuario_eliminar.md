@@ -8,7 +8,9 @@ operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/usuario_eliminar.php"
 entrada: ["post.sel:array"]
 entrada_obligatoria: []
-respuesta: "pendiente_revision"
+respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "usuarios_usuarioEliminarData"
+respuesta_data: ["error:string, data: string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/usuario_lista.php"]
 casos_uso: ["src\\usuarios\\application\\usuarioEliminar"]
@@ -35,9 +37,15 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `sel` | `array` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
-No se ha detectado salida estandar. Revisar manualmente.
+- Helper: `ContestarJson::enviar`
+- Forma: `standard_envelope_string_data`
+- Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `usuarios_usuarioEliminarData`):
+  - `error` (`string, data: string`)
 
 ## Casos De Uso
 

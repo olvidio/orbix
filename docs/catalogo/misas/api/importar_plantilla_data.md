@@ -6,12 +6,12 @@ url: "/src/misas/importar_plantilla_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/importar_plantilla_data.php"
-entrada: ["post.id_zona:integer", "post.tipo_plantilla_destino:string", "post.tipo_plantilla_origen:string"]
+entrada: ["post.id_zona:mixed", "post.tipo_plantilla_destino:mixed", "post.tipo_plantilla_origen:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/importar_plantilla.php"]
-casos_uso: ["src\\misas\\application\\ImportarPlantillaData"]
+casos_uso: ["src\\misas\\application\\ImportarPlantillaData", "src\\misas\\application\\support\\MisasBuildInput"]
 tags: ["misas", "importar", "plantilla", "data"]
 estado_revision: "generado"
 ---
@@ -33,9 +33,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_zona` | `integer` | controller | No | controller |
-| `tipo_plantilla_destino` | `string` | controller | No | controller |
-| `tipo_plantilla_origen` | `string` | controller | No | controller |
+| `id_zona` | `mixed` | controller | No | controller |
+| `tipo_plantilla_destino` | `mixed` | controller | No | controller |
+| `tipo_plantilla_origen` | `mixed` | controller | No | controller |
 
 ## Salida
 
@@ -46,6 +46,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Casos De Uso
 
 - `src\misas\application\ImportarPlantillaData`
+- `src\misas\application\support\MisasBuildInput`
 
 ## Frontend Relacionado
 

@@ -6,7 +6,7 @@ url: "/src/ubiscamas/cama_form_data"
 metodos: ["GET", "POST"]
 operacion: "form_data"
 controller: "src/ubiscamas/infrastructure/ui/http/controllers/cama_form_data.php"
-entrada: ["post.id_cama:string", "post.id_habitacion:mixed", "post.id_ubi:integer", "post.mod:string"]
+entrada: ["post.id_cama:string", "post.id_habitacion:string", "post.id_ubi:integer", "post.mod:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -34,7 +34,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `id_cama` | `string` | application | No | application |
-| `id_habitacion` | `mixed` | application | No | application |
+| `id_habitacion` | `string` | application | No | application |
 | `id_ubi` | `integer` | application | No | application |
 | `mod` | `string` | application | No | application |
 

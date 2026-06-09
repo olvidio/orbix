@@ -110,10 +110,16 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Nota = Nota::fromArray($aDatos);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $Nota = Nota::fromArray($normalized);
             $NotaSet->add($Nota);
         }
-        return array_values($NotaSet->getTot());
+        /** @var list<Nota> $items */
+        $items = array_values($NotaSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

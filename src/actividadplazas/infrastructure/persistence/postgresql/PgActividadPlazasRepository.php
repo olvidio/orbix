@@ -101,16 +101,24 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<ActividadPlazas> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            // para los json
-            $aDatos['cedidas'] = (new ConverterJson($aDatos['cedidas'], true))->fromPg();
-            $ActividadPlazas = ActividadPlazas::fromArray($aDatos);
-            $ActividadPlazasSet->add($ActividadPlazas);
+            $cedidasRaw = $aDatos['cedidas'] ?? null;
+            $aDatos['cedidas'] = (new ConverterJson(
+                is_array($cedidasRaw) || is_string($cedidasRaw) || $cedidasRaw instanceof \stdClass ? $cedidasRaw : null,
+                true
+            ))->fromPg();
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = ActividadPlazas::fromArray($normalized);
         }
-        return array_values($ActividadPlazasSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -208,7 +216,11 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         if (!is_array($aDatos)) {
             return false;
         }
-        $aDatos['cedidas'] = (new ConverterJson($aDatos['cedidas'], true))->fromPg();
+        $cedidasRaw = $aDatos['cedidas'] ?? null;
+        $aDatos['cedidas'] = (new ConverterJson(
+            is_array($cedidasRaw) || is_string($cedidasRaw) || $cedidasRaw instanceof \stdClass ? $cedidasRaw : null,
+            true
+        ))->fromPg();
         $result = [];
         foreach ($aDatos as $key => $value) {
             $result[(string)$key] = $value;

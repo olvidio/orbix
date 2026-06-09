@@ -84,7 +84,11 @@ final class LoginProcesar
             return ['ok' => false, 'error' => 1];
         }
         $row['password'] = $password_db;
-        $MiUsuario = (new Usuario())->setAllAttributes($row);
+        $normalized = [];
+        foreach ($row as $key => $value) {
+            $normalized[(string) $key] = $value;
+        }
+        $MiUsuario = (new Usuario())->setAllAttributes($normalized);
 
         $oCrypt = new PasswordHasher();
         if ($oCrypt->encode($password, $password_db) !== $password_db) {

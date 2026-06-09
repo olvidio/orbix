@@ -44,12 +44,6 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
   - `a_valores` (`array`)
   - `puede_anadir` (`boolean`)
 
-## Permisos
-
-- Permiso oficina `adl`
-- Permiso oficina `pr`
-- Permiso oficina `calendario`
-
 ## Casos De Uso
 
 - `src\actividadtarifas\application\RelacionTarifaListaData`

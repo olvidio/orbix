@@ -148,7 +148,7 @@ final class ComunicarActividadesSacdService
             $ord_activ = [];
             foreach ($cAsistentes as $aAsistente) {
                 $id_activ = $this->mixedToInt($aAsistente['id_activ'] ?? 0);
-                $propio = is_true($aAsistente['propio'] ?? false);
+                $propio = is_true($aAsistente['propio'] ?? false) ?? false;
                 $id_cargo = isset($aAsistente['id_cargo']) && $aAsistente['id_cargo'] !== ''
                     ? $this->mixedToInt($aAsistente['id_cargo'])
                     : null;

@@ -6,7 +6,7 @@ url: "/src/devel_db_admin/db_propiedades_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/devel_db_admin/infrastructure/ui/http/controllers/db_propiedades_data.php"
-entrada: ["post.default_esquema:string", "post.op:string", "post.tabla:string"]
+entrada: ["post.default_esquema:mixed", "post.op:mixed", "post.tabla:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "devel_db_admin_DbPropiedadesFormDataData"
@@ -35,9 +35,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `default_esquema` | `string` | application | No | application |
-| `op` | `string` | application | No | application |
-| `tabla` | `string` | application | No | application |
+| `default_esquema` | `mixed` | application | No | application |
+| `op` | `mixed` | application | No | application |
+| `tabla` | `mixed` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

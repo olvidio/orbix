@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Usuario Perm Activ Ajax
 
-Caso de uso: devuelve las opciones disponibles para el desplegable `fase_ref[]` de la pantalla usuario_perm_activ, filtradas por el tipo de actividad y la delegacion.
+Caso de uso: opciones del desplegable fase_ref[] en usuario_perm_activ.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

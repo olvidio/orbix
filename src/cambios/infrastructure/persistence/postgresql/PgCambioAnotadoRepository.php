@@ -116,10 +116,13 @@ class PgCambioAnotadoRepository extends ClaseRepository implements CambioAnotado
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $CambioAnotado = CambioAnotado::fromArray($aDatos);
             $CambioAnotadoSet->add($CambioAnotado);
         }
-        return array_values($CambioAnotadoSet->getTot());
+        /** @var list<CambioAnotado> $result */
+        $result = array_values($CambioAnotadoSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

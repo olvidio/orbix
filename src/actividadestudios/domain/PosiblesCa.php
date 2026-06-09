@@ -42,7 +42,8 @@ class PosiblesCa
             if (array_key_exists($id_situacion, $aSuperadas)) {
                 $todas_asig_p[] = $id_asignatura;
                 // Apunto las opcionales a parte.
-                if ((int)substr($id_nivel, 0, 3) === 243 || (int)substr($id_nivel, 0, 3) === 123) {
+                $idNivelStr = (string) $id_nivel;
+                if ((int)substr($idNivelStr, 0, 3) === 243 || (int)substr($idNivelStr, 0, 3) === 123) {
                     $num_opcionales++;
                 }
             }

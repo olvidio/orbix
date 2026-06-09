@@ -10,7 +10,7 @@ entrada: ["post.f_ini_iso:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadessacd_SacdAsignarAutoData"
-respuesta_data: ["asignadas:int, sin_asignar:int"]
+respuesta_data: ["asignadas:int, sin_asignar: int"]
 requiere_hashb: false
 frontend_referencias: ["frontend/actividadessacd/controller/asignar_sacd_auto.php", "frontend/actividadessacd/view/asignar_sacd_auto.phtml"]
 casos_uso: ["src\\actividadessacd\\application\\SacdAsignarAuto"]
@@ -35,7 +35,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `f_ini_iso` | `string` | application | No | application |
+| `f_ini_iso` | `string` | controller+application | No | controller+application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
@@ -45,7 +45,7 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `actividadessacd_SacdAsignarAutoData`):
-  - `asignadas` (`int, sin_asignar:int`)
+  - `asignadas` (`int, sin_asignar: int`)
 
 ## Casos De Uso
 

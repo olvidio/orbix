@@ -9,6 +9,8 @@ controller: "src/usuarios/infrastructure/ui/http/controllers/mails_contactos_reg
 entrada: ["post.region:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "usuarios_usuariosRegionContactosData"
+respuesta_data: ["error:string, data: array<string, mixed>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/mails_contactos_region.php"]
 casos_uso: ["src\\usuarios\\application\\usuariosRegionContactos"]
@@ -35,11 +37,15 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `region` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `usuarios_usuariosRegionContactosData`):
+  - `error` (`string, data: array<string, mixed>`)
 
 ## Permisos
 

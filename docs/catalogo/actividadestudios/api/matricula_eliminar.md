@@ -19,7 +19,7 @@ estado_revision: "generado"
 
 # Matricula Eliminar
 
-Elimina una o varias matriculas.
+Elimina una o varias matriculas y reajusta los dossiers 1303 / 3103 y las asignaturas impartidas (`ActividadAsignatura`). Sustituye al case `eliminar` del antiguo `update_3103.php` dispatcher.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

@@ -70,11 +70,10 @@ class ModuloInstalado
      */
     public function getDatosCampos(): array
     {
-        $oModuloInstaladoSet = new Set();
-
-        $oModuloInstaladoSet->add($this->getDatosId_mod());
-        $oModuloInstaladoSet->add($this->getDatosStatus());
-        return array_values($oModuloInstaladoSet->getTot());
+        return [
+            $this->getDatosId_mod(),
+            $this->getDatosStatus(),
+        ];
     }
 
     private function getDatosId_mod(): DatosCampo

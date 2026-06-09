@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Solapes Sacd Data
 
-Endpoint backend: devuelve el listado de sacd con actividades incompatibles (solapes) en el periodo.
+Endpoint backend: devuelve sacd con actividades incompatibles (solapes).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -38,15 +38,13 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `periodo` | `string` | controller+application | No | controller+application |
 | `year` | `string` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
-
-## Efectos colaterales
-
-- Para cada sacd de la dl/de paso, devuelve las actividades que le caen en el periodo y que se solapan entre si segun el criterio de `CargoOAsistenteInterface::getSolapes`.
 
 ## Casos De Uso
 

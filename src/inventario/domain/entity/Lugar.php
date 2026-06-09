@@ -79,7 +79,7 @@ class Lugar
         return 'id_lugar';
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos():array
@@ -88,7 +88,9 @@ class Lugar
 
         $oSet->add($this->getDatosId_ubi());
         $oSet->add($this->getDatosNom_lugar());
-        return $oSet->getTot();
+                /** @var list<DatosCampo> $campos */
+        $campos = array_values($oSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_ubi(): DatosCampo
@@ -113,7 +115,7 @@ class Lugar
         $oDatosCampo->setMetodoSet('setNom_lugar');
         $oDatosCampo->setEtiqueta(_("lugar"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 

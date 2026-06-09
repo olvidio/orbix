@@ -21,7 +21,7 @@ estado_revision: "generado"
 
 # Sacd Ausencias Update
 
-Guarda/modifica las ausencias de un SACD (`frontend/encargossacd/controller/sacd_ausencias_update.php`). Devuelve ['error' => bool, 'mensajes' => string] donde `mensajes` acumula los errores de guardado/eliminacion para mostrar al usuario.
+Guarda/modifica las ausencias de un SACD (`frontend/encargossacd/controller/sacd_ausencias_update.php`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -45,10 +45,6 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `encargossacd_SacdAusenciasUpdateData`):
   - `error` (`bool, mensajes: string`)
-
-## Efectos colaterales
-
-- Devuelve ['error' => bool, 'mensajes' => string] donde `mensajes` acumula los errores de guardado/eliminacion para mostrar al usuario.
 
 ## Errores conocidos
 

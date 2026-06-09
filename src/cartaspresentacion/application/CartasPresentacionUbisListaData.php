@@ -87,11 +87,15 @@ final class CartasPresentacionUbisListaData
                 $cId_ubis = $this->relacionCentroDireccionRepository->getUbisPorDireccion($id_direccion);
                 $cCentros = [];
                 foreach ($cId_ubis as $aId_ubi) {
-                    $oCentro = $this->centroDlRepository->findById((int)$aId_ubi['id_ubi']);
-                    if ($oCentro !== null) {
-                        $cCentros[] = $oCentro;
+                    $idUbiRaw = $aId_ubi['id_ubi'] ?? null;
+                        if (!is_numeric($idUbiRaw)) {
+                            continue;
+                        }
+                        $oCentro = $this->centroDlRepository->findById((int) $idUbiRaw);
+                        if ($oCentro !== null) {
+                            $cCentros[] = $oCentro;
+                        }
                     }
-                }
                 $cDirCentros[$d] = [
                     'dir' => $oDireccion->getDireccionPostal(' - '),
                     'colCentros' => $cCentros,
@@ -159,8 +163,15 @@ final class CartasPresentacionUbisListaData
             $nombre_ubi_base = $oCentro->getNombre_ubi();
 
             $cCtrxDir = $this->relacionCentroExDireccionRepository->getDireccionesPorUbi($id_ubi);
+            if ($cCtrxDir === false) {
+                continue;
+            }
             foreach ($cCtrxDir as $aCtrxDir) {
-                $id_direccion = (int)$aCtrxDir['id_direccion'];
+                $idDirRaw = $aCtrxDir['id_direccion'] ?? null;
+                if (!is_numeric($idDirRaw)) {
+                    continue;
+                }
+                $id_direccion = (int) $idDirRaw;
                 $oDireccion = $this->direccionCentroExRepository->findById($id_direccion);
                 if ($oDireccion === null) {
                     continue;

@@ -11,7 +11,7 @@ entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: []
-casos_uso: []
+casos_uso: ["src\\actividades\\application\\ActividadPublicar"]
 tags: ["actividades", "actividad", "publicar"]
 estado_revision: "generado"
 ---
@@ -33,7 +33,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `sel` | `array` | controller | No | controller |
+| `sel` | `array` | controller+application | No | controller+application |
 
 ## Salida
 
@@ -43,7 +43,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- `src\actividades\application\ActividadPublicar`
 
 ## Frontend Relacionado
 

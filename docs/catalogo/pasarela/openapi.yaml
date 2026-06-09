@@ -40,13 +40,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ActivacionDefaultDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ActivacionDefaultDataDataResponse"
   "/src/pasarela/activacion_default_guardar":
     post:
       operationId: "post_pasarela_activacion_default_guardar"
@@ -179,13 +179,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ActivacionListaDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ActivacionListaDataResponse"
   "/src/pasarela/contribucion_no_duerme_default_data":
     post:
       operationId: "post_pasarela_contribucion_no_duerme_default_data"
@@ -214,13 +214,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ContribucionNoDuermeDefaultDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ContribucionNoDuermeDefaultDataDataResponse"
   "/src/pasarela/contribucion_no_duerme_default_guardar":
     post:
       operationId: "post_pasarela_contribucion_no_duerme_default_guardar"
@@ -353,13 +353,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ContribucionNoDuermeListaDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ContribucionNoDuermeListaDataResponse"
   "/src/pasarela/contribucion_reserva_default_data":
     post:
       operationId: "post_pasarela_contribucion_reserva_default_data"
@@ -388,13 +388,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ContribucionReservaDefaultDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ContribucionReservaDefaultDataDataResponse"
   "/src/pasarela/contribucion_reserva_default_guardar":
     post:
       operationId: "post_pasarela_contribucion_reserva_default_guardar"
@@ -527,19 +527,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ContribucionReservaListaDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ContribucionReservaListaDataResponse"
   "/src/pasarela/exportar_actividades_data":
     post:
       operationId: "post_pasarela_exportar_actividades_data"
       summary: "Exportar Actividades Data"
       description: |
-        Caso de uso "exportar actividades": dado un filtro (tipo de actividad, periodo y casas), devuelve cabeceras + filas para el listado de exportación, mezclando datos de actividades con las conversiones de pasarela. Devuelve un array serializable por {
+        Caso de uso "exportar actividades": dado un filtro (tipo de actividad, periodo y casas), devuelve cabeceras + filas para el listado de exportación.
         
         Operacion: `mutacion`.
         
@@ -575,19 +575,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ExportarActividadesDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ExportarActividadesDataDataResponse"
   "/src/pasarela/exportar_que_actividad_tipo_html":
     post:
       operationId: "post_pasarela_exportar_que_actividad_tipo_html"
       summary: "Exportar Que Actividad Tipo Html"
       description: |
-        HTML del selector de tipo de actividad para la pantalla «exportar qué». Replica la configuración que antes hacía {
+        HTML del selector de tipo de actividad para la pantalla «exportar qué».
         
         Operacion: `mutacion`.
         
@@ -615,13 +615,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ExportarQueActividadTipoHtmlDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_ExportarQueActividadTipoHtmlDataResponse"
   "/src/pasarela/nombre_excepcion_eliminar":
     post:
       operationId: "post_pasarela_nombre_excepcion_eliminar"
@@ -720,13 +720,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_NombreListaDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_NombreListaDataResponse"
   "/src/pasarela/tipo_activ_txt_data":
     post:
       operationId: "post_pasarela_tipo_activ_txt_data"
@@ -754,13 +754,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_TipoActivTxtDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/pasarela_TipoActivTxtDataDataResponse"
 components:
   securitySchemes:
     OrbixSession:
@@ -768,6 +768,168 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    pasarela_ActivacionDefaultDataData:
+      type: object
+      properties:
+        default:
+          type: "string"
+    pasarela_ActivacionDefaultDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/pasarela_ActivacionDefaultDataData"
+    pasarela_ActivacionListaData:
+      type: object
+      properties:
+        default:
+          type: "string"
+    pasarela_ActivacionListaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/pasarela_ActivacionListaData"
+    pasarela_ContribucionNoDuermeDefaultDataData:
+      type: object
+      properties:
+        default:
+          type: "string"
+    pasarela_ContribucionNoDuermeDefaultDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/pasarela_ContribucionNoDuermeDefaultDataData"
+    pasarela_ContribucionNoDuermeListaData:
+      type: object
+      properties:
+        default:
+          type: "string"
+    pasarela_ContribucionNoDuermeListaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/pasarela_ContribucionNoDuermeListaData"
+    pasarela_ContribucionReservaDefaultDataData:
+      type: object
+      properties:
+        default:
+          type: "string"
+    pasarela_ContribucionReservaDefaultDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/pasarela_ContribucionReservaDefaultDataData"
+    pasarela_ContribucionReservaListaData:
+      type: object
+      properties:
+        default:
+          type: "string"
+    pasarela_ContribucionReservaListaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/pasarela_ContribucionReservaListaData"
+    pasarela_ExportarActividadesDataData:
+      type: object
+      properties:
+        a_cabeceras:
+          type: "string"
+    pasarela_ExportarActividadesDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/pasarela_ExportarActividadesDataData"
+    pasarela_ExportarQueActividadTipoHtmlData:
+      type: object
+      properties:
+        html:
+          type: "string"
+    pasarela_ExportarQueActividadTipoHtmlDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/pasarela_ExportarQueActividadTipoHtmlData"
+    pasarela_NombreListaData:
+      type: object
+      properties:
+        excepciones:
+          type: "string"
+    pasarela_NombreListaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/pasarela_NombreListaData"
+    pasarela_TipoActivTxtDataData:
+      type: object
+      properties:
+        tipo_txt:
+          type: "string"
+    pasarela_TipoActivTxtDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/pasarela_TipoActivTxtDataData"
     OrbixStandardResponseStringData:
       type: object
       required:

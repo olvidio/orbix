@@ -91,6 +91,9 @@ class rolesLista
             $a_GM = [];
             foreach ($cGMR as $oGrupMenuRole) {
                 $id_grupmenu = $oGrupMenuRole->getId_grupmenu();
+                if ($id_grupmenu === null || !isset($aGrupMenus[$id_grupmenu])) {
+                    continue;
+                }
                 $grup_menu = $aGrupMenus[$id_grupmenu];
                 $a_GM[$id_grupmenu] = $grup_menu;
             }

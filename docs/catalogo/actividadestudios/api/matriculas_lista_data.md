@@ -6,7 +6,7 @@ url: "/src/actividadestudios/matriculas_lista_data"
 metodos: ["GET", "POST"]
 operacion: "lista_data"
 controller: "src/actividadestudios/infrastructure/ui/http/controllers/matriculas_lista_data.php"
-entrada: ["post.finIso:mixed", "post.inicioIso:mixed"]
+entrada: ["post.finIso:string", "post.fin_iso:string", "post.inicioIso:string", "post.inicio_iso:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadestudios_MatriculasListaDataData"
@@ -35,8 +35,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `finIso` | `mixed` | controller | No | controller |
-| `inicioIso` | `mixed` | controller | No | controller |
+| `finIso` | `string` | controller | No | controller |
+| `fin_iso` | `string` | application | No | application |
+| `inicioIso` | `string` | controller | No | controller |
+| `inicio_iso` | `string` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

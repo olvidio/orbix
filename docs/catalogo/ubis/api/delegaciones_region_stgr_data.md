@@ -6,7 +6,7 @@ url: "/src/ubis/delegaciones_region_stgr_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/delegaciones_region_stgr_data.php"
-entrada: ["post.region_stgr:mixed"]
+entrada: ["post.region_stgr:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "ubis_DelegacionesRegionStgrDataData"
@@ -35,7 +35,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `region_stgr` | `mixed` | controller | No | controller |
+| `region_stgr` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

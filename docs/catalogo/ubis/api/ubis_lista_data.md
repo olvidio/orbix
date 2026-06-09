@@ -6,7 +6,7 @@ url: "/src/ubis/ubis_lista_data"
 metodos: ["GET", "POST"]
 operacion: "lista_data"
 controller: "src/ubis/infrastructure/ui/http/controllers/ubis_lista_data.php"
-entrada: ["post.nombre_ubi:string"]
+entrada: ["post.error:string", "post.nombre_ubi:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "ubis_UbisListaDataData"
@@ -35,7 +35,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
+| `error` | `string` | controller | No | controller |
 | `nombre_ubi` | `string` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

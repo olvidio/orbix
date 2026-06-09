@@ -9,6 +9,8 @@ controller: "src/actividadestudios/infrastructure/ui/http/controllers/acta_notas
 entrada: ["post.id_activ:integer", "post.id_asignatura:integer"]
 entrada_obligatoria: []
 respuesta: "raw_response"
+respuesta_data_schema: "actividadestudios_ActaNotasDefinitivasGrabarData"
+respuesta_data: ["success:bool, mensaje: string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/actividadestudios/controller/acta_notas.php"]
 casos_uso: ["src\\actividadestudios\\application\\ActaNotasDefinitivasGrabar"]
@@ -43,6 +45,8 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Helper: `echo`
 - Forma: `raw_response`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `actividadestudios_ActaNotasDefinitivasGrabarData`):
+  - `success` (`bool, mensaje: string`)
 
 ## Casos De Uso
 

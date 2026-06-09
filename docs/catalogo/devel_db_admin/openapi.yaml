@@ -41,13 +41,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/devel_db_admin_AbsorberEsquemaDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/devel_db_admin_AbsorberEsquemaDataResponse"
   "/src/devel_db_admin/apptables_apps_data":
     post:
       operationId: "post_devel_db_admin_apptables_apps_data"
@@ -83,6 +83,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/devel_db_admin_ApptablesAppsDataDataResponse"
+  "/src/devel_db_admin/apptables_update":
+    post:
+      operationId: "post_devel_db_admin_apptables_update"
+      summary: "Apptables Update"
+      description: |
+        Ejecuta {
+        
+        Operacion: `mutacion`.
+        
+        Fuente catalogo: `docs/catalogo/devel_db_admin/api/apptables_update.md`
+      tags:
+        - "devel_db_admin"
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _sin_parametros_detectados:
+                  type: string
+                  description: "No se han inferido campos desde el catalogo."
+      responses:
+        "200":
+          description: "Respuesta generada por Orbix."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_ApptablesUpdateDataResponse"
+        "400":
+          description: "Peticion no valida o error de validacion."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/devel_db_admin_ApptablesUpdateDataResponse"
   "/src/devel_db_admin/copiar_esquema":
     post:
       operationId: "post_devel_db_admin_copiar_esquema"
@@ -619,6 +654,21 @@ components:
           type: string
         data:
           description: "Ver schema concreto de cada operacion."
+    devel_db_admin_AbsorberEsquemaData:
+      type: object
+      properties:
+        "0":
+          type: "string"
+    devel_db_admin_AbsorberEsquemaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/devel_db_admin_AbsorberEsquemaData"
     devel_db_admin_ApptablesAppsDataData:
       type: object
       properties:
@@ -635,6 +685,21 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/devel_db_admin_ApptablesAppsDataData"
+    devel_db_admin_ApptablesUpdateData:
+      type: object
+      properties:
+        ok:
+          type: "string"
+    devel_db_admin_ApptablesUpdateDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/devel_db_admin_ApptablesUpdateData"
     devel_db_admin_CorregirEstadoRenombrarEsquemaData:
       type: object
       properties:

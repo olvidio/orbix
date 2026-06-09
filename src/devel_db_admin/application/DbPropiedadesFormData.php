@@ -92,7 +92,7 @@ final class DbPropiedadesFormData
                 if ($key === '') {
                     continue;
                 }
-                $mapped[$key] = is_scalar($v) ? (string) $v : $key;
+                $mapped[$key] = (string) $v;
             }
         }
 
@@ -125,7 +125,7 @@ final class DbPropiedadesFormData
         $list = [];
         if (is_array($raw)) {
             foreach ($raw as $value) {
-                if (is_scalar($value) && (string) $value !== '') {
+                if ((string) $value !== '') {
                     $list[] = (string) $value;
                 }
             }

@@ -160,8 +160,16 @@ class PgCambioDlRepository extends PgCambioRepository implements CambioDlReposit
         // para las fechas del postgres (texto iso)
         $result['timestamp_cambio'] = (new ConverterDate('timestamp', $result['timestamp_cambio']))->fromPg();
         // para los json
-        $result['json_fases_sv'] = (new ConverterJson($result['json_fases_sv'], true))->fromPg();
-        $result['json_fases_sf'] = (new ConverterJson($result['json_fases_sf'], true))->fromPg();
+        $jsonFasesSv = $result['json_fases_sv'] ?? null;
+        if (!is_string($jsonFasesSv) && !is_array($jsonFasesSv) && !($jsonFasesSv instanceof \stdClass)) {
+            $jsonFasesSv = null;
+        }
+        $jsonFasesSf = $result['json_fases_sf'] ?? null;
+        if (!is_string($jsonFasesSf) && !is_array($jsonFasesSf) && !($jsonFasesSf instanceof \stdClass)) {
+            $jsonFasesSf = null;
+        }
+        $result['json_fases_sv'] = (new ConverterJson($jsonFasesSv, true))->fromPg();
+        $result['json_fases_sf'] = (new ConverterJson($jsonFasesSf, true))->fromPg();
         return $result;
     }
 

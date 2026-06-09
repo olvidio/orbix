@@ -6,7 +6,7 @@ url: "/src/certificados/certificado_emitido_upload_firmado_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/certificados/infrastructure/ui/http/controllers/certificado_emitido_upload_firmado_data.php"
-entrada: ["post.id_item:integer", "post.sel:array"]
+entrada: ["post.id_item:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "certificados_CertificadoEmitidoUploadFirmadoFormDataData"
@@ -36,7 +36,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `id_item` | `integer` | controller | No | controller |
-| `sel` | `array` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

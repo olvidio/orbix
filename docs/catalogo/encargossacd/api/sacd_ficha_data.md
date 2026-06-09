@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Sacd Ficha Data
 
-Datos para la ficha de encargos de un SACD (`sacd_ficha_ajax?que=ficha`). Porta la lectura del antiguo controlador frontend y devuelve un payload estructurado con los encargos y sus dedicaciones (horario del centro y del SACD ya calculadas como texto cuando `mod_horario=3`).
+Datos para la ficha de encargos de un SACD (`sacd_ficha_ajax?que=ficha`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

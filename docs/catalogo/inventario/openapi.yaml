@@ -1454,7 +1454,7 @@ paths:
               type: object
               properties:
                 id_equipaje:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1653,7 +1653,8 @@ components:
       type: object
       properties:
         a_opciones:
-          type: "string"
+          type: array
+          items: {}
     inventario_ColeccionesOpcionesDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
@@ -1668,7 +1669,8 @@ components:
       type: object
       properties:
         a_opciones:
-          type: "string"
+          type: array
+          items: {}
     inventario_TipoDocOpcionesDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"

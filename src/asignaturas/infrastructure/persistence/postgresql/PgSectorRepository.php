@@ -151,9 +151,15 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
             if (!is_array($aDatos)) {
                 continue;
             }
-            $SectorSet->add(Sector::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $SectorSet->add(Sector::fromArray($normalized));
         }
-        return array_values($SectorSet->getTot());
+        /** @var list<Sector> $items */
+        $items = array_values($SectorSet->getTot());
+        return $items;
     }
 
     public function Eliminar(Sector $Sector): bool

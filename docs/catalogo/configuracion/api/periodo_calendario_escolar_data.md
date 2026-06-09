@@ -10,7 +10,7 @@ entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "configuracion_PeriodoCalendarioEscolarDataData"
-respuesta_data: ["mes_fin_stgr:integer", "mes_fin_crt:integer", "dia_ini_stgr:integer", "mes_ini_stgr:integer", "dia_fin_stgr:integer", "dia_ini_crt:integer", "mes_ini_crt:integer", "dia_fin_crt:integer", "mes_fin_crt:integer", "any_final_est:integer", "any_final_crt:integer"]
+respuesta_data: ["mes_fin_stgr:integer", "mes_fin_crt:integer", "dia_ini_stgr:integer", "mes_ini_stgr:integer", "dia_fin_stgr:integer", "dia_ini_crt:integer", "mes_ini_crt:integer", "dia_fin_crt:integer", "any_final_est:integer", "any_final_crt:integer"]
 requiere_hashb: false
 frontend_referencias: ["frontend/shared/web/Periodo.php"]
 casos_uso: ["src\\configuracion\\application\\PeriodoCalendarioEscolarData"]
@@ -49,7 +49,6 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
   - `dia_ini_crt` (`integer`)
   - `mes_ini_crt` (`integer`)
   - `dia_fin_crt` (`integer`)
-  - `mes_fin_crt` (`integer`)
   - `any_final_est` (`integer`)
   - `any_final_crt` (`integer`)
 

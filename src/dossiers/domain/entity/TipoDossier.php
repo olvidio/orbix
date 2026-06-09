@@ -380,27 +380,25 @@ class TipoDossier
     }
 
 
-    /** @return array<string, mixed> */
-
-
-
+    /**
+     * @return list<DatosCampo>
+     */
     public function getDatosCampos():array
     {
-        $oTipoDossierSet = new Set();
-
-        $oTipoDossierSet->add($this->getDatosDescripcion());
-        $oTipoDossierSet->add($this->getDatosTabla_from());
-        $oTipoDossierSet->add($this->getDatosTabla_to());
-        $oTipoDossierSet->add($this->getDatosCampo_to());
-        $oTipoDossierSet->add($this->getDatosId_tipo_dossier_rel());
-        $oTipoDossierSet->add($this->getDatosPermiso_lectura());
-        $oTipoDossierSet->add($this->getDatosPermiso_escritura());
-        $oTipoDossierSet->add($this->getDatosDepende_modificar());
-        $oTipoDossierSet->add($this->getDatosApp());
-        $oTipoDossierSet->add($this->getDatosClass());
-        $oTipoDossierSet->add($this->getDatosDb());
-        $oTipoDossierSet->add($this->getDatosCodigo());
-        return $oTipoDossierSet->getTot();
+        return [
+            $this->getDatosDescripcion(),
+            $this->getDatosTabla_from(),
+            $this->getDatosTabla_to(),
+            $this->getDatosCampo_to(),
+            $this->getDatosId_tipo_dossier_rel(),
+            $this->getDatosPermiso_lectura(),
+            $this->getDatosPermiso_escritura(),
+            $this->getDatosDepende_modificar(),
+            $this->getDatosApp(),
+            $this->getDatosClass(),
+            $this->getDatosDb(),
+            $this->getDatosCodigo(),
+        ];
     }
 
 
@@ -412,7 +410,7 @@ class TipoDossier
         $oDatosCampo->setMetodoSet('setDescripcion');
         $oDatosCampo->setEtiqueta(_("descripción"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(70);
+        $oDatosCampo->setArgument('70');
         return $oDatosCampo;
     }
 
@@ -424,7 +422,7 @@ class TipoDossier
         $oDatosCampo->setMetodoSet('setTabla_from');
         $oDatosCampo->setEtiqueta(_("tabla_from"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(1);
+        $oDatosCampo->setArgument('1');
         return $oDatosCampo;
     }
 
@@ -436,7 +434,7 @@ class TipoDossier
         $oDatosCampo->setMetodoSet('setTabla_to');
         $oDatosCampo->setEtiqueta(_("tabla_to"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(25);
+        $oDatosCampo->setArgument('25');
         return $oDatosCampo;
     }
 
@@ -448,7 +446,7 @@ class TipoDossier
         $oDatosCampo->setMetodoSet('setCampo_to');
         $oDatosCampo->setEtiqueta(_("campo_to"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(20);
+        $oDatosCampo->setArgument('20');
         return $oDatosCampo;
     }
 
@@ -460,7 +458,7 @@ class TipoDossier
         $oDatosCampo->setMetodoSet('setId_tipo_dossier_rel');
         $oDatosCampo->setEtiqueta(_("id_tipo_dossier_rel"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(5);
+        $oDatosCampo->setArgument('5');
         return $oDatosCampo;
     }
 
@@ -472,7 +470,7 @@ class TipoDossier
         $oDatosCampo->setMetodoSet('setPermiso_lectura');
         $oDatosCampo->setEtiqueta(_("permiso de lectura"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(5);
+        $oDatosCampo->setArgument('5');
         return $oDatosCampo;
     }
 
@@ -484,7 +482,7 @@ class TipoDossier
         $oDatosCampo->setMetodoSet('setPermiso_escritura');
         $oDatosCampo->setEtiqueta(_("permiso de escritura"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(5);
+        $oDatosCampo->setArgument('5');
         return $oDatosCampo;
     }
 
@@ -507,7 +505,7 @@ class TipoDossier
         $oDatosCampo->setMetodoSet('setApp');
         $oDatosCampo->setEtiqueta(_("app"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(20);
+        $oDatosCampo->setArgument('20');
         return $oDatosCampo;
     }
 
@@ -519,7 +517,7 @@ class TipoDossier
         $oDatosCampo->setMetodoSet('setClass');
         $oDatosCampo->setEtiqueta(_("class"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(20);
+        $oDatosCampo->setArgument('20');
         return $oDatosCampo;
     }
 
@@ -531,7 +529,7 @@ class TipoDossier
         $oDatosCampo->setMetodoSet('setDb');
         $oDatosCampo->setEtiqueta(_("db"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(1);
+        $oDatosCampo->setArgument('1');
         return $oDatosCampo;
     }
 
@@ -543,7 +541,7 @@ class TipoDossier
         $oDatosCampo->setMetodoSet('setCodigo');
         $oDatosCampo->setEtiqueta(_("código (slug ficheros)"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(80);
+        $oDatosCampo->setArgument('80');
         return $oDatosCampo;
     }
 }

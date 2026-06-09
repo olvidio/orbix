@@ -91,7 +91,7 @@ class Coleccion
         return 'id_coleccion';
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos(): array
@@ -100,7 +100,9 @@ class Coleccion
 
         $oSet->add($this->getDatosNom_coleccion());
         $oSet->add($this->getDatosAgrupar());
-        return $oSet->getTot();
+                /** @var list<DatosCampo> $campos */
+        $campos = array_values($oSet->getTot());
+        return $campos;
     }
 
     private function getDatosNom_coleccion(): DatosCampo

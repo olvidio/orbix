@@ -9,9 +9,11 @@ controller: "src/actividades/infrastructure/ui/http/controllers/actividad_import
 entrada: ["post.sel:array"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "actividades_ActividadImportarData"
+respuesta_data: ["error_txt:string, avisos: list<string>"]
 requiere_hashb: false
 frontend_referencias: []
-casos_uso: []
+casos_uso: ["src\\actividades\\application\\ActividadImportar"]
 tags: ["actividades", "actividad", "importar"]
 estado_revision: "generado"
 ---
@@ -33,17 +35,19 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `sel` | `array` | controller | No | controller |
+| `sel` | `array` | controller+application | No | controller+application |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `actividades_ActividadImportarData`):
+  - `error_txt` (`string, avisos: list<string>`)
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- `src\actividades\application\ActividadImportar`
 
 ## Frontend Relacionado
 

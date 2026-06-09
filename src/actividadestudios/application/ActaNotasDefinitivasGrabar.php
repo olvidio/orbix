@@ -8,8 +8,10 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterf
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\NivelId;
+use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\notas\application\EditarPersonaNota;
 use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaEpoca;
@@ -17,6 +19,8 @@ use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\actividades\domain\entity\TiposActividades;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\is_true;
 
@@ -39,6 +43,10 @@ final class ActaNotasDefinitivasGrabar
         private AsignaturaRepositoryInterface $asignaturaRepository,
         private PersonaNotaRepositoryInterface $personaNotaRepository,
         private ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
+        private DelegacionRepositoryInterface $delegacionRepository,
+        private DbSchemaRepositoryInterface $dbSchemaRepository,
+        private DossierRepositoryInterface $dossierRepository,
+        private PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
     ) {
     }
 
@@ -212,7 +220,7 @@ final class ActaNotasDefinitivasGrabar
             switch ($acta) {
                 case '':
                     if ($oPersonaNotaAnterior !== null) {
-                        $oPersonaNotaAnterior->DBEliminar();
+                        $this->crearEditarPersonaNota($oPersonaNotaAnterior)->eliminar();
                     }
                     continue 2;
                 case NotaSituacion::CURSADA:
@@ -226,7 +234,7 @@ final class ActaNotasDefinitivasGrabar
                                 : NotaSituacion::NUMERICA;
                         } else {
                             if ($oPersonaNotaAnterior !== null) {
-                                $oPersonaNotaAnterior->DBEliminar();
+                                $this->crearEditarPersonaNota($oPersonaNotaAnterior)->eliminar();
                             }
                             continue 2;
                         }
@@ -249,7 +257,7 @@ final class ActaNotasDefinitivasGrabar
             $oPersonaNota->setNotaNumVo($nota_num !== null && $nota_num !== '' ? $notaNumFloat : null);
             $oPersonaNota->setNotaMaxVo(is_numeric($nota_max) ? (int) $nota_max : null);
 
-            $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+            $oEditarPersonaNota = $this->crearEditarPersonaNota($oPersonaNota);
             try {
                 if ($oPersonaNotaAnterior !== null) {
                     $oEditarPersonaNota->editar($Qid_asignatura);
@@ -268,5 +276,17 @@ final class ActaNotasDefinitivasGrabar
             'success' => empty($msg_err),
             'mensaje' => $msg_err,
         ];
+    }
+
+    private function crearEditarPersonaNota(PersonaNota $personaNota): EditarPersonaNota
+    {
+        return new EditarPersonaNota(
+            $personaNota,
+            $this->personaNotaRepository,
+            $this->delegacionRepository,
+            $this->dbSchemaRepository,
+            $this->dossierRepository,
+            $this->personaNotaDlRepository,
+        );
     }
 }

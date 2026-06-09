@@ -132,6 +132,8 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<ActividadAsignatura> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
@@ -139,10 +141,13 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
             // para las fechas del postgres (texto iso)
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
-            $ActividadAsignatura = ActividadAsignatura::fromArray($aDatos);
-            $ActividadAsignaturaSet->add($ActividadAsignatura);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = ActividadAsignatura::fromArray($normalized);
         }
-        return array_values($ActividadAsignaturaSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -207,7 +212,7 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
 
         if ($bInsert) {
             $sid = ConfigGlobal::mi_id_schema();
-            $idSchema = is_numeric($sid) ? (int) $sid : (int) filter_var((string) $sid, FILTER_VALIDATE_INT);
+            $idSchema = $sid;
             if ($idSchema < 1) {
                 throw new \RuntimeException(_('Falta id_schema de sesión (mi_id_schema) para persistir actividad-asignatura.'));
             }

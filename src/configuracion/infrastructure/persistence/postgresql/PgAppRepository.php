@@ -46,7 +46,6 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $AppSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -98,14 +97,18 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $apps = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $App =  App::fromArray($aDatos);
-            $AppSet->add($App);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $apps[] = App::fromArray($normalized);
         }
-        return array_values($AppSet->getTot());
+        return $apps;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

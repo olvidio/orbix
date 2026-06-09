@@ -38,7 +38,7 @@ final class TelecoEditarData
         }
 
         $oUbi = $this->ubiRepositoryResolver->findUbiForPermisos($obj_pau, $id_ubi);
-        $dl = ($oUbi !== null && method_exists($oUbi, 'getDl')) ? (string)($oUbi->getDl() ?? '') : '';
+        $dl = $oUbi !== null ? (string) ($oUbi->getDl() ?? '') : '';
         $botones = UbiPermisos::puedeModificarPorObjeto($obj_pau, $dl) ? '1,3' : '0';
 
         $a_tipos = $this->tipoTelecoRepository->getArrayTiposTelecoUbi();

@@ -6,7 +6,7 @@ url: "/src/menus/grupmenu_info"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/menus/infrastructure/ui/http/controllers/grupmenu_info.php"
-entrada: ["post.id_grupmenu:string"]
+entrada: ["post.id_grupmenu:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -33,7 +33,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_grupmenu` | `string` | controller | No | controller |
+| `id_grupmenu` | `integer` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

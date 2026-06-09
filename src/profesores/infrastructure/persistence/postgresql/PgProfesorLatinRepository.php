@@ -102,10 +102,13 @@ class PgProfesorLatinRepository extends ClaseRepository implements ProfesorLatin
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $ProfesorLatin = ProfesorLatin::fromArray($aDatos);
             $ProfesorLatinSet->add($ProfesorLatin);
         }
-        return array_values($ProfesorLatinSet->getTot());
+        /** @var list<ProfesorLatin> $result */
+        $result = array_values($ProfesorLatinSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

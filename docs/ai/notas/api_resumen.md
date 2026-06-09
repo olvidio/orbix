@@ -21,14 +21,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.acta_imprimir_presentacion_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/acta_imprimir_presentacion_data.php`
-- Entrada: `post.acta:mixed`, `post.mode:mixed`
+- Entrada: `post.acta:string`, `post.mode:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/acta_listado_anual_data`
 
 - Id: `notas.acta_listado_anual_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/acta_listado_anual_data.php`
-- Entrada: `post.finIso:mixed`, `post.inicioIso:mixed`
+- Entrada: `post.finIso:string`, `post.inicioIso:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/acta_modificar`
@@ -70,7 +70,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.acta_select_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/acta_select_data.php`
-- Entrada: `post.acta:mixed`, `post.mes_fin_stgr:mixed`, `post.titulo:mixed`
+- Entrada: `post.acta:string`, `post.mes_fin_stgr:integer`, `post.titulo:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/acta_ver_form_data`
@@ -91,14 +91,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.asig_faltan_personas_select_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/asig_faltan_personas_select_data.php`
-- Entrada: `post.b_c:mixed`, `post.c1:mixed`, `post.c2:mixed`, `post.id_asignatura:mixed`, `post.personas_agd:mixed`, `post.personas_n:mixed`
+- Entrada: `post.b_c:string`, `post.c1:string`, `post.c2:string`, `post.id_asignatura:integer`, `post.personas_agd:string`, `post.personas_n:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/asig_faltan_select_data`
 
 - Id: `notas.asig_faltan_select_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/asig_faltan_select_data.php`
-- Entrada: `post.b_c:mixed`, `post.c1:mixed`, `post.c2:mixed`, `post.lista:mixed`, `post.numero:mixed`, `post.personas_agd:mixed`, `post.personas_n:mixed`
+- Entrada: `post.b_c:string`, `post.c1:string`, `post.c2:string`, `post.lista:string`, `post.numero:integer`, `post.personas_agd:string`, `post.personas_n:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/asignaturas_pendientes_data`
@@ -224,7 +224,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.tessera_copiar_select_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/tessera_copiar_select_data.php`
-- Entrada: `post.id_nom:mixed`
+- Entrada: `post.id_nom:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/tessera_imprimir_data`

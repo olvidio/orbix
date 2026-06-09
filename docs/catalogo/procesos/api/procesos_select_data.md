@@ -9,6 +9,8 @@ controller: "src/procesos/infrastructure/ui/http/controllers/procesos_select_dat
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "procesos_ProcesosSelectDataData"
+respuesta_data: ["a_tipos_proceso:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/procesos/controller/procesos_select.php"]
 casos_uso: ["src\\procesos\\application\\ProcesosSelectData"]
@@ -18,7 +20,7 @@ estado_revision: "generado"
 
 # Procesos Select Data
 
-Caso de uso: datos para la pantalla `procesos_select`. Devuelve las opciones del desplegable de tipo de proceso para que la vista frontend monte el `frontend\shared\web\Desplegable` y los `web\Hash` correspondientes.
+Caso de uso: datos para la pantalla `procesos_select`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -38,6 +40,8 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `procesos_ProcesosSelectDataData`):
+  - `a_tipos_proceso` (`array`)
 
 ## Casos De Uso
 

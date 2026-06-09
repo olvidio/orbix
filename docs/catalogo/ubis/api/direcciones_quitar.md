@@ -9,6 +9,8 @@ controller: "src/ubis/infrastructure/ui/http/controllers/direcciones_quitar.php"
 entrada: ["post.id_direccion:string", "post.id_ubi:integer", "post.idx:integer", "post.obj_dir:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "ubis_DireccionesQuitarData"
+respuesta_data: ["ok:boolean"]
 requiere_hashb: false
 frontend_referencias: ["frontend/ubis/controller/direcciones_quitar.php"]
 casos_uso: ["src\\ubis\\application\\DireccionesQuitar"]
@@ -38,11 +40,15 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `idx` | `integer` | controller | No | controller |
 | `obj_dir` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `ubis_DireccionesQuitarData`):
+  - `ok` (`boolean`)
 
 ## Casos De Uso
 

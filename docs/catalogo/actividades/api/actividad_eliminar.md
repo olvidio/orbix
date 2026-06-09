@@ -10,8 +10,9 @@ entrada: ["post.id_activ:integer", "post.sel:array"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["actividad no encontrada", "sesión de permisos no disponible", "No tiene permiso para borrar esta actividad"]
 frontend_referencias: []
-casos_uso: ["src\\actividades\\application\\BorrarActividad"]
+casos_uso: ["src\\actividades\\application\\ActividadEliminar"]
 tags: ["actividades", "actividad", "eliminar"]
 estado_revision: "generado"
 ---
@@ -33,8 +34,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `integer` | controller | No | controller |
-| `sel` | `array` | controller | No | controller |
+| `id_activ` | `integer` | controller+application | No | controller+application |
+| `sel` | `array` | controller+application | No | controller+application |
 
 ## Salida
 
@@ -44,13 +45,18 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Efectos colaterales
 
-- Servicio de aplicacion para eliminar (o marcar como borrable) una actividad.
-- - Si la actividad es de la propia dl y esta en PROYECTO, se elimina fisicamente.
-- - Si es de otra dl y esta importada (id_tabla='dl'), se elimina de Importada.
+- Elimina actividades indicadas por selección masiva o por id único (planning).
+- Sustituye la lógica del antiguo case `eliminar` de actividad_update.php.
+
+## Errores conocidos
+
+- `actividad no encontrada`
+- `sesión de permisos no disponible`
+- `No tiene permiso para borrar esta actividad`
 
 ## Casos De Uso
 
-- `src\actividades\application\BorrarActividad`
+- `src\actividades\application\ActividadEliminar`
 
 ## Frontend Relacionado
 

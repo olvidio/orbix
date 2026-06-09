@@ -21,7 +21,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `dbextern.sincro_baja`
 - Controller: `src/dbextern/infrastructure/ui/http/controllers/sincro_baja.php`
-- Entrada: `post.dl:string`, `post.id_nom_orbix:string`, `post.tipo_persona:string`
+- Entrada: `post.dl:string`, `post.id_nom_orbix:integer`, `post.tipo_persona:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/dbextern/sincro_crear`
@@ -63,14 +63,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `dbextern.sincro_trasladar`
 - Controller: `src/dbextern/infrastructure/ui/http/controllers/sincro_trasladar.php`
-- Entrada: `post.dl:string`, `post.id_nom_orbix:string`, `post.tipo_persona:string`
+- Entrada: `post.dl:string`, `post.id_nom_orbix:integer`, `post.tipo_persona:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/dbextern/sincro_trasladar_a`
 
 - Id: `dbextern.sincro_trasladar_a`
 - Controller: `src/dbextern/infrastructure/ui/http/controllers/sincro_trasladar_a.php`
-- Entrada: `post.dl:string`, `post.id_nom_orbix:string`, `post.tipo_persona:string`
+- Entrada: `post.dl:string`, `post.id_nom_orbix:integer`, `post.tipo_persona:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/dbextern/sincro_unir`

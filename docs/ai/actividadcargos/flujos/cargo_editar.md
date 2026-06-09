@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ActividadCargoEditar. Edita un ActividadCargo existente.
+Guardar cambios en un cargo existente (tipo, AGD, observaciones y sincronización de asistente). Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Cargo Editar).
 
 ## Errores Documentados
 

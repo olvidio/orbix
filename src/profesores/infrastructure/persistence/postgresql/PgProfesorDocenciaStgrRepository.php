@@ -101,10 +101,13 @@ class PgProfesorDocenciaStgrRepository extends ClaseRepository implements Profes
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $ProfesorDocenciaStgr = ProfesorDocenciaStgr::fromArray($aDatos);
             $ProfesorDocenciaStgrSet->add($ProfesorDocenciaStgr);
         }
-        return array_values($ProfesorDocenciaStgrSet->getTot());
+        /** @var list<ProfesorDocenciaStgr> $result */
+        $result = array_values($ProfesorDocenciaStgrSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

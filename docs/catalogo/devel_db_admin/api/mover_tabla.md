@@ -6,7 +6,7 @@ url: "/src/devel_db_admin/mover_tabla"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/devel_db_admin/infrastructure/ui/http/controllers/mover_tabla.php"
-entrada: ["post.tabla:string"]
+entrada: ["post.tabla:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -33,7 +33,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `tabla` | `string` | controller | No | controller |
+| `tabla` | `mixed` | controller | No | controller |
 
 ## Salida
 

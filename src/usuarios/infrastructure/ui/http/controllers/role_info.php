@@ -77,6 +77,9 @@ if (!empty($Qid_role)) {
         $i++;
         $id_item = $oGrupMenuRole->getId_item();
         $id_grupmenu = $oGrupMenuRole->getId_grupmenu();
+        if ($id_grupmenu === null) {
+            continue;
+        }
         $oGrupMenu = $GrupMenuRepository->findById($id_grupmenu);
         if ($oGrupMenu === null) {
             continue;

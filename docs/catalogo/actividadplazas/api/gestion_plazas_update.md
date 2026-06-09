@@ -34,8 +34,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `colName` | `string` | application | No | application |
-| `data` | `string` | application | No | application |
+| `colName` | `string` | controller+application | No | controller+application |
+| `data` | `string` | controller+application | No | controller+application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

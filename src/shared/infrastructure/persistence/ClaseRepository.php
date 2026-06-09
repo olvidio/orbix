@@ -178,5 +178,19 @@ abstract class ClaseRepository
         return $result;
     }
 
+    /**
+     * @param array<mixed, mixed> $row
+     * @return array<string, mixed>
+     */
+    protected function normalizeAssocRow(array $row): array
+    {
+        $result = [];
+        foreach ($row as $key => $value) {
+            $result[(string) $key] = $value;
+        }
+
+        return $result;
+    }
+
 
 }

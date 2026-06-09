@@ -75,13 +75,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_DocenciaListaDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_DocenciaListaDataResponse"
   "/src/profesores/ficha_profesor_stgr":
     post:
       operationId: "post_profesores_ficha_profesor_stgr"
@@ -203,7 +203,7 @@ paths:
       operationId: "post_profesores_profesor_asignatura_que"
       summary: "Profesor Asignatura Que"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Opciones del desplegable de asignatura en profesor_asignatura_que.
         
         Operacion: `mutacion`.
         
@@ -226,13 +226,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_ProfesorAsignaturaQueDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/profesores_ProfesorAsignaturaQueDataDataResponse"
 components:
   securitySchemes:
     OrbixSession:
@@ -240,6 +240,49 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    profesores_DocenciaListaData:
+      type: object
+      properties:
+        id_tabla:
+          type: "string"
+    profesores_DocenciaListaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/profesores_DocenciaListaData"
+    profesores_ProfesorAsignaturaQueDataData:
+      type: object
+      properties:
+        aOpciones:
+          type: array
+          items: {}
+    profesores_ProfesorAsignaturaQueDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/profesores_ProfesorAsignaturaQueDataData"
     OrbixStandardResponseStringData:
       type: object
       required:

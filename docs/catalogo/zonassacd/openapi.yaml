@@ -40,13 +40,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/zonassacd_ZonaCtrPageDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/zonassacd_ZonaCtrPageDataResponse"
   "/src/zonassacd/zona_ctr_ajax":
     post:
       operationId: "post_zonassacd_zona_ctr_ajax"
@@ -182,13 +182,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/zonassacd_ZonaSacdPageDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/zonassacd_ZonaSacdPageDataResponse"
   "/src/zonassacd/zona_sacd_ajax":
     post:
       operationId: "post_zonassacd_zona_sacd_ajax"
@@ -342,6 +342,50 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    zonassacd_ZonaCtrPageData:
+      type: object
+      properties:
+        a_opciones:
+          type: array
+          items: {}
+    zonassacd_ZonaCtrPageDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/zonassacd_ZonaCtrPageData"
+    zonassacd_ZonaSacdPageData:
+      type: object
+      properties:
+        a_opciones:
+          type: array
+          items: {}
+    zonassacd_ZonaSacdPageDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/zonassacd_ZonaSacdPageData"
     OrbixStandardResponseStringData:
       type: object
       required:

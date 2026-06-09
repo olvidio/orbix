@@ -4,7 +4,7 @@ subtipo: "indice"
 modulo: "misas"
 flujos: 32
 pantallas: 23
-endpoints: 32
+endpoints: 33
 estado_revision: "generado"
 ---
 

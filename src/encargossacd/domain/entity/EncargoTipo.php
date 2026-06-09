@@ -151,17 +151,17 @@ class EncargoTipo
     }
 
     /**
-     * @return array<string, mixed>
+     * @return list<DatosCampo>
      */
     public function getDatosCampos(): array
     {
         $this->traduccion();
 
-        $oEncargoTipoSet = new Set();
-        $oEncargoTipoSet->add($this->getDatosId_tipo_enc());
-        $oEncargoTipoSet->add($this->getDatosTipo_enc());
-        $oEncargoTipoSet->add($this->getDatosMod_horario());
-        return $oEncargoTipoSet->getTot();
+        return [
+            $this->getDatosId_tipo_enc(),
+            $this->getDatosTipo_enc(),
+            $this->getDatosMod_horario(),
+        ];
     }
 
     /**
@@ -178,7 +178,7 @@ class EncargoTipo
         $oDatosCampo->setMetodoSet('setId_tipo_enc');
         $oDatosCampo->setEtiqueta(_("id tipo de encargo"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(10);
+        $oDatosCampo->setArgument('10');
         return $oDatosCampo;
     }
 
@@ -196,7 +196,7 @@ class EncargoTipo
         $oDatosCampo->setMetodoSet('setTipo_enc');
         $oDatosCampo->setEtiqueta(_("tipo de encargo"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 

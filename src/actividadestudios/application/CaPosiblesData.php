@@ -332,7 +332,7 @@ final class CaPosiblesData
                 $nomPersona = $oPersonaDl->getPrefApellidosNombre();
                 $stgr = (int)$oPersonaDl->getNivel_stgr();
                 $ce = '';
-                if (is_object($oPersonaDl) && method_exists($oPersonaDl, 'getCe')) {
+                if (method_exists($oPersonaDl, 'getCe')) {
                     $ceVal = $oPersonaDl->getCe();
                     $ce = is_string($ceVal) ? $ceVal : (string) ($ceVal ?? '');
                 }

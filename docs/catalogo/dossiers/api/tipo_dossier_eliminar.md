@@ -19,7 +19,7 @@ estado_revision: "generado"
 
 # Tipo Dossier Eliminar
 
-Elimina un `TipoDossier`.
+Elimina un `TipoDossier`. Sustituye al case `eliminar` del antiguo `apps/dossiers/controller/perm_dossier_update.php`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

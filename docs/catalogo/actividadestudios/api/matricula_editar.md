@@ -19,7 +19,7 @@ estado_revision: "generado"
 
 # Matricula Editar
 
-Edita una matricula.
+Edita una matricula existente (id_asignatura, id_nivel, id_situacion, preceptor, id_preceptor). Sustituye al case `editar` de `update_3103.php`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

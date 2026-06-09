@@ -6,12 +6,12 @@ url: "/src/misas/crear_nuevo_periodo_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/crear_nuevo_periodo_data.php"
-entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.id_zona:integer", "post.orden:string", "post.periodo:string", "post.seleccion:integer", "post.tipo_plantilla:string"]
+entrada: ["post.empiezamax:mixed", "post.empiezamin:mixed", "post.id_zona:mixed", "post.orden:mixed", "post.periodo:mixed", "post.seleccion:mixed", "post.tipo_plantilla:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: ["frontend/misas/controller/crear_nuevo_periodo.php", "frontend/misas/support/CuadriculaZonaRenderer.php"]
-casos_uso: ["src\\misas\\application\\CrearNuevoPeriodoData"]
+frontend_referencias: ["frontend/misas/controller/crear_nuevo_periodo.php"]
+casos_uso: ["src\\misas\\application\\CrearNuevoPeriodoData", "src\\misas\\application\\support\\MisasBuildInput"]
 tags: ["misas", "crear", "nuevo", "periodo", "data"]
 estado_revision: "generado"
 ---
@@ -33,13 +33,13 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `empiezamax` | `string` | controller | No | controller |
-| `empiezamin` | `string` | controller | No | controller |
-| `id_zona` | `integer` | controller | No | controller |
-| `orden` | `string` | controller | No | controller |
-| `periodo` | `string` | controller | No | controller |
-| `seleccion` | `integer` | controller | No | controller |
-| `tipo_plantilla` | `string` | controller | No | controller |
+| `empiezamax` | `mixed` | controller | No | controller |
+| `empiezamin` | `mixed` | controller | No | controller |
+| `id_zona` | `mixed` | controller | No | controller |
+| `orden` | `mixed` | controller | No | controller |
+| `periodo` | `mixed` | controller | No | controller |
+| `seleccion` | `mixed` | controller | No | controller |
+| `tipo_plantilla` | `mixed` | controller | No | controller |
 
 ## Salida
 
@@ -50,11 +50,11 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Casos De Uso
 
 - `src\misas\application\CrearNuevoPeriodoData`
+- `src\misas\application\support\MisasBuildInput`
 
 ## Frontend Relacionado
 
 - `frontend/misas/controller/crear_nuevo_periodo.php`
-- `frontend/misas/support/CuadriculaZonaRenderer.php`
 
 ## Revision Manual
 

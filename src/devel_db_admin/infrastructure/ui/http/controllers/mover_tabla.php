@@ -20,9 +20,9 @@ $dbp = new DBPropiedades();
 $raw = $dbp->array_esquemas_con_tabla($tabla);
 $a_esquemas = [];
 if (is_array($raw)) {
-    foreach (array_values($raw) as $esquema) {
-        if (is_scalar($esquema) && (string) $esquema !== '') {
-            $a_esquemas[] = (string) $esquema;
+    foreach ($raw as $esquema) {
+        if ($esquema !== '') {
+            $a_esquemas[] = $esquema;
         }
     }
 }

@@ -147,13 +147,16 @@ public function getArrayProfesoresAsignaturaVo(AsignaturaId $id_asignatura): arr
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();
             $aDatos['f_cese'] = (new ConverterDate('date', $aDatos['f_cese']))->fromPg();
             $ProfesorAmpliacion = ProfesorAmpliacion::fromArray($aDatos);
             $ProfesorAmpliacionSet->add($ProfesorAmpliacion);
         }
-        return array_values($ProfesorAmpliacionSet->getTot());
+        /** @var list<ProfesorAmpliacion> $result */
+        $result = array_values($ProfesorAmpliacionSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

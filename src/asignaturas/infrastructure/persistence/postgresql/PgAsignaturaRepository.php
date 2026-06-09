@@ -267,7 +267,11 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             if (!is_array($aDatos)) {
                 continue;
             }
-            $oAsignatura = Asignatura::fromArray($aDatos);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $oAsignatura = Asignatura::fromArray($normalized);
             $oMin = new stdClass();
             $oMin->id_asignatura = $oAsignatura->getIdAsignaturaVo()->value();
             $oMin->id_nivel = $oAsignatura->getIdNivelVo()->value();
@@ -340,9 +344,15 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             if (!is_array($aDatos)) {
                 continue;
             }
-            $AsignaturaSet->add(Asignatura::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $AsignaturaSet->add(Asignatura::fromArray($normalized));
         }
-        return array_values($AsignaturaSet->getTot());
+        /** @var list<Asignatura> $items */
+        $items = array_values($AsignaturaSet->getTot());
+        return $items;
     }
 
     public function Eliminar(Asignatura $Asignatura): bool

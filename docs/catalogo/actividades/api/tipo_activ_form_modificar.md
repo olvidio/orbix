@@ -6,7 +6,7 @@ url: "/src/actividades/tipo_activ_form_modificar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividades/infrastructure/ui/http/controllers/tipo_activ_form_modificar.php"
-entrada: []
+entrada: ["post.id_tipo_activ:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -31,7 +31,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_tipo_activ` | `integer` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

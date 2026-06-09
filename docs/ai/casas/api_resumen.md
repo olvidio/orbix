@@ -56,7 +56,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `casas.casa_ingreso_update`
 - Controller: `src/casas/infrastructure/ui/http/controllers/casa_ingreso_update.php`
-- Entrada: `post.id_activ:integer`, `post.id_tarifa:mixed`, `post.ingresos:string`, `post.num_asistentes:integer`, `post.observ:string`, `post.precio:mixed`
+- Entrada: `post.id_activ:integer`, `post.id_tarifa:string`, `post.ingresos:string`, `post.num_asistentes:integer`, `post.observ:string`, `post.precio:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/casas/casa_ingresos_lista_data`

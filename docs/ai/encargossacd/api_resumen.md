@@ -28,7 +28,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `encargossacd.ctr_ficha_update`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/ctr_ficha_update.php`
-- Entrada: `post.cl:mixed`, `post.dedic_ctr_m:string`, `post.dedic_ctr_t:string`, `post.dedic_ctr_v:string`, `post.dedic_m:mixed`, `post.dedic_t:mixed`, `post.dedic_v:mixed`, `post.e:integer`, `post.id_enc_$e:integer`, `post.id_sacd:mixed`, `post.id_sacd_suplente:integer`, `post.id_sacd_titular:integer`, `post.id_ubi_$e:integer`, `post.mod_$e:string`, `post.n_sacd:integer`, `post.num_alum:integer`, `post.observ:string`, `post.sacd_num:integer`, `post.tipo_centro_$e:string`
+- Entrada: `post.cl:mixed`, `post.dedic_ctr_m:string`, `post.dedic_ctr_t:string`, `post.dedic_ctr_v:string`, `post.dedic_m:mixed`, `post.dedic_t:mixed`, `post.dedic_v:mixed`, `post.e:integer`, `post.id_enc_:integer`, `post.id_sacd:mixed`, `post.id_sacd_suplente:integer`, `post.id_sacd_titular:integer`, `post.id_ubi_:integer`, `post.mod_:string`, `post.n_sacd:integer`, `post.num_alum:integer`, `post.observ:string`, `post.sacd_num:integer`, `post.tipo_centro_:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/encargossacd/ctr_get_ficha_data`

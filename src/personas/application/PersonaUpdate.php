@@ -174,10 +174,12 @@ final class PersonaUpdate
         $oPersona->setLugar_nacimiento(input_string($input, 'lugar_nacimiento'));
 
         $f_nacimiento = input_string($input, 'f_nacimiento');
-        $oPersona->setF_nacimiento($f_nacimiento === '' ? null : DateTimeLocal::createFromLocal($f_nacimiento));
+        $rawF_nacimiento = $f_nacimiento === '' ? null : DateTimeLocal::createFromLocal($f_nacimiento);
+        $oPersona->setF_nacimiento($rawF_nacimiento instanceof DateTimeLocal ? $rawF_nacimiento : null);
 
         $f_situacion = input_string($input, 'f_situacion');
-        $oPersona->setF_situacion($f_situacion === '' ? null : DateTimeLocal::createFromLocal($f_situacion));
+        $rawF_situacion = $f_situacion === '' ? null : DateTimeLocal::createFromLocal($f_situacion);
+        $oPersona->setF_situacion($rawF_situacion instanceof DateTimeLocal ? $rawF_situacion : null);
 
         $oPersona->setProfesion(input_string($input, 'profesion'));
         $oPersona->setSacd(is_true(input_string($input, 'sacd')));
@@ -185,7 +187,8 @@ final class PersonaUpdate
         $oPersona->setInc(input_string($input, 'inc'));
 
         $f_inc = input_string($input, 'f_inc');
-        $oPersona->setF_inc($f_inc === '' ? null : DateTimeLocal::createFromLocal($f_inc));
+        $rawF_inc = $f_inc === '' ? null : DateTimeLocal::createFromLocal($f_inc);
+        $oPersona->setF_inc($rawF_inc instanceof DateTimeLocal ? $rawF_inc : null);
         $oPersona->setObserv(input_string($input, 'observ'));
     }
 

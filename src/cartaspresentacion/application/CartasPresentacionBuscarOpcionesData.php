@@ -37,8 +37,8 @@ final class CartasPresentacionBuscarOpcionesData
     {
         return [
             'opciones_region' => $this->regionDropdown->activasOrdenNombre(),
-            'opciones_pais' => (array)$this->direccionCentroRepository->getArrayPaises(),
-            'opciones_delegacion' => $this->delegacionDropdown->byRegiones(['H']),
+            'opciones_pais' => $this->stringKeyOptions((array) $this->direccionCentroRepository->getArrayPaises()),
+            'opciones_delegacion' => $this->stringKeyOptions($this->delegacionDropdown->byRegiones(['H'])),
             'paths' => [
                 'lista' => 'frontend/cartaspresentacion/controller/cartas_presentacion_lista.php',
             ],
@@ -48,5 +48,19 @@ final class CartasPresentacionBuscarOpcionesData
                 'campos_no' => 'scroll_id!sel',
             ],
         ];
+    }
+
+    /**
+     * @param array<int|string, string> $options
+     * @return array<string, string>
+     */
+    private function stringKeyOptions(array $options): array
+    {
+        $result = [];
+        foreach ($options as $key => $value) {
+            $result[(string) $key] = (string) $value;
+        }
+
+        return $result;
     }
 }

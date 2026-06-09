@@ -20,9 +20,6 @@ final class CambioObjetoDatosCampos
             default => [],
         };
 
-        return array_values(array_filter(
-            $campos,
-            static fn (mixed $campo): bool => $campo instanceof DatosCampo
-        ));
+        return $campos;
     }
 }

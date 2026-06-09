@@ -101,12 +101,15 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_traslado'] = (new ConverterDate('date', $aDatos['f_traslado']))->fromPg();
             $Traslado = Traslado::fromArray($aDatos);
             $TrasladoSet->add($Traslado);
         }
-        return array_values($TrasladoSet->getTot());
+        /** @var list<Traslado> $result */
+        $result = array_values($TrasladoSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

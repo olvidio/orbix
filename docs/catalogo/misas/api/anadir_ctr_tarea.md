@@ -6,7 +6,7 @@ url: "/src/misas/anadir_ctr_tarea"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/anadir_ctr_tarea.php"
-entrada: ["post.id_item:integer", "post.id_tarea:integer", "post.id_ubi:integer", "post.que:string"]
+entrada: ["post.id_item:mixed", "post.id_tarea:mixed", "post.id_ubi:mixed", "post.que:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_AnadirCtrTareaData"
@@ -35,10 +35,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `integer` | controller+application | No | controller+application |
-| `id_tarea` | `integer` | controller+application | No | controller+application |
-| `id_ubi` | `integer` | controller+application | No | controller+application |
-| `que` | `string` | controller+application | No | controller+application |
+| `id_item` | `mixed` | controller | No | controller |
+| `id_tarea` | `mixed` | controller | No | controller |
+| `id_ubi` | `mixed` | controller | No | controller |
+| `que` | `mixed` | controller | No | controller |
 
 ## Salida
 

@@ -83,7 +83,7 @@ final class E43CertificadoData
         $idUbi = $oActividad->getId_ubi();
         $fIni = $oActividad->getF_ini()?->getFromLocal() ?? '';
         $fFin = $oActividad->getF_fin()?->getFromLocal() ?? '';
-        $oUbi = Ubi::NewUbi($idUbi);
+        $oUbi = $idUbi !== null ? Ubi::NewUbi($idUbi) : null;
         $lugar = $oUbi !== null ? $oUbi->getNombre_ubi() : '';
         $txtActividad = "$lugar, $fIni-$fFin";
 

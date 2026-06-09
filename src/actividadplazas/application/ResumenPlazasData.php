@@ -87,9 +87,7 @@ final class ResumenPlazasData
         $dl_opciones_out = [];
         if (is_array($dl_opciones)) {
             foreach ($dl_opciones as $key => $label) {
-                if (is_string($key) && (is_string($label) || is_int($label))) {
-                    $dl_opciones_out[$key] = (string)$label;
-                }
+                $dl_opciones_out[$key] = (string) $label;
             }
         }
 

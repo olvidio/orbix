@@ -6,7 +6,7 @@ url: "/src/actividadestudios/posibles_asignaturas_ca_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividadestudios/infrastructure/ui/http/controllers/posibles_asignaturas_ca_data.php"
-entrada: ["post.id_activ:mixed", "post.nom_activ:mixed"]
+entrada: ["post.id_activ:integer", "post.nom_activ:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadestudios_PosiblesAsignaturasCaDataData"
@@ -35,8 +35,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `mixed` | controller | No | controller |
-| `nom_activ` | `mixed` | controller | No | controller |
+| `id_activ` | `integer` | controller+application | No | controller+application |
+| `nom_activ` | `string` | controller+application | No | controller+application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

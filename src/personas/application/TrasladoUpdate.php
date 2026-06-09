@@ -81,7 +81,8 @@ final class TrasladoUpdate
         $new_ctr = input_string($input, 'new_ctr');
         $f_ctr = input_string($input, 'f_ctr');
         if (!empty($new_ctr) && !empty($f_ctr)) {
-            $oF_ctr = DateTimeLocal::createFromLocal($f_ctr);
+            $rawF_ctr = DateTimeLocal::createFromLocal($f_ctr);
+            $oF_ctr = $rawF_ctr instanceof DateTimeLocal ? $rawF_ctr : null;
             $id_ctr_o = input_string($input, 'id_ctr_o');
             $ctr_o = input_string($input, 'ctr_o');
 
@@ -130,7 +131,8 @@ final class TrasladoUpdate
             $oTrasladoDl->setDl_persona($old_dl);
             $oTrasladoDl->setReg_dl_org($reg_dl_org);
             $oTrasladoDl->setReg_dl_dst($new_dl_sfsv);
-            $oTrasladoDl->setF_traslado(DateTimeLocal::createFromLocal($f_dl));
+            $rawF_dl = DateTimeLocal::createFromLocal($f_dl);
+            $oTrasladoDl->setF_traslado($rawF_dl instanceof DateTimeLocal ? $rawF_dl : null);
             $oTrasladoDl->setSituacionVo($situacion);
             $oTrasladoDl->trasladar();
             $err_dl = $oTrasladoDl->getError();

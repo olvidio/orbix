@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Locales Desplegable Data
 
-Descripcion funcional pendiente de revisar.
+Endpoint backend: desplegable de locales para filtros sacd.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

@@ -102,12 +102,15 @@ class PgUltimaAsistenciaRepository extends ClaseRepository implements UltimaAsis
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $UltimaAsistencia = UltimaAsistencia::fromArray($aDatos);
             $UltimaAsistenciaSet->add($UltimaAsistencia);
         }
-        return array_values($UltimaAsistenciaSet->getTot());
+        /** @var list<UltimaAsistencia> $result */
+        $result = array_values($UltimaAsistenciaSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

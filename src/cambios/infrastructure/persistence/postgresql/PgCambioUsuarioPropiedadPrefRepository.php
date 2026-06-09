@@ -100,10 +100,13 @@ class PgCambioUsuarioPropiedadPrefRepository extends ClaseRepository implements 
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $CambioUsuarioPropiedadPref = CambioUsuarioPropiedadPref::fromArray($aDatos);
             $CambioUsuarioPropiedadPrefSet->add($CambioUsuarioPropiedadPref);
         }
-        return array_values($CambioUsuarioPropiedadPrefSet->getTot());
+        /** @var list<CambioUsuarioPropiedadPref> $result */
+        $result = array_values($CambioUsuarioPropiedadPrefSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

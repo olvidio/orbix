@@ -9,6 +9,8 @@ controller: "src/asistentes/infrastructure/ui/http/controllers/lista_asis_conjun
 entrada: ["post.dl_org:string", "post.empiezamax:string", "post.empiezamin:string", "post.id_tipo_activ:string", "post.id_ubi:integer", "post.modo:string", "post.nom_activ:string", "post.periodo:string", "post.que:string", "post.sactividad:string", "post.sasistentes:string", "post.sfsv:string", "post.snom_tipo:string", "post.status:integer", "post.year:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "asistentes_ListaAsisConjuntoActivDataData"
+respuesta_data: ["content_html:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/asistentes/controller/lista_asis_conjunto_activ.php"]
 casos_uso: ["src\\asistentes\\application\\ListaAsisConjuntoActivData"]
@@ -56,6 +58,8 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `asistentes_ListaAsisConjuntoActivDataData`):
+  - `content_html` (`string`)
 
 ## Casos De Uso
 

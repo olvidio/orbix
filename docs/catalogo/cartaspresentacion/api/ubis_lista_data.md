@@ -38,6 +38,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `poblacion_sel` | `string` | controller+application | No | controller+application |
 | `tipo_lista` | `string` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`

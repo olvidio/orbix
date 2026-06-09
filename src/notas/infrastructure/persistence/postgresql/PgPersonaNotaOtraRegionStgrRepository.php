@@ -203,12 +203,22 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             if (!is_array($aDatos)) {
                 continue;
             }
-            $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta'] ?? null))->fromPg();
-            $aDatos['json_certificados'] = (new ConverterJson($aDatos['json_certificados'] ?? null, false))->fromPg();
-            $oPersonaNotaOtraRegionStgr = PersonaNotaOtraRegionStgr::fromArray($aDatos);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta'] ?? null))->fromPg();
+            $jsonCertificados = $normalized['json_certificados'] ?? null;
+            if (!is_string($jsonCertificados) && !is_array($jsonCertificados) && !($jsonCertificados instanceof \stdClass)) {
+                $jsonCertificados = null;
+            }
+            $normalized['json_certificados'] = (new ConverterJson($jsonCertificados, false))->fromPg();
+            $oPersonaNotaOtraRegionStgr = PersonaNotaOtraRegionStgr::fromArray($normalized);
             $oPersonaNotaOtraRegionStgrSet->add($oPersonaNotaOtraRegionStgr);
         }
-        return array_values($oPersonaNotaOtraRegionStgrSet->getTot());
+        /** @var list<PersonaNotaOtraRegionStgr> $items */
+        $items = array_values($oPersonaNotaOtraRegionStgrSet->getTot());
+        return $items;
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -287,20 +297,32 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             if (!is_array($aDatos)) {
                 continue;
             }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
             // para las fechas del postgres (texto iso)
-            $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
+            $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta']))->fromPg();
             // para los json
-            $aDatos['json_certificados'] = (new ConverterJson($aDatos['json_certificados'], false))->fromPg();
+            $jsonCertificados = $normalized['json_certificados'] ?? null;
+            if (!is_string($jsonCertificados) && !is_array($jsonCertificados) && !($jsonCertificados instanceof \stdClass)) {
+                $jsonCertificados = null;
+            }
+            $normalized['json_certificados'] = (new ConverterJson($jsonCertificados, false))->fromPg();
 
-            $a_pkey = array('id_nom' => $aDatos['id_nom'],
-                'id_nivel' =>  NivelId::fromNullableInt($aDatos['id_nivel']),
-                'tipo_acta' => $aDatos['tipo_acta']);
+            $idNivelRaw = $normalized['id_nivel'] ?? null;
+            $idNivel = is_numeric($idNivelRaw) ? (int) $idNivelRaw : null;
+            $a_pkey = array('id_nom' => $normalized['id_nom'],
+                'id_nivel' => NivelId::fromNullableInt($idNivel),
+                'tipo_acta' => $normalized['tipo_acta']);
             $PersonaNota = $this->chooseNewObject($a_pkey);
             //$PersonaNota->setAllAttributes($aDatos);
-            $PersonaNota = $PersonaNota::fromArray($aDatos);
+            $PersonaNota = $PersonaNota::fromArray($normalized);
             $PersonaNotaSet->add($PersonaNota);
         }
-        return array_values($PersonaNotaSet->getTot());
+        /** @var list<PersonaNotaOtraRegionStgr> $items */
+        $items = array_values($PersonaNotaSet->getTot());
+        return $items;
     }
 
     /**

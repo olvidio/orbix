@@ -6,7 +6,7 @@ url: "/src/procesos/tipo_activ_proceso_lst_posibles"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_lst_posibles.php"
-entrada: []
+entrada: ["post.id_tipo_activ:integer", "post.propio:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Tipo Activ Proceso Lst Posibles
 
-Caso de uso: devuelve la lista de procesos posibles que el usuario puede asignar a un id_tipo_activ concreto, como estructura. El frontend se encarga de la mini-tabla HTML clickable.
+Caso de uso: procesos posibles asignables a un id_tipo_activ.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -31,7 +31,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_tipo_activ` | `integer` | application | No | application |
+| `propio` | `string` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

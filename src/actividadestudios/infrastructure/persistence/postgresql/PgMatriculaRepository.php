@@ -54,14 +54,20 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
             return [];
         }
 
-        foreach ($stmt as $aDatos) {
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<Matricula> $items */
+        $items = [];
+        foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Matricula = Matricula::fromArray($aDatos);
-            $MatriculaSet->add($Matricula);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = Matricula::fromArray($normalized);
         }
-        return array_values($MatriculaSet->getTot());
+        return $items;
     }
 
 
@@ -126,14 +132,19 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<Matricula> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Matricula = Matricula::fromArray($aDatos);
-            $MatriculaSet->add($Matricula);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = Matricula::fromArray($normalized);
         }
-        return array_values($MatriculaSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

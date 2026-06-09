@@ -165,7 +165,7 @@ class ProfesorAmpliacion
         return 'id_item';
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos(): array
@@ -178,7 +178,9 @@ class ProfesorAmpliacion
         $oProfesorAmpliacionSet->add($this->getDatosF_nombramiento());
         $oProfesorAmpliacionSet->add($this->getDatosEscrito_cese());
         $oProfesorAmpliacionSet->add($this->getDatosF_cese());
-        return $oProfesorAmpliacionSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oProfesorAmpliacionSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_nom(): DatosCampo
@@ -216,7 +218,7 @@ class ProfesorAmpliacion
         $oDatosCampo->setMetodoSet('setEscrito_nombramiento');
         $oDatosCampo->setEtiqueta(_("escrito de nombramiento"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 
@@ -239,7 +241,7 @@ class ProfesorAmpliacion
         $oDatosCampo->setMetodoSet('setEscrito_cese');
         $oDatosCampo->setEtiqueta(_("escrito de cese"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 

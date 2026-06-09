@@ -154,7 +154,7 @@ class ProfesorTituloEst
         return 'id_item';
     }
 
-  /** @return array<string, mixed> */
+  /** @return list<DatosCampo> */
 
 
   public function getDatosCampos(): array
@@ -166,7 +166,9 @@ class ProfesorTituloEst
         $oProfesorTituloEstSet->add($this->getDatosCentro_dnt());
         $oProfesorTituloEstSet->add($this->getDatosEclesiastico());
         $oProfesorTituloEstSet->add($this->getDatosYear());
-        return $oProfesorTituloEstSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oProfesorTituloEstSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_nom(): DatosCampo
@@ -189,7 +191,7 @@ class ProfesorTituloEst
         $oDatosCampo->setMetodoSet('setTitulo');
         $oDatosCampo->setEtiqueta(_("título"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(25);
+        $oDatosCampo->setArgument('25');
         return $oDatosCampo;
     }
 
@@ -201,7 +203,7 @@ class ProfesorTituloEst
         $oDatosCampo->setMetodoSet('setCentro_dnt');
         $oDatosCampo->setEtiqueta(_("centro docente"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(25);
+        $oDatosCampo->setArgument('25');
         return $oDatosCampo;
     }
 
@@ -224,7 +226,7 @@ class ProfesorTituloEst
         $oDatosCampo->setMetodoSet('setYear');
         $oDatosCampo->setEtiqueta(_("año"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(5);
+        $oDatosCampo->setArgument('5');
         return $oDatosCampo;
     }
 }

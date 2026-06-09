@@ -17,6 +17,10 @@ $data = [];
 // todos los esquemas
 $oDBPropiedades = new DBPropiedades();
 $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE, TRUE);
+if (!is_array($a_posibles_esquemas)) {
+    ContestarJson::enviar(_("No se pudieron obtener esquemas"), $data);
+    return;
+}
 // sólo para pruebas-sv-e
 $isDocker = FALSE;
 if  (preg_match('/(.*?)\.docker/',ServerConf::SERVIDOR )) {

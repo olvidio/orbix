@@ -180,14 +180,19 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<Role> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Role = Role::fromArray($aDatos);
-            $RoleSet->add($Role);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = Role::fromArray($normalized);
         }
-        return array_values($RoleSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

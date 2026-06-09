@@ -9,6 +9,8 @@ controller: "src/usuarios/infrastructure/ui/http/controllers/grupo_lista.php"
 entrada: ["post.username:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "usuarios_GruposListaData"
+respuesta_data: ["a_cabeceras:list<mixed>, a_botones: list<array<string, string>>, a_valores: array<int, array<int|string, mixed>>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/grupo_lista.php"]
 casos_uso: ["src\\usuarios\\application\\GruposLista"]
@@ -35,11 +37,15 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `username` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `usuarios_GruposListaData`):
+  - `a_cabeceras` (`list<mixed>, a_botones: list<array<string, string>>, a_valores: array<int, array<int|string, mixed>>`)
 
 ## Casos De Uso
 

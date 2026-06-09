@@ -123,9 +123,9 @@ final class PlazasBalanceData
         string $mi_dl
     ): array {
         $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dlA]);
-        $id_dlA = isset($cDelegaciones[0]) ? (int)($cDelegaciones[0]->getIdDlVo()?->value() ?? 0) : 0;
+        $id_dlA = $cDelegaciones !== [] ? (int) $cDelegaciones[0]->getIdDlVo()->value() : 0;
         $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $dlB]);
-        $id_dlB = isset($cDelegaciones[0]) ? (int)($cDelegaciones[0]->getIdDlVo()?->value() ?? 0) : 0;
+        $id_dlB = $cDelegaciones !== [] ? (int) $cDelegaciones[0]->getIdDlVo()->value() : 0;
 
         $aWhereA = [
             'dl_org' => $dlA,

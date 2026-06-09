@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Ver Orbix Datos
 
-Obtiene la lista de personas Orbix sin unir a la BDU.
+Descripcion funcional pendiente de revisar.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -37,6 +37,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_nom_orbix` | `integer` | controller | No | controller |
 | `region` | `string` | controller | No | controller |
 | `tipo_persona` | `string` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

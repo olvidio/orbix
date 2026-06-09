@@ -6,7 +6,7 @@ url: "/src/actividadestudios/e43_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividadestudios/infrastructure/ui/http/controllers/e43_data.php"
-entrada: ["post.id_activ:mixed", "post.id_nom:mixed"]
+entrada: ["post.append_blank_footer:mixed", "post.id_activ:integer", "post.id_nom:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadestudios_E43CertificadoDataData"
@@ -35,8 +35,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `mixed` | controller | No | controller |
-| `id_nom` | `mixed` | controller | No | controller |
+| `append_blank_footer` | `mixed` | application | No | application |
+| `id_activ` | `integer` | controller+application | No | controller+application |
+| `id_nom` | `integer` | controller+application | No | controller+application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

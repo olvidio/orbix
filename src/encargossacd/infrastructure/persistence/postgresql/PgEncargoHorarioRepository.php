@@ -48,7 +48,6 @@ class PgEncargoHorarioRepository extends ClaseRepository implements EncargoHorar
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $EncargoHorarioSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -100,6 +99,7 @@ class PgEncargoHorarioRepository extends ClaseRepository implements EncargoHorar
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $encargoHorarios = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
@@ -109,10 +109,13 @@ class PgEncargoHorarioRepository extends ClaseRepository implements EncargoHorar
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
             $aDatos['h_ini'] = (new ConverterDate('time', $aDatos['h_ini']))->fromPg();
             $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
-            $EncargoHorario =  EncargoHorario::fromArray($aDatos);
-            $EncargoHorarioSet->add($EncargoHorario);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $encargoHorarios[] = EncargoHorario::fromArray($normalized);
         }
-        return array_values($EncargoHorarioSet->getTot());
+        return $encargoHorarios;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

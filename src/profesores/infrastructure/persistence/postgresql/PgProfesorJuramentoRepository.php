@@ -102,12 +102,15 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_juramento'] = (new ConverterDate('date', $aDatos['f_juramento']))->fromPg();
             $ProfesorJuramento = ProfesorJuramento::fromArray($aDatos);
             $ProfesorJuramentoSet->add($ProfesorJuramento);
         }
-        return array_values($ProfesorJuramentoSet->getTot());
+        /** @var list<ProfesorJuramento> $result */
+        $result = array_values($ProfesorJuramentoSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

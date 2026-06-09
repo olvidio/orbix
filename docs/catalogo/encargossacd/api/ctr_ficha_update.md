@@ -6,7 +6,7 @@ url: "/src/encargossacd/ctr_ficha_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/encargossacd/infrastructure/ui/http/controllers/ctr_ficha_update.php"
-entrada: ["post.cl:mixed", "post.dedic_ctr_m:string", "post.dedic_ctr_t:string", "post.dedic_ctr_v:string", "post.dedic_m:mixed", "post.dedic_t:mixed", "post.dedic_v:mixed", "post.e:integer", "post.id_enc_$e:integer", "post.id_sacd:mixed", "post.id_sacd_suplente:integer", "post.id_sacd_titular:integer", "post.id_ubi_$e:integer", "post.mod_$e:string", "post.n_sacd:integer", "post.num_alum:integer", "post.observ:string", "post.sacd_num:integer", "post.tipo_centro_$e:string"]
+entrada: ["post.cl:mixed", "post.dedic_ctr_m:string", "post.dedic_ctr_t:string", "post.dedic_ctr_v:string", "post.dedic_m:mixed", "post.dedic_t:mixed", "post.dedic_v:mixed", "post.e:integer", "post.id_enc_:integer", "post.id_sacd:mixed", "post.id_sacd_suplente:integer", "post.id_sacd_titular:integer", "post.id_ubi_:integer", "post.mod_:string", "post.n_sacd:integer", "post.num_alum:integer", "post.observ:string", "post.sacd_num:integer", "post.tipo_centro_:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "encargossacd_CtrFichaUpdateData"
@@ -43,17 +43,17 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `dedic_t` | `mixed` | application | No | application |
 | `dedic_v` | `mixed` | application | No | application |
 | `e` | `integer` | application | No | application |
-| `id_enc_$e` | `integer` | application | No | application |
+| `id_enc_` | `integer` | application | No | application |
 | `id_sacd` | `mixed` | application | No | application |
 | `id_sacd_suplente` | `integer` | application | No | application |
 | `id_sacd_titular` | `integer` | application | No | application |
-| `id_ubi_$e` | `integer` | application | No | application |
-| `mod_$e` | `string` | application | No | application |
+| `id_ubi_` | `integer` | application | No | application |
+| `mod_` | `string` | application | No | application |
 | `n_sacd` | `integer` | application | No | application |
 | `num_alum` | `integer` | application | No | application |
 | `observ` | `string` | application | No | application |
 | `sacd_num` | `integer` | application | No | application |
-| `tipo_centro_$e` | `string` | application | No | application |
+| `tipo_centro_` | `string` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

@@ -10,7 +10,7 @@ entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.periodo:stri
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadescentro_ListaActividadesCtrDataData"
-respuesta_data: ["0:object, 1: object"]
+respuesta_data: ["titulo:string", "tipo:string", "inicio_iso:string", "fin_iso:string", "filas:list<array<string, mixed>>"]
 requiere_hashb: false
 frontend_referencias: []
 casos_uso: ["src\\actividadescentro\\application\\ListaActividadesCtrData"]
@@ -41,13 +41,19 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `tipo` | `string` | controller+application | No | controller+application |
 | `year` | `string` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `actividadescentro_ListaActividadesCtrDataData`):
-  - `0` (`object, 1: object`)
+  - `titulo` (`string`)
+  - `tipo` (`string`)
+  - `inicio_iso` (`string`)
+  - `fin_iso` (`string`)
+  - `filas` (`list<array<string, mixed>>`)
 
 ## Casos De Uso
 

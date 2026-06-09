@@ -83,9 +83,16 @@ class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements
             if (!is_array($aDatos)) {
                 continue;
             }
-            $RelacionTarifaTipoActividadSet->add(RelacionTarifaTipoActividad::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $RelacionTarifaTipoActividadSet->add(RelacionTarifaTipoActividad::fromArray($normalized));
         }
-        return array_values($RelacionTarifaTipoActividadSet->getTot());
+        /** @var list<RelacionTarifaTipoActividad> $result */
+        $result = array_values($RelacionTarifaTipoActividadSet->getTot());
+
+        return $result;
     }
 
     public function Eliminar(RelacionTarifaTipoActividad $RelacionTarifaTipoActividad): bool

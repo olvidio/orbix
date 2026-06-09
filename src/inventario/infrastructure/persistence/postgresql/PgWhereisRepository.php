@@ -123,10 +123,13 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $Whereis = Whereis::fromArray($aDatos);
             $WhereisSet->add($Whereis);
         }
-        return array_values($WhereisSet->getTot());
+        /** @var list<Whereis> $result */
+        $result = array_values($WhereisSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

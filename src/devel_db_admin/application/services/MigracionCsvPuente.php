@@ -258,8 +258,8 @@ final class MigracionCsvPuente
 
     private function directorioOrbix(): string
     {
-        if (isset(ConfigGlobal::$directorio) && ConfigGlobal::$directorio !== '') {
-            return (string) ConfigGlobal::$directorio;
+        if (ConfigGlobal::$directorio !== '') {
+            return ConfigGlobal::$directorio;
         }
 
         return dirname(__DIR__, 4);

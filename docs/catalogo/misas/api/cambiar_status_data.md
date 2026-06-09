@@ -4,70 +4,57 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/cambiar_status_data"
 metodos: ["GET", "POST"]
-operacion: "consulta"
+operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/cambiar_status_data.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data: ["zonas_opciones:object", "orden_opciones:object", "estados_opciones:object"]
+respuesta_data_schema: "misas_CambiarStatusPantallaDataData"
+respuesta_data: ["zonas_opciones:array", "orden_opciones:array", "estados_opciones:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/cambiar_status.php"]
 casos_uso: ["src\\misas\\application\\CambiarStatusPantallaData"]
-tags: ["misas", "cambiar", "status", "data", "cliente_movil"]
-estado_revision: "revisado"
+tags: ["misas", "cambiar", "status", "data"]
+estado_revision: "generado"
 ---
 
 # Cambiar Status Data
 
-Desplegables para la pantalla **Modificar estado del plan de misas**: zonas, criterio de orden y estados del plan. Solo lectura; la mutación real es [`nuevo_status.md`](nuevo_status.md).
+Formulario "Cambiar estado del plan de misas" (zona, estado, orden).
 
-Convenciones: [`_convenciones_api.md`](../_convenciones_api.md) · Flujo móvil: [`_endpoints_cliente_movil.md`](../_endpoints_cliente_movil.md)
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Endpoint
 
 - URL: `/src/misas/cambiar_status_data`
-- Métodos: `POST` (recomendado), `GET` registrado
+- Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
 - Controller: `src/misas/infrastructure/ui/http/controllers/cambiar_status_data.php`
 
 ## Entrada
 
-Sin parámetros POST. Usa sesión y rol del usuario (`IdNomJefeResolver`).
+Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- `data`: objeto serializado como string JSON (segundo parse).
+- Forma: `standard_envelope_string_data`
+- Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `misas_CambiarStatusPantallaDataData`):
+  - `zonas_opciones` (`array`)
+  - `orden_opciones` (`array`)
+  - `estados_opciones` (`array`)
 
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| `zonas_opciones` | object | Mapa `id_zona → nombre` |
-| `orden_opciones` | object | Claves `orden`, `prioridad`, `desc_enc` |
-| `estados_opciones` | object | Mapa `1/2/3 → etiqueta` (propuesta, comunicado SACD, comunicado centros) |
+## Casos De Uso
 
-### Errores
+- `src\misas\application\CambiarStatusPantallaData`
 
-Si el usuario no puede resolver jefe de calendario (rol `p-sacd` sin permiso): `success: false`, `mensaje` traducido (*No tiene permiso para ver esta página*).
+## Frontend Relacionado
 
-## Flujo móvil
+- `frontend/misas/controller/cambiar_status.php`
 
-1. `cambiar_status_data` → filtros.
-2. `ver_cuadricula_zona_data` con `tipo_plantilla=p` para previsualizar (consulta; cambio de estado no implementado en móvil).
+## Revision Manual
 
-## Ejemplo
-
-```http
-POST /orbix/src/misas/cambiar_status_data HTTP/1.1
-Accept: application/json
-Cookie: PHPSESSID=...
-```
-
-```json
-{
-  "success": true,
-  "data": "{\"zonas_opciones\":{\"12\":\"Zona Norte\"},\"orden_opciones\":{\"desc_enc\":\"alfabético\"},\"estados_opciones\":{\"1\":\"Propuesta\",\"2\":\"Comunicado sacerdotes\"}}"
-}
-```
-
-## Cliente de referencia
-
-- `orbix-android`: `fetchCambiarStatusPantalla()` — pantalla `CambiarStatusPlan` (solo consulta).
+- Confirmar permisos/autorizacion de oficina.
+- Anadir ejemplos reales de request/response.
+- Marcar `estado_revision: "revisado"` cuando este validado.

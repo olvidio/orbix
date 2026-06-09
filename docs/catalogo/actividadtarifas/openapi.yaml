@@ -51,7 +51,7 @@ paths:
       operationId: "post_actividadtarifas_relacion_tarifa_form_data"
       summary: "Relacion Tarifa Form Data"
       description: |
-        Endpoint backend: datos del formulario modificar/nuevo de `RelacionTarifaTipoActividad`.
+        Endpoint backend: datos del form modificar/nuevo `RelacionTarifaTipoActividad`.
         
         Operacion: `form_data`.
         
@@ -160,8 +160,6 @@ paths:
       description: |
         Endpoint backend: copiar tarifas del año anterior.
         
-        Requiere cápsula HashB en `ctx_copiar` (accion `tarifa_ubi_copiar`).
-        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tarifa_ubi_copiar.md`
@@ -173,8 +171,6 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required:
-                - "ctx_copiar"
               properties:
                 ctx_copiar:
                   type: "string"
@@ -202,8 +198,6 @@ paths:
       description: |
         Endpoint backend: elimina una `TarifaUbi`.
         
-        Requiere cápsula HashB en `ctx_eliminar` (accion `tarifa_ubi_eliminar`).
-        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tarifa_ubi_eliminar.md`
@@ -215,8 +209,6 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required:
-                - "ctx_eliminar"
               properties:
                 ctx_eliminar:
                   type: "string"
@@ -240,7 +232,7 @@ paths:
       operationId: "post_actividadtarifas_tarifa_ubi_form_data"
       summary: "Tarifa Ubi Form Data"
       description: |
-        Endpoint backend: datos del formulario modificar/nuevo de `TarifaUbi`.
+        Endpoint backend: datos del form modificar/nuevo `TarifaUbi`.
         
         Operacion: `form_data`.
         
@@ -318,8 +310,6 @@ paths:
       description: |
         Endpoint backend: crea o actualiza una `TarifaUbi`.
         
-        Requiere cápsula HashB en `ctx_update` (accion `tarifa_ubi_update`).
-        
         Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/actividadtarifas/api/tarifa_ubi_update.md`
@@ -331,8 +321,6 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required:
-                - "ctx_update"
               properties:
                 cantidad:
                   type: "string"
@@ -438,7 +426,7 @@ paths:
       operationId: "post_actividadtarifas_tipo_tarifa_form_data"
       summary: "Tipo Tarifa Form Data"
       description: |
-        Endpoint backend: datos del formulario modificar/nuevo de `TipoTarifa`.
+        Endpoint backend: datos del form modificar/nuevo `TipoTarifa`.
         
         Operacion: `form_data`.
         

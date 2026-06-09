@@ -10,8 +10,9 @@ entrada: ["post.sel:array"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["no se ha seleccionado ninguna actividad", "actividad no encontrada", "no se puede duplicar actividades que no sean de la propia dl"]
 frontend_referencias: []
-casos_uso: []
+casos_uso: ["src\\actividades\\application\\ActividadDuplicar"]
 tags: ["actividades", "actividad", "duplicar"]
 estado_revision: "generado"
 ---
@@ -33,7 +34,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `sel` | `array` | controller | No | controller |
+| `sel` | `array` | controller+application | No | controller+application |
 
 ## Salida
 
@@ -41,9 +42,19 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 
+## Permisos
+
+- Permiso oficina `des`
+
+## Errores conocidos
+
+- `no se ha seleccionado ninguna actividad`
+- `actividad no encontrada`
+- `no se puede duplicar actividades que no sean de la propia dl`
+
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- `src\actividades\application\ActividadDuplicar`
 
 ## Frontend Relacionado
 

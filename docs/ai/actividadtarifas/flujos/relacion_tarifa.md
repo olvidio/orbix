@@ -79,7 +79,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona RelacionTarifa. crea o actualiza una RelacionTarifaTipoActividad. datos del formulario modificar/nuevo de RelacionTarifaTipoActividad. elimina una RelacionTarifaTipoActividad. listado de relaciones tarifa ↔ tipo actividad.
+Definir qué tipo de tarifa del catálogo corresponde a cada tipo de actividad. Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Relacion Tarifa).
 
 ## Errores Documentados
 

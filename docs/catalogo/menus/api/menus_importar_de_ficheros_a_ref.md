@@ -5,7 +5,7 @@ modulo: "menus"
 url: "/src/menus/menus_importar_de_ficheros_a_ref"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
-controller: "frontend/menus/controller/menus_importar_de_ficheros_a_ref.php"
+controller: "src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php"
 entrada: ["post.seguro:mixed", "post.todos:mixed"]
 entrada_obligatoria: []
 respuesta: "raw_response"
@@ -27,7 +27,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - URL: `/src/menus/menus_importar_de_ficheros_a_ref`
 - Metodos registrados: `GET, POST`
 - Operacion: `mutacion`
-- Controller: `frontend/menus/controller/menus_importar_de_ficheros_a_ref.php`
+- Controller: `src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php`
 
 ## Entrada
 

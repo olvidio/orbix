@@ -6,11 +6,11 @@ url: "/src/actividades/tipo_activ_eliminar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividades/infrastructure/ui/http/controllers/tipo_activ_eliminar.php"
-entrada: []
+entrada: ["post.id_tipo_activ:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["hay un error, no se ha eliminado"]
+errores: ["tipo de actividad no encontrado", "hay un error, no se ha eliminado"]
 frontend_referencias: ["frontend/actividades/controller/tipo_activ.php"]
 casos_uso: ["src\\actividades\\application\\TipoActivEliminar"]
 tags: ["actividades", "tipo", "activ", "eliminar"]
@@ -32,7 +32,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_tipo_activ` | `integer` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
@@ -49,6 +51,7 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Errores conocidos
 
+- `tipo de actividad no encontrado`
 - `hay un error, no se ha eliminado`
 
 ## Casos De Uso

@@ -147,6 +147,9 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos'));
+        }
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         $this->delPermisoGlobal('comun');

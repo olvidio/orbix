@@ -107,9 +107,15 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
             if (!is_array($aDatos)) {
                 continue;
             }
-            $DepartamentoSet->add(Departamento::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $DepartamentoSet->add(Departamento::fromArray($normalized));
         }
-        return array_values($DepartamentoSet->getTot());
+        /** @var list<Departamento> $items */
+        $items = array_values($DepartamentoSet->getTot());
+        return $items;
     }
 
     public function Eliminar(Departamento $Departamento): bool

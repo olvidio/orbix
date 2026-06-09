@@ -70,22 +70,6 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         return $aDatos;
     }
 
-    /**
-     * @param array<mixed, mixed> $row
-     * @return array<string, mixed>
-     */
-    private function normalizeAssocRow(array $row): array
-    {
-        $result = [];
-        foreach ($row as $key => $value) {
-            if (is_string($key)) {
-                $result[$key] = $value;
-            }
-        }
-
-        return $result;
-    }
-
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
@@ -165,21 +149,28 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             try {
                 $Persona = $this->createEntityFromArray($aDatos);
             } catch (RegionStgrConfigException $e) {
-                $nombre = trim(($aDatos['id_nom'] ?? '') . ': ' .($aDatos['apellido1'] ?? '') . ' ' . ($aDatos['apellido2'] ?? '') . ', ' . ($aDatos['nom'] ?? ''));
+                $nombre = trim(
+                    $this->scalarFieldAsString($aDatos, 'id_nom') . ': '
+                    . $this->scalarFieldAsString($aDatos, 'apellido1') . ' '
+                    . $this->scalarFieldAsString($aDatos, 'apellido2') . ', '
+                    . $this->scalarFieldAsString($aDatos, 'nom')
+                );
                 throw new \RuntimeException($nombre, 0, $e);
             }
             $PersonaDlSet->add($Persona);
         }
-        return array_values($PersonaDlSet->getTot());
+        /** @var list<PersonaPub> $result */
+        $result = array_values($PersonaDlSet->getTot());
+        return $result;
     }
 
     /**
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
-     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
      * @param array<int, true> $sinRegionStgrPorIdNom
      * @return list<PersonaPub>
-     * @param-out array<string, array<string, string>> $problemasRegionStgr
+     * @param-out array<string, array<int|string, string>> $problemasRegionStgr
      * @param-out array<int, true> $sinRegionStgrPorIdNom
      */
     public function getPersonasParaListado(
@@ -243,9 +234,17 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             $PersonaDlSet->add($persona);
         }
 
-        return array_values($PersonaDlSet->getTot());
+        /** @var list<PersonaPub> $result */
+        $result = array_values($PersonaDlSet->getTot());
+
+        return $result;
     }
 
+    /**
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
+     * @param-out array<string, array<int|string, string>> $problemasRegionStgr
+     * @param-out bool $marcaAvisoRegionStgr
+     */
     public function findByIdParaListado(int $id_nom, array &$problemasRegionStgr, bool &$marcaAvisoRegionStgr): ?PersonaPub
     {
         $marcaAvisoRegionStgr = false;
@@ -259,7 +258,8 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
 
     /**
      * @param array<string, mixed> $aDatos
-     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
+     * @param-out array<string, array<int|string, string>> $problemasRegionStgr
      * @param-out bool $marcaAvisoRegionStgr
      */
     private function createEntityParaListado(
@@ -342,5 +342,15 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             return null;
         }
         return $this->createEntityFromArray($aDatos);
+    }
+
+    /**
+     * @param array<string, mixed> $aDatos
+     */
+    private function scalarFieldAsString(array $aDatos, string $key): string
+    {
+        $value = $aDatos[$key] ?? '';
+
+        return is_scalar($value) ? (string) $value : '';
     }
 }

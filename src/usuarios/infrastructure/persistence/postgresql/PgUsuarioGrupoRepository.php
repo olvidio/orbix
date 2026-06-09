@@ -98,14 +98,19 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<UsuarioGrupo> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $UsuarioGrupo = UsuarioGrupo::fromArray($aDatos);
-            $UsuarioGrupoSet->add($UsuarioGrupo);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = UsuarioGrupo::fromArray($normalized);
         }
-        return array_values($UsuarioGrupoSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

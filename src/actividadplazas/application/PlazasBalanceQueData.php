@@ -61,7 +61,7 @@ final class PlazasBalanceQueData
 
         $opciones = [];
         foreach ($delegaciones as $dl) {
-            $opciones[$dl->getDlVo()?->value() ?? ''] = $dl->getNombreDlVo()?->value() ?? '';
+            $opciones[$dl->getDlVo()->value()] = $dl->getNombreDlVo()?->value() ?? '';
         }
 
         return $opciones;

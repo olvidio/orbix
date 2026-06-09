@@ -4,56 +4,60 @@ tipo: "endpoint"
 modulo: "encargossacd"
 url: "/src/encargossacd/sacd_select_data"
 metodos: ["GET", "POST"]
-operacion: "consulta"
+operacion: "mutacion"
 controller: "src/encargossacd/infrastructure/ui/http/controllers/sacd_select_data.php"
-entrada: ["post.filtro_sacd:string", "post.id_nom:integer"]
+entrada: ["post.filtro_sacd:mixed", "post.id_nom:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data: ["opciones:object", "selected:integer", "label_prefix:string"]
+respuesta_data_schema: "encargossacd_SacdSelectDataData"
+respuesta_data: ["opciones:array", "selected:integer", "label_prefix:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/sacd_ficha_ajax.php"]
 casos_uso: ["src\\encargossacd\\application\\SacdSelectData"]
-tags: ["encargossacd", "sacd", "select", "data", "cliente_movil"]
-estado_revision: "revisado"
+tags: ["encargossacd", "sacd", "select", "data"]
+estado_revision: "generado"
 ---
 
 # Sacd Select Data
 
-Desplegable de sacerdotes filtrados por tabla (`id_tabla`), usado en la ficha SACD y en **Ausencias SACD** (`sacd_ausencias.php` vía `sacd_ficha_ajax?que=get_select`).
+Opciones para el desplegable de SACDs filtrados por tabla (`sacd_ficha_ajax?que=get_select`).
 
-Convenciones: [`_convenciones_api.md`](../_convenciones_api.md) · Ausencias: [`sacd_ausencias_get_data.md`](sacd_ausencias_get_data.md)
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Endpoint
 
 - URL: `/src/encargossacd/sacd_select_data`
-- Métodos: `POST` (recomendado)
+- Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/sacd_select_data.php`
 
 ## Entrada
 
-| Campo | Tipo | Obligatorio | Notas |
-|-------|------|-------------|-------|
-| `filtro_sacd` | string | No | `n`, `a` (agd), `sssc` (sss+), `cp_sss` (cp) — ver `SacdFichaAjaxHashes::opcionesFiltroSacd()` |
-| `id_nom` | int | No | SACD preseleccionado; `0` si ninguno |
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `filtro_sacd` | `mixed` | controller | No | controller |
+| `id_nom` | `mixed` | controller | No | controller |
 
 ## Salida
 
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| `opciones` | object | Mapa `id_nom → nombre` |
-| `selected` | int | Eco de `id_nom` |
-| `label_prefix` | string | Etiqueta HTML legacy; móvil puede ignorar |
+- Helper: `ContestarJson::enviar`
+- Forma: `standard_envelope_string_data`
+- Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `encargossacd_SacdSelectDataData`):
+  - `opciones` (`array`)
+  - `selected` (`integer`)
+  - `label_prefix` (`string`)
 
-## Ejemplo
+## Casos De Uso
 
-```http
-POST /orbix/src/encargossacd/sacd_select_data HTTP/1.1
-Content-Type: application/x-www-form-urlencoded
-Cookie: PHPSESSID=...
+- `src\encargossacd\application\SacdSelectData`
 
-filtro_sacd=n&id_nom=0
-```
+## Frontend Relacionado
 
-## Cliente de referencia
+- `frontend/encargossacd/controller/sacd_ficha_ajax.php`
 
-- `orbix-android`: `fetchSacdSelectPage()` — menú `sacd_ausencias.php`, modo `SacdLista`.
+## Revision Manual
+
+- Confirmar permisos/autorizacion de oficina.
+- Anadir ejemplos reales de request/response.
+- Marcar `estado_revision: "revisado"` cuando este validado.

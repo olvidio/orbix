@@ -92,13 +92,14 @@ final class PersonaNotaInputParser
             $epoca = NotaEpoca::EPOCA_OTRO;
         }
 
-        $oF_acta = empty($f_acta) ? null : DateTimeLocal::createFromLocal($f_acta);
+        $parsedF_acta = $f_acta === '' ? null : DateTimeLocal::createFromLocal($f_acta);
+        $oF_acta = $parsedF_acta instanceof DateTimeLocal ? $parsedF_acta : null;
 
         $oPersonaNota->setIdSituacionVo($id_situacion);
         $oPersonaNota->setActaVo($acta);
         $oPersonaNota->setDetalleVo($detalle);
         $oPersonaNota->setF_acta($oF_acta);
-        $oPersonaNota->setPreceptor(is_true($preceptor));
+        $oPersonaNota->setPreceptor(is_true($preceptor) ?? false);
         $oPersonaNota->setId_preceptor($id_preceptor);
         $oPersonaNota->setEpocaVo($epoca);
         $oPersonaNota->setIdActivVo($id_activ);

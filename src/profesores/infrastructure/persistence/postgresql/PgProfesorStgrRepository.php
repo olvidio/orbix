@@ -103,13 +103,16 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();
             $aDatos['f_cese'] = (new ConverterDate('date', $aDatos['f_cese']))->fromPg();
             $ProfesorStgr = ProfesorStgr::fromArray($aDatos);
             $ProfesorStgrSet->add($ProfesorStgr);
         }
-        return array_values($ProfesorStgrSet->getTot());
+        /** @var list<ProfesorStgr> $result */
+        $result = array_values($ProfesorStgrSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

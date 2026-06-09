@@ -280,7 +280,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `inventario.lista_equipajes_posibles_maletas`
 - Controller: `src/inventario/infrastructure/ui/http/controllers/lista_equipajes_posibles_maletas.php`
-- Entrada: `post.id_equipaje:string`
+- Entrada: `post.id_equipaje:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/inventario/lista_lugares_de_ubi`

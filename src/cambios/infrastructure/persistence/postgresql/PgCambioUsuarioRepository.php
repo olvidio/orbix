@@ -122,10 +122,13 @@ class PgCambioUsuarioRepository extends ClaseRepository implements CambioUsuario
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $CambioUsuario = CambioUsuario::fromArray($aDatos);
             $CambioUsuarioSet->add($CambioUsuario);
         }
-        return array_values($CambioUsuarioSet->getTot());
+        /** @var list<CambioUsuario> $result */
+        $result = array_values($CambioUsuarioSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

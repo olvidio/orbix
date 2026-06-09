@@ -35,8 +35,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `dl_org` | `string` | controller | No | controller |
-| `isfsv` | `integer` | controller | No | controller |
+| `dl_org` | `string` | controller+application | No | controller+application |
+| `isfsv` | `integer` | controller+application | No | controller+application |
 | `tipo` | `string` | controller | No | controller |
 
 ## Salida

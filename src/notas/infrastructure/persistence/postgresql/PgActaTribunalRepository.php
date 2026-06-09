@@ -157,10 +157,16 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
             if (!is_array($aDatos)) {
                 continue;
             }
-            $ActaTribunalDl = ActaTribunal::fromArray($aDatos);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $ActaTribunalDl = ActaTribunal::fromArray($normalized);
             $ActaTribunalDlSet->add($ActaTribunalDl);
         }
-        return array_values($ActaTribunalDlSet->getTot());
+        /** @var list<ActaTribunal> $items */
+        $items = array_values($ActaTribunalDlSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

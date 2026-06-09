@@ -10,7 +10,7 @@ entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.periodo:stri
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadessacd_ListaActividadesSacdDataData"
-respuesta_data: ["0:object, 1: object, 2: object"]
+respuesta_data: ["0:PermAccion, 1: PermAccion, 2: PermAccion"]
 requiere_hashb: false
 frontend_referencias: ["frontend/actividadessacd/controller/activ_sacd.php"]
 casos_uso: ["src\\actividadessacd\\application\\ListaActividadesSacdData"]
@@ -41,13 +41,15 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `tipo` | `string` | controller+application | No | controller+application |
 | `year` | `string` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `actividadessacd_ListaActividadesSacdDataData`):
-  - `0` (`object, 1: object, 2: object`)
+  - `0` (`PermAccion, 1: PermAccion, 2: PermAccion`)
 
 ## Permisos
 

@@ -308,7 +308,7 @@ paths:
       operationId: "post_notas_acta_pdf_subir"
       summary: "Acta Pdf Subir"
       description: |
-        Sube (persiste) el contenido binario de un PDF firmado en el campo `pdf` del acta identificada por `acta_num`. El contenido se lee del array `$files` que tiene la misma forma que `$_FILES` (clave `acta_pdf` generada por bootstrap-fileinput en `acta_ver.phtml`).
+        Sube (persiste) el contenido binario de un PDF firmado en el campo `pdf` del acta identificada por `acta_num`.
         
         Operacion: `mutacion`.
         
@@ -359,7 +359,7 @@ paths:
                 acta:
                   type: "string"
                 mes_fin_stgr:
-                  type: "string"
+                  type: "integer"
                 titulo:
                   type: "string"
       responses:
@@ -474,7 +474,7 @@ paths:
                 c2:
                   type: "string"
                 id_asignatura:
-                  type: "string"
+                  type: "integer"
                 personas_agd:
                   type: "string"
                 personas_n:
@@ -520,7 +520,7 @@ paths:
                 lista:
                   type: "string"
                 numero:
-                  type: "string"
+                  type: "integer"
                 personas_agd:
                   type: "string"
                 personas_n:
@@ -1162,7 +1162,7 @@ paths:
               type: object
               properties:
                 id_nom:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."

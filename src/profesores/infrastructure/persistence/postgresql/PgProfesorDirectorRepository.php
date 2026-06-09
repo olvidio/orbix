@@ -102,13 +102,16 @@ class PgProfesorDirectorRepository extends ClaseRepository implements ProfesorDi
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();
             $aDatos['f_cese'] = (new ConverterDate('date', $aDatos['f_cese']))->fromPg();
             $ProfesorDirector = ProfesorDirector::fromArray($aDatos);
             $ProfesorDirectorSet->add($ProfesorDirector);
         }
-        return array_values($ProfesorDirectorSet->getTot());
+        /** @var list<ProfesorDirector> $result */
+        $result = array_values($ProfesorDirectorSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -32,7 +32,8 @@ final class MoverTabla
             $esquemaNewv = $esquemaTxt;
             $esquemaRefv = $esquemaTxt;
 
-            $aTablas = [$tabla => $tabla];
+            /** @var array<string, array<string, mixed>> $aTablas */
+            $aTablas = [$tabla => []];
             $oDBTabla = new DBTabla();
             $oDBTabla->setTablas($aTablas);
             $oDBTabla->setRef($esquemaRefv);

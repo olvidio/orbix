@@ -40,6 +40,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `mod` | `string` | controller | No | controller |
 | `obj_dir` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`

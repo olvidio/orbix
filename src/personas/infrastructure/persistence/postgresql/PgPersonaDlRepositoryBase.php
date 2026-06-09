@@ -111,22 +111,8 @@ abstract class PgPersonaDlRepositoryBase extends ClaseRepository
             $Persona = $this->createEntityFromArray($aDatos);
             $PersonaDlSet->add($Persona);
         }
-        return array_values($PersonaDlSet->getTot());
-    }
-
-    /**
-     * @param array<mixed, mixed> $row
-     * @return array<string, mixed>
-     */
-    private function normalizeAssocRow(array $row): array
-    {
-        $result = [];
-        foreach ($row as $key => $value) {
-            if (is_string($key)) {
-                $result[$key] = $value;
-            }
-        }
-
+        /** @var list<PersonaDl> $result */
+        $result = array_values($PersonaDlSet->getTot());
         return $result;
     }
 

@@ -3,6 +3,7 @@
 namespace src\actividadestudios\application;
 
 use src\shared\config\ConfigGlobal;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\Matricula;
@@ -268,7 +269,7 @@ class Select_matriculas_de_una_persona
             throw new \Exception(sprintf(_("No se ha encontrado alumno con id_nom: %s"), $this->id_pau));
         }
         $stgr = $oPersona->getNivel_stgr();
-        if ($stgr === 'r') {
+        if ($stgr === NivelStgrId::R) {
             $this->avisoLines[] = _("está de repaso") . "<br>";
         }
 

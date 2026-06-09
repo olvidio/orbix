@@ -6,7 +6,7 @@ url: "/src/procesos/procesos_depende"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/procesos_depende.php"
-entrada: []
+entrada: ["post.acc:string", "post.valor_depende:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "procesos_ProcesosDependeData"
@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Procesos Depende
 
-Caso de uso: devuelve las opciones disponibles para el desplegable de tareas dependientes de la fase indicada (usado al cambiar de fase o fase_previa en el formulario procesos_ver). Respuesta JSON con `opciones` (value => label). El frontend inyecta los `<option>` en el `<select>` destino indicado por `acc`.
+Caso de uso: opciones del desplegable de tareas dependientes de una fase.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -33,7 +33,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `acc` | `string` | application | No | application |
+| `valor_depende` | `integer` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

@@ -127,10 +127,13 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $Coleccion = Coleccion::fromArray($aDatos);
             $ColeccionSet->add($Coleccion);
         }
-        return array_values($ColeccionSet->getTot());
+        /** @var list<Coleccion> $result */
+        $result = array_values($ColeccionSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

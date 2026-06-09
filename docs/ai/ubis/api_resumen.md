@@ -63,21 +63,21 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.centros_form_labor`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/centros_form_labor.php`
-- Entrada: `post.id_ubi:mixed`
+- Entrada: `post.id_ubi:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/centros_form_num`
 
 - Id: `ubis.centros_form_num`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/centros_form_num.php`
-- Entrada: `post.id_ubi:mixed`
+- Entrada: `post.id_ubi:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/centros_form_plazas`
 
 - Id: `ubis.centros_form_plazas`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/centros_form_plazas.php`
-- Entrada: `post.id_ubi:mixed`
+- Entrada: `post.id_ubi:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/centros_get_labor`
@@ -105,7 +105,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.centros_opciones_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/centros_opciones_data.php`
-- Entrada: `post.active:mixed`, `post.id_ubi_in:mixed`, `post.sf:mixed`, `post.sv:mixed`, `post.tipo_ctr:mixed`
+- Entrada: `post.active:mixed`, `post.id_ubi_in:mixed`, `post.sf:mixed`, `post.sv:mixed`, `post.tipo_ctr:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/centros_update`
@@ -126,7 +126,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.delegaciones_region_stgr_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/delegaciones_region_stgr_data.php`
-- Entrada: `post.region_stgr:mixed`
+- Entrada: `post.region_stgr:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/direccion_update`
@@ -189,7 +189,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.lista_ctrs_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/lista_ctrs_data.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.error:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/teleco_desc_lista`
@@ -203,21 +203,21 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.teleco_editar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/teleco_editar.php`
-- Entrada: `post.id_ubi:integer`, `post.mod:string`, `post.obj_pau:string`, `post.s_pkey:string`, `post.sel:array`
+- Entrada: `post.id_ubi:integer`, `post.mod:string`, `post.obj_pau:string`, `post.s_pkey:string`, `post.sel:mixed`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/teleco_eliminar`
 
 - Id: `ubis.teleco_eliminar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/teleco_eliminar.php`
-- Entrada: `post.obj_pau:string`, `post.sel:array`
+- Entrada: `post.obj_pau:string`, `post.sel:mixed`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/teleco_guardar`
 
 - Id: `ubis.teleco_guardar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/teleco_guardar.php`
-- Entrada: `post.id_desc_teleco:integer`, `post.id_tipo_teleco:integer`, `post.id_ubi:integer`, `post.num_teleco:string`, `post.obj_pau:string`, `post.observ:string`, `post.s_pkey:string`, `post.sel:array`
+- Entrada: `post.id_desc_teleco:integer`, `post.id_tipo_teleco:integer`, `post.id_ubi:integer`, `post.num_teleco:string`, `post.obj_pau:string`, `post.observ:string`, `post.s_pkey:string`, `post.sel:mixed`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/teleco_tabla`
@@ -259,7 +259,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.ubis_editar_normalize_dl_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/ubis_editar_normalize_dl_data.php`
-- Entrada: `post.id_ubi:mixed`, `post.nombre_ubi:mixed`, `post.obj_pau:mixed`, `post.tipo_ubi:mixed`
+- Entrada: `post.id_ubi:integer`, `post.nombre_ubi:string`, `post.obj_pau:string`, `post.tipo_ubi:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/ubis_eliminar`
@@ -273,19 +273,19 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `ubis.ubis_guardar`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/ubis_guardar.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.active:string`, `post.cdc:string`, `post.dl:string`, `post.id_ctr_padre:integer`, `post.id_ubi:integer`, `post.n_buzon:integer`, `post.nombre_ubi:string`, `post.num_cartas:integer`, `post.num_cartas_mensuales:integer`, `post.num_habit_indiv:integer`, `post.num_pi:integer`, `post.num_sacd:integer`, `post.obj_pau:string`, `post.observ:string`, `post.plazas:integer`, `post.plazas_min:integer`, `post.region:string`, `post.sf:string`, `post.sv:string`, `post.tipo_casa:string`, `post.tipo_ctr:string`, `post.tipo_labor:mixed`, `post.tipo_ubi:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/ubis_lista_data`
 
 - Id: `ubis.ubis_lista_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/ubis_lista_data.php`
-- Entrada: `post.nombre_ubi:string`
+- Entrada: `post.error:string`, `post.nombre_ubi:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/ubis_tabla_data`
 
 - Id: `ubis.ubis_tabla_data`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/ubis_tabla_data.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.error:string`
 - Respuesta: `standard_envelope_string_data`

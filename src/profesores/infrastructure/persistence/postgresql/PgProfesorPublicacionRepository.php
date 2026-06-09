@@ -103,12 +103,15 @@ class PgProfesorPublicacionRepository extends ClaseRepository implements Profeso
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_publicacion'] = (new ConverterDate('date', $aDatos['f_publicacion']))->fromPg();
             $Publicacion = ProfesorPublicacion::fromArray($aDatos);
             $PublicacionSet->add($Publicacion);
         }
-        return array_values($PublicacionSet->getTot());
+        /** @var list<ProfesorPublicacion> $result */
+        $result = array_values($PublicacionSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

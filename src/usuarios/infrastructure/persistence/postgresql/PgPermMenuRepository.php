@@ -98,14 +98,19 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<PermMenu> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $PermMenu = PermMenu::fromArray($aDatos);
-            $PermMenuSet->add($PermMenu);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = PermMenu::fromArray($normalized);
         }
-        return array_values($PermMenuSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

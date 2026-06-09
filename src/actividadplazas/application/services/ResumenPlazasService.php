@@ -596,11 +596,11 @@ class ResumenPlazasService
         $a_dele = [];
         $a_id_dele = [];
         foreach ($cDelegaciones as $oDelegacion) {
-            $dl = $oDelegacion->getDlVo()?->value() ?? '';
+            $dl = (string) $oDelegacion->getDlVo()->value();
             if (ConfigGlobal::mi_sfsv() === 2) {
                 $dl .= 'f';
             }
-            $id_dl = (int)($oDelegacion->getIdDlVo()?->value() ?? 0);
+            $id_dl = (int) $oDelegacion->getIdDlVo()->value();
             $a_dele[$id_dl] = $dl;
             $a_id_dele[$dl] = $id_dl;
         }

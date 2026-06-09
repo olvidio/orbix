@@ -19,7 +19,7 @@ estado_revision: "generado"
 
 # Matricula Nueva
 
-Crea una matricula.
+Crea una matricula (asignatura de una persona en una actividad) y ajusta los dossiers 1303 (persona) y 3103 (actividad) + la asignatura impartida (`ActividadAsignatura`). Sustituye al case `nuevo` de `update_3103.php`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

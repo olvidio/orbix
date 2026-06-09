@@ -9,6 +9,8 @@ controller: "src/menus/infrastructure/ui/http/controllers/grupmenu_lista.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "menus_GrupMenuListaUseCaseData"
+respuesta_data: ["a_lista:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/menus/controller/grupmenu_lista.php", "frontend/menus/controller/menus_get.php", "frontend/menus/controller/menus_que.php"]
 casos_uso: ["src\\menus\\application\\GrupMenuListaUseCase"]
@@ -38,6 +40,8 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `menus_GrupMenuListaUseCaseData`):
+  - `a_lista` (`array`)
 
 ## Casos De Uso
 

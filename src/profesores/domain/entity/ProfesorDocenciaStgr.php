@@ -188,7 +188,7 @@ class ProfesorDocenciaStgr
         return 'id_item';
     }
 
-  /** @return array<string, mixed> */
+  /** @return list<DatosCampo> */
 
 
   public function getDatosCampos(): array
@@ -201,7 +201,9 @@ class ProfesorDocenciaStgr
         $oProfesorDocenciaStgrSet->add($this->getDatosTipo());
         $oProfesorDocenciaStgrSet->add($this->getDatosCurso_inicio());
         $oProfesorDocenciaStgrSet->add($this->getDatosActa());
-        return $oProfesorDocenciaStgrSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oProfesorDocenciaStgrSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_nom(): DatosCampo
@@ -264,7 +266,7 @@ class ProfesorDocenciaStgr
         $oDatosCampo->setMetodoSet('setCurso_inicio');
         $oDatosCampo->setEtiqueta(_("año inicio curso"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(5);
+        $oDatosCampo->setArgument('5');
         return $oDatosCampo;
     }
 
@@ -276,7 +278,7 @@ class ProfesorDocenciaStgr
         $oDatosCampo->setMetodoSet('setActa');
         $oDatosCampo->setEtiqueta(_("acta"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 

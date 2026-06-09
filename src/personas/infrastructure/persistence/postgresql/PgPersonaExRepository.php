@@ -104,6 +104,7 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
@@ -111,7 +112,9 @@ class PgPersonaExRepository extends ClaseRepository implements PersonaExReposito
             $Persona = PersonaEx::fromArray($aDatos);
             $PersonaDlSet->add($Persona);
         }
-        return array_values($PersonaDlSet->getTot());
+        /** @var list<PersonaEx> $result */
+        $result = array_values($PersonaDlSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

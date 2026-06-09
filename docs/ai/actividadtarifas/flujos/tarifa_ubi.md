@@ -101,7 +101,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona TarifaUbi. actualiza en lote las cantidades de varias TarifaUbi desde el estudio economico de casa. copiar tarifas del año anterior. crea o actualiza una TarifaUbi. datos del formulario modificar/nuevo de TarifaUbi. elimina una TarifaUbi. listado de TarifaUbi por id_ubi + year.
+Consultar y mantener las tarifas económicas de una casa para un año: listado, alta, edición, eliminación, copia desde el año anterior y actualización en lote desde el estudio económico. Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Tarifa Ubi).
 
 ## Errores Documentados
 

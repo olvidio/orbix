@@ -6,7 +6,7 @@ url: "/src/usuarios/usuario_guardar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php"
-entrada: ["post.cambio_password:boolean", "post.casas:array", "post.ctx:string", "post.email:string", "post.has_2fa:boolean", "post.id_ctr:integer", "post.id_nom:integer", "post.id_role:integer", "post.nom_usuario:string", "post.pass:string", "post.password:string", "post.perm_activ:array", "post.usuario:string"]
+entrada: ["post.cambio_password:boolean", "post.casas:array", "post.ctx:string", "post.email:string", "post.has_2fa:boolean", "post.id_ctr:integer", "post.id_nom:integer", "post.id_role:integer", "post.id_usuario:integer", "post.nom_usuario:string", "post.pass:string", "post.password:string", "post.perm_activ:array", "post.que_user:string", "post.usuario:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -41,10 +41,12 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_ctr` | `integer` | controller | No | controller |
 | `id_nom` | `integer` | controller | No | controller |
 | `id_role` | `integer` | controller | No | controller |
+| `id_usuario` | `integer` | controller | No | controller |
 | `nom_usuario` | `string` | controller | No | controller |
 | `pass` | `string` | controller | No | controller |
 | `password` | `string` | controller | No | controller |
 | `perm_activ` | `array` | controller | No | controller |
+| `que_user` | `string` | controller | No | controller |
 | `usuario` | `string` | controller | No | controller |
 
 ## Salida

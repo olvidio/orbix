@@ -9,6 +9,8 @@ controller: "src/devel_db_admin/infrastructure/ui/http/controllers/absorber_esqu
 entrada: ["post.esquema_del:string", "post.esquema_matriz:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "devel_db_admin_AbsorberEsquemaData"
+respuesta_data: ["0:string, 1: string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/devel_db_admin/controller/db_absorber_esquema.php"]
 casos_uso: ["src\\devel_db_admin\\application\\AbsorberEsquema"]
@@ -41,6 +43,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `devel_db_admin_AbsorberEsquemaData`):
+  - `0` (`string, 1: string`)
 
 ## Casos De Uso
 

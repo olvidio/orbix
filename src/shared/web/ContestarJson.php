@@ -30,7 +30,7 @@ class ContestarJson
      * {@see \frontend\shared\PostRequest::getDataFromUrl} decodifica siempre a `array`
      * (p. ej. ack `'ok'` sin JSON interno → `[]`; ver `frontend/shared/PostRequest.php`).
      *
-     * @param string|array<string, mixed> $data
+     * @param string|array<int|string, mixed> $data
      * @param int $httpStatusOnError Código HTTP si hay error (`$error_txt` no vacío). Por defecto 200 por compatibilidad.
      */
     public static function enviar(string $error_txt = '', string|array $data = 'ok', int $httpStatusOnError = 200): void
@@ -63,7 +63,7 @@ class ContestarJson
     /**
      * forma un array con las claves 'success', 'mensaje' y 'data' sin codificar!
      *
-     * @param string|array<string, mixed> $data
+     * @param string|array<int|string, mixed> $data
      * @return array<string, mixed>
      */
     public static function respuestaPhp(string $error_txt = '', string|array $data = 'ok'): array

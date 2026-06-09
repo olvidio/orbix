@@ -6,9 +6,11 @@ url: "/src/ubis/teleco_guardar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/teleco_guardar.php"
-entrada: ["post.id_desc_teleco:integer", "post.id_tipo_teleco:integer", "post.id_ubi:integer", "post.num_teleco:string", "post.obj_pau:string", "post.observ:string", "post.s_pkey:string", "post.sel:array"]
+entrada: ["post.id_desc_teleco:integer", "post.id_tipo_teleco:integer", "post.id_ubi:integer", "post.num_teleco:string", "post.obj_pau:string", "post.observ:string", "post.s_pkey:string", "post.sel:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "ubis_TelecoGuardarData"
+respuesta_data: ["ok:true"]
 requiere_hashb: false
 frontend_referencias: []
 casos_uso: ["src\\ubis\\application\\TelecoGuardar"]
@@ -40,13 +42,17 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `obj_pau` | `string` | controller | No | controller |
 | `observ` | `string` | controller | No | controller |
 | `s_pkey` | `string` | controller | No | controller |
-| `sel` | `array` | controller | No | controller |
+| `sel` | `mixed` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `ubis_TelecoGuardarData`):
+  - `ok` (`true`)
 
 ## Casos De Uso
 

@@ -42,7 +42,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `certificados.certificado_emitido_guardar_pdf`
 - Controller: `src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php`
-- Entrada: `post.certificado:string`, `post.id_item:integer`, `post.id_nom:integer`, `post.pdf:mixed`
+- Entrada: `post.certificado:string`, `post.id_item:integer`, `post.id_nom:integer`, `post.pdf:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/certificados/certificado_emitido_imprimir_datos`
@@ -56,7 +56,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `certificados.certificado_emitido_imprimir_mpdf_datos`
 - Controller: `src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_mpdf_datos.php`
-- Entrada: `post.id_item:string`
+- Entrada: `post.id_item:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/certificados/certificado_emitido_lista_datos`
@@ -84,7 +84,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `certificados.certificado_emitido_upload_firmado_data`
 - Controller: `src/certificados/infrastructure/ui/http/controllers/certificado_emitido_upload_firmado_data.php`
-- Entrada: `post.id_item:integer`, `post.sel:array`
+- Entrada: `post.id_item:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/certificados/certificado_emitido_ver_datos`
@@ -112,14 +112,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `certificados.certificado_recibido_guardar`
 - Controller: `src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php`
-- Entrada: `post.certificado:string`, `post.certificado_old:string`, `post.destino:string`, `post.f_certificado:string`, `post.f_enviado:string`, `post.f_recibido:string`, `post.firmado:string`, `post.id_item:integer`, `post.id_nom:integer`, `post.idioma:string`, `post.nom:string`, `post.nuevo:integer`
+- Entrada: `post.certificado:string`, `post.certificado_old:string`, `post.destino:string`, `post.f_certificado:string`, `post.f_recibido:string`, `post.firmado:string`, `post.id_item:integer`, `post.id_nom:integer`, `post.idioma:string`, `post.nom:string`, `post.nuevo:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/certificados/certificado_recibido_modificar_data`
 
 - Id: `certificados.certificado_recibido_modificar_data`
 - Controller: `src/certificados/infrastructure/ui/http/controllers/certificado_recibido_modificar_data.php`
-- Entrada: `post.sel:array`
+- Entrada: `post.id_item:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/certificados/certificado_recibido_pdf_download`

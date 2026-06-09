@@ -132,9 +132,11 @@ final class MatriculasListaOtrasRData
                 $idAsignatura = $oPersonaNotaOtraRegionDB->getId_asignatura();
                 $idActiv = $oPersonaNotaOtraRegionDB->getId_activ();
                 $acta = $oPersonaNotaOtraRegionDB->getActa();
-                $Acta = $this->actaRepository->findById($acta);
-                if ($Acta !== null && ($Acta->getPdfVo() === null)) {
-                    $alert .= '!';
+                if ($acta !== null && $acta !== '') {
+                    $Acta = $this->actaRepository->findById($acta);
+                    if ($Acta !== null && ($Acta->getPdfVo() === null)) {
+                        $alert .= '!';
+                    }
                 }
                 $nomAsignatura = $aAsignaturas[$idAsignatura];
                 $nomActiv = '';
@@ -204,10 +206,30 @@ final class MatriculasListaOtrasRData
             if (!RegionStgrAviso::esDlSinRegion($e)) {
                 throw $e;
             }
-            RegionStgrAviso::registrar($problemasRegionStgr, $e);
+            /** @var array<string, array<int|string, string>> $problemasParaRegistrar */
+            $problemasParaRegistrar = $problemasRegionStgr;
+            RegionStgrAviso::registrar($problemasParaRegistrar, $e);
+            $problemasRegionStgr = self::normalizeProblemasKeys($problemasParaRegistrar);
         }
 
         return $this->personaPubRepository->findByIdParaListado($idNom, $problemasRegionStgr, $marcaRegionStgr);
+    }
+
+    /**
+     * @param array<string, array<int|string, string>> $problemas
+     * @return array<string, array<string, string>>
+     */
+    private static function normalizeProblemasKeys(array $problemas): array
+    {
+        $normalized = [];
+        foreach ($problemas as $tipo => $items) {
+            $normalized[$tipo] = [];
+            foreach ($items as $key => $value) {
+                $normalized[$tipo][(string) $key] = (string) $value;
+            }
+        }
+
+        return $normalized;
     }
 
     public static function esAvisoRegionStgr(\Throwable $e): bool

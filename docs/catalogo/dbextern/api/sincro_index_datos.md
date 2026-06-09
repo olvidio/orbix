@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Sincro Index Datos
 
-Calcula los 10 contadores del dashboard de sincronización.
+Descripcion funcional pendiente de revisar.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -35,15 +35,13 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `tipo` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
-
-## Efectos colaterales
-
-- Calcula los 10 contadores del dashboard de sincronización.
 
 ## Permisos
 

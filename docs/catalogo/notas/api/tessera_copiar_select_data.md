@@ -6,7 +6,7 @@ url: "/src/notas/tessera_copiar_select_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/notas/infrastructure/ui/http/controllers/tessera_copiar_select_data.php"
-entrada: ["post.id_nom:mixed"]
+entrada: ["post.id_nom:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -33,7 +33,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_nom` | `mixed` | controller | No | controller |
+| `id_nom` | `integer` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

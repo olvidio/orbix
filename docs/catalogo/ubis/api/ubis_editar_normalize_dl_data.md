@@ -6,7 +6,7 @@ url: "/src/ubis/ubis_editar_normalize_dl_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/ubis_editar_normalize_dl_data.php"
-entrada: ["post.id_ubi:mixed", "post.nombre_ubi:mixed", "post.obj_pau:mixed", "post.tipo_ubi:mixed"]
+entrada: ["post.id_ubi:integer", "post.nombre_ubi:string", "post.obj_pau:string", "post.tipo_ubi:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -33,10 +33,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_ubi` | `mixed` | controller | No | controller |
-| `nombre_ubi` | `mixed` | controller | No | controller |
-| `obj_pau` | `mixed` | controller | No | controller |
-| `tipo_ubi` | `mixed` | controller | No | controller |
+| `id_ubi` | `integer` | controller | No | controller |
+| `nombre_ubi` | `string` | controller | No | controller |
+| `obj_pau` | `string` | controller | No | controller |
+| `tipo_ubi` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

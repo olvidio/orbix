@@ -10,7 +10,7 @@ entrada: ["post.id_ubi:mixed", "post.seleccion_sacd:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "encargossacd_CtrGetFichaDataData"
-respuesta_data: ["dedic_m:string, dedic_t: string, dedic_v: string, dedic_sacd: string"]
+respuesta_data: ["id_enc:integer", "id_tipo_enc:integer", "mod_horario:integer", "desc_enc:string", "observ:string", "cl_checked:string", "actual_id_sacd_titular:integer", "actual_id_sacd_suplente:integer", "dedic_ctr_m:string", "dedic_ctr_t:string", "dedic_ctr_v:string", "dedic_m:array", "dedic_t:array", "dedic_v:array", "dedic_sacd:array", "colaboradores:list<array<string, mixed>>", "sacd_num:integer"]
 requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/ctr_get_ficha.php"]
 casos_uso: ["src\\encargossacd\\application\\CtrGetFichaData"]
@@ -44,7 +44,23 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `encargossacd_CtrGetFichaDataData`):
-  - `dedic_m` (`string, dedic_t: string, dedic_v: string, dedic_sacd: string`)
+  - `id_enc` (`integer`)
+  - `id_tipo_enc` (`integer`)
+  - `mod_horario` (`integer`)
+  - `desc_enc` (`string`)
+  - `observ` (`string`)
+  - `cl_checked` (`string`)
+  - `actual_id_sacd_titular` (`integer`)
+  - `actual_id_sacd_suplente` (`integer`)
+  - `dedic_ctr_m` (`string`)
+  - `dedic_ctr_t` (`string`)
+  - `dedic_ctr_v` (`string`)
+  - `dedic_m` (`array`)
+  - `dedic_t` (`array`)
+  - `dedic_v` (`array`)
+  - `dedic_sacd` (`array`)
+  - `colaboradores` (`list<array<string, mixed>>`)
+  - `sacd_num` (`integer`)
 
 ## Permisos
 

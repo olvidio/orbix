@@ -10,7 +10,7 @@ entrada: ["post.id_pau:integer", "post.queSel:string", "post.sel:array"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "asistentes_ListaAsistentesDataData"
-respuesta_data: ["nom_activ:string, queSel: string, aAsistentes: array<string|int, array{nombre: string, a_datos_cl: array<string, string>}>"]
+respuesta_data: ["nom_activ:string, queSel: string, aAsistentes: array<string, array{nombre: string, a_datos_cl: array<string, string>}>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/asistentes/controller/lista_asistentes.php"]
 casos_uso: ["src\\asistentes\\application\\ListaAsistentesData"]
@@ -47,7 +47,7 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `asistentes_ListaAsistentesDataData`):
-  - `nom_activ` (`string, queSel: string, aAsistentes: array<string|int, array{nombre: string, a_datos_cl: array<string, string>}>`)
+  - `nom_activ` (`string, queSel: string, aAsistentes: array<string, array{nombre: string, a_datos_cl: array<string, string>}>`)
 
 ## Efectos colaterales
 

@@ -150,7 +150,6 @@ class PgEncargoTipoRepository extends ClaseRepository implements EncargoTipoRepo
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $EncargoTipoSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -202,14 +201,18 @@ class PgEncargoTipoRepository extends ClaseRepository implements EncargoTipoRepo
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $encargoTipos = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $EncargoTipo = EncargoTipo::fromArray($aDatos);
-            $EncargoTipoSet->add($EncargoTipo);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $encargoTipos[] = EncargoTipo::fromArray($normalized);
         }
-        return array_values($EncargoTipoSet->getTot());
+        return $encargoTipos;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

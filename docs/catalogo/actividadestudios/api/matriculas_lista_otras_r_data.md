@@ -6,7 +6,7 @@ url: "/src/actividadestudios/matriculas_lista_otras_r_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividadestudios/infrastructure/ui/http/controllers/matriculas_lista_otras_r_data.php"
-entrada: ["post.apellido1:mixed"]
+entrada: ["post.apellido1:string", "post.esquema:string", "post.esquema_region_stgr:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadestudios_MatriculasListaOtrasRDataData"
@@ -35,7 +35,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `apellido1` | `mixed` | controller | No | controller |
+| `apellido1` | `string` | controller+application | No | controller+application |
+| `esquema` | `string` | controller | No | controller |
+| `esquema_region_stgr` | `string` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

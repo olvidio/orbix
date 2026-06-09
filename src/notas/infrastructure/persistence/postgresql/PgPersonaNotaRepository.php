@@ -115,16 +115,22 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
             if (!is_array($aDatos)) {
                 continue;
             }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
             // para las fechas del postgres (texto iso)
-            $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
-            $a_pkey = array('id_nom' => $aDatos['id_nom'],
-                'id_nivel' => $aDatos['id_nivel'],
-                'tipo_acta' => $aDatos['tipo_acta']);
+            $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta']))->fromPg();
+            $a_pkey = array('id_nom' => $normalized['id_nom'],
+                'id_nivel' => $normalized['id_nivel'],
+                'tipo_acta' => $normalized['tipo_acta']);
             $PersonaNota = $this->chooseNewObject($a_pkey);
-            $PersonaNota->setAllAttributes($aDatos);
+            $PersonaNota->setAllAttributes($normalized);
             $PersonaNotaSet->add($PersonaNota);
         }
-        return array_values($PersonaNotaSet->getTot());
+        /** @var list<PersonaNota|PersonaNotaOtraRegionStgr> $items */
+        $items = array_values($PersonaNotaSet->getTot());
+        return $items;
     }
 
     /**

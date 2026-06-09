@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Traslado Form Data
 
-Endpoint JSON: datos para el formulario `traslado_form.phtml`.
+Endpoint JSON: datos para el formulario de traslado.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

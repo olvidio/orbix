@@ -46,7 +46,6 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $DossierSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -96,6 +95,7 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $dossieres = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
@@ -103,10 +103,13 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_camb_dossier'] = (new ConverterDate('date', $aDatos['f_camb_dossier']))->fromPg();
             $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
-            $Dossier = Dossier::fromArray($aDatos);
-            $DossierSet->add($Dossier);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $dossieres[] = Dossier::fromArray($normalized);
         }
-        return array_values($DossierSet->getTot());
+        return $dossieres;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

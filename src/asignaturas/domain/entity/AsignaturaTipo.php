@@ -184,7 +184,9 @@ class AsignaturaTipo
         $oAsignaturaTipoSet->add($this->getDatosTipo_breve());
         $oAsignaturaTipoSet->add($this->getDatosYear());
         $oAsignaturaTipoSet->add($this->getDatosTipo_latin());
-        return array_values($oAsignaturaTipoSet->getTot());
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oAsignaturaTipoSet->getTot());
+        return $campos;
     }
 
     /**

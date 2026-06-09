@@ -43,6 +43,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `pres_telf` | `string` | controller+application | No | controller+application |
 | `zona` | `string` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`

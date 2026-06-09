@@ -59,7 +59,7 @@ class ProfesorJuramento
         return 'id_item';
     }
 
-  /** @return array<string, mixed> */
+  /** @return list<DatosCampo> */
 
 
   public function getDatosCampos(): array
@@ -68,7 +68,9 @@ class ProfesorJuramento
 
         $oProfesorJuramentoSet->add($this->getDatosId_nom());
         $oProfesorJuramentoSet->add($this->getDatosF_juramento());
-        return $oProfesorJuramentoSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oProfesorJuramentoSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_nom(): DatosCampo

@@ -4,6 +4,7 @@ namespace src\misas\application;
 
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\misas\application\support\EncargoDiaTimeHelper;
 use src\misas\application\support\PeriodoDateRange;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
@@ -126,7 +127,7 @@ class VerPlanCtrData
                         continue;
                     }
                     $status = $oEncargoDia->getStatus();
-                    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+                    $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
                     if ($hora_ini === '00:00') {
                         $hora_ini = '';
                     }

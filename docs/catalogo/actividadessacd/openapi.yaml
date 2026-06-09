@@ -40,21 +40,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadessacd_ComSacdActivPeriodoPageDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadessacd_ComSacdActivPeriodoPageDataDataResponse"
   "/src/actividadessacd/comunicacion_activ_sacd_data":
     post:
       operationId: "post_actividadessacd_comunicacion_activ_sacd_data"
       summary: "Comunicacion Activ Sacd Data"
       description: |
-        Listado de **atención de actividades** para comunicar a los SACD (principal + «sacd de paso» cuando aplica). Equivalente al botón «buscar» de la web.
+        Endpoint backend: construye el listado de atencion de actividades a comunicar a los sacd.
         
-        Operacion: `consulta`.
+        Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/actividadessacd/api/comunicacion_activ_sacd_data.md`
       tags:
@@ -65,9 +65,6 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required:
-                - "periodo"
-                - "year"
               properties:
                 empiezamax:
                   type: "string"
@@ -80,8 +77,6 @@ paths:
                 propuesta:
                   type: "string"
                 que:
-                  type: "string"
-                sacd:
                   type: "string"
                 sel:
                   type: "string"
@@ -105,7 +100,7 @@ paths:
       operationId: "post_actividadessacd_comunicacion_activ_sacd_enviar"
       summary: "Comunicacion Activ Sacd Enviar"
       description: |
-        Endpoint backend: encola los mails de comunicacion de actividades a los sacd y al ctr del sacd, con copia al jefe de calendario.
+        Endpoint backend: encola mails de comunicacion de actividades a sacd.
         
         Operacion: `mutacion`.
         
@@ -182,7 +177,7 @@ paths:
       operationId: "post_actividadessacd_locales_desplegable_data"
       summary: "Locales Desplegable Data"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Endpoint backend: desplegable de locales para filtros sacd.
         
         Operacion: `mutacion`.
         
@@ -331,7 +326,7 @@ paths:
       operationId: "post_actividadessacd_sacd_reordenar"
       summary: "Sacd Reordenar"
       description: |
-        Endpoint backend: reordena un sacd dentro de una actividad (mas / menos prioridad).
+        Endpoint backend: reordena sacd encargados (+/- prioridad).
         
         Operacion: `mutacion`.
         
@@ -372,7 +367,7 @@ paths:
       operationId: "post_actividadessacd_sacds_disponibles_data"
       summary: "Sacds Disponibles Data"
       description: |
-        Endpoint backend: devuelve los sacd candidatos para asignar a una actividad (sacd del centro encargado + sacd globales segun bitmask `seleccion`).
+        Endpoint backend: devuelve sacd candidatos para asignar a una actividad.
         
         Operacion: `mutacion`.
         
@@ -446,7 +441,7 @@ paths:
       operationId: "post_actividadessacd_solapes_sacd_data"
       summary: "Solapes Sacd Data"
       description: |
-        Endpoint backend: devuelve el listado de sacd con actividades incompatibles (solapes) en el periodo.
+        Endpoint backend: devuelve sacd con actividades incompatibles (solapes).
         
         Operacion: `mutacion`.
         
@@ -522,7 +517,7 @@ paths:
       operationId: "post_actividadessacd_texto_comunicacion_guardar"
       summary: "Texto Comunicacion Guardar"
       description: |
-        Endpoint backend: upsert/delete del texto de comunicacion (`clave`, `idioma`, `texto`).
+        Endpoint backend: guarda/elimina texto de comunicacion sacd.
         
         Operacion: `mutacion`.
         
@@ -574,27 +569,26 @@ components:
           type: string
         data:
           description: "Ver schema concreto de cada operacion."
+    actividadessacd_ComSacdActivPeriodoPageDataData:
+      type: object
+      properties:
+        perm_mod_txt:
+          type: "boolean"
+    actividadessacd_ComSacdActivPeriodoPageDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadessacd_ComSacdActivPeriodoPageDataData"
     actividadessacd_ComunicacionActividadesSacdDataData:
       type: object
       properties:
         que:
           type: "string"
-        propuesta:
-          type: "string"
-        mi_dele:
-          type: "string"
-        lugar_fecha:
-          type: "string"
-        periodo_txt:
-          type: "string"
-        "mensaje_periodo?":
-          type: "string"
-        sacds:
-          type: array
-          items: {}
-        sacds_paso:
-          type: array
-          items: {}
     actividadessacd_ComunicacionActividadesSacdDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"

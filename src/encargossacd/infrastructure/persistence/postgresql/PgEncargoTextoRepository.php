@@ -47,7 +47,6 @@ class PgEncargoTextoRepository extends ClaseRepository implements EncargoTextoRe
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $EncargoTextoSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -99,14 +98,18 @@ class PgEncargoTextoRepository extends ClaseRepository implements EncargoTextoRe
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $encargoTextos = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $EncargoTexto = EncargoTexto::fromArray($aDatos);
-            $EncargoTextoSet->add($EncargoTexto);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $encargoTextos[] = EncargoTexto::fromArray($normalized);
         }
-        return array_values($EncargoTextoSet->getTot());
+        return $encargoTextos;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

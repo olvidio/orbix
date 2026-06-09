@@ -10,7 +10,7 @@ entrada: ["post.comun:integer", "post.dl:string", "post.esquema:string", "post.e
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "devel_db_admin_CorregirEstadoRenombrarEsquemaData"
-respuesta_data: ["acciones:list<string>, avisos: list<string>, verificacion: array"]
+respuesta_data: ["acciones:list<string>, avisos: list<string>, verificacion: array<string, mixed>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/devel_db_admin/controller/db_corregir_renombrar_esquema.php"]
 casos_uso: ["src\\devel_db_admin\\application\\CorregirEstadoRenombrarEsquema", "src\\devel_db_admin\\application\\RenombrarEsquemaVerificacionContexto"]
@@ -49,7 +49,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `devel_db_admin_CorregirEstadoRenombrarEsquemaData`):
-  - `acciones` (`list<string>, avisos: list<string>, verificacion: array`)
+  - `acciones` (`list<string>, avisos: list<string>, verificacion: array<string, mixed>`)
 
 ## Efectos colaterales
 

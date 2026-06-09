@@ -139,7 +139,7 @@ class TelecoPersona
         return ['id_item' => (string)$this->id_item];
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos(): array
@@ -150,7 +150,9 @@ class TelecoPersona
         $oSet->add($this->getDatosId_desc_teleco());
         $oSet->add($this->getDatosNum_teleco());
         $oSet->add($this->getDatosObserv());
-        return $oSet->getTot();
+                /** @var list<DatosCampo> $campos */
+        $campos = array_values($oSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_nom(): DatosCampo

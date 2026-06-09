@@ -9,8 +9,6 @@ controller: "src/cambios/infrastructure/ui/http/controllers/avisos_generar_lista
 entrada: ["post.aviso_tipo:integer", "post.id_usuario:integer", "post.is_admin:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "cambios_AvisosGenerarListaDataData"
-respuesta_data: ["error:string", "a_valores:array", "aOpcionesUsuarios:array", "aOpcionesAvisoTipo:array", "effective_id_usuario:integer", "effective_aviso_tipo:integer"]
 requiere_hashb: false
 frontend_referencias: ["frontend/cambios/controller/avisos_generar.php"]
 casos_uso: ["src\\cambios\\application\\AvisosGenerarListaData"]
@@ -39,17 +37,12 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_usuario` | `integer` | controller+application | No | controller+application |
 | `is_admin` | `integer` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
-- Payload en `data` (schema `cambios_AvisosGenerarListaDataData`):
-  - `error` (`string`)
-  - `a_valores` (`array`)
-  - `aOpcionesUsuarios` (`array`)
-  - `aOpcionesAvisoTipo` (`array`)
-  - `effective_id_usuario` (`integer`)
-  - `effective_aviso_tipo` (`integer`)
 
 ## Efectos colaterales
 

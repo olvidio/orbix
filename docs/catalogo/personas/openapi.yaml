@@ -263,13 +263,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/personas_PersonasSelectDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/personas_PersonasSelectDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/personas/stgr_cambio_data":
     post:
       operationId: "post_personas_stgr_cambio_data"
@@ -351,7 +351,7 @@ paths:
       operationId: "post_personas_traslado_form_data"
       summary: "Traslado Form Data"
       description: |
-        Endpoint JSON: datos para el formulario `traslado_form.phtml`.
+        Endpoint JSON: datos para el formulario de traslado.
         
         Operacion: `form_data`.
         
@@ -387,7 +387,7 @@ paths:
       operationId: "post_personas_traslado_update"
       summary: "Traslado Update"
       description: |
-        Endpoint JSON: aplica un traslado de centro y/o delegacion.
+        Endpoint JSON: aplica traslado de centro/delegacion.
         
         Operacion: `mutacion`.
         
@@ -441,45 +441,6 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
-    OrbixStandardResponseEnvelope:
-      type: object
-      required:
-        - success
-        - data
-      properties:
-        success:
-          type: boolean
-        mensaje:
-          type: string
-        data:
-          description: "Ver schema concreto de cada operacion."
-    personas_PersonasSelectDataData:
-      type: object
-      properties:
-        id_nom:
-          type: "integer"
-        id_tabla:
-          type: "string"
-        nom:
-          type: "string"
-        nombre_ubi:
-          type: "string"
-        nivel_stgr:
-          type: "string"
-        situacion:
-          type: "string"
-        f_situacion:
-          type: "string"
-    personas_PersonasSelectDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/personas_PersonasSelectDataData"
     OrbixStandardResponseStringData:
       type: object
       required:

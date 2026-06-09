@@ -437,13 +437,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/asistentes_ListaAsisConjuntoActivDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/asistentes_ListaAsisConjuntoActivDataDataResponse"
   "/src/asistentes/lista_asistentes_data":
     post:
       operationId: "post_asistentes_lista_asistentes_data"
@@ -731,6 +731,21 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/asistentes_ListaActivCtrDataData"
+    asistentes_ListaAsisConjuntoActivDataData:
+      type: object
+      properties:
+        content_html:
+          type: "string"
+    asistentes_ListaAsisConjuntoActivDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/asistentes_ListaAsisConjuntoActivDataData"
     asistentes_ListaAsistentesDataData:
       type: object
       properties:

@@ -6,7 +6,7 @@ url: "/src/ubis/lista_ctrs_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/lista_ctrs_data.php"
-entrada: []
+entrada: ["post.error:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "ubis_CentrosSListaDataData"
@@ -33,7 +33,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `error` | `string` | controller | No | controller |
 
 ## Salida
 

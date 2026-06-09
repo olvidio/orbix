@@ -7,12 +7,10 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_copiar.php"
 entrada: ["post.ctx_copiar:string", "post.id_ubi:integer", "post.year:integer"]
-entrada_obligatoria: ["ctx_copiar"]
+entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-requiere_hashb: true
-hashb_campo: "ctx_copiar"
-hashb_action: "tarifa_ubi_copiar"
-errores: ["no sé qué casa/año tengo que copiar", "función de copiar tarifas pendiente de reimplementar", "Operación no autorizada"]
+requiere_hashb: false
+errores: ["no sé qué casa/año tengo que copiar", "función de copiar tarifas pendiente de reimplementar"]
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa_ubi.php", "frontend/actividadtarifas/view/tarifa_ubi.phtml"]
 casos_uso: ["src\\actividadtarifas\\application\\TarifaUbiCopiar"]
 tags: ["actividadtarifas", "tarifa", "ubi", "copiar"]
@@ -36,16 +34,11 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `ctx_copiar` | `string` | controller | Si | controller |
-| `id_ubi` | `integer` | application | No | application; ignorado en body si viene en cápsula HashB |
-| `year` | `integer` | application | No | application; ignorado en body si viene en cápsula HashB |
+| `ctx_copiar` | `string` | controller | No | controller |
+| `id_ubi` | `integer` | controller+application | No | controller+application |
+| `year` | `integer` | controller+application | No | controller+application |
 
-## Autorizacion HashB
-
-- Campo POST: `ctx_copiar`
-- Accion: `tarifa_ubi_copiar`
-- Cápsula invalida: `success: false`, `mensaje: "Operación no autorizada"`.
-- Ver `documentacion/hash_arquitectura.md`.
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
@@ -57,7 +50,6 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - `no sé qué casa/año tengo que copiar`
 - `función de copiar tarifas pendiente de reimplementar`
-- `Operación no autorizada`
 
 ## Casos De Uso
 

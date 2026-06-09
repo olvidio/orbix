@@ -48,13 +48,6 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 
-## Permisos
-
-- Permiso oficina `sg`
-- Permiso oficina `vcsd`
-- Permiso oficina `des`
-- Permiso oficina `admin`
-
 ## Casos De Uso
 
 - `src\actividades\application\ListaSrCsvListado`

@@ -9,6 +9,8 @@ controller: "src/pasarela/infrastructure/ui/http/controllers/tipo_activ_txt_data
 entrada: ["post.id_tipo_activ:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "pasarela_TipoActivTxtDataData"
+respuesta_data: ["tipo_txt:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/pasarela/controller/activacion_ajax.php", "frontend/pasarela/controller/contribucion_no_duerme_ajax.php", "frontend/pasarela/controller/contribucion_reserva_ajax.php", "frontend/pasarela/controller/nombre_ajax.php"]
 casos_uso: ["src\\pasarela\\application\\TipoActivTxtData"]
@@ -40,6 +42,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `pasarela_TipoActivTxtDataData`):
+  - `tipo_txt` (`string`)
 
 ## Efectos colaterales
 

@@ -6,7 +6,7 @@ url: "/src/actividades/actividad_tipo_get"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividades/infrastructure/ui/http/controllers/actividad_tipo_get.php"
-entrada: ["post.salida:string"]
+entrada: ["post.entrada:string", "post.extendida:string", "post.isfsv:integer", "post.modo:string", "post.opcion_sel:string", "post.salida:string", "post.ssfsv:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividades_ActividadTipoGetActividadData"
@@ -35,7 +35,13 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
+| `entrada` | `string` | application | No | application |
+| `extendida` | `string` | application | No | application |
+| `isfsv` | `integer` | application | No | application |
+| `modo` | `string` | application | No | application |
+| `opcion_sel` | `string` | application | No | application |
 | `salida` | `string` | controller | No | controller |
+| `ssfsv` | `string` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

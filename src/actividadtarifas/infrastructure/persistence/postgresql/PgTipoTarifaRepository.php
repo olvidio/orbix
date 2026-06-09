@@ -110,9 +110,16 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
             if (!is_array($aDatos)) {
                 continue;
             }
-            $TipoTarifaSet->add(TipoTarifa::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $TipoTarifaSet->add(TipoTarifa::fromArray($normalized));
         }
-        return array_values($TipoTarifaSet->getTot());
+        /** @var list<TipoTarifa> $result */
+        $result = array_values($TipoTarifaSet->getTot());
+
+        return $result;
     }
 
     public function Eliminar(TipoTarifa $TipoTarifa): bool

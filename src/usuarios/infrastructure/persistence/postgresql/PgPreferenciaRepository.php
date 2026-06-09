@@ -99,14 +99,19 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<Preferencia> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Preferencia = Preferencia::fromArray($aDatos);
-            $PreferenciaSet->add($Preferencia);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = Preferencia::fromArray($normalized);
         }
-        return array_values($PreferenciaSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

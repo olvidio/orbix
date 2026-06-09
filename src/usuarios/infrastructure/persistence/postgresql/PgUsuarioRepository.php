@@ -123,19 +123,26 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<Usuario> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
+            if (!is_array($aDatos)) {
+                continue;
+            }
             // para los bytea: (resources)
             $handle = $aDatos['password'];
-            if ($handle !== null) {
+            if (is_resource($handle)) {
                 $contents = stream_get_contents($handle);
                 fclose($handle);
-                $password = $contents;
-                $aDatos['password'] = $password;
+                $aDatos['password'] = $contents;
             }
-            $usuario = Usuario::fromArray($aDatos);
-            $usuarioSet->add($usuario);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = Usuario::fromArray($normalized);
         }
-        return array_values($usuarioSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

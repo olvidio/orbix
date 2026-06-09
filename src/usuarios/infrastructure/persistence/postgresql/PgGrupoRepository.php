@@ -98,14 +98,19 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<Grupo> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Grupo = Grupo::fromArray($aDatos);
-            $GrupoSet->add($Grupo);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = Grupo::fromArray($normalized);
         }
-        return array_values($GrupoSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

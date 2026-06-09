@@ -14,7 +14,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadescentro.activ_ctr_shell_data`
 - Controller: `src/actividadescentro/infrastructure/ui/http/controllers/activ_ctr_shell_data.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.periodo:string`, `post.tipo:string`, `post.year:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadescentro/centro_encargado_asignar`

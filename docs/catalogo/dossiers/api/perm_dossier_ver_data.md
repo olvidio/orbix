@@ -6,9 +6,11 @@ url: "/src/dossiers/perm_dossier_ver_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/dossiers/infrastructure/ui/http/controllers/perm_dossier_ver_data.php"
-entrada: ["post.id_tipo_dossier:mixed", "post.tipo:mixed"]
+entrada: ["post.id_tipo_dossier:integer", "post.tipo:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "dossiers_PermDossierVerFormDataData"
+respuesta_data: ["path:string, query: array<string, string>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/dossiers/controller/perm_dossier_ver.php"]
 casos_uso: ["src\\dossiers\\application\\PermDossierVerFormData"]
@@ -18,7 +20,7 @@ estado_revision: "generado"
 
 # Perm Dossier Ver Data
 
-Formulario "permisos de acceso" para un tipo de dossier. El backend devuelve sólo datos: - `go_to_link_spec` ({path, query}) para que el frontend firme con HashFront. - `hash_config` (campos_form, campos_no, campos_hidden) para que el frontend componga el bloque hidden con HashFront; el valor de `go_to` dentro de `campos_hidden` se inyecta firmado en el borde del frontend. - `permiso_dossier_bit_map` + enteros `permiso_lectura` / `permiso_escritura`; el HTML de checkboxes lo genera el controlador frontend con {
+Formulario "permisos de acceso" para un tipo de dossier.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -33,8 +35,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_tipo_dossier` | `mixed` | controller | No | controller |
-| `tipo` | `mixed` | controller | No | controller |
+| `id_tipo_dossier` | `integer` | controller | No | controller |
+| `tipo` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
@@ -43,11 +45,12 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `dossiers_PermDossierVerFormDataData`):
+  - `path` (`string, query: array<string, string>`)
 
 ## Efectos colaterales
 
 - Formulario "permisos de acceso" para un tipo de dossier.
-- - `permiso_dossier_bit_map` + enteros `permiso_lectura` / `permiso_escritura`; el HTML de checkboxes lo genera el controlador frontend con {@see \frontend\shared\permisos\MenuPermisoMenuHtml}.
 
 ## Permisos
 

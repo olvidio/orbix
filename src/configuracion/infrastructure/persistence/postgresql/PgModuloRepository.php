@@ -66,7 +66,6 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $ModuloSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -118,6 +117,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $modulos = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
@@ -128,10 +128,13 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
             if (is_string($aDatos['apps_req'] ?? null)) {
                 $aDatos['apps_req'] = array_pgInteger2php($aDatos['apps_req']);
             }
-            $Modulo = Modulo::fromArray($aDatos);
-            $ModuloSet->add($Modulo);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $modulos[] = Modulo::fromArray($normalized);
         }
-        return array_values($ModuloSet->getTot());
+        return $modulos;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -156,8 +159,8 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         $bInsert = $this->isNew($id_mod);
 
         $aDatos = $Modulo->toArrayForDatabase([
-            'mods_req' => fn($v) => array_php2pg($Modulo->getModsReqVo()?->toArray()),
-            'apps_req' => fn($v) => array_php2pg($Modulo->getAppsReqVo()?->toArray()),
+            'mods_req' => fn($v) => array_php2pg($Modulo->getModsReqVo()?->toArray() ?? []),
+            'apps_req' => fn($v) => array_php2pg($Modulo->getAppsReqVo()?->toArray() ?? []),
         ]);
         /*
         $aDatos = [];

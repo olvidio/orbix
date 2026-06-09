@@ -194,7 +194,7 @@ class ProfesorCongreso
         return 'id_item';
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos(): array
@@ -208,7 +208,9 @@ class ProfesorCongreso
         $oProfesorCongresoSet->add($this->getDatosF_fin());
         $oProfesorCongresoSet->add($this->getDatosOrganiza());
         $oProfesorCongresoSet->add($this->getDatosTipo());
-        return $oProfesorCongresoSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oProfesorCongresoSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_nom(): DatosCampo
@@ -231,7 +233,7 @@ class ProfesorCongreso
         $oDatosCampo->setMetodoSet('setCongreso');
         $oDatosCampo->setEtiqueta(_("congreso"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(80);
+        $oDatosCampo->setArgument('80');
         return $oDatosCampo;
     }
 
@@ -243,7 +245,7 @@ class ProfesorCongreso
         $oDatosCampo->setMetodoSet('setLugar');
         $oDatosCampo->setEtiqueta(_("lugar"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 
@@ -277,7 +279,7 @@ class ProfesorCongreso
         $oDatosCampo->setMetodoSet('setOrganiza');
         $oDatosCampo->setEtiqueta(_("organiza"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(50);
+        $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
 

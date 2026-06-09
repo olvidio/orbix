@@ -1,5 +1,6 @@
 <?php
 
+use src\misas\application\support\EncargoDiaTimeHelper;
 use src\misas\application\support\MisasBuildInput;
 
 /**
@@ -236,8 +237,8 @@ function misas_importar_plantilla_build(array $in, \src\misas\application\Import
             if (count($cEncargosDia) === 1) {
                 $oEncargoDia = $cEncargosDia[0];
                 $id_nom = $oEncargoDia->getId_nom();
-                $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                $hora_fin = $oEncargoDia->getTend()->format('H:i');
+                $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
+                $hora_fin = EncargoDiaTimeHelper::format($oEncargoDia->getTend(), 'H:i');
                 $observ = $oEncargoDia->getObserv();
 
                 $oEncargoDia = new EncargoDia();
@@ -276,8 +277,8 @@ function misas_importar_plantilla_build(array $in, \src\misas\application\Import
                 if (count($cEncargosDia) === 1) {
                     $oEncargoDia = $cEncargosDia[0];
                     $id_nom = $oEncargoDia->getId_nom();
-                    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                    $hora_fin = $oEncargoDia->getTend()->format('H:i');
+                    $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
+                    $hora_fin = EncargoDiaTimeHelper::format($oEncargoDia->getTend(), 'H:i');
                     $observ = $oEncargoDia->getObserv();
 
                     $oEncargoDia = new EncargoDia();
@@ -316,8 +317,8 @@ function misas_importar_plantilla_build(array $in, \src\misas\application\Import
                 if (count($cEncargosDia) === 1) {
                     $oEncargoDia = $cEncargosDia[0];
                     $id_nom = $oEncargoDia->getId_nom();
-                    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                    $hora_fin = $oEncargoDia->getTend()->format('H:i');
+                    $hora_ini = EncargoDiaTimeHelper::format($oEncargoDia->getTstart(), 'H:i');
+                    $hora_fin = EncargoDiaTimeHelper::format($oEncargoDia->getTend(), 'H:i');
                     $observ = $oEncargoDia->getObserv();
 
                     $oEncargoDia = new EncargoDia();

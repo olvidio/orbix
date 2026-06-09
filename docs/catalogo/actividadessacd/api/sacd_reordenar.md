@@ -19,7 +19,7 @@ estado_revision: "generado"
 
 # Sacd Reordenar
 
-Endpoint backend: reordena un sacd dentro de una actividad (mas / menos prioridad).
+Endpoint backend: reordena sacd encargados (+/- prioridad).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -34,9 +34,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `integer` | application | Si | application |
-| `id_nom` | `integer` | application | Si | application |
-| `num_orden` | `string` | application | No | application |
+| `id_activ` | `integer` | controller+application | Si | controller+application |
+| `id_nom` | `integer` | controller+application | Si | controller+application |
+| `num_orden` | `string` | controller+application | No | controller+application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

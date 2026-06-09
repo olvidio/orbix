@@ -104,8 +104,9 @@ class DossiersVerPantallaData
             if (method_exists($oInfoClase, 'getId_dossier')) {
                 $Qid_dossier = (string) $oInfoClase->getId_dossier();
             }
-            if (method_exists($oInfoClase, 'getPau')) {
-                $pau = (string) $oInfoClase->getPau();
+            $pauFromInfo = $oInfoClase->getPau();
+            if ($pauFromInfo !== null) {
+                $pau = $pauFromInfo;
             }
         }
 
@@ -277,9 +278,7 @@ class DossiersVerPantallaData
                 $oDatosTabla->setBloque($bloque);
                 $oDatosTabla->setExplicacion_txt($oInfoClase->getTxtExplicacion());
                 $oDatosTabla->setEliminar_txt($oInfoClase->getTxtEliminar());
-                if (method_exists($oInfoClase, 'getColeccion')) {
-                    $oDatosTabla->setColeccion($oInfoClase->getColeccion());
-                }
+                $oDatosTabla->setColeccion($oInfoClase->getColeccion());
                 $oDatosTabla->setId_sel($Qid_sel);
                 $oDatosTabla->setScroll_id($Qscroll_id);
 

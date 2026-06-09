@@ -49,7 +49,7 @@ class ProfesorLatin
         return 'id_nom';
     }
 
-  /** @return array<string, mixed> */
+  /** @return list<DatosCampo> */
 
 
   public function getDatosCampos(): array
@@ -58,7 +58,9 @@ class ProfesorLatin
 
         $oProfesorLatinSet->add($this->getDatosId_nom());
         $oProfesorLatinSet->add($this->getDatosLatin());
-        return $oProfesorLatinSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oProfesorLatinSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_nom(): DatosCampo

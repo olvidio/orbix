@@ -43,23 +43,6 @@ class PgPersonaSacdRepository extends ClaseRepository implements PersonaSacdRepo
         return PersonaPub::fromArray($aDatos);
     }
 
-    /**
-     * @param array<mixed, mixed> $row
-     * @return array<string, mixed>
-     */
-    private function normalizeAssocRow(array $row): array
-    {
-        $result = [];
-        foreach ($row as $key => $value) {
-            if (is_string($key)) {
-                $result[$key] = $value;
-            }
-        }
-
-        return $result;
-    }
-
-
     public function getSacdsBySelect(int $Qseleccion_sacd): array
     {
         // selecciono según la variable selecion_sacd ('2'=> n y agd, '4'=> de paso, '8'=> sssc, '16'=>cp)
@@ -207,7 +190,9 @@ class PgPersonaSacdRepository extends ClaseRepository implements PersonaSacdRepo
             $Persona = $this->createEntityFromArray($aDatos);
             $PersonaDlSet->add($Persona);
         }
-        return array_values($PersonaDlSet->getTot());
+        /** @var list<PersonaSacd> $result */
+        $result = array_values($PersonaDlSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

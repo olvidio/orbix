@@ -45,9 +45,9 @@ final class CambioUsuarioObjetoPrefGuardar
         $id_fase_ref = isset($input['id_fase_ref']) && is_numeric($input['id_fase_ref'])
             ? (int) $input['id_fase_ref']
             : 0;
-        $aviso_off = is_true($input['aviso_off'] ?? '');
-        $aviso_on = is_true($input['aviso_on'] ?? '');
-        $aviso_outdate = is_true($input['aviso_outdate'] ?? '');
+        $aviso_off = is_true($input['aviso_off'] ?? '') ?? false;
+        $aviso_on = is_true($input['aviso_on'] ?? '') ?? false;
+        $aviso_outdate = is_true($input['aviso_outdate'] ?? '') ?? false;
         $a_casas = isset($input['casas']) && is_array($input['casas']) ? $input['casas'] : [];
 
         if ($id_usuario <= 0) {

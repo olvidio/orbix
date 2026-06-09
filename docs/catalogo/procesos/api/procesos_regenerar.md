@@ -6,7 +6,7 @@ url: "/src/procesos/procesos_regenerar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/procesos_regenerar.php"
-entrada: []
+entrada: ["post.id_tipo_proceso:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Procesos Regenerar
 
-Caso de uso: regenera las tareas del proceso a partir de las fases definidas en `tareas_proceso`, eliminando las sobrantes.
+Caso de uso: regenera las tareas del proceso a partir de tareas_proceso.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -31,7 +31,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_tipo_proceso` | `integer` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
@@ -40,10 +42,6 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
-
-## Efectos colaterales
-
-- Caso de uso: regenera las tareas del proceso a partir de las fases definidas en `tareas_proceso`, eliminando las sobrantes.
 
 ## Casos De Uso
 

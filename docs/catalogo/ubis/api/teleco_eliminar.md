@@ -6,9 +6,11 @@ url: "/src/ubis/teleco_eliminar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/teleco_eliminar.php"
-entrada: ["post.obj_pau:string", "post.sel:array"]
+entrada: ["post.obj_pau:string", "post.sel:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "ubis_TelecoEliminarData"
+respuesta_data: ["ok:true"]
 requiere_hashb: false
 frontend_referencias: []
 casos_uso: ["src\\ubis\\application\\TelecoEliminar"]
@@ -34,13 +36,17 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `obj_pau` | `string` | controller | No | controller |
-| `sel` | `array` | controller | No | controller |
+| `sel` | `mixed` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `ubis_TelecoEliminarData`):
+  - `ok` (`true`)
 
 ## Casos De Uso
 

@@ -103,10 +103,16 @@ class PgInicialesSacdRepository extends ClaseRepository implements InicialesSacd
             if (!is_array($aDatos)) {
                 continue;
             }
-            $InicialesSacd = InicialesSacd::fromArray($aDatos);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $InicialesSacd = InicialesSacd::fromArray($normalized);
             $EncargoDiaSet->add($InicialesSacd);
         }
-        return array_values($EncargoDiaSet->getTot());
+        /** @var list<InicialesSacd> $items */
+        $items = array_values($EncargoDiaSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

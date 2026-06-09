@@ -25,15 +25,18 @@ paths:
       tags:
         - "actividadescentro"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
+                periodo:
+                  type: "string"
+                tipo:
+                  type: "string"
+                year:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -239,13 +242,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadescentro_CentrosEncargadosDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividadescentro_CentrosEncargadosDataDataResponse"
   "/src/actividadescentro/lista_actividades_ctr_data":
     post:
       operationId: "post_actividadescentro_lista_actividades_ctr_data"
@@ -356,10 +359,39 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/actividadescentro_CentrosDisponiblesDataData"
+    actividadescentro_CentrosEncargadosDataData:
+      type: object
+      properties:
+        id_activ:
+          type: "integer"
+        permite_ver:
+          type: "boolean"
+        permite_modificar:
+          type: "boolean"
+        centros:
+          type: "string"
+    actividadescentro_CentrosEncargadosDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividadescentro_CentrosEncargadosDataData"
     actividadescentro_ListaActividadesCtrDataData:
       type: object
       properties:
-        "0":
+        titulo:
+          type: "string"
+        tipo:
+          type: "string"
+        inicio_iso:
+          type: "string"
+        fin_iso:
+          type: "string"
+        filas:
           type: "string"
     actividadescentro_ListaActividadesCtrDataDataResponse:
       allOf:

@@ -36,6 +36,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_equipaje` | `integer` | controller | No | controller |
 | `id_tipo_doc` | `integer` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`

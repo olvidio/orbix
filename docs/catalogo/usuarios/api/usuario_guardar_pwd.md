@@ -8,7 +8,7 @@ operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php"
 entrada: ["post.id_usuario:integer", "post.password:string"]
 entrada_obligatoria: []
-respuesta: "custom_json"
+respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/usuarios/controller/usuario_form_pwd.php"]
 casos_uso: []
@@ -38,8 +38,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Salida
 
-- Helper: `ContestarJson::send`
-- Forma: `custom_json`
+- Helper: `ContestarJson::enviar`
+- Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 
 ## Casos De Uso

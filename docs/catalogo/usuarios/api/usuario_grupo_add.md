@@ -6,7 +6,7 @@ url: "/src/usuarios/usuario_grupo_add"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php"
-entrada: ["post.ctx:string"]
+entrada: ["post.ctx:string", "post.id_grupo:integer", "post.id_usuario:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -34,6 +34,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `ctx` | `string` | controller | No | controller |
+| `id_grupo` | `integer` | controller | No | controller |
+| `id_usuario` | `integer` | controller | No | controller |
 
 ## Salida
 

@@ -128,10 +128,16 @@ public function getArrayHabitaciones(string $sCondicion = ''): array
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Habitacion = Habitacion::fromArray($aDatos);
-            $HabitacionSet->add($Habitacion);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $HabitacionSet->add(Habitacion::fromArray($normalized));
         }
-        return array_values($HabitacionSet->getTot());
+        /** @var list<Habitacion> $result */
+        $result = array_values($HabitacionSet->getTot());
+
+        return $result;
     }
 
     /**

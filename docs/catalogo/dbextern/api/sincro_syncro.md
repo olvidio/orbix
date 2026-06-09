@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Sincro Syncro
 
-Sincroniza todas las personas unidas de una DL.
+Descripcion funcional pendiente de revisar.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -39,6 +39,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `region` | `string` | controller | No | controller |
 | `tipo_persona` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
@@ -46,10 +48,6 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `dbextern_SincroPersonasData`):
   - `count` (`int, msg: string`)
-
-## Efectos colaterales
-
-- Sincroniza todas las personas unidas de una DL.
 
 ## Casos De Uso
 

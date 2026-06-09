@@ -80,7 +80,7 @@ class Situacion
         return 'situacion';
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos(): array
@@ -89,7 +89,9 @@ class Situacion
 
         $oSituacionSet->add($this->getDatosSituacion());
         $oSituacionSet->add($this->getDatosNombre_situacion());
-        return $oSituacionSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oSituacionSet->getTot());
+        return $campos;
     }
 
     private function getDatosSituacion(): DatosCampo
@@ -100,7 +102,7 @@ class Situacion
         $oDatosCampo->setMetodoSet('setSituacion');
         $oDatosCampo->setEtiqueta(_("situacion"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(1);
+        $oDatosCampo->setArgument('1');
         return $oDatosCampo;
     }
 
@@ -118,7 +120,7 @@ class Situacion
         $oDatosCampo->setMetodoSet('setNombre_situacion');
         $oDatosCampo->setEtiqueta(_("nombre situación"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(60);
+        $oDatosCampo->setArgument('60');
         return $oDatosCampo;
     }
 }

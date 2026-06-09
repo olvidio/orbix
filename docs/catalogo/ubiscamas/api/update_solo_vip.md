@@ -6,7 +6,7 @@ url: "/src/ubiscamas/update_solo_vip"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubiscamas/infrastructure/ui/http/controllers/update_solo_vip.php"
-entrada: ["post.ctx:string", "post.solo_vip:string"]
+entrada: ["post.ctx:string", "post.id_activ:integer", "post.solo_vip:string"]
 entrada_obligatoria: []
 respuesta: "raw_response"
 requiere_hashb: false
@@ -34,7 +34,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `ctx` | `string` | controller | No | controller |
+| `id_activ` | `integer` | controller | No | controller |
 | `solo_vip` | `string` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

@@ -6,7 +6,7 @@ url: "/src/ubis/centros_opciones_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/centros_opciones_data.php"
-entrada: ["post.active:mixed", "post.id_ubi_in:mixed", "post.sf:mixed", "post.sv:mixed", "post.tipo_ctr:mixed"]
+entrada: ["post.active:mixed", "post.id_ubi_in:mixed", "post.sf:mixed", "post.sv:mixed", "post.tipo_ctr:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "ubis_CentrosOpcionesDataData"
@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Centros Opciones Data
 
-Devuelve el payload (solo datos) para poblar el <select> de centros en `frontend\shared\web\CentrosQue`. Sustituye el acceso directo desde `CentrosQue` al repositorio `CentroDlRepositoryInterface` (separación frontend ↔ backend, ver `refactor.md`).
+Devuelve el payload (solo datos) para poblar el <select> de centros en `frontend\shared\web\CentrosQue`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -39,7 +39,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_ubi_in` | `mixed` | controller | No | controller |
 | `sf` | `mixed` | controller | No | controller |
 | `sv` | `mixed` | controller | No | controller |
-| `tipo_ctr` | `mixed` | controller | No | controller |
+| `tipo_ctr` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

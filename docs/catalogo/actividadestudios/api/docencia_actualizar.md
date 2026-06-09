@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Docencia Actualizar
 
-Ejecuta {
+Actualiza el dossier `d_docencia_stgr` con la informacion docente derivada de las actividades terminadas del periodo indicado. Para cada actividad terminada recorre sus asignaturas (con profesor asignado) y graba/actualiza la docencia correspondiente (`ProfesorDocenciaStgr`). Sustituye a la rama "continuar" del legacy `apps/actividadestudios/controller/actualizar_docencia.php`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

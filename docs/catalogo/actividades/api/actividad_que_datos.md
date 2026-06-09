@@ -35,17 +35,17 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `extendida` | `mixed` | controller | No | controller |
-| `id_tipo_activ` | `mixed` | controller | No | controller |
-| `para` | `string` | controller | No | controller |
-| `perm_jefe` | `mixed` | controller | No | controller |
-| `que` | `string` | controller | No | controller |
-| `sactividad` | `string` | controller | No | controller |
-| `sactividad2` | `string` | controller | No | controller |
-| `sasistentes` | `string` | controller | No | controller |
-| `sfsv` | `string` | controller | No | controller |
-| `sfsv_all` | `mixed` | controller | No | controller |
-| `snom_tipo` | `string` | controller | No | controller |
+| `extendida` | `mixed` | controller+application | No | controller+application |
+| `id_tipo_activ` | `mixed` | controller+application | No | controller+application |
+| `para` | `string` | controller+application | No | controller+application |
+| `perm_jefe` | `mixed` | controller+application | No | controller+application |
+| `que` | `string` | controller+application | No | controller+application |
+| `sactividad` | `string` | controller+application | No | controller+application |
+| `sactividad2` | `string` | controller+application | No | controller+application |
+| `sasistentes` | `string` | controller+application | No | controller+application |
+| `sfsv` | `string` | controller+application | No | controller+application |
+| `sfsv_all` | `mixed` | controller+application | No | controller+application |
+| `snom_tipo` | `string` | controller+application | No | controller+application |
 
 ## Salida
 

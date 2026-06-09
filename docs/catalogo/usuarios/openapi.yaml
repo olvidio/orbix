@@ -17,7 +17,7 @@ paths:
       operationId: "post_usuarios_app_login"
       summary: "App Login"
       description: |
-        Login JSON para clientes móviles (Camino B). Establece `$_SESSION['session_auth']` y cookies (`PHPSESSID`, `esquema`, `idioma`) igual que el login web.
+        Login JSON para app móvil (Camino B).
         
         Operacion: `mutacion`.
         
@@ -30,9 +30,6 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required:
-                - "username"
-                - "password"
               properties:
                 esquema:
                   type: "string"
@@ -60,9 +57,9 @@ paths:
       operationId: "post_usuarios_app_session"
       summary: "App Session"
       description: |
-        Comprueba si la cookie de sesión actual identifica un usuario autenticado. Útil al arrancar la app sin volver a pedir credenciales.
+        Comprueba si hay sesión autenticada (útil al arrancar la app).
         
-        Operacion: `consulta`.
+        Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/usuarios/api/app_session.md`
       tags:
@@ -252,7 +249,7 @@ paths:
               type: object
               properties:
                 id_usuario:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -293,13 +290,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/usuarios_GruposListaDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/usuarios_GruposListaDataResponse"
   "/src/usuarios/mails_contactos_region":
     post:
       operationId: "post_usuarios_mails_contactos_region"
@@ -327,13 +324,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/usuarios_usuariosRegionContactosDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/usuarios_usuariosRegionContactosDataResponse"
   "/src/usuarios/perm_activ_eliminar":
     post:
       operationId: "post_usuarios_perm_activ_eliminar"
@@ -619,7 +616,7 @@ paths:
       operationId: "post_usuarios_preferencia_tabla_get"
       summary: "Preferencia Tabla Get"
       description: |
-        Devuelve las preferencias de usuario necesarias para renderizar una tabla (HTML simple o SlickGrid) en el front. Entrada: - `id_tabla` (opcional): identificador del grid. Si viene vacío, no se devolverán preferencias específicas del grid (útil cuando sólo se necesita saber si el usuario prefiere HTML o SlickGrid). Salida: array asociativo con la forma: [ 'formato_tabla' => ''|'html'|'slickgrid', // prefs 'tabla_presentacion' 'slickgrid' => null|array, // prefs 'slickGrid_<id_tabla>_<idioma>' ] Para slickgrid se busca primero la preferencia del usuario actual; si no existe, se usa la del usuario 44 (default).
+        Devuelve las preferencias de usuario necesarias para renderizar una tabla (HTML simple o SlickGrid) en el front.
         
         Operacion: `mutacion`.
         
@@ -641,13 +638,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/usuarios_PreferenciaTablaDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/usuarios_PreferenciaTablaDataDataResponse"
   "/src/usuarios/preferencias_guardar":
     post:
       operationId: "post_usuarios_preferencias_guardar"
@@ -916,7 +913,7 @@ paths:
               type: object
               properties:
                 id_role:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -994,7 +991,7 @@ paths:
               type: object
               properties:
                 id_role:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1260,13 +1257,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/usuarios_usuarioEliminarDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/usuarios_usuarioEliminarDataResponse"
   "/src/usuarios/usuario_form":
     post:
       operationId: "post_usuarios_usuario_form"
@@ -1324,6 +1321,10 @@ paths:
               properties:
                 ctx:
                   type: "string"
+                id_grupo:
+                  type: "integer"
+                id_usuario:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1358,6 +1359,10 @@ paths:
               properties:
                 ctx:
                   type: "string"
+                id_grupo:
+                  type: "integer"
+                id_usuario:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1476,6 +1481,8 @@ paths:
                   type: "integer"
                 id_role:
                   type: "integer"
+                id_usuario:
+                  type: "integer"
                 nom_usuario:
                   type: "string"
                 pass:
@@ -1486,6 +1493,8 @@ paths:
                   type: "array"
                   items:
                     type: string
+                que_user:
+                  type: "string"
                 usuario:
                   type: "string"
       responses:
@@ -1566,13 +1575,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixCustomJsonResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixCustomJsonResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/usuarios/usuario_info":
     post:
       operationId: "post_usuarios_usuario_info"
@@ -1698,14 +1707,8 @@ components:
     usuarios_AppMobileLoginData:
       type: object
       properties:
-        id_usuario:
-          type: "integer"
-        username:
+        ok:
           type: "string"
-        esquema:
-          type: "string"
-        require_password_change:
-          type: "boolean"
     usuarios_AppMobileLoginDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
@@ -1716,6 +1719,66 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/usuarios_AppMobileLoginData"
+    usuarios_GruposListaData:
+      type: object
+      properties:
+        a_cabeceras:
+          type: "string"
+    usuarios_GruposListaDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/usuarios_GruposListaData"
+    usuarios_usuariosRegionContactosData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    usuarios_usuariosRegionContactosDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/usuarios_usuariosRegionContactosData"
+    usuarios_PreferenciaTablaDataData:
+      type: object
+      properties:
+        formato_tabla:
+          type: "string"
+    usuarios_PreferenciaTablaDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/usuarios_PreferenciaTablaDataData"
+    usuarios_usuarioEliminarData:
+      type: object
+      properties:
+        error:
+          type: "string"
+    usuarios_usuarioEliminarDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/usuarios_usuarioEliminarData"
     OrbixStandardResponseStringData:
       type: object
       required:

@@ -19,7 +19,7 @@ estado_revision: "generado"
 
 # Ingreso Plazas Previstas Update
 
-Endpoint backend: actualiza `num_asistentes_previstos` de un `Ingreso` desde la `TablaEditable` de `prevision_asistentes`.
+Endpoint backend: actualiza plazas previstas de un ingreso (TablaEditable).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -36,6 +36,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `colName` | `string` | controller+application | No | controller+application |
 | `data` | `string` | controller+application | No | controller+application |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

@@ -10,7 +10,7 @@ entrada: ["post.id:integer", "post.id_nom_listas:integer", "post.tipo_persona:st
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["no se encontró la persona en la BDU", "hay un error, no se ha guardado"]
+errores: ["no se encontró la persona en la BDU", "no se pudo resolver la delegación de listas", "No existe la clase de la persona", "hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/dbextern/controller/ver_listas.php"]
 casos_uso: ["src\\dbextern\\application\\CrearPersonaDesdeListasUseCase"]
 tags: ["dbextern", "sincro", "crear"]
@@ -19,7 +19,7 @@ estado_revision: "generado"
 
 # Sincro Crear
 
-Crea una persona en Orbix desde la BDU y la vincula.
+Descripcion funcional pendiente de revisar.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -38,6 +38,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_nom_listas` | `integer` | controller | No | controller |
 | `tipo_persona` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
@@ -47,6 +49,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Errores conocidos
 
 - `no se encontró la persona en la BDU`
+- `no se pudo resolver la delegación de listas`
+- `No existe la clase de la persona`
 - `hay un error, no se ha guardado`
 
 ## Casos De Uso

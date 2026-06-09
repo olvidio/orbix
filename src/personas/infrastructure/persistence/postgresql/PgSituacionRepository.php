@@ -128,7 +128,9 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
             $Situacion = Situacion::fromArray($aDatos);
             $SituacionSet->add($Situacion);
         }
-        return array_values($SituacionSet->getTot());
+        /** @var list<Situacion> $result */
+        $result = array_values($SituacionSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

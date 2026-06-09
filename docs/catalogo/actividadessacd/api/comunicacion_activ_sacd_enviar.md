@@ -19,7 +19,7 @@ estado_revision: "generado"
 
 # Comunicacion Activ Sacd Enviar
 
-Endpoint backend: encola los mails de comunicacion de actividades a los sacd y al ctr del sacd, con copia al jefe de calendario.
+Endpoint backend: encola mails de comunicacion de actividades a sacd.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

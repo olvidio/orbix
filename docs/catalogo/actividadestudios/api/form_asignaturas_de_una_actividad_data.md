@@ -6,7 +6,7 @@ url: "/src/actividadestudios/form_asignaturas_de_una_actividad_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividadestudios/infrastructure/ui/http/controllers/form_asignaturas_de_una_actividad_data.php"
-entrada: ["post.id_activ:mixed", "post.id_asignatura:mixed", "post.id_pau:mixed", "post.pau:mixed", "post.sel:mixed"]
+entrada: ["post.id_activ:integer", "post.id_asignatura:integer", "post.id_pau:integer", "post.pau:string", "post.sel:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadestudios_FormAsignaturasDeUnaActividadDataData"
@@ -35,11 +35,11 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `mixed` | controller | No | controller |
-| `id_asignatura` | `mixed` | controller | No | controller |
-| `id_pau` | `mixed` | controller | No | controller |
-| `pau` | `mixed` | controller | No | controller |
-| `sel` | `mixed` | controller | No | controller |
+| `id_activ` | `integer` | controller+application | No | controller+application |
+| `id_asignatura` | `integer` | controller+application | No | controller+application |
+| `id_pau` | `integer` | controller+application | No | controller+application |
+| `pau` | `string` | controller+application | No | controller+application |
+| `sel` | `mixed` | controller+application | No | controller+application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

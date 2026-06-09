@@ -6,6 +6,10 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 
 // Obtener el usuario actual
 $oMiUsuario = ConfigGlobal::MiUsuario();
+if ($oMiUsuario === null) {
+    header('Location: ' . ConfigGlobal::getWeb());
+    exit();
+}
 $id_usuario = $oMiUsuario->getId_usuario();
 
 // Verificar si el usuario tiene 2FA habilitado

@@ -2,6 +2,10 @@
 
 namespace src\ubis\application\services;
 
+use src\ubis\domain\entity\Casa;
+use src\ubis\domain\entity\Centro;
+use src\ubis\domain\entity\CentroDl;
+use src\ubis\domain\entity\CentroEx;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
@@ -77,7 +81,7 @@ final class UbiRepositoryResolver
     /**
      * Carga el ubi para comprobar permisos de edición (incluye fallback ctrsf/cdcsf en tabla general).
      */
-    public function findUbiForPermisos(string $obj, int $idUbi): ?object
+    public function findUbiForPermisos(string $obj, int $idUbi): Centro|CentroDl|CentroEx|Casa|null
     {
         $objPau = UbiPermisos::normalizeObjPau($obj);
         if (!in_array($objPau, ['CentroDl', 'CasaDl', 'CentroEx', 'CasaEx'], true)) {

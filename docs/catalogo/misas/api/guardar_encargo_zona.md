@@ -6,9 +6,11 @@ url: "/src/misas/guardar_encargo_zona"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/guardar_encargo_zona.php"
-entrada: ["post.descripcion_lugar:string", "post.encargo:string", "post.id_enc:integer", "post.id_tipo_enc:integer", "post.id_ubi:integer", "post.id_zona:integer", "post.idioma_enc:string", "post.observ:string", "post.orden:integer", "post.prioridad:integer"]
+entrada: ["post.descripcion_lugar:mixed", "post.encargo:mixed", "post.id_enc:mixed", "post.id_tipo_enc:mixed", "post.id_ubi:mixed", "post.id_zona:mixed", "post.idioma_enc:mixed", "post.observ:mixed", "post.orden:mixed", "post.prioridad:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "misas_GuardarEncargoZonaData"
+respuesta_data: ["error:string, data: array{id_enc: int, lugar: string}"]
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/ver_encargos_zona.php"]
 casos_uso: ["src\\misas\\application\\GuardarEncargoZona"]
@@ -33,22 +35,24 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `descripcion_lugar` | `string` | controller+application | No | controller+application |
-| `encargo` | `string` | controller+application | No | controller+application |
-| `id_enc` | `integer` | controller+application | No | controller+application |
-| `id_tipo_enc` | `integer` | controller+application | No | controller+application |
-| `id_ubi` | `integer` | controller+application | No | controller+application |
-| `id_zona` | `integer` | controller+application | No | controller+application |
-| `idioma_enc` | `string` | controller+application | No | controller+application |
-| `observ` | `string` | controller+application | No | controller+application |
-| `orden` | `integer` | controller+application | No | controller+application |
-| `prioridad` | `integer` | controller+application | No | controller+application |
+| `descripcion_lugar` | `mixed` | controller | No | controller |
+| `encargo` | `mixed` | controller | No | controller |
+| `id_enc` | `mixed` | controller | No | controller |
+| `id_tipo_enc` | `mixed` | controller | No | controller |
+| `id_ubi` | `mixed` | controller | No | controller |
+| `id_zona` | `mixed` | controller | No | controller |
+| `idioma_enc` | `mixed` | controller | No | controller |
+| `observ` | `mixed` | controller | No | controller |
+| `orden` | `mixed` | controller | No | controller |
+| `prioridad` | `mixed` | controller | No | controller |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `misas_GuardarEncargoZonaData`):
+  - `error` (`string, data: array{id_enc: int, lugar: string}`)
 
 ## Casos De Uso
 

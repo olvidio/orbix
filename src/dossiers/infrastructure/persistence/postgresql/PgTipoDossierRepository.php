@@ -47,7 +47,6 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $TipoDossierSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -97,14 +96,18 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $tiposDossiers = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $TipoDossier = TipoDossier::fromArray($aDatos);
-            $TipoDossierSet->add($TipoDossier);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $tiposDossiers[] = TipoDossier::fromArray($normalized);
         }
-        return array_values($TipoDossierSet->getTot());
+        return $tiposDossiers;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

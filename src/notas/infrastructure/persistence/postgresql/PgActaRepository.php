@@ -207,14 +207,20 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
             if (!is_array($aDatos)) {
                 continue;
             }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
             // para los bytea: (resources)
-            $aDatos['pdf'] = $this->normalizeBytea($this->readByteaField($aDatos['pdf'] ?? null));
+            $normalized['pdf'] = $this->normalizeBytea($this->readByteaField($normalized['pdf'] ?? null));
             // para las fechas del postgres (texto iso)
-            $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
-            $ActaDl = Acta::fromArray($aDatos);
+            $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta']))->fromPg();
+            $ActaDl = Acta::fromArray($normalized);
             $ActaDlSet->add($ActaDl);
         }
-        return array_values($ActaDlSet->getTot());
+        /** @var list<Acta> $items */
+        $items = array_values($ActaDlSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

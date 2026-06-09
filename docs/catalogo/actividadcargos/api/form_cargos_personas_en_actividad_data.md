@@ -6,7 +6,7 @@ url: "/src/actividadcargos/form_cargos_personas_en_actividad_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividadcargos/infrastructure/ui/http/controllers/form_cargos_personas_en_actividad_data.php"
-entrada: ["post.id_dossier:integer", "post.id_pau:integer", "post.id_tipo:integer", "post.mod:string", "post.pau:string", "post.permiso:integer", "post.que_dl:string", "post.sel:mixed"]
+entrada: ["post.id_dossier:integer", "post.id_pau:integer", "post.id_tipo:integer", "post.mod:string", "post.permiso:integer", "post.que_dl:string", "post.sel:array"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -37,10 +37,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_pau` | `integer` | application | No | application |
 | `id_tipo` | `integer` | application | No | application |
 | `mod` | `string` | application | No | application |
-| `pau` | `string` | application | No | application |
 | `permiso` | `integer` | application | No | application |
 | `que_dl` | `string` | application | No | application |
-| `sel` | `mixed` | application | No | application |
+| `sel` | `array` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

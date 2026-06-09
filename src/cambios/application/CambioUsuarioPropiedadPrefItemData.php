@@ -57,13 +57,40 @@ final class CambioUsuarioPropiedadPrefItemData
         $aOpcionesCasas = [];
         if ($propiedad === 'id_ubi') {
             $oMiUsuario = ConfigGlobal::MiUsuario();
+            if ($oMiUsuario === null) {
+                return [
+                    'error' => '',
+                    'id_item' => $id_item,
+                    'objeto' => $objeto,
+                    'propiedad' => $propiedad,
+                    'valor' => $valor,
+                    'operador' => $operador,
+                    'chk_old' => $chk_old,
+                    'chk_new' => $chk_new,
+                    'aOpcionesCasas' => [],
+                ];
+            }
+            $idRole = $oMiUsuario->getId_role();
+            if ($idRole === null) {
+                return [
+                    'error' => '',
+                    'id_item' => $id_item,
+                    'objeto' => $objeto,
+                    'propiedad' => $propiedad,
+                    'valor' => $valor,
+                    'operador' => $operador,
+                    'chk_old' => $chk_old,
+                    'chk_new' => $chk_new,
+                    'aOpcionesCasas' => [],
+                ];
+            }
             $oRole = new Role();
-            $oRole->setId_role($oMiUsuario->getId_role());
+            $oRole->setId_role($idRole);
             $miSfsv = ConfigGlobal::mi_sfsv();
             $donde = '';
             if ($oRole->isRolePau(PauType::PAU_CDC)) {
-                $id_pau = $oMiUsuario->getCsv_id_pau();
-                $sDonde = str_replace(',', ' OR id_ubi=', (string)$id_pau);
+                $id_pau = $oMiUsuario->getCsvIdPauAsString() ?? '';
+                $sDonde = str_replace(',', ' OR id_ubi=', $id_pau);
                 $donde = "WHERE active='t' AND (id_ubi=$sDonde)";
             } else {
                 $oPerm = $_SESSION['oPerm'] ?? null;

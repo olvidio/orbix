@@ -85,13 +85,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividades_ActividadCambiarTipoDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividades_ActividadCambiarTipoDataResponse"
   "/src/actividades/actividad_duplicar":
     post:
       operationId: "post_actividades_actividad_duplicar"
@@ -205,13 +205,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividades_ActividadEditarDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividades_ActividadEditarDataResponse"
   "/src/actividades/actividad_eliminar":
     post:
       operationId: "post_actividades_actividad_eliminar"
@@ -349,13 +349,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividades_ActividadImportarDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividades_ActividadImportarDataResponse"
   "/src/actividades/actividad_nivel_stgr_default_datos":
     post:
       operationId: "post_actividades_actividad_nivel_stgr_default_datos"
@@ -499,13 +499,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividades_ActividadNuevoCursoEjecutarDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/actividades_ActividadNuevoCursoEjecutarDataResponse"
   "/src/actividades/actividad_permiso_crear_datos":
     post:
       operationId: "post_actividades_actividad_permiso_crear_datos"
@@ -849,7 +849,19 @@ paths:
             schema:
               type: object
               properties:
+                entrada:
+                  type: "string"
+                extendida:
+                  type: "string"
+                isfsv:
+                  type: "integer"
+                modo:
+                  type: "string"
+                opcion_sel:
+                  type: "string"
                 salida:
+                  type: "string"
+                ssfsv:
                   type: "string"
       responses:
         "200":
@@ -1250,15 +1262,14 @@ paths:
       tags:
         - "actividades"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
+                id_tipo_activ:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1285,15 +1296,14 @@ paths:
       tags:
         - "actividades"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
+                id_tipo_activ:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1425,15 +1435,22 @@ paths:
       tags:
         - "actividades"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
+                iactividad_val:
+                  type: "string"
+                iasistentes_val:
+                  type: "string"
+                id_nom_tipo_activ:
+                  type: "string"
+                isfsv_val:
+                  type: "string"
+                nom_tipo_activ:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1460,15 +1477,16 @@ paths:
       tags:
         - "actividades"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
+                id_tipo_activ:
+                  type: "integer"
+                nom_tipo_activ:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -1501,6 +1519,36 @@ components:
           type: string
         data:
           description: "Ver schema concreto de cada operacion."
+    actividades_ActividadCambiarTipoData:
+      type: object
+      properties:
+        error_txt:
+          type: "string"
+    actividades_ActividadCambiarTipoDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_ActividadCambiarTipoData"
+    actividades_ActividadEditarData:
+      type: object
+      properties:
+        error_txt:
+          type: "string"
+    actividades_ActividadEditarDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_ActividadEditarData"
     actividades_ActividadFaseCompletadaDatosData:
       type: object
       properties:
@@ -1531,6 +1579,36 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/actividades_ActividadFasesCompletadasDatosData"
+    actividades_ActividadImportarData:
+      type: object
+      properties:
+        error_txt:
+          type: "string"
+    actividades_ActividadImportarDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_ActividadImportarData"
+    actividades_ActividadNuevoCursoEjecutarData:
+      type: object
+      properties:
+        html:
+          type: "string"
+    actividades_ActividadNuevoCursoEjecutarDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/actividades_ActividadNuevoCursoEjecutarData"
     actividades_ActividadQueDatosData:
       type: object
       properties:
@@ -1608,8 +1686,7 @@ components:
         ver_sacd:
           type: "integer"
         a_cabeceras:
-          type: array
-          items: {}
+          type: "string"
         a_valores:
           type: array
           items: {}

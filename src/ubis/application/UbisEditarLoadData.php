@@ -216,7 +216,7 @@ final class UbisEditarLoadData
         };
     }
 
-    private static function computeBotones(string $Qobj_pau, string $Qnuevo, ?object $oUbi, string $dlOverride = ''): int|string
+    private static function computeBotones(string $Qobj_pau, string $Qnuevo, Centro|CentroDl|CentroEx|Casa|null $oUbi, string $dlOverride = ''): int|string
     {
         if ($Qnuevo !== '') {
             $dl = $dlOverride;
@@ -228,7 +228,7 @@ final class UbisEditarLoadData
             return UbiPermisos::puedeModificarPorObjeto($Qobj_pau, $dl) ? '1,2' : 0;
         }
 
-        $dl = ($oUbi !== null && method_exists($oUbi, 'getDl')) ? (string)($oUbi->getDl() ?? '') : '';
+        $dl = $oUbi !== null ? (string) ($oUbi->getDl() ?? '') : '';
 
         return UbiPermisos::puedeModificarPorObjeto($Qobj_pau, $dl) ? '1,2' : 0;
     }

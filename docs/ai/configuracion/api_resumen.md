@@ -21,14 +21,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `configuracion.modulos_select_data`
 - Controller: `src/configuracion/infrastructure/ui/http/controllers/modulos_select_data.php`
-- Entrada: `post.id_sel:string`, `post.restored_id_sel:string`, `post.restored_scroll_id:string`, `post.scroll_id:string`, `post.stack:mixed`
+- Entrada: `post.id_sel:string`, `post.restored_id_sel:string`, `post.restored_scroll_id:string`, `post.scroll_id:string`, `post.stack:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/configuracion/modulos_update`
 
 - Id: `configuracion.modulos_update`
 - Controller: `src/configuracion/infrastructure/ui/http/controllers/modulos_update.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.descripcion:string`, `post.id_mod:integer`, `post.mod:string`, `post.nom:string`, `post.sel:mixed`
 - Respuesta: `raw_response`
 
 ## `/src/configuracion/parametros_lista`

@@ -6,7 +6,7 @@ url: "/src/configuracion/modulos_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/configuracion/infrastructure/ui/http/controllers/modulos_update.php"
-entrada: []
+entrada: ["post.descripcion:string", "post.id_mod:integer", "post.mod:string", "post.nom:string", "post.sel:mixed"]
 entrada_obligatoria: []
 respuesta: "raw_response"
 requiere_hashb: false
@@ -32,7 +32,13 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `descripcion` | `string` | application | No | application |
+| `id_mod` | `integer` | application | No | application |
+| `mod` | `string` | application | No | application |
+| `nom` | `string` | application | No | application |
+| `sel` | `mixed` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

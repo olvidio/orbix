@@ -9,6 +9,8 @@ controller: "src/actividadessacd/infrastructure/ui/http/controllers/com_sacd_act
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "actividadessacd_ComSacdActivPeriodoPageDataData"
+respuesta_data: ["perm_mod_txt:boolean"]
 requiere_hashb: false
 frontend_referencias: ["frontend/actividadessacd/controller/com_sacd_activ_periodo.php"]
 casos_uso: ["src\\actividadessacd\\application\\ComSacdActivPeriodoPageData"]
@@ -38,6 +40,8 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `actividadessacd_ComSacdActivPeriodoPageDataData`):
+  - `perm_mod_txt` (`boolean`)
 
 ## Casos De Uso
 

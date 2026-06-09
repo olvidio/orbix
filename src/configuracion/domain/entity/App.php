@@ -84,10 +84,7 @@ class App
      */
     public function getDatosCampos(): array
     {
-        $oAppSet = new Set();
-
-        $oAppSet->add($this->getDatosNombreApp());
-        return array_values($oAppSet->getTot());
+        return [$this->getDatosNombreApp()];
     }
 
     /**
@@ -104,7 +101,7 @@ class App
         $oDatosCampo->setMetodoSet('setNom'); // en tablaDB, no se pueden usar lo VO.
         $oDatosCampo->setEtiqueta(_("nombre de la aplicación"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
 
         return $oDatosCampo;
     }

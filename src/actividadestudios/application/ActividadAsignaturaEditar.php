@@ -43,8 +43,10 @@ final class ActividadAsignaturaEditar
         $oActividadAsignatura->setId_profesor($Qid_profesor);
         $oActividadAsignatura->setAvis_profesor($Qavis_profesor);
         $oActividadAsignatura->setTipo($Qtipo);
-        $oActividadAsignatura->setF_ini(DateTimeLocal::createFromLocal($Qf_ini));
-        $oActividadAsignatura->setF_fin(DateTimeLocal::createFromLocal($Qf_fin));
+        $rawF_ini = $Qf_ini === '' ? null : DateTimeLocal::createFromLocal($Qf_ini);
+        $rawF_fin = $Qf_fin === '' ? null : DateTimeLocal::createFromLocal($Qf_fin);
+        $oActividadAsignatura->setF_ini($rawF_ini instanceof DateTimeLocal ? $rawF_ini : null);
+        $oActividadAsignatura->setF_fin($rawF_fin instanceof DateTimeLocal ? $rawF_fin : null);
         if ($this->actividadAsignaturaDlRepository->Guardar($oActividadAsignatura) === false) {
             return _("hay un error, no se ha guardado");
         }

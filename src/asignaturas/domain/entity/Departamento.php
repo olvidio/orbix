@@ -96,7 +96,9 @@ class Departamento
         $oDepartamentoSet = new Set();
 
         $oDepartamentoSet->add($this->getDatosDepartamento());
-        return array_values($oDepartamentoSet->getTot());
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oDepartamentoSet->getTot());
+        return $campos;
     }
 
     /**
@@ -113,7 +115,7 @@ class Departamento
         $oDatosCampo->setMetodoSet('setDepartamento');
         $oDatosCampo->setEtiqueta(_("departamento"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(50);
+        $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
 

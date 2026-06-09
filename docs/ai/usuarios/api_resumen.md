@@ -56,7 +56,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.grupo_info`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/grupo_info.php`
-- Entrada: `post.id_usuario:string`
+- Entrada: `post.id_usuario:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/grupo_lista`
@@ -175,7 +175,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.role_grupmenu_info`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php`
-- Entrada: `post.id_role:string`
+- Entrada: `post.id_role:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/role_guardar`
@@ -189,7 +189,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.role_info`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/role_info.php`
-- Entrada: `post.id_role:string`
+- Entrada: `post.id_role:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/role_lista`
@@ -239,7 +239,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `usuarios.usuario_eliminar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_eliminar.php`
 - Entrada: `post.sel:array`
-- Respuesta: `pendiente_revision`
+- Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_form`
 
@@ -252,14 +252,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.usuario_grupo_add`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php`
-- Entrada: `post.ctx:string`
+- Entrada: `post.ctx:string`, `post.id_grupo:integer`, `post.id_usuario:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_grupo_del`
 
 - Id: `usuarios.usuario_grupo_del`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del.php`
-- Entrada: `post.ctx:string`
+- Entrada: `post.ctx:string`, `post.id_grupo:integer`, `post.id_usuario:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_grupo_del_lst`
@@ -280,7 +280,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.usuario_guardar`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php`
-- Entrada: `post.cambio_password:boolean`, `post.casas:array`, `post.ctx:string`, `post.email:string`, `post.has_2fa:boolean`, `post.id_ctr:integer`, `post.id_nom:integer`, `post.id_role:integer`, `post.nom_usuario:string`, `post.pass:string`, `post.password:string`, `post.perm_activ:array`, `post.usuario:string`
+- Entrada: `post.cambio_password:boolean`, `post.casas:array`, `post.ctx:string`, `post.email:string`, `post.has_2fa:boolean`, `post.id_ctr:integer`, `post.id_nom:integer`, `post.id_role:integer`, `post.id_usuario:integer`, `post.nom_usuario:string`, `post.pass:string`, `post.password:string`, `post.perm_activ:array`, `post.que_user:string`, `post.usuario:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_guardar_mail`
@@ -295,7 +295,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `usuarios.usuario_guardar_pwd`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php`
 - Entrada: `post.id_usuario:integer`, `post.password:string`
-- Respuesta: `custom_json`
+- Respuesta: `standard_envelope_string_data`
 
 ## `/src/usuarios/usuario_info`
 

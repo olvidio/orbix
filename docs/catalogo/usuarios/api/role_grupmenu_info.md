@@ -6,7 +6,7 @@ url: "/src/usuarios/role_grupmenu_info"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php"
-entrada: ["post.id_role:string"]
+entrada: ["post.id_role:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -33,7 +33,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_role` | `string` | controller | No | controller |
+| `id_role` | `integer` | controller | No | controller |
 
 ## Salida
 

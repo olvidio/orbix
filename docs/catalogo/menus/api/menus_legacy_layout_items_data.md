@@ -6,7 +6,7 @@ url: "/src/menus/menus_legacy_layout_items_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/menus/infrastructure/ui/http/controllers/menus_legacy_layout_items_data.php"
-entrada: ["post.id_grupmenu:mixed"]
+entrada: ["post.id_grupmenu:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -33,7 +33,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_grupmenu` | `mixed` | controller | No | controller |
+| `id_grupmenu` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

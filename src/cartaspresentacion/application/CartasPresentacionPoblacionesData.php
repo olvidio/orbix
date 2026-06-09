@@ -66,7 +66,7 @@ final class CartasPresentacionPoblacionesData
      */
     private function poblacionesPaisEspaña(): array
     {
-        return (array)$this->direccionCentroRepository->getArrayPoblaciones("WHERE pais ILIKE 'españa'");
+        return (array) $this->stringKeyOptions((array) $this->direccionCentroRepository->getArrayPoblaciones("WHERE pais ILIKE 'españa'"));
     }
 
     /**
@@ -74,7 +74,7 @@ final class CartasPresentacionPoblacionesData
      */
     private function poblacionesPaisExtranjero(): array
     {
-        return (array)$this->direccionCentroRepository->getArrayPoblaciones("WHERE pais NOT ILIKE 'españa'");
+        return (array) $this->stringKeyOptions((array) $this->direccionCentroRepository->getArrayPoblaciones("WHERE pais NOT ILIKE 'españa'"));
     }
 
     /**
@@ -86,8 +86,15 @@ final class CartasPresentacionPoblacionesData
         $poblaciones = [];
         foreach ($cCentros as $oCentro) {
             $aDirecciones = $this->relacionCentroDlDireccionRepository->getDireccionesPorUbi($oCentro->getId_ubi());
+            if ($aDirecciones === false) {
+                continue;
+            }
             foreach ($aDirecciones as $aDireccion) {
-                $oDir = $this->direccionCentroDlRepository->findById((int)$aDireccion['id_direccion']);
+                $idDirRaw = $aDireccion['id_direccion'] ?? null;
+                if (!is_numeric($idDirRaw)) {
+                    continue;
+                }
+                $oDir = $this->direccionCentroDlRepository->findById((int) $idDirRaw);
                 if ($oDir === null) {
                     continue;
                 }
@@ -99,5 +106,19 @@ final class CartasPresentacionPoblacionesData
         }
         uksort($poblaciones, 'src\shared\domain\helpers\strsinacentocmp');
         return $poblaciones;
+    }
+
+    /**
+     * @param array<int|string, string> $options
+     * @return array<string, string>
+     */
+    private function stringKeyOptions(array $options): array
+    {
+        $result = [];
+        foreach ($options as $key => $value) {
+            $result[(string) $key] = (string) $value;
+        }
+
+        return $result;
     }
 }

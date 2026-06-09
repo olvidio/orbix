@@ -44,7 +44,7 @@ final class AsistentePlanEstOk
         if ($oAsistente === null) {
             return _("no encuentro al asistente");
         }
-        $oAsistente->setEst_ok(is_true($Qest_ok));
+        $oAsistente->setEst_ok(is_true($Qest_ok) === true);
         if ($AsistenteRepository->Guardar($oAsistente) === false) {
             return _("hay un error, no se ha guardado");
         }

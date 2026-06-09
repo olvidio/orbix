@@ -142,8 +142,8 @@ final class GestionPlazasData
         $id_tipo_activ_regex = '^' . $Qid_tipo_activ;
         $status = StatusId::ACTUAL;
         foreach ($cDelegaciones as $oDelegacion) {
-            $dl = (string)$oDelegacion->getDlVo()?->value();
-            $id_dl = (int)($oDelegacion->getIdDlVo()?->value() ?? 0);
+            $dl = (string) $oDelegacion->getDlVo()->value();
+            $id_dl = (int) $oDelegacion->getIdDlVo()->value();
             $a_grupo[$dl] = $id_dl;
             $aWhere = [
                 'dl_org' => $dl,

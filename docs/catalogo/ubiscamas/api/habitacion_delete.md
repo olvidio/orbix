@@ -6,7 +6,7 @@ url: "/src/ubiscamas/habitacion_delete"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubiscamas/infrastructure/ui/http/controllers/habitacion_delete.php"
-entrada: ["post.id_habitacion:string", "post.id_ubi:integer", "post.sel:array"]
+entrada: ["post.id_habitacion:string", "post.sel:array"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -34,8 +34,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `id_habitacion` | `string` | controller | No | controller |
-| `id_ubi` | `integer` | controller | No | controller |
 | `sel` | `array` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

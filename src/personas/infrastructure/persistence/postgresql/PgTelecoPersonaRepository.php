@@ -100,7 +100,9 @@ class PgTelecoPersonaRepository extends ClaseRepository implements TelecoPersona
             $TelecoPersona = TelecoPersona::fromArray($aDatos);
             $TelecoPersonaSet->add($TelecoPersona);
         }
-        return array_values($TelecoPersonaSet->getTot());
+        /** @var list<TelecoPersona> $result */
+        $result = array_values($TelecoPersonaSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

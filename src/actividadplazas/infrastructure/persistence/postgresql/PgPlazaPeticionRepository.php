@@ -98,14 +98,19 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<PlazaPeticion> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $PlazaPeticion = PlazaPeticion::fromArray($aDatos);
-            $PlazaPeticionSet->add($PlazaPeticion);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = PlazaPeticion::fromArray($normalized);
         }
-        return array_values($PlazaPeticionSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

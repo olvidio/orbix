@@ -105,13 +105,19 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
             if (!is_array($aDatos)) {
                 continue;
             }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
             // para las fechas del postgres (texto iso)
-            $aDatos['tstart'] = (new ConverterDate('datetime', $aDatos['tstart']))->fromPg();
-            $aDatos['tend'] = (new ConverterDate('datetime', $aDatos['tend']))->fromPg();
-            $EncargoDia = EncargoDia::fromArray($aDatos);
+            $normalized['tstart'] = (new ConverterDate('datetime', $normalized['tstart']))->fromPg();
+            $normalized['tend'] = (new ConverterDate('datetime', $normalized['tend']))->fromPg();
+            $EncargoDia = EncargoDia::fromArray($normalized);
             $EncargoDiaSet->add($EncargoDia);
         }
-        return array_values($EncargoDiaSet->getTot());
+        /** @var list<EncargoDia> $items */
+        $items = array_values($EncargoDiaSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -9,6 +9,8 @@ controller: "src/pasarela/infrastructure/ui/http/controllers/contribucion_reserv
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "pasarela_ContribucionReservaDefaultDataData"
+respuesta_data: ["default:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/pasarela/controller/contribucion_reserva_ajax.php"]
 casos_uso: ["src\\pasarela\\application\\ContribucionReservaDefaultData"]
@@ -38,6 +40,8 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `pasarela_ContribucionReservaDefaultDataData`):
+  - `default` (`string`)
 
 ## Casos De Uso
 

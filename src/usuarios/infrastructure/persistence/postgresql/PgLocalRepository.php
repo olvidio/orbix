@@ -124,14 +124,19 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var list<Local> $items */
+        $items = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Local = Local::fromArray($aDatos);
-            $LocalSet->add($Local);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $items[] = Local::fromArray($normalized);
         }
-        return array_values($LocalSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -492,7 +492,16 @@ class PersonaNotaOtraRegionStgr
      */
     public function getJson_certificados(bool $returnArray = FALSE): array|stdClass|null
     {
-        return (new ConverterJson($this->json_certificados, $returnArray))->fromPg();
+        $result = (new ConverterJson($this->json_certificados, $returnArray))->fromPg();
+        if (!is_array($result)) {
+            return $result;
+        }
+        $normalized = [];
+        foreach ($result as $key => $value) {
+            $normalized[(string) $key] = $value;
+        }
+
+        return $normalized;
     }
 
     /**

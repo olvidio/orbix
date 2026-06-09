@@ -183,12 +183,12 @@ paths:
                   type: "string"
                 obj_pau:
                   type: "string"
-                pau:
-                  type: "string"
                 permiso:
                   type: "string"
                 sel:
-                  type: "string"
+                  type: "array"
+                  items:
+                    type: string
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -229,14 +229,14 @@ paths:
                   type: "integer"
                 mod:
                   type: "string"
-                pau:
-                  type: "string"
                 permiso:
                   type: "integer"
                 que_dl:
                   type: "string"
                 sel:
-                  type: "string"
+                  type: "array"
+                  items:
+                    type: string
       responses:
         "200":
           description: "Respuesta generada por Orbix."

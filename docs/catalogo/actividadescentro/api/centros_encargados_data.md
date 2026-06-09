@@ -9,6 +9,8 @@ controller: "src/actividadescentro/infrastructure/ui/http/controllers/centros_en
 entrada: ["post.dl_org:string", "post.id_activ:integer", "post.id_tipo_activ:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "actividadescentro_CentrosEncargadosDataData"
+respuesta_data: ["id_activ:integer", "permite_ver:boolean", "permite_modificar:boolean", "centros:list<array{id_ubi: int, nombre_ubi: string}>"]
 requiere_hashb: false
 frontend_referencias: []
 casos_uso: ["src\\actividadescentro\\application\\CentrosEncargadosData"]
@@ -37,11 +39,18 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_activ` | `integer` | controller+application | No | controller+application |
 | `id_tipo_activ` | `string` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `actividadescentro_CentrosEncargadosDataData`):
+  - `id_activ` (`integer`)
+  - `permite_ver` (`boolean`)
+  - `permite_modificar` (`boolean`)
+  - `centros` (`list<array{id_ubi: int, nombre_ubi: string}>`)
 
 ## Casos De Uso
 

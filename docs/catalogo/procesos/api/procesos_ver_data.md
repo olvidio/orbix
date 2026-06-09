@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Procesos Ver Data
 
-Caso de uso: datos para la pantalla `procesos_ver` (formulario editar / nuevo de una fase dentro de un tipo de proceso). Devuelve todos los arrays necesarios para que el controlador frontend monte los `frontend\shared\web\Desplegable` (fases, tareas, status, oficinas responsables, fases previas y sus tareas) y el formulario de edicion.
+Caso de uso: datos para la pantalla `procesos_ver`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -35,6 +35,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `id_item` | `integer` | controller | No | controller |
 | `mod` | `string` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

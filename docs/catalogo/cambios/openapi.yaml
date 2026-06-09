@@ -43,13 +43,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_AvisosGenerarListaDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/cambios_AvisosGenerarListaDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/cambios/cambio_usuario_eliminar":
     post:
       operationId: "post_cambios_cambio_usuario_eliminar"
@@ -308,7 +308,7 @@ paths:
               type: object
               properties:
                 id_item_usuario_objeto_prop:
-                  type: "integer"
+                  type: "string"
                 objeto_prop:
                   type: "string"
       responses:
@@ -511,34 +511,6 @@ components:
           type: string
         data:
           description: "Ver schema concreto de cada operacion."
-    cambios_AvisosGenerarListaDataData:
-      type: object
-      properties:
-        error:
-          type: "string"
-        a_valores:
-          type: array
-          items: {}
-        aOpcionesUsuarios:
-          type: array
-          items: {}
-        aOpcionesAvisoTipo:
-          type: array
-          items: {}
-        effective_id_usuario:
-          type: "integer"
-        effective_aviso_tipo:
-          type: "integer"
-    cambios_AvisosGenerarListaDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/cambios_AvisosGenerarListaDataData"
     cambios_CambioUsuarioEliminarData:
       type: object
       properties:

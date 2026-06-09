@@ -26,6 +26,7 @@ fecha: 2026-05-21
 
 Documentos transversales:
 
+- **Resumen / presentación:** [QUE_ES_ORBIX.md](QUE_ES_ORBIX.md)
 - Plan: [PLAN_DOCUMENTACION_MODULOS.md](PLAN_DOCUMENTACION_MODULOS.md)
 - **Repaso final:** [REPASSO_FINAL.md](REPASSO_FINAL.md)
 - Excepciones: [excepciones_modulos.md](excepciones_modulos.md)

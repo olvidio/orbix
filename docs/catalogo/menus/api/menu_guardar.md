@@ -10,6 +10,7 @@ entrada: ["post.filtro_grupo:integer", "post.id_menu:integer", "post.id_metamenu
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
+errores: ["No encuentro el menu"]
 frontend_referencias: []
 casos_uso: ["src\\menus\\application\\MenuGuardar"]
 tags: ["menus", "menu", "guardar"]
@@ -42,11 +43,17 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `perm_menu` | `array` | controller | No | controller |
 | `txt_menu` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+
+## Errores conocidos
+
+- `No encuentro el menu`
 
 ## Casos De Uso
 

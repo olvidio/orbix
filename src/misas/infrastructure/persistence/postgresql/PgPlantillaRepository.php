@@ -104,13 +104,19 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
             if (!is_array($aDatos)) {
                 continue;
             }
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
             // para las fechas del postgres (texto iso)
-            $aDatos['t_start'] = (new ConverterDate('time', $aDatos['t_start']))->fromPg();
-            $aDatos['t_end'] = (new ConverterDate('time', $aDatos['t_end']))->fromPg();
-            $Plantilla = Plantilla::fromArray($aDatos);
+            $normalized['t_start'] = (new ConverterDate('time', $normalized['t_start']))->fromPg();
+            $normalized['t_end'] = (new ConverterDate('time', $normalized['t_end']))->fromPg();
+            $Plantilla = Plantilla::fromArray($normalized);
             $PlantillaSet->add($Plantilla);
         }
-        return array_values($PlantillaSet->getTot());
+        /** @var list<Plantilla> $items */
+        $items = array_values($PlantillaSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

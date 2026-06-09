@@ -95,7 +95,10 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
                 $oActividadSet->add($oActividad);
             }
         }
-        return array_values($oActividadSet->getTot());
+        /** @var list<ActividadAll> $result */
+        $result = array_values($oActividadSet->getTot());
+
+        return $result;
     }
 
     /**
@@ -128,7 +131,10 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
                 $oUbiSet->add($oUbi);
             }
         }
-        return array_values($oUbiSet->getTot());
+        /** @var list<CentroDl|CentroEllas> $result */
+        $result = array_values($oUbiSet->getTot());
+
+        return $result;
     }
 
     /**
@@ -194,10 +200,16 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
             if (!is_array($aDatos)) {
                 continue;
             }
-            $CentroEncargado = CentroEncargado::fromArray($aDatos);
-            $CentroEncargadoSet->add($CentroEncargado);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $CentroEncargadoSet->add(CentroEncargado::fromArray($normalized));
         }
-        return array_values($CentroEncargadoSet->getTot());
+        /** @var list<CentroEncargado> $result */
+        $result = array_values($CentroEncargadoSet->getTot());
+
+        return $result;
     }
 
     public function Eliminar(CentroEncargado $CentroEncargado, bool $registrarCambios = true): bool

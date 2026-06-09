@@ -6,12 +6,12 @@ url: "/src/misas/ver_misas_zona_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/ver_misas_zona_data.php"
-entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.id_zona:integer", "post.seleccion:integer"]
+entrada: ["post.empiezamax:mixed", "post.empiezamin:mixed", "post.id_zona:mixed", "post.seleccion:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-frontend_referencias: ["frontend/misas/controller/ver_misas_zona.php", "frontend/misas/support/CuadriculaZonaRenderer.php"]
-casos_uso: ["src\\misas\\application\\VerMisasZonaData"]
+frontend_referencias: ["frontend/misas/controller/ver_misas_zona.php"]
+casos_uso: ["src\\misas\\application\\VerMisasZonaData", "src\\misas\\application\\support\\MisasBuildInput"]
 tags: ["misas", "ver", "zona", "data"]
 estado_revision: "generado"
 ---
@@ -33,10 +33,10 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `empiezamax` | `string` | controller | No | controller |
-| `empiezamin` | `string` | controller | No | controller |
-| `id_zona` | `integer` | controller | No | controller |
-| `seleccion` | `integer` | controller | No | controller |
+| `empiezamax` | `mixed` | controller | No | controller |
+| `empiezamin` | `mixed` | controller | No | controller |
+| `id_zona` | `mixed` | controller | No | controller |
+| `seleccion` | `mixed` | controller | No | controller |
 
 ## Salida
 
@@ -47,11 +47,11 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Casos De Uso
 
 - `src\misas\application\VerMisasZonaData`
+- `src\misas\application\support\MisasBuildInput`
 
 ## Frontend Relacionado
 
 - `frontend/misas/controller/ver_misas_zona.php`
-- `frontend/misas/support/CuadriculaZonaRenderer.php`
 
 ## Revision Manual
 

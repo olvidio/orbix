@@ -270,7 +270,7 @@ paths:
               type: object
               properties:
                 id_item:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -289,7 +289,7 @@ paths:
       operationId: "post_certificados_certificado_emitido_lista_datos"
       summary: "Certificado Emitido Lista Datos"
       description: |
-        Esta página muestra una tabla con los certificados.
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -358,7 +358,7 @@ paths:
       operationId: "post_certificados_certificado_emitido_pdf_upload"
       summary: "Certificado Emitido Pdf Upload"
       description: |
-        Subida AJAX del PDF (bootstrap-fileinput / FormData multipart).
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -424,10 +424,6 @@ paths:
               properties:
                 id_item:
                   type: "integer"
-                sel:
-                  type: "array"
-                  items:
-                    type: string
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -574,8 +570,6 @@ paths:
                   type: "string"
                 f_certificado:
                   type: "string"
-                f_enviado:
-                  type: "string"
                 f_recibido:
                   type: "string"
                 firmado:
@@ -622,10 +616,8 @@ paths:
             schema:
               type: object
               properties:
-                sel:
-                  type: "array"
-                  items:
-                    type: string
+                id_item:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -675,7 +667,7 @@ paths:
       operationId: "post_certificados_certificado_recibido_pdf_upload"
       summary: "Certificado Recibido Pdf Upload"
       description: |
-        Subida AJAX del PDF (certificado recibido, FormData multipart).
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -758,7 +750,7 @@ paths:
       operationId: "post_certificados_textos_certificados"
       summary: "Textos Certificados"
       description: |
-        Descripcion funcional pendiente de revisar.
+        Textos en latín para certificados.
         
         Operacion: `mutacion`.
         

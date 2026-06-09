@@ -109,9 +109,15 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
             if (!is_array($aDatos)) {
                 continue;
             }
-            $AsignaturaTipoSet->add(AsignaturaTipo::fromArray($aDatos));
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $AsignaturaTipoSet->add(AsignaturaTipo::fromArray($normalized));
         }
-        return array_values($AsignaturaTipoSet->getTot());
+        /** @var list<AsignaturaTipo> $items */
+        $items = array_values($AsignaturaTipoSet->getTot());
+        return $items;
     }
 
     public function Eliminar(AsignaturaTipo $AsignaturaTipo): bool

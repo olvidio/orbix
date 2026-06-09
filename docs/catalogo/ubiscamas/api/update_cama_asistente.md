@@ -6,19 +6,21 @@ url: "/src/ubiscamas/update_cama_asistente"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubiscamas/infrastructure/ui/http/controllers/update_cama_asistente.php"
-entrada: ["post.ctx:string", "post.id_cama:string", "post.id_nom:integer"]
+entrada: ["post.ctx:string", "post.id_activ:integer", "post.id_cama:string", "post.id_nom:integer"]
 entrada_obligatoria: []
 respuesta: "raw_response"
+respuesta_data_schema: "ubiscamas_UpdateCamaAsistenteData"
+respuesta_data: ["success:bool, mensaje: string"]
 requiere_hashb: false
 frontend_referencias: []
-casos_uso: ["src\\asistentes\\application\\services\\AsistenteActividadService"]
+casos_uso: ["src\\ubiscamas\\application\\UpdateCamaAsistente"]
 tags: ["ubiscamas", "update", "cama", "asistente"]
 estado_revision: "generado"
 ---
 
 # Update Cama Asistente
 
-Servicio de aplicación para operaciones de asistentes que requieren coordinación entre múltiples repositorios
+Descripcion funcional pendiente de revisar.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -34,22 +36,23 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `ctx` | `string` | controller | No | controller |
+| `id_activ` | `integer` | controller | No | controller |
 | `id_cama` | `string` | controller | No | controller |
 | `id_nom` | `integer` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
 - Helper: `echo`
 - Forma: `raw_response`
 - Exito: `success: true`, `data: "ok"`.
-
-## Efectos colaterales
-
-- Servicio de aplicación para operaciones de asistentes que requieren coordinación entre múltiples repositorios @package orbix @subpackage asistentes @author Daniel Serrabou @version 1.0 @created 16/12/2025
+- Payload en `data` (schema `ubiscamas_UpdateCamaAsistenteData`):
+  - `success` (`bool, mensaje: string`)
 
 ## Casos De Uso
 
-- `src\asistentes\application\services\AsistenteActividadService`
+- `src\ubiscamas\application\UpdateCamaAsistente`
 
 ## Frontend Relacionado
 

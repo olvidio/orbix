@@ -9,6 +9,8 @@ controller: "src/menus/infrastructure/ui/http/controllers/lista_meta_menus.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "menus_ListaMetaMenusData"
+respuesta_data: ["a_opciones:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/menus/controller/menus_get.php"]
 casos_uso: ["src\\menus\\application\\ListaMetaMenus"]
@@ -38,6 +40,8 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `menus_ListaMetaMenusData`):
+  - `a_opciones` (`array`)
 
 ## Casos De Uso
 

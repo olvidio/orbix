@@ -64,7 +64,9 @@ final class CentrosDisponiblesData
             $f_ini_act_iso = '';
             if ($f_ini_act !== '') {
                 $oDate = DateTimeLocal::createFromLocal($f_ini_act);
-                $f_ini_act_iso = $oDate->getIso();
+                if ($oDate !== false && $oDate !== null) {
+                    $f_ini_act_iso = $oDate->getIso();
+                }
             }
             $periodo = ($inicio !== '' && $fin !== '')
                 ? "f_ini BETWEEN '" . $inicio . "' AND '" . $fin . "'"

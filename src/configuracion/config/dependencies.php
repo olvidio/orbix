@@ -25,7 +25,6 @@ return [
     ModuloRepositoryInterface::class => autowire(PgModuloRepository::class),
 
     InfoAppsDomain::class => autowire(InfoAppsDomain::class),
-    \src\configuracion\domain\InfoApps::class => autowire(InfoAppsDomain::class),
     InfoModsInstalled::class => autowire(InfoModsInstalled::class),
     ModulosConfig::class => autowire(ModulosConfig::class),
 

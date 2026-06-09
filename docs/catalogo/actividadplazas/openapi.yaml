@@ -467,8 +467,7 @@ components:
       type: object
       properties:
         a_cabeceras:
-          type: array
-          items: {}
+          type: "string"
         a_valores:
           type: array
           items: {}
@@ -554,8 +553,7 @@ components:
         concedidasB2A:
           type: "integer"
         a_cabeceras:
-          type: array
-          items: {}
+          type: "string"
         a_valores:
           type: array
           items: {}

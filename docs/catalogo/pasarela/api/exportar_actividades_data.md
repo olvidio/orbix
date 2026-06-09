@@ -9,6 +9,8 @@ controller: "src/pasarela/infrastructure/ui/http/controllers/exportar_actividade
 entrada: ["post.fin_iso:string", "post.iactividad_val:string", "post.iasistentes_val:string", "post.id_cdc:array", "post.id_tipo_activ:string", "post.inicio_iso:string", "post.isfsv_val:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "pasarela_ExportarActividadesDataData"
+respuesta_data: ["a_cabeceras:list<string>, a_botones: list<mixed>, a_valores: array<int, array<int, mixed>>, errores: string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/pasarela/controller/exportar_select.php"]
 casos_uso: ["src\\pasarela\\application\\ExportarActividadesData"]
@@ -18,7 +20,7 @@ estado_revision: "generado"
 
 # Exportar Actividades Data
 
-Caso de uso "exportar actividades": dado un filtro (tipo de actividad, periodo y casas), devuelve cabeceras + filas para el listado de exportación, mezclando datos de actividades con las conversiones de pasarela. Devuelve un array serializable por {
+Caso de uso "exportar actividades": dado un filtro (tipo de actividad, periodo y casas), devuelve cabeceras + filas para el listado de exportación.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -46,6 +48,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `pasarela_ExportarActividadesDataData`):
+  - `a_cabeceras` (`list<string>, a_botones: list<mixed>, a_valores: array<int, array<int, mixed>>, errores: string`)
 
 ## Casos De Uso
 

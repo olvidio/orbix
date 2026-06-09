@@ -49,10 +49,6 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 
-## Permisos
-
-- Permiso oficina `scdl`
-
 ## Casos De Uso
 
 - `src\ubis\application\UbisEditarLoadData`

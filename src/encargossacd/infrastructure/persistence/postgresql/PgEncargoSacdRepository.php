@@ -64,7 +64,6 @@ class PgEncargoSacdRepository extends ClaseRepository implements EncargoSacdRepo
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $EncargoSacdSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -116,6 +115,7 @@ class PgEncargoSacdRepository extends ClaseRepository implements EncargoSacdRepo
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $encargosSacd = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
@@ -123,10 +123,13 @@ class PgEncargoSacdRepository extends ClaseRepository implements EncargoSacdRepo
             // para las fechas del postgres (texto iso)
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
-            $EncargoSacd = EncargoSacd::fromArray($aDatos);
-            $EncargoSacdSet->add($EncargoSacd);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $encargosSacd[] = EncargoSacd::fromArray($normalized);
         }
-        return array_values($EncargoSacdSet->getTot());
+        return $encargosSacd;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

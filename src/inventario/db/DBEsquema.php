@@ -621,6 +621,10 @@ class DBEsquema extends DBAbstract
         $filename = $datosTabla['filename'];
         $oDbl = $this->oDbl;
 
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos.'));
+        }
+
         $a_sql = [];
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;";
         $this->executeSql($a_sql);
@@ -654,6 +658,10 @@ class DBEsquema extends DBAbstract
         $id_seq = $datosTabla['id_seq'];
         $filename = $datosTabla['filename'];
         $oDbl = $this->oDbl;
+
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos.'));
+        }
 
         $a_sql = [];
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY CASCADE;";
@@ -690,6 +698,10 @@ class DBEsquema extends DBAbstract
         $filename = $datosTabla['filename'];
         $oDbl = $this->oDbl;
 
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos.'));
+        }
+
         $a_sql = [];
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY CASCADE;";
         $this->executeSql($a_sql);
@@ -723,6 +735,10 @@ class DBEsquema extends DBAbstract
         $id_seq = $datosTabla['id_seq'];
         $filename = $datosTabla['filename'];
         $oDbl = $this->oDbl;
+
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos.'));
+        }
 
         $a_sql = [];
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY CASCADE;";
@@ -758,6 +774,10 @@ class DBEsquema extends DBAbstract
         $filename = $datosTabla['filename'];
         $oDbl = $this->oDbl;
 
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos.'));
+        }
+
         $a_sql = [];
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;";
         $this->executeSql($a_sql);
@@ -791,6 +811,10 @@ class DBEsquema extends DBAbstract
         $id_seq = $datosTabla['id_seq'];
         $filename = $datosTabla['filename'];
         $oDbl = $this->oDbl;
+
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos.'));
+        }
 
         $a_sql = [];
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;";
@@ -826,6 +850,10 @@ class DBEsquema extends DBAbstract
         $filename = $datosTabla['filename'];
         $oDbl = $this->oDbl;
 
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos.'));
+        }
+
         $a_sql = [];
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;";
         $this->executeSql($a_sql);
@@ -859,6 +887,10 @@ class DBEsquema extends DBAbstract
         $id_seq = $datosTabla['id_seq'];
         $filename = $datosTabla['filename'];
         $oDbl = $this->oDbl;
+
+        if ($oDbl === null) {
+            throw new \RuntimeException(_('No hay conexión a la base de datos.'));
+        }
 
         $a_sql = [];
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY CASCADE;";

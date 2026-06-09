@@ -14,7 +14,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.acta_notas_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/acta_notas_data.php`
-- Entrada: `post.id_activ:mixed`, `post.id_asignatura:mixed`
+- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/acta_notas_definitivas_grabar`
@@ -98,35 +98,35 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.e43_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/e43_data.php`
-- Entrada: `post.id_activ:mixed`, `post.id_nom:mixed`
+- Entrada: `post.append_blank_footer:mixed`, `post.id_activ:integer`, `post.id_nom:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/e43_imprimir_mpdf_data`
 
 - Id: `actividadestudios.e43_imprimir_mpdf_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/e43_imprimir_mpdf_data.php`
-- Entrada: `post.id_activ:mixed`, `post.id_nom:mixed`
+- Entrada: `post.append_blank_footer:mixed`, `post.id_activ:integer`, `post.id_nom:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/form_asignaturas_de_una_actividad_data`
 
 - Id: `actividadestudios.form_asignaturas_de_una_actividad_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/form_asignaturas_de_una_actividad_data.php`
-- Entrada: `post.id_activ:mixed`, `post.id_asignatura:mixed`, `post.id_pau:mixed`, `post.pau:mixed`, `post.sel:mixed`
+- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_pau:integer`, `post.pau:string`, `post.sel:mixed`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/form_matriculas_de_una_persona_data`
 
 - Id: `actividadestudios.form_matriculas_de_una_persona_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/form_matriculas_de_una_persona_data.php`
-- Entrada: `post.id_activ:mixed`, `post.id_asignatura:mixed`, `post.id_pau:mixed`, `post.sel:mixed`
+- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_nom:integer`, `post.sel:mixed`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/lista_clases_ca_data`
 
 - Id: `actividadestudios.lista_clases_ca_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/lista_clases_ca_data.php`
-- Entrada: `post.id_activ:mixed`
+- Entrada: `post.id_activ:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/matricula_automatica`
@@ -161,14 +161,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.matriculas_lista_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/matriculas_lista_data.php`
-- Entrada: `post.finIso:mixed`, `post.inicioIso:mixed`
+- Entrada: `post.finIso:string`, `post.fin_iso:string`, `post.inicioIso:string`, `post.inicio_iso:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/matriculas_lista_otras_r_data`
 
 - Id: `actividadestudios.matriculas_lista_otras_r_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/matriculas_lista_otras_r_data.php`
-- Entrada: `post.apellido1:mixed`
+- Entrada: `post.apellido1:string`, `post.esquema:string`, `post.esquema_region_stgr:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/matriculas_pendientes_data`
@@ -182,19 +182,19 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadestudios.plan_estudios_ca_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/plan_estudios_ca_data.php`
-- Entrada: `post.id_activ:mixed`
+- Entrada: `post.id_activ:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/posibles_asignaturas_ca_data`
 
 - Id: `actividadestudios.posibles_asignaturas_ca_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/posibles_asignaturas_ca_data.php`
-- Entrada: `post.id_activ:mixed`, `post.nom_activ:mixed`
+- Entrada: `post.id_activ:integer`, `post.nom_activ:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadestudios/profesores_desplegable_data`
 
 - Id: `actividadestudios.profesores_desplegable_data`
 - Controller: `src/actividadestudios/infrastructure/ui/http/controllers/profesores_desplegable_data.php`
-- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.salida:string`
+- Entrada: `post.id_activ:integer`, `post.id_asignatura:integer`, `post.id_profesor:integer`, `post.salida:string`
 - Respuesta: `standard_envelope_string_data`

@@ -19,7 +19,7 @@ estado_revision: "generado"
 
 # Texto Comunicacion Guardar
 
-Endpoint backend: upsert/delete del texto de comunicacion (`clave`, `idioma`, `texto`).
+Endpoint backend: guarda/elimina texto de comunicacion sacd.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -34,9 +34,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `clave` | `string` | application | No | application |
-| `idioma` | `string` | application | No | application |
-| `texto` | `string` | application | No | application |
+| `clave` | `string` | controller+application | No | controller+application |
+| `idioma` | `string` | controller+application | No | controller+application |
+| `texto` | `string` | controller+application | No | controller+application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
@@ -49,7 +49,6 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 ## Efectos colaterales
 
 - Guarda/actualiza/elimina el texto de comunicacion de `{clave, idioma}`.
-- Reglas (mismas que el legacy `com_sacd_txt_ajax.php` rama `update`): - Si ya existe la fila y `texto === ''` → se elimina.
 
 ## Errores conocidos
 

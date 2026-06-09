@@ -57,10 +57,13 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $UbiInventario = UbiInventario::fromArray($aDatos);
             $UbiInventarioSet->add($UbiInventario);
         }
-        return array_values($UbiInventarioSet->getTot());
+        /** @var list<UbiInventario> $result */
+        $result = array_values($UbiInventarioSet->getTot());
+        return $result;
     }
 
     public function getArrayUbisInventario(): array
@@ -157,10 +160,13 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $UbiInventario = UbiInventario::fromArray($aDatos);
             $UbiInventarioSet->add($UbiInventario);
         }
-        return array_values($UbiInventarioSet->getTot());
+        /** @var list<UbiInventario> $result */
+        $result = array_values($UbiInventarioSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

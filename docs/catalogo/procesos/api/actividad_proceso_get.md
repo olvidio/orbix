@@ -6,9 +6,11 @@ url: "/src/procesos/actividad_proceso_get"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/actividad_proceso_get.php"
-entrada: []
+entrada: ["post.id_activ:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "procesos_ActividadProcesoGetData"
+respuesta_data: ["error:string, a_rows: list<array<string, mixed>>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/procesos/controller/actividad_proceso.php", "frontend/procesos/controller/actividad_proceso_get.php"]
 casos_uso: ["src\\procesos\\application\\ActividadProcesoGet"]
@@ -18,7 +20,7 @@ estado_revision: "generado"
 
 # Actividad Proceso Get
 
-Caso de uso: devuelve las tareas del proceso para un id_activ como estructura (completado, fase, tarea, responsable, observ) + flag de permiso de edicion. El render HTML se hace en el frontend.
+Caso de uso: tareas del proceso para un id_activ (estructura + permiso edición).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -31,7 +33,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_activ` | `integer` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
@@ -40,6 +44,8 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `procesos_ActividadProcesoGetData`):
+  - `error` (`string, a_rows: list<array<string, mixed>>`)
 
 ## Casos De Uso
 

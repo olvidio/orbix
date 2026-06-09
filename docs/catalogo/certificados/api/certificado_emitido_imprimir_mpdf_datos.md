@@ -6,12 +6,12 @@ url: "/src/certificados/certificado_emitido_imprimir_mpdf_datos"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_mpdf_datos.php"
-entrada: ["post.id_item:string"]
+entrada: ["post.id_item:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/certificados/controller/certificado_emitido_imprimir_mpdf.php"]
-casos_uso: []
+casos_uso: ["src\\certificados\\application\\support\\CertificadosSession"]
 tags: ["certificados", "certificado", "emitido", "imprimir", "mpdf", "datos"]
 estado_revision: "generado"
 ---
@@ -33,7 +33,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item` | `string` | controller | No | controller |
+| `id_item` | `integer` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
@@ -43,7 +45,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- `src\certificados\application\support\CertificadosSession`
 
 ## Frontend Relacionado
 

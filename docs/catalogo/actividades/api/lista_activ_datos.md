@@ -10,7 +10,7 @@ entrada: ["post.asist:array", "post.c_activ:array", "post.dl_org:string", "post.
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividades_ListaActivTablaData"
-respuesta_data: ["titulo:string", "ver_hora:integer", "ver_tarifa:integer", "ver_sacd:integer", "a_cabeceras:array", "a_valores:array"]
+respuesta_data: ["titulo:string", "ver_hora:integer", "ver_tarifa:integer", "ver_sacd:integer", "a_cabeceras:list<array<string, mixed>|string>", "a_valores:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/actividades/controller/lista_activ.php", "frontend/actividades/controller/lista_activ_que.php"]
 casos_uso: ["src\\actividades\\application\\ListaActivTabla"]
@@ -35,24 +35,24 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `asist` | `array` | controller | No | controller |
-| `c_activ` | `array` | controller | No | controller |
-| `dl_org` | `string` | controller | No | controller |
-| `empiezamax` | `string` | controller | No | controller |
-| `empiezamin` | `string` | controller | No | controller |
+| `asist` | `array` | controller+application | No | controller+application |
+| `c_activ` | `array` | controller+application | No | controller+application |
+| `dl_org` | `string` | controller+application | No | controller+application |
+| `empiezamax` | `string` | controller+application | No | controller+application |
+| `empiezamin` | `string` | controller+application | No | controller+application |
 | `filtro_lugar` | `string` | controller | No | controller |
-| `id_tipo_activ` | `string` | controller | No | controller |
-| `id_ubi` | `integer` | controller | No | controller |
-| `periodo` | `string` | controller | No | controller |
-| `que` | `string` | controller | No | controller |
-| `sactividad` | `string` | controller | No | controller |
-| `sasistentes` | `string` | controller | No | controller |
-| `seccion` | `array` | controller | No | controller |
-| `snom_tipo` | `string` | controller | No | controller |
-| `ssfsv` | `string` | controller | No | controller |
-| `status` | `mixed` | controller | No | controller |
-| `titulo` | `string` | controller | No | controller |
-| `year` | `string` | controller | No | controller |
+| `id_tipo_activ` | `string` | controller+application | No | controller+application |
+| `id_ubi` | `integer` | controller+application | No | controller+application |
+| `periodo` | `string` | controller+application | No | controller+application |
+| `que` | `string` | controller+application | No | controller+application |
+| `sactividad` | `string` | controller+application | No | controller+application |
+| `sasistentes` | `string` | controller+application | No | controller+application |
+| `seccion` | `array` | controller+application | No | controller+application |
+| `snom_tipo` | `string` | controller+application | No | controller+application |
+| `ssfsv` | `string` | controller+application | No | controller+application |
+| `status` | `mixed` | controller+application | No | controller+application |
+| `titulo` | `string` | controller+application | No | controller+application |
+| `year` | `string` | controller+application | No | controller+application |
 
 ## Salida
 
@@ -64,7 +64,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
   - `ver_hora` (`integer`)
   - `ver_tarifa` (`integer`)
   - `ver_sacd` (`integer`)
-  - `a_cabeceras` (`array`)
+  - `a_cabeceras` (`list<array<string, mixed>|string>`)
   - `a_valores` (`array`)
 
 ## Casos De Uso

@@ -47,6 +47,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `num_fin` | `string` | controller | No | controller |
 | `num_ini` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`

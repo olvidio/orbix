@@ -53,10 +53,16 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
             if (!is_array($aDatos)) {
                 continue;
             }
-            $EncargoCtr = EncargoCtr::fromArray($aDatos);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $EncargoCtr = EncargoCtr::fromArray($normalized);
             $EncargoCtrSet->add($EncargoCtr);
         }
-        return array_values($EncargoCtrSet->getTot());
+        /** @var list<EncargoCtr> $items */
+        $items = array_values($EncargoCtrSet->getTot());
+        return $items;
     }
 
     public function getCentrosEncargo(int $id_enc): array
@@ -77,10 +83,16 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
             if (!is_array($aDatos)) {
                 continue;
             }
-            $EncargoCtr = EncargoCtr::fromArray($aDatos);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $EncargoCtr = EncargoCtr::fromArray($normalized);
             $EncargoCtrSet->add($EncargoCtr);
         }
-        return array_values($EncargoCtrSet->getTot());
+        /** @var list<EncargoCtr> $items */
+        $items = array_values($EncargoCtrSet->getTot());
+        return $items;
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -151,10 +163,16 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
             if (!is_array($aDatos)) {
                 continue;
             }
-            $EncargoCtr = EncargoCtr::fromArray($aDatos);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $EncargoCtr = EncargoCtr::fromArray($normalized);
             $EncargoCtrSet->add($EncargoCtr);
         }
-        return array_values($EncargoCtrSet->getTot());
+        /** @var list<EncargoCtr> $items */
+        $items = array_values($EncargoCtrSet->getTot());
+        return $items;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

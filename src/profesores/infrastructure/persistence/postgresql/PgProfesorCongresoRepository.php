@@ -102,13 +102,16 @@ class PgProfesorCongresoRepository extends ClaseRepository implements ProfesorCo
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
             $ProfesorCongreso = ProfesorCongreso::fromArray($aDatos);
             $ProfesorCongresoSet->add($ProfesorCongreso);
         }
-        return array_values($ProfesorCongresoSet->getTot());
+        /** @var list<ProfesorCongreso> $result */
+        $result = array_values($ProfesorCongresoSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -9,19 +9,18 @@ controller: "src/dbextern/infrastructure/ui/http/controllers/sincro_crear_todos.
 entrada: ["post.dl:string", "post.region:string", "post.tipo_persona:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "dbextern_CrearPersonaDesdeListasUseCaseData"
-respuesta_data: ["count:int, errors: string[]"]
+respuesta_data_schema: "dbextern_CrearTodosDesdeListasUseCaseData"
+respuesta_data: ["count:int, errors: list<string>"]
 requiere_hashb: false
-errores: ["no se encontró la persona en la BDU", "hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/dbextern/controller/ver_listas.php"]
-casos_uso: ["src\\dbextern\\application\\CrearPersonaDesdeListasUseCase", "src\\dbextern\\application\\CrearTodosDesdeListasUseCase"]
+casos_uso: ["src\\dbextern\\application\\CrearTodosDesdeListasUseCase"]
 tags: ["dbextern", "sincro", "crear", "todos"]
 estado_revision: "generado"
 ---
 
 # Sincro Crear Todos
 
-Crea una persona en Orbix desde la BDU y la vincula.
+Descripcion funcional pendiente de revisar.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -40,22 +39,18 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `region` | `string` | controller | No | controller |
 | `tipo_persona` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `dbextern_CrearPersonaDesdeListasUseCaseData`):
-  - `count` (`int, errors: string[]`)
-
-## Errores conocidos
-
-- `no se encontró la persona en la BDU`
-- `hay un error, no se ha guardado`
+- Payload en `data` (schema `dbextern_CrearTodosDesdeListasUseCaseData`):
+  - `count` (`int, errors: list<string>`)
 
 ## Casos De Uso
 
-- `src\dbextern\application\CrearPersonaDesdeListasUseCase`
 - `src\dbextern\application\CrearTodosDesdeListasUseCase`
 
 ## Frontend Relacionado

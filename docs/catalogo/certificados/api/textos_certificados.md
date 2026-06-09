@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Textos Certificados
 
-Descripcion funcional pendiente de revisar.
+Textos en latín para certificados.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

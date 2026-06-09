@@ -307,6 +307,17 @@ function extractInputs(string $contents): array
         ];
     }
 
+    $inputHelperPattern = '/input_(?P<helper>string|int|string_list)\(\s*(?P<arrayVar>\$_POST|\$_GET|\$[a-zA-Z_][a-zA-Z0-9_]*)\s*,\s*[\'"](?P<name>[^\'"]+)[\'"]/';
+    preg_match_all($inputHelperPattern, $contents, $matches, PREG_SET_ORDER);
+    foreach ($matches as $match) {
+        $inputs[] = [
+            'source' => inferInputHelperSource($match['arrayVar']),
+            'name' => $match['name'],
+            'type' => inferInputHelperType($match['helper']),
+            'evidence' => trim($match[0]),
+        ];
+    }
+
     $byKey = [];
     foreach ($inputs as $input) {
         $key = $input['source'] . ':' . $input['name'];
@@ -337,6 +348,20 @@ function inferInputType(string $cast, string $rest): string
         'bool', 'boolean' => 'boolean',
         'float', 'double' => 'number',
         default => 'mixed',
+    };
+}
+
+function inferInputHelperSource(string $arrayVar): string
+{
+    return $arrayVar === '$_GET' ? 'get' : 'post';
+}
+
+function inferInputHelperType(string $helper): string
+{
+    return match ($helper) {
+        'int' => 'integer',
+        'string_list' => 'array',
+        default => 'string',
     };
 }
 
@@ -459,9 +484,11 @@ function extractEffectsFromDoc(string $contents): array
 function extractApplicationMethodBody(string $contents): string
 {
     foreach (['execute', 'build'] as $method) {
-        $pattern = '/public\s+static\s+function\s+' . $method . '\s*\([^)]*\)\s*(?::\s*[^{]+)?\{(?P<body>.*)\n\s*\}/s';
-        if (preg_match($pattern, $contents, $m)) {
-            return $m['body'];
+        foreach (['public\s+static\s+', 'public\s+'] as $prefix) {
+            $pattern = '/' . $prefix . 'function\s+' . $method . '\s*\([^)]*\)\s*(?::\s*[^{]+)?\{(?P<body>.*)\n\s*\}/s';
+            if (preg_match($pattern, $contents, $m)) {
+                return $m['body'];
+            }
         }
     }
 
@@ -474,10 +501,24 @@ function extractApplicationMethodBody(string $contents): string
 function extractApplicationInputs(string $methodBody): array
 {
     $inputs = [];
+
+    $helperPattern = '/input_(?P<helper>string|int|string_list)\(\s*\$(?:input|post|a_post)\s*,\s*[\'"](?P<name>[^\'"]+)[\'"]/';
+    preg_match_all($helperPattern, $methodBody, $matches, PREG_SET_ORDER);
+    foreach ($matches as $match) {
+        $inputs[$match['name']] = [
+            'name' => $match['name'],
+            'type' => inferInputHelperType($match['helper']),
+            'source' => 'post',
+        ];
+    }
+
     $pattern = '/\$(?:input|post|a_post)\[\s*[\'"](?P<name>[^\'"]+)[\'"]\s*\]/';
     preg_match_all($pattern, $methodBody, $matches, PREG_SET_ORDER);
     foreach ($matches as $match) {
         $name = $match['name'];
+        if (isset($inputs[$name]) && $inputs[$name]['type'] !== 'mixed') {
+            continue;
+        }
         $type = inferApplicationFieldType($methodBody, $name);
         $inputs[$name] = [
             'name' => $name,
@@ -492,6 +533,9 @@ function extractApplicationInputs(string $methodBody): array
 function inferApplicationFieldType(string $methodBody, string $name): string
 {
     $quoted = preg_quote($name, '/');
+    if (preg_match('/input_(?P<helper>string|int|string_list)\(\s*\$(?:input|post|a_post)\s*,\s*[\'"]' . $quoted . '[\'"]/', $methodBody, $helperMatch)) {
+        return inferInputHelperType($helperMatch['helper']);
+    }
     if (preg_match('/\(\s*array\s*\)\s*\(\s*\$_(?:input|post)\[\s*[\'"]' . $quoted . '[\'"]\s*\]/', $methodBody)) {
         return 'array';
     }

@@ -6,7 +6,7 @@ url: "/src/actividadescentro/activ_ctr_shell_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividadescentro/infrastructure/ui/http/controllers/activ_ctr_shell_data.php"
-entrada: []
+entrada: ["post.periodo:string", "post.tipo:string", "post.year:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadescentro_ActivCtrShellDataData"
@@ -33,7 +33,11 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `periodo` | `string` | controller | No | controller |
+| `tipo` | `string` | controller | No | controller |
+| `year` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

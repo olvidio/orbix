@@ -28,7 +28,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `planning.planning_ctr_select_data`
 - Controller: `src/planning/infrastructure/ui/http/controllers/planning_ctr_select_data.php`
-- Entrada: `post.ctr:string`, `post.sacd:string`, `post.todos_agd:string`, `post.todos_n:string`, `post.todos_s:string`
+- Entrada: `post.ctr:string`, `post.empiezamax:string`, `post.empiezamin:string`, `post.periodo:string`, `post.sacd:string`, `post.todos_agd:string`, `post.todos_n:string`, `post.todos_s:string`, `post.year:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/planning/planning_persona_select_data`
@@ -42,7 +42,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `planning.planning_persona_ver_data`
 - Controller: `src/planning/infrastructure/ui/http/controllers/planning_persona_ver_data.php`
-- Entrada: `post.obj_pau:string`
+- Entrada: `post.empiezamax:string`, `post.empiezamin:string`, `post.obj_pau:string`, `post.periodo:string`, `post.sel:array`, `post.year:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/planning/planning_zones_que_data`

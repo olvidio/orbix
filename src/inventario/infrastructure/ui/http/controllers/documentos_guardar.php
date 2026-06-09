@@ -55,7 +55,8 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
             if (empty($Qf_recibido)) {
                 $oF_recibido = null;
             } else {
-                $oF_recibido = DateTimeLocal::createFromLocal($Qf_recibido);
+                $rawF_recibido = DateTimeLocal::createFromLocal($Qf_recibido);
+                $oF_recibido = $rawF_recibido instanceof DateTimeLocal ? $rawF_recibido : null;
             }
             $oDocumento->setF_recibido($oF_recibido);
         }
@@ -63,7 +64,8 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
             if (empty($Qf_asignado)) {
                 $oF_asignado = null;
             } else {
-                $oF_asignado = DateTimeLocal::createFromLocal($Qf_asignado);
+                $rawF_asignado = DateTimeLocal::createFromLocal($Qf_asignado);
+                $oF_asignado = $rawF_asignado instanceof DateTimeLocal ? $rawF_asignado : null;
             }
             $oDocumento->setF_asignado($oF_asignado);
         }
@@ -78,7 +80,8 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
             if (empty($Qf_eliminado)) {
                 $oF_eliminado = null;
             } else {
-                $oF_eliminado = DateTimeLocal::createFromLocal($Qf_eliminado);
+                $rawF_eliminado = DateTimeLocal::createFromLocal($Qf_eliminado);
+                $oF_eliminado = $rawF_eliminado instanceof DateTimeLocal ? $rawF_eliminado : null;
             }
             $oDocumento->setF_eliminado($oF_eliminado);
         }

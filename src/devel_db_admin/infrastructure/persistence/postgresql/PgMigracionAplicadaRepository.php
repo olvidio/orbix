@@ -86,8 +86,12 @@ SQL;
         if (!is_array($row) || $row === []) {
             return null;
         }
+        $normalized = [];
+        foreach ($row as $key => $value) {
+            $normalized[(string) $key] = $value;
+        }
 
-        return MigracionAplicada::fromArray($row);
+        return MigracionAplicada::fromArray($normalized);
     }
 
     public function existe(string $prefijo, string $descripcion, string $database): bool

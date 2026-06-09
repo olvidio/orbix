@@ -6,7 +6,7 @@ url: "/src/cambios/cambio_usuario_propiedad_pref_guardar_todas"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/cambios/infrastructure/ui/http/controllers/cambio_usuario_propiedad_pref_guardar_todas.php"
-entrada: ["post.id_item_usuario_objeto_prop:integer", "post.objeto_prop:string"]
+entrada: ["post.id_item_usuario_objeto_prop:mixed", "post.objeto_prop:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "cambios_CambioUsuarioPropiedadPrefGuardarTodasData"
@@ -35,8 +35,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item_usuario_objeto_prop` | `integer` | application | No | application |
-| `objeto_prop` | `string` | application | No | application |
+| `id_item_usuario_objeto_prop` | `mixed` | application | No | application |
+| `objeto_prop` | `mixed` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

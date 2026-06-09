@@ -8,6 +8,8 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\notas\application\EditarPersonaNota;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -186,7 +188,7 @@ class Trasladar
             $oDBPropiedades = new DBPropiedades();
             $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
 
-            if (!in_array($esquema, $aEsquemas)) {
+            if (!is_array($aEsquemas) || !in_array($esquema, $aEsquemas, true)) {
                 $esquema = 'restov';
             }
         }
@@ -196,7 +198,8 @@ class Trasladar
 
         $oConfigDB = new ConfigDB($database);
         $config = $oConfigDB->getEsquema($esquema);
-        $this->sconfig_user = (string)($config['user'] ?? '');
+        $configUser = $config['user'] ?? '';
+        $this->sconfig_user = is_string($configUser) ? $configUser : '';
         // Fuerzo el schema efectivo para evitar sobrescrituras accidentales desde ficheros .inc.
         $config['schema'] = $esquema;
         $oConexion = new DBConnection($config);
@@ -865,7 +868,14 @@ class Trasladar
                 $oPersonaNota->setNotaMaxVo($oPersonaNotaDB->getNotaMaxVo()->value());
                 */
 
-                $oEditarPersonaNota = new EditarPersonaNota($oPersonaNotaDB);
+                $oEditarPersonaNota = new EditarPersonaNota(
+                    $oPersonaNotaDB,
+                    $this->repositoryWithConnection(PersonaNotaRepositoryInterface::class, $oDBorg),
+                    $this->delegacionRepository,
+                    $this->repositoryWithConnection(DbSchemaRepositoryInterface::class, $oDBorg),
+                    $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBorg),
+                    $PersonaNotaDBRepository,
+                );
                 $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
                 $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
                 $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $esquemaRegionStgrStr);
@@ -1092,7 +1102,7 @@ class Trasladar
 
         $certificadoRecibidoRepository = $this->repositoryWithConnection(CertificadoRecibidoRepositoryInterface::class, $oDBdst);
         $newId_item = $certificadoRecibidoRepository->getNewId_item();
-        $CertificadoRecibido->setId_item($newId_item);
+        $CertificadoRecibido->setId_item(is_numeric($newId_item) ? (int) $newId_item : 0);
         if ($certificadoRecibidoRepository->Guardar($CertificadoRecibido) === FALSE) {
             $error .= $certificadoRecibidoRepository->getErrorTxt();
         }
@@ -1126,7 +1136,7 @@ class Trasladar
 
         $certificadoRecibidoRepository = $this->repositoryWithConnection(CertificadoRecibidoRepositoryInterface::class, $oDBdst);
         $newId_item = $certificadoRecibidoRepository->getNewId_item();
-        $CertificadoRecibido->setId_item($newId_item);
+        $CertificadoRecibido->setId_item(is_numeric($newId_item) ? (int) $newId_item : 0);
         if ($certificadoRecibidoRepository->Guardar($CertificadoRecibido) === FALSE) {
             $error .= $certificadoRecibidoRepository->getErrorTxt();
         }

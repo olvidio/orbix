@@ -6,9 +6,11 @@ url: "/src/procesos/procesos_get_listado"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/procesos_get_listado.php"
-entrada: []
+entrada: ["post.id_tipo_proceso:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "procesos_ProcesosGetListadoData"
+respuesta_data: ["a_rows:list<array<string, mixed>>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/procesos/controller/procesos_get_listado.php"]
 casos_uso: ["src\\procesos\\application\\ProcesosGetListado"]
@@ -18,7 +20,7 @@ estado_revision: "generado"
 
 # Procesos Get Listado
 
-Caso de uso: devuelve el listado (estructurado) de fases/tareas del proceso filtrando por sfsv/role. El render HTML se hace en el frontend.
+Caso de uso: listado estructurado de fases/tareas del proceso.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -31,7 +33,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `id_tipo_proceso` | `integer` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
@@ -40,6 +44,8 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `procesos_ProcesosGetListadoData`):
+  - `a_rows` (`list<array<string, mixed>>`)
 
 ## Casos De Uso
 

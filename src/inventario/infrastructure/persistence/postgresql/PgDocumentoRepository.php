@@ -103,6 +103,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             // para las fechas del postgres (texto iso)
             $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
             $aDatos['f_asignado'] = (new ConverterDate('date', $aDatos['f_asignado']))->fromPg();
@@ -112,7 +113,9 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
             $Documento = Documento::fromArray($aDatos);
             $DocumentoSet->add($Documento);
         }
-        return array_values($DocumentoSet->getTot());
+        /** @var list<Documento> $result */
+        $result = array_values($DocumentoSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

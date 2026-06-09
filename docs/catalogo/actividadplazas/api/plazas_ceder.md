@@ -10,7 +10,7 @@ entrada: ["post.id_activ:integer", "post.num_plazas:integer", "post.region_dl:st
 entrada_obligatoria: ["id_activ"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
-errores: ["faltan parametros id_activ / region_dl", "hay un error, no se ha guardado"]
+errores: ["faltan parametros id_activ / region_dl", "hay un error, no se ha guardado", "No tiene plazas para ceder"]
 frontend_referencias: ["frontend/actividadplazas/controller/resumen_plazas.php"]
 casos_uso: ["src\\actividadplazas\\application\\PlazasCeder"]
 tags: ["actividadplazas", "plazas", "ceder"]
@@ -38,6 +38,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `num_plazas` | `integer` | controller+application | No | controller+application |
 | `region_dl` | `string` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
@@ -48,6 +50,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - `faltan parametros id_activ / region_dl`
 - `hay un error, no se ha guardado`
+- `No tiene plazas para ceder`
 
 ## Casos De Uso
 

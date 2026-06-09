@@ -6,6 +6,10 @@ use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\input_int;
 
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
 use src\ubis\domain\entity\Direccion;
 use function src\shared\domain\helpers\is_true;
 
@@ -38,6 +42,14 @@ final class DireccionUpdate
         }
 
         if ($Qidx === 'nuevo') {
+            if (
+                !$DireccionRepository instanceof DireccionCentroDlRepositoryInterface
+                && !$DireccionRepository instanceof DireccionCentroExRepositoryInterface
+                && !$DireccionRepository instanceof DireccionCasaDlRepositoryInterface
+                && !$DireccionRepository instanceof DireccionCasaExRepositoryInterface
+            ) {
+                return _('operación no soportada para este tipo de dirección');
+            }
             $id_auto = $DireccionRepository->getNewId();
             $id_direccion = $DireccionRepository->getNewIdDireccion($id_auto);
             $oDireccion = new Direccion();

@@ -62,15 +62,6 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 
-## Permisos
-
-- Permiso oficina `est`
-- Permiso oficina `vcsd`
-- Permiso oficina `des`
-- Permiso oficina `calendario`
-- Permiso oficina `agd`
-- Permiso oficina `sm`
-
 ## Casos De Uso
 
 - `src\actividades\application\ActividadSelectListado`

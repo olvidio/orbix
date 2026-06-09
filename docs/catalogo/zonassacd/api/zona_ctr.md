@@ -9,6 +9,8 @@ controller: "src/zonassacd/infrastructure/ui/http/controllers/zona_ctr.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "zonassacd_ZonaCtrPageData"
+respuesta_data: ["a_opciones:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/zonassacd/controller/zona_ctr.php", "frontend/zonassacd/controller/zona_ctr_lista_ajax.php", "frontend/zonassacd/controller/zona_ctr_update_ajax.php"]
 casos_uso: ["src\\zonassacd\\application\\ZonaCtrPage"]
@@ -38,6 +40,8 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `zonassacd_ZonaCtrPageData`):
+  - `a_opciones` (`array`)
 
 ## Permisos
 

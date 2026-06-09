@@ -105,15 +105,22 @@ paths:
       tags:
         - "configuracion"
       requestBody:
-        required: false
+        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
+                descripcion:
+                  type: "string"
+                id_mod:
+                  type: "integer"
+                mod:
+                  type: "string"
+                nom:
+                  type: "string"
+                sel:
+                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -278,8 +285,6 @@ components:
         mes_ini_crt:
           type: "integer"
         dia_fin_crt:
-          type: "integer"
-        mes_fin_crt:
           type: "integer"
         any_final_est:
           type: "integer"

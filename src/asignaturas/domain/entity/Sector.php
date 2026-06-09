@@ -121,7 +121,9 @@ class Sector
 
         $oSectorSet->add($this->getDatosId_departamento());
         $oSectorSet->add($this->getDatosSector());
-        return array_values($oSectorSet->getTot());
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oSectorSet->getTot());
+        return $campos;
     }
 
     /**
@@ -158,7 +160,7 @@ class Sector
         $oDatosCampo->setMetodoSet('setSector');
         $oDatosCampo->setEtiqueta(_("sector"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(50);
+        $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
 

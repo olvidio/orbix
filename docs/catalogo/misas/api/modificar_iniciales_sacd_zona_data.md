@@ -4,41 +4,51 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/modificar_iniciales_sacd_zona_data"
 metodos: ["GET", "POST"]
-operacion: "consulta"
+operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/modificar_iniciales_sacd_zona_data.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data: ["a_opciones:object"]
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/modificar_iniciales_sacd_zona.php"]
 casos_uso: ["src\\misas\\application\\ModificarInicialesSacdZonaData"]
-tags: ["misas", "modificar", "iniciales", "sacd", "zona", "data", "cliente_movil"]
-estado_revision: "revisado"
+tags: ["misas", "modificar", "iniciales", "sacd", "zona", "data"]
+estado_revision: "generado"
 ---
 
 # Modificar Iniciales Sacd Zona Data
 
-Desplegable de zonas para **Modificar la tabla de iniciales de los sacerdotes**. La mutación es [`update_iniciales.md`](update_iniciales.md).
+Descripcion funcional pendiente de revisar.
 
-Convenciones: [`_convenciones_api.md`](../_convenciones_api.md) · Grid: [`ver_iniciales_zona_data.md`](ver_iniciales_zona_data.md)
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Endpoint
 
 - URL: `/src/misas/modificar_iniciales_sacd_zona_data`
-- Métodos: `POST` (recomendado)
+- Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
 - Controller: `src/misas/infrastructure/ui/http/controllers/modificar_iniciales_sacd_zona_data.php`
 
 ## Entrada
 
-Sin parámetros POST.
+Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
 
 ## Salida
 
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| `a_opciones` | object | Mapa **todas** las zonas (`getArrayZonas`) |
+- Helper: `ContestarJson::enviar`
+- Forma: `standard_envelope_string_data`
+- Exito: `success: true`, `data: "ok"`.
 
-## Cliente de referencia
+## Casos De Uso
 
-- `orbix-android`: `fetchModificarInicialesPage()` → `InicialesZonaScreen`.
+- `src\misas\application\ModificarInicialesSacdZonaData`
+
+## Frontend Relacionado
+
+- `frontend/misas/controller/modificar_iniciales_sacd_zona.php`
+
+## Revision Manual
+
+- Confirmar permisos/autorizacion de oficina.
+- Anadir ejemplos reales de request/response.
+- Marcar `estado_revision: "revisado"` cuando este validado.

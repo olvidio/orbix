@@ -47,7 +47,6 @@ class PgEncargoSacdObservRepository extends ClaseRepository implements EncargoSa
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $EncargoSacdObservSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -99,14 +98,18 @@ class PgEncargoSacdObservRepository extends ClaseRepository implements EncargoSa
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $encargosSacdObservs = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $EncargoSacdObserv = EncargoSacdObserv::fromArray($aDatos);
-            $EncargoSacdObservSet->add($EncargoSacdObserv);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $encargosSacdObservs[] = EncargoSacdObserv::fromArray($normalized);
         }
-        return array_values($EncargoSacdObservSet->getTot());
+        return $encargosSacdObservs;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

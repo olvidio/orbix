@@ -102,10 +102,13 @@ class PgProfesorTituloEstRepository extends ClaseRepository implements ProfesorT
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $ProfesorTituloEst = ProfesorTituloEst::fromArray($aDatos);
             $ProfesorTituloEstSet->add($ProfesorTituloEst);
         }
-        return array_values($ProfesorTituloEstSet->getTot());
+        /** @var list<ProfesorTituloEst> $result */
+        $result = array_values($ProfesorTituloEstSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

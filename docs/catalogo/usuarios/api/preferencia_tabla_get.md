@@ -9,6 +9,8 @@ controller: "src/usuarios/infrastructure/ui/http/controllers/preferencia_tabla_g
 entrada: ["post.id_tabla:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "usuarios_PreferenciaTablaDataData"
+respuesta_data: ["formato_tabla:string, slickgrid: array<string, mixed>|null"]
 requiere_hashb: false
 frontend_referencias: ["frontend/shared/web/Lista.php", "frontend/shared/web/TablaEditable.php"]
 casos_uso: ["src\\usuarios\\application\\PreferenciaTablaData"]
@@ -18,7 +20,7 @@ estado_revision: "generado"
 
 # Preferencia Tabla Get
 
-Devuelve las preferencias de usuario necesarias para renderizar una tabla (HTML simple o SlickGrid) en el front. Entrada: - `id_tabla` (opcional): identificador del grid. Si viene vacío, no se devolverán preferencias específicas del grid (útil cuando sólo se necesita saber si el usuario prefiere HTML o SlickGrid). Salida: array asociativo con la forma: [ 'formato_tabla' => ''|'html'|'slickgrid', // prefs 'tabla_presentacion' 'slickgrid' => null|array, // prefs 'slickGrid_<id_tabla>_<idioma>' ] Para slickgrid se busca primero la preferencia del usuario actual; si no existe, se usa la del usuario 44 (default).
+Devuelve las preferencias de usuario necesarias para renderizar una tabla (HTML simple o SlickGrid) en el front.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -35,11 +37,15 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `id_tabla` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `usuarios_PreferenciaTablaDataData`):
+  - `formato_tabla` (`string, slickgrid: array<string, mixed>|null`)
 
 ## Casos De Uso
 

@@ -9,6 +9,8 @@ controller: "src/ubis/infrastructure/ui/http/controllers/direcciones_asignar.php
 entrada: ["post.id_direccion:integer", "post.id_ubi:integer", "post.obj_dir:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "ubis_DireccionesAsignarData"
+respuesta_data: ["ok:boolean"]
 requiere_hashb: false
 frontend_referencias: ["frontend/ubis/controller/direcciones_asignar.php"]
 casos_uso: ["src\\ubis\\application\\DireccionesAsignar"]
@@ -37,11 +39,15 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_ubi` | `integer` | controller | No | controller |
 | `obj_dir` | `string` | controller | No | controller |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `ubis_DireccionesAsignarData`):
+  - `ok` (`boolean`)
 
 ## Casos De Uso
 

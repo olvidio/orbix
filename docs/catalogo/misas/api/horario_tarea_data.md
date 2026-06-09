@@ -6,7 +6,7 @@ url: "/src/misas/horario_tarea_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/horario_tarea_data.php"
-entrada: ["post.id_item_h:integer"]
+entrada: ["post.id_item_h:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "misas_HorarioTareaDataData"
@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Horario Tarea Data
 
-Datos del horario de una tarea (modal `horario_tarea.phtml`). Simple lectura de `t_start`/`t_end` del `EncargoHorario` indicado por `id_item_h`. Se saca de la vista frontend para cumplir la regla de `refactor.md`: los controladores `frontend/` no pueden instanciar repositorios de `src\` ni tocar `$GLOBALS['container']`.
+Datos del horario de una tarea (modal `horario_tarea.phtml`). Simple lectura de `t_start`/`t_end` del `EncargoHorario` indicado por `id_item_h`. Se saca de la vista frontend para cumplir la regla de `refactor.md`: los controladores `frontend/` no pueden instanciar repositorios de `src\` ni resolver dependencias del contenedor.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -35,7 +35,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_item_h` | `integer` | controller | No | controller |
+| `id_item_h` | `mixed` | controller | No | controller |
 
 ## Salida
 

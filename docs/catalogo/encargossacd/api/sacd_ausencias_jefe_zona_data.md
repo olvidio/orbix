@@ -4,64 +4,55 @@ tipo: "endpoint"
 modulo: "encargossacd"
 url: "/src/encargossacd/sacd_ausencias_jefe_zona_data"
 metodos: ["GET", "POST"]
-operacion: "consulta"
+operacion: "mutacion"
 controller: "src/encargossacd/infrastructure/ui/http/controllers/sacd_ausencias_jefe_zona_data.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data: ["a_sacd:object"]
+respuesta_data_schema: "encargossacd_SacdAusenciasJefeZonaDataData"
+respuesta_data: ["a_sacd:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/encargossacd/controller/sacd_ausencias_jefe_zona.php"]
 casos_uso: ["src\\encargossacd\\application\\SacdAusenciasJefeZonaData"]
-tags: ["encargossacd", "sacd", "ausencias", "jefe", "zona", "data", "cliente_movil"]
-estado_revision: "revisado"
+tags: ["encargossacd", "sacd", "ausencias", "jefe", "zona", "data"]
+estado_revision: "generado"
 ---
 
 # Sacd Ausencias Jefe Zona Data
 
-Lista de sacerdotes para el desplegable de **Ausencias** (vista jefe de zona / oficial).
+Datos para el listado de SACDs susceptibles de gestionar ausencias desde la ficha de jefe de zona (`frontend/encargossacd/controller/sacd_ausencias_jefe_zona.php`). Recopila los SACDs de la(s) zona(s) del jefe y, cuando corresponde (Oficial_dl o jefe de calendario), la totalidad de SACDs activos. El array se devuelve ordenado por iniciales para alimentar el desplegable.
 
-Convenciones: [`_convenciones_api.md`](../_convenciones_api.md) · Siguiente: [`sacd_ausencias_get_data.md`](sacd_ausencias_get_data.md)
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Endpoint
 
 - URL: `/src/encargossacd/sacd_ausencias_jefe_zona_data`
-- Métodos: `POST` (recomendado)
+- Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/sacd_ausencias_jefe_zona_data.php`
 
 ## Entrada
 
-Sin parámetros POST. Usa sesión, rol y zonas del usuario.
+Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
 
 ## Salida
 
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| `a_sacd` | object | Mapa **`iniciales#id_nom` → nombre** (ordenado por iniciales) |
+- Helper: `ContestarJson::enviar`
+- Forma: `standard_envelope_string_data`
+- Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `encargossacd_SacdAusenciasJefeZonaDataData`):
+  - `a_sacd` (`array`)
 
-Incluye SACDs de las zonas del jefe; rol `Oficial_dl` o jefe de calendario amplía a todos los SACD activos.
+## Casos De Uso
 
-## Flujo móvil
+- `src\encargossacd\application\SacdAusenciasJefeZonaData`
 
-1. Cargar este endpoint → desplegable sacerdote.
-2. Extraer `id_nom` de la clave (parte tras `#`).
-3. [`sacd_ausencias_get_data`](sacd_ausencias_get_data.md) con `filtro_sacd=n` implícito en web; móvil no envía `filtro_sacd`.
+## Frontend Relacionado
 
-## Ejemplo
+- `frontend/encargossacd/controller/sacd_ausencias_jefe_zona.php`
 
-```http
-POST /orbix/src/encargossacd/sacd_ausencias_jefe_zona_data HTTP/1.1
-Accept: application/json
-Cookie: PHPSESSID=...
-```
+## Revision Manual
 
-```json
-{
-  "success": true,
-  "data": "{\"a_sacd\":{\"JP#42\":\"Juan Pérez\",\"MR#51\":\"María Ruiz\"}}"
-}
-```
-
-## Cliente de referencia
-
-- `orbix-android`: `fetchSacdAusenciasJefeZonaPage()` — menú `sacd_ausencias_jefe_zona.php`, modo `JefeZona`.
+- Confirmar permisos/autorizacion de oficina.
+- Anadir ejemplos reales de request/response.
+- Marcar `estado_revision: "revisado"` cuando este validado.

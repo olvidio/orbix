@@ -9,6 +9,8 @@ controller: "src/casas/infrastructure/ui/http/controllers/casa_ec_gastos_guardar
 entrada: ["post.ap_sf$m:string", "post.ap_sv$m:string", "post.g$m:string", "post.id_ubi:integer", "post.year:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "casas_CasaEcGastosGuardarData"
+respuesta_data: ["ok:bool, mensaje: string, data: string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/casas/controller/casa_ec_gastos_lista.php"]
 casos_uso: ["src\\casas\\application\\CasaEcGastosGuardar"]
@@ -18,7 +20,7 @@ estado_revision: "generado"
 
 # Casa Ec Gastos Guardar
 
-Use case: guardar los gastos y aportaciones (sv/sf) mensuales de una casa para un año completo. Borra los existentes y los reinserta con fecha 5 de cada mes. Sucesor de la rama `que=guardarGasto` de `apps/casas/controller/casa_ec_ajax.php`.
+Endpoint backend: guardar gastos/aportaciones mensuales (`casa_ec_gastos_guardar`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -33,9 +35,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `ap_sf$m` | `string` | application | No | application |
-| `ap_sv$m` | `string` | application | No | application |
-| `g$m` | `string` | application | No | application |
+| `ap_sf$m` | `string` | controller+application | No | controller+application |
+| `ap_sv$m` | `string` | controller+application | No | controller+application |
+| `g$m` | `string` | controller+application | No | controller+application |
 | `id_ubi` | `integer` | controller+application | No | controller+application |
 | `year` | `integer` | controller+application | No | controller+application |
 
@@ -46,6 +48,8 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `casas_CasaEcGastosGuardarData`):
+  - `ok` (`bool, mensaje: string, data: string`)
 
 ## Casos De Uso
 

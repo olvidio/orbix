@@ -74,7 +74,6 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $ModuloInstaladoSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -126,14 +125,18 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $moduloInstalados = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $ModuloInstalado = ModuloInstalado::fromArray($aDatos);
-            $ModuloInstaladoSet->add($ModuloInstalado);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $moduloInstalados[] = ModuloInstalado::fromArray($normalized);
         }
-        return array_values($ModuloInstaladoSet->getTot());
+        return $moduloInstalados;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

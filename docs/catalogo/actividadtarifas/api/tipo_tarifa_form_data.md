@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Tipo Tarifa Form Data
 
-Endpoint backend: datos del formulario modificar/nuevo de `TipoTarifa`.
+Endpoint backend: datos del form modificar/nuevo `TipoTarifa`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -36,6 +36,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `id_tarifa` | `string` | controller+application | No | controller+application |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

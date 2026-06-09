@@ -137,7 +137,9 @@ class ConfigGlobal extends ServerConf
             return $webdir === 'pruebas';
         }
 
-        return self::WEBDIR === 'pruebas';
+        $configured = (new \ReflectionClass(self::class))->getConstant('WEBDIR');
+
+        return is_string($configured) && $configured === 'pruebas';
     }
 
     public static function getDIR_PWD(): string
@@ -172,7 +174,11 @@ class ConfigGlobal extends ServerConf
         if (!is_array($aApps) || empty($aApps[$nom_app])) {
             return false;
         }
-        $id_app = (int) $aApps[$nom_app];
+        $idAppRaw = $aApps[$nom_app];
+        if (!is_numeric($idAppRaw)) {
+            return false;
+        }
+        $id_app = (int) $idAppRaw;
         $appInstalled = $config['app_installed'] ?? null;
         if (!is_array($appInstalled)) {
             return false;

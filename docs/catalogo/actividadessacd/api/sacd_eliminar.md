@@ -34,9 +34,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_activ` | `integer` | application | Si | application |
-| `id_cargo` | `integer` | application | Si | application |
-| `id_nom` | `integer` | application | No | application |
+| `id_activ` | `integer` | controller+application | Si | controller+application |
+| `id_cargo` | `integer` | controller+application | Si | controller+application |
+| `id_nom` | `integer` | controller+application | No | controller+application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
@@ -49,7 +49,6 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 ## Efectos colaterales
 
 - Elimina un sacd ({id_activ, id_cargo}) de una actividad, incluyendo la fila de `Asistencia` {id_activ, id_nom} asociada (si existe).
-- En el legacy se usaban los metodos mal escritos `finsById` y `DBEliminar()` directamente en la entidad; aqui se arregla al contrato estandar del repositorio (`findById` + `Eliminar`).
 
 ## Errores conocidos
 

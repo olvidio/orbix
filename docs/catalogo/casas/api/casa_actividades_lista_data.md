@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Casa Actividades Lista Data
 
-Endpoint backend: listado de actividades por casa y periodo (`casa_actividades_lista`).
+Endpoint backend: listado de actividades por casa (`casa_actividades_lista`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -38,6 +38,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_cdc` | `array` | controller+application | No | controller+application |
 | `periodo` | `string` | controller+application | No | controller+application |
 | `year` | `string` | controller+application | No | controller+application |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

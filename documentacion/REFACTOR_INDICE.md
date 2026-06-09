@@ -5,7 +5,7 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 
 **Normas canónicas (no duplicar aquí):** [`agents.md`](../agents.md)
 
-**Última actualización de inventarios:** 2026-06-08
+**Última actualización de inventarios:** 2026-06-09
 
 ---
 
@@ -33,7 +33,7 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 - **`global_object.inc`:** orquestador ~74 líneas → `ConnectionBootstrap`, `BootstrapPdoGlobals`, `DiContainerBootstrap`, hidratadores en `src/shared/application/`.
 - **PHPStan (dos métricas):**
   - **Con baseline** (`composer phpstan`): nivel 9; **~12.470** entradas en `phpstan-baseline.neon` (informe A/B/C desactualizado hasta próximo `composer phpstan:baseline-report`).
-  - **Sin baseline** (`composer phpstan:file -- src/<modulo>/`): **17 módulos a 0 errores** (ver tabla **PS₀** y [§ PHPStan sin baseline](#phpstan-sin-baseline-junio-2026)); el resto pendiente.
+  - **Sin baseline** (`composer phpstan:file -- src/<modulo>/`): **36/36 módulos a 0 errores** (PS₀ ✓, verificado 2026-06-09; [§ PHPStan sin baseline](#phpstan-sin-baseline-junio-2026)).
 - **Pendiente operativo:** cambios sin commit de la sesión de refactor; smoke tests (login, menús, permisos actividades, tablaDB) no verificados en esta ronda.
 
 ---
@@ -54,42 +54,42 @@ Columnas:
 | **asistentes** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); piloto de referencia; ver [baseline](asistentes_migracion_baseline.md#deuda-post-refactor) |
 | **actividadcargos** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](actividadcargos_migracion_baseline.md) |
 | **actividades** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](actividades_migracion_baseline.md) |
-| **actividadescentro** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente; ver [baseline](actividadescentro_migracion_baseline.md) |
-| actividadessacd | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente; ver [baseline](actividadessacd_migracion_baseline.md) |
-| **actividadestudios** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~28); ver [baseline](actividadestudios_migracion_baseline.md) |
-| actividadplazas | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~28); ver [baseline](actividadplazas_migracion_baseline.md) |
-| **actividadtarifas** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente; ver [baseline](actividadtarifas_migracion_baseline.md) |
-| **asignaturas** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~21); ver [baseline](asignaturas_migracion_baseline.md) |
-| **cambios** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~49); ver [baseline](cambios_migracion_baseline.md) |
-| **cartaspresentacion** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~17); ver [baseline](cartaspresentacion_migracion_baseline.md) |
+| **actividadescentro** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](actividadescentro_migracion_baseline.md) |
+| **actividadessacd** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](actividadessacd_migracion_baseline.md) |
+| **actividadestudios** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](actividadestudios_migracion_baseline.md) |
+| **actividadplazas** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](actividadplazas_migracion_baseline.md) |
+| **actividadtarifas** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](actividadtarifas_migracion_baseline.md) |
+| **asignaturas** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](asignaturas_migracion_baseline.md) |
+| **cambios** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](cambios_migracion_baseline.md) |
+| **cartaspresentacion** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](cartaspresentacion_migracion_baseline.md) |
 | casas | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](casas_migracion_baseline.md) |
 | **certificados** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](certificados_migracion_baseline.md) |
-| **configuracion** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~19); `ConfigSnapshot` cross-módulo; ver [baseline](configuracion_migracion_baseline.md) |
+| **configuracion** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); `ConfigSnapshot` cross-módulo; ver [baseline](configuracion_migracion_baseline.md) |
 | **dbextern** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](dbextern_migracion_baseline.md) |
 | devel_codegen | — | 1 | 0 | ✓ | Herramienta interna; `factory.php` excepción documentada; PS₀ ✓ |
-| **devel_db_admin** | ✓ | 0 | 0 | — | Cierre DI ✓; herramienta interna; ver [baseline](devel_db_admin_migracion_baseline.md) |
-| **dossiers** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~19); ver [baseline](dossiers_migracion_baseline.md) |
-| encargossacd | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~19); ver [baseline](encargossacd_migracion_baseline.md#cierre-di-2026-06-06) |
-| **inventario** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~54); ver [baseline](inventario_migracion_baseline.md) |
+| **devel_db_admin** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); herramienta interna; ver [baseline](devel_db_admin_migracion_baseline.md) |
+| **dossiers** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](dossiers_migracion_baseline.md) |
+| **encargossacd** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](encargossacd_migracion_baseline.md#cierre-di-2026-06-06) |
+| **inventario** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](inventario_migracion_baseline.md) |
 | **menus** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); `menus_importar_de_ficheros_a_ref` en src; ver [baseline](menus_migracion_baseline.md) |
-| **misas** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~23); ver [baseline](misas_migracion_baseline.md#cierre-di-junio-2026) |
-| notas | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~20); ver [baseline](notas_migracion_baseline.md#cierre-di-2026-06-06) |
+| **misas** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](misas_migracion_baseline.md#cierre-di-junio-2026) |
+| **notas** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](notas_migracion_baseline.md#cierre-di-2026-06-06) |
 | **pasarela** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](pasarela_migracion_baseline.md) |
 | **permisos** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); domain-only; ver [baseline](permisos_migracion_baseline.md) |
-| **personas** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~45); ver [baseline](personas_migracion_baseline.md) |
+| **personas** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](personas_migracion_baseline.md) |
 | **planning** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](planning_migracion_baseline.md) |
 | **procesos** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](procesos_migracion_baseline.md#cierre-di--phpstan-2026-06-06) |
-| **profesores** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente (~52); ver [baseline](profesores_migracion_baseline.md#cierre-di-junio-2026) |
+| **profesores** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](profesores_migracion_baseline.md#cierre-di-junio-2026) |
 | **tablonanuncios** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](tablonanuncios_migracion_baseline.md) |
 | **ubis** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (77→0, jun 2026); ver [baseline](ubis_migracion_baseline.md) |
-| **ubiscamas** | ✓ | 0 | 0 | — | Cierre DI ✓; PS₀ pendiente; ver [baseline](ubiscamas_migracion_baseline.md) |
-| **usuarios** | ✓ | 2 | 0 | — | Cierre DI ✓; `login`/`recovery` excepciones frontend; PS₀ pendiente (~32); ver [baseline](usuarios_migracion_baseline.md) |
+| **ubiscamas** | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](ubiscamas_migracion_baseline.md) |
+| **usuarios** | ✓ | 2 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); `login`/`recovery` excepciones frontend; ver [baseline](usuarios_migracion_baseline.md) |
 | utils_database | — | 0 | 0 | ✓ | Utilidad transversal BD/esquemas; PS₀ ✓ (jun 2026) |
 | zonassacd | ✓ | 0 | 0 | ✓ | **Cierre DI + PS₀** (jun 2026); ver [baseline](zonassacd_migracion_baseline.md) |
 
 \* **`shared` GLOBALS=2:** solo `DependencyResolver.php` y `DiContainerBootstrap.php` (creación del contenedor).
 
-Los recuentos **~N** en PS₀ pendiente son orientativos (`composer phpstan:file`, jun 2026); regenerar con el comando de [§ PHPStan sin baseline](#phpstan-sin-baseline-junio-2026).
+Regenerar inventario PS₀ con el comando de [§ PHPStan sin baseline](#phpstan-sin-baseline-junio-2026).
 
 ---
 
@@ -126,15 +126,15 @@ Infra transversal migrada a `DependencyResolver` / bootstrap tipado. Ver [§ `sr
 
 Lecturas directas `$GLOBALS['oDB*']` en `src/**/*.php` de producción → **0**; acceso vía `GlobalPdo::get()`. Tests pueden seguir simulando `$GLOBALS` para bootstrap.
 
-### Fase 3 — PHPStan incremental (en curso)
+### Fase 3 — PHPStan incremental ✓ (completada 2026-06-09)
 
 **Comando sin baseline:** `composer phpstan:file -- src/<modulo>/` (usa `phpstan-nobaseline.neon`).
 
-**Completado (PS₀ = 0):** `shared` (1004→0, 6 subfases), `utils_database`, `asistentes`, `actividadcargos`, `casas`, `zonassacd`, `devel_codegen`. Regresiones post-`shared` en 5 módulos corregidas (jun 2026).
+**PS₀ = 0 en los 36 módulos de `src/`** (verificado 2026-06-09). Cierre por oleadas jun 2026: piloto `shared` (1004→0) → módulos medianos → `personas`/`cambios`/`profesores`/`inventario`.
 
-**Próximo orden sugerido (PS₀, por volumen):** `personas`/`cambios`/`profesores`/`inventario` (45–54) → módulos pequeños restantes (~4–23).
+**Siguiente paso (paralelo, no bloqueante):** reducir entradas obsoletas en `phpstan-baseline.neon` al tocar ficheros.
 
-**Con baseline global** (paralelo, no bloqueante):
+**Con baseline global** (mantenimiento):
 
 - Al tocar un fichero: quitar entradas obsoletas de `phpstan-baseline.neon` (rutas movidas, ficheros borrados).
 - `composer phpstan:baseline-report` → [`build/phpstan-baseline-priority-summary.md`](../build/phpstan-baseline-priority-summary.md) (regenerar; cifras A/B/C del índice estaban desactualizadas).
@@ -168,9 +168,9 @@ Ver [`backlog.md`](backlog.md): ServerConf→`.env`, dispatcher interno PostRequ
 
 ## PHPStan sin baseline (junio 2026)
 
-Módulos con **0 errores** verificados:
+**36/36 módulos con 0 errores** (verificado 2026-06-09):
 
-`shared`, `devel_codegen`, `asistentes`, `utils_database`, `actividadcargos`, `casas`, `zonassacd`, `ubis`, `pasarela`, `permisos`, `planning`, `certificados`, `dbextern`, `tablonanuncios`, `menus`, `procesos`, `actividades`
+`actividadcargos`, `actividades`, `actividadescentro`, `actividadessacd`, `actividadestudios`, `actividadplazas`, `actividadtarifas`, `asignaturas`, `asistentes`, `cambios`, `cartaspresentacion`, `casas`, `certificados`, `configuracion`, `dbextern`, `devel_codegen`, `devel_db_admin`, `dossiers`, `encargossacd`, `inventario`, `menus`, `misas`, `notas`, `pasarela`, `permisos`, `personas`, `planning`, `procesos`, `profesores`, `shared`, `tablonanuncios`, `ubis`, `ubiscamas`, `usuarios`, `utils_database`, `zonassacd`
 
 Regenerar inventario por módulo:
 
@@ -181,8 +181,6 @@ for d in src/*/; do
   printf '%-22s %s\n' "$mod" "$err"
 done
 ```
-
-Prioridad actual: módulos pequeños (~2–10 errores), luego los de ~30–54 errores.
 
 ---
 

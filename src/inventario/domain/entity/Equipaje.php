@@ -253,7 +253,7 @@ class Equipaje
         return 'id_equipaje';
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos(): array
@@ -269,7 +269,9 @@ class Equipaje
         $oEquipajeSet->add($this->getDatosCabecera());
         $oEquipajeSet->add($this->getDatosCabeceraB());
         $oEquipajeSet->add($this->getDatosPie());
-        return $oEquipajeSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oEquipajeSet->getTot());
+        return $campos;
     }
 
     private function getDatosIds_activ(): DatosCampo

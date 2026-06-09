@@ -90,10 +90,16 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
             if (!is_array($aDatos)) {
                 continue;
             }
-            $ActividadSacdTexto = ActividadSacdTexto::fromArray($aDatos);
-            $ActividadSacdTextoSet->add($ActividadSacdTexto);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $ActividadSacdTextoSet->add(ActividadSacdTexto::fromArray($normalized));
         }
-        return array_values($ActividadSacdTextoSet->getTot());
+        /** @var list<ActividadSacdTexto> $result */
+        $result = array_values($ActividadSacdTextoSet->getTot());
+
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

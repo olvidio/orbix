@@ -6,7 +6,7 @@ url: "/src/notas/acta_listado_anual_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/notas/infrastructure/ui/http/controllers/acta_listado_anual_data.php"
-entrada: ["post.finIso:mixed", "post.inicioIso:mixed"]
+entrada: ["post.finIso:string", "post.inicioIso:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -33,8 +33,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `finIso` | `mixed` | controller | No | controller |
-| `inicioIso` | `mixed` | controller | No | controller |
+| `finIso` | `string` | controller | No | controller |
+| `inicioIso` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

@@ -130,10 +130,16 @@ public function getArrayCamas(string $sCondicion = ''): array
             if (!is_array($aDatos)) {
                 continue;
             }
-            $Cama = Cama::fromArray($aDatos);
-            $CamaSet->add($Cama);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $CamaSet->add(Cama::fromArray($normalized));
         }
-        return array_values($CamaSet->getTot());
+        /** @var list<Cama> $result */
+        $result = array_values($CamaSet->getTot());
+
+        return $result;
     }
 
     /**
@@ -196,8 +202,7 @@ public function getArrayCamas(string $sCondicion = ''): array
         }
 
         if ($bInsert) {
-            $sid = ConfigGlobal::mi_id_schema();
-            $idSchema = is_numeric($sid) ? (int) $sid : (int) filter_var((string) $sid, FILTER_VALIDATE_INT);
+            $idSchema = ConfigGlobal::mi_id_schema();
             if ($idSchema < 1) {
                 throw new \RuntimeException(_('Falta id_schema de sesión (mi_id_schema) para persistir en du_camas.'));
             }

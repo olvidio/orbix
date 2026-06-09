@@ -10,7 +10,7 @@ entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.id_tipo_acti
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadplazas_GestionPlazasDataData"
-respuesta_data: ["a_cabeceras:array", "a_valores:array", "a_grupo:array", "extendida:boolean", "id_tipo_activ:string", "sactividad:string", "year:int|string", "periodo:string", "empiezamin:string", "empiezamax:string"]
+respuesta_data: ["a_cabeceras:list<array<string, mixed>>", "a_valores:array", "a_grupo:array", "extendida:boolean", "id_tipo_activ:string", "sactividad:string", "year:int|string", "periodo:string", "empiezamin:string", "empiezamax:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/actividadplazas/controller/gestion_plazas.php"]
 casos_uso: ["src\\actividadplazas\\application\\GestionPlazasData"]
@@ -44,13 +44,15 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `sasistentes` | `string` | controller+application | No | controller+application |
 | `year` | `string` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `actividadplazas_GestionPlazasDataData`):
-  - `a_cabeceras` (`array`)
+  - `a_cabeceras` (`list<array<string, mixed>>`)
   - `a_valores` (`array`)
   - `a_grupo` (`array`)
   - `extendida` (`boolean`)

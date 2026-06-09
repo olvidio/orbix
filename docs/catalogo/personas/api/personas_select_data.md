@@ -9,8 +9,6 @@ controller: "src/personas/infrastructure/ui/http/controllers/personas_select_dat
 entrada: ["post.apellido1:string", "post.apellido2:string", "post.centro:string", "post.cmb:string", "post.es_sacd:integer", "post.exacto:string", "post.na:string", "post.nombre:string", "post.tabla:string", "post.tipo:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "personas_PersonasSelectDataData"
-respuesta_data: ["id_nom:integer", "id_tabla:string", "nom:string", "nombre_ubi:string", "nivel_stgr:string", "situacion:string", "f_situacion:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/personas/controller/personas_select.php"]
 casos_uso: ["src\\personas\\application\\PersonasSelectData"]
@@ -53,24 +51,6 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `personas_PersonasSelectDataData`):
-  - `id_nom` (`integer`)
-  - `id_tabla` (`string`)
-  - `nom` (`string`)
-  - `nombre_ubi` (`string`)
-  - `nivel_stgr` (`string`)
-  - `situacion` (`string`)
-  - `f_situacion` (`string`)
-
-## Permisos
-
-- Permiso oficina `dtor`
-- Permiso oficina `des`
-- Permiso oficina `sg`
-- Permiso oficina `sm`
-- Permiso oficina `nax`
-- Permiso oficina `agd`
-- Permiso oficina `est`
 
 ## Casos De Uso
 

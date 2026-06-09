@@ -56,6 +56,9 @@ $ambito = ($_SESSION['oConfig'] ?? null) instanceof ConfigSnapshot
     : '';
 foreach ($cGMR as $oGMR) {
     $id_grupmenu = $oGMR->getId_grupmenu();
+    if ($id_grupmenu === null) {
+        continue;
+    }
     $oGrupMenu = $GrupMenuRepository->findById($id_grupmenu);
     if ($oGrupMenu === null) {
         continue;

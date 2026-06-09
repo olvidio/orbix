@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Certificado Emitido Pdf Upload
 
-Subida AJAX del PDF (bootstrap-fileinput / FormData multipart).
+Descripcion funcional pendiente de revisar.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -42,6 +42,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_nom` | `integer` | controller | No | controller |
 | `idioma` | `string` | controller | No | controller |
 | `solo_pdf` | `integer` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

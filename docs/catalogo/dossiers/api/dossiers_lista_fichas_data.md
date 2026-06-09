@@ -6,7 +6,7 @@ url: "/src/dossiers/dossiers_lista_fichas_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/dossiers/infrastructure/ui/http/controllers/dossiers_lista_fichas_data.php"
-entrada: ["post.id_pau:mixed", "post.obj_pau:mixed", "post.pau:mixed"]
+entrada: ["post.id_pau:integer", "post.obj_pau:string", "post.pau:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "dossiers_DossiersListaFichasDataData"
@@ -35,9 +35,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `id_pau` | `mixed` | controller | No | controller |
-| `obj_pau` | `mixed` | controller | No | controller |
-| `pau` | `mixed` | controller | No | controller |
+| `id_pau` | `integer` | controller | No | controller |
+| `obj_pau` | `string` | controller | No | controller |
+| `pau` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

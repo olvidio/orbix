@@ -71,9 +71,10 @@ final class UbiPermisos
     private static function tienePermisoScdl(): bool
     {
         $oPerm = $_SESSION['oPerm'] ?? null;
-        if (!$oPerm instanceof XPermisos && !empty($_SESSION['iPermMenus'])) {
+        $iPermMenus = $_SESSION['iPermMenus'] ?? null;
+        if (!$oPerm instanceof XPermisos && is_numeric($iPermMenus) && (int) $iPermMenus !== 0) {
             $oPerm = new PermDl();
-            $oPerm->setAccion((int) $_SESSION['iPermMenus']);
+            $oPerm->setAccion((int) $iPermMenus);
         }
         if ($oPerm instanceof XPermisos) {
             return (bool) $oPerm->have_perm_oficina('scdl');

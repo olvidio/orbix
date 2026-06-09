@@ -124,9 +124,6 @@ final class ActaNotasData
         if ($cActas !== []) {
             $desplActasOpciones = [0 => '', NotaSituacion::CURSADA => Nota::getStatusTxt(NotaSituacion::CURSADA)];
             foreach ($cActas as $oActa) {
-                if (!$oActa instanceof Acta) {
-                    continue;
-                }
                 $nomActa = $oActa->getActa();
                 $desplActasOpciones[$nomActa] = $oActa->getActa();
                 $aActasList[] = $nomActa;

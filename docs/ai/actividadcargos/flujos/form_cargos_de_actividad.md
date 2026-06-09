@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona FormCargosDeActividad. Datos para form_cargos_de_actividad. Los desplegables se construyen en el front ({.
+Asignar o editar el cargo de una persona en una actividad (tipo de cargo, AGD, observaciones y, en altas, si asiste). Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Form Cargos De Actividad).
 
 ## Limites De La Respuesta
 

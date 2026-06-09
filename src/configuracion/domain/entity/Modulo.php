@@ -180,13 +180,12 @@ class Modulo
      */
     public function getDatosCampos(): array
     {
-        $oModuloSet = new Set();
-
-        $oModuloSet->add($this->getDatosNom());
-        $oModuloSet->add($this->getDatosDescripcion());
-        $oModuloSet->add($this->getDatosMods_req());
-        $oModuloSet->add($this->getDatosApps_req());
-        return array_values($oModuloSet->getTot());
+        return [
+            $this->getDatosNom(),
+            $this->getDatosDescripcion(),
+            $this->getDatosMods_req(),
+            $this->getDatosApps_req(),
+        ];
     }
 
     /**
@@ -200,7 +199,7 @@ class Modulo
         $oDatosCampo->setMetodoSet('setNom'); // en tablaDB, no se pueden usar lo VO.
         $oDatosCampo->setEtiqueta(_("nombre del módulo"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 
@@ -215,7 +214,7 @@ class Modulo
         $oDatosCampo->setMetodoSet('setDescripcion'); // en tablaDB, no se pueden usar lo VO.
         $oDatosCampo->setEtiqueta(_("descripción"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 
@@ -230,7 +229,7 @@ class Modulo
         $oDatosCampo->setMetodoSet('setMods_req'); // en tablaDB, no se pueden usar lo VO.
         $oDatosCampo->setEtiqueta(_("mods requeridos"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 
@@ -245,7 +244,7 @@ class Modulo
         $oDatosCampo->setMetodoSet('setApps_req'); // en tablaDB, no se pueden usar lo VO.
         $oDatosCampo->setEtiqueta(_("apps requeridas"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
     }
 }

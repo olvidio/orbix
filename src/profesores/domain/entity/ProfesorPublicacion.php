@@ -289,7 +289,7 @@ class ProfesorPublicacion
         return 'id_item';
     }
 
-  /** @return array<string, mixed> */
+  /** @return list<DatosCampo> */
 
 
   public function getDatosCampos(): array
@@ -306,7 +306,9 @@ class ProfesorPublicacion
         $oProfesorPublicacionSet->add($this->getDatosReferencia());
         $oProfesorPublicacionSet->add($this->getDatosLugar());
         $oProfesorPublicacionSet->add($this->getDatosObserv());
-        return $oProfesorPublicacionSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oProfesorPublicacionSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_nom(): DatosCampo
@@ -329,7 +331,7 @@ class ProfesorPublicacion
         $oDatosCampo->setMetodoSet('setTipo_publicacion');
         $oDatosCampo->setEtiqueta(_("tipo de publicación"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(15);
+        $oDatosCampo->setArgument('15');
         return $oDatosCampo;
     }
 
@@ -341,7 +343,7 @@ class ProfesorPublicacion
         $oDatosCampo->setMetodoSet('setTitulo');
         $oDatosCampo->setEtiqueta(_("título"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(100);
+        $oDatosCampo->setArgument('100');
         return $oDatosCampo;
     }
 
@@ -353,7 +355,7 @@ class ProfesorPublicacion
         $oDatosCampo->setMetodoSet('setEditorial');
         $oDatosCampo->setEtiqueta(_("editorial"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(50);
+        $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
 
@@ -365,7 +367,7 @@ class ProfesorPublicacion
         $oDatosCampo->setMetodoSet('setColeccion');
         $oDatosCampo->setEtiqueta(_("colección"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(50);
+        $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
 
@@ -399,7 +401,7 @@ class ProfesorPublicacion
         $oDatosCampo->setMetodoSet('setReferencia');
         $oDatosCampo->setEtiqueta(_("referencia"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(50);
+        $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
 
@@ -411,7 +413,7 @@ class ProfesorPublicacion
         $oDatosCampo->setMetodoSet('setLugar');
         $oDatosCampo->setEtiqueta(_("lugar"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(100);
+        $oDatosCampo->setArgument('100');
         return $oDatosCampo;
     }
 
@@ -423,7 +425,7 @@ class ProfesorPublicacion
         $oDatosCampo->setMetodoSet('setObserv');
         $oDatosCampo->setEtiqueta(_("observaciones"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(100);
+        $oDatosCampo->setArgument('100');
         return $oDatosCampo;
     }
 }

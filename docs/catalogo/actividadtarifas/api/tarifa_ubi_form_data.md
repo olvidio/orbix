@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Tarifa Ubi Form Data
 
-Endpoint backend: datos del formulario modificar/nuevo de `TarifaUbi`.
+Endpoint backend: datos del form modificar/nuevo `TarifaUbi`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -40,6 +40,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `letra` | `string` | controller+application | No | controller+application |
 | `year` | `integer` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
@@ -56,10 +58,6 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
   - `id_serie_sel` (`integer`)
   - `token_update` (`string`)
   - `token_eliminar` (`string`)
-
-## Efectos colaterales
-
-- Junto con los datos del form, emite las **cápsulas `HashB`** que el navegador transportará opacamente y que los endpoints de mutación (`tarifa_ubi_update`, `tarifa_ubi_eliminar`) abrirán para recuperar el contexto firmado (`id_item`, `id_ubi`, `year`).
 
 ## Casos De Uso
 

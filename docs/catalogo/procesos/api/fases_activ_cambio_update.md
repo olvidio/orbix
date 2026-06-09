@@ -6,7 +6,7 @@ url: "/src/procesos/fases_activ_cambio_update"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_update.php"
-entrada: []
+entrada: ["post.accion:string", "post.id_fase_nueva:string", "post.sel:array"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Fases Activ Cambio Update
 
-Caso de uso: aplica setCompletado(t|f) a la tarea de la fase nueva para cada id_activ seleccionado, respetando permisos de oficina del responsable.
+Caso de uso: aplica setCompletado a la fase nueva para actividades seleccionadas.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -31,7 +31,11 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Entrada
 
-Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint que lee la sesion).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `accion` | `string` | application | No | application |
+| `id_fase_nueva` | `string` | application | No | application |
+| `sel` | `array` | application | No | application |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

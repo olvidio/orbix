@@ -4,61 +4,63 @@ tipo: "endpoint"
 modulo: "misas"
 url: "/src/misas/ver_plan_ctr_data"
 metodos: ["GET", "POST"]
-operacion: "consulta"
+operacion: "mutacion"
 controller: "src/misas/infrastructure/ui/http/controllers/ver_plan_ctr_data.php"
-entrada: ["post.id_ubi:integer", "post.periodo:string", "post.empiezamin:string", "post.empiezamax:string"]
-entrada_obligatoria: ["id_ubi"]
+entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.id_ubi:integer", "post.periodo:string"]
+entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "misas_VerPlanCtrDataData"
 respuesta_data: ["columns:array", "rows:array", "legend:array"]
 requiere_hashb: false
-frontend_referencias: ["frontend/misas/controller/ver_plan_ctr.php", "frontend/misas/controller/imprimir_plan_ctr.php"]
+frontend_referencias: ["frontend/misas/controller/imprimir_plan_ctr.php", "frontend/misas/controller/ver_plan_ctr.php"]
 casos_uso: ["src\\misas\\application\\VerPlanCtrData"]
-tags: ["misas", "ver", "plan", "ctr", "data", "cliente_movil"]
-estado_revision: "revisado"
+tags: ["misas", "ver", "plan", "ctr", "data"]
+estado_revision: "generado"
 ---
 
 # Ver Plan Ctr Data
 
-Cuadrícula encargo × días del plan de un centro (`id_ubi`).
+Datos para la vista `ver_plan_ctr.phtml`: cuadricula del plan de misas por centro (filas: encargos, columnas: días).
 
-Convenciones: [`_convenciones_api.md`](../_convenciones_api.md) · Previo: [`buscar_plan_ctr_data.md`](buscar_plan_ctr_data.md)
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Endpoint
 
 - URL: `/src/misas/ver_plan_ctr_data`
-- Métodos: `POST` (recomendado)
+- Metodos registrados: `GET, POST`
+- Operacion: `mutacion`
 - Controller: `src/misas/infrastructure/ui/http/controllers/ver_plan_ctr_data.php`
 
 ## Entrada
 
-| Campo | Tipo | Obligatorio | Notas |
-|-------|------|-------------|-------|
-| `id_ubi` | int | **Sí** | Centro de `centros_opciones` |
-| `periodo` | string | Recomendado | Alias como en cuadrícula zona |
-| `empiezamin` / `empiezamax` | string | Condicional | Si `periodo=otro` |
-
-Visibilidad de celdas según rol y estado del plan (centro solo ve comunicado a centros).
+| Campo | Tipo | Origen | Obligatorio | Notas |
+|-------|------|--------|-------------|-------|
+| `empiezamax` | `string` | controller | No | controller |
+| `empiezamin` | `string` | controller | No | controller |
+| `id_ubi` | `integer` | controller | No | controller |
+| `periodo` | `string` | controller | No | controller |
 
 ## Salida
 
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| `columns` | array | `{ letra, num_dia, num_mes, id_dia }` |
-| `rows` | array | `{ desc_enc, cells[] }` — una celda por columna |
-| `legend` | array | `{ iniciales, nombre }` |
+- Helper: `ContestarJson::enviar`
+- Forma: `standard_envelope_string_data`
+- Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `misas_VerPlanCtrDataData`):
+  - `columns` (`array`)
+  - `rows` (`array`)
+  - `legend` (`array`)
 
-Celdas ocultas pueden mostrarse como ` -- ` en web; la app muestra el texto tal cual.
+## Casos De Uso
 
-## Ejemplo
+- `src\misas\application\VerPlanCtrData`
 
-```http
-POST /orbix/src/misas/ver_plan_ctr_data HTTP/1.1
-Content-Type: application/x-www-form-urlencoded
-Cookie: PHPSESSID=...
+## Frontend Relacionado
 
-id_ubi=5&periodo=este_mes&empiezamin=&empiezamax=
-```
+- `frontend/misas/controller/imprimir_plan_ctr.php`
+- `frontend/misas/controller/ver_plan_ctr.php`
 
-## Cliente de referencia
+## Revision Manual
 
-- `orbix-android`: `fetchVerPlanCtr()` — tabla `PlanCtrGridTable`.
+- Confirmar permisos/autorizacion de oficina.
+- Anadir ejemplos reales de request/response.
+- Marcar `estado_revision: "revisado"` cuando este validado.

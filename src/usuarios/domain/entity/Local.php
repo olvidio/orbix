@@ -163,7 +163,7 @@ class Local
         $oDatosCampo->setMetodoSet('setIdLocaleVo');
         $oDatosCampo->setEtiqueta(_("sigla de locale"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(12);
+        $oDatosCampo->setArgument('12');
         return $oDatosCampo;
     }
     private function getDatosNom_locale(): DatosCampo
@@ -174,7 +174,7 @@ class Local
         $oDatosCampo->setMetodoSet('setNomLocaleVo');
         $oDatosCampo->setEtiqueta(_("nombre de locale"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(200);
+        $oDatosCampo->setArgument('200');
         return $oDatosCampo;
     }
     private function getDatosIdioma(): DatosCampo
@@ -185,7 +185,7 @@ class Local
         $oDatosCampo->setMetodoSet('setIdiomaVo');
         $oDatosCampo->setEtiqueta(_("sigla de idioma"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(3);
+        $oDatosCampo->setArgument('3');
         return $oDatosCampo;
     }
      private function getDatosNom_idioma(): DatosCampo
@@ -196,7 +196,7 @@ class Local
         $oDatosCampo->setMetodoSet('setNomIdiomaVo');
         $oDatosCampo->setEtiqueta(_("nombre de idioma"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(200);
+        $oDatosCampo->setArgument('200');
         return $oDatosCampo;
     }
     private function getDatosActive(): DatosCampo

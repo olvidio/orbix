@@ -38,6 +38,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `id_ubi` | `integer` | controller+application | No | controller+application |
 | `year` | `integer` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
@@ -51,16 +53,6 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
   - `id_ubi` (`integer`)
   - `year` (`integer`)
   - `token_copiar` (`string`)
-
-## Efectos colaterales
-
-- Además del listado tabular, emite la **cápsula `HashB`** que autoriza la acción "copiar tarifas del año anterior" (`token_copiar`).
-
-## Permisos
-
-- Permiso oficina `adl`
-- Permiso oficina `pr`
-- Permiso oficina `calendario`
 
 ## Casos De Uso
 

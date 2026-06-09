@@ -32,7 +32,7 @@ paths:
               type: object
               properties:
                 id_activ:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -145,11 +145,7 @@ paths:
                   type: "string"
                 id_habitacion:
                   type: "string"
-                id_ubi:
-                  type: "integer"
                 larga:
-                  type: "string"
-                mod:
                   type: "string"
                 sel:
                   type: "array"
@@ -191,8 +187,6 @@ paths:
               properties:
                 id_habitacion:
                   type: "string"
-                id_ubi:
-                  type: "integer"
                 sel:
                   type: "array"
                   items:
@@ -291,8 +285,6 @@ paths:
                     type: string
                 nombre:
                   type: "string"
-                nuevo:
-                  type: "string"
                 numero_camas:
                   type: "integer"
                 numero_camas_vip:
@@ -329,7 +321,7 @@ paths:
       operationId: "post_ubiscamas_update_cama_asistente"
       summary: "Update Cama Asistente"
       description: |
-        Servicio de aplicación para operaciones de asistentes que requieren coordinación entre múltiples repositorios
+        Descripcion funcional pendiente de revisar.
         
         Operacion: `mutacion`.
         
@@ -345,6 +337,8 @@ paths:
               properties:
                 ctx:
                   type: "string"
+                id_activ:
+                  type: "integer"
                 id_cama:
                   type: "string"
                 id_nom:
@@ -355,13 +349,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/ubiscamas_UpdateCamaAsistenteDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/ubiscamas_UpdateCamaAsistenteDataResponse"
   "/src/ubiscamas/update_solo_vip":
     post:
       operationId: "post_ubiscamas_update_solo_vip"
@@ -383,6 +377,8 @@ paths:
               properties:
                 ctx:
                   type: "string"
+                id_activ:
+                  type: "integer"
                 solo_vip:
                   type: "string"
       responses:
@@ -405,6 +401,33 @@ components:
       in: cookie
       name: PHPSESSID
   schemas:
+    OrbixStandardResponseEnvelope:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+        mensaje:
+          type: string
+        data:
+          description: "Ver schema concreto de cada operacion."
+    ubiscamas_UpdateCamaAsistenteData:
+      type: object
+      properties:
+        success:
+          type: "string"
+    ubiscamas_UpdateCamaAsistenteDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/ubiscamas_UpdateCamaAsistenteData"
     OrbixStandardResponseStringData:
       type: object
       required:

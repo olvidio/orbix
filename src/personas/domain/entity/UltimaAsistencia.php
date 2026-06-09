@@ -132,7 +132,7 @@ class UltimaAsistencia
         return ['id_item' => (string)$this->id_item];
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos(): array
@@ -143,7 +143,9 @@ class UltimaAsistencia
         $oSet->add($this->getDatosF_ini());
         $oSet->add($this->getDatosDescripcion());
         $oSet->add($this->getDatosCdr());
-        return $oSet->getTot();
+                /** @var list<DatosCampo> $campos */
+        $campos = array_values($oSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_tipo_activ(): DatosCampo
@@ -180,7 +182,7 @@ class UltimaAsistencia
         $oDatosCampo->setMetodoSet('setDescripcion');
         $oDatosCampo->setEtiqueta(_("descripción"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(70);
+        $oDatosCampo->setArgument('70');
         return $oDatosCampo;
     }
 

@@ -6,7 +6,7 @@ url: "/src/planning/planning_persona_ver_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/planning/infrastructure/ui/http/controllers/planning_persona_ver_data.php"
-entrada: ["post.obj_pau:string"]
+entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.obj_pau:string", "post.periodo:string", "post.sel:array", "post.year:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "planning_PlanningPersonaVerDataData"
@@ -35,7 +35,12 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
+| `empiezamax` | `string` | controller | No | controller |
+| `empiezamin` | `string` | controller | No | controller |
 | `obj_pau` | `string` | application | No | application |
+| `periodo` | `string` | controller | No | controller |
+| `sel` | `array` | controller | No | controller |
+| `year` | `integer` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

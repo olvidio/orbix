@@ -10,7 +10,7 @@ entrada: ["post.dl_propia:string", "post.id_tipo_activ:string", "post.selected:s
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "procesos_ActividadQueFasesCuadroData"
-respuesta_data: ["a_fases:array"]
+respuesta_data: ["a_fases:list<array{id: int, nom: string, checked: bool}>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/actividades/controller/actividad_que.php"]
 casos_uso: ["src\\procesos\\application\\ActividadQueFasesCuadro"]
@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Actividad Que Fases Ajax
 
-Caso de uso: devuelve la lista de fases aplicables al tipo de actividad indicado (estructura pura) para construir los checkboxes de `fases_on` o `fases_off` del filtro de busqueda de actividades.
+Caso de uso: fases aplicables al tipo de actividad para checkboxes fases_on/fases_off.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -45,7 +45,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `procesos_ActividadQueFasesCuadroData`):
-  - `a_fases` (`array`)
+  - `a_fases` (`list<array{id: int, nom: string, checked: bool}>`)
 
 ## Casos De Uso
 

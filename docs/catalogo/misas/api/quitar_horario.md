@@ -9,6 +9,8 @@ controller: "src/misas/infrastructure/ui/http/controllers/quitar_horario.php"
 entrada: ["post.id_item:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "misas_QuitarHorarioPlantillaData"
+respuesta_data: ["error:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/horario_tarea.php"]
 casos_uso: ["src\\misas\\application\\QuitarHorarioPlantilla"]
@@ -18,7 +20,7 @@ estado_revision: "generado"
 
 # Quitar Horario
 
-Descripcion funcional pendiente de revisar.
+Anula `t_start` / `t_end` de una fila `misa_plantillas_dl` (`id_item`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -40,6 +42,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `misas_QuitarHorarioPlantillaData`):
+  - `error` (`string`)
 
 ## Casos De Uso
 

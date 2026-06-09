@@ -51,7 +51,6 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $ConfigSchemaSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
@@ -103,14 +102,18 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
         }
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $configSchemas = [];
         foreach ($filas as $aDatos) {
             if (!is_array($aDatos)) {
                 continue;
             }
-            $ConfigSchema = ConfigSchema::fromArray($aDatos);
-            $ConfigSchemaSet->add($ConfigSchema);
+            $normalized = [];
+            foreach ($aDatos as $key => $value) {
+                $normalized[(string) $key] = $value;
+            }
+            $configSchemas[] = ConfigSchema::fromArray($normalized);
         }
-        return array_values($ConfigSchemaSet->getTot());
+        return $configSchemas;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -85,7 +85,7 @@ class ProfesorTipo
         return 'id_tipo_profesor';
     }
 
-  /** @return array<string, mixed> */
+  /** @return list<DatosCampo> */
 
 
   public function getDatosCampos(): array
@@ -94,7 +94,9 @@ class ProfesorTipo
 
         $oTipoCentroSet->add($this->getDatosId_nom());
         $oTipoCentroSet->add($this->getDatosTipo_profesor());
-        return $oTipoCentroSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oTipoCentroSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_nom(): DatosCampo
@@ -117,7 +119,7 @@ class ProfesorTipo
         $oDatosCampo->setMetodoSet('setTipo_profesor');
         $oDatosCampo->setEtiqueta(_("tipo de profesor"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(50);
+        $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
 }

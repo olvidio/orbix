@@ -32,7 +32,7 @@ paths:
               type: object
               properties:
                 id_pau:
-                  type: "string"
+                  type: "integer"
                 obj_pau:
                   type: "string"
                 pau:
@@ -55,7 +55,7 @@ paths:
       operationId: "post_dossiers_dossiers_ver_pantalla_data"
       summary: "Dossiers Ver Pantalla Data"
       description: |
-        Cuerpo de dossiers_ver: datos de cabecera + lista o ficha. El backend NO firma URLs: devuelve `*_link_spec` ({path, query}) que firma el frontend. En modo ficha, `ficha_segmentos` mezcla: - Segmentos `html` ya generados por los `Select_*` (TODO: refactorizar para que tampoco lleven HTML/HashFront desde `src/`). - Segmentos `datos_tabla` con datos puros (`action_tabla_link_spec`, `ins_traslado_link_spec`, `script_ctx`, `hash`, `tabla`, `permiso`) que el frontend compone con HashFront, Lista y el script JS de `DatosTablaRepo`.
+        Cuerpo de dossiers_ver: datos de cabecera + lista o ficha.
         
         Operacion: `mutacion`.
         
@@ -103,29 +103,25 @@ paths:
                   type: "string"
                 stack:
                   type: "string"
-                stack_actual:
-                  type: "integer"
-                todos:
-                  type: "string"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dossiers_DossiersVerPantallaDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/dossiers_DossiersVerPantallaDataDataResponse"
+                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/dossiers/perm_dossier_ver_data":
     post:
       operationId: "post_dossiers_perm_dossier_ver_data"
       summary: "Perm Dossier Ver Data"
       description: |
-        Formulario "permisos de acceso" para un tipo de dossier. El backend devuelve sólo datos: - `go_to_link_spec` ({path, query}) para que el frontend firme con HashFront. - `hash_config` (campos_form, campos_no, campos_hidden) para que el frontend componga el bloque hidden con HashFront; el valor de `go_to` dentro de `campos_hidden` se inyecta firmado en el borde del frontend. - `permiso_dossier_bit_map` + enteros `permiso_lectura` / `permiso_escritura`; el HTML de checkboxes lo genera el controlador frontend con {
+        Formulario "permisos de acceso" para un tipo de dossier.
         
         Operacion: `mutacion`.
         
@@ -140,7 +136,7 @@ paths:
               type: object
               properties:
                 id_tipo_dossier:
-                  type: "string"
+                  type: "integer"
                 tipo:
                   type: "string"
       responses:
@@ -149,13 +145,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/dossiers_PermDossierVerFormDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/dossiers_PermDossierVerFormDataDataResponse"
   "/src/dossiers/perm_dossiers_data":
     post:
       operationId: "post_dossiers_perm_dossiers_data"
@@ -195,7 +191,7 @@ paths:
       operationId: "post_dossiers_tipo_dossier_eliminar"
       summary: "Tipo Dossier Eliminar"
       description: |
-        Elimina un `TipoDossier`.
+        Elimina un `TipoDossier`. Sustituye al case `eliminar` del antiguo `apps/dossiers/controller/perm_dossier_update.php`.
         
         Operacion: `mutacion`.
         
@@ -229,7 +225,7 @@ paths:
       operationId: "post_dossiers_tipo_dossier_guardar"
       summary: "Tipo Dossier Guardar"
       description: |
-        Guarda los cambios a un `TipoDossier`.
+        Guarda los cambios a un `TipoDossier`. Sustituye al case `guardar` del antiguo `apps/dossiers/controller/perm_dossier_update.php`.
         
         Operacion: `mutacion`.
         
@@ -244,13 +240,9 @@ paths:
               type: object
               properties:
                 Permiso_escritura:
-                  type: "array"
-                  items:
-                    type: string
+                  type: "string"
                 Permiso_lectura:
-                  type: "array"
-                  items:
-                    type: string
+                  type: "string"
                 app:
                   type: "string"
                 campo_to:
@@ -318,15 +310,12 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/dossiers_DossiersListaFichasDataData"
-    dossiers_DossiersVerPantallaDataData:
+    dossiers_PermDossierVerFormDataData:
       type: object
       properties:
-        top_data:
-          type: array
-          items: {}
-        modo:
+        path:
           type: "string"
-    dossiers_DossiersVerPantallaDataDataResponse:
+    dossiers_PermDossierVerFormDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
         - type: object
@@ -335,7 +324,7 @@ components:
               oneOf:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/dossiers_DossiersVerPantallaDataData"
+                - $ref: "#/components/schemas/dossiers_PermDossierVerFormDataData"
     dossiers_PermDossiersListaDataData:
       type: object
       properties:

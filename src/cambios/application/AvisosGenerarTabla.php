@@ -226,10 +226,7 @@ class AvisosGenerarTabla
                         // fase on
                         if (in_array($id_fase_ref, $aFases_cmb)) {
                             if (is_true($aviso_on)) {
-                                $oPermActividades = DependencyResolver::make(
-                                    PermisosActividades::class,
-                                    ['idUsuario' => $id_usuario]
-                                );
+                                $oPermActividades = $this->makePermisosActividades($id_usuario);
                                 $oPermActividades->setActividad($id_activ);
                                 $oPermActividades->setFasesCompletadas($aFases_cmb);
                                 $oPermActiv = $oPermActividades->getPermisoActual($afecta);
@@ -254,10 +251,7 @@ class AvisosGenerarTabla
                         } else {
                             // fase off
                             if (is_true($aviso_off)) {
-                                $oPermActividades = DependencyResolver::make(
-                                    PermisosActividades::class,
-                                    ['idUsuario' => $id_usuario]
-                                );
+                                $oPermActividades = $this->makePermisosActividades($id_usuario);
                                 $oPermActividades->setActividad($id_activ);
                                 $oPermActividades->setFasesCompletadas($aFases_cmb);
                                 $oPermActiv = $oPermActividades->getPermisoActual($afecta);
@@ -326,7 +320,7 @@ class AvisosGenerarTabla
 
     /**
      * @param array<string, mixed>|stdClass|null $json
-     * @return list<int|string>
+     * @return list<int>
      */
     private static function jsonFasesToList(array|stdClass|null $json): array
     {
@@ -338,11 +332,21 @@ class AvisosGenerarTabla
         }
         $result = [];
         foreach ($json as $fase) {
-            if (is_int($fase) || is_string($fase)) {
-                $result[] = $fase;
+            if (is_numeric($fase)) {
+                $result[] = (int) $fase;
             }
         }
 
         return $result;
+    }
+
+    private function makePermisosActividades(int $id_usuario): PermisosActividades
+    {
+        $resolved = DependencyResolver::make(PermisosActividades::class, ['idUsuario' => $id_usuario]);
+        if (!$resolved instanceof PermisosActividades) {
+            throw new \RuntimeException('PermisosActividades could not be resolved');
+        }
+
+        return $resolved;
     }
 }

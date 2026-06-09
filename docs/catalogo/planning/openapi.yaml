@@ -17,9 +17,9 @@ paths:
       operationId: "post_planning_planning_casa_que_data"
       summary: "Planning Casa Que Data"
       description: |
-        Filtro de casas y modo del selector **Planning por casas** / **Nuevo plan** (`propuesta_calendario=1` en menú).
+        Dataset para montar CasasQue en {
         
-        Operacion: `consulta`.
+        Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/planning/api/planning_casa_que_data.md`
       tags:
@@ -40,21 +40,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/planning_PlanningCasaQueFormDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/planning_PlanningCasaQueFormDataDataResponse"
   "/src/planning/planning_casa_ver_data":
     post:
       operationId: "post_planning_planning_casa_ver_data"
       summary: "Planning Casa Ver Data"
       description: |
-        Actividades por casa en un periodo. Invocado desde `planning_casa_ver.php` (tras `planning_casa_que` → `planning_casa_select`).
+        Dataset para {
         
-        Operacion: `consulta`.
+        Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/planning/api/planning_casa_ver_data.md`
       tags:
@@ -65,27 +65,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required:
-                - "f_ini_iso"
-                - "f_fin_iso"
               properties:
                 cdc_sel:
                   type: "integer"
-                f_ini_iso:
-                  type: "string"
                 f_fin_iso:
+                  type: "string"
+                f_ini_iso:
                   type: "string"
                 sSeleccionados:
                   type: "string"
                 sin_activ:
-                  type: "integer"
-                periodo:
-                  type: "string"
-                year:
-                  type: "integer"
-                propuesta_calendario:
-                  type: "string"
-                modelo:
                   type: "integer"
       responses:
         "200":
@@ -93,13 +82,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/planning_PlanningCasaVerDataDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/planning_PlanningCasaVerDataDataResponse"
   "/src/planning/planning_ctr_select_data":
     post:
       operationId: "post_planning_planning_ctr_select_data"
@@ -121,6 +110,12 @@ paths:
               properties:
                 ctr:
                   type: "string"
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
+                periodo:
+                  type: "string"
                 sacd:
                   type: "string"
                 todos_agd:
@@ -129,6 +124,8 @@ paths:
                   type: "string"
                 todos_s:
                   type: "string"
+                year:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -205,8 +202,20 @@ paths:
             schema:
               type: object
               properties:
+                empiezamax:
+                  type: "string"
+                empiezamin:
+                  type: "string"
                 obj_pau:
                   type: "string"
+                periodo:
+                  type: "string"
+                sel:
+                  type: "array"
+                  items:
+                    type: string
+                year:
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -225,9 +234,9 @@ paths:
       operationId: "post_planning_planning_zones_que_data"
       summary: "Planning Zones Que Data"
       description: |
-        Opciones del desplegable **zona** y comprobación de permiso para la pantalla «Planning zonas». Primera llamada del flujo planning por zonas.
+        Opciones de zona + comprobación de permiso para `planning_zones_que`.
         
-        Operacion: `consulta`.
+        Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/planning/api/planning_zones_que_data.md`
       tags:
@@ -260,9 +269,9 @@ paths:
       operationId: "post_planning_planning_zones_select_data"
       summary: "Planning Zones Select Data"
       description: |
-        Dataset del planning por **zona(s)** y periodo (trimestre/mes). Segunda llamada tras elegir filtros en «Planning zonas».
+        Dataset para {
         
-        Operacion: `consulta`.
+        Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/planning/api/planning_zones_select_data.md`
       tags:
@@ -273,17 +282,11 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required:
-                - "id_zona"
-                - "trimestre"
-                - "year"
               properties:
                 actividad:
                   type: "string"
                 id_zona:
                   type: "string"
-                modelo:
-                  type: "integer"
                 propuesta:
                   type: "string"
                 trimestre:
@@ -322,6 +325,41 @@ components:
           type: string
         data:
           description: "Ver schema concreto de cada operacion."
+    planning_PlanningCasaQueFormDataData:
+      type: object
+      properties:
+        filtro:
+          type: array
+          items: {}
+    planning_PlanningCasaQueFormDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/planning_PlanningCasaQueFormDataData"
+    planning_PlanningCasaVerDataData:
+      type: object
+      properties:
+        a_actividades:
+          type: array
+          items: {}
+        casa_periodos_por_ubi:
+          type: array
+          items: {}
+    planning_PlanningCasaVerDataDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/planning_PlanningCasaVerDataData"
     planning_PlanningCtrSelectDataData:
       type: object
       properties:
@@ -358,8 +396,6 @@ components:
       properties:
         error:
           type: "string"
-        opciones_zonas:
-          type: "string"
     planning_PlanningZonesQueDataDataResponse:
       allOf:
         - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
@@ -374,9 +410,11 @@ components:
       type: object
       properties:
         actividades_por_zona:
-          type: "string"
+          type: array
+          items: {}
         cabeceras_por_zona:
-          type: "string"
+          type: array
+          items: {}
         zonas:
           type: "integer"
         titulo:

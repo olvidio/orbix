@@ -17,9 +17,9 @@ paths:
       operationId: "post_menus_grupmenu_coleccion"
       summary: "Grupmenu Coleccion"
       description: |
-        Lista los **grupmenus** visibles para el usuario de la sesión y, dentro de cada uno, las entradas de menú (mismo criterio que el menú lateral ☰ de la web).
+        Grupmenus visibles para el usuario actual, mismo criterio que el menú lateral en {
         
-        Operacion: `consulta`.
+        Operacion: `mutacion`.
         
         Fuente catalogo: `docs/catalogo/menus/api/grupmenu_coleccion.md`
       tags:
@@ -141,7 +141,7 @@ paths:
               type: object
               properties:
                 id_grupmenu:
-                  type: "string"
+                  type: "integer"
       responses:
         "200":
           description: "Respuesta generada por Orbix."
@@ -183,13 +183,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/menus_GrupMenuListaUseCaseDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/menus_GrupMenuListaUseCaseDataResponse"
   "/src/menus/lista_meta_menus":
     post:
       operationId: "post_menus_lista_meta_menus"
@@ -218,13 +218,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/menus_ListaMetaMenusDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/menus_ListaMetaMenusDataResponse"
   "/src/menus/lista_templates":
     post:
       operationId: "post_menus_lista_templates"
@@ -253,13 +253,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/menus_ListaTemplatesMenusDataResponse"
         "400":
           description: "Peticion no valida o error de validacion."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
+                $ref: "#/components/schemas/menus_ListaTemplatesMenusDataResponse"
   "/src/menus/menu_copiar":
     post:
       operationId: "post_menus_menu_copiar"
@@ -716,6 +716,54 @@ components:
           type: string
         data:
           description: "Ver schema concreto de cada operacion."
+    menus_GrupMenuListaUseCaseData:
+      type: object
+      properties:
+        a_lista:
+          type: array
+          items: {}
+    menus_GrupMenuListaUseCaseDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/menus_GrupMenuListaUseCaseData"
+    menus_ListaMetaMenusData:
+      type: object
+      properties:
+        a_opciones:
+          type: array
+          items: {}
+    menus_ListaMetaMenusDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/menus_ListaMetaMenusData"
+    menus_ListaTemplatesMenusData:
+      type: object
+      properties:
+        a_opciones:
+          type: array
+          items: {}
+    menus_ListaTemplatesMenusDataResponse:
+      allOf:
+        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: string
+                  description: "JSON codificado como string (compatibilidad legacy)."
+                - $ref: "#/components/schemas/menus_ListaTemplatesMenusData"
     menus_MenusBurgerLayoutDataUseCaseData:
       type: object
       properties:

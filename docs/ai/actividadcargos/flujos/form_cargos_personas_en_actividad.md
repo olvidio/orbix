@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona FormCargosPersonasEnActividad. Datos para form_cargos_personas_en_actividad (vista por persona).
+Gestionar los cargos de una persona en distintas actividades (dossier 1302): consultar, añadir, modificar y quitar. Plantilla de redacción revisada en `docs/manual/actividadcargos.md` (sección Form Cargos Personas En Actividad).
 
 ## Limites De La Respuesta
 

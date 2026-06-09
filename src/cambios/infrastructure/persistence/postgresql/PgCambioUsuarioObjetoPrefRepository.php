@@ -100,10 +100,13 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $CambioUsuarioObjetoPref = CambioUsuarioObjetoPref::fromArray($aDatos);
             $CambioUsuarioObjetoPrefSet->add($CambioUsuarioObjetoPref);
         }
-        return array_values($CambioUsuarioObjetoPrefSet->getTot());
+        /** @var list<CambioUsuarioObjetoPref> $result */
+        $result = array_values($CambioUsuarioObjetoPrefSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

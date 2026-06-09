@@ -9,6 +9,8 @@ controller: "src/ubis/infrastructure/ui/http/controllers/centros_get_num.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "ubis_CentrosGetNumDataData"
+respuesta_data: ["a_cabeceras:list<mixed>, a_valores: array<int, array<int, mixed>>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/ubis/controller/centros_get_num.php"]
 casos_uso: ["src\\ubis\\application\\CentrosGetNumData"]
@@ -38,6 +40,8 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `ubis_CentrosGetNumDataData`):
+  - `a_cabeceras` (`list<mixed>, a_valores: array<int, array<int, mixed>>`)
 
 ## Casos De Uso
 

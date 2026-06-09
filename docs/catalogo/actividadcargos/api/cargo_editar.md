@@ -6,7 +6,7 @@ url: "/src/actividadcargos/cargo_editar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividadcargos/infrastructure/ui/http/controllers/cargo_editar.php"
-entrada: ["post.asis:string", "post.asis_presente:mixed", "post.id_activ:integer", "post.id_cargo:integer", "post.id_item:integer", "post.id_nom:integer", "post.observ:string", "post.puede_agd:string"]
+entrada: ["post.asis:string", "post.asis_presente:string", "post.id_activ:integer", "post.id_cargo:integer", "post.id_item:integer", "post.id_nom:integer", "post.observ:string", "post.puede_agd:string"]
 entrada_obligatoria: ["id_activ", "id_nom", "id_cargo"]
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -35,7 +35,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `asis` | `string` | controller+application | No | controller+application |
-| `asis_presente` | `mixed` | controller+application | No | controller+application |
+| `asis_presente` | `string` | controller+application | No | controller+application |
 | `id_activ` | `integer` | application | Si | application |
 | `id_cargo` | `integer` | application | Si | application |
 | `id_item` | `integer` | application | No | application |

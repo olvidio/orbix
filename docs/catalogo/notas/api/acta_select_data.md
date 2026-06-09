@@ -6,7 +6,7 @@ url: "/src/notas/acta_select_data"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/notas/infrastructure/ui/http/controllers/acta_select_data.php"
-entrada: ["post.acta:mixed", "post.mes_fin_stgr:mixed", "post.titulo:mixed"]
+entrada: ["post.acta:string", "post.mes_fin_stgr:integer", "post.titulo:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "notas_ActaSelectDataData"
@@ -35,9 +35,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `acta` | `mixed` | controller | No | controller |
-| `mes_fin_stgr` | `mixed` | controller | No | controller |
-| `titulo` | `mixed` | controller | No | controller |
+| `acta` | `string` | controller | No | controller |
+| `mes_fin_stgr` | `integer` | controller | No | controller |
+| `titulo` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 

@@ -6,7 +6,7 @@ url: "/src/ubis/teleco_editar"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/teleco_editar.php"
-entrada: ["post.id_ubi:integer", "post.mod:string", "post.obj_pau:string", "post.s_pkey:string", "post.sel:array"]
+entrada: ["post.id_ubi:integer", "post.mod:string", "post.obj_pau:string", "post.s_pkey:string", "post.sel:mixed"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
@@ -37,7 +37,9 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `mod` | `string` | controller | No | controller |
 | `obj_pau` | `string` | controller | No | controller |
 | `s_pkey` | `string` | controller | No | controller |
-| `sel` | `array` | controller | No | controller |
+| `sel` | `mixed` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

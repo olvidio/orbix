@@ -294,7 +294,9 @@ class Asignatura
         $oAsignaturaSet->add($this->getDatosId_sector());
         $oAsignaturaSet->add($this->getDatosStatus());
         $oAsignaturaSet->add($this->getDatosId_tipo());
-        return array_values($oAsignaturaSet->getTot());
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oAsignaturaSet->getTot());
+        return $campos;
     }
 
     /**
@@ -311,7 +313,7 @@ class Asignatura
         $oDatosCampo->setMetodoSet('setId_asignatura');
         $oDatosCampo->setEtiqueta(_("id asignatura"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(5);
+        $oDatosCampo->setArgument('5');
         return $oDatosCampo;
     }
 
@@ -329,7 +331,7 @@ class Asignatura
         $oDatosCampo->setMetodoSet('setId_nivel');
         $oDatosCampo->setEtiqueta(_("id nivel"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(5);
+        $oDatosCampo->setArgument('5');
         return $oDatosCampo;
     }
 
@@ -347,7 +349,7 @@ class Asignatura
         $oDatosCampo->setMetodoSet('setNombre_asignatura');
         $oDatosCampo->setEtiqueta(_("nombre largo"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(100);
+        $oDatosCampo->setArgument('100');
         return $oDatosCampo;
     }
 
@@ -365,7 +367,7 @@ class Asignatura
         $oDatosCampo->setMetodoSet('setNombre_corto');
         $oDatosCampo->setEtiqueta(_("nombre corto"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(23);
+        $oDatosCampo->setArgument('23');
         return $oDatosCampo;
     }
 
@@ -383,7 +385,7 @@ class Asignatura
         $oDatosCampo->setMetodoSet('setCreditos');
         $oDatosCampo->setEtiqueta(_("créditos"));
         $oDatosCampo->setTipo('decimal');
-        $oDatosCampo->setArgument(4);
+        $oDatosCampo->setArgument('4');
         return $oDatosCampo;
     }
 
@@ -401,7 +403,7 @@ class Asignatura
         $oDatosCampo->setMetodoSet('setYear');
         $oDatosCampo->setEtiqueta(_("año"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(4);
+        $oDatosCampo->setArgument('4');
         return $oDatosCampo;
     }
 

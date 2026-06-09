@@ -374,14 +374,11 @@ class Avisos
                 $cAsistentes = $this->actividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
                 if ($cAsistentes !== [] && isset($cAsistentes[$id_activ])) {
                     $aAsistente = $cAsistentes[$id_activ];
-                    $propio = is_true($aAsistente['propio'] ?? false);
+                    $propio = is_true($aAsistente['propio'] ?? false) === true;
                     $id_cargoRaw = $aAsistente['id_cargo'] ?? null;
 
                     if ($id_cargoRaw !== null && $id_cargoRaw !== '' && is_numeric($id_cargoRaw)) {
-                        $oPermActividades = DependencyResolver::make(
-                            PermisosActividades::class,
-                            ['idUsuario' => $this->id_usuario]
-                        );
+                        $oPermActividades = $this->makePermisosActividades();
                         $oPermActividades->setActividad($id_activ);
                         $permiso_ver = $oPermActividades->havePermisoSacd((int) $id_cargoRaw, $propio);
                     }
@@ -405,38 +402,39 @@ class Avisos
 
     private function permCargo(int $id_activ): bool
     {
-        $oPermActividades = DependencyResolver::make(
-            PermisosActividades::class,
-            ['idUsuario' => $this->id_usuario]
-        );
+        $oPermActividades = $this->makePermisosActividades();
         $oPermActividades->setActividad($id_activ);
-        $oPermActividades->setFasesCompletadas($this->aFases_cmb);
+        $oPermActividades->setFasesCompletadas($this->fasesAsIntList());
         $oPermSacd = $oPermActividades->getPermisoOn('cargos');
         return $oPermSacd->have_perm_activ('ver');
     }
 
     private function permCargoSacd(int $id_activ): bool
     {
-        $oPermActividades = DependencyResolver::make(
-            PermisosActividades::class,
-            ['idUsuario' => $this->id_usuario]
-        );
+        $oPermActividades = $this->makePermisosActividades();
         $oPermActividades->setActividad($id_activ);
-        $oPermActividades->setFasesCompletadas($this->aFases_cmb);
+        $oPermActividades->setFasesCompletadas($this->fasesAsIntList());
         $oPermSacd = $oPermActividades->getPermisoOn('sacd');
         return $oPermSacd->have_perm_activ('ver');
     }
 
     private function permAsiste(int $id_activ): bool
     {
-        $oPermActividades = DependencyResolver::make(
-            PermisosActividades::class,
-            ['idUsuario' => $this->id_usuario]
-        );
+        $oPermActividades = $this->makePermisosActividades();
         $oPermActividades->setActividad($id_activ);
-        $oPermActividades->setFasesCompletadas($this->aFases_cmb);
+        $oPermActividades->setFasesCompletadas($this->fasesAsIntList());
         $oPermAsisSacd = $oPermActividades->getPermisoOn('asistentesSacd');
         return $oPermAsisSacd->have_perm_activ('ver');
+    }
+
+    private function makePermisosActividades(): PermisosActividades
+    {
+        $resolved = DependencyResolver::make(PermisosActividades::class, ['idUsuario' => $this->id_usuario]);
+        if (!$resolved instanceof PermisosActividades) {
+            throw new \RuntimeException('PermisosActividades could not be resolved');
+        }
+
+        return $resolved;
     }
 
     public function setId_schema_cmb(int $id_schema_cmb): void
@@ -465,5 +463,20 @@ class Avisos
     public function setFasesCmb(array $aFases_cmb): void
     {
         $this->aFases_cmb = $aFases_cmb;
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function fasesAsIntList(): array
+    {
+        $result = [];
+        foreach ($this->aFases_cmb as $fase) {
+            if (is_numeric($fase)) {
+                $result[] = (int) $fase;
+            }
+        }
+
+        return $result;
     }
 }

@@ -130,10 +130,13 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
             if (!is_array($aDatos)) {
                 continue;
             }
+            $aDatos = $this->normalizeAssocRow($aDatos);
             $TipoDoc = TipoDoc::fromArray($aDatos);
             $TipoDocSet->add($TipoDoc);
         }
-        return array_values($TipoDocSet->getTot());
+        /** @var list<TipoDoc> $result */
+        $result = array_values($TipoDocSet->getTot());
+        return $result;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

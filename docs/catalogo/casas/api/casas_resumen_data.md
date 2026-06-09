@@ -10,7 +10,7 @@ entrada: ["post.cdc_sel:integer", "post.empiezamax:string", "post.empiezamin:str
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "casas_CasasResumenDataData"
-respuesta_data: ["row:array"]
+respuesta_data: ["row:array", "0:array", "1:array", "2:array", "_id_ubi_padre:integer", "_id_ubi_hijo:integer", "avisos:list<string>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/casas/controller/casas_resumen_lista.php"]
 casos_uso: ["src\\casas\\application\\CasasResumenData"]
@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Casas Resumen Data
 
-Use case: resumen económico de casas (dias ocupados, asistentes previstos/reales, ingresos, gastos, aportaciones, superávit). Sucesor de `apps/casas/controller/casas_resumen_ajax.php`. Dos modos: - `que=''` → un único periodo (año/trimestre/rango) por casa. - `que!=''` → estadística por año (5 años) por casa.
+Endpoint backend: resumen económico de casas (`casas_resumen_data`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -43,6 +43,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `que` | `string` | controller+application | No | controller+application |
 | `year` | `string` | controller+application | No | controller+application |
 
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+
 ## Salida
 
 - Helper: `ContestarJson::enviar`
@@ -50,6 +52,12 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `casas_CasasResumenDataData`):
   - `row` (`array`)
+  - `0` (`array`)
+  - `1` (`array`)
+  - `2` (`array`)
+  - `_id_ubi_padre` (`integer`)
+  - `_id_ubi_hijo` (`integer`)
+  - `avisos` (`list<string>`)
 
 ## Efectos colaterales
 

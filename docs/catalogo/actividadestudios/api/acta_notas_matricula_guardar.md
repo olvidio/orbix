@@ -19,7 +19,7 @@ estado_revision: "generado"
 
 # Acta Notas Matricula Guardar
 
-Guarda el borrador de notas sobre cada matricula (rama `que=1` del legacy `apps/actividadestudios/controller/acta_notas_update.php`).
+Guarda las notas de cada matricula (borrador del acta de notas). Se invoca desde la pantalla `acta_notas` cuando el usuario pulsa "Grabar". Sustituye a la rama `que=1` del legacy `apps/actividadestudios/controller/acta_notas_update.php`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

@@ -7,12 +7,10 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_update.php"
 entrada: ["post.cantidad:string", "post.ctx_update:string", "post.id_item:integer", "post.id_serie:integer", "post.id_tarifa:integer", "post.id_ubi:integer", "post.observ:string", "post.year:integer"]
-entrada_obligatoria: ["ctx_update"]
+entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-requiere_hashb: true
-hashb_campo: "ctx_update"
-hashb_action: "tarifa_ubi_update"
-errores: ["no se encuentra la tarifa", "hay un error, no se ha guardado", "Operación no autorizada"]
+requiere_hashb: false
+errores: ["no se encuentra la tarifa", "hay un error, no se ha guardado"]
 frontend_referencias: ["frontend/actividadtarifas/controller/tarifa_ubi.php", "frontend/actividadtarifas/controller/tarifa_ubi_form.php", "frontend/casas/controller/calendario_ubi_resumen.php"]
 casos_uso: ["src\\actividadtarifas\\application\\TarifaUbiUpdate"]
 tags: ["actividadtarifas", "tarifa", "ubi", "update"]
@@ -37,20 +35,15 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
 | `cantidad` | `string` | controller+application | No | controller+application |
-| `ctx_update` | `string` | controller | Si | controller |
-| `id_item` | `integer` | application | No | application; ignorado en body si viene en cápsula HashB |
+| `ctx_update` | `string` | controller | No | controller |
+| `id_item` | `integer` | controller+application | No | controller+application |
 | `id_serie` | `integer` | controller+application | No | controller+application |
 | `id_tarifa` | `integer` | controller+application | No | controller+application |
-| `id_ubi` | `integer` | application | No | application; ignorado en body si viene en cápsula HashB |
+| `id_ubi` | `integer` | controller+application | No | controller+application |
 | `observ` | `string` | controller+application | No | controller+application |
-| `year` | `integer` | application | No | application; ignorado en body si viene en cápsula HashB |
+| `year` | `integer` | controller+application | No | controller+application |
 
-## Autorizacion HashB
-
-- Campo POST: `ctx_update`
-- Accion: `tarifa_ubi_update`
-- Cápsula invalida: `success: false`, `mensaje: "Operación no autorizada"`.
-- Ver `documentacion/hash_arquitectura.md`.
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
@@ -62,7 +55,6 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - `no se encuentra la tarifa`
 - `hay un error, no se ha guardado`
-- `Operación no autorizada`
 
 ## Casos De Uso
 

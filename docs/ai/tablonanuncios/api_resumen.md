@@ -15,4 +15,4 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `tablonanuncios.anuncio_delete`
 - Controller: `src/tablonanuncios/infrastructure/ui/http/controllers/anuncio_delete.php`
 - Entrada: `post.sel:array`, `post.uuid_item:string`
-- Respuesta: `pendiente_revision`
+- Respuesta: `standard_envelope_string_data`

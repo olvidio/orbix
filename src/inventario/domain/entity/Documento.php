@@ -476,7 +476,7 @@ class Documento
         return 'id_doc';
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos(): array
@@ -501,7 +501,9 @@ class Documento
         $oDocumentoSet->add($this->getDatosNum_fin());
         $oDocumentoSet->add($this->getDatosIdentificador());
         $oDocumentoSet->add($this->getDatosNum_ejemplares());
-        return $oDocumentoSet->getTot();
+        /** @var list<DatosCampo> $campos */
+        $campos = array_values($oDocumentoSet->getTot());
+        return $campos;
     }
 
     private function getDatosId_tipo_doc(): DatosCampo
@@ -578,7 +580,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setObserv');
         $oDatosCampo->setEtiqueta(_("observaciones"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(50);
+        $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
 
@@ -590,7 +592,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setObserv_ctr');
         $oDatosCampo->setEtiqueta(_("observaciones para el centro"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(50);
+        $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
 
@@ -669,7 +671,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setNum_reg');
         $oDatosCampo->setEtiqueta(_("número de registro"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(10);
+        $oDatosCampo->setArgument('10');
         return $oDatosCampo;
     }
 
@@ -681,7 +683,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setNum_ini');
         $oDatosCampo->setEtiqueta(_("número inicial de la colección"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(10);
+        $oDatosCampo->setArgument('10');
         return $oDatosCampo;
     }
 
@@ -693,7 +695,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setNum_fin');
         $oDatosCampo->setEtiqueta(_("número final de la colección"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(10);
+        $oDatosCampo->setArgument('10');
         return $oDatosCampo;
     }
 
@@ -705,7 +707,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setIdentificador');
         $oDatosCampo->setEtiqueta(_("identificador"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(25);
+        $oDatosCampo->setArgument('25');
         return $oDatosCampo;
     }
 
@@ -717,7 +719,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setNum_ejemplares');
         $oDatosCampo->setEtiqueta(_("número de ejemplares"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(10);
+        $oDatosCampo->setArgument('10');
         return $oDatosCampo;
     }
 

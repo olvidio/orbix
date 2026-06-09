@@ -9,16 +9,18 @@ controller: "src/profesores/infrastructure/ui/http/controllers/profesor_asignatu
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "profesores_ProfesorAsignaturaQueDataData"
+respuesta_data: ["aOpciones:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/profesores/controller/profesor_asignatura_que.php"]
-casos_uso: []
+casos_uso: ["src\\profesores\\application\\ProfesorAsignaturaQueData"]
 tags: ["profesores", "profesor", "asignatura", "que"]
 estado_revision: "generado"
 ---
 
 # Profesor Asignatura Que
 
-Descripcion funcional pendiente de revisar.
+Opciones del desplegable de asignatura en profesor_asignatura_que.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -38,10 +40,12 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `profesores_ProfesorAsignaturaQueDataData`):
+  - `aOpciones` (`array`)
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- `src\profesores\application\ProfesorAsignaturaQueData`
 
 ## Frontend Relacionado
 

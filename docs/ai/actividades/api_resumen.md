@@ -133,7 +133,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividades.actividad_tipo_get`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_tipo_get.php`
-- Entrada: `post.salida:string`
+- Entrada: `post.entrada:string`, `post.extendida:string`, `post.isfsv:integer`, `post.modo:string`, `post.opcion_sel:string`, `post.salida:string`, `post.ssfsv:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/actividad_ver_datos`
@@ -189,14 +189,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividades.tipo_activ_eliminar`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_eliminar.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.id_tipo_activ:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/tipo_activ_form_modificar`
 
 - Id: `actividades.tipo_activ_form_modificar`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_form_modificar.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.id_tipo_activ:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/tipo_activ_form_nuevo`
@@ -224,12 +224,12 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividades.tipo_activ_nuevo`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_nuevo.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.iactividad_val:string`, `post.iasistentes_val:string`, `post.id_nom_tipo_activ:string`, `post.isfsv_val:string`, `post.nom_tipo_activ:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/tipo_activ_update`
 
 - Id: `actividades.tipo_activ_update`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_update.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.id_tipo_activ:integer`, `post.nom_tipo_activ:string`
 - Respuesta: `standard_envelope_string_data`

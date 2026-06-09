@@ -102,7 +102,7 @@ class UbiInventario
         return 'id_ubi';
     }
 
-    /** @return array<string, mixed> */
+    /** @return list<DatosCampo> */
 
 
     public function getDatosCampos():array
@@ -110,7 +110,9 @@ class UbiInventario
         $oSet = new Set();
 
         $oSet->add($this->getDatosNom_ubi());
-        return $oSet->getTot();
+                /** @var list<DatosCampo> $campos */
+        $campos = array_values($oSet->getTot());
+        return $campos;
     }
 
     private function getDatosNom_ubi(): DatosCampo
@@ -121,7 +123,7 @@ class UbiInventario
         $oDatosCampo->setMetodoSet('setNom_ubi');
         $oDatosCampo->setEtiqueta(_("nombre del centro/casa"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument('30');
         return $oDatosCampo;
 
     }

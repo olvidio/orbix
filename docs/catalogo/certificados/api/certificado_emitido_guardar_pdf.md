@@ -6,12 +6,12 @@ url: "/src/certificados/certificado_emitido_guardar_pdf"
 metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php"
-entrada: ["post.certificado:string", "post.id_item:integer", "post.id_nom:integer", "post.pdf:mixed"]
+entrada: ["post.certificado:string", "post.id_item:integer", "post.id_nom:integer", "post.pdf:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 frontend_referencias: ["frontend/certificados/controller/certificado_emitido_2_mpdf.php"]
-casos_uso: ["src\\certificados\\application\\CertificadoEmitidoGuardarMessages"]
+casos_uso: ["src\\certificados\\application\\CertificadoEmitidoGuardarMessages", "src\\certificados\\application\\support\\CertificadosSession"]
 tags: ["certificados", "certificado", "emitido", "guardar", "pdf"]
 estado_revision: "generado"
 ---
@@ -36,7 +36,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `certificado` | `string` | controller | No | controller |
 | `id_item` | `integer` | controller | No | controller |
 | `id_nom` | `integer` | controller | No | controller |
-| `pdf` | `mixed` | controller | No | controller |
+| `pdf` | `string` | controller | No | controller |
 
 El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
@@ -49,6 +49,7 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 ## Casos De Uso
 
 - `src\certificados\application\CertificadoEmitidoGuardarMessages`
+- `src\certificados\application\support\CertificadosSession`
 
 ## Frontend Relacionado
 

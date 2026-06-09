@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Sacds Disponibles Data
 
-Endpoint backend: devuelve los sacd candidatos para asignar a una actividad (sacd del centro encargado + sacd globales segun bitmask `seleccion`).
+Endpoint backend: devuelve sacd candidatos para asignar a una actividad.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -35,6 +35,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 |-------|------|--------|-------------|-------|
 | `id_activ` | `integer` | controller+application | No | controller+application |
 | `seleccion` | `integer` | controller+application | No | controller+application |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

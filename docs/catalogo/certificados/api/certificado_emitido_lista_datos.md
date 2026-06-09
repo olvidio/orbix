@@ -18,7 +18,7 @@ estado_revision: "generado"
 
 # Certificado Emitido Lista Datos
 
-Esta página muestra una tabla con los certificados.
+Descripcion funcional pendiente de revisar.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -36,6 +36,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 | `certificado` | `string` | controller | No | controller |
 | `fincurs_ca_iso` | `string` | controller | No | controller |
 | `inicurs_ca_iso` | `string` | controller | No | controller |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 

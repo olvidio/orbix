@@ -10,7 +10,7 @@ entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "procesos_TipoActivProcesoListaData"
-respuesta_data: ["a_cabeceras:array", "a_tipos:array"]
+respuesta_data: ["a_cabeceras:list<string>", "a_tipos:list<array<string, mixed>>"]
 requiere_hashb: false
 frontend_referencias: ["frontend/procesos/controller/tipo_activ_proceso_lista.php"]
 casos_uso: ["src\\procesos\\application\\TipoActivProcesoLista"]
@@ -20,7 +20,7 @@ estado_revision: "generado"
 
 # Tipo Activ Proceso Lista
 
-Caso de uso: devuelve el listado estructurado de tipos de actividad con el proceso propio / no-propio asignado. El frontend renderiza la tabla con `frontend\shared\web\Lista`.
+Caso de uso: listado de tipos de actividad con proceso propio / no-propio.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -41,8 +41,8 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `procesos_TipoActivProcesoListaData`):
-  - `a_cabeceras` (`array`)
-  - `a_tipos` (`array`)
+  - `a_cabeceras` (`list<string>`)
+  - `a_tipos` (`list<array<string, mixed>>`)
 
 ## Casos De Uso
 

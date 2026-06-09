@@ -9,9 +9,11 @@ controller: "src/actividades/infrastructure/ui/http/controllers/actividad_editar
 entrada: ["post.desc_activ:string", "post.dl_org:string", "post.f_fin:string", "post.f_ini:string", "post.h_fin:string", "post.h_ini:string", "post.iactividad_val:integer", "post.iasistentes_val:integer", "post.id_activ:integer", "post.id_repeticion:integer", "post.id_tarifa:integer", "post.id_tipo_activ:integer", "post.id_ubi:integer", "post.idioma:string", "post.inom_tipo_val:string", "post.isfsv_val:integer", "post.lugar_esp:string", "post.nivel_stgr:integer", "post.nom_activ:string", "post.num_asistentes:integer", "post.observ:string", "post.observ_material:string", "post.plazas:integer", "post.precio:mixed", "post.publicado:string", "post.status:integer"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
+respuesta_data_schema: "actividades_ActividadEditarData"
+respuesta_data: ["error_txt:string, tipo_error?: string"]
 requiere_hashb: false
 frontend_referencias: []
-casos_uso: []
+casos_uso: ["src\\actividades\\application\\ActividadEditar"]
 tags: ["actividades", "actividad", "editar"]
 estado_revision: "generado"
 ---
@@ -33,42 +35,46 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `desc_activ` | `string` | controller | No | controller |
-| `dl_org` | `string` | controller | No | controller |
-| `f_fin` | `string` | controller | No | controller |
-| `f_ini` | `string` | controller | No | controller |
-| `h_fin` | `string` | controller | No | controller |
-| `h_ini` | `string` | controller | No | controller |
-| `iactividad_val` | `integer` | controller | No | controller |
-| `iasistentes_val` | `integer` | controller | No | controller |
-| `id_activ` | `integer` | controller | No | controller |
-| `id_repeticion` | `integer` | controller | No | controller |
-| `id_tarifa` | `integer` | controller | No | controller |
-| `id_tipo_activ` | `integer` | controller | No | controller |
-| `id_ubi` | `integer` | controller | No | controller |
-| `idioma` | `string` | controller | No | controller |
-| `inom_tipo_val` | `string` | controller | No | controller |
-| `isfsv_val` | `integer` | controller | No | controller |
-| `lugar_esp` | `string` | controller | No | controller |
-| `nivel_stgr` | `integer` | controller | No | controller |
-| `nom_activ` | `string` | controller | No | controller |
-| `num_asistentes` | `integer` | controller | No | controller |
-| `observ` | `string` | controller | No | controller |
-| `observ_material` | `string` | controller | No | controller |
-| `plazas` | `integer` | controller | No | controller |
-| `precio` | `mixed` | controller | No | controller |
-| `publicado` | `string` | controller | No | controller |
-| `status` | `integer` | controller | No | controller |
+| `desc_activ` | `string` | application | No | application |
+| `dl_org` | `string` | application | No | application |
+| `f_fin` | `string` | application | No | application |
+| `f_ini` | `string` | application | No | application |
+| `h_fin` | `string` | application | No | application |
+| `h_ini` | `string` | application | No | application |
+| `iactividad_val` | `integer` | application | No | application |
+| `iasistentes_val` | `integer` | application | No | application |
+| `id_activ` | `integer` | application | No | application |
+| `id_repeticion` | `integer` | application | No | application |
+| `id_tarifa` | `integer` | application | No | application |
+| `id_tipo_activ` | `integer` | application | No | application |
+| `id_ubi` | `integer` | application | No | application |
+| `idioma` | `string` | application | No | application |
+| `inom_tipo_val` | `string` | application | No | application |
+| `isfsv_val` | `integer` | application | No | application |
+| `lugar_esp` | `string` | application | No | application |
+| `nivel_stgr` | `integer` | application | No | application |
+| `nom_activ` | `string` | application | No | application |
+| `num_asistentes` | `integer` | application | No | application |
+| `observ` | `string` | application | No | application |
+| `observ_material` | `string` | application | No | application |
+| `plazas` | `integer` | application | No | application |
+| `precio` | `mixed` | application | No | application |
+| `publicado` | `string` | application | No | application |
+| `status` | `integer` | application | No | application |
+
+El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Payload en `data` (schema `actividades_ActividadEditarData`):
+  - `error_txt` (`string, tipo_error?: string`)
 
 ## Casos De Uso
 
-No se han detectado imports de `src\...\application\...`.
+- `src\actividades\application\ActividadEditar`
 
 ## Frontend Relacionado
 
