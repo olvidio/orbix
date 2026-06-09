@@ -107,6 +107,7 @@
     </div>
 
 
+    <?php if (empty($solo_lectura)): ?>
     <div id="modal_cuadricula_sacd" class='item-details-form' style="display: none">
 
         <div class="item-details-form-header">
@@ -162,6 +163,7 @@
             <button data-action='cancel' class='slick-btn slick-btn-default'>Cancel</button>
         </div>
     </div>
+    <?php endif; ?>
 
 </div>
 
@@ -177,9 +179,12 @@
 
 <script>
 
-    var modal = $('#modal_cuadricula_sacd');
+    var solo_lectura = <?= !empty($solo_lectura) ? 'true' : 'false' ?>;
+    var modal = solo_lectura ? $() : $('#modal_cuadricula_sacd');
     var modalHost = $('#cuadriculas');
-    fnjs_initItemDetailsFormDrag(modal, 'cuadriculaSacdModal');
+    if (!solo_lectura) {
+        fnjs_initItemDetailsFormDrag(modal, 'cuadriculaSacdModal');
+    }
 
     function showItemDetailsModal() {
         $('.item-details-form').not(modal).hide();
@@ -258,25 +263,27 @@
         return '';
     }
 
-    modal.keydown(function (e) {
-        if (e.which == Slick.keyCode.ENTER) {
+    if (!solo_lectura) {
+        modal.keydown(function (e) {
+            if (e.which == Slick.keyCode.ENTER) {
+                commitCurrentEdit();
+                e.stopPropagation();
+                e.preventDefault();
+            } else if (e.which == Slick.keyCode.ESCAPE) {
+                cancelCurrentEdit();
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        });
+
+        modal.find("[data-action=save]").click(function () {
             commitCurrentEdit();
-            e.stopPropagation();
-            e.preventDefault();
-        } else if (e.which == Slick.keyCode.ESCAPE) {
+        });
+
+        modal.find("[data-action=cancel]").click(function () {
             cancelCurrentEdit();
-            e.stopPropagation();
-            e.preventDefault();
-        }
-    });
-
-    modal.find("[data-action=save]").click(function () {
-        commitCurrentEdit();
-    });
-
-    modal.find("[data-action=cancel]").click(function () {
-        cancelCurrentEdit();
-    });
+        });
+    }
 
     function cancelCurrentEdit() {
         hideItemDetailsModal();
@@ -452,6 +459,9 @@
     }
 
     function openDetails(cell) {
+        if (solo_lectura) {
+            return;
+        }
         if (cell == null || cell.row == null || cell.cell == null) {
             return;
         }
@@ -599,7 +609,7 @@ var meta;
         editable: false,
         frozenColumn: 0,
         frozenRow: 0,
-        enableAddRow: true,
+        enableAddRow: false,
         enableCellNavigation: true,
         asyncEditorLoading: false,
         autoEdit: false
@@ -635,11 +645,13 @@ var meta;
     $(function () {
         grid = new Slick.Grid("#myGrid", data, columns, options);
 
-        grid.onClick.subscribe(function (e) {
-            var cell = grid.getCellFromEvent(e);
-            openDetails(cell);
-            e.stopPropagation();
-        });
+        if (!solo_lectura) {
+            grid.onClick.subscribe(function (e) {
+                var cell = grid.getCellFromEvent(e);
+                openDetails(cell);
+                e.stopPropagation();
+            });
+        }
 
         var fila =<?= (int)($fila ?? 0) ?>;
         var columna =<?= (int)($columna ?? 0) ?>;

@@ -11,8 +11,7 @@ use frontend\shared\security\HashFront;
 /**
  * Renderiza la cuadrícula de zona a partir de datos del backend.
  *
- * - `ver_cuadricula_zona.phtml`: tabla HTML de solo lectura.
- * - `modificar_cuadricula_zona.phtml`: SlickGrid editable (modal SACD).
+ * - `modificar_cuadricula_zona.phtml`: SlickGrid (solo lectura o editable con modal SACD).
  */
 class CuadriculaZonaRenderer
 {
@@ -30,7 +29,7 @@ class CuadriculaZonaRenderer
         string $camposSelf,
         array $overrides = []
     ): void {
-        self::render($data, $post, $url_self, $camposSelf, 'ver_cuadricula_zona.phtml', false, $overrides);
+        self::render($data, $post, $url_self, $camposSelf, 'modificar_cuadricula_zona.phtml', false, $overrides);
     }
 
     /**
@@ -90,6 +89,7 @@ class CuadriculaZonaRenderer
             'json_data_cuadricula' => $json_data_cuadricula,
             'url_ver_cuadricula_zona' => $url_self,
             'h_ver_cuadricula_zona' => $h_ver_cuadricula_zona,
+            'solo_lectura' => !$editable,
             'id_zona' => $pick('id_zona', $post['id_zona'] ?? 0, 'int'),
             'tipo_plantilla' => $pick('tipo_plantilla', $post['tipo_plantilla'] ?? '', 'string'),
             'orden' => $pick('orden', $post['orden'] ?? '', 'string'),
@@ -99,6 +99,10 @@ class CuadriculaZonaRenderer
             'empieza_max' => (string)($data['empieza_max'] ?? $post['empiezamax'] ?? ''),
             'fila' => $pick('fila', $post['fila'] ?? 0, 'int'),
             'columna' => $pick('columna', $post['columna'] ?? 0, 'int'),
+            'h_cuadricula_update' => '',
+            'url_cuadricula_update' => '',
+            'url_desplegable_sacd' => '',
+            'h_desplegable_sacd' => '',
         ];
 
         if ($editable) {

@@ -762,6 +762,7 @@ class Lista
 				
 				
 			$(function () {
+				var initGrid_$id_tabla = function () {
 				dataView_$id_tabla = new Slick.Data.DataView();
 				grid_$id_tabla = new Slick.Grid(\"#grid_$id_tabla\", dataView_$id_tabla, columns_$id_tabla, options);
 				grid_$id_tabla.setSelectionModel(new Slick.RowSelectionModel());
@@ -984,6 +985,12 @@ class Lista
 			$('#grid_$id_tabla').css({ width: '{$grid_width}px', height: '{$grid_height}px' });
 			$('#GridContainer_$id_tabla').css('max-width', '{$grid_width}px');
 			grid_$id_tabla.resizeCanvas();
+				};
+				if (typeof fnjs_ensureSlickLista === 'function') {
+					fnjs_ensureSlickLista(initGrid_$id_tabla);
+				} else {
+					initGrid_$id_tabla();
+				}
 		  })
 		</script>
 		";

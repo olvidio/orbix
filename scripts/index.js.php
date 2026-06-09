@@ -607,6 +607,54 @@ if (!isset($h)) {
         }
     }
 
+    /**
+     * Tras cargar vistas AJAX que reincluyen slick.core.js (p. ej. misas), window.Slick se
+     * sustituye y pierde Slick.Data aunque index.php ya hubiera cargado slick.dataview.js.
+     */
+    function fnjs_slickListaDepsReady() {
+        return !!(window.Slick
+            && Slick.Data && Slick.Data.DataView
+            && Slick.RowSelectionModel
+            && Slick.AutoTooltips
+            && Slick.Controls && Slick.Controls.Pager && Slick.Controls.ColumnPicker);
+    }
+
+    function fnjs_loadScriptFresh(src) {
+        return new Promise(function (resolve, reject) {
+            var s = document.createElement('script');
+            s.async = false;
+            s.src = src + (src.indexOf('?') >= 0 ? '&' : '?') + '_orbix=' + Date.now();
+            s.onload = function () { resolve(); };
+            s.onerror = function () { reject(new Error('No se pudo cargar ' + src)); };
+            document.head.appendChild(s);
+        });
+    }
+
+    function fnjs_ensureSlickLista(ready) {
+        if (fnjs_slickListaDepsReady()) {
+            ready();
+            return;
+        }
+        var slickBase = <?= json_encode(rtrim(ConfigGlobal::getWeb_NodeScripts(), '/') . '/slickgrid/dist/browser') ?>;
+        var autosizeUrl = <?= json_encode(rtrim(ConfigGlobal::getWeb_scripts(), '/') . '/slickgrid-orbix/slick-grid-autosize.js') ?>;
+        var urls = [
+            slickBase + '/slick.dataview.js',
+            slickBase + '/plugins/slick.autotooltips.js',
+            slickBase + '/plugins/slick.rowselectionmodel.js',
+            slickBase + '/controls/slick.pager.js',
+            slickBase + '/controls/slick.columnpicker.js',
+            autosizeUrl
+        ];
+        var chain = Promise.resolve();
+        urls.forEach(function (url) {
+            chain = chain.then(function () { return fnjs_loadScriptFresh(url); });
+        });
+        chain.then(function () { ready(); }).catch(function (err) {
+            console.error(err);
+            ready();
+        });
+    }
+
     function fnjs_mostra_resposta(respuesta, bloque) {
         var myText = '';
         switch (typeof respuesta) {
