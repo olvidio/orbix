@@ -16,9 +16,10 @@ use src\shared\infrastructure\logging\GestorErrores;
  */
 trait HandlesPdoErrors
 {
-    // Requiere que la clase que use el trait tenga un método setErrorTxt(string): self
-    // (provisto por src\shared\infrastructure\persistence\ClaseRepository como método protegido). No se declara abstract para
-    // mantener compatibilidad de visibilidad y tipo de retorno.
+    /**
+     * Lo implementa ClaseRepository o StoresPdoErrorTxt.
+     */
+    abstract protected function setErrorTxt(string $sErrorTxt): object;
 
     /**
      * Si es true, el trait lanza RuntimeException al fallar; si es false, devuelve false.

@@ -9,13 +9,3 @@ parameters:
     scanFiles:
         - frontend/shared/helpers/func_tablas.php
         - src/shared/domain/helpers/func_tablas.php
-    ignoreErrors:
-        -
-            identifier: trait.unused
-            path: src/shared/traits/DispatchesDomainEvents.php
-        -
-            identifier: trait.unused
-            path: src/shared/traits/HandlesPgBytea.php
-        -
-            identifier: trait.unused
-            path: src/shared/infrastructure/ProvidesRepositories.php

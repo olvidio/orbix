@@ -12,6 +12,7 @@ use src\personas\domain\entity\PersonaGlobal;
 use function src\shared\domain\helpers\is_true;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
+use src\shared\traits\StoresPdoErrorTxt;
 
 /**
  * GestorCargoOAsistente — lista de objetos CargoOAsistente.
@@ -19,6 +20,7 @@ use src\shared\traits\HandlesPdoErrors;
 class PgCargoOAsistente implements CargoOAsistenteInterface
 {
     use HandlesPdoErrors;
+    use StoresPdoErrorTxt;
 
     private PDO $oDbl;
 

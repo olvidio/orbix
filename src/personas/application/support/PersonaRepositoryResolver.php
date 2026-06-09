@@ -13,11 +13,6 @@ use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
  * Helper transversal para resolver el repositorio de una persona
  * a partir de su `obj_pau` (PersonaN, PersonaAgd, ...) o de su
  * `id_tabla` (n, a, s, sssc, pn, pa, x, cp_sss).
- *
- * Centraliza la clase anonima `new class { use ProvidesRepositories; }`
- * que estaba copiada en 6 controllers del modulo (`home_persona`,
- * `personas_editar`, `personas_update`, `stgr_cambio`, `stgr_update`,
- * `traslado_update`) junto con el mapa `id_tabla -> obj_pau`.
  */
 final class PersonaRepositoryResolver
 {

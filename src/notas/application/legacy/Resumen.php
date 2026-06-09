@@ -14,6 +14,7 @@ use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use src\shared\traits\HandlesPdoErrors;
+use src\shared\traits\StoresPdoErrorTxt;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -24,6 +25,7 @@ class Resumen
 {
 
     use HandlesPdoErrors;
+    use StoresPdoErrorTxt;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
