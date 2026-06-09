@@ -1,5 +1,11 @@
 -- aux_menus: entrada "Cambiar estado" (misas) en todos los esquemas sv-e (datos, idempotente).
 -- Criterio de existencia: id_metamenu = 6. id_menu lo asigna la secuencia de la BD.
+SELECT setval(
+    '*.aux_menus_id_menu_seq'::regclass,
+    COALESCE((SELECT MAX(id_menu) FROM *.aux_menus), 1),
+    true
+);
+
 UPDATE *.aux_menus
 SET orden = '{110,26}',
     menu = 'Cambiar estado',
