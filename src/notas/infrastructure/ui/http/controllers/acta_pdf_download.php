@@ -4,7 +4,6 @@ use src\shared\infrastructure\DependencyResolver;
 use frontend\shared\helpers\SignedDownloadToken;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 $tkRaw = $_GET['tk'] ?? '';
 $tk = is_string($tkRaw) ? trim($tkRaw) : '';

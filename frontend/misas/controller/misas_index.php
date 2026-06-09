@@ -2,9 +2,11 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 // Index estatico: enlaces canonicos `frontend/misas/controller/...` (Slice 11).
 // Los `apps/misas/controller/*.php` homonimos siguen como wrappers por enlaces viejos.
 $goModificarPlantilla = HashFront::link('frontend/misas/controller/modificar_plantilla.php');

@@ -4,7 +4,6 @@ use frontend\shared\helpers\SignedDownloadToken;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 $tk = (isset($_GET['tk']) && is_scalar($_GET['tk'])) ? trim((string) $_GET['tk']) : '';
 

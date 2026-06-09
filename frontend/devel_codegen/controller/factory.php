@@ -16,7 +16,8 @@ use function src\shared\domain\helpers\is_true;
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 require_once __DIR__ . '/func_factory.php';
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -891,6 +892,7 @@ $txt_pgRepositorio .= "
 use src\\$grupo\\domain\\entity\\$Q_clase;
 use src\\$grupo\\domain\\contracts\\$clase_interface;
 use src\\shared\\traits\\HandlesPdoErrors;
+use frontend\shared\FrontBootstrap;
 ";
 
 $use_txt = '';

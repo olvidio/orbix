@@ -3,9 +3,11 @@
 use frontend\inventario\domain\ListaAgrupar;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
 // Crea los objetos de uso global **********************************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');

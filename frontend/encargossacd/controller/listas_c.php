@@ -2,6 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Listado de atencion SACD segun cr 9/05, Anexo2, 9.4 c).
@@ -12,7 +13,8 @@ use frontend\shared\PostRequest;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_c_data', []);

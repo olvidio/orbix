@@ -64,6 +64,8 @@ class DBEsquema extends DBAbstract
             case "x_config_schema":
                 $nom_tabla = $this->getNomTabla($tabla);
                 break;
+            default:
+                throw new \InvalidArgumentException('Tabla desconocida: ' . $tabla);
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
         $datosTabla['campo_seq'] = $campo_seq;

@@ -20,9 +20,11 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $a_Claves = [
     'com_sacd' => _("comunicación a los sacerdotes"),
     't_propio' => _("titulo: propio"),

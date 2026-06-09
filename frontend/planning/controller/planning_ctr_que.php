@@ -7,6 +7,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Formulario de filtros para el planning por centros (personas de un
@@ -15,8 +16,8 @@ use frontend\shared\web\Posicion;
  * Migrado desde `apps/planning/controller/planning_ctr_que.php`
  * (slice 2 de la migracion del modulo planning).
  */
-require_once('frontend/shared/global_header_front.inc');
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 

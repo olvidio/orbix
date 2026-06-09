@@ -11,7 +11,7 @@ Hoy existe **una sola clase de hash** para todo:
 - Vive en `apps/web/Hash.php`, namespace `web\Hash`.
 - Firma con `md5(strOrdenado + session_id() + "a+a+")`. El "secreto" es el `session_id` + una sal constante.
 - Se usa tanto para **emitir** tokens (métodos `getCamposHtml`, `linkSinVal`, `linkConVal`, `Hash::link`, `Hash::add_hash`, `Hash::cmdCon/SinParametros`, `getParamAjax*`) como para **validar** los que llegan (`validatePost`).
-- La validación se invoca en dos headers globales que se incluyen en casi todo: `apps/core/global_object.inc` y `frontend/shared/global_header_front.inc`.
+- La validación se invoca en dos bootstraps: `src/shared/global_object.inc` (vía `after_global_object.inc`) para `/src/...` y `frontend\shared\FrontBootstrap` para controladores `frontend/`.
 - Como `frontend/` y `src/` son el mismo monolito PHP con la misma cookie `PHPSESSID`, el mismo `session_id()` sirve de secreto a ambos lados. Es una **coincidencia del monolito**, no una decisión arquitectónica.
 
 Cuatro síntomas del problema conceptual:
@@ -33,7 +33,7 @@ Dos clases distintas con responsabilidades asimétricas.
 - Sigue el algoritmo actual (session-derived) **sin cambios**.
 - **Simétrica:** cualquier código de `frontend/` puede firmar y cualquier código de `frontend/` puede validar.
 - Usos:
-    - Anti-CSRF para endpoints en `frontend/` (validación en `global_header_front.inc`).
+    - Anti-CSRF para endpoints en `frontend/` (validación en `FrontBootstrap::boot()` / `HashFront::validatePost`).
     - Integridad de URL en navegaciones `frontend/`↔`frontend/` (listas, filtros, paginación, scroll memory).
     - Integridad de nombres de campos en forms (el `h` de hoy): el usuario puede editar los valores, pero no puede añadir/quitar campos.
 - `src/` **no importa** `HashF`. Las piezas de `src/` que hoy generan URLs para el navegador (layouts, etc.) se mueven a `frontend/shared/` (ver §7.2).
@@ -170,7 +170,7 @@ Para acciones "crear nuevo" donde aún no hay recurso, la cápsula contiene solo
 | **Formato** | Parámetros `h`, `hh`, `hno`, `hchk`, `hnov`, `horig`, `hpos` como hoy | Token opaco `base64(payload).sig` |
 | **El navegador lo ve** | Sí (es su CSRF, debe verlo) | Sí (lo transporta), pero opaco y sin posibilidad de manipulación útil |
 | **Métodos del emisor** | `getCamposHtml`, `linkSinVal`, `linkConVal`, `Hash::link`, `Hash::add_hash`, … | `HashB::sign($action, $context, $ttl?)` |
-| **Método del receptor** | `validatePost` en `global_header_front.inc` | `HashB::open($ctx, $expectedAction)` en cada controlador HTTP de `src/` |
+| **Método del receptor** | `validatePost` en `FrontBootstrap` (`HashFront`) | `HashB::open($ctx, $expectedAction)` en cada controlador HTTP de `src/` |
 | **Quién puede llamar al emisor** | `frontend/` (controllers, views) | `src/` (controllers HTTP, `application/` cuando responde lecturas) |
 | **Quién puede llamar al receptor** | Cualquier controlador `frontend/` | Cualquier controlador `src/` |
 
@@ -208,23 +208,16 @@ Para acciones "crear nuevo" donde aún no hay recurso, la cápsula contiene solo
 
 ## 7. Qué piezas toca esta migración
 
-### 7.1 La validación del header frontend
+### 7.1 La validación del bootstrap frontend
 
-`frontend/shared/global_header_front.inc` hoy hace:
+`frontend\shared\FrontBootstrap::boot()` (sustituto del antiguo `global_header_front.inc`) hace:
 
 ```php
-$oValidator = new Hash();
+$oValidator = new HashFront();
 echo $oValidator->validatePost($a_data);
 ```
 
-Pasa a:
-
-```php
-$oValidator = new HashF();
-echo $oValidator->validatePost($a_data);
-```
-
-Y **no** valida `HashB`. Si un endpoint de `src/` necesita verificar cápsula, lo hace él mismo con `HashB::open`.
+En la visión futura pasará a `HashF`. **No** valida `HashB`. Si un endpoint de `src/` necesita verificar cápsula, lo hace él mismo con `HashB::open`.
 
 ### 7.2 `apps/web/Hash.php`, `apps/web/Posicion.php`, `src/layouts/*`
 

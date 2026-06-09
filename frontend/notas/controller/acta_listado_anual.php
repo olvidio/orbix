@@ -7,9 +7,11 @@ use frontend\shared\web\Periodo;
 use frontend\shared\web\PeriodoQue;
 
 use function frontend\shared\helpers\strtoupper_dlb;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qyear = (string)filter_input(INPUT_POST, 'year');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');

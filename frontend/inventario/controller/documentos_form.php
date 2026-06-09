@@ -4,9 +4,11 @@
  * Antes en `src/inventario/.../documentos_form.php`.
  */
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');
 $Qdocumentos = (string)filter_input(INPUT_POST, 'documentos');
 

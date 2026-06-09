@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $QEsquemaMatriz = (string) filter_input(INPUT_POST, 'esquema_matriz');
 $QEsquemaDel = (string) filter_input(INPUT_POST, 'esquema_del');
 

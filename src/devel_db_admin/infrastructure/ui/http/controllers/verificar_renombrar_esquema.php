@@ -11,7 +11,6 @@ use src\devel_db_admin\application\RenombrarEsquemaVerificacionContexto;
 use src\devel_db_admin\application\VerificarEstadoRenombrarEsquema;
 use src\shared\web\ContestarJson;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 $QEsquemaOrigen = trim((string) filter_input(INPUT_POST, 'esquema_origen'));
 if ($QEsquemaOrigen === '') {

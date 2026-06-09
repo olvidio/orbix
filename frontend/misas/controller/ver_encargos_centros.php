@@ -5,9 +5,11 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
 
 $data = PostRequest::getDataFromUrl('/src/misas/ver_encargos_centros_data', [

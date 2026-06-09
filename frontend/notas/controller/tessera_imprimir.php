@@ -19,9 +19,11 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 // En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);

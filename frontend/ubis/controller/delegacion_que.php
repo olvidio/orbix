@@ -2,11 +2,13 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/ubis/delegacion_que_data', []);
 if (!empty($data['error'])) {
     exit((string)$data['error']);

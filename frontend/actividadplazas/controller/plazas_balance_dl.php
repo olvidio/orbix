@@ -15,9 +15,11 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\TablaEditable;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $campos = [
     'dl' => (string)filter_input(INPUT_POST, 'dl'),
     'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),

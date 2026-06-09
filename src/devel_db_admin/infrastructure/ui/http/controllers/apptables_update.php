@@ -9,7 +9,6 @@ declare(strict_types=1);
 use src\devel_db_admin\application\ApptablesUpdate;
 use src\shared\web\ContestarJson;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 try {
     $result = (new ApptablesUpdate())->ejecutar($_POST);

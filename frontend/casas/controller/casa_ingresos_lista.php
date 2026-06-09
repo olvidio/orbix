@@ -7,9 +7,11 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $campos = [
     'id_cdc' => (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
     'periodo' => (string)filter_input(INPUT_POST, 'periodo'),

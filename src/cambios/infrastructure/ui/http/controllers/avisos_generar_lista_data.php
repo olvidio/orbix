@@ -12,7 +12,6 @@ use src\shared\web\ContestarJson;
 
 use function src\shared\domain\helpers\input_int;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 $input = [
     'id_usuario' => input_int($_POST, 'id_usuario'),

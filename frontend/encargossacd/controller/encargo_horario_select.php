@@ -4,6 +4,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Listado de horarios de un encargo. Los datos vienen de
@@ -12,7 +13,8 @@ use frontend\shared\web\Lista;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();

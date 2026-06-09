@@ -5,9 +5,11 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 /**
  * Dispatcher AJAX para el parámetro `contribucion_no_duerme`.
  *

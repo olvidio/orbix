@@ -5,9 +5,11 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
+use frontend\shared\FrontBootstrap;
 
 // Crea los objetos de uso global **********************************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->setBloque('#ficha'); // antes del recordar

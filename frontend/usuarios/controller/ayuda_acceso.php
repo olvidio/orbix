@@ -9,9 +9,6 @@ use frontend\shared\web\UrlBaseProject;
  * Esta página proporciona instrucciones detalladas para usuarios que han perdido
  * acceso a su aplicación de autenticación y necesitan restablecer su configuración de 2FA.
  */
-// Crea los objetos de uso global **********************************************
-//require_once("frontend/shared/global_header_front.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 require __DIR__ . '/../../../libs/vendor/autoload.php';
 
 $Qusername = (string)filter_input(INPUT_POST, 'username');

@@ -10,7 +10,6 @@ use src\shared\web\ContestarJson;
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string_list;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 $a_sel = input_string_list($_POST, 'sel');
 if ($a_sel !== []) {

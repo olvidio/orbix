@@ -6,6 +6,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Esta página muestra una tabla con los ubis seleccionados.
@@ -17,8 +18,8 @@ use frontend\shared\web\Posicion;
  *
  * Se tiene en cuenta si es una vuelta de un go_to
  */
-require_once("frontend/shared/global_header_front.inc");
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
 //Si vengo por medio de Posicion, borro la última

@@ -9,9 +9,11 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/devel_db_admin/migraciones_lista_data');
 $data = is_array($data) ? $data : [];
 

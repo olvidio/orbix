@@ -9,6 +9,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Planning (calendario) por zonas sacd. Datos vía `PostRequest` → `/src/planning/planning_zones_select_data`
@@ -19,9 +20,8 @@ use frontend\shared\web\Posicion;
  * hacia `echo` de HTML e incluia directamente los CSS y el calendario;
  * ahora la presentacion vive en la vista PHTML.
  */
-require_once("frontend/shared/global_header_front.inc");
-
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 

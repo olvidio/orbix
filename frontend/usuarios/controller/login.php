@@ -14,8 +14,8 @@ use src\usuarios\application\LoginProcesar;
  * Guardia de sesion del sistema web.
  *
  * No es una URL convencional: se incluye via `require_once(...)` desde los
- * bootstraps globales (`apps/core/global_object.inc` y
- * `frontend/shared/global_header_front.inc`) en CADA request.
+ * bootstraps globales (`src/shared/global_object.inc` y
+ * `frontend\shared\FrontBootstrap`) en CADA request del frontend.
  *
  *   - Si hay `$_SESSION['session_auth']` ya asentada -> asegura gettext y
  *     sigue.

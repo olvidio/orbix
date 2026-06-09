@@ -5,7 +5,7 @@
 `apps/permisos/controller/login_obj.php` **no es un controlador HTTP con URL propia**: se incluye con `require_once(...)` en:
 
 - `apps/core/global_object.inc:51` (bootstrap global que usan todas las pantallas legacy y la mayor parte del backend).
-- `frontend/shared/global_header_front.inc:40` (bootstrap del frontend refactorizado).
+- `frontend/shared/FrontBootstrap.php` (bootstrap del frontend refactorizado).
 
 Actua como **guardia de sesion**: si `$_SESSION['session_auth']` no existe, dibuja el form de login (y muere), y si llega POST de login valida y rellena `$_SESSION['session_auth']` y `$_SESSION['config']`.
 
@@ -28,7 +28,7 @@ Actua como **guardia de sesion**: si `$_SESSION['session_auth']` no existe, dibu
 
 ## Flujo
 
-1. `session_start()` (hecho en `global_object.inc` / `global_header_front.inc` antes del require).
+1. `session_start()` (hecho en `global_object.inc` / `FrontBootstrap::boot()` antes del require de login).
 2. Validar `$esquema_web` contra `DBPropiedades::array_posibles_esquemas(FALSE, TRUE)`. Si no existe -> `die("No existe este esquema: ...")`.
 3. Rama sin `session_auth`:
    - Si **no** hay POST -> renderiza `login_form2.phtml` con `error=0`, cookies, `DesplRegiones`.
@@ -85,7 +85,7 @@ Las cadenas traducibles viven en los `.po` bajo `permisos/controller/login_obj.p
   - `src/usuarios/infrastructure/ui/http/controllers/usuario_check_pwd.php`.
   - `src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php`.
   - `src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php`.
-- `apps/core/global_object.inc` y `frontend/shared/global_header_front.inc` pasan a requerir `frontend/usuarios/controller/login.php`.
+- `src/shared/global_object.inc` y `FrontBootstrap` pasan a requerir `frontend/usuarios/controller/login.php`.
 
 ## Fuera del alcance de este slice
 

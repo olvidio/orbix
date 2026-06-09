@@ -13,9 +13,11 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $isfsv = empty($_REQUEST['isfsv']) ? '' : $_REQUEST['isfsv'];
 $ssfsv = empty($_REQUEST['ssfsv']) ? '' : $_REQUEST['ssfsv'];
 

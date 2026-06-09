@@ -16,7 +16,7 @@ function css_colores_estilo_desde_sesion(): array
 {
     $estilo_color = 'azul';
     $tipo_menu = 'horizontal';
-    // Tras session_write_close() (p. ej. global_header_front.inc en peticiones AJAX del
+    // Tras session_write_close() (p. ej. FrontBootstrap en peticiones AJAX del
     // planning) la sesión deja de estar "active" pero $_SESSION sigue disponible en memoria.
     $auth = $_SESSION['session_auth'] ?? null;
     if (!is_array($auth) || empty($auth['id_usuario']) || empty($auth['esquema'])) {

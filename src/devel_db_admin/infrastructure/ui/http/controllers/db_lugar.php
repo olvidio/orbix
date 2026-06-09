@@ -11,7 +11,6 @@ use src\devel_db_admin\application\DbLugarDropdown;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 /** @var DelegacionRepositoryInterface $repoDl */
 $repoDl = DependencyResolver::get(DelegacionRepositoryInterface::class);

@@ -4,6 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\DesplegableArray;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Esta página sirve para asignar una dirección a un determinado ubi.
@@ -16,8 +17,9 @@ use frontend\shared\security\HashFront;
  */
 // INICIO Cabecera global de URL de controlador *********************************
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $aOpciones = array(
     'get_labor' => _("labor"),
     'get_num' => _("pi, cartas, nº buzón"),

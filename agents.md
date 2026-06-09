@@ -377,7 +377,7 @@ final class BañoTipo {
 ## Manejo de Navegación y Estado ($oPosicion)
 
 ### Conceptos Clave
-- **$oPosicion**: Objeto principal para gestionar el historial de navegación y la persistencia de parámetros entre páginas. Se define en `frontend\shared\web\Posicion` y se instancia en `frontend/shared/global_header_front.inc`. Usa `$_SESSION['position']` como backing store.
+- **$oPosicion**: Objeto principal para gestionar el historial de navegación y la persistencia de parámetros entre páginas. Se define en `frontend\shared\web\Posicion` y se instancia con `FrontBootstrap::boot()`. Usa `$_SESSION['position']` como backing store.
 - **js_atras(n)**: Método fundamental para retornar `n` pasos en el historial. Genera el código JS necesario para la navegación.
 - **addParametro($key, $valor, $fila)** / **setParametros($aVars, $fila)**: Permiten persistir datos en una fila concreta de la pila. Si `$fila = 1`, el parámetro se guarda en la posición anterior, facilitando su recuperación al volver atrás. `setParametros` además persiste en sesión (`guardar()`).
 
@@ -392,11 +392,10 @@ final class BañoTipo {
 ### Patrón canónico en controllers frontend
 ```php
 // frontend/<modulo>/controller/<pagina>.php
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar((int)filter_input(INPUT_POST, 'refresh'));
-
-$campos = array_merge($_GET, $_POST);
 
 // Resolver aquí cualquier estado de navegación que el builder necesite:
 $stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
@@ -424,7 +423,7 @@ La clase **`src\permisos\domain\PermisosActividades`** nació para **tener en se
 **Separación objetivo (evolución recomendada):**
 
 1. **Read model en sesión (solo datos ya cargados)**  
-   Lo que pertenece a la sesión es la **matriz cacheada** (`aPermDl`, `aPermOtras` y la lógica que recorre tipos / fases ref **solo con esos arrays**). Idealmente sería un tipo dedicado (p. ej. *matriz* o *snapshot*) serializable, sin métodos que asuman `$GLOBALS['container']` ni `$GLOBALS['oDBE']` en requests que solo pasan por `frontend/shared/global_header_front.inc`.
+   Lo que pertenece a la sesión es la **matriz cacheada** (`aPermDl`, `aPermOtras` y la lógica que recorre tipos / fases ref **solo con esos arrays**). Idealmente sería un tipo dedicado (p. ej. *matriz* o *snapshot*) serializable, sin métodos que asuman `$GLOBALS['container']` ni `$GLOBALS['oDBE']` en requests frontend que solo pasan por `FrontBootstrap::boot()` (sin `global_object.inc`).
 
 2. **Resolución con I/O en el backend (`src/` + petición HTTP)**  
    Cualquier cosa que implique **consultar la actividad por `id_activ`**, **estado de fase en proceso** (`faseCompletada`, etc.) o **árbol de procesos / tipos** (`getPermisoCrear` y similares) es **caso de uso de aplicación / infra**: debe ejecutarse en un script bajo `global_object` (o endpoint JSON) y, desde controladores **`frontend/`**, llegar como **`PostRequest::getDataFromUrl`** o datos ya incluidos en un DTO grande (p. ej. ampliar `actividad_ver_datos`), no llamando al contenedor desde un objeto de sesión.
@@ -450,7 +449,7 @@ Patrones que han roto producción (avisos `session_id()` / JSON corrupto / hash 
    En POST internos desde `frontend/`, revisar que los metadatos de navegación/hash que no pertenecen al formulario destino (p. ej. **`hpos`**) se normalicen en `PostRequest` para que la URL firmada coincida con la que valida el endpoint; si no, errores de hash o redirecciones (302) inesperadas.
 
 3. **Includes de tema después de `echo`**  
-   Tras cualquier salida (`mostrar_left_slide`, `echo` previo, etc.), **no** cargar **`global_object.inc`** (ni stack que llame a `session_id()` / rearranque de sesión) desde rutas como **`css/colores.php`** o entrypoints de estilos. Resolver estilo con bootstrap mínimo (p. ej. autoload + lectura de preferencia sin DI pesada, como **`css/colores_estilo_desde_sesion.php`**). Los `.css.php` servidos como recurso **no** deben pasar por `global_header_front.inc` si eso imprime HTML o cierra sesión antes de servir CSS.
+   Tras cualquier salida (`mostrar_left_slide`, `echo` previo, etc.), **no** cargar **`global_object.inc`** (ni stack que llame a `session_id()` / rearranque de sesión) desde rutas como **`css/colores.php`** o entrypoints de estilos. Resolver estilo con bootstrap mínimo (p. ej. autoload + lectura de preferencia sin DI pesada, como **`css/colores_estilo_desde_sesion.php`**). Los `.css.php` servidos como recurso **no** deben pasar por `FrontBootstrap::boot()` si eso imprime HTML o cierra sesión antes de servir CSS.
 
 4. **`src/` sin `core\` implícito**  
    Clases en `src/domain` (o servicios usados solo vía JSON) no deben extender o importar **`core\...`** que no esté garantizado por el autoload de esa petición; si hace falta un helper, usar uno en `src/shared/domain/helpers/` o un adaptador en `infrastructure`.
@@ -519,7 +518,7 @@ Para abrir en **nueva pestaña** (`window.open`) enlaces que sirven **binarios d
 
 **Helper:** `frontend\shared\helpers\SignedDownloadToken`
 
-- **Variable de entorno (producción):** `ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET` — cadena secreta larga y estable (mismo valor en todos los procesos PHP que emitan o verifiquen el token). Declararla en `.env` en la raíz del proyecto (plantilla **`.env.example`**; carga con **`src/shared/load_env.php`** desde `src/shared/global_header.inc` y `frontend/shared/global_header_front.inc`). Si falta, hay un **fallback de desarrollo** derivado de la ruta raíz del proyecto y del prefijo de firma (no sustituye un secreto explícito en entornos expuestos).
+- **Variable de entorno (producción):** `ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET` — cadena secreta larga y estable (mismo valor en todos los procesos PHP que emitan o verifiquen el token). Declararla en `.env` en la raíz del proyecto (plantilla **`.env.example`**; carga con **`src/shared/load_env.php`** desde `src/shared/global_header.inc` o dentro de `FrontBootstrap::boot()`). Si falta, hay un **fallback de desarrollo** derivado de la ruta raíz del proyecto y del prefijo de firma (no sustituye un secreto explícito en entornos expuestos).
 - **Prefijo criptográfico** (entra en el HMAC, no es secreto): **`orbix.signed_dl.v1`**. Cualquier cambio de prefijo invalida los `tk` ya emitidos.
 - **TTL:** 600 s desde `e` en el payload JSON interno.
 - **Payload:** debe incluir siempre el alcance **`s`** y **`e`** (expiración); además identificadores por tipo (p. ej. `a` para id de acta, `id` para id de ítem de certificado). **`parse()`** rechaza tokens sin `s` o con firma/expiración incorrecta.
@@ -570,7 +569,7 @@ Las pantallas bajo `frontend/devel_db_admin/` siguen el mismo criterio que el re
 
 - **Casos de uso / orquestación** (efectos secundarios, SQL, ficheros): clases en `src/devel_db_admin/application/` (p. ej. `CrearEsquema`, `CopiarEsquema`, `RenombrarEsquema`, `EliminarEsquemaDl`, `MoverTabla`, `AbsorberEsquema`, `CrearUsuarios`). Cuando necesiten el contenedor DI, reciben `object $container` en constructor (herramienta interna; excepción pragmática a “no `$GLOBALS` en application” solo en este módulo de administración).
 - **Rutas:** `src/devel_db_admin/config/routes.php` registra cada acción (`/src/devel_db_admin/copiar_esquema`, `crear_esquema`, `renombrar_esquema`, `eliminar_esquema`, `crear_usuarios`, `absorber_esquema`, `mover_tabla`, etc.).
-- **Controladores HTTP:** `src/devel_db_admin/infrastructure/ui/http/controllers/*.php` hacen `require_once 'frontend/shared/global_header_front.inc'`, leen `$_POST` / `filter_input`, invocan la clase de `application/` y responden con **`ContestarJson::enviar`** (`data` string `"ok"` o un objeto/array con campos como `lines`, credenciales, `a_esquemas`+`lines` para mover, etc.). Errores de negocio que deben cortar el flujo: `ContestarJson::enviar($mensaje, 'none')` para que `PostRequest` trate `success === false` y haga `exit` con el mensaje.
+- **Controladores HTTP:** `src/devel_db_admin/infrastructure/ui/http/controllers/*.php` leen `$_POST` / `filter_input`, invocan la clase de `application/` y responden con **`ContestarJson::enviar`** (`data` string `"ok"` o un objeto/array con campos como `lines`, credenciales, `a_esquemas`+`lines` para mover, etc.). El bootstrap (sesión, DI, hash) lo aporta `public/index.php` → `global_object.inc`. Errores de negocio que deben cortar el flujo: `ContestarJson::enviar($mensaje, 'none')` para que `PostRequest` trate `success === false` y haga `exit` con el mensaje.
 - **Controladores frontend:** `frontend/devel_db_admin/controller/*.php` solo leen el request del navegador, llaman a `PostRequest::getDataFromUrl('/src/devel_db_admin/<endpoint>', $campos)` y muestran HTML/mensajes con los datos devueltos (o el texto fijo que ya existía). **Prohibido** `use src\devel_db_admin\application\...` en esos controladores para ejecutar la operación (sí puede existir `use` residual solo si otra regla del repo lo exige; el flujo canónico es el endpoint).
 
 **Datos de formulario / desplegables (solo lectura):**
@@ -598,7 +597,7 @@ Guía para seguir moviendo pantallas desde `apps/` hacia `frontend/` + `src/` si
 | Backend API | `src/<modulo>/infrastructure/ui/http/controllers/*.php` | Orquestación HTTP mínima: leer input, llamar a `application`, responder con `ContestarJson::enviar($error, $data)`. Sin `echo` de HTML ni `Lista` aquí. |
 | Caso de uso | `src/<modulo>/application/*.php` | Montar arrays de datos usando repositorios/servicios del contenedor. Devolver datos listos para serializar; el controlador HTTP llama a `ContestarJson::enviar`. |
 | Rutas HTTP | `src/<modulo>/config/routes.php` | Registrar `/src/<modulo>/<nombre>` con GET y POST si hace falta (compatibilidad). |
-| Frontend controlador | `frontend/<modulo>/controller/*.php` | `require_once("frontend/shared/global_header_front.inc")`, `PostRequest::getDataFromUrl('/src/...', $campos)`, construir `web\Lista` u otros componentes UI, pasar variables a la vista. |
+| Frontend controlador | `frontend/<modulo>/controller/*.php` | `FrontBootstrap::boot()`, `PostRequest::getDataFromUrl('/src/...', $campos)`, construir `web\Lista` u otros componentes UI, pasar variables a la vista. |
 | Frontend vista | `frontend/<modulo>/view/*.phtml` | Presentación: HTML, scripts, `mostrar_tabla()`, sin consultas a BD ni contenedor. |
 | Compatibilidad legacy | `apps/<modulo>/controller/*.php` | Opcional: `require` al controlador `frontend` equivalente. Comentar que la URL `apps/...` está **deprecada** para enlaces nuevos. |
 

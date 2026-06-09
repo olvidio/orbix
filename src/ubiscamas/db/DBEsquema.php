@@ -59,6 +59,8 @@ class DBEsquema extends DBAbstract
                 $nom_tabla = $this->getNomTabla($tabla);
                 $campo_seq = 'id_cama';
                 break;
+            default:
+                throw new \InvalidArgumentException('Tabla desconocida: ' . $tabla);
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
         $datosTabla['campo_seq'] = $campo_seq;

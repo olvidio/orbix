@@ -17,9 +17,11 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');

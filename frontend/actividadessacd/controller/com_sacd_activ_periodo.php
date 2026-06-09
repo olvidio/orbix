@@ -32,9 +32,11 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $Qid_nom = (int)filter_input(INPUT_POST, 'id_nom');
 $Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
 $Qque = (string)filter_input(INPUT_POST, 'que');

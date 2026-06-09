@@ -6,9 +6,11 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 // Archivos requeridos por esta url **********************************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 // Crea los objetos de uso global **********************************************
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');

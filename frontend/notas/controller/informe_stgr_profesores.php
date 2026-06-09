@@ -4,6 +4,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 
 use function frontend\shared\helpers\strtoupper_dlb;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Informe anual STGR - Profesores (puntos 36..47).
@@ -15,8 +16,9 @@ use function frontend\shared\helpers\strtoupper_dlb;
  * @subpackage estudios
  */
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 
 $datos = PostRequest::getDataFromUrl('/src/notas/informe_stgr_profesores_data', [

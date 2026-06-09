@@ -8,6 +8,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Formulario para trasladar una persona de centro y/o delegacion.
@@ -19,9 +20,8 @@ use frontend\shared\web\Posicion;
  * `src/personas/application/TrasladoFormData.php` tras el endpoint
  * `/src/personas/traslado_form_data`. Este controlador no importa clases `src\`.
  */
-require_once("frontend/shared/global_header_front.inc");
-
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 

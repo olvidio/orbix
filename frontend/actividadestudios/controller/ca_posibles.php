@@ -4,6 +4,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Periodo;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Esta página sirve para calcular los créditos cursables para cada alumno en cada ca.
@@ -17,7 +18,8 @@ use frontend\shared\web\Periodo;
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************

@@ -1,11 +1,14 @@
 <?php
 
+use frontend\shared\FrontBootstrap;
+
 /**
  * Compatibilidad: despacha por `que` a los controladores finos (mismo patrón que ubis_lista.php).
  */
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {

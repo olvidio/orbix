@@ -3,9 +3,11 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\asistentes\helpers\ActivPendientesSelectRender;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $campos = array_merge($_GET, $_POST);
 $data = PostRequest::getDataFromUrl('/src/asistentes/activ_pendientes_select_data', $campos);
 /** @var array<string, mixed> $payload */

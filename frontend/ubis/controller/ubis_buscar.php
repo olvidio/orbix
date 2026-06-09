@@ -4,6 +4,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\strtoupper_dlb;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Es un formulario para introducir las condiciones de búsqueda de los ubis.
@@ -15,8 +16,8 @@ use function frontend\shared\helpers\strtoupper_dlb;
  * @since        15/5/02.
  *
  */
-require_once("frontend/shared/global_header_front.inc");
-
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/ubis/ubis_buscar_data', []);
 $opciones_region = $data['opciones_region'] ?? [];
 $opciones_tipo_ctr = $data['opciones_tipo_ctr'] ?? [];

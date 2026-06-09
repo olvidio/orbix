@@ -8,6 +8,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Formulario de filtros para el planning por zonas (sacd). Calcula el
@@ -17,9 +18,8 @@ use frontend\shared\web\Posicion;
  * (slice 3 de la migracion del modulo planning). La plantilla se ha
  * reescrito como PHTML; ya no se usa Twig.
  */
-require_once("frontend/shared/global_header_front.inc");
-
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 

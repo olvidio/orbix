@@ -9,7 +9,6 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\ui\http\MultipartUploadGuard;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 header('Content-Type: application/json; charset=UTF-8');
 

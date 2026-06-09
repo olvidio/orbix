@@ -2,6 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Esta página sirve para generar un cuadro con el numero de alumnos que tienen
@@ -15,8 +16,9 @@ use frontend\shared\PostRequest;
  *
  */
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/notas/asignaturas_pendientes_resumen_data', []);
 $aPendientes = $data['pendientes'] ?? [];
 

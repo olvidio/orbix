@@ -9,6 +9,7 @@ use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use function frontend\shared\helpers\urlsafe_b64decode;
 use function frontend\shared\helpers\urlsafe_b64encode;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Lista de personas que cumplen los filtros del formulario anterior
@@ -17,9 +18,8 @@ use function frontend\shared\helpers\urlsafe_b64encode;
  * Migrado desde `apps/planning/controller/planning_persona_select.php`
  * (slice 2 de la migracion del modulo planning).
  */
-require_once("frontend/shared/global_header_front.inc");
-
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 

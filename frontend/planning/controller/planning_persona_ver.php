@@ -10,6 +10,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Planning (calendario) de las actividades asignadas a un conjunto
@@ -18,9 +19,8 @@ use frontend\shared\web\Posicion;
  * Migrado desde `apps/planning/controller/planning_persona_ver.php`
  * (slice 2 de la migracion del modulo planning).
  */
-require_once("frontend/shared/global_header_front.inc");
-
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');

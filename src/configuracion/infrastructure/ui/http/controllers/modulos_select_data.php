@@ -11,7 +11,6 @@ use src\configuracion\application\ModulosSelectData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 /** @var ModulosSelectData $useCase */
 $useCase = DependencyResolver::get(ModulosSelectData::class);

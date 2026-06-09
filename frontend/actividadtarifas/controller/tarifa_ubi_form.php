@@ -14,9 +14,11 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $campos = [
     'id_item' => (string)filter_input(INPUT_POST, 'id_item'),
     'id_ubi' => (string)filter_input(INPUT_POST, 'id_ubi'),

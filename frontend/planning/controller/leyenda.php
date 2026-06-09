@@ -2,6 +2,7 @@
 
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Popup estatico con la leyenda de colores/estilos del planning.
@@ -11,8 +12,8 @@ use frontend\shared\model\ViewNewPhtml;
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("frontend/shared/global_header_front.inc");
-
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');

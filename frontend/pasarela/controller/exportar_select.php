@@ -3,9 +3,11 @@
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 /**
  * Resultado del filtro "exportar actividades": delega el armado del listado en
  * `/src/pasarela/exportar_actividades_data` (caso de uso

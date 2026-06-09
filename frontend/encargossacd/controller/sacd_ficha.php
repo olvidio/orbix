@@ -2,6 +2,7 @@
 
 use frontend\encargossacd\support\SacdFichaAjaxHashes;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Ficha de encargos de un sacd.
@@ -13,7 +14,8 @@ use frontend\shared\model\ViewNewPhtml;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qfiltro_sacd = (string)filter_input(INPUT_POST, 'filtro_sacd');

@@ -6,12 +6,14 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************

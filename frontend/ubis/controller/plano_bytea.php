@@ -8,12 +8,14 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\MultipartUploadHelper;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
 // para que funcione bien la seguridad
 $_POST = $_REQUEST;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qact = (string)filter_input(INPUT_POST, 'act');
 $Qid_direccion = (integer)filter_input(INPUT_POST, 'id_direccion');
 $Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');

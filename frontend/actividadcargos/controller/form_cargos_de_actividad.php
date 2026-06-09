@@ -10,12 +10,14 @@
  * @param array   $_POST['sel']
  */
 
+use frontend\shared\FrontBootstrap;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
 $data = PostRequest::getDataFromUrl('/src/actividadcargos/form_cargos_de_actividad_data', PostRequest::requestPayloadForHash());

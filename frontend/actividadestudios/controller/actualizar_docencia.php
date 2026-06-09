@@ -17,9 +17,11 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 use function frontend\shared\helpers\strtoupper_dlb;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qyear = (string) filter_input(INPUT_POST, 'year');
 $Qperiodo = (string) filter_input(INPUT_POST, 'periodo');
 $Qempiezamin = (string) filter_input(INPUT_POST, 'empiezamin');

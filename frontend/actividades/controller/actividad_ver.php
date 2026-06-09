@@ -27,9 +27,11 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\actividades\helpers\PrefillPermActividadesFases;
 use function frontend\shared\helpers\is_true;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 // Necesario cuando tengo que buscar el desplegable dl_org segun permisos en procesos
 // (Como tambien afecta al status de la actividad, mejor rehacer toda la pagina).
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');

@@ -7,6 +7,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Pantalla de cabecera de una persona (datos basicos + acceso a dossiers y ficha).
@@ -18,9 +19,8 @@ use frontend\shared\web\Posicion;
  * `src/personas/application/HomePersonaData.php` tras el endpoint
  * `/src/personas/home_persona_data`. Este controlador no importa clases `src\`.
  */
-require_once("frontend/shared/global_header_front.inc");
-
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 

@@ -1,9 +1,11 @@
 <?php
 
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 PostRequest::getDataFromUrl('/src/ubis/direcciones_asignar', [
     'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),
     'obj_dir' => (string)filter_input(INPUT_POST, 'obj_dir'),

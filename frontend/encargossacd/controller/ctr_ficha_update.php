@@ -1,6 +1,7 @@
 <?php
 
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Proxy frontend a `/src/encargossacd/ctr_ficha_update`
@@ -16,7 +17,8 @@ use frontend\shared\PostRequest;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $campos = $_POST;

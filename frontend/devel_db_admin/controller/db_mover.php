@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 // copiar definición y datos de sv
 // las definiciones de tablas padre ya las tengo: todas las global y public de sv las pongo en sv-e.
 // Para todos los esquemas

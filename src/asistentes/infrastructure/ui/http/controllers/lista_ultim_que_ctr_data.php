@@ -9,8 +9,6 @@ use src\asistentes\application\ListaUltimQueCtrData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-require_once 'frontend/shared/global_header_front.inc';
-
 /** @var ListaUltimQueCtrData $useCase */
 $useCase = DependencyResolver::get(ListaUltimQueCtrData::class);
 $data = $useCase->build($_POST);

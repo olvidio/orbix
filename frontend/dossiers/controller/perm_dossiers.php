@@ -3,6 +3,7 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Página de selección de los dossiers cuyos permisos deseo visualizar
@@ -10,7 +11,8 @@ use frontend\shared\security\HashFrontSignedLink;
  * la lista de selección de los dossiers que interesen.
  */
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');

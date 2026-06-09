@@ -1,9 +1,11 @@
 <?php
 
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 //En el caso de modificar cartas de presentación, quiero que quede dentro del bloque.
 $oPosicion->recordar();
 

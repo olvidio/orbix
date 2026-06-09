@@ -3,8 +3,11 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\configuracion\helpers\ModulosFormRender;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
+
+$oPosicion = FrontBootstrap::boot();
 require_once 'frontend/shared/web/func_web.php';
 
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');

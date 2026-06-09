@@ -5,9 +5,11 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $tipo_persona = (string)filter_input(INPUT_POST, 'tipo');
 
 $data = PostRequest::getDataFromUrl('/src/dbextern/sincro_index_datos', ['tipo' => $tipo_persona]);

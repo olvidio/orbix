@@ -7,21 +7,9 @@ parameters:
 			path: frontend/actividadcargos/controller/form_cargos_de_actividad.php
 
 		-
-			message: '#^Variable \$oPosicion might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
-			path: frontend/actividadcargos/controller/form_cargos_de_actividad.php
-
-		-
 			message: '#^Parameter \#1 \$data of static method frontend\\actividadcargos\\helpers\\FormCargosDeActividadHashCompose\:\:withHashCamposHtml\(\) expects array\<string, mixed\>, array\<int\|string, mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
-			path: frontend/actividadcargos/controller/form_cargos_personas_en_actividad.php
-
-		-
-			message: '#^Variable \$oPosicion might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
 			path: frontend/actividadcargos/controller/form_cargos_personas_en_actividad.php
 
 		-
@@ -16669,24 +16657,6 @@ parameters:
 			path: src/actividadescentro/db/DBEsquema.php
 
 		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/actividadescentro/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/actividadescentro/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/actividadescentro/db/DBEsquema.php
-
-		-
 			message: '#^Method src\\actividadescentro\\db\\DBEsquemaSelect\:\:createAllSelect\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -17433,24 +17403,6 @@ parameters:
 		-
 			message: '#^Method src\\actividadessacd\\db\\DBEsquema\:\:infoTable\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/actividadessacd/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/actividadessacd/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/actividadessacd/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: src/actividadessacd/db/DBEsquema.php
 
@@ -25015,24 +24967,6 @@ parameters:
 			path: src/cambios/db/DBEsquema.php
 
 		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/cambios/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/cambios/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/cambios/db/DBEsquema.php
-
-		-
 			message: '#^Method src\\cambios\\db\\DBEsquemaSelect\:\:createAllSelect\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -26707,24 +26641,6 @@ parameters:
 			path: src/cartaspresentacion/db/DBEsquema.php
 
 		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/cartaspresentacion/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/cartaspresentacion/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/cartaspresentacion/db/DBEsquema.php
-
-		-
 			message: '#^Method src\\cartaspresentacion\\domain\\contracts\\CartaPresentacionRepositoryInterface\:\:datosById\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -27691,24 +27607,6 @@ parameters:
 			path: src/casas/db/DBEsquema.php
 
 		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/casas/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/casas/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/casas/db/DBEsquema.php
-
-		-
 			message: '#^Method src\\casas\\domain\\contracts\\GrupoCasaRepositoryInterface\:\:datosById\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -28251,24 +28149,6 @@ parameters:
 		-
 			message: '#^Method src\\certificados\\db\\DBEsquema\:\:infoTable\(\) has parameter \$tabla with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/certificados/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/certificados/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/certificados/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: src/certificados/db/DBEsquema.php
 
@@ -29541,24 +29421,6 @@ parameters:
 		-
 			message: '#^Property src\\configuracion\\db\\DBEsquema\:\:\$dir_base has no type specified\.$#'
 			identifier: missingType.property
-			count: 1
-			path: src/configuracion/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/configuracion/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/configuracion/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: src/configuracion/db/DBEsquema.php
 
@@ -35743,24 +35605,6 @@ parameters:
 			path: src/encargossacd/db/DBEsquema.php
 
 		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/encargossacd/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/encargossacd/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/encargossacd/db/DBEsquema.php
-
-		-
 			message: '#^Method src\\encargossacd\\domain\\EncargoConstants\:\:getOpcionesEncargos\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -37743,24 +37587,6 @@ parameters:
 		-
 			message: '#^Property src\\inventario\\db\\DBEsquema\:\:\$dir_base has no type specified\.$#'
 			identifier: missingType.property
-			count: 1
-			path: src/inventario/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/inventario/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/inventario/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: src/inventario/db/DBEsquema.php
 
@@ -42853,24 +42679,6 @@ parameters:
 			path: src/misas/db/DBEsquema.php
 
 		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/misas/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/misas/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/misas/db/DBEsquema.php
-
-		-
 			message: '#^Method src\\misas\\db\\DBEsquemaSelect\:\:createAllSelect\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -46711,66 +46519,6 @@ parameters:
 			path: src/notas/infrastructure/ui/http/controllers/asig_faltan_select_data.php
 
 		-
-			message: '#^Cannot call method fetchAll\(\) on PDOStatement\|false\.$#'
-			identifier: method.nonObject
-			count: 14
-			path: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php
-
-		-
-			message: '#^Cannot call method fetchColumn\(\) on PDOStatement\|false\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php
-
-		-
-			message: '#^Cannot call method getCaducaCursada\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php
-
-		-
-			message: '#^Cannot call method rowCount\(\) on PDOStatement\|false\.$#'
-			identifier: method.nonObject
-			count: 14
-			path: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php
-
-		-
-			message: '#^Offset ''NivelStgrId'' on array\{NivelStgrId\: array\<string, int\>, NotaSituacion\: array\<string, int\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php
-
-		-
-			message: '#^Offset ''NotaSituacion'' on array\{NivelStgrId\: array\<string, int\>, NotaSituacion\: array\<string, int\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php
-
-		-
-			message: '#^Offset ''a_asignaturas'' on array\{a_asignaturas\: array\<int\|string, string\|null\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php
-
-		-
-			message: '#^Offset ''vo'' on array\{vo\: array\{NivelStgrId\: array\<string, int\>, NotaSituacion\: array\<string, int\>\}\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php
-
-		-
-			message: '#^Variable \$tabla might not be defined\.$#'
-			identifier: variable.undefined
-			count: 18
-			path: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php
-
-		-
-			message: '#^Variable \$tabla_txt might not be defined\.$#'
-			identifier: variable.undefined
-			count: 7
-			path: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php
-
-		-
 			message: '#^Parameter \#1 \$a_dl of method src\\notas\\application\\InformeStgrAgregados\:\:calcular\(\) expects array\<int, int\|string\>, array\<string\|false\> given\.$#'
 			identifier: argument.type
 			count: 1
@@ -47073,24 +46821,6 @@ parameters:
 		-
 			message: '#^Method src\\pasarela\\db\\DBEsquema\:\:infoTable\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/pasarela/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/pasarela/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/pasarela/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: src/pasarela/db/DBEsquema.php
 
@@ -53233,30 +52963,6 @@ parameters:
 			path: src/procesos/db/DBEsquema.php
 
 		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/procesos/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/procesos/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/procesos/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$tabla might not be defined\.$#'
-			identifier: variable.undefined
-			count: 6
-			path: src/procesos/db/DBEsquema.php
-
-		-
 			message: '#^Method src\\procesos\\db\\DBEsquemaSelect\:\:create_a_actividad_proceso_selected\(\) has parameter \$seccion with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -53266,12 +52972,6 @@ parameters:
 			message: '#^Method src\\procesos\\db\\DBEsquemaSelect\:\:eliminar_a_actividad_proceso_selected\(\) has parameter \$seccion with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: src/procesos/db/DBEsquemaSelect.php
-
-		-
-			message: '#^Variable \$tabla might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
 			path: src/procesos/db/DBEsquemaSelect.php
 
 		-
@@ -69922,18 +69622,6 @@ parameters:
 			path: src/ubiscamas/db/DBEsquema.php
 
 		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/ubiscamas/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/ubiscamas/db/DBEsquema.php
-
-		-
 			message: '#^Call to function is_array\(\) with array\{mod\: ''nuevo'', pau\: mixed, obj_pau\: mixed, id_pau\: mixed\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -71208,24 +70896,6 @@ parameters:
 		-
 			message: '#^Property src\\usuarios\\db\\DBEsquema\:\:\$dir_base has no type specified\.$#'
 			identifier: missingType.property
-			count: 1
-			path: src/usuarios/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/usuarios/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/usuarios/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: src/usuarios/db/DBEsquema.php
 
@@ -74100,24 +73770,6 @@ parameters:
 		-
 			message: '#^Property src\\zonassacd\\db\\DBEsquema\:\:\$dir_base has no type specified\.$#'
 			identifier: missingType.property
-			count: 1
-			path: src/zonassacd/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$campo_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/zonassacd/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$id_seq might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/zonassacd/db/DBEsquema.php
-
-		-
-			message: '#^Variable \$nom_tabla might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: src/zonassacd/db/DBEsquema.php
 

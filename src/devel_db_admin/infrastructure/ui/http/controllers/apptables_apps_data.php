@@ -10,7 +10,6 @@ use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\ApptablesAppsData;
 use src\shared\infrastructure\DependencyResolver;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 /** @var ApptablesAppsData $data */
 $data = DependencyResolver::get(ApptablesAppsData::class);

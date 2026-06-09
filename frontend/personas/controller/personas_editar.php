@@ -8,6 +8,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Ficha de una persona: edicion (o alta si `$Qnuevo === 1`).
@@ -23,7 +24,8 @@ use frontend\shared\web\Posicion;
  * La seleccion de plantilla y la habilitacion de botones siguen aqui porque
  * dependen de `$_SESSION['oPerm']` y de la vista a renderizar.
  */
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 require_once("frontend/shared/web/func_web.php");
 
 

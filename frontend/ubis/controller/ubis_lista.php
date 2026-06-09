@@ -1,6 +1,7 @@
 <?php
 
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Esta página muestra una tabla con los ubis seleccionados.
@@ -12,8 +13,9 @@ use frontend\shared\PostRequest;
  * @since      3/2/09.
  */
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qnombre_ubi = (string)filter_input(INPUT_POST, 'nombre_ubi');
 
 $data = PostRequest::getDataFromUrl('/src/ubis/ubis_lista_data', [

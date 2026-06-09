@@ -3,13 +3,15 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Formulario para cambiar el mail por parte del usuario.
  */
 
 // Crea los objetos de uso global **********************************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);

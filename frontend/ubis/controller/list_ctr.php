@@ -7,6 +7,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Página para realizar algunos listados standard de ubis
@@ -25,8 +26,8 @@ use frontend\shared\web\Posicion;
  *
  * Se tiene en cuenta si es una vuelta de un go_to
  */
-require_once("frontend/shared/global_header_front.inc");
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);

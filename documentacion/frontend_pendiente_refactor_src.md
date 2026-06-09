@@ -53,7 +53,7 @@ rg -l 'global_object' frontend/*/controller/
 
 Tras la migracion masiva, la mayoria de modulos ya no incluyen `global_object`
 de forma explicita en sus controladores. Revisar caso a caso al tocar un
-controlador; `global_header_front.inc` ya carga el bootstrap via `login.php`.
+controlador; `FrontBootstrap::boot()` carga el bootstrap vía `login.php`.
 
 ## Como regenerar el conteo
 

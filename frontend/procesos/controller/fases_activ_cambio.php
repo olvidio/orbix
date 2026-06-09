@@ -5,6 +5,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Página para cambiar la fase a un grupo de actividades.
@@ -15,8 +16,9 @@ use frontend\shared\web\PeriodoQue;
  * @since        2/8/2011.
  */
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
 $apiBase = AppUrlConfig::getApiBaseUrl();

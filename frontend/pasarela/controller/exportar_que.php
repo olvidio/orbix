@@ -7,6 +7,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\CasasQue;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Página para cambiar la fase a un grupo de actividades.
@@ -17,8 +18,9 @@ use frontend\shared\web\Posicion;
  * @since        2/8/2011.
  */
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
 $oPosicion->recordar();

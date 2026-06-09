@@ -11,7 +11,6 @@ use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\input_string_list;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 $input = [
     'id_item_usuario_objeto' => input_int($_POST, 'id_item_usuario_objeto'),

@@ -2,6 +2,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Controlador para restablecer la configuración de autenticación de dos factores (2FA).
@@ -10,7 +11,8 @@ use frontend\shared\PostRequest;
  *
  */
 // Crea los objetos de uso global **********************************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // Verificar que el usuario está autenticado

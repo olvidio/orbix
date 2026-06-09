@@ -4,7 +4,6 @@ use src\shared\web\ContestarJson;
 use src\notas\application\TesseraImprimirData;
 use src\shared\infrastructure\DependencyResolver;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 $error = '';
 $data = [];

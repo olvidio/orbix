@@ -2,9 +2,11 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qid_item = (int)filter_input(INPUT_POST, 'id_item');
 $data = PostRequest::getDataFromUrl('/src/ubis/calendario_periodos_form_periodo_data', [
     'id_item' => $Qid_item,

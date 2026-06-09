@@ -11,7 +11,6 @@ use src\shared\web\ContestarJson;
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 $input = [
     'objeto' => input_string($_POST, 'objeto'),

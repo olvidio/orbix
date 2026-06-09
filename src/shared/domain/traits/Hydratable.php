@@ -149,6 +149,10 @@ trait Hydratable
         $data = [];
 
         foreach ($properties as $property) {
+            if ($property->isStatic()) {
+                continue;
+            }
+
             $name = $property->getName();
 
             $method = 'get' . ucfirst($name);
@@ -214,9 +218,14 @@ trait Hydratable
         $data = [];
 
         foreach ($properties as $property) {
+            if ($property->isStatic()) {
+                continue;
+            }
+
             $name = $property->getName();
             if ($name === 'id_auto') { continue; }
             if ($name === 'id_schema') { continue; }
+            if ($name === 'domainEvents') { continue; }
             $value = null;
             $isBoolean = false; // Flag para saber si el campo es booleano
 

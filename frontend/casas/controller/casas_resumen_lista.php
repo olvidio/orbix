@@ -6,9 +6,11 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $campos = [
     'que' => (string)filter_input(INPUT_POST, 'que'),
     'cdc_sel' => (int)filter_input(INPUT_POST, 'cdc_sel'),

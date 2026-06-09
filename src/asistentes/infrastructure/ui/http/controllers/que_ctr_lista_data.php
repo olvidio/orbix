@@ -10,8 +10,6 @@ use src\asistentes\application\QueCtrListaData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-require_once 'frontend/shared/global_header_front.inc';
-
 /** @var QueCtrListaData $useCase */
 $useCase = DependencyResolver::get(QueCtrListaData::class);
 $data = $useCase->build($_POST);

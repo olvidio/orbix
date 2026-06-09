@@ -4,8 +4,9 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
-require_once __DIR__ . '/../global_header_front.inc';
-
+use frontend\shared\FrontBootstrap;
+require_once __DIR__ . '/../FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /**
  * @return array{href: string, full_url: string, parametros: string}
  */

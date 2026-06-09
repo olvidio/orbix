@@ -12,7 +12,8 @@ use frontend\shared\config\OrbixRuntime;
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 require_once __DIR__ . '/func_factory.php';
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -839,6 +840,7 @@ $gestor = "Gestor" . ucfirst($clase);
 $txt2 = "<?php
 namespace $grupo\\model\\entity;
 use core;
+use frontend\shared\FrontBootstrap;
 /**
  * $gestor
  *

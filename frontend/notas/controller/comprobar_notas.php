@@ -6,6 +6,7 @@
  */
 
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Esta página sirve para comprobar las notas de la tabla e_notas.
@@ -14,8 +15,9 @@ use frontend\shared\PostRequest;
  * @subpackage estudios
  */
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
 $payload = PostRequest::getDataFromUrl(

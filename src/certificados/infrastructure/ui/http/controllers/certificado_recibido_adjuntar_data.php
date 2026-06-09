@@ -8,7 +8,6 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\ubis\domain\RegionStgrAviso;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 /** @var CertificadoRecibidoAdjuntarFormData $useCase */
 $useCase = DependencyResolver::get(CertificadoRecibidoAdjuntarFormData::class);

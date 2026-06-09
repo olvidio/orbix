@@ -5,6 +5,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Cuadro "alumnos x asignaturas": genera una tabla con las asignaturas
@@ -17,8 +18,9 @@ use frontend\shared\web\Lista;
  * @since        24/10/12.
  */
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $data = PostRequest::getDataFromUrl('/src/notas/asignaturas_pendientes_data', [

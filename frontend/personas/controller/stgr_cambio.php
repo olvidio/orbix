@@ -7,6 +7,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Formulario para cambiar el `nivel_stgr` de una persona.
@@ -17,9 +18,8 @@ use frontend\shared\web\Posicion;
  * `src/personas/application/StgrCambioData.php` tras el endpoint
  * `/src/personas/stgr_cambio_data`. Este controlador no importa clases `src\`.
  */
-require_once("frontend/shared/global_header_front.inc");
-
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 

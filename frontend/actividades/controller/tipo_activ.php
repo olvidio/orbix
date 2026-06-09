@@ -3,9 +3,11 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $webBase = AppUrlConfig::getPublicAppBaseUrl();
 $url_lista = $webBase . '/src/actividades/tipo_activ_lista';
 $url_form_nuevo = $webBase . '/src/actividades/tipo_activ_form_nuevo';

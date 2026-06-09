@@ -4,9 +4,11 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 $Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');
 $Qc_p = (string)filter_input(INPUT_POST, 'c_p');

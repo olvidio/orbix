@@ -2,6 +2,7 @@
 
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
 /**
 * Esta página está como include de acta_2_mpdf.php
@@ -14,7 +15,9 @@ use frontend\shared\PostRequest;
 *		
 */
 
-require_once ("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+
+FrontBootstrap::boot();
 include_once(OrbixRuntime::dirEstilos() . '/actas_mpdf.css.php');
 
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();

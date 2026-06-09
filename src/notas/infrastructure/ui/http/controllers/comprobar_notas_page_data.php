@@ -7,7 +7,6 @@ use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\web\ContestarJson;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 $oDB = GlobalPdo::get('oDB');
 

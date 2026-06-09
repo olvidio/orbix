@@ -10,9 +10,11 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');

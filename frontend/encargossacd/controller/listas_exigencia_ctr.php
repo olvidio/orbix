@@ -2,6 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Listado de exigencias de atencion por centros / iglesias
@@ -13,7 +14,8 @@ use frontend\shared\PostRequest;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qsf = (int)filter_input(INPUT_POST, 'sf');

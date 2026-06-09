@@ -6,6 +6,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\UrlBaseProject;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Formulario para cambiar el password por parte del usuario.
@@ -16,7 +17,8 @@ $usuario = (string)($_SESSION['session_auth']['username'] ?? '');
 $expire = $_SESSION['session_auth']['expire'] ?? null;
 
 if (!defined('ORBIX_INDEX_EMBED')) {
-    require_once('frontend/shared/global_header_front.inc');
+    require_once 'frontend/shared/FrontBootstrap.php';
+    $oPosicion = FrontBootstrap::boot();
 } else {
     global $oPosicion;
     if (!isset($oPosicion)) {

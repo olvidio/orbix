@@ -6,6 +6,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Posicion;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Formulario de busqueda de personas.
@@ -15,8 +16,8 @@ use frontend\shared\security\HashFront;
  * La rama `$Qque === 'telf'` (que apuntaba a un inexistente
  * `personas_select_telf.php`) se ha eliminado por enlace muerto.
  */
-require_once("frontend/shared/global_header_front.inc");
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 

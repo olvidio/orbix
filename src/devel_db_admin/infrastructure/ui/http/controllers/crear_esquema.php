@@ -11,7 +11,6 @@ use src\devel_db_admin\application\CrearEsquema;
 use src\devel_db_admin\application\CrearEsquemaPrecondicionException;
 use src\shared\infrastructure\DependencyResolver;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 /** @var CrearEsquema $useCase */
 $useCase = DependencyResolver::get(CrearEsquema::class);

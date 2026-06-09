@@ -13,9 +13,11 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
 $Qf_acta_iso = (string)filter_input(INPUT_POST, 'f_acta_iso');
 $Qid_activ = (int)filter_input(INPUT_POST, 'id_activ');

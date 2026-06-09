@@ -7,7 +7,7 @@ use frontend\shared\PostRequest;
 /**
  * Rellena {@see \src\permisos\domain\PermisosActividades::setFasesCompletadas}
  * vía backend antes de {@see \src\permisos\domain\PermisosActividades::getPermisoActual}
- * en controladores que solo cargan `global_header_front.inc` (sin contenedor DI).
+ * en controladores frontend sin contenedor DI completo en la misma petición.
  */
 final class PrefillPermActividadesFases
 {

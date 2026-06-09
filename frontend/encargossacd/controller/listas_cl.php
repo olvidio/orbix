@@ -1,6 +1,7 @@
 <?php
 
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Listado de cl para cr (solo centros de sss+).
@@ -11,7 +12,8 @@ use frontend\shared\PostRequest;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_cl_data', []);

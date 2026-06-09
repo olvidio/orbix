@@ -130,6 +130,8 @@ class DBEsquema extends DBAbstract
                 $campo_seq = 'id_item';
                 $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
                 break;
+            default:
+                throw new \InvalidArgumentException('Tabla desconocida: ' . $tabla);
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
         $datosTabla['campo_seq'] = $campo_seq;

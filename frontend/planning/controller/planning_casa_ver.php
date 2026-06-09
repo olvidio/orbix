@@ -10,6 +10,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use function frontend\shared\helpers\is_true;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Planning (calendario) de actividades de un grupo de casas en un
@@ -22,9 +23,8 @@ use function frontend\shared\helpers\is_true;
  * (`PlanningCasaVerData`: `ActividadesPorCasasService` + `CasaPeriodosForPlanning`).
  * Las fechas del periodo se envían como `f_ini_iso` / `f_fin_iso` junto al POST del formulario.
  */
-require_once("frontend/shared/global_header_front.inc");
-
-
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
 $Qpropuesta_calendario = (string)filter_input(INPUT_POST, 'propuesta_calendario');
 $Qyear = (int)filter_input(INPUT_POST, 'year');

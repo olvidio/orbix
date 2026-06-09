@@ -3,9 +3,11 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\procesos\support\ProcesosHashes;
 use frontend\shared\model\ViewNewTwig;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $url_lista = 'frontend/procesos/controller/tipo_activ_proceso_lista.php';
 // Renderer frontend que consume /src/procesos/tipo_activ_proceso_lst_posibles

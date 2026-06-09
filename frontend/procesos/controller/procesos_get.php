@@ -7,9 +7,11 @@
 
 use frontend\procesos\support\ProcesosTreeHtml;
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/procesos/procesos_get', PostRequest::requestPayloadForHash());
 $aPadres = $data['aPadres'] ?? [];
 

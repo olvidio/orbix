@@ -2,6 +2,7 @@
 
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Esta página sirve para la tessera de una persona.
@@ -18,8 +19,8 @@ use frontend\shared\PostRequest;
 /**
  * Funciones más comunes de la aplicación
  */
-require_once 'frontend/shared/global_header_front.inc';
-
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
 $id_nom = (int)(empty($_GET['id_nom']) ? 0 : $_GET['id_nom']);
 $id_tabla = empty($_GET['id_tabla']) ? '' : $_GET['id_tabla'];
 

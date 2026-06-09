@@ -9,7 +9,6 @@ declare(strict_types=1);
 use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\CopiarEsquema;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 $QEsquemaRef = (string) filter_input(INPUT_POST, 'esquema');
 $Qregion = (string) filter_input(INPUT_POST, 'region');

@@ -5,6 +5,7 @@ use frontend\shared\permisos\MenuPermisoMenuHtml;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Es el frame inferior. Muestra la ficha de los ubis
@@ -18,8 +19,8 @@ use frontend\shared\security\HashFront;
  * @since        15/5/02.
  *
  */
-require_once("frontend/shared/global_header_front.inc");
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');

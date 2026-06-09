@@ -10,6 +10,7 @@ use frontend\shared\web\CasasQue;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use function frontend\shared\helpers\strtoupper_dlb;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Formulario de filtros para el planning por casas (se selecciona el
@@ -21,8 +22,8 @@ use function frontend\shared\helpers\strtoupper_dlb;
  * Migrado desde `apps/planning/controller/planning_casa_que.php`
  * (slice 2 de la migracion del modulo planning).
  */
-require_once('frontend/shared/global_header_front.inc');
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 

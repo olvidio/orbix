@@ -13,12 +13,14 @@ use frontend\certificados\helpers\SelectCertificadosDeUnaPersonaRender;
 use frontend\notas\helpers\SelectNotasDeUnaPersonaRender;
 use frontend\actividadestudios\helpers\SelectMatriculasDeUnaActividadRender;
 use frontend\actividadestudios\helpers\SelectMatriculasDeUnaPersonaRender;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $requestPayload = PostRequest::requestPayloadForHash();

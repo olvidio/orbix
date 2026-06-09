@@ -2,47 +2,47 @@
 
 | Prioridad | Ocurrencias (suma de count) |
 |---|---:|
-| A | 629 |
-| B | 9368 |
-| C | 8520 |
+| A | 663 |
+| B | 4503 |
+| C | 7063 |
+| D | 5439 |
 
 ## Identificadores en A y B (por volumen)
 
 | identifier | count |
 |---|--:|
-| `method.nonObject` | 4519 |
-| `offsetAccess.nonOffsetAccessible` | 1889 |
-| `variable.undefined` | 952 |
-| `argument.type` | 736 |
-| `method.notFound` | 380 |
-| `return.type` | 327 |
-| `assign.propertyType` | 317 |
-| `foreach.nonIterable` | 181 |
-| `encapsedStringPart.nonString` | 146 |
-| `offsetAccess.invalidOffset` | 86 |
-| `nullCoalesce.offset` | 82 |
-| `binaryOp.invalid` | 80 |
-| `echo.nonString` | 66 |
+| `method.nonObject` | 1470 |
+| `variable.undefined` | 944 |
+| `argument.type` | 751 |
+| `method.notFound` | 387 |
+| `return.type` | 337 |
+| `assign.propertyType` | 320 |
+| `foreach.nonIterable` | 211 |
+| `encapsedStringPart.nonString` | 153 |
+| `offsetAccess.invalidOffset` | 89 |
+| `nullCoalesce.offset` | 87 |
+| `binaryOp.invalid` | 77 |
+| `echo.nonString` | 68 |
+| `offsetAccess.nonOffsetAccessible` | 67 |
 | `parameter.notFound` | 34 |
-| `offsetAccess.notFound` | 32 |
 | `isset.property` | 30 |
-| `property.nonObject` | 18 |
+| `offsetAccess.notFound` | 26 |
 | `class.notFound` | 17 |
-| `nullCoalesce.variable` | 16 |
 | `isset.variable` | 15 |
 | `assignOp.invalid` | 14 |
-| `deadCode.unreachable` | 12 |
+| `deadCode.unreachable` | 13 |
+| `nullCoalesce.variable` | 10 |
 | `property.notFound` | 8 |
 | `isset.offset` | 6 |
 | `nullCoalesce.property` | 6 |
 | `return.missing` | 5 |
-| `new.noConstructor` | 5 |
 | `property.onlyRead` | 4 |
+| `new.noConstructor` | 4 |
 | `offsetAccess.nonArray` | 3 |
 | `function.impossibleType` | 3 |
-| `requireOnce.fileNotFound` | 2 |
 | `offsetAssign.dimType` | 2 |
 | `function.notFound` | 1 |
+| `property.nonObject` | 1 |
 | `argument.unresolvableType` | 1 |
 | `array.duplicateKey` | 1 |
 | `constant.notFound` | 1 |

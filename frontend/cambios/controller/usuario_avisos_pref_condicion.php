@@ -13,9 +13,11 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\DesplegableArray;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+FrontBootstrap::boot();
 $Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
 $Qpropiedad = (string)filter_input(INPUT_POST, 'propiedad');
 $Qid_item = (int)filter_input(INPUT_POST, 'id_item');

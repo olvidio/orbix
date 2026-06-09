@@ -1,8 +1,11 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once("frontend/shared/global_header_front.inc");
+require_once 'frontend/shared/FrontBootstrap.php';
+
+FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 

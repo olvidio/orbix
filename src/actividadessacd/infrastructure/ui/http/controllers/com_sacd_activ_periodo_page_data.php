@@ -4,7 +4,6 @@ use src\actividadessacd\application\ComSacdActivPeriodoPageData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 $error = '';
 $data = [];

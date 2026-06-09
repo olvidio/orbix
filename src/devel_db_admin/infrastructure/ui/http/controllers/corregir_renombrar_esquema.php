@@ -12,7 +12,6 @@ use src\devel_db_admin\application\RenombrarEsquemaVerificacionContexto;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 /** @var CorregirEstadoRenombrarEsquema $useCase */
 $useCase = DependencyResolver::get(CorregirEstadoRenombrarEsquema::class);

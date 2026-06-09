@@ -4,7 +4,7 @@ Documento de referencia según `refactor.md` (misma línea que `profesores` / `m
 
 ## Estado aplicado (slice 1 — capa frontend)
 
-- **Controladores canónicos:** `frontend/encargossacd/controller/*.php` con `frontend/shared/global_header_front.inc`.
+- **Controladores canónicos:** `frontend/encargossacd/controller/*.php` con `FrontBootstrap::boot()`.
 - **Compatibilidad:** `apps/encargossacd/controller/<nombre>.php` delega con `require` al equivalente en `frontend/` (URL legacy; enlaces nuevos deben usar `frontend/...`).
 - **Vistas:** `frontend/encargossacd/view/*.phtml`; render con `ViewNewPhtml('frontend\\encargossacd\\controller')`. La carpeta `apps/encargossacd/view` queda vacía / retirada como duplicado.
 - **API JSON `/src/encargossacd/*`:** `src/encargossacd/config/routes.php` registra los endpoints extraídos slice a slice (ver secciones siguientes).

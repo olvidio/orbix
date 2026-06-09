@@ -17,9 +17,11 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $any_final_curs = $_SESSION['oConfig']->any_final_curs();
 $oF_inicurs_des = new \DateTime('@' . mktime(0, 0, 0, 9, 2, $any_final_curs));
 

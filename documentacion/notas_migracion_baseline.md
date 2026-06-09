@@ -315,7 +315,7 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
 
 ### Ficheros en `frontend/notas/` y `src/notas/`
 
-- `frontend/notas/controller/` — 25 controllers delgados, todos con header `frontend/shared/global_header_front.inc` y render `ViewNewPhtml('frontend\\notas\\controller')`. Incluye `actividad_buscar_form.php` (dialogo "añadir ca").
+- `frontend/notas/controller/` — controllers delgados con `FrontBootstrap::boot()` y render `ViewNewPhtml('frontend\\notas\\controller')`. Incluye `actividad_buscar_form.php` (dialogo "añadir ca").
 - `frontend/notas/view/` — 12 vistas PHTML (+ `tesera_ver.phtml` usada por `Tesera` model; + `actividad_buscar_form.phtml`).
 - `src/notas/application/` — use cases + `services/` (helpers compartidos) + `support/` + `legacy/` (bloque `Resumen.php` heredado, encapsulado tras los use cases `InformeStgr*`). Los casos de uso publicos van sin sufijo (`AsignaturasPendientes`, `TablaAlumnosAsignaturas`, `Tesera`, `DatosActa`, `Select_notas_de_una_persona`, `ActaNueva`, `InformeStgrNumerarios/Agregados/Profesores`, etc.); el sufijo `Service` queda reservado para los helpers dentro de `application/services/` (ej. `ResumenTempTablesService`).
 - `src/notas/infrastructure/ui/http/controllers/` — 18 endpoints HTTP registrados en `src/notas/config/routes.php` (incluye `buscar_acta`, `posibles_opcionales_data`, `posibles_preceptores_data`, `actividades_buscar_data`, `nota_persona_form_data`).

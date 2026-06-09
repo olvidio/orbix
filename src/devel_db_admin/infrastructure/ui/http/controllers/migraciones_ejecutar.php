@@ -6,7 +6,6 @@ use src\devel_db_admin\application\MigracionesEjecutar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-require_once 'frontend/shared/global_header_front.inc';
 
 /** @var MigracionesEjecutar $useCase */
 $useCase = DependencyResolver::get(MigracionesEjecutar::class);

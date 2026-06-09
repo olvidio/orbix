@@ -6,6 +6,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
+use frontend\shared\FrontBootstrap;
 
 /**
  * Pantalla intermedia entre `planning_casa_que` y `planning_casa_ver`.
@@ -17,9 +18,8 @@ use frontend\shared\web\Posicion;
  * array de actividades en base64: `planning_casa_ver` recalcula a partir
  * de los filtros.
  */
-require_once("frontend/shared/global_header_front.inc");
-
-
+require_once 'frontend/shared/FrontBootstrap.php';
+$oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 

@@ -17,9 +17,11 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\cartaspresentacion\helpers\CartasPresentacionBuscarOpcionesRender;
+use frontend\shared\FrontBootstrap;
 
-require_once 'frontend/shared/global_header_front.inc';
+require_once 'frontend/shared/FrontBootstrap.php';
 
+$oPosicion = FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_buscar_data');
 $payload = is_array($data) ? $data : [];
 $payload = CartasPresentacionBuscarOpcionesRender::enrich($payload);
