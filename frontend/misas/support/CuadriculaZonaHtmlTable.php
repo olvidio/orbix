@@ -39,16 +39,16 @@ final class CuadriculaZonaHtmlTable
             }
             $html .= '<tr>';
             $html .= self::td(
-                (string)($row['encargo'] ?? ''),
+                tessera_imprimir_string($row['encargo'] ?? ''),
                 self::encargoCellClass($row),
                 ''
             );
             foreach ($dayFields as $field) {
                 $meta = is_array($row['meta'] ?? null) ? $row['meta'][$field] ?? null : null;
                 $html .= self::td(
-                    (string)($row[$field] ?? ''),
-                    is_array($meta) ? (string)($meta['color'] ?? '') : '',
-                    is_array($meta) ? (string)($meta['texto'] ?? '') : ''
+                    tessera_imprimir_string($row[$field] ?? ''),
+                    is_array($meta) ? tessera_imprimir_string($meta['color'] ?? '') : '',
+                    is_array($meta) ? tessera_imprimir_string($meta['texto'] ?? '') : ''
                 );
             }
             $html .= '</tr>';
@@ -61,6 +61,7 @@ final class CuadriculaZonaHtmlTable
 
     /**
      * @param array<int, array<string, mixed>> $rows
+     * @param string|array<int, array<string, mixed>>|null $columns
      * @return array{0: list<string>, 1: list<string>}
      */
     private static function resolveHeaders(array $rows, string|array|null $columns): array
@@ -83,7 +84,7 @@ final class CuadriculaZonaHtmlTable
             usort($dayFields, 'strcmp');
             $sortedHeaders = [_('Encargo')];
             foreach ($dayFields as $field) {
-                $sortedHeaders[] = (string)($row[$field] ?? $field);
+                $sortedHeaders[] = tessera_imprimir_string($row[$field] ?? $field);
             }
 
             return [$sortedHeaders, $dayFields];
@@ -110,6 +111,7 @@ final class CuadriculaZonaHtmlTable
     }
 
     /**
+     * @param string|array<int, array<string, mixed>>|null $columns
      * @return array{0: list<string>, 1: list<string>}|null
      */
     private static function headersFromColumns(string|array|null $columns): ?array
@@ -129,8 +131,8 @@ final class CuadriculaZonaHtmlTable
             if (!is_array($col)) {
                 continue;
             }
-            $field = (string)($col['field'] ?? $col['id'] ?? '');
-            $name = (string)($col['name'] ?? $field);
+            $field = tessera_imprimir_string($col['field'] ?? $col['id'] ?? '');
+            $name = tessera_imprimir_string($col['name'] ?? $field);
             if ($field === 'encargo') {
                 $headers[] = $name;
                 continue;
@@ -181,7 +183,7 @@ final class CuadriculaZonaHtmlTable
      */
     private static function encargoCellClass(array $row): string
     {
-        $color = (string)($row['color_encargo'] ?? '');
+        $color = tessera_imprimir_string($row['color_encargo'] ?? '');
         if ($color !== '' && $color !== 'titulo') {
             return $color;
         }
@@ -196,8 +198,8 @@ final class CuadriculaZonaHtmlTable
     private static function dayFieldsFromRow(array $row): array
     {
         $fields = [];
-        foreach ($row as $key => $_) {
-            if (is_string($key) && self::isDayField($key)) {
+        foreach (array_keys($row) as $key) {
+            if (self::isDayField($key)) {
                 $fields[] = $key;
             }
         }

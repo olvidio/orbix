@@ -8,6 +8,7 @@ use frontend\shared\web\Lista;
 use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -20,6 +21,7 @@ $Qc2 = (string)filter_input(INPUT_POST, 'c2');
 $Qpersonas_n = (string)filter_input(INPUT_POST, 'personas_n');
 $Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
+$Qid_sel = '';
 
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
@@ -45,15 +47,15 @@ $tabla = PostRequest::getDataFromUrl('/src/notas/asig_faltan_select_data', [
     'personas_agd' => $Qpersonas_agd,
     'lista' => $Qlista,
 ]);
-$titulo = (string)($tabla['titulo'] ?? '');
-$obj_pau = (string)($tabla['obj_pau'] ?? '');
-$rows = $tabla['rows'] ?? [];
+$presentacion = notas_asig_faltan_tabla_from_payload($tabla);
+$titulo = $presentacion['titulo'];
+$obj_pau = $presentacion['obj_pau'];
+$rows = $presentacion['rows'];
 
-$a_botones = [
-    ['txt' => _("modificar stgr"), 'click' => "fnjs_modificar(\"#seleccionados\")"],
-    ['txt' => _("ver tessera"), 'click' => "fnjs_tesera(\"#seleccionados\")"],
-];
+/** @var list<array{txt: string, click: string}> $a_botones */
+$a_botones = notas_botones_modificar_tessera();
 
+/** @var list<array<string, mixed>|string> $a_cabeceras */
 $a_cabeceras = [
     ucfirst(_("tipo")),
     ['name' => _("nombre y apellidos"), 'formatter' => 'clickFormatter'],
@@ -68,14 +70,14 @@ $i = 0;
 $a_valores = [];
 foreach ($rows as $row) {
     $i++;
-    $id_nom = (int)($row['id_nom'] ?? 0);
-    $id_tabla = (string)($row['id_tabla'] ?? '');
-    $nom = (string)($row['nom'] ?? '');
-    $nombre_ubi = (string)($row['nombre_ubi'] ?? '');
-    $stgr = (string)($row['stgr'] ?? '');
-    $as = $row['asig_txt'] ?? '';
-    $telfs = (string)($row['telfs'] ?? '');
-    $mails = (string)($row['mails'] ?? '');
+    $id_nom = $row['id_nom'];
+    $id_tabla = $row['id_tabla'];
+    $nom = $row['nom'];
+    $nombre_ubi = $row['nombre_ubi'];
+    $stgr = $row['stgr'];
+    $as = $row['asig_txt'];
+    $telfs = $row['telfs'];
+    $mails = $row['mails'];
 
     $pagina = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query(['id_nom' => $id_nom, 'obj_pau' => $obj_pau]));
 
@@ -88,7 +90,7 @@ foreach ($rows as $row) {
     $a_valores[$i][6] = $telfs;
     $a_valores[$i][7] = $mails;
 }
-if (!empty($a_valores) && !empty($Qid_sel)) {
+if ($a_valores !== [] && $Qid_sel !== '') {
     $a_valores['select'] = $Qid_sel;
 }
 

@@ -7,53 +7,40 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
 
 $Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
 $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
-//Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
+        if ($oPosicion2->goStack($stack)) {
+            $Qid_sel = actividades_posicion_string($oPosicion2->getParametro('id_sel'));
+            $Qscroll_id = actividades_posicion_string($oPosicion2->getParametro('scroll_id'));
             $oPosicion2->olvidar($stack);
         }
     }
 }
 
-$url_backend = '/src/usuarios/role_lista';
-$data = PostRequest::getDataFromUrl($url_backend);
-
-$a_cabeceras = $data['a_cabeceras'];
-$a_botones = $data['a_botones'];
-$a_valores = $data['a_valores'];
-$permiso = $data['permiso'];
-
-if (isset($Qid_sel) && !empty($Qid_sel)) {
-    $a_valores['select'] = $Qid_sel;
-}
-if (isset($Qscroll_id) && !empty($Qscroll_id)) {
-    $a_valores['scroll_id'] = $Qscroll_id;
-}
+$data = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/role_lista'));
+$lista = usuarios_lista_from_payload($data);
+$a_valores = usuarios_lista_apply_nav($lista['valores'], $Qid_sel, $Qscroll_id);
+$permiso = tessera_imprimir_string($data['permiso'] ?? '');
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('roles_lista');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
+$oTabla->setCabeceras($lista['cabeceras']);
+$oTabla->setBotones($lista['botones']);
 $oTabla->setDatos($a_valores);
 
 $oHash = new HashFront();
 $oHash->setCamposForm('sel');
 $oHash->setcamposNo('scroll_id');
-
 
 $url_nuevo = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
     . '/frontend/usuarios/controller/role_form.php?'

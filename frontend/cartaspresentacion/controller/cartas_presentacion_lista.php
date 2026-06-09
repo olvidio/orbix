@@ -15,6 +15,7 @@
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/cartaspresentacion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -27,7 +28,7 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_lista_data', $campos);
-$payload = is_array($data) ? $data : [];
+$html = cartaspresentacion_lista_html_from_payload(cartaspresentacion_post_data($data));
 
-echo (string)($payload['html_lista'] ?? '');
-echo (string)($payload['html_errores'] ?? '');
+echo $html['html_lista'];
+echo $html['html_errores'];

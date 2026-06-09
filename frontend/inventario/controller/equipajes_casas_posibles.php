@@ -2,14 +2,11 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/inventario_support.php';
 FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
-
 
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qyear = (int)filter_input(INPUT_POST, 'year');
@@ -28,13 +25,12 @@ $a_campos_backend = [
     'fin' => $Qfin,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$a_opciones = $data['a_opciones'];
+$payload = inventario_post_payload($data);
+$a_opciones = inventario_desplegable_opciones($payload['a_opciones'] ?? []);
 
 $oDesplUbis = new Desplegable();
 $oDesplUbis->setNombre('id_cdc');
 $oDesplUbis->setOpciones($a_opciones);
-$oDesplUbis->setBlanco(TRUE);
+$oDesplUbis->setBlanco(true);
 $oDesplUbis->setAction('fnjs_ver_actividades_casa()');
 echo $oDesplUbis->desplegable();
-
-

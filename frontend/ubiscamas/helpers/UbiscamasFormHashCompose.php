@@ -7,6 +7,8 @@ namespace frontend\ubiscamas\helpers;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 
+require_once __DIR__ . '/ubiscamas_support.php';
+
 /**
  * Construye campos HTML de `HashFront` y parámetros `linkSinValParams` para formularios ubiscamas.
  * Los datos planos vienen de {@see \src\ubiscamas\application\HabitacionFormData} y {@see \src\ubiscamas\application\CamaFormData}.
@@ -28,35 +30,33 @@ final class UbiscamasFormHashCompose
     {
         $form = isset($data['hash_form']) && is_array($data['hash_form']) ? $data['hash_form'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm((string)($form['campos_form'] ?? ''));
-        $oHash->setCamposChk((string)($form['campos_chk'] ?? ''));
-        $oHash->setCamposNo((string)($form['campos_no'] ?? ''));
-        $hidden = $form['campos_hidden'] ?? [];
-        $oHash->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+        $oHash->setCamposForm(tessera_imprimir_string($form['campos_form'] ?? ''));
+        $oHash->setCamposChk(tessera_imprimir_string($form['campos_chk'] ?? ''));
+        $oHash->setCamposNo(tessera_imprimir_string($form['campos_no'] ?? ''));
+        $oHash->setArrayCamposHidden(ubiscamas_hash_campos_hidden($form['campos_hidden'] ?? []));
 
         $act = isset($data['hash_actualizar']) && is_array($data['hash_actualizar']) ? $data['hash_actualizar'] : [];
         $oAct = new HashFront();
         $oAct->setCamposForm('');
-        $oAct->setCamposNo((string)($act['campos_no'] ?? ''));
-        $hiddenAct = $act['campos_hidden'] ?? [];
-        $oAct->setArrayCamposHidden(is_array($hiddenAct) ? $hiddenAct : []);
+        $oAct->setCamposNo(tessera_imprimir_string($act['campos_no'] ?? ''));
+        $oAct->setArrayCamposHidden(ubiscamas_hash_campos_hidden($act['campos_hidden'] ?? []));
 
         $cf = isset($data['cama_form_hash']) && is_array($data['cama_form_hash']) ? $data['cama_form_hash'] : [];
         $oCamaForm = new HashFront();
-        $oCamaForm->setUrl((string)($cf['url'] ?? ''));
-        $oCamaForm->setCamposForm((string)($cf['campos_form'] ?? ''));
+        $oCamaForm->setUrl(tessera_imprimir_string($cf['url'] ?? ''));
+        $oCamaForm->setCamposForm(tessera_imprimir_string($cf['campos_form'] ?? ''));
 
         $cd = isset($data['cama_delete_hash']) && is_array($data['cama_delete_hash']) ? $data['cama_delete_hash'] : [];
         $oCamaDel = new HashFront();
-        $oCamaDel->setUrl((string)($cd['url'] ?? ''));
-        $oCamaDel->setCamposForm((string)($cd['campos_form'] ?? ''));
+        $oCamaDel->setUrl(tessera_imprimir_string($cd['url'] ?? ''));
+        $oCamaDel->setCamposForm(tessera_imprimir_string($cd['campos_form'] ?? ''));
 
         return [
             'hash_form_html' => $oHash->getCamposHtml(),
             'hash_actualizar_html' => $oAct->getCamposHtml(),
-            'url_cama_form' => (string)($cf['url'] ?? ''),
+            'url_cama_form' => tessera_imprimir_string($cf['url'] ?? ''),
             'h_cama_form_params' => $oCamaForm->linkSinValParams(),
-            'url_cama_delete' => (string)($cd['url'] ?? ''),
+            'url_cama_delete' => tessera_imprimir_string($cd['url'] ?? ''),
             'h_cama_delete_params' => $oCamaDel->linkSinValParams(),
         ];
     }
@@ -69,10 +69,9 @@ final class UbiscamasFormHashCompose
     {
         $form = isset($data['hash_form']) && is_array($data['hash_form']) ? $data['hash_form'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm((string)($form['campos_form'] ?? ''));
-        $oHash->setCamposChk((string)($form['campos_chk'] ?? ''));
-        $hidden = $form['campos_hidden'] ?? [];
-        $oHash->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+        $oHash->setCamposForm(tessera_imprimir_string($form['campos_form'] ?? ''));
+        $oHash->setCamposChk(tessera_imprimir_string($form['campos_chk'] ?? ''));
+        $oHash->setArrayCamposHidden(ubiscamas_hash_campos_hidden($form['campos_hidden'] ?? []));
 
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
 

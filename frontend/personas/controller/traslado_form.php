@@ -12,15 +12,9 @@ use frontend\shared\FrontBootstrap;
 
 /**
  * Formulario para trasladar una persona de centro y/o delegacion.
- *
- * Migrado desde `apps/personas/controller/traslado_form.php` (slice 5) y
- * refactorizado conforme a `refactor.md`: la localizacion de la persona, la
- * construccion de listas de centros, delegaciones y situaciones, y el calculo
- * del centro/dl actuales viven ahora en
- * `src/personas/application/TrasladoFormData.php` tras el endpoint
- * `/src/personas/traslado_form_data`. Este controlador no importa clases `src\`.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/personas_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -28,28 +22,24 @@ $oPosicion->recordar();
 $Qcabecera = (string)filter_input(INPUT_POST, 'cabecera');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) {
-    $id_pau = (int)strtok($a_sel[0], "#");
-} else {
-    $id_pau = (int)filter_input(INPUT_POST, 'id_pau');
-}
+$id_pau = personas_id_pau_from_sel_post()['id_pau'];
 
 $campos = [
     'id_pau' => $id_pau,
 ];
 
 $data = PostRequest::getDataFromUrl('/src/personas/traslado_form_data', $campos);
-$payload = is_array($data) ? $data : [];
+$payload = personas_post_payload($data);
+$view = personas_traslado_form_from_payload($payload);
 
-$titulo = (string)($payload['titulo'] ?? '');
-$id_ctr = $payload['id_ctr'] ?? '';
-$nombre_ctr = (string)($payload['nombre_ctr'] ?? '');
-$dl = (string)($payload['dl'] ?? '');
-$hoy = (string)($payload['hoy'] ?? '');
-$opciones_centros = (array)($payload['opciones_centros'] ?? []);
-$opciones_dl = (array)($payload['opciones_dl'] ?? []);
-$opciones_situacion = (array)($payload['opciones_situacion'] ?? []);
+$titulo = $view['titulo'];
+$id_ctr = $view['id_ctr'];
+$nombre_ctr = $view['nombre_ctr'];
+$dl = $view['dl'];
+$hoy = $view['hoy'];
+$opciones_centros = $view['opciones_centros'];
+$opciones_dl = $view['opciones_dl'];
+$opciones_situacion = $view['opciones_situacion'];
 
 $oDesplCentroDl = new Desplegable();
 $oDesplCentroDl->setNombre('new_ctr');

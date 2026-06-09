@@ -6,6 +6,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 // Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/menus_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -27,7 +28,7 @@ if (isset($_POST['stack'])) {
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $a_sel = $oPosicion2->getParametro('id_sel');
             if (!empty($a_sel)) {
-                $Qid_grupmenu = (integer)strtok($a_sel[0], "#");
+                $Qid_grupmenu = menus_id_from_sel_item(menus_sel_first_item($a_sel));
             } else {
                 $Qid_grupmenu = $oPosicion2->getParametro('id_grupmenu');
             }
@@ -38,7 +39,7 @@ if (isset($_POST['stack'])) {
 } elseif (!empty($a_sel)) { //vengo de un checkbox
     $Qque = (string)filter_input(INPUT_POST, 'que');
     if ($Qque !== 'del_grupmenu') { //En el caso de venir de borrar un grupmenu, no hago nada
-        $Qid_grupmenu = (integer)strtok($a_sel[0], "#");
+        $Qid_grupmenu = menus_id_from_sel_item(menus_sel_first_item($a_sel));
     }
 }
 $oPosicion->setParametros(array('id_grupmenu' => $Qid_grupmenu), 1);

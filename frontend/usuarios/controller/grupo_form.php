@@ -8,10 +8,9 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
@@ -20,46 +19,37 @@ $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
 $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-// Hay que usar isset y empty porque puede tener el valor =0.
-// Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
-        // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+        if ($oPosicion2->goStack($stack)) {
             $a_sel = $oPosicion2->getParametro('id_sel');
             if (!empty($a_sel)) {
-                $Qid_usuario = (integer)strtok($a_sel[0], "#");
+                $Qid_usuario = usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
             } else {
-                $Qid_usuario = $oPosicion2->getParametro('id_usuario');
+                $Qid_usuario = actividades_posicion_int($oPosicion2->getParametro('id_usuario'));
             }
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
+            $Qscroll_id = actividades_posicion_int($oPosicion2->getParametro('scroll_id'));
             $oPosicion2->olvidar($stack);
         }
     }
-} elseif (!empty($a_sel)) { //vengo de un checkbox
+} elseif (!empty($a_sel)) {
     $Qque = (string)filter_input(INPUT_POST, 'que');
-    if ($Qque !== 'del_grupmenu') { //En el caso de venir de borrar un grupmenu, no hago nada
-        $Qid_usuario = (integer)strtok($a_sel[0], "#");
+    if ($Qque !== 'del_grupmenu') {
+        $Qid_usuario = usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
     }
 }
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 if (!empty($Qid_usuario)) {
-    //////////// Nombre de grupo ////////////////////////////////////////////////////////
-    $url_backend = '/src/usuarios/grupo_info';
-    $a_campos_backend = [ 'id_usuario' => $Qid_usuario];
-    $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-    $usuario = $data['nombre'];
+    $infoData = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/grupo_info', ['id_usuario' => $Qid_usuario]));
+    $usuario = tessera_imprimir_string($infoData['nombre'] ?? '');
 
     $oHashG = new HashFront();
     $oHashG->setCamposForm('que!usuario');
     $oHashG->setcamposNo('id_ctr!id_sacd!casas!refresh');
-    $a_camposHidden = array(
-        'id_usuario' => $Qid_usuario,
-    );
-    $oHashG->setArraycamposHidden($a_camposHidden);
+    $oHashG->setArraycamposHidden(['id_usuario' => $Qid_usuario]);
 
     $txt_guardar = _("guardar datos grupo");
     $a_camposG = [
@@ -72,40 +62,28 @@ if (!empty($Qid_usuario)) {
     $oView = new ViewNewPhtml('frontend\usuarios\controller');
     $oView->renderizar('grupo_form.phtml', $a_camposG);
 
-    //////////// Permisos de grupos //////////////////////////////////////////////////
-    $url_backend = '/src/usuarios/perm_menu_lista';
-    $a_campos = [ 'id_usuario' => $Qid_usuario];
-    $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-    $a_cabeceras = $data['a_cabeceras'];
-    $a_botones = $data['a_botones'];
-    $a_valores = $data['a_valores'];
+    $permData = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/perm_menu_lista', ['id_usuario' => $Qid_usuario]));
+    $lista = usuarios_lista_from_payload($permData);
 
     $oTablaPermMenu = new Lista();
     $oTablaPermMenu->setId_tabla('form_perm_menu');
-    $oTablaPermMenu->setCabeceras($a_cabeceras);
-    $oTablaPermMenu->setBotones($a_botones);
-    $oTablaPermMenu->setDatos($a_valores);
+    $oTablaPermMenu->setCabeceras($lista['cabeceras']);
+    $oTablaPermMenu->setBotones($lista['botones']);
+    $oTablaPermMenu->setDatos($lista['valores']);
 
     $oHashPermisos = new HashFront();
     $oHashPermisos->setCamposForm('que!sel');
     $oHashPermisos->setcamposNo('scroll_id!refresh');
-    $a_camposHidden = array(
-        'id_usuario' => $Qid_usuario,
-    );
-    $oHashPermisos->setArraycamposHidden($a_camposHidden);
+    $oHashPermisos->setArraycamposHidden(['id_usuario' => $Qid_usuario]);
 
-    if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
-        // Permisos
-        $a_camposP = [
-            'oHashPermisos' => $oHashPermisos,
-            'oTablaPermMenu' => $oTablaPermMenu,
-        ];
+    $a_camposP = [
+        'oHashPermisos' => $oHashPermisos,
+        'oTablaPermMenu' => $oTablaPermMenu,
+    ];
 
-        $oView = new ViewNewPhtml('frontend\usuarios\controller');
-        $oView->renderizar('perm_menu_lista.phtml', $a_camposP);
-    }
+    $oView = new ViewNewPhtml('frontend\usuarios\controller');
+    $oView->renderizar('perm_menu_lista.phtml', $a_camposP);
 
-    //////////// Permisos en actividades ////////////////////////////////////////////////
     if (AppInstalled::is('procesos')) {
         $url = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
             . '/frontend/usuarios/controller/perm_activ_lista.php'
@@ -122,10 +100,7 @@ if (!empty($Qid_usuario)) {
     $oHashG = new HashFront();
     $oHashG->setCamposForm('que!usuario');
     $oHashG->setcamposNo('id_ctr!id_sacd!casas!refresh');
-    $a_camposHidden = array(
-        'id_usuario' => '',
-    );
-    $oHashG->setArraycamposHidden($a_camposHidden);
+    $oHashG->setArraycamposHidden(['id_usuario' => '']);
 
     $txt_guardar = _("guardar datos grupo");
     $a_camposG = [

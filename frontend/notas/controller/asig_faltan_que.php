@@ -7,6 +7,7 @@ use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -47,7 +48,7 @@ $Qlista = (string)filter_input(INPUT_POST, 'lista');
 $chk_lista = is_true($Qlista) ? 'checked' : '';
 
 $dAsig = PostRequest::getDataFromUrl('/src/asignaturas/asignaturas_con_separador_data', []);
-$aOpciones = $dAsig['a_opciones'] ?? [];
+$aOpciones = notas_desplegable_opciones($dAsig['a_opciones'] ?? []);
 $oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
 $oDesplAsignaturas->setNombre('id_asignatura');
 $oDesplAsignaturas->setOpcion_sel($Qid_asignatura);

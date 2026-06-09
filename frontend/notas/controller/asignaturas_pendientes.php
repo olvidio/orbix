@@ -18,29 +18,27 @@ use frontend\shared\FrontBootstrap;
  * @since        24/10/12.
  */
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$QdlRaw = filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qdl = is_array($QdlRaw) ? $QdlRaw : [];
 
 $data = PostRequest::getDataFromUrl('/src/notas/asignaturas_pendientes_data', [
     'dl' => $Qdl,
 ]);
-
-$datosTabla = [
-    'cabeceras' => $data['cabeceras'] ?? [],
-    'filas' => $data['filas'] ?? [],
-];
+$presentacion = notas_asignaturas_pendientes_from_payload($data);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('pendientes');
-$oTabla->setCabeceras($datosTabla['cabeceras']);
-$oTabla->setDatos($datosTabla['filas']);
+$oTabla->setCabeceras($presentacion['cabeceras']);
+$oTabla->setDatos($presentacion['filas']);
 
 
-if (!empty($data['ambito_rstgr'])) {
-    $aChecked = $Qdl;
-    $a_delegacionesStgr = $data['delegaciones'] ?? [];
+if ($presentacion['ambito_rstgr']) {
+    $aChecked = notas_checked_ids_from_post($Qdl);
+    $a_delegacionesStgr = $presentacion['delegaciones'];
 
     $oCuadros = new Desplegable();
     $oCuadros->setNombre('dl');

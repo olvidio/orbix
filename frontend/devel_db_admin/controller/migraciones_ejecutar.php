@@ -6,31 +6,28 @@ use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/devel_db_admin/helpers/devel_db_admin_support.php';
 
 FrontBootstrap::boot();
-$modo = (string) ($_POST['modo'] ?? 'seleccion');
-$seleccionados = $_POST['sel'] ?? [];
-if (!is_array($seleccionados)) {
-    $seleccionados = [$seleccionados];
-}
-$seleccionados = array_values(array_filter(array_map('strval', $seleccionados), static fn (string $value): bool => $value !== ''));
-$prefijoHasta = (string) ($_POST['prefijo_hasta'] ?? '');
+$modo = tessera_imprimir_string($_POST['modo'] ?? 'seleccion');
+$seleccionados = devel_db_admin_migraciones_sel($_POST['sel'] ?? []);
+$prefijoHasta = tessera_imprimir_string($_POST['prefijo_hasta'] ?? '');
 
 $data = PostRequest::getDataFromUrl('/src/devel_db_admin/migraciones_ejecutar', [
     'modo' => $modo,
     'sel' => $seleccionados,
     'prefijo_hasta' => $prefijoHasta,
 ]);
-$data = is_array($data) ? $data : [];
 
 echo '<h1>' . _("resultado migraciones") . '</h1>';
-if (!empty($data['error'])) {
+$error = tessera_imprimir_string($data['error'] ?? '');
+if ($error !== '') {
     echo '<p><strong>' . _("error") . ':</strong> '
-        . htmlspecialchars((string) $data['error'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+        . htmlspecialchars($error, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
         . '</p>';
 }
 echo '<pre>';
-foreach ((array) ($data['lines'] ?? []) as $line) {
-    echo htmlspecialchars((string) $line, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "\n";
+foreach (devel_db_admin_avisos_list($data['lines'] ?? []) as $line) {
+    echo htmlspecialchars($line, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "\n";
 }
 echo '</pre>';

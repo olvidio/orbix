@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
@@ -22,23 +23,22 @@ require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)filter_input(INPUT_POST, 'que');
-$Qid_nom = (int)filter_input(INPUT_POST, 'id_nom');
+$Qque = encargossacd_post_string('que');
+$Qid_nom = encargossacd_post_int('id_nom');
 
 switch ($Qque) {
     case 'get_select':
-        $Qfiltro_sacd = (string)filter_input(INPUT_POST, 'filtro_sacd');
+        $Qfiltro_sacd = encargossacd_post_string('filtro_sacd');
         $data = PostRequest::getDataFromUrl('/src/encargossacd/sacd_select_data', [
             'filtro_sacd' => $Qfiltro_sacd,
             'id_nom' => $Qid_nom,
         ]);
-        $opciones = is_array($data['opciones'] ?? null) ? $data['opciones'] : [];
-        $prefix = (string)($data['label_prefix'] ?? '');
+        $prefix = tessera_imprimir_string($data['label_prefix'] ?? '');
 
         $oDespl = new Desplegable();
         $oDespl->setBlanco(true);
-        $oDespl->setOpciones($opciones);
-        $oDespl->setOpcion_sel($Qid_nom);
+        $oDespl->setOpciones(encargossacd_desplegable_opciones($data['opciones'] ?? []));
+        $oDespl->setOpcion_sel(encargossacd_desplegable_opcion_sel($Qid_nom));
         $oDespl->setNombre('lst_sacds');
         $oDespl->setAction('fnjs_ver_ficha()');
 
@@ -51,14 +51,14 @@ switch ($Qque) {
             'id_nom' => $Qid_nom,
         ]);
 
-        $permiso = (int)($data['permiso'] ?? 0);
-        $observ_sacd = (string)($data['observ_sacd'] ?? '');
-        $encargos = is_array($data['encargos'] ?? null) ? $data['encargos'] : [];
-        $opciones_mas = is_array($data['opciones_mas'] ?? null) ? $data['opciones_mas'] : [];
+        $permiso = tessera_imprimir_int($data['permiso'] ?? 0);
+        $observ_sacd = tessera_imprimir_string($data['observ_sacd'] ?? '');
+        $encargos = encargossacd_sacd_ficha_encargos_from_payload($data['encargos'] ?? null);
+        $opciones_mas = encargossacd_desplegable_opciones($data['opciones_mas'] ?? []);
         $avisos = is_array($data['avisos'] ?? null) ? $data['avisos'] : [];
 
         foreach ($encargos as $idx => $e) {
-            $aQuery = ['id_ubi' => (int)($e['id_ubi'] ?? 0)];
+            $aQuery = ['id_ubi' => encargossacd_sacd_ficha_encargo_id_ubi($e)];
             array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
             $encargos[$idx]['pagina_ctr'] = HashFront::link(
                 'frontend/encargossacd/controller/ctr_ficha.php?' . http_build_query($aQuery),
@@ -68,7 +68,7 @@ switch ($Qque) {
         $oDesplEncs = new Desplegable();
         $oDesplEncs->setNombre('mas');
         $oDesplEncs->setOpciones($opciones_mas);
-        $oDesplEncs->setBlanco(1);
+        $oDesplEncs->setBlanco(encargossacd_desplegable_blanco(1));
         $oDesplEncs->setAction("fnjs_mas_enc();");
 
         $oHash = new HashFront();

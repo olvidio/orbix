@@ -5,6 +5,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\asistentes\helpers\FormActividadesDeUnaPersonaRender;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/asistentes_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -12,9 +13,8 @@ $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
 $campos = array_merge($_GET, $_POST);
-$data = PostRequest::getDataFromUrl('/src/asistentes/form_actividades_de_una_persona_data', $campos);
 /** @var array<string, mixed> $payload */
-$payload = is_array($data) ? $data : [];
+$payload = asistentes_post_data(PostRequest::getDataFromUrl('/src/asistentes/form_actividades_de_una_persona_data', $campos));
 $payload = FormActividadesDeUnaPersonaRender::enrich($payload);
 
 $a_campos = array_merge($payload, ['oPosicion' => $oPosicion]);

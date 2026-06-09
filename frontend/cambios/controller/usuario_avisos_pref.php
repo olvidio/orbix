@@ -9,6 +9,7 @@ use frontend\shared\web\DesplegableArray;
 use frontend\cambios\helpers\UsuarioAvisosPrefFormRender;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/cambios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -26,65 +27,48 @@ if (!empty($a_sel)) {
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $Qsalida = (string)filter_input(INPUT_POST, 'salida');
 
-$payload = PostRequest::getDataFromUrl('/src/cambios/usuario_avisos_pref_form_data', [
+$payload = UsuarioAvisosPrefFormRender::enrich(cambios_post_data(PostRequest::getDataFromUrl('/src/cambios/usuario_avisos_pref_form_data', [
     'id_usuario' => $Qid_usuario,
     'id_item_usuario_objeto' => $Qid_item_usuario_objeto,
     'salida' => $Qsalida,
     'quien' => $Qquien,
-]);
-if (!is_array($payload)) {
-    $payload = [];
-}
-$payload = UsuarioAvisosPrefFormRender::enrich($payload);
-
-$aTiposAviso = (array)($payload['aTiposAviso'] ?? []);
-$aObjetos = (array)($payload['aObjetos'] ?? []);
-$aFases = (array)($payload['aFases'] ?? []);
-$aOpcionesCasas = (array)($payload['aOpcionesCasas'] ?? []);
-$id_pau = (string)($payload['id_pau'] ?? '');
-$aviso_tipo = (string)($payload['aviso_tipo'] ?? '');
-$objeto = (string)($payload['objeto'] ?? '');
-$id_fase_ref = (string)($payload['id_fase_ref'] ?? '');
-$dl_propia = (bool)($payload['dl_propia'] ?? true);
-$aviso_off = (bool)($payload['aviso_off'] ?? false);
-$aviso_on = (bool)($payload['aviso_on'] ?? true);
-$aviso_outdate = (bool)($payload['aviso_outdate'] ?? false);
-$id_tipo_activ = (string)($payload['id_tipo_activ'] ?? '');
+])));
+$form = cambios_usuario_avisos_pref_form_from_payload($payload);
 
 $oDesplTiposAviso = new Desplegable();
 $oDesplTiposAviso->setNombre('aviso_tipo');
 $oDesplTiposAviso->setBlanco('false');
-$oDesplTiposAviso->setOpciones($aTiposAviso);
-if ($aviso_tipo !== '') {
-    $oDesplTiposAviso->setOpcion_sel($aviso_tipo);
+$oDesplTiposAviso->setOpciones($form['aTiposAviso']);
+if ($form['aviso_tipo'] !== '') {
+    $oDesplTiposAviso->setOpcion_sel($form['aviso_tipo']);
 }
 
 $oDesplObjetos = new Desplegable();
 $oDesplObjetos->setNombre('objeto');
 $oDesplObjetos->setBlanco('true');
-$oDesplObjetos->setOpciones($aObjetos);
+$oDesplObjetos->setOpciones($form['aObjetos']);
 $oDesplObjetos->setAction('fnjs_actualizar_fases(); fnjs_actualizar_propiedades()');
-if ($objeto !== '') {
-    $oDesplObjetos->setOpcion_sel($objeto);
+if ($form['objeto'] !== '') {
+    $oDesplObjetos->setOpcion_sel($form['objeto']);
 }
 
 $oDesplFases = new Desplegable();
 $oDesplFases->setNombre('id_fase_ref');
 $oDesplFases->setBlanco('true');
-$oDesplFases->setOpciones($aFases);
-if ($id_fase_ref !== '') {
-    $oDesplFases->setOpcion_sel($id_fase_ref);
+$oDesplFases->setOpciones($form['aFases']);
+if ($form['id_fase_ref'] !== '') {
+    $oDesplFases->setOpcion_sel($form['id_fase_ref']);
 }
 
-$oDesplArrayCasas = new DesplegableArray($id_pau, $aOpcionesCasas, 'casas');
+$oDesplArrayCasas = new DesplegableArray($form['id_pau'], $form['aOpcionesCasas'], 'casas');
 $oDesplArrayCasas->setBlanco('t');
 $oDesplArrayCasas->setAccionConjunto('fnjs_mas_casas(event)');
 
-$chk_propia = $dl_propia ? 'checked' : '';
-$chk_otra = $dl_propia ? '' : 'checked';
-$chk_off = $aviso_off ? 'checked' : '';
-$chk_on = $aviso_on ? 'checked' : '';
-$chk_outdate = $aviso_outdate ? 'checked' : '';
+$chk_propia = $form['dl_propia'] ? 'checked' : '';
+$chk_otra = $form['dl_propia'] ? '' : 'checked';
+$chk_off = $form['aviso_off'] ? 'checked' : '';
+$chk_on = $form['aviso_on'] ? 'checked' : '';
+$chk_outdate = $form['aviso_outdate'] ? 'checked' : '';
 
 $a_campos = array_merge($payload, [
     'oPosicion' => $oPosicion,
@@ -97,7 +81,7 @@ $a_campos = array_merge($payload, [
     'chk_off' => $chk_off,
     'chk_on' => $chk_on,
     'chk_outdate' => $chk_outdate,
-    'id_tipo_activ' => $id_tipo_activ,
+    'id_tipo_activ' => $form['id_tipo_activ'],
 ]);
 
 $oView = new ViewNewPhtml('frontend\\cambios\\view');

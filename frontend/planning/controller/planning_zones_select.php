@@ -20,6 +20,7 @@ use frontend\shared\FrontBootstrap;
  * hacia `echo` de HTML e incluia directamente los CSS y el calendario;
  * ahora la presentacion vive en la vista PHTML.
  */
+require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
@@ -42,22 +43,21 @@ $oPosicion->setParametros([
 ], 1);
 
 $data = PostRequest::getDataFromUrl('/src/planning/planning_zones_select_data', $_POST);
-$data = is_array($data) ? $data : [];
-$isoIni = (string)($data['planning_ini_iso'] ?? '');
-$isoFin = (string)($data['planning_fin_iso'] ?? '');
+$zonesSelect = planning_zones_select_from_payload($data);
+$isoIni = $zonesSelect['planning_ini_iso'];
+$isoFin = $zonesSelect['planning_fin_iso'];
 $oIniPlanning = \DateTimeImmutable::createFromFormat('Y-m-d', $isoIni) ?: new \DateTimeImmutable($isoIni);
 $oFinPlanning = \DateTimeImmutable::createFromFormat('Y-m-d', $isoFin) ?: new \DateTimeImmutable($isoFin);
 
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
-include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
-include_once(OrbixRuntime::dirEstilos() . '/calendario.css.php');
+$estilos = planning_calendario_estilos();
 
 $oPlanning = new PlanningRenderer();
-$oPlanning->setColorColumnaUno($colorColumnaUno);
-$oPlanning->setColorColumnaDos($colorColumnaDos);
-$oPlanning->setColorColumnaDomingo($colorColumnaDomingo);
-$oPlanning->setTable_border($table_border);
+$oPlanning->setColorColumnaUno($estilos['colorColumnaUno']);
+$oPlanning->setColorColumnaDos($estilos['colorColumnaDos']);
+$oPlanning->setColorColumnaDomingo($estilos['colorColumnaDomingo']);
+$oPlanning->setTable_border($estilos['table_border']);
 $oPlanning->setDd(3);
 $oPlanning->setInicio($oIniPlanning);
 $oPlanning->setFin($oFinPlanning);
@@ -66,10 +66,10 @@ $a_campos = [
     'oPosicion' => $oPosicion,
     'oPlanning' => $oPlanning,
     'goLeyenda' => $goLeyenda,
-    'titulo' => $data['titulo'] ?? '',
-    'zonas' => (int)($data['zonas'] ?? 0),
-    'actividades_por_zona' => (array)($data['actividades_por_zona'] ?? []),
-    'cabeceras_por_zona' => (array)($data['cabeceras_por_zona'] ?? []),
+    'titulo' => $zonesSelect['titulo'],
+    'zonas' => $zonesSelect['zonas'],
+    'actividades_por_zona' => $zonesSelect['actividades_por_zona'],
+    'cabeceras_por_zona' => $zonesSelect['cabeceras_por_zona'],
 ];
 
 $oView = new ViewNewPhtml('frontend\planning\controller');

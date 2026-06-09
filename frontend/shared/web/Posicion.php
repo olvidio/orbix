@@ -5,16 +5,21 @@ namespace frontend\shared\web;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\security\HashFront;
 
+/**
+ * @phpstan-type PositionEntry array{url: string, bloque: string, parametros: array<string, mixed>, stack: int}
+ */
 class Posicion
 {
     private ?string $sid_div = null;
     private string $surl = '';
     private string $sbloque = '';
+    /** @var array<string, mixed> */
     private array $aParametros = [];
-    private int $stack;
+    private int $stack = 0;
     private bool $constructor;
 
-    public function __construct($php_self = '', $vars = array())
+    /** @param array<string, mixed> $vars */
+    public function __construct(string $php_self = '', array $vars = [])
     {
         $this->constructor = true;
         $this->surl = $php_self;
@@ -30,7 +35,43 @@ class Posicion
 
     private function notExistsSession(): bool
     {
-        return (!array_key_exists('position', $_SESSION) || !is_array($_SESSION['position']));
+        return !isset($_SESSION['position']) || !is_array($_SESSION['position']);
+    }
+
+    /**
+     * @return array<int|string, array<string, mixed>>
+     */
+    private function &positionStackRef(): array
+    {
+        if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+            $_SESSION['position'] = [];
+        }
+        /** @var array<int|string, array<string, mixed>> $position */
+        $position = &$_SESSION['position'];
+        return $position;
+    }
+
+    /**
+     * @param array<string, mixed> $raw
+     * @return PositionEntry
+     */
+    private static function normalizeEntry(array $raw, int $stackKey): array
+    {
+        return [
+            'url' => isset($raw['url']) && is_string($raw['url']) ? $raw['url'] : '',
+            'bloque' => isset($raw['bloque']) && is_string($raw['bloque']) ? $raw['bloque'] : '',
+            'parametros' => isset($raw['parametros']) && is_array($raw['parametros']) ? $raw['parametros'] : [],
+            'stack' => isset($raw['stack']) && is_numeric($raw['stack']) ? (int) $raw['stack'] : $stackKey,
+        ];
+    }
+
+    /** @param PositionEntry $entry */
+    private function applyEntry(array $entry, int $stackKey): void
+    {
+        $this->stack = $stackKey;
+        $this->surl = $entry['url'];
+        $this->sbloque = $entry['bloque'];
+        $this->aParametros = $entry['parametros'];
     }
 
     private function deleteFroward(): void
@@ -39,151 +80,164 @@ class Posicion
             return;
         }
         session_start();
-        $stack = $this->stack;
-        $num = count($_SESSION['position']);
-        $quitar = $num - $stack;
-        array_splice($_SESSION['position'], -$quitar);
-        $_SESSION['position'] = array_values($_SESSION['position']);
-        foreach ($_SESSION['position'] as $key => $values) {
-            $_SESSION['position'][$key]['stack'] = $key;
+        $stack = $this->positionStackRef();
+        $current = $this->stack;
+        $num = count($stack);
+        $quitar = $num - $current;
+        if ($quitar > 0) {
+            array_splice($stack, -$quitar);
         }
-        $this->stack = $stack - 1;
+        $stack = array_values($stack);
+        foreach ($stack as $key => $values) {
+            $stack[$key]['stack'] = $key;
+        }
+        $_SESSION['position'] = $stack;
+        $this->stack = $current - 1;
         session_write_close();
     }
 
-    /**
-     * Coloca el cursor de position en la última posición.
-     */
     private function goEnd(): void
     {
         if ($this->notExistsSession()) {
             return;
         }
-        $aPosition = end($_SESSION['position']);
-        $this->stack = key($_SESSION['position']);
-        $this->surl = $aPosition['url'];
-        $this->sbloque = $aPosition['bloque'];
-        $this->aParametros = $aPosition['parametros'];
+        $stack = $this->positionStackRef();
+        $raw = end($stack);
+        $stackKey = key($stack);
+        if (!is_array($raw) || $stackKey === null) {
+            return;
+        }
+        $this->applyEntry(self::normalizeEntry($raw, (int) $stackKey), (int) $stackKey);
     }
 
-    /**
-     * Coloca el cursor de Posicion n posiciones atrás.
-     * Para n=0, no se usa el valor en $_SESSION['position'], sino el actual.
-     */
     public function go(int $n = 0): void
     {
         if ($n === 0 || $this->notExistsSession()) {
             return;
         }
 
-        $aPosition = end($_SESSION['position']);
+        $stack = $this->positionStackRef();
+        $raw = end($stack);
         for ($i = 0; $i < $n; $i++) {
-            $aPosition = prev($_SESSION['position']);
-            if ($aPosition === FALSE) {
-                $aPosition = reset($_SESSION['position']);
+            $prev = prev($stack);
+            if ($prev === false) {
+                $raw = reset($stack);
                 break;
             }
+            $raw = $prev;
         }
-        $this->stack = key($_SESSION['position']);
-        $this->surl = $aPosition['url'];
-        $this->sbloque = $aPosition['bloque'];
-        $this->aParametros = $aPosition['parametros'];
+        $stackKey = key($stack);
+        if (!is_array($raw) || $stackKey === null) {
+            return;
+        }
+        $this->applyEntry(self::normalizeEntry($raw, (int) $stackKey), (int) $stackKey);
     }
 
-    public function getStack($n = 0): int
+    public function getStack(int $n = 0): int
     {
-        end($_SESSION['position']);
+        $stack = $this->positionStackRef();
+        end($stack);
         for ($i = 0; $i < $n; $i++) {
-            prev($_SESSION['position']);
+            prev($stack);
         }
-        $key = key($_SESSION['position']);
-        $this->stack = empty($key) ? 0 : $key;
+        $key = key($stack);
+        $this->stack = ($key === null || $key === '') ? 0 : (int) $key;
         return $this->stack;
     }
 
-    /**
-     * Coloca el cursor de Posicion en stack.
-     *
-     * @param int|string $stack índice del array $_SESSION['position'].
-     */
     public function goStack(int|string $stack = '*'): bool
     {
-        if (isset($_SESSION['position'][$stack])) {
-            $aPosition = $_SESSION['position'][$stack];
-            $this->stack = $aPosition['stack'];
-            $this->surl = $aPosition['url'];
-            $this->sbloque = $aPosition['bloque'];
-            $this->aParametros = $aPosition['parametros'];
-            return true;
+        if ($stack === '*') {
+            return false;
         }
-        return false;
+        $position = $this->positionStackRef();
+        if (!isset($position[$stack])) {
+            return false;
+        }
+        $raw = $position[$stack];
+        $stackKey = is_int($stack) ? $stack : (int) $stack;
+        $this->applyEntry(self::normalizeEntry($raw, $stackKey), $stackKey);
+        return true;
     }
 
-    public function olvidar($stack = '*'): void
+    public function olvidar(int|string $stack = '*'): void
     {
+        $position = &$this->positionStackRef();
         if ($stack !== '*') {
-            array_splice($_SESSION['position'], $stack + 1);
-        } elseif (isset($this->stack)) {
-            array_splice($_SESSION['position'], $this->stack);
+            $idx = is_int($stack) ? $stack : (int) $stack;
+            array_splice($position, $idx + 1);
+        } else {
+            array_splice($position, $this->stack);
         }
         $this->guardar();
     }
 
-    /**
-     * @param int $parar Para el incremento de la pila. Por defecto 0. Usar 1 para actualizar la misma página.
-     */
-    public function recordar($parar = 0): void
+    public function recordar(int $parar = 0): void
     {
-        $this->stack = $this->aParametros['stack'] ?? 0;
+        $stackParam = $this->aParametros['stack'] ?? 0;
+        $this->stack = is_numeric($stackParam) ? (int) $stackParam : 0;
         $this->limitar(20);
-        if (empty($this->stack)) {
+        if ($this->stack === 0) {
             if ($this->existsSession()) {
-                end($_SESSION['position']);
-                $stack = empty($parar) ? (int)key($_SESSION['position']) + 1 : (int)key($_SESSION['position']);
+                $position = $this->positionStackRef();
+                end($position);
+                $key = key($position);
+                $base = ($key === null) ? 0 : (int) $key;
+                $stack = $parar === 0 ? $base + 1 : $base;
             } else {
                 $stack = 0;
             }
         } else {
             $this->deleteFroward();
-            $stack = empty($parar) ? $this->stack + 1 : $this->stack;
+            $stack = $parar === 0 ? $this->stack + 1 : $this->stack;
         }
         $this->setParametro('stack', $stack);
-        $aPosition = array('url' => $this->surl, 'bloque' => $this->sbloque, 'parametros' => $this->aParametros, 'stack' => $stack);
+        $aPosition = [
+            'url' => $this->surl,
+            'bloque' => $this->sbloque,
+            'parametros' => $this->aParametros,
+            'stack' => $stack,
+        ];
 
         session_start();
-        $_SESSION['position'][$stack] = $aPosition;
+        $position = &$this->positionStackRef();
+        $position[$stack] = $aPosition;
         session_write_close();
     }
 
     private function guardar(): void
     {
-        if (!isset($this->stack)) {
-            if ($this->existsSession()) {
-                end($_SESSION['position']);
-                $stack = key($_SESSION['position']);
-            } else {
-                $stack = 0;
-            }
+        if ($this->existsSession()) {
+            $position = $this->positionStackRef();
+            end($position);
+            $key = key($position);
+            $stack = ($key === null) ? 0 : (int) $key;
         } else {
             $stack = $this->stack;
         }
         session_start();
-        $_SESSION['position'][$stack] = array('url' => $this->surl, 'bloque' => $this->sbloque, 'parametros' => $this->aParametros, 'stack' => $stack);
+        $position = &$this->positionStackRef();
+        $position[$stack] = [
+            'url' => $this->surl,
+            'bloque' => $this->sbloque,
+            'parametros' => $this->aParametros,
+            'stack' => $stack,
+        ];
         session_write_close();
     }
 
-    public function go_atras($n = 0): string
+    public function go_atras(int $n = 0): string
     {
         $this->go($n);
-        if (empty($this->surl)) {
+        if ($this->surl === '') {
             return '';
         }
         $id_div = $this->getId_div();
-        $id_div = empty($id_div) ? 'go_atras' : $id_div;
+        $id_div = $id_div === '' ? 'go_atras' : $id_div;
 
         $url = $this->surl;
         $aParam = $this->aParametros;
-        if (!empty($aParam['bloque'])) {
+        if (!empty($aParam['bloque']) && is_string($aParam['bloque'])) {
             $this->sbloque = '#' . $aParam['bloque'];
         }
         $sparametros = HashFront::add_hash($aParam, $url);
@@ -200,14 +254,14 @@ class Posicion
         return $html;
     }
 
-    public function js_atras($n = 0): string
+    public function js_atras(int $n = 0): string
     {
         $this->go($n);
-        if (empty($this->surl)) {
+        if ($this->surl === '') {
             return '';
         }
         $id_div = $this->getId_div();
-        $id_div = empty($id_div) ? 'js_atras' : $id_div;
+        $id_div = $id_div === '' ? 'js_atras' : $id_div;
 
         $url = $this->surl;
         $aParam = $this->aParametros;
@@ -224,21 +278,18 @@ class Posicion
         return "fnjs_mostrar_atras('#$id_div','$html');";
     }
 
-    /**
-     * Retorna un div con formulario para enviar datos a Posicion.
-     */
     public function mostrar_left_slide(int $n = 0): string
     {
         $this->go($n);
-        if (empty($this->surl)) {
+        if ($this->surl === '') {
             return '';
         }
         $id_div = $this->getId_div();
-        $id_div = empty($id_div) ? 'ir_atras' : $id_div;
+        $id_div = $id_div === '' ? 'ir_atras' : $id_div;
 
         $url = $this->surl;
         $aParam = $this->aParametros;
-        if (!empty($aParam['bloque'])) {
+        if (!empty($aParam['bloque']) && is_string($aParam['bloque'])) {
             $this->sbloque = '#' . $aParam['bloque'];
         }
         $sparametros = HashFront::add_hash($aParam, $url);
@@ -256,18 +307,14 @@ class Posicion
         return $html;
     }
 
-    /**
-     * Retorna una imagen de flecha, con formulario para enviar datos a Posicion.
-     * onClick -> activa fnjs_ir_a(id_div)
-     */
     public function mostrar_back_arrow(int $n = 0): string
     {
         $this->go($n);
-        if (empty($this->surl)) {
+        if ($this->surl === '') {
             return '';
         }
         $id_div = $this->getId_div();
-        $id_div = empty($id_div) ? 'ir_atras2' : $id_div;
+        $id_div = $id_div === '' ? 'ir_atras2' : $id_div;
 
         $url = $this->surl;
         $aParam = $this->aParametros;
@@ -287,33 +334,32 @@ class Posicion
         return $html;
     }
 
-    private function limitar($n = 10): void
+    private function limitar(int $n = 10): void
     {
-        if (isset($_SESSION['position']) && $this->existsSession()) {
+        if ($this->existsSession()) {
+            $position = $this->positionStackRef();
             $max = 2 * $n;
-            $num = count($_SESSION['position']);
+            $num = count($position);
             if ($num > $max) {
-                array_splice($_SESSION['position'], -$n);
-                end($_SESSION['position']);
-                $this->stack = key($_SESSION['position']);
+                array_splice($position, -$n);
+                end($position);
+                $key = key($position);
+                $this->stack = ($key === null) ? 0 : (int) $key;
             }
         }
     }
 
-    public function setId_div($id_div): void
+    public function setId_div(?string $id_div): void
     {
         $this->sid_div = $id_div;
     }
 
     public function getId_div(): string
     {
-        if (empty($this->sid_div)) {
-            return '';
-        }
-        return $this->sid_div;
+        return $this->sid_div ?? '';
     }
 
-    public function setUrl($url): void
+    public function setUrl(string $url): void
     {
         $this->surl = $url;
     }
@@ -323,7 +369,7 @@ class Posicion
         return $this->surl;
     }
 
-    public function setBloque($bloque): void
+    public function setBloque(string $bloque): void
     {
         $this->sbloque = $bloque;
     }
@@ -333,55 +379,45 @@ class Posicion
         return $this->sbloque;
     }
 
-    public function addParametro($nomParametre, $valor, $n = 0): void
+    public function addParametro(string $nomParametre, mixed $valor, int $n = 0): void
     {
-        if (!empty($_SESSION['position'])) {
+        if ($this->existsSession()) {
             $this->go($n);
             $this->setParametro($nomParametre, $valor);
             $this->goEnd();
         }
     }
 
-    public function setParametro($nomParametre, $valor): void
+    public function setParametro(string $nomParametre, mixed $valor): void
     {
         $this->aParametros[$nomParametre] = $valor;
     }
 
-    public function setParametros($aVars, $n = 0): void
+    /** @param array<string, mixed> $aVars */
+    public function setParametros(array $aVars, int $n = 0): void
     {
         if ($this->constructor) {
             foreach ($aVars as $key => $value) {
                 $this->aParametros[$key] = $value;
             }
-        } else {
-            if (!empty($_SESSION['position'])) {
-                $this->go($n);
-                foreach ($aVars as $key => $value) {
-                    $this->aParametros[$key] = $value;
-                }
-                $this->guardar();
-                $this->goEnd();
+        } elseif ($this->existsSession()) {
+            $this->go($n);
+            foreach ($aVars as $key => $value) {
+                $this->aParametros[$key] = $value;
             }
+            $this->guardar();
+            $this->goEnd();
         }
     }
 
-    public function getParametro($nomParametre, $n = 0)
+    public function getParametro(string $nomParametre, int $n = 0): mixed
     {
-        if ($n == 0) {
-            if (!isset($this->aParametros[$nomParametre])) {
-                $valParametre = '';
-            } else {
-                $valParametre = empty($this->aParametros[$nomParametre]) ? '' : $this->aParametros[$nomParametre];
-            }
-        } else {
-            $this->go($n);
-            if (!isset($this->aParametros[$nomParametre])) {
-                $valParametre = '';
-            } else {
-                $valParametre = empty($this->aParametros[$nomParametre]) ? '' : $this->aParametros[$nomParametre];
-            }
-            $this->goEnd();
+        if ($n === 0) {
+            return $this->aParametros[$nomParametre] ?? '';
         }
-        return $valParametre;
+        $this->go($n);
+        $val = $this->aParametros[$nomParametre] ?? '';
+        $this->goEnd();
+        return empty($val) ? '' : $val;
     }
 }

@@ -14,13 +14,14 @@ use frontend\shared\PostRequest;
 class CasasQue
 {
     private ?string $sTitulo = null;
+    /** @var array<int, string> */
     private array $aCasas = [];
     private ?Desplegable $oDesplCasas = null;
     private ?DesplegableArray $oSelects = null;
     private ?string $sSeleccionados = null;
-    private int $cdc_sel;
-    private mixed $sBoton = null;
-    private mixed $sAntes = null;
+    private int $cdc_sel = 0;
+    private ?string $sBoton = null;
+    private ?string $sAntes = null;
 
     /**
      * Filtro whitelisted aplicado al obtener el listado de casas.
@@ -38,7 +39,7 @@ class CasasQue
      */
     public function getHtmlTabla2(): string
     {
-        $aOpcionesCasas = $this->getDesplCasas()->getOpciones();
+        $aOpcionesCasas = self::opcionesComoArray($this->getDesplCasas()->getOpciones());
         $this->oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
         $this->oSelects->setBlanco('t');
         $this->oSelects->setAccionConjunto('fnjs_mas_casas(event)');
@@ -86,7 +87,7 @@ class CasasQue
      */
     public function getHtmlTabla(): string
     {
-        $aOpcionesCasas = $this->getDesplCasas()->getOpciones();
+        $aOpcionesCasas = self::opcionesComoArray($this->getDesplCasas()->getOpciones());
         $this->oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
         $this->oSelects->setBlanco('t');
         $this->oSelects->setAccionConjunto('fnjs_mas_casas(event)');
@@ -142,7 +143,7 @@ class CasasQue
         return $sHtml;
     }
 
-    public function setCasas($sQue): void
+    public function setCasas(string $sQue): void
     {
         $this->aCasas = [];
         switch ($sQue) {
@@ -200,9 +201,12 @@ class CasasQue
         $this->oDesplCasas->setOpciones($this->fetchOpciones($filtro));
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getPosiblesCasas(): array
     {
-        return $this->oDesplCasas?->getOpciones() ?? [];
+        return self::opcionesComoArray($this->oDesplCasas?->getOpciones());
     }
 
     public function getDesplCasas(): Desplegable
@@ -221,7 +225,7 @@ class CasasQue
     public function getSelects(): DesplegableArray
     {
         if (!isset($this->oSelects)) {
-            $aOpcionesCasas = $this->getDesplCasas()->getOpciones();
+            $aOpcionesCasas = self::opcionesComoArray($this->getDesplCasas()->getOpciones());
             $this->oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
             $this->oSelects->setBlanco('t');
             $this->oSelects->setAccionConjunto('fnjs_mas_casas(event)');
@@ -232,7 +236,7 @@ class CasasQue
         return $this->oSelects;
     }
 
-    public function setAction($sAction): void
+    public function setAction(string $sAction): void
     {
         if (!isset($this->oDesplCasas)) {
             $oDesplCasas = new Desplegable();
@@ -243,26 +247,26 @@ class CasasQue
         $this->oDesplCasas->setAction($sAction);
     }
 
-    public function setCasasSel($sCasas): void
+    public function setCasasSel(string $sCasas): void
     {
     }
 
-    public function setTitulo($sTitulo): void
+    public function setTitulo(string $sTitulo): void
     {
         $this->sTitulo = $sTitulo;
     }
 
-    public function setBoton($sBoton): void
+    public function setBoton(string $sBoton): void
     {
         $this->sBoton = $sBoton;
     }
 
-    public function setAntes($sAntes): void
+    public function setAntes(string $sAntes): void
     {
         $this->sAntes = $sAntes;
     }
 
-    public function setSeleccionados($sSeleccionados): void
+    public function setSeleccionados(string $sSeleccionados): void
     {
         $this->sSeleccionados = $sSeleccionados;
     }
@@ -274,7 +278,31 @@ class CasasQue
 
     public function getCdcSel(): int
     {
-        return $this->cdc_sel ?? 0;
+        return $this->cdc_sel;
+    }
+
+    /**
+     * @return array<int|string, string>
+     */
+    private static function opcionesComoArray(mixed $opciones): array
+    {
+        if ($opciones === null) {
+            return [];
+        }
+        if (!is_array($opciones) && !$opciones instanceof \Traversable) {
+            return [];
+        }
+        $out = [];
+        foreach ($opciones as $key => $value) {
+            if (!is_int($key) && !is_string($key)) {
+                continue;
+            }
+            if (is_string($value) || is_numeric($value)) {
+                $out[$key] = (string) $value;
+            }
+        }
+
+        return $out;
     }
 
     /**
@@ -290,7 +318,18 @@ class CasasQue
         if (!isset($data['opciones']) || !is_array($data['opciones'])) {
             return [];
         }
-        return $data['opciones'];
+        $out = [];
+        foreach ($data['opciones'] as $id => $nombre) {
+            if (!is_int($id) && !is_numeric($id)) {
+                continue;
+            }
+            if (!is_string($nombre) && !is_numeric($nombre)) {
+                continue;
+            }
+            $out[(int) $id] = (string) $nombre;
+        }
+
+        return $out;
     }
 
     /**
@@ -308,8 +347,17 @@ class CasasQue
             }
         }
         if (!empty($filtro['id_ubi_in']) && is_array($filtro['id_ubi_in'])) {
-            $ids = array_values(array_filter(array_map('intval', $filtro['id_ubi_in']), static fn ($v) => $v > 0));
-            if (!empty($ids)) {
+            $ids = [];
+            foreach ($filtro['id_ubi_in'] as $id) {
+                if (!is_int($id) && !(is_string($id) && is_numeric($id))) {
+                    continue;
+                }
+                $v = (int) $id;
+                if ($v > 0) {
+                    $ids[] = $v;
+                }
+            }
+            if ($ids !== []) {
                 $campos['id_ubi_in'] = implode(',', $ids);
             }
         }

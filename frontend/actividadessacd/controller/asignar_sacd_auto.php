@@ -20,16 +20,14 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadessacd/helpers/actividadessacd_support.php';
 
 $oPosicion = FrontBootstrap::boot();
-$any_final_curs = $_SESSION['oConfig']->any_final_curs();
+$any_final_curs = actividadessacd_any_final_curs();
 $oF_inicurs_des = new \DateTime('@' . mktime(0, 0, 0, 9, 2, $any_final_curs));
 
-$idioma = $_SESSION['session_auth']['idioma'];
-if (!isset($idioma)) {
-    $idioma = $_SESSION['oConfig']->getIdioma_default();
-}
-$a_idioma = explode('.', (string)$idioma);
+$idioma = actividadessacd_session_idioma();
+$a_idioma = explode('.', $idioma);
 $code_lng = $a_idioma[0];
 $sep = '/';
 $fmtLocal = ($code_lng === 'en_US')

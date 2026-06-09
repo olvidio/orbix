@@ -5,6 +5,7 @@ use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
+use src\ubis\domain\contracts\PlanoOperationsTrait;
 use src\utils_database\domain\GenerateIdGlobal;
 
 /**
@@ -18,6 +19,8 @@ use src\utils_database\domain\GenerateIdGlobal;
  */
 class PgDireccionCentroDlRepository extends PgDireccionRepository implements DireccionCentroDlRepositoryInterface
 {
+    use PlanoOperationsTrait;
+
     public function __construct()
     {
         parent::__construct();
@@ -47,5 +50,10 @@ class PgDireccionCentroDlRepository extends PgDireccionRepository implements Dir
     {
         $miRegionDl = ConfigGlobal::mi_region_dl();
         return GenerateIdGlobal::generateIdGlobal($miRegionDl, $this->getNomTabla(), $id);
+    }
+
+    protected function getPdoConnection(): \PDO
+    {
+        return $this->getoDbl();
     }
 }

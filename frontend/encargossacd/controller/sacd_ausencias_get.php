@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
@@ -21,9 +22,9 @@ $oPosicion = FrontBootstrap::boot();
 
 $oPosicion->recordar();
 
-$Qhistorial = (integer)filter_input(INPUT_POST, 'historial');
-$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-$Qfiltro_sacd = (integer)filter_input(INPUT_POST, 'filtro_sacd');
+$Qhistorial = encargossacd_post_int('historial');
+$Qid_nom = encargossacd_post_int('id_nom');
+$Qfiltro_sacd = encargossacd_post_int('filtro_sacd');
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/sacd_ausencias_get_data', [
     'id_nom' => $Qid_nom,
@@ -40,12 +41,13 @@ $id_item = [];
 $inicio = [];
 $fin = [];
 foreach ($filas as $i => $fila) {
-    $id_enc[$i] = (int)($fila['id_enc'] ?? 0);
-    $id_tipo_enc[$i] = (int)($fila['id_tipo_enc'] ?? 0);
-    $desc_enc[$i] = (string)($fila['desc_enc'] ?? '');
-    $id_item[$i] = (int)($fila['id_item'] ?? 0);
-    $inicio[$i] = (string)($fila['inicio'] ?? '');
-    $fin[$i] = (string)($fila['fin'] ?? '');
+    $row = encargossacd_ausencia_row($fila);
+    $id_enc[$i] = $row['id_enc'];
+    $id_tipo_enc[$i] = $row['id_tipo_enc'];
+    $desc_enc[$i] = $row['desc_enc'];
+    $id_item[$i] = $row['id_item'];
+    $inicio[$i] = $row['inicio'];
+    $fin[$i] = $row['fin'];
 }
 
 $a_cosas = [

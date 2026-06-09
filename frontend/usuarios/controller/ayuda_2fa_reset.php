@@ -4,38 +4,30 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 
-// vengo por $GET
-$_POST = empty($_POST) ? $_GET : $_POST;
-
-/**
- * Página de ayuda para restablecer la autenticación de dos factores (2FA).
- * Esta página proporciona instrucciones detalladas para usuarios que han perdido
- * acceso a su aplicación de autenticación y necesitan restablecer su configuración de 2FA.
- */
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require __DIR__ . '/../../../libs/vendor/autoload.php';
 
-$Qusername = (string)$_POST['username'];
-$Qubicacion = (string)$_POST['ubicacion'];
-$Qesquema = (string)$_POST['esquema'];
-$Qurl_base = (string)$_POST['url_base'];
+if ($_POST === [] && $_GET !== []) {
+    $_POST = $_GET;
+}
+
+$Qusername = usuarios_request_string('username');
+$Qubicacion = usuarios_request_string('ubicacion');
+$Qesquema = usuarios_request_string('esquema');
+$Qurl_base = usuarios_request_string('url_base');
 
 $a_cosas = ['url_base' => $Qurl_base, 'username' => $Qusername, 'ubicacion' => $Qubicacion, 'esquema' => $Qesquema];
 $linkEnviarMail2fa = 'recuperar_2fa.php?' . http_build_query($a_cosas);
 
-$url_backend = $Qurl_base . 'src/usuarios/usuario_ayuda_info';
-$a_campos_backend = [
+$data = usuarios_post_data(PostRequest::getDataFromUrl($Qurl_base . 'src/usuarios/usuario_ayuda_info', [
     'username' => $Qusername,
     'esquema' => $Qesquema,
-];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$errores = $data['errores'];
-$emailOfuscado = $data['emailOfuscado'];
-
+]));
 
 $a_campos = [
-    'error_txt' => $errores,
+    'error_txt' => tessera_imprimir_string($data['errores'] ?? ''),
     'linkEnviarMail2fa' => $linkEnviarMail2fa,
-    'emailOfuscado' => $emailOfuscado,
+    'emailOfuscado' => tessera_imprimir_string($data['emailOfuscado'] ?? ''),
     'url_base' => $Qurl_base,
 ];
 

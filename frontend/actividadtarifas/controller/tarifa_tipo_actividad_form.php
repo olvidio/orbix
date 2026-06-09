@@ -22,27 +22,28 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadtarifas/helpers/actividadtarifas_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
 
 $campos = ['id_item' => $Qid_item];
-$data = PostRequest::getDataFromUrl('/src/actividadtarifas/relacion_tarifa_form_data', $campos);
-$payload = is_array($data) ? $data : [];
+$fields = actividadtarifas_payload_fields(
+    PostRequest::getDataFromUrl('/src/actividadtarifas/relacion_tarifa_form_data', $campos)
+);
 
-$es_nuevo = (bool)($payload['es_nuevo'] ?? true);
-$id_item = (string)($payload['id_item'] ?? 'nuevo');
-$id_tipo_activ = (int)($payload['id_tipo_activ'] ?? 0);
-$id_tarifa_sel = (int)($payload['id_tarifa_sel'] ?? 0);
-$isfsv = (int)($payload['isfsv'] ?? 0);
-$nom_tipo_activ = (string)($payload['nom_tipo_activ'] ?? '');
-$opciones_tarifa = $payload['opciones_tarifa'] ?? [];
+$es_nuevo = $fields['es_nuevo'];
+$id_item = $fields['id_item'];
+$id_tipo_activ = $fields['id_tipo_activ'];
+$id_tarifa_sel = $fields['id_tarifa_sel'];
+$isfsv = $fields['isfsv'];
+$nom_tipo_activ = $fields['nom_tipo_activ'];
 
 $oDesplPosiblesTipoTarifas = new Desplegable();
 $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
-$oDesplPosiblesTipoTarifas->setOpciones($opciones_tarifa);
+$oDesplPosiblesTipoTarifas->setOpciones($fields['opciones_tarifa']);
 if (!$es_nuevo) {
-    $oDesplPosiblesTipoTarifas->setOpcion_sel($id_tarifa_sel);
+    $oDesplPosiblesTipoTarifas->setOpcion_sel(tessera_imprimir_string($id_tarifa_sel));
 }
 
 $api = AppUrlConfig::getApiBaseUrl();
@@ -100,7 +101,7 @@ if (!$es_nuevo) {
         'extendida' => '',
         'sfsv_all' => 'f',
     ]);
-    $actividad_tipo_html = (string)($dataTipo['actividad_tipo_html'] ?? '');
+    $actividad_tipo_html = tessera_imprimir_string($dataTipo['actividad_tipo_html'] ?? '');
 
     $a_campos = [
         'oPosicion' => $oPosicion,

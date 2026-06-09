@@ -7,12 +7,13 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/misas/modificar_iniciales_sacd_zona_data');
 
 $oDesplZonas = new Desplegable();
-$oDesplZonas->setOpciones($data['a_opciones'] ?? []);
+$oDesplZonas->setOpciones(misas_desplegable_opciones($data['a_opciones'] ?? []));
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_iniciales_sacd_zona()');

@@ -16,6 +16,7 @@ use frontend\shared\FrontBootstrap;
  * @since        2/8/2011.
  */
 
+require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -60,7 +61,7 @@ $dataTipo = PostRequest::getDataFromUrl($apiBase . '/src/procesos/fases_activ_ca
     'sactividad' => $Qsactividad,
     'sactividad2' => $Qsactividad2,
 ]);
-$tipo_actividad_html = (string)($dataTipo['tipo_actividad_html'] ?? '');
+$tipo_actividad_html = tessera_imprimir_string($dataTipo['tipo_actividad_html'] ?? '');
 
 $aOpciones = [
     'tot_any' => _("todo el año"),

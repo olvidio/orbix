@@ -4,6 +4,7 @@ use frontend\shared\PostRequest;
 use function frontend\shared\helpers\payload_string;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/asistentes_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -11,8 +12,7 @@ $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
 $campos = array_merge($_GET, $_POST);
-$data = PostRequest::getDataFromUrl('/src/asistentes/lista_ultima_activ_data', $campos);
-$payload = is_array($data) ? $data : [];
+$payload = asistentes_post_data(PostRequest::getDataFromUrl('/src/asistentes/lista_ultima_activ_data', $campos));
 
 echo payload_string($payload, 'alert_html');
 echo '<h3>' . htmlspecialchars(payload_string($payload, 'titulo'), ENT_QUOTES, 'UTF-8') . '</h3>';

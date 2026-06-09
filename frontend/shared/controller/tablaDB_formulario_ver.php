@@ -36,7 +36,8 @@ $aQuery = array(
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $stack = '';
 if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el caso de nuevo no hay que guardar el check)
-    $Qs_pkey = explode('#', $a_sel[0]);
+    $sel0 = $a_sel[0] ?? '';
+    $Qs_pkey = explode('#', is_string($sel0) ? $sel0 : '');
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
     $a_pkey = json_decode(src\shared\domain\helpers\urlsafe_b64decode($Qs_pkey));
@@ -79,8 +80,8 @@ $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $fields = $data['fields'];
 $tit_txt = $data['tit_txt'];
 $explicacion_txt = $data['explicacion_txt'];
-$camposForm = $data['camposForm'];
-$camposNo = $data['camposNo'];
+$camposForm = is_string($data['camposForm'] ?? null) ? $data['camposForm'] : '';
+$camposNo = is_string($data['camposNo'] ?? null) ? $data['camposNo'] : '';
 
 $oHashSelect = new HashFront();
 $oHashSelect->setCamposForm($camposForm);

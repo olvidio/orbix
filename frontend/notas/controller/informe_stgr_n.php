@@ -16,19 +16,20 @@ use frontend\shared\FrontBootstrap;
  * @subpackage estudios
  */
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-$Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$QdlRaw = filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qdl = is_array($QdlRaw) ? $QdlRaw : [];
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 
 $payload = PostRequest::getDataFromUrl('/src/notas/informe_stgr_n_data', [
     'dl' => $Qdl,
     'lista' => $Qlista,
 ]);
-$payload = is_array($payload) ? $payload : [];
 
-$ce_lugar = (string)($payload['ce_lugar'] ?? '');
+$ce_lugar = tessera_imprimir_string($payload['ce_lugar'] ?? '');
 unset($payload['ce_lugar']);
 
 if ($ce_lugar === '') {

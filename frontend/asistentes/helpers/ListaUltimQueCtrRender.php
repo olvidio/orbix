@@ -32,8 +32,8 @@ final class ListaUltimQueCtrRender
         if ($cn !== '') {
             $oHash->setCamposNo($cn);
         }
-        $hidden = $hashMain['campos_hidden'] ?? [];
-        $oHash->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+        $hidden = asistentes_hash_campos_hidden($hashMain['campos_hidden'] ?? []);
+        $oHash->setArrayCamposHidden($hidden);
         $payload['hash_form_html'] = $oHash->getCamposHtml();
 
         unset($payload['hash_main'], $payload['paths']);

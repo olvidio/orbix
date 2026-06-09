@@ -7,6 +7,7 @@ use frontend\shared\FrontBootstrap;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/inventario_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -21,7 +22,7 @@ $url_backend = '/src/inventario/lista_docs_de_lugar';
 $a_campos_backend = [ 'id_lugar' => $Qid_lugar];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
-$a_valores = $data['a_valores'];
+$a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
 
 $a_cabeceras[] = ucfirst(_("sigla"));
 $a_cabeceras[] = ucfirst(_("identificador"));

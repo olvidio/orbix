@@ -9,6 +9,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -20,21 +21,21 @@ $campos = [
     'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
 ];
 
-$data = PostRequest::getDataFromUrl('/src/casas/casa_ingresos_lista_data', $campos);
-$payload = is_array($data) ? $data : [];
+$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/casa_ingresos_lista_data', $campos));
+$lista = casas_ingresos_lista_from_payload($data);
 
-if (($payload['ok'] ?? false) === false) {
-    echo $payload['error'] ?? (string)_("No se pueden obtener los datos.");
+if (!$lista['ok']) {
+    echo $lista['error'] !== '' ? $lista['error'] : (string)_("No se pueden obtener los datos.");
     return;
 }
 
 $oLista = new Lista();
-$oLista->setGrupos($payload['a_grupos'] ?? []);
-$oLista->setCabeceras($payload['a_cabeceras'] ?? []);
-$oLista->setDatos($payload['a_valores'] ?? []);
+$oLista->setGrupos($lista['grupos']);
+$oLista->setCabeceras($lista['cabeceras']);
+$oLista->setDatos($lista['valores']);
 echo $oLista->listaPaginada();
-echo htmlspecialchars((string)($payload['nota'] ?? ''));
-$errores = (string)($payload['errores'] ?? '');
+echo htmlspecialchars($lista['nota']);
+$errores = $lista['errores'];
 if ($errores !== '') {
     echo "<br>";
     echo _("CUIDADO. Falta introducir datos");

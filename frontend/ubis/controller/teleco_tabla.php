@@ -6,6 +6,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -15,16 +16,18 @@ $oPosicion->recordar();
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 
-$data = PostRequest::getDataFromUrl('/src/ubis/teleco_tabla', [
+$payload = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/teleco_tabla', [
     'obj_pau' => $Qobj_pau,
     'id_ubi' => $Qid_ubi,
-]);
+]));
+$data = ubis_teleco_from_payload($payload);
+$lista = ubis_lista_from_payload($payload);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('telecos_tabla');
-$oTabla->setCabeceras($data['a_cabeceras']);
-$oTabla->setBotones($data['a_botones']);
-$oTabla->setDatos($data['a_valores']);
+$oTabla->setCabeceras($lista['cabeceras']);
+$oTabla->setBotones($lista['botones']);
+$oTabla->setDatos($lista['valores']);
 
 $oHash = new HashFront();
 $oHash->setCamposForm('mod!sel');

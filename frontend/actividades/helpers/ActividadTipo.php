@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\actividades\helpers;
 
+require_once __DIR__ . '/actividades_support.php';
+
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\helpers\ActividadTipoTwigHashCompose;
 use frontend\shared\model\ViewNewTwig;
@@ -43,7 +45,7 @@ class ActividadTipo
      * `ViewNewTwig::renderizar`). Para obtenerlo como string usar
      * {@see self::captureHtml()}.
      */
-    public function getHtml($extendida = false): void
+    public function getHtml(bool $extendida = false): void
     {
         $isfsv = OrbixRuntime::miSfsv();
         $aSfsv = [1 => 'sv', 2 => 'sf'];
@@ -61,10 +63,8 @@ class ActividadTipo
             $this->sasistentes = $oTipoActiv->getAsistentesText();
             if ($extendida) {
                 $this->sactividad = $oTipoActiv->getActividad2DigitosText();
-                $this->snom_tipo = $oTipoActiv->getNom_tipoText();
             } else {
                 $this->sactividad = $oTipoActiv->getActividadText();
-                $this->snom_tipo = $oTipoActiv->getNom_tipoText();
             }
         } else {
             $oTipoActiv = new TiposDeActividades('', (bool)$extendida);
@@ -83,6 +83,9 @@ class ActividadTipo
                     $oTipoActiv->setActividadText($this->sactividad);
                 }
             }
+            if (!empty($this->snom_tipo)) {
+                $oTipoActiv->setNom_tipoText($this->snom_tipo);
+            }
             $oTipoActiv->setPosiblesAll($this->bAll);
         }
 
@@ -99,23 +102,24 @@ class ActividadTipo
             $val_blanco_nom = '...';
         }
 
+        $oPerm = actividades_o_perm();
         $array2 = [];
-        if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+        if ($oPerm !== null && $oPerm->have_perm_oficina('est')) {
             $array2 = array_merge($array2, [1 => 'n', 3 => 'agd']);
         }
-        if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+        if ($oPerm !== null && $oPerm->have_perm_oficina('sm')) {
             $array2 = array_merge($array2, [1 => 'n']);
         }
-        if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+        if ($oPerm !== null && $oPerm->have_perm_oficina('nax')) {
             $array2 = array_merge($array2, [1 => 'nax']);
         }
-        if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+        if ($oPerm !== null && $oPerm->have_perm_oficina('agd')) {
             $array2 = array_merge($array2, [3 => 'agd']);
         }
-        if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+        if ($oPerm !== null && $oPerm->have_perm_oficina('sg')) {
             $array2 = array_merge($array2, [4 => 's', 5 => 'sg']);
         }
-        if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+        if ($oPerm !== null && $oPerm->have_perm_oficina('des')) {
             if ($this->status === ActividadStatusId::ACTUAL) {
                 $array_des = $oTipoActiv->getAsistentesPosibles();
             } else {
@@ -123,15 +127,15 @@ class ActividadTipo
             }
             $array2 = array_merge($array2, $array_des);
         }
-        if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
+        if ($oPerm !== null && $oPerm->have_perm_oficina('sr')) {
             $array2 = array_merge($array2, [7 => 'sr']);
         }
-        if ($_SESSION['oPerm']->have_perm_oficina('calendario')) { // desde la sf
+        if ($oPerm !== null && $oPerm->have_perm_oficina('calendario')) { // desde la sf
             $array2 = array_merge($array2, $oTipoActiv->getAsistentesPosibles());
         }
 
         // si es una búsqueda, también puedo buscar todos. (Excepto sf/sv)
-        if ($_SESSION['oConfig']->is_jefeCalendario()
+        if (actividades_is_jefe_calendario()
             || ((isset($this->que) && $this->que === 'buscar') || $this->bperm_jefe)
         ) {
             $oTipoActivB = new TiposDeActividades('', (bool)$extendida);
@@ -157,7 +161,7 @@ class ActividadTipo
         $oDesplSfsv = new Desplegable();
         $oDesplSfsv->setNombre('isfsv_val');
         $oDesplSfsv->setOpciones($a_sfsv_posibles);
-        $oDesplSfsv->setOpcion_sel($isfsvId);
+        $oDesplSfsv->setOpcion_sel((string) $isfsvId);
         if ($this->bAll === true) {
             $oDesplSfsv->setBlanco('t');
             $oDesplSfsv->setValBlanco('.');
@@ -167,7 +171,7 @@ class ActividadTipo
         $oDesplAsistentes = new Desplegable();
         $oDesplAsistentes->setNombre('iasistentes_val');
         $oDesplAsistentes->setOpciones($a_asistentes_posibles);
-        $oDesplAsistentes->setOpcion_sel($iasistentes);
+        $oDesplAsistentes->setOpcion_sel((string) $iasistentes);
         $oDesplAsistentes->setBlanco('t');
         $oDesplAsistentes->setValBlanco('.');
         $oDesplAsistentes->setAction('fnjs_actividad()');
@@ -183,7 +187,7 @@ class ActividadTipo
         $oDesplNomTipo = new Desplegable();
         $oDesplNomTipo->setNombre('inom_tipo_val');
         $oDesplNomTipo->setOpciones($a_nom_tipo_posibles);
-        $oDesplNomTipo->setOpcion_sel($inom_tipo);
+        $oDesplNomTipo->setOpcion_sel((string) $inom_tipo);
         $oDesplNomTipo->setBlanco('t');
         $oDesplNomTipo->setValBlanco($val_blanco_nom);
         if (isset($this->que)) {
@@ -260,59 +264,65 @@ class ActividadTipo
         return ob_get_clean() ?: '';
     }
 
-    public function setPerm_jefe($perm_jefe): void
+    public function setPerm_jefe(mixed $perm_jefe): void
     {
         $this->bperm_jefe = (bool)$perm_jefe;
     }
 
-    public function setSfsvAll($bAll = false): void
+    public function setSfsvAll(mixed $bAll = false): void
     {
         $this->bAll = (bool)$bAll;
     }
 
-    public function setSfsv($ssfsv): void
+    public function setSfsv(mixed $ssfsv): void
     {
-        $this->ssfsv = $ssfsv === null ? null : (string)$ssfsv;
+        $this->ssfsv = $ssfsv === null ? null : tessera_imprimir_string($ssfsv);
     }
 
-    public function setAsistentes($sasistentes): void
+    public function setAsistentes(mixed $sasistentes): void
     {
-        $this->sasistentes = $sasistentes === null ? null : (string)$sasistentes;
+        $this->sasistentes = $sasistentes === null ? null : tessera_imprimir_string($sasistentes);
     }
 
-    public function setActividad($sactividad): void
+    public function setActividad(mixed $sactividad): void
     {
-        $this->sactividad = $sactividad === null ? null : (string)$sactividad;
+        $this->sactividad = $sactividad === null ? null : tessera_imprimir_string($sactividad);
     }
 
-    public function setActividad2Digitos($sactividad): void
+    public function setActividad2Digitos(mixed $sactividad): void
     {
-        $this->sactividad = $sactividad === null ? null : (string)$sactividad;
+        $this->sactividad = $sactividad === null ? null : tessera_imprimir_string($sactividad);
     }
 
-    public function setNom_tipo($snom_tipo): void
+    public function setNom_tipo(mixed $snom_tipo): void
     {
-        $this->snom_tipo = $snom_tipo === null ? null : (string)$snom_tipo;
+        $this->snom_tipo = $snom_tipo === null ? null : tessera_imprimir_string($snom_tipo);
     }
 
-    public function setStatus($status): void
+    public function setStatus(mixed $status): void
     {
-        $this->status = $status === null ? null : (int)$status;
+        $this->status = $status === null ? null : tessera_imprimir_int($status);
     }
 
-    public function setQue($que): void
+    public function setQue(mixed $que): void
     {
-        $this->que = $que === null ? null : (string)$que;
+        $this->que = $que === null ? null : tessera_imprimir_string($que);
     }
 
-    public function setId_tipo_activ($id_tipo_activ): void
+    public function setId_tipo_activ(mixed $id_tipo_activ): void
     {
-        $this->id_tipo_activ = $id_tipo_activ;
+        if ($id_tipo_activ === null) {
+            $this->id_tipo_activ = null;
+        } elseif (is_int($id_tipo_activ) || is_string($id_tipo_activ)) {
+            $this->id_tipo_activ = $id_tipo_activ;
+        } else {
+            $this->id_tipo_activ = tessera_imprimir_string($id_tipo_activ);
+        }
     }
 
-    public function setPara($para = 'actividades'): void
+    public function setPara(mixed $para = 'actividades'): void
     {
-        $this->para = $para === null ? null : (string)$para;
+        $this->para = $para === null ? null : tessera_imprimir_string($para);
     }
 
     public function getEvitarProcesos(): ?bool
@@ -324,7 +334,7 @@ class ActividadTipo
      * Indica si se debe ignorar la app `procesos` aunque esté instalada
      * (la plantilla la usa para decidir si pinta el bloque de fases).
      */
-    public function setEvitarProcesos($evitar_procesos): void
+    public function setEvitarProcesos(mixed $evitar_procesos): void
     {
         $this->evitar_procesos = $evitar_procesos === null ? null : (bool)$evitar_procesos;
     }

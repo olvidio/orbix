@@ -5,33 +5,26 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-/**
- * Formulario para cambiar el mail por parte del usuario.
- */
-
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
-$id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
+$id_usuario = usuarios_session_auth_int('id_usuario');
+$usuario = usuarios_session_auth_string('username');
+$email = usuarios_session_auth_string('mail');
 
-$usuario = (string)($_SESSION['session_auth']['username'] ?? '');
-$email = (string)($_SESSION['session_auth']['mail'] ?? '');
 if ($usuario === '' && $id_usuario > 0) {
-    $data = PostRequest::getDataFromUrl('/src/usuarios/usuario_info', ['id_usuario' => $id_usuario]);
-    $usuario = (string)($data['usuario'] ?? '');
-    $email = (string)($data['email'] ?? '');
+    $data = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_info', ['id_usuario' => $id_usuario]));
+    $usuario = tessera_imprimir_string($data['usuario'] ?? '');
+    $email = tessera_imprimir_string($data['email'] ?? '');
 }
 
 $oHash = new HashFront();
 $oHash->setCamposForm('email');
-$a_camposHidden = array(
+$oHash->setArraycamposHidden([
     'id_usuario' => $id_usuario,
     'quien' => 'usuario',
-);
-$oHash->setArraycamposHidden($a_camposHidden);
-
+]);
 
 $txt_guardar = _("guardar datos");
 $txt_ok = _("se ha cambiado el mail");

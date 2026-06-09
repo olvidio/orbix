@@ -13,6 +13,7 @@ use frontend\shared\FrontBootstrap;
  */
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/dossiers/helpers/dossiers_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -24,38 +25,44 @@ $data = PostRequest::getDataFromUrl('/src/dossiers/perm_dossier_ver_data', [
 ]);
 
 // Firma de URLs y composición del bloque hash en el frontend.
-$goTo = '';
-if (!empty($data['go_to_link_spec']) && is_array($data['go_to_link_spec'])) {
-    $goTo = HashFrontSignedLink::fromSpec($data['go_to_link_spec']);
-}
+$goTo = HashFrontSignedLink::tryFromSpec($data['go_to_link_spec'] ?? null);
 unset($data['go_to_link_spec']);
-$data['go_to'] = $goTo;
 
-$hashConfig = is_array($data['hash_config'] ?? null) ? $data['hash_config'] : [];
+$hashConfigRaw = $data['hash_config'] ?? [];
+$hashConfig = is_array($hashConfigRaw) ? $hashConfigRaw : [];
 unset($data['hash_config']);
+
 $oHash = new HashFront();
-$oHash->setCamposForm((string)($hashConfig['campos_form'] ?? ''));
-$oHash->setCamposNo((string)($hashConfig['campos_no'] ?? ''));
-$camposHidden = is_array($hashConfig['campos_hidden'] ?? null) ? $hashConfig['campos_hidden'] : [];
+$oHash->setCamposForm(tessera_imprimir_string($hashConfig['campos_form'] ?? ''));
+$oHash->setCamposNo(tessera_imprimir_string($hashConfig['campos_no'] ?? ''));
+$camposHidden = [];
+$hiddenRaw = $hashConfig['campos_hidden'] ?? null;
+if (is_array($hiddenRaw)) {
+    foreach ($hiddenRaw as $k => $v) {
+        if (is_string($k)) {
+            $camposHidden[$k] = $v;
+        }
+    }
+}
 $camposHidden['go_to'] = $goTo;
 $oHash->setArrayCamposHidden($camposHidden);
-$data['hash_campos_html'] = $oHash->getCamposHtml();
 
-$dossierMap = [];
-if (isset($data['permiso_dossier_bit_map']) && is_array($data['permiso_dossier_bit_map'])) {
-    $dossierMap = $data['permiso_dossier_bit_map'];
-}
-$data['permiso_lectura_html'] = MenuPermisoMenuHtml::cuadrosCheck(
+$dossierMap = dossiers_perm_bit_map($data['permiso_dossier_bit_map'] ?? null);
+
+$viewData = dossiers_view_variables($data);
+$viewData['go_to'] = $goTo;
+$viewData['hash_campos_html'] = $oHash->getCamposHtml();
+$viewData['permiso_lectura_html'] = MenuPermisoMenuHtml::cuadrosCheck(
     'permiso_lectura',
-    (int)($data['permiso_lectura'] ?? 0),
+    tessera_imprimir_int($data['permiso_lectura'] ?? 0),
     $dossierMap
 );
-$data['permiso_escritura_html'] = MenuPermisoMenuHtml::cuadrosCheck(
+$viewData['permiso_escritura_html'] = MenuPermisoMenuHtml::cuadrosCheck(
     'permiso_escritura',
-    (int)($data['permiso_escritura'] ?? 0),
+    tessera_imprimir_int($data['permiso_escritura'] ?? 0),
     $dossierMap
 );
-unset($data['permiso_dossier_bit_map']);
+unset($viewData['permiso_dossier_bit_map']);
 
 $oView = new ViewNewPhtml('frontend\\dossiers\\controller');
-$oView->renderizar('perm_dossier_pres.phtml', $data);
+$oView->renderizar('perm_dossier_pres.phtml', $viewData);

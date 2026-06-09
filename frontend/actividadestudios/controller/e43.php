@@ -6,49 +6,35 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-// INICIO Cabecera global de URL de controlador *********************************
+require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
 
-$msg_err = '';
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
+$Qid_nom = actividadestudios_id_nom_from_sel_post()['id_nom'];
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-    $parts = explode('#', $a_sel[0]);
-    $Qid_nom = (int)($parts[0] ?? 0);
-} else {
-    $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-}
-
-$d = PostRequest::getDataFromUrl('/src/actividadestudios/e43_data', [
+$d = actividadestudios_e43_from_payload(actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/e43_data', [
     'id_nom' => $Qid_nom,
     'id_activ' => $Qid_activ,
-]);
-$msg_err = $d['msg_err'] ?? '';
-$nom = $d['nom'] ?? '';
-$txt_nacimiento = $d['txt_nacimiento'] ?? '';
-$dl_origen = $d['dl_origen'] ?? '';
-$dl_destino = $d['dl_destino'] ?? '';
-$txt_actividad = $d['txt_actividad'] ?? '';
-$matriculas = (int)($d['matriculas'] ?? 0);
-$aAsignaturasMatriculadas = $d['aAsignaturasMatriculadas'] ?? [];
+])));
+$msg_err = $d['msg_err'];
+$nom = $d['nom'];
+$txt_nacimiento = $d['txt_nacimiento'];
+$dl_origen = $d['dl_origen'];
+$dl_destino = $d['dl_destino'];
+$txt_actividad = $d['txt_actividad'];
+$matriculas = $d['matriculas'];
+$aAsignaturasMatriculadas = $d['aAsignaturasMatriculadas'];
 
 $oHash = new HashFront();
 $oHash->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/e43_2_mpdf.php');
 $oHash->setCamposForm('id_nom!id_activ');
 $h = $oHash->linkSinVal();
 
-
-if (!empty($msg_err)) {
-    echo $msg_err . "<br><br>";
+if ($msg_err !== '') {
+    actividadestudios_echo_string($msg_err . '<br><br>');
 }
 
 $a_campos = ['oPosicion' => $oPosicion,

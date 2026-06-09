@@ -16,6 +16,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -26,34 +27,29 @@ $campos = [
     'inc_t' => (string)filter_input(INPUT_POST, 'inc_t'),
 ];
 
-$data = PostRequest::getDataFromUrl('/src/casas/calendario_ubi_resumen_data', $campos);
-$payload = is_array($data) ? $data : [];
+$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/calendario_ubi_resumen_data', $campos));
+$errorInfo = casas_calendario_body_error_from_payload($data);
 
-$ok = (bool)($payload['ok'] ?? false);
-$error = (string)($payload['error'] ?? '');
-
-if (!$ok && $error === 'sin_gastos_anterior') {
-    $any_anterior = (int)($payload['any_anterior'] ?? 0);
-    $id_ubi = (int)($payload['id_ubi'] ?? 0);
+if (!$errorInfo['ok'] && $errorInfo['error'] === 'sin_gastos_anterior') {
     $aQuery = [
         'tipo_lista' => 'datosEcGastos',
-        'id_ubi' => $id_ubi,
+        'id_ubi' => $errorInfo['id_ubi'],
         'periodo' => 'ninguno',
-        'year' => $any_anterior,
+        'year' => $errorInfo['any_anterior'],
     ];
     array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
     $web = AppUrlConfig::getPublicAppBaseUrl();
     $pagina = HashFront::link($web . '/frontend/casas/controller/casa.php?' . http_build_query($aQuery));
-    $link = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$pagina');\">$any_anterior</span>";
+    $link = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$pagina');\">{$errorInfo['any_anterior']}</span>";
     echo sprintf(_("Falta introducir la información económica (total) del año anterior: %s"), $link);
     echo "<br><br>";
     return;
 }
 
-if (!$ok) {
-    echo $error !== '' ? $error : _("No se pueden calcular los datos solicitados.");
+if (!$errorInfo['ok']) {
+    echo $errorInfo['error'] !== '' ? $errorInfo['error'] : _("No se pueden calcular los datos solicitados.");
     return;
 }
 
 $oView = new ViewNewPhtml('frontend\\casas\\controller');
-$oView->renderizar('calendario_ubi_resumen_body.phtml', $payload);
+$oView->renderizar('calendario_ubi_resumen_body.phtml', $data);

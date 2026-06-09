@@ -7,45 +7,35 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) {
-    $Qid_activ = (int)strtok($a_sel[0], "#");
-} else {
-    $Qid_activ = (int)filter_input(INPUT_POST, 'id_activ');
-}
+$sel = procesos_sel_tokens_from_post();
+$Qid_activ = $sel['id'];
 
 $data = PostRequest::getDataFromUrl('/src/procesos/actividad_proceso_data', [
     'id_activ' => $Qid_activ,
 ]);
-$nom_activ = $data['nom_activ'] ?? '';
+$nom_activ = tessera_imprimir_string($data['nom_activ'] ?? '');
 
 $aQuery = [
     'pau' => 'a',
     'id_pau' => $Qid_activ,
     'obj_pau' => 'Actividad',
 ];
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
-}
+array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
 $godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
 $alt = _("ver dossiers");
 $dos = _("dossiers");
 
-$permiso_calendario = false;
-if (($_SESSION['oPerm']->have_perm_oficina('calendario')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
-    $permiso_calendario = true;
-}
+$permiso_calendario = procesos_have_perm_calendario();
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $url_generar = $apiBase . '/src/procesos/actividad_proceso_generar';
-// Renderer frontend que consume /src/procesos/actividad_proceso_get y
-// devuelve HTML.
 $url_get = 'frontend/procesos/controller/actividad_proceso_get.php';
 $url_update = $apiBase . '/src/procesos/actividad_proceso_update';
 

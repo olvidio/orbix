@@ -3,7 +3,6 @@
 namespace frontend\shared\layouts;
 
 use frontend\shared\config\OrbixRuntime;
-use frontend\shared\PostRequest;
 
 /**
  * Layout compacto de dos bandas (grupos en pills + módulos), sin barra lateral.
@@ -12,31 +11,11 @@ use frontend\shared\PostRequest;
  */
 class PillsLayout implements LayoutInterface
 {
-    /** @var array<string, mixed> */
-    private array $menuConfigArray = [];
-
-    /**
-     * @var array<int|string, string>
-     */
-    private array $listaGrupMenu = [];
+    use MenusBurgerLayoutSupport;
 
     public function generateMenuHtml(array $params): array
     {
-        $this->listaGrupMenu = $params['listaGrupMenu'] ?? [];
-
-        $payload = PostRequest::getDataFromUrl('/src/menus/menus_burger_layout_data', [
-            'lista_grup_menu_json' => json_encode($this->listaGrupMenu, JSON_UNESCAPED_UNICODE),
-        ]);
-        $this->menuConfigArray = [];
-        $user_menus = '';
-        if (is_array($payload)) {
-            if (isset($payload['menu_config']) && is_array($payload['menu_config'])) {
-                $this->menuConfigArray = $payload['menu_config'];
-            }
-            if (isset($payload['user_menus_html']) && is_string($payload['user_menus_html'])) {
-                $user_menus = $payload['user_menus_html'];
-            }
-        }
+        $user_menus = $this->loadBurgerMenuPayload($params);
 
         $html_shell = '<div class="orbix-layout-pills" id="orbixPillsShell">';
 
@@ -45,11 +24,9 @@ class PillsLayout implements LayoutInterface
 
         $html_shell .= '<nav class="pills-appbar__groups" aria-label="grupos">';
         $html_shell .= '<ul class="pills-groups" id="pillsGroupMenu">';
-        if (isset($params['grupMenuData'])) {
-            ksort($params['grupMenuData']);
-            foreach ($params['grupMenuData'] as $grupMenuItem) {
-                $grup_menu = $grupMenuItem['grup_menu'];
-                $esc = htmlspecialchars($grup_menu, ENT_QUOTES, 'UTF-8');
+        if (isset($params['grupMenuData']) && is_array($params['grupMenuData'])) {
+            foreach (self::layoutGrupMenuItems($params['grupMenuData']) as $grupMenuItem) {
+                $esc = htmlspecialchars($grupMenuItem['grup_menu'], ENT_QUOTES, 'UTF-8');
                 $html_shell .= '<li><button type="button" class="pills-pill pills-group-link" data-grupo="' . $esc . '">' . $esc . '</button></li>';
             }
         }
@@ -88,21 +65,18 @@ class PillsLayout implements LayoutInterface
         ob_start();
         include_once OrbixRuntime::dirEstilos() . '/layout_pills.css.php';
 
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     public function includeJs(array $params): string
     {
-        $defaultGrupMenu = (empty($params['id_grupmenu'])) ? '' : ($this->listaGrupMenu[$params['id_grupmenu']] ?? '');
-        $menuJson = json_encode($this->menuConfigArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        if ($menuJson === false) {
-            $menuJson = '{}';
-        }
+        $defaultGrupMenu = $this->defaultGrupMenuFromParams($params);
+        $menuJson = $this->menuConfigJson();
         ob_start();
         ?>
         <script>
             window.orbixLayout = {
-                defaultGrupMenu: <?= json_encode((string)$defaultGrupMenu, JSON_UNESCAPED_UNICODE) ?>,
+                defaultGrupMenu: <?= json_encode($defaultGrupMenu, JSON_UNESCAPED_UNICODE) ?>,
                 menuConfig: <?= $menuJson ?>
             };
             if (!window.__orbixLayoutPillsJsLoaded) {
@@ -114,16 +88,16 @@ class PillsLayout implements LayoutInterface
         </script>
         <?php
 
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     public function renderHtml(array $htmlComponents, array $params): string
     {
-        $html_shell = $htmlComponents['html_shell'] ?? '';
+        $html_shell = self::layoutScalarString($htmlComponents['html_shell'] ?? '');
 
         ob_start();
         echo $html_shell;
 
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 }

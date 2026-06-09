@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
@@ -16,20 +17,16 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
+$Qrefresh = encargossacd_post_int('refresh');
 $oPosicion->recordar($Qrefresh);
 
-$Qmod = (string)filter_input(INPUT_POST, 'mod');
-$Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
-$Qorigen = (string)filter_input(INPUT_POST, 'origen');
-$Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
+$Qmod = encargossacd_post_string('mod');
+$Qid_enc = encargossacd_post_int('id_enc');
+$Qorigen = encargossacd_post_string('origen');
+$Qdesc_enc = encargossacd_post_string('desc_enc');
 $Qdesc_enc = urldecode($Qdesc_enc);
 
-$id_item_h = (integer)filter_input(INPUT_POST, 'id_item_h');
-if (!empty($_POST['sel']) && is_array($_POST['sel'])) {
-    $parts = explode('#', (string)$_POST['sel'][0], 2);
-    $id_item_h = (int)($parts[0] ?? $id_item_h);
-}
+$id_item_h = encargossacd_post_sel_id_item_h(encargossacd_post_int('id_item_h'));
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/horario_ver_data', [
@@ -38,21 +35,22 @@ $data = PostRequest::getDataFromUrl('/src/encargossacd/horario_ver_data', [
     'id_item_h' => $id_item_h,
 ]);
 
-$f_ini = (string)($data['f_ini'] ?? '');
-$f_fin = (string)($data['f_fin'] ?? '');
-$dia_ref = (string)($data['dia_ref'] ?? '');
-$dia_num = (string)($data['dia_num'] ?? '');
-$mas_menos = (string)($data['mas_menos'] ?? '');
-$dia_inc = (string)($data['dia_inc'] ?? '');
-$h_ini = (string)($data['h_ini'] ?? '');
-$h_fin = (string)($data['h_fin'] ?? '');
-$n_sacd = (string)($data['n_sacd'] ?? '');
-$mes = (string)($data['mes'] ?? '');
-$id_item_h = (string)($data['id_item_h'] ?? '');
-$dia = (string)($data['dia'] ?? '');
-$opciones_dia_semana = is_array($data['opciones_dia_semana'] ?? null) ? $data['opciones_dia_semana'] : [];
-$opciones_dia_ref = is_array($data['opciones_dia_ref'] ?? null) ? $data['opciones_dia_ref'] : [];
-$opciones_ordinales = is_array($data['opciones_ordinales'] ?? null) ? $data['opciones_ordinales'] : [];
+$horario = encargossacd_horario_ver_from_payload($data);
+$f_ini = $horario['f_ini'];
+$f_fin = $horario['f_fin'];
+$dia_ref = $horario['dia_ref'];
+$dia_num = $horario['dia_num'];
+$mas_menos = $horario['mas_menos'];
+$dia_inc = $horario['dia_inc'];
+$h_ini = $horario['h_ini'];
+$h_fin = $horario['h_fin'];
+$n_sacd = $horario['n_sacd'];
+$mes = $horario['mes'];
+$id_item_h = $horario['id_item_h'];
+$dia = $horario['dia'];
+$opciones_dia_semana = $horario['opciones_dia_semana'];
+$opciones_dia_ref = $horario['opciones_dia_ref'];
+$opciones_ordinales = $horario['opciones_ordinales'];
 
 $titulo = _("horario de") . ": " . $Qdesc_enc;
 

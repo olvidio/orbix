@@ -22,13 +22,15 @@ use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadtarifas/helpers/actividadtarifas_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $miSfsv = OrbixRuntime::miSfsv();
 
 $oForm = new CasasQue();
 $filtro = ['active' => true];
-if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
+$oPerm = actividades_o_perm();
+if ($oPerm !== null && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))) {
     $oForm->setCasas('all');
 } elseif ($miSfsv === 1) {
     $oForm->setCasas('sv');

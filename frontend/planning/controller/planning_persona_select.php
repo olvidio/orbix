@@ -18,62 +18,72 @@ use frontend\shared\FrontBootstrap;
  * Migrado desde `apps/planning/controller/planning_persona_select.php`
  * (slice 2 de la migracion del modulo planning).
  */
+require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 
-$Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
-$Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
-$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
-$Qna = (string)filter_input(INPUT_POST, 'na');
-$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)filter_input(INPUT_POST, 'year');
-$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-$Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
-$Qapellido2 = (string)filter_input(INPUT_POST, 'apellido2');
-$Qnombre = (string)filter_input(INPUT_POST, 'nombre');
-$Qcentro = (string)filter_input(INPUT_POST, 'centro');
+$Qid_sel = planning_post_string('id_sel');
+$Qscroll_id = planning_post_string('scroll_id');
+$Qobj_pau = planning_post_string('obj_pau');
+$Qna = planning_post_string('na');
+$Qperiodo = planning_post_string('periodo');
+$Qyear = planning_post_string('year');
+$Qempiezamin = planning_post_string('empiezamin');
+$Qempiezamax = planning_post_string('empiezamax');
+$Qapellido1 = planning_post_string('apellido1');
+$Qapellido2 = planning_post_string('apellido2');
+$Qnombre = planning_post_string('nombre');
+$Qcentro = planning_post_string('centro');
+$QsaWhere = '';
+$QsaOperador = '';
+$QsaWhereCtr = '';
+$QsaOperadorCtr = '';
 
 if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = planning_post_int('stack');
     if ($stack !== 0) {
         $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack((int)$stack)) {
-            $Qobj_pau = (string)($oPosicion2->getParametro('obj_pau') ?: $Qobj_pau);
-            $Qna = (string)($oPosicion2->getParametro('na') ?: $Qna);
-            $Qperiodo = (string)($oPosicion2->getParametro('periodo') ?: $Qperiodo);
-            $Qyear = (string)($oPosicion2->getParametro('year') ?: $Qyear);
-            $Qempiezamin = (string)($oPosicion2->getParametro('empiezamin') ?: $Qempiezamin);
-            $Qempiezamax = (string)($oPosicion2->getParametro('empiezamax') ?: $Qempiezamax);
-            $Qid_sel = (string)($oPosicion2->getParametro('id_sel') ?: $Qid_sel);
-            $Qscroll_id = (string)($oPosicion2->getParametro('scroll_id') ?: $Qscroll_id);
-            $QsaWhere = (string)$oPosicion2->getParametro('saWhere');
-            $QsaOperador = (string)$oPosicion2->getParametro('saOperador');
-            $QsaWhereCtr = (string)$oPosicion2->getParametro('saWhereCtr');
-            $QsaOperadorCtr = (string)$oPosicion2->getParametro('saOperadorCtr');
-            $oPosicion2->olvidar((int)$stack);
+        if ($oPosicion2->goStack($stack)) {
+            $Qobj_pau = planning_posicion_string($oPosicion2->getParametro('obj_pau'), $Qobj_pau);
+            $Qna = planning_posicion_string($oPosicion2->getParametro('na'), $Qna);
+            $Qperiodo = planning_posicion_string($oPosicion2->getParametro('periodo'), $Qperiodo);
+            $Qyear = planning_posicion_string($oPosicion2->getParametro('year'), $Qyear);
+            $Qempiezamin = planning_posicion_string($oPosicion2->getParametro('empiezamin'), $Qempiezamin);
+            $Qempiezamax = planning_posicion_string($oPosicion2->getParametro('empiezamax'), $Qempiezamax);
+            $Qid_sel = planning_posicion_string($oPosicion2->getParametro('id_sel'), $Qid_sel);
+            $Qscroll_id = planning_posicion_string($oPosicion2->getParametro('scroll_id'), $Qscroll_id);
+            $QsaWhere = planning_posicion_string($oPosicion2->getParametro('saWhere'));
+            $QsaOperador = planning_posicion_string($oPosicion2->getParametro('saOperador'));
+            $QsaWhereCtr = planning_posicion_string($oPosicion2->getParametro('saWhereCtr'));
+            $QsaOperadorCtr = planning_posicion_string($oPosicion2->getParametro('saOperadorCtr'));
+            $oPosicion2->olvidar($stack);
 
-            $aWhere = json_decode(urlsafe_b64decode($QsaWhere), true) ?? [];
-            $aOperador = json_decode(urlsafe_b64decode($QsaOperador), true) ?? [];
-            $aWhereCtr = json_decode(urlsafe_b64decode($QsaWhereCtr), true) ?? [];
-            $aOperadorCtr = json_decode(urlsafe_b64decode($QsaOperadorCtr), true) ?? [];
-            $Qapellido1 = (string)($aWhere['apellido1'] ?? $Qapellido1);
+            $aWhereDecoded = json_decode(urlsafe_b64decode($QsaWhere), true);
+            $aWhere = is_array($aWhereDecoded) ? $aWhereDecoded : [];
+            $aOperadorDecoded = json_decode(urlsafe_b64decode($QsaOperador), true);
+            $aOperador = is_array($aOperadorDecoded) ? $aOperadorDecoded : [];
+            $aWhereCtrDecoded = json_decode(urlsafe_b64decode($QsaWhereCtr), true);
+            $aWhereCtr = is_array($aWhereCtrDecoded) ? $aWhereCtrDecoded : [];
+            $aOperadorCtrDecoded = json_decode(urlsafe_b64decode($QsaOperadorCtr), true);
+            $aOperadorCtr = is_array($aOperadorCtrDecoded) ? $aOperadorCtrDecoded : [];
+            $Qapellido1 = planning_where_string($aWhere, 'apellido1', $Qapellido1);
             if (str_starts_with($Qapellido1, '^')) {
                 $Qapellido1 = substr($Qapellido1, 1);
             }
-            $Qapellido2 = (string)($aWhere['apellido2'] ?? $Qapellido2);
+            $Qapellido2 = planning_where_string($aWhere, 'apellido2', $Qapellido2);
             if (str_starts_with($Qapellido2, '^')) {
                 $Qapellido2 = substr($Qapellido2, 1);
             }
-            $Qnombre = (string)($aWhere['nom'] ?? $Qnombre);
+            $Qnombre = planning_where_string($aWhere, 'nom', $Qnombre);
             if (str_starts_with($Qnombre, '^')) {
                 $Qnombre = substr($Qnombre, 1);
             }
-            $Qcentro = (string)($aWhereCtr['nombre_ubi'] ?? $Qcentro);
-            if (isset($aWhere['id_tabla']) && str_starts_with((string)$aWhere['id_tabla'], 'p')) {
-                $Qna = substr((string)$aWhere['id_tabla'], 1);
+            $Qcentro = planning_where_string($aWhereCtr, 'nombre_ubi', $Qcentro);
+            $idTablaWhere = planning_where_string($aWhere, 'id_tabla');
+            if (str_starts_with($idTablaWhere, 'p')) {
+                $Qna = substr($idTablaWhere, 1);
             }
         }
     }
@@ -121,7 +131,7 @@ $postPayload = [
 ];
 
 $apiData = PostRequest::getDataFromUrl('/src/planning/planning_persona_select_data', $postPayload);
-$cPersonas = $apiData['personas'] ?? [];
+$cPersonas = planning_personas_from_payload($apiData['personas'] ?? null);
 
 $aGoBack = [
     'obj_pau' => $Qobj_pau,
@@ -130,10 +140,10 @@ $aGoBack = [
     'year' => $Qyear,
     'empiezamin' => $Qempiezamin,
     'empiezamax' => $Qempiezamax,
-    'saWhere' => $QsaWhere ?? '',
-    'saOperador' => $QsaOperador ?? '',
-    'saWhereCtr' => $QsaWhereCtr ?? '',
-    'saOperadorCtr' => $QsaOperadorCtr ?? '',
+    'saWhere' => $QsaWhere,
+    'saOperador' => $QsaOperador,
+    'saWhereCtr' => $QsaWhereCtr,
+    'saOperadorCtr' => $QsaOperadorCtr,
 ];
 $oPosicion->setParametros($aGoBack, 1);
 
@@ -149,11 +159,12 @@ $a_cabeceras = [
 ];
 
 $i = 0;
+/** @var array<int|string, mixed> $a_valores */
 $a_valores = [];
-if (!empty($Qid_sel)) {
+if ($Qid_sel !== '') {
     $a_valores['select'] = $Qid_sel;
 }
-if (!empty($Qscroll_id)) {
+if ($Qscroll_id !== '') {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 foreach ($cPersonas as $row) {
@@ -173,10 +184,12 @@ foreach ($cPersonas as $row) {
     array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
     $pagina = HashFront::link('frontend/personas/controller/home_persona.php?' . http_build_query($aQuery));
 
-    $a_valores[$i]['sel'] = "$id_nom";
-    $a_valores[$i][1] = $id_tabla;
-    $a_valores[$i][2] = ['ira' => $pagina, 'valor' => $nom];
-    $a_valores[$i][3] = $ctr_o_dl;
+    $a_valores[$i] = [
+        'sel' => (string) $id_nom,
+        1 => $id_tabla,
+        2 => ['ira' => $pagina, 'valor' => $nom],
+        3 => $ctr_o_dl,
+    ];
 }
 
 $oHash = new HashFront();

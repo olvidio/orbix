@@ -4,11 +4,12 @@ namespace frontend\shared\permisos;
 
 /**
  * Vista solo lectura de bits (iconos), misma lógica que {@see \src\permisos\domain\XPermisos::cuadros_check_read()}.
- *
- * @param array<string, int> $bitMap
  */
 final class MenuPermCheckboxReadHtml
 {
+    /**
+     * @param array<string, int> $bitMap
+     */
     public static function render(int $bin, array $bitMap, string $iconsBaseUrl): string
     {
         if (empty($bin)) {

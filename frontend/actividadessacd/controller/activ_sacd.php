@@ -24,6 +24,7 @@ use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadessacd/helpers/actividadessacd_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
@@ -51,8 +52,7 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setBoton("<input type=\"button\" name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">");
 
-$perm_des = isset($_SESSION['oPerm'])
-    && $_SESSION['oPerm']->have_perm_oficina('des');
+$perm_des = actividades_have_perm_oficina('des');
 
 // Por cada endpoint AJAX, construir la URL firmada (`url + linkSinVal()`):
 // la firma cubre URL + nombres de campos; los valores viajan en el body POST.

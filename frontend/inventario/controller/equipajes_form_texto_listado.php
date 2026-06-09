@@ -5,11 +5,9 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/inventario_support.php';
 FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
-
 
 $Qtexto = (string)filter_input(INPUT_POST, 'texto');
 $Qloc = (string)filter_input(INPUT_POST, 'loc');
@@ -19,26 +17,26 @@ $titulo = '';
 $texto = htmlspecialchars_decode($Qtexto);
 switch ($Qloc) {
     case 'cabecera':
-        $titulo = _("cabecera");
+        $titulo = _('cabecera');
         break;
     case 'cabeceraB':
-        $titulo = _("cabecera B)");
+        $titulo = _('cabecera B)');
         break;
     case 'pie':
-        $titulo = _("pie");
+        $titulo = _('pie');
         break;
     default:
-        $titulo = _("texto a añadir en las maletas");
-        // Buscar el texto por defecto
-        preg_match('/docs_grupo_(.*)/', $Qloc, $matches);
-        $id_grupo = $matches[1];
+        $titulo = _('texto a añadir en las maletas');
+        $id_grupo = inventario_grupo_id_from_loc($Qloc);
 
         $url_backend = '/src/inventario/texto_de_egm';
         $a_campos_backend = [
             'id_equipaje' => $Qid_equipaje,
-            'id_grupo' => $id_grupo];
+            'id_grupo' => $id_grupo,
+        ];
         $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-        $texto = $data['texto'];
+        $payload = inventario_post_payload($data);
+        $texto = tessera_imprimir_string($payload['texto'] ?? '');
         break;
 }
 

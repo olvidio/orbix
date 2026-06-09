@@ -4,42 +4,27 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
-/**
- * Controlador para restablecer la configuración de autenticación de dos factores (2FA).
- * Este controlador se utiliza cuando un usuario ha perdido acceso a su aplicación de autenticación
- * y necesita desactivar 2FA para poder acceder a su cuenta.
- *
- */
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
-// Verificar que el usuario está autenticado
-$id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
-
-// Verificar que el ID de usuario en la solicitud coincide con el usuario autenticado
+$id_usuario = usuarios_session_auth_int('id_usuario');
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
 if ($id_usuario !== $Qid_usuario) {
-    // Si los IDs no coinciden, mostrar un error y redirigir
     $_SESSION['msg_2fa'] = _("Error: No tiene permiso para realizar esta acción");
     $go_to = AppUrlConfig::getPublicAppBaseUrl() . "/index.php";
     header("Location: $go_to");
     exit();
 }
 
-//////////////////////// Desactivar vía usuario_2fa_update (no usuario_guardar: requiere ctx HashB) ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/usuario_2fa_update';
-$a_campos_backend = [
+PostRequest::getDataFromUrl('/src/usuarios/usuario_2fa_update', [
     'id_usuario' => $id_usuario,
     'enable_2fa' => '0',
-];
-PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+]);
 
 $_SESSION['msg_2fa'] = _("Se ha desactivado correctamente la autenticación de dos factores (2FA). Si desea volver a activarla, deberá configurarla nuevamente.");
 
-// Redirigir al formulario de 2FA
 $url_2fa_form = AppUrlConfig::getPublicAppBaseUrl() . "/frontend/usuarios/controller/usuario_form_2fa.php";
 header("Location: $url_2fa_form");
 exit();

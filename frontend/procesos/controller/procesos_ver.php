@@ -7,70 +7,67 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$Qmod = (string)filter_input(INPUT_POST, 'mod');
-$Qid_item = (int)filter_input(INPUT_POST, 'id_item');
-$Qid_tipo_proceso = (int)filter_input(INPUT_POST, 'id_tipo_proceso');
+$Qmod = procesos_post_string('mod');
+$Qid_item = procesos_post_int('id_item');
+$Qid_tipo_proceso = procesos_post_int('id_tipo_proceso');
 
 $data = PostRequest::getDataFromUrl('/src/procesos/procesos_ver_data', [
     'mod' => $Qmod,
     'id_item' => $Qid_item,
 ]);
+$ver = procesos_ver_from_payload($data);
 
-$a_oficinas = $data['a_oficinas'] ?? [];
-$a_status = $data['a_status'] ?? [];
-$a_fases = $data['a_fases'] ?? [];
-$a_tareas = $data['a_tareas'] ?? [];
-$a_fases_previas = $data['a_fases_previas'] ?? [];
-
-$oDesplOficinas = new Desplegable('id_of_responsable', $a_oficinas, '', true);
-$oDesplStatus = new Desplegable('status', $a_status, $data['status'] ?? '', true);
+$oDesplOficinas = new Desplegable('id_of_responsable', $ver['a_oficinas'], '', true);
+$oDesplStatus = new Desplegable('status', $ver['a_status'], $ver['status'], true);
 
 $oDesplFase = new Desplegable();
-$oDesplFase->setOpciones($a_fases);
+$oDesplFase->setOpciones($ver['a_fases']);
 $oDesplFase->setNombre('id_fase');
 $oDesplFase->setAction('fnjs_get_depende(\'#id_fase\',\'#id_tarea\')');
 $oDesplFase->setBlanco(true);
 
 $oDesplTarea = new Desplegable();
-$oDesplTarea->setOpciones($a_tareas);
+$oDesplTarea->setOpciones($ver['a_tareas']);
 $oDesplTarea->setNombre('id_tarea');
 $oDesplTarea->setBlanco(true);
 
 if ($Qmod === 'editar') {
-    $oDesplOficinas->setOpcion_sel($data['id_of_responsable'] ?? '');
-    $oDesplFase->setOpcion_sel($data['id_fase'] ?? '');
-    if (!empty($data['id_tarea'])) {
-        $oDesplTarea->setOpcion_sel($data['id_tarea']);
+    $oDesplOficinas->setOpcion_sel($ver['id_of_responsable']);
+    $oDesplFase->setOpcion_sel($ver['id_fase']);
+    if ($ver['id_tarea'] !== '') {
+        $oDesplTarea->setOpcion_sel($ver['id_tarea']);
     }
 }
 
 $aDesplFasesPrevias = [];
 $aDesplTareasPrevias = [];
 $aMensajes_requisitos = [];
-foreach ($a_fases_previas as $fila) {
+foreach ($ver['a_fases_previas'] as $fila) {
+    $previa = procesos_fase_previa_row($fila);
     $oDesplFasePrevia = new Desplegable();
-    $oDesplFasePrevia->setOpciones($a_fases);
+    $oDesplFasePrevia->setOpciones($ver['a_fases']);
     $oDesplFasePrevia->setNombre('id_fase_previa[]');
     $oDesplFasePrevia->setAction('fnjs_get_depende(\'#id_fase_previa\',\'#id_tarea_previa\')');
     $oDesplFasePrevia->setBlanco(true);
-    if (!empty($fila['id_fase_previa'])) {
-        $oDesplFasePrevia->setOpcion_sel($fila['id_fase_previa']);
+    if ($previa['id_fase_previa'] !== '') {
+        $oDesplFasePrevia->setOpcion_sel($previa['id_fase_previa']);
     }
     $aDesplFasesPrevias[] = $oDesplFasePrevia;
 
     $oDesplTareaPrevia = new Desplegable();
-    $oDesplTareaPrevia->setOpciones($fila['a_tareas_previa'] ?? []);
+    $oDesplTareaPrevia->setOpciones($previa['a_tareas_previa']);
     $oDesplTareaPrevia->setNombre('id_tarea_previa[]');
     $oDesplTareaPrevia->setBlanco(true);
-    if (!empty($fila['id_tarea_previa'])) {
-        $oDesplTareaPrevia->setOpcion_sel($fila['id_tarea_previa']);
+    if ($previa['id_tarea_previa'] !== '') {
+        $oDesplTareaPrevia->setOpcion_sel($previa['id_tarea_previa']);
     }
     $aDesplTareasPrevias[] = $oDesplTareaPrevia;
 
-    $aMensajes_requisitos[] = $fila['mensaje_requisito'] ?? '';
+    $aMensajes_requisitos[] = $previa['mensaje_requisito'];
 }
 $dep_num = count($aDesplFasesPrevias);
 

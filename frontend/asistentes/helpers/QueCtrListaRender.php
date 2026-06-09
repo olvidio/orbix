@@ -28,19 +28,19 @@ final class QueCtrListaRender
         if ($cn !== '') {
             $oHash->setCamposNo($cn);
         }
-        $hidden = $hashMain['campos_hidden'] ?? [];
-        $oHash->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+        $hidden = asistentes_hash_campos_hidden($hashMain['campos_hidden'] ?? []);
+        $oHash->setArrayCamposHidden($hidden);
         $payload['hash_form_html'] = $oHash->getCamposHtml();
         unset($payload['hash_main']);
 
-        $pf = $payload['periodo_form'] ?? null;
-        if (is_array($pf)) {
+        $pf = asistentes_periodo_form_config($payload['periodo_form'] ?? null);
+        if ($pf !== null) {
             $oFormP = new PeriodoQue();
-            $oFormP->setFormName(payload_string($pf, 'form_name', 'modifica'));
-            $oFormP->setTitulo(payload_string($pf, 'titulo'));
-            $oFormP->setPosiblesPeriodos((array)($pf['opciones_periodos'] ?? []));
-            $oFormP->setDesplPeriodosOpcion_sel($pf['periodo_sel'] ?? 'tot_any');
-            $oFormP->setDesplAnysOpcion_sel($pf['year_sel'] ?? (int)date('Y'));
+            $oFormP->setFormName($pf['form_name']);
+            $oFormP->setTitulo($pf['titulo']);
+            $oFormP->setPosiblesPeriodos($pf['opciones_periodos']);
+            $oFormP->setDesplPeriodosOpcion_sel($pf['periodo_sel']);
+            $oFormP->setDesplAnysOpcion_sel($pf['year_sel']);
             $payload['periodo_form_html'] = $oFormP->getHtml();
         } else {
             $payload['periodo_form_html'] = '';

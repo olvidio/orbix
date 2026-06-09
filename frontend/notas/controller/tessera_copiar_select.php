@@ -6,6 +6,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -21,21 +22,15 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) {
-    $id_nom = (int)strtok($a_sel[0], '#');
-    $id_tabla = (string)strtok('#');
-} else {
-    $id_nom = (int)filter_input(INPUT_POST, 'id_nom');
-    $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
-}
+$persona = notas_persona_from_sel_post();
+$id_nom = $persona['id_nom'];
 
 $data = PostRequest::getDataFromUrl('/src/notas/tessera_copiar_select_data', [
     'id_nom' => $id_nom,
 ]);
 
-$nom = $data['nom'] ?? '';
-$aPosibles = $data['posibles_personas'] ?? [];
+$nom = tessera_imprimir_string($data['nom'] ?? '');
+$aPosibles = notas_desplegable_opciones($data['posibles_personas'] ?? []);
 
 $oDesplPersonas = new Desplegable();
 $oDesplPersonas->setNombre('id_nom_dst');

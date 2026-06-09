@@ -5,6 +5,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\asistentes\helpers\FormAsistentesAUnaActividadRender;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/asistentes_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -15,9 +16,8 @@ if (empty($Qactualizar)) {
 }
 
 $campos = array_merge($_GET, $_POST);
-$data = PostRequest::getDataFromUrl('/src/asistentes/form_asistentes_a_una_actividad_data', $campos);
 /** @var array<string, mixed> $payload */
-$payload = is_array($data) ? $data : [];
+$payload = asistentes_post_data(PostRequest::getDataFromUrl('/src/asistentes/form_asistentes_a_una_actividad_data', $campos));
 $payload = FormAsistentesAUnaActividadRender::enrich($payload);
 
 $a_campos = array_merge($payload, ['oPosicion' => $oPosicion]);

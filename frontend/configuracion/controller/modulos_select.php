@@ -6,6 +6,7 @@ use frontend\shared\web\Lista;
 use frontend\configuracion\helpers\ModulosSelectRender;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/configuracion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -16,7 +17,6 @@ $oPosicion->setParametros($aGoBack, 1);
 
 $campos = array_merge($_GET, $_POST);
 
-// Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
 $stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
 if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
     $campos['restored_id_sel']    = $oPosicion->getParametro('id_sel');
@@ -25,25 +25,22 @@ if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
 }
 
 $data = PostRequest::getDataFromUrl('/src/configuracion/modulos_select_data', $campos);
-$payload = is_array($data) ? $data : [];
+$payload = configuracion_string_key_payload($data);
 $payload = ModulosSelectRender::enrich($payload);
-
-$a_cabeceras = (array)($payload['a_cabeceras'] ?? []);
-$a_botones = (array)($payload['a_botones'] ?? []);
-$a_valores = (array)($payload['a_valores'] ?? []);
+$view = configuracion_modulos_select_view_from_payload($payload);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('modulos_select');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
+$oTabla->setCabeceras($view['a_cabeceras']);
+$oTabla->setBotones($view['a_botones']);
+$oTabla->setDatos($view['a_valores']);
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'hash_lista_html' => (string)($payload['hash_lista_html'] ?? ''),
+    'hash_lista_html' => $view['hash_lista_html'],
     'oTabla' => $oTabla,
-    'txt_eliminar' => (string)($payload['txt_eliminar'] ?? ''),
-    'txt_anadir_modulo' => (string)($payload['txt_anadir_modulo'] ?? ''),
+    'txt_eliminar' => $view['txt_eliminar'],
+    'txt_anadir_modulo' => $view['txt_anadir_modulo'],
 ];
 
 $oView = new ViewNewPhtml('frontend\\configuracion\\view');

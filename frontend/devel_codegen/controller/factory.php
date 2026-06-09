@@ -2,10 +2,12 @@
 
 namespace frontend\devel_codegen\controller;
 
+use frontend\shared\FrontBootstrap;
+use RuntimeException;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
-use RuntimeException;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\GlobalPdo;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -16,6 +18,7 @@ use function src\shared\domain\helpers\is_true;
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
+require_once __DIR__ . '/../helpers/devel_codegen_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 require_once __DIR__ . '/func_factory.php';
@@ -32,30 +35,27 @@ if (empty($Q_tabla)) {
     exit("Ha de dir quina taula");
 }
 // si la tabla tiene el schema, hay que separalo:
-$schema_sql = '';
-$tabla = $Q_tabla;
-$schema = strtok($tabla, '.');
-if ($schema !== $tabla) {
-    $tabla = strtok('.');
-    $schema_sql = "and n.nspname='$schema' ";
-} else {
-    $schema = 'public';
-}
+$schemaParts = devel_codegen_schema_table_parts($Q_tabla);
+$schema_sql = $schemaParts['schema_sql'];
+$tabla = $schemaParts['tabla'];
+$schema = $schemaParts['schema'];
 
-if (isset($Q_db)) {
-    switch ($Q_db) {
+if ($Q_db === '') {
+    exit("Ha de dir quina base de dades");
+}
+switch ($Q_db) {
         case "tramity":
-            $oDbl = $oDBT;
+            $oDbl = GlobalPdo::get('oDBT');
             $oDB_txt = 'oDBT';
             $prefix = '';
             break;
         case "davical":
-            $oDbl = $oDBDavical;
+            $oDbl = GlobalPdo::get('oDBDavical');
             $oDB_txt = 'oDBDavical';
             $prefix = '';
             break;
         case "comun":
-            $oDbl = $oDBC;
+            $oDbl = GlobalPdo::get('oDBC');
             $oDB_txt = 'oDBC';
             $prefix = '';
             switch ($schema) {
@@ -72,7 +72,7 @@ if (isset($Q_db)) {
             break;
         case "sv":
         case "sf":
-            $oDbl = $oDB;
+            $oDbl = GlobalPdo::get('oDB');
             $oDB_txt = 'oDB';
             $prefix = '';
             switch ($schema) {
@@ -91,7 +91,7 @@ if (isset($Q_db)) {
             }
             break;
         case "sv-e":
-            $oDbl = $oDBE;
+            $oDbl = GlobalPdo::get('oDBE');
             $oDB_txt = 'oDBE';
             $prefix = '';
             switch ($schema) {
@@ -111,9 +111,6 @@ if (isset($Q_db)) {
             break;
         default:
             exit("Ha de dir quina base de dades");
-    }
-} else {
-    exit("Ha de dir quina base de dades");
 }
 
 
@@ -145,14 +142,18 @@ $filenameOld = ServerConf::DIR . '/apps/' . $grupo . '/legacy/zz' . $Q_clase . '
 if (file_exists($filename)) {
     rename($filename, $filenameOld);
     /* rename class if exists */
-    $content = file_get_contents($filenameOld);
+    $content = devel_codegen_file_contents($filenameOld);
+    if ($content === '') {
+        echo "Cannot read file ($filenameOld)";
+        die();
+    }
     $pattern = '/^class\s+' . $Q_clase . '/im';
     $replacement = 'class zzz' . $Q_clase . 'Old';
-    $new_content = preg_replace($pattern, $replacement, $content);
+    $new_content = devel_codegen_preg_replace($pattern, $replacement, $content);
     // también el namespace:
     $pattern2 = '/^namespace\s+(.*)/im';
     $replacement2 = "namespace $grupo\\legacy;";
-    $new_content2 = preg_replace($pattern2, $replacement2, $new_content);
+    $new_content2 = devel_codegen_preg_replace($pattern2, $replacement2, $new_content);
 
     if (file_put_contents($filenameOld, $new_content2) === false) {
         echo "No puedo cambiar el nombre de la clase en  ($filenameOld)";
@@ -166,14 +167,18 @@ $filenameOld = ServerConf::DIR . '/apps/' . $grupo . '/legacy/zzzGestor' . $Q_cl
 if (file_exists($filename)) {
     rename($filename, $filenameOld);
     /* rename class if exists */
-    $content = file_get_contents($filenameOld);
+    $content = devel_codegen_file_contents($filenameOld);
+    if ($content === '') {
+        echo "Cannot read file ($filenameOld)";
+        die();
+    }
     $pattern = '/^class\s+' . $gestor . '/im';
     $replacement = 'class zzz' . $gestor . 'Old';
-    $new_content = preg_replace($pattern, $replacement, $content);
+    $new_content = devel_codegen_preg_replace($pattern, $replacement, $content);
     // también el namespace:
     $pattern2 = '/^namespace\s+(.*)/im';
     $replacement2 = "namespace $grupo\\legacy;";
-    $new_content2 = preg_replace($pattern2, $replacement2, $new_content);
+    $new_content2 = devel_codegen_preg_replace($pattern2, $replacement2, $new_content);
 
     if (file_put_contents($filenameOld, $new_content2) === false) {
         echo "No puedo cambiar el nombre de la clase en  ($filenameOld)";
@@ -239,7 +244,7 @@ $guardar_json = "";
 $err_bool = "";
 $a_auto = [];
 // una primera vuelta para cargar excepciones...
-foreach ($oDbl->query($sql) as $row) {
+foreach (devel_codegen_sql_rows($oDbl, $sql) as $row) {
     $nomcamp = $row['field'];
     if ($nomcamp === 'id_schema') {
         continue;
@@ -288,7 +293,7 @@ foreach ($oDbl->query($sql) as $row) {
     }
 }
 
-foreach ($oDbl->query($sql) as $row) {
+foreach (devel_codegen_sql_rows($oDbl, $sql) as $row) {
     $nomcamp = $row['field'];
     if ($nomcamp === 'id_schema') {
         continue;
@@ -296,6 +301,9 @@ foreach ($oDbl->query($sql) as $row) {
     $NomCamp = ucwords($nomcamp);
     $tipo = $row['type'];
     $null = (is_true($row['notnull'])) ? 'null' : '';
+    $tip = 's';
+    $tipo_db = 'string';
+    $tip_val = '';
 
     $sql_get_default = "SELECT pg_get_expr(adbin, adrelid) AS rowdefault
 				FROM pg_catalog.pg_attrdef d,
@@ -309,7 +317,7 @@ foreach ($oDbl->query($sql) as $row) {
 					and d.adnum =" . $row['attnum'];
 
     //echo "sql_def: $sql_get_default<br>";
-    $default = $oDbl->query($sql_get_default)->fetchColumn();
+    $default = devel_codegen_fetch_column($oDbl, $sql_get_default);
     $auto = 0;
     if (!empty($default)) { //nomes agafo un. li dono preferencia al id_local
         $matches = [];
@@ -423,6 +431,11 @@ foreach ($oDbl->query($sql) as $row) {
             $bytea_bind .= '$aDatos[\'' . $nomcamp . '\'] = hex2bin($' . $tip . $nomcamp . ' ?? \'\');';
             $bytea_bind .= "\n\t\t";
             $bytea_bind .= '}';
+            break;
+        default:
+            $tipo_db = 'string';
+            $tip = 's';
+            $tip_val = '';
             break;
     }
     if (empty($null)) {
@@ -779,6 +792,9 @@ $claus_getPrimary = '';
 $getClau = '';
 $claus_txt = '';
 $claus_txt2 = '';
+$clau = '';
+$clau_tip_txt = 'mixed';
+$nom_clau = '';
 if (count($aClaus2) === 1) {
     $a_nom_clau = current($aClaus2);
     $nom_clau = $a_nom_clau['tip_nomcamp'];
@@ -798,23 +814,27 @@ if (count($aClaus2) === 1) {
 } else {
     // si n'hi ha més d'una
     $i = 0;
-    foreach ($aClaus2 as $clau => $nom_clau) {
-        //$nom_clau="i".$clau;
+    foreach ($aClaus2 as $clauKey => $clauMeta) {
+        $clau = $clauKey;
+        $clau_tip_txt = $clauMeta['tip_txt'];
         $i++;
-        if ($i > 0) {
+        if ($i > 1) {
             $where .= " AND ";
         }
-        // si es integer quito las comillas del where
-        if ($nom_clau[0] === 'i') {
-            $where .= $clau . ' = $' . $clau;
+        if ($clauMeta['tip_nomcamp'][0] === 'i') {
+            $where .= $clauKey . ' = $' . $clauKey;
         } else {
-            $where .= $clau . ' = \'$' . $clau . '\'';
+            $where .= $clauKey . ' = \'$' . $clauKey . '\'';
         }
 
-        if (!empty($claus_txt)) $claus_txt .= ",";
-        $claus_txt .= $nom_clau;
-        if ($i > 0) $claus_txt2 .= ",\n\t\t\t\t\t\t\t";
-        $claus_txt2 .= "'$clau' => " . '$aDatos[\'' . $clau . '\']';
+        if ($claus_txt !== '') {
+            $claus_txt .= ',';
+        }
+        $claus_txt .= $clauMeta['tip_nomcamp'];
+        if ($i > 1) {
+            $claus_txt2 .= ",\n\t\t\t\t\t\t\t";
+        }
+        $claus_txt2 .= "'$clauKey' => " . '$aDatos[\'' . $clauKey . '\']';
     }
 }
 
@@ -1504,7 +1524,10 @@ $useImplementation = "use src\\$grupo\\infrastructure\\repositories\\{$pg_clase}
 $mappingLine = "    {$clase_interface}::class => autowire({$pg_clase}::class),";
 
 if (file_exists($filename)) {
-    $content = file_get_contents($filename);
+    $content = devel_codegen_file_contents($filename);
+    if ($content === '') {
+        die("Cannot read file ($filename)\n");
+    }
     // Insertar los 'use'
     // Buscamos el último 'use' para insertar los nuevos después, o antes de la función autowire si es el final.
     // Estrategia: Buscar la línea "use function DI\autowire;" que suele ser la última importación.

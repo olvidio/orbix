@@ -6,7 +6,6 @@ namespace frontend\asistentes\helpers;
 
 use function frontend\shared\helpers\payload_string;
 
-use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
@@ -74,25 +73,24 @@ final class SelectAsistentesAUnaActividadRender
         $oHash = new HashFront();
         $oHash->setCamposForm(payload_string($hashMain, 'campos_form'));
         $oHash->setCamposNo(payload_string($hashMain, 'campos_no'));
-        $hidden = $hashMain['campos_hidden'] ?? [];
-        $oHash->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+        $hidden = asistentes_hash_campos_hidden($hashMain['campos_hidden'] ?? []);
+        $oHash->setArrayCamposHidden($hidden);
 
         $hashMat = isset($seg['hash_matriculas']) && is_array($seg['hash_matriculas']) ? $seg['hash_matriculas'] : [];
         $oHash1 = new HashFront();
         $oHash1->setCamposForm(payload_string($hashMat, 'campos_form'));
         $oHash1->setCamposNo(payload_string($hashMat, 'campos_no'));
-        $hiddenM = $hashMat['campos_hidden'] ?? [];
-        $oHash1->setArrayCamposHidden(is_array($hiddenM) ? $hiddenM : []);
+        $hiddenM = asistentes_hash_campos_hidden($hashMat['campos_hidden'] ?? []);
+        $oHash1->setArrayCamposHidden($hiddenM);
 
         $tabla = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
         $oTabla = new Lista();
         $oTabla->setId_tabla(payload_string($tabla, 'id_tabla', 'select_asistentes_a_una_actividad'));
-        $oTabla->setCabeceras(is_array($tabla['cabeceras'] ?? null) ? $tabla['cabeceras'] : []);
-        $oTabla->setBotones(is_array($tabla['botones'] ?? null) ? $tabla['botones'] : []);
-        $oTabla->setDatos(is_array($tabla['valores'] ?? null) ? $tabla['valores'] : []);
+        $oTabla->setCabeceras(actividades_lista_cabeceras($tabla['cabeceras'] ?? []));
+        $oTabla->setBotones(actividades_lista_botones($tabla['botones'] ?? []));
+        $oTabla->setDatos(actividades_lista_datos($tabla['valores'] ?? []));
 
-        $dlSpecs = $seg['links_dl_specs'] ?? [];
-        $aLinks_dl = is_array($dlSpecs) ? DossierTipoFormLinkSpecsSigning::signLinkMap($dlSpecs) : [];
+        $aLinks_dl = asistentes_sign_link_map($seg['links_dl_specs'] ?? []);
 
         $oView = new ViewNewPhtml('frontend\asistentes\view');
 
@@ -100,7 +98,7 @@ final class SelectAsistentesAUnaActividadRender
             'oTabla' => $oTabla,
             'oHash' => $oHash,
             'oHash1' => $oHash1,
-            'id_pau' => $seg['id_pau'] ?? 0,
+            'id_pau' => tessera_imprimir_int($seg['id_pau'] ?? 0),
             'h3' => $h3,
             'h4' => $h4,
             'plazas_txt' => payload_string($seg, 'plazas_txt'),

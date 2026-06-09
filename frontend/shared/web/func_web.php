@@ -32,7 +32,7 @@ function dibujar_campo($obj, string $atributo, int $size, int $span1, int $span2
         $valor = $valor->getFromLocal();
     }
 
-    $valor = empty($valor) ? '' : htmlspecialchars($valor ?? '');
+    $valor = empty($valor) ? '' : htmlspecialchars((string) $valor);
 
     $help = '';
     $help_ref = '';

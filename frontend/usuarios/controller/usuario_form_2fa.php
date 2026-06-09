@@ -13,31 +13,23 @@ use frontend\shared\web\UrlBaseProject;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
-$id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
+$id_usuario = usuarios_session_auth_int('id_usuario');
+$usuario = usuarios_session_auth_string('username');
 
-$usuario = (string)($_SESSION['session_auth']['username'] ?? '');
+$faData = usuarios_2fa_info_from_payload(
+    usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_2fa_info', ['id_usuario' => $id_usuario]))
+);
+$has_2fa = $faData['has_2fa'];
+$secret_2fa = $faData['secret_2fa'];
 
-//////////////////////// Datos 2FA del usuario ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/usuario_2fa_info';
-$a_campos_backend = [ 'id_usuario' => $id_usuario ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-
-$has_2fa = isset($data['has_2fa']) ? $data['has_2fa'] : false;
-$secret_2fa = isset($data['secret_2fa']) ? $data['secret_2fa'] : '';
-
-// Si no hay clave secreta, generar una nueva
-if (empty($secret_2fa)) {
-    // Generar una clave secreta aleatoria de 16 caracteres
+if ($secret_2fa === '') {
     $secret_2fa = generate_secret_key();
 }
 
-// Generar la URL para el c?digo QR
-// poner un nombre seg?n la instalaci?n:
 $appName = 'Orbix';
 if (OrbixRuntime::webdirIsPruebas()) {
     $appName .= '-pruebas';
@@ -50,17 +42,15 @@ if (preg_match('/(.*?)\.docker/', OrbixRuntime::servidor())) {
 }
 $qr_url = get_qr_code_data($usuario, $secret_2fa, $appName);
 
-// Configurar el formulario
 $oHashUpdate = new HashFront();
 $url_2fa_update = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_2fa_update';
 $oHashUpdate->setUrl($url_2fa_update);
 $oHashUpdate->setCamposForm('enable_2fa!verification_code');
 $oHashUpdate->setCamposNo('enable_2fa');
-$a_camposHidden = array(
+$oHashUpdate->setArraycamposHidden([
     'id_usuario' => $id_usuario,
     'secret_2fa' => $secret_2fa,
-);
-$oHashUpdate->setArraycamposHidden($a_camposHidden);
+]);
 
 $oHashVerify = new HashFront();
 $url_2fa_verify = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_2fa_verify';
@@ -71,25 +61,23 @@ $h_2fa_verify = $oHashVerify->linkSinValParams();
 $txt_guardar = _("guardar configuraci?n");
 $txt_ok = _("se ha actualizado la configuraci?n de 2FA");
 
-// Verificar si hay un mensaje en la sesi?n
 $msg_2fa = '';
 $go_to = 'atras';
 if (isset($_SESSION['msg_2fa'])) {
-    $msg_2fa = $_SESSION['msg_2fa'];
-    // Limpiar el mensaje de la sesi?n para que no se muestre de nuevo
+    $msg_2fa = tessera_imprimir_string($_SESSION['msg_2fa']);
     unset($_SESSION['msg_2fa']);
     $go_to = "fnjs_logout();";
 }
 
 $url_base = UrlBaseProject::getUrlBase();
-$a_cosas = ['url_base' => $url_base,
+$a_cosas = [
+    'url_base' => $url_base,
     'username' => $usuario,
     'ubicacion' => '',
     'esquema' => OrbixRuntime::miRegionDl(),
 ];
 $link_ayuda = 'frontend/usuarios/controller/ayuda_2fa_reset.php?' . http_build_query($a_cosas);
 
-// Acceder a la variable global $oPosicion
 global $oPosicion;
 
 $url_jquery = AppUrlConfig::getNodeModulesBaseUrl() . '/jquery/dist/jquery.min.js';
@@ -117,13 +105,7 @@ $a_campos = [
 $oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('usuario_form_2fa.phtml', $a_campos);
 
-/**
- * Genera una clave secreta aleatoria para 2FA
- *
- * @param int $length Longitud de la clave (por defecto 16 caracteres)
- * @return string Clave secreta en formato base32
- */
-function generate_secret_key($length = 16)
+function generate_secret_key(int $length = 16): string
 {
     $base32_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
     $secret = '';
@@ -135,15 +117,7 @@ function generate_secret_key($length = 16)
     return $secret;
 }
 
-/**
- * Genera la URL para el c?digo QR que se usar? en la aplicaci?n de autenticaci?n
- *
- * @param string $username Nombre de usuario
- * @param string $secret Clave secreta
- * @param string $issuer Nombre de la aplicaci?n/sitio (por defecto 'Orbix')
- * @return string URL para generar el c?digo QR
- */
-function get_qr_code_data($username, $secret, $issuer = 'Orbix')
+function get_qr_code_data(string $username, string $secret, string $issuer = 'Orbix'): string
 {
     $data = "otpauth://totp/{$issuer}:{$username}?secret={$secret}&issuer={$issuer}";
 

@@ -6,6 +6,8 @@ namespace frontend\configuracion\helpers;
 
 use frontend\shared\security\HashFront;
 
+require_once __DIR__ . '/configuracion_support.php';
+
 /**
  * Completa el JSON de {@see \src\configuracion\application\ModulosFormData} para la vista.
  */
@@ -19,23 +21,21 @@ final class ModulosFormRender
     {
         $hm = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm((string)($hm['campos_form'] ?? ''));
-        $cn = (string)($hm['campos_no'] ?? '');
+        $oHash->setCamposForm(tessera_imprimir_string($hm['campos_form'] ?? ''));
+        $cn = tessera_imprimir_string($hm['campos_no'] ?? '');
         if ($cn !== '') {
             $oHash->setCamposNo($cn);
         }
-        $hidden = $hm['campos_hidden'] ?? [];
-        $oHash->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+        $oHash->setArrayCamposHidden(configuracion_hash_campos_hidden($hm['campos_hidden'] ?? null));
         $payload['hash_form_html'] = $oHash->getCamposHtml();
 
         $ha = isset($payload['hash_actualizar']) && is_array($payload['hash_actualizar']) ? $payload['hash_actualizar'] : [];
         $oHashA = new HashFront();
-        $cna = (string)($ha['campos_no'] ?? '');
+        $cna = tessera_imprimir_string($ha['campos_no'] ?? '');
         if ($cna !== '') {
             $oHashA->setCamposNo($cna);
         }
-        $hiddenA = $ha['campos_hidden'] ?? [];
-        $oHashA->setArrayCamposHidden(is_array($hiddenA) ? $hiddenA : []);
+        $oHashA->setArrayCamposHidden(configuracion_hash_campos_hidden($ha['campos_hidden'] ?? null));
         $payload['hash_actualizar_html'] = $oHashA->getCamposHtml();
 
         unset($payload['hash_main'], $payload['hash_actualizar']);

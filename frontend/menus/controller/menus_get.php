@@ -8,6 +8,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 
 // Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/menus_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -22,7 +23,7 @@ $Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
 $url_backend = '/src/menus/lista_meta_menus';
 $data = PostRequest::getDataFromUrl($url_backend);
 
-$aOpciones = $data['a_opciones'];
+$aOpciones = notas_desplegable_opciones($data['a_opciones'] ?? []);
 
 $oDesplMeta = new Desplegable('', $aOpciones, '', true);
 $oDesplMeta->setNombre('id_metamenu');
@@ -31,7 +32,7 @@ $oDesplMeta->setNombre('id_metamenu');
 $url_backend = '/src/menus/grupmenu_lista';
 $data = PostRequest::getDataFromUrl($url_backend);
 
-$aOpciones = $data['a_lista'];
+$aOpciones = notas_desplegable_opciones($data['a_lista'] ?? []);
 
 $oDesplGM = new Desplegable('', $aOpciones, '', true);
 $oDesplGM->setNombre('gm_new');
@@ -49,23 +50,20 @@ $pageData = PostRequest::getDataFromUrl('/src/menus/menus_get_page_data', [
     'id_menu' => $Qid_menu,
 ]);
 
-$perm_menu_bit_map = [];
-if (isset($pageData['perm_menu_bit_map']) && is_array($pageData['perm_menu_bit_map'])) {
-    $perm_menu_bit_map = $pageData['perm_menu_bit_map'];
-}
+$page = menus_get_page_from_payload($pageData);
+$perm_menu_bit_map = menus_perm_menu_bit_map($pageData['perm_menu_bit_map'] ?? []);
 
-if (($pageData['mode'] ?? '') === 'edit') {
-    $Qid_menu = (string)($pageData['id_menu'] ?? '');
-    $orden_txt = (string)($pageData['orden_txt'] ?? '');
-    $menu = (string)($pageData['menu'] ?? '');
-    $parametros = (string)($pageData['parametros'] ?? '');
-    $id_metamenu = $pageData['id_metamenu'] ?? null;
-    $menu_perm = $pageData['menu_perm'] ?? 0;
-    $txt_ok = (string)($pageData['txt_ok'] ?? '');
-    $campos_chk = (string)($pageData['campos_chk'] ?? 'ok');
+if ($page['mode'] === 'edit') {
+    $Qid_menu = $page['id_menu'];
+    $orden_txt = $page['orden_txt'];
+    $menu = $page['menu'];
+    $parametros = $page['parametros'];
+    $menu_perm = $page['menu_perm'];
+    $txt_ok = $page['txt_ok'];
+    $campos_chk = $page['campos_chk'];
 
-    if ($id_metamenu !== null) {
-        $oDesplMeta->setOpcion_sel((int)$id_metamenu);
+    if ($page['id_metamenu'] !== '') {
+        $oDesplMeta->setOpcion_sel($page['id_metamenu']);
     }
 
     $oHash = new HashFront();
@@ -132,7 +130,7 @@ if (($pageData['mode'] ?? '') === 'edit') {
     $oView = new ViewNewPhtml('frontend\menus\controller');
     $oView->renderizar('menus_get.phtml', $a_campos);
 } else {
-    $menuRows = (array)($pageData['menu_rows'] ?? []);
+    $menuRows = $page['menu_rows'];
 
     $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/menus/controller/menus_get.php';
     $oHash2 = new HashFront();

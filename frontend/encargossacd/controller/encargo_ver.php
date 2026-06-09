@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\encargossacd\model\DesplCentros;
 use frontend\shared\config\AppUrlConfig;
@@ -21,23 +22,23 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
+$Qrefresh = encargossacd_post_int('refresh');
 $oPosicion->recordar($Qrefresh);
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) {
     $Qid_enc = (int)strtok((string)$a_sel[0], '#');
 } else {
-    $Qid_enc = (int)filter_input(INPUT_POST, 'id_enc');
+    $Qid_enc = encargossacd_post_int('id_enc');
 }
 
-$Qque = (string)filter_input(INPUT_POST, 'que');
-$Qid_tipo_enc = (int)filter_input(INPUT_POST, 'id_tipo_enc');
-$Qgrupo = (string)filter_input(INPUT_POST, 'grupo');
-$Qfiltro_ctr = (string)filter_input(INPUT_POST, 'filtro_ctr');
-$Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
-$Qdesc_lugar = (string)filter_input(INPUT_POST, 'desc_lugar');
-$Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
+$Qque = encargossacd_post_string('que');
+$Qid_tipo_enc = encargossacd_post_int('id_tipo_enc');
+$Qgrupo = encargossacd_post_string('grupo');
+$Qfiltro_ctr = encargossacd_post_string('filtro_ctr');
+$Qdesc_enc = encargossacd_post_string('desc_enc');
+$Qdesc_lugar = encargossacd_post_string('desc_lugar');
+$Qid_zona = encargossacd_post_int('id_zona');
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/encargo_ver_data', [
@@ -51,34 +52,34 @@ $data = PostRequest::getDataFromUrl('/src/encargossacd/encargo_ver_data', [
     'id_zona' => $Qid_zona,
 ]);
 
-$Qque = (string)($data['que'] ?? $Qque);
-$Qid_enc = (int)($data['id_enc'] ?? $Qid_enc);
-$Qid_tipo_enc = (int)($data['id_tipo_enc'] ?? $Qid_tipo_enc);
-$Qgrupo = (string)($data['grupo'] ?? $Qgrupo);
-$Qfiltro_ctr = (string)($data['filtro_ctr'] ?? $Qfiltro_ctr);
-$Qdesc_enc = (string)($data['desc_enc'] ?? $Qdesc_enc);
-$Qdesc_lugar = (string)($data['desc_lugar'] ?? $Qdesc_lugar);
-$idioma_enc = (string)($data['idioma_enc'] ?? '');
-$Qid_ubi = (int)($data['id_ubi'] ?? 0);
-$Qid_zona = (int)($data['id_zona'] ?? $Qid_zona);
-$grupo_posibles = is_array($data['grupo_posibles'] ?? null) ? $data['grupo_posibles'] : [];
-$posibles_encargo_tipo = is_array($data['posibles_encargo_tipo'] ?? null) ? $data['posibles_encargo_tipo'] : [];
-$opciones_seccion = is_array($data['opciones_seccion'] ?? null) ? $data['opciones_seccion'] : [];
-$opciones_zonas = is_array($data['opciones_zonas'] ?? null) ? $data['opciones_zonas'] : [];
-$opciones_locales = is_array($data['opciones_locales'] ?? null) ? $data['opciones_locales'] : [];
+$Qque = tessera_imprimir_string($data['que'] ?? $Qque);
+$Qid_enc = tessera_imprimir_int($data['id_enc'] ?? $Qid_enc);
+$Qid_tipo_enc = tessera_imprimir_int($data['id_tipo_enc'] ?? $Qid_tipo_enc);
+$Qgrupo = tessera_imprimir_string($data['grupo'] ?? $Qgrupo);
+$Qfiltro_ctr = tessera_imprimir_string($data['filtro_ctr'] ?? $Qfiltro_ctr);
+$Qdesc_enc = tessera_imprimir_string($data['desc_enc'] ?? $Qdesc_enc);
+$Qdesc_lugar = tessera_imprimir_string($data['desc_lugar'] ?? $Qdesc_lugar);
+$idioma_enc = tessera_imprimir_string($data['idioma_enc'] ?? '');
+$Qid_ubi = tessera_imprimir_int($data['id_ubi'] ?? 0);
+$Qid_zona = tessera_imprimir_int($data['id_zona'] ?? $Qid_zona);
+$grupo_posibles = encargossacd_desplegable_opciones($data['grupo_posibles'] ?? []);
+$posibles_encargo_tipo = encargossacd_desplegable_opciones($data['posibles_encargo_tipo'] ?? []);
+$opciones_seccion = encargossacd_desplegable_opciones($data['opciones_seccion'] ?? []);
+$opciones_zonas = encargossacd_desplegable_opciones($data['opciones_zonas'] ?? []);
+$opciones_locales = encargossacd_desplegable_opciones($data['opciones_locales'] ?? []);
 
 $oDesplGrupos = new Desplegable();
 $oDesplGrupos->setNombre('grupo');
 $oDesplGrupos->setOpciones($grupo_posibles);
 $oDesplGrupos->setOpcion_sel($Qgrupo);
-$oDesplGrupos->setBlanco(1);
+$oDesplGrupos->setBlanco(encargossacd_desplegable_blanco(1));
 $oDesplGrupos->setAction("fnjs_lst_tipo_enc();");
 
 $oDesplNoms = new Desplegable();
 if (!empty($posibles_encargo_tipo)) {
     $oDesplNoms->setNombre('id_tipo_enc');
     $oDesplNoms->setOpciones($posibles_encargo_tipo);
-    $oDesplNoms->setOpcion_sel($Qid_tipo_enc);
+    $oDesplNoms->setOpcion_sel(encargossacd_desplegable_opcion_sel($Qid_tipo_enc));
     $oDesplNoms->setBlanco('t');
 } else {
     $oDesplNoms->setOpciones([]);
@@ -88,7 +89,7 @@ $oDesplGrupoCtrs = new Desplegable();
 $oDesplGrupoCtrs->setNombre('filtro_ctr');
 $oDesplGrupoCtrs->setOpciones($opciones_seccion);
 $oDesplGrupoCtrs->setOpcion_sel($Qfiltro_ctr);
-$oDesplGrupoCtrs->setBlanco(1);
+$oDesplGrupoCtrs->setBlanco(encargossacd_desplegable_blanco(1));
 $oDesplGrupoCtrs->setAction("fnjs_lista_ctrs();");
 
 $oDesplZonas = new Desplegable();
@@ -97,7 +98,7 @@ $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona_sel');
 $oDesplZonas->setAction('fnjs_lista_ctrs_por_zona()');
 if ($Qid_zona !== 0) {
-    $oDesplZonas->setOpcion_sel($Qid_zona);
+    $oDesplZonas->setOpcion_sel(encargossacd_desplegable_opcion_sel($Qid_zona));
 }
 
 $oDesplCtrs = DesplCentros::build((int)$Qfiltro_ctr, $Qid_ubi, $Qid_zona);
@@ -123,7 +124,7 @@ $oHashZona->setUrl($url_zona);
 $oHashZona->setCamposForm('id_zona');
 $h_zona = $oHashZona->linkSinValParams();
 
-$url_ctr = $webBase . '/src/encargossacd/ctr_get_select_data';
+$url_ctr = $apiBase . '/src/encargossacd/ctr_get_select_data';
 $oHashCtr = new HashFront();
 $oHashCtr->setUrl($url_ctr);
 $oHashCtr->setCamposForm('filtro_ctr');

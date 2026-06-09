@@ -6,6 +6,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -15,19 +16,20 @@ $Qc_p = (string)filter_input(INPUT_POST, 'c_p');
 $Qciudad = (string)filter_input(INPUT_POST, 'ciudad');
 $Qpais = (string)filter_input(INPUT_POST, 'pais');
 
-$data = PostRequest::getDataFromUrl('/src/ubis/direcciones_tabla', [
+$data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/direcciones_tabla', [
     'id_ubi' => $Qid_ubi,
     'obj_dir' => $Qobj_dir,
     'c_p' => $Qc_p,
     'ciudad' => $Qciudad,
     'pais' => $Qpais,
-]);
+]));
+$lista = ubis_lista_from_payload($data);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('direcciones_tabla');
-$oTabla->setCabeceras($data['a_cabeceras']);
+$oTabla->setCabeceras($lista['cabeceras']);
 $oTabla->setBotones([]);
-$oTabla->setDatos($data['a_valores']);
+$oTabla->setDatos($lista['valores']);
 
 $url_nueva = HashFront::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query([
     'mod' => 'nuevo',

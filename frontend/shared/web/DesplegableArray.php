@@ -4,19 +4,65 @@ namespace frontend\shared\web;
 
 class DesplegableArray extends Desplegable
 {
+    /** @var string|list<string>|null */
     private string|array|null $sSeleccionados = null;
     private ?string $sNomConjunto = null;
     private ?string $sAccionConjunto = null;
     private ?int $iTabIndexIni = null;
 
-    public function __construct($id = '', $Opciones = '', $Nom = '')
-    {
-        if (isset($id) && $id !== '') $this->sSeleccionados = $id;
-        if (isset($Opciones) && $Opciones !== '') $this->oOpciones = $Opciones;
-        if (isset($Nom) && $Nom !== '') $this->sNomConjunto = $Nom;
+    /**
+     * @param string|list<string> $id
+     * @param array<int|string, string>|DesplegableOpcionesIterable|string $Opciones
+     */
+    public function __construct(
+        string|array $id = '',
+        array|DesplegableOpcionesIterable|string $Opciones = '',
+        string $Nom = '',
+    ) {
+        if ($id !== '' && $id !== []) {
+            $this->sSeleccionados = $id;
+        }
+        if (is_array($Opciones) || $Opciones instanceof DesplegableOpcionesIterable) {
+            $this->oOpciones = $Opciones;
+        }
+        if ($Nom !== '') {
+            $this->sNomConjunto = $Nom;
+        }
     }
 
-    public function export()
+    private static function scalarString(mixed $value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        return '';
+    }
+
+    /**
+     * @return array{
+     *     multiple: bool,
+     *     size: int,
+     *     clase: string,
+     *     action: string,
+     *     nombre: string,
+     *     blanco: bool|string|null,
+     *     valorBlanco: string,
+     *     opcion_sel: string,
+     *     options: array<int|string, string>,
+     *     Seleccionados: string|list<string>|null,
+     *     NomConjunto: string|null,
+     *     AccionConjunto: string|null,
+     *     TabIndexIni: int|null
+     * }
+     */
+    public function export(): array
     {
         $a_properties = parent::export();
 
@@ -28,12 +74,23 @@ class DesplegableArray extends Desplegable
         return $a_properties;
     }
 
-    public function import($data)
+    /** @param array<string, mixed> $data */
+    public function import(array $data): void
     {
-        $this->sSeleccionados = $data['Seleccionados'] ?? '';
-        $this->sNomConjunto = $data['NomConjunto'] ?? '';
-        $this->sAccionConjunto = $data['AccionConjunto'] ?? '';
-        $this->iTabIndexIni = $data['TabIndexIni'] ?? 0;
+        $sel = $data['Seleccionados'] ?? '';
+        if (is_array($sel)) {
+            $normalized = [];
+            foreach ($sel as $item) {
+                $normalized[] = self::scalarString($item);
+            }
+            $this->sSeleccionados = $normalized;
+        } else {
+            $this->sSeleccionados = self::scalarString($sel);
+        }
+        $this->sNomConjunto = self::scalarString($data['NomConjunto'] ?? '') ?: null;
+        $this->sAccionConjunto = self::scalarString($data['AccionConjunto'] ?? '') ?: null;
+        $tab = $data['TabIndexIni'] ?? 0;
+        $this->iTabIndexIni = is_int($tab) ? $tab : (is_string($tab) && is_numeric($tab) ? (int) $tab : null);
 
         parent::import($data);
     }
@@ -41,43 +98,48 @@ class DesplegableArray extends Desplegable
     /**
      * @return string html `<select>...</select>`
      */
-    public function ListaSelects()
+    public function ListaSelects(): string
     {
+        $nomConjunto = $this->sNomConjunto ?? '';
         $aSeleccionados = [];
         if (is_string($this->sSeleccionados)) {
-            $aSeleccionados = explode(",", $this->sSeleccionados);
+            $aSeleccionados = explode(',', $this->sSeleccionados);
+        } elseif (is_array($this->sSeleccionados)) {
+            $aSeleccionados = $this->sSeleccionados;
         }
 
-        $span = $this->sNomConjunto . "_span";
+        $span = $nomConjunto . '_span';
         $n = 0;
-        $sLista = "<span id=\"$span\" >";
-        if (!empty($aSeleccionados)) {
+        $sLista = '<span id="' . $span . '" >';
+        if ($aSeleccionados !== []) {
             foreach ($aSeleccionados as $id) {
-                $this->sNombre = $this->sNomConjunto . "[$n]";
-                if (isset($this->iTabIndexIni)) $this->iTabIndex = $this->iTabIndexIni + $n;
-                $this->sOpcion_sel = $id;
-                $this->sAction = "fnjs_comprobar_select('" . $this->sNomConjunto . "',$n);";
+                $this->sNombre = $nomConjunto . '[' . $n . ']';
+                if (isset($this->iTabIndexIni)) {
+                    $this->iTabIndex = $this->iTabIndexIni + $n;
+                }
+                $this->sOpcion_sel = self::scalarString($id);
+                $this->sAction = "fnjs_comprobar_select('" . $nomConjunto . "',$n);";
 
                 $sLista .= $this->desplegable();
                 $n++;
             }
         }
-        $sLista .= "</span>";
-        // para que me salga una opción más en blanco
-        $this->sNombre = $this->sNomConjunto . "_mas";
+        $sLista .= '</span>';
+        $this->sNombre = $nomConjunto . '_mas';
         $this->sAction = $this->sAccionConjunto;
         $this->sOpcion_sel = '';
         $sLista .= $this->desplegable();
-        $sLista .= "<input type=hidden name='" . $this->sNomConjunto . "_num' id='" . $this->sNomConjunto . "_num' value=$n>";
+        $sLista .= '<input type=hidden name=\'' . $nomConjunto . '_num\' id=\'' . $nomConjunto . '_num\' value=' . $n . '>';
+
         return $sLista;
     }
 
-    public function ListaSelectsJs()
+    public function ListaSelectsJs(): string
     {
-        $nom = $this->sNomConjunto;
-        $mas = $this->sNomConjunto . "_mas";
-        $num = $this->sNomConjunto . "_num";
-        $span = $this->sNomConjunto . "_span";
+        $nom = $this->sNomConjunto ?? '';
+        $mas = $nom . '_mas';
+        $num = $nom . '_num';
+        $span = $nom . '_span';
         $tab = $this->iTabIndexIni ?? 10;
 
         $txt_js = "\n\t\t\tvar num=$('#$num');";
@@ -103,7 +165,7 @@ class DesplegableArray extends Desplegable
         return $txt_js;
     }
 
-    public function ComprobarSelectJs()
+    public function ComprobarSelectJs(): string
     {
         $txt_js = "\nfnjs_comprobar_select = function (nom,n) {";
         $txt_js .= "\n\t" . 'var id="#"+nom+"\\\\["+n+"\\\\]";';
@@ -117,17 +179,18 @@ class DesplegableArray extends Desplegable
         return $txt_js;
     }
 
-    public function setNomConjunto($sNomConjunto)
+    public function setNomConjunto(string $sNomConjunto): void
     {
         $this->sNomConjunto = $sNomConjunto;
     }
 
-    public function setAccionConjunto($sAccionConjunto)
+    public function setAccionConjunto(string $sAccionConjunto): void
     {
         $this->sAccionConjunto = $sAccionConjunto;
     }
 
-    public function setSeleccionados($sSeleccionados)
+    /** @param string|list<string> $sSeleccionados */
+    public function setSeleccionados(string|array $sSeleccionados): void
     {
         $this->sSeleccionados = $sSeleccionados;
     }

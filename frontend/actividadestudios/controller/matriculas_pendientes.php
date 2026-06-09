@@ -7,25 +7,17 @@ use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
-/**
- * Para asegurar que inicia la sesión, y poder acceder a los permisos
- */
-// INICIO Cabecera global de URL de controlador *********************************
+require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// Archivos requeridos por esta url **********************************************
 
-// Crea los objetos de uso global **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
-
-//Si vengo por medio de Posicion, borro la última
+$Qid_sel = null;
+$Qscroll_id = null;
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
-        // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+        if ($oPosicion2->goStack($stack)) {
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
             $oPosicion2->olvidar($stack);
@@ -35,14 +27,11 @@ if (isset($_POST['stack'])) {
 $oPosicion->recordar();
 
 $aviso = '';
-$form = '';
-$traslados = '';
-if (!empty($traslados)) {
-} else {
-    $data = PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_pendientes_data', []);
-    $msg_err = $data['msg_err'] ?? '';
-    $a_valores = $data['a_valores'] ?? [];
-}
+$pendientes = actividadestudios_matriculas_pendientes_from_payload(
+    actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_pendientes_data', []))
+);
+$msg_err = $pendientes['msg_err'];
+$a_valores = actividadestudios_lista_valores($pendientes['a_valores'], $Qid_sel, $Qscroll_id);
 
 $titulo = _("lista de matrículas pendientes de poner nota");
 $a_botones = array(
@@ -51,20 +40,6 @@ $a_botones = array(
 );
 
 $a_cabeceras = array(_("actividad"), _("asignatura"), _("alumno"), _("p"));
-
-$i = 0;
-if (!isset($a_valores)) {
-    $a_valores = [];
-}
-if (isset($Qid_sel) && !empty($Qid_sel)) {
-    $a_valores['select'] = $Qid_sel;
-}
-if (isset($Qscroll_id) && !empty($Qscroll_id)) {
-    $a_valores['scroll_id'] = $Qscroll_id;
-}
-if (!isset($msg_err)) {
-    $msg_err = '';
-}
 
 $oHash = new HashFront();
 $oHash->setCamposNo('sel!mod!pau!scroll_id');
@@ -76,8 +51,8 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-if (!empty($msg_err)) {
-    echo $msg_err;
+if ($msg_err !== '') {
+    actividadestudios_echo_string($msg_err);
 }
 echo $oPosicion->mostrar_left_slide(1);
 

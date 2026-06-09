@@ -7,6 +7,8 @@ namespace frontend\ubiscamas\helpers;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 
+require_once __DIR__ . '/ubiscamas_support.php';
+
 /**
  * Firma URLs hacia habitacion_form para el widget CDC (specs desde
  * {@see \src\ubiscamas\domain\Select_habitaciones_cdc::getSegmentData()},
@@ -25,9 +27,9 @@ final class SelectHabitacionesCdcUrlSigning
     {
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $urlNuevo = '';
-        if (!empty($in['url_nuevo_spec']) && is_array($in['url_nuevo_spec'])) {
-            $spec = $in['url_nuevo_spec'];
-            $path = (string)($spec['path'] ?? '');
+        $spec = $in['url_nuevo_spec'] ?? null;
+        if ($spec !== null) {
+            $path = tessera_imprimir_string($spec['path'] ?? '');
             $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
             if ($path !== '') {
                 $url = $base . '/' . ltrim($path, '/') . '?' . http_build_query($query);
@@ -36,16 +38,13 @@ final class SelectHabitacionesCdcUrlSigning
         }
         $aLinksDl = [];
         foreach ($in['a_links_dl_specs'] ?? [] as $item) {
-            if (!is_array($item)) {
+            $label = tessera_imprimir_string($item['label'] ?? '');
+            $itemSpec = $item['spec'] ?? null;
+            if ($label === '' || !is_array($itemSpec)) {
                 continue;
             }
-            $label = (string)($item['label'] ?? '');
-            $spec = $item['spec'] ?? null;
-            if ($label === '' || !is_array($spec)) {
-                continue;
-            }
-            $path = (string)($spec['path'] ?? '');
-            $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
+            $path = tessera_imprimir_string($itemSpec['path'] ?? '');
+            $query = is_array($itemSpec['query'] ?? null) ? $itemSpec['query'] : [];
             if ($path === '') {
                 continue;
             }

@@ -6,6 +6,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/devel_db_admin/helpers/devel_db_admin_support.php';
 
 FrontBootstrap::boot();
 $QEsquemaRef = (string) filter_input(INPUT_POST, 'esquema');
@@ -24,12 +25,12 @@ $data = PostRequest::getDataFromUrl('/src/devel_db_admin/crear_esquema', [
     'sf' => $Qsf,
 ]);
 
-$avisos = $data['avisos'] ?? [];
+$avisos = devel_db_admin_avisos_list($data['avisos'] ?? []);
 if (($data['ok'] ?? true) === false) {
     echo '<br>';
     echo '<strong>' . _('Avisos') . ':</strong><ul>';
     foreach ($avisos as $aviso) {
-        echo '<li>' . htmlspecialchars((string) $aviso, ENT_QUOTES, 'UTF-8') . '</li>';
+        echo '<li>' . htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') . '</li>';
     }
     echo '</ul>';
     return;
@@ -37,10 +38,10 @@ if (($data['ok'] ?? true) === false) {
 
 echo '<br>';
 echo sprintf(_("se ha creado la estructura de los esquemas."));
-if (is_array($avisos) && $avisos !== []) {
+if ($avisos !== []) {
     echo '<br><strong>' . _('Avisos') . ':</strong><ul>';
     foreach ($avisos as $aviso) {
-        echo '<li>' . htmlspecialchars((string) $aviso, ENT_QUOTES, 'UTF-8') . '</li>';
+        echo '<li>' . htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') . '</li>';
     }
     echo '</ul>';
 }

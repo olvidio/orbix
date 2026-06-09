@@ -11,40 +11,30 @@
  *
  */
 
-// INICIO Cabecera global de URL de controlador *********************************
-
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
-
 
 $oPosicion->recordar();
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-    $parts = explode('#', $a_sel[0]);
-    $id_activ = (int)($parts[0] ?? 0);
-    $nom_activ = (string)($parts[1] ?? '');
-}
+$sel = actividadestudios_id_activ_nom_from_sel_post();
+$id_activ = $sel['id_activ'];
+$nom_activ = $sel['nom_activ'];
 
-$d = PostRequest::getDataFromUrl('/src/actividadestudios/posibles_asignaturas_ca_data', [
+$d = actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/posibles_asignaturas_ca_data', [
     'id_activ' => $id_activ,
     'nom_activ' => $nom_activ,
-]);
+]));
 
 $a_campos = ['oPosicion' => $oPosicion,
-    'nom_activ' => $d['nom_activ'] ?? '',
-    'aAsignaturas_alumnos' => $d['aAsignaturas_alumnos'] ?? [],
-    'a_alumnos_fin_c' => $d['a_alumnos_fin_c'] ?? [],
+    'nom_activ' => tessera_imprimir_string($d['nom_activ'] ?? $nom_activ),
+    'aAsignaturas_alumnos' => actividades_lista_datos($d['aAsignaturas_alumnos'] ?? []),
+    'a_alumnos_fin_c' => actividades_lista_datos($d['a_alumnos_fin_c'] ?? []),
 ];
 
 $oView = new ViewNewTwig('frontend/actividadestudios/controller');

@@ -1,6 +1,8 @@
 <?php
 
 namespace frontend\devel_codegen\controller;
+
+require_once __DIR__ . '/../helpers/devel_codegen_support.php';
 /**
  * Devuelve un array con los nombres de los campos que forman la clave primaria de la tabla
  *
@@ -8,7 +10,10 @@ namespace frontend\devel_codegen\controller;
  * sé que puede pasar.
  *
  */
-function primaryKey($oDB, $tabla)
+/**
+ * @return list<string>
+ */
+function primaryKey(\PDO $oDB, string $tabla): array
 {
     // si la tabla tiene el schema, hay que separalo:
     $schema = strtok($tabla, '.');
@@ -25,9 +30,14 @@ function primaryKey($oDB, $tabla)
             AND    i.indisprimary; ";
 
     $oDBSt_resultado = $oDB->query($query_primaria);
+    if ($oDBSt_resultado === false) {
+        exit('Quizà falta definir la clave primaria');
+    }
     $row = $oDBSt_resultado->fetch(\PDO::FETCH_ASSOC);
-    if (empty($row)) exit ('Quizà falta definir la clave primaria');
-    $campo[] = $row['attname'];
+    if (!is_array($row) || !isset($row['attname'])) {
+        exit('Quizà falta definir la clave primaria');
+    }
+    $campo[] = tessera_imprimir_string($row['attname']);
 
     return $campo;
 

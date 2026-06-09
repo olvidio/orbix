@@ -20,27 +20,20 @@ use frontend\shared\FrontBootstrap;
  * `/src/personas/home_persona_data`. Este controlador no importa clases `src\`.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/personas_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) {
-    $id_nom = (int)strtok($a_sel[0], "#");
-    $id_tabla = (string)strtok("#");
-} else {
-    $id_nom = (int)filter_input(INPUT_POST, 'id_nom');
-    $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
-}
+$ids = personas_id_from_sel_post();
+$id_nom = $ids['id_nom'];
+$id_tabla = $ids['id_tabla'];
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
-// Si vengo de planning_select u otros, la tabla puede ser mas generica.
-if (isset($_SESSION['session_go_to']['sel']['tabla'])) {
-    $_SESSION['session_go_to']['sel']['tabla'] = $Qobj_pau;
-}
+personas_session_go_to_set_tabla($Qobj_pau);
 
-$pau = "p";
+$pau = 'p';
 
 $campos = [
     'id_nom' => $id_nom,
@@ -51,7 +44,7 @@ $campos = [
 $data = PostRequest::getDataFromUrl('/src/personas/home_persona_data', $campos, false);
 $aviso = '';
 if (!empty($data['error'])) {
-    $errorHtml = PostRequest::stripInternalCallProvenance((string)$data['error']);
+    $errorHtml = PostRequest::stripInternalCallProvenance(tessera_imprimir_string($data['error']));
     if (
         str_contains($errorHtml, _('persona no válida'))
         || str_contains($errorHtml, 'persona no válida')
@@ -65,21 +58,21 @@ if (!empty($data['error'])) {
         return;
     }
 }
-$payload = is_array($data) ? $data : [];
-$aviso = (string)($payload['aviso'] ?? $aviso);
-
-$Qobj_pau = (string)($payload['Qobj_pau'] ?? $Qobj_pau);
-$nom = (string)($payload['titulo'] ?? '');
-$dl = (string)($payload['dl'] ?? '');
-$f_nacimiento = (string)($payload['f_nacimiento'] ?? '');
-$situacion = (string)($payload['situacion'] ?? '');
-$f_situacion = (string)($payload['f_situacion'] ?? '');
-$profesion = (string)($payload['profesion'] ?? '');
-$stgr = (string)($payload['stgr'] ?? '');
-$observ = (string)($payload['observ'] ?? '');
-$ctr = (string)($payload['ctr'] ?? '');
-$telfs = (string)($payload['telfs'] ?? '');
-$mails = (string)($payload['mails'] ?? '');
+$payload = personas_post_payload($data);
+$home = personas_home_from_payload($payload, $Qobj_pau, $aviso);
+$Qobj_pau = $home['Qobj_pau'];
+$nom = $home['titulo'];
+$dl = $home['dl'];
+$f_nacimiento = $home['f_nacimiento'];
+$situacion = $home['situacion'];
+$f_situacion = $home['f_situacion'];
+$profesion = $home['profesion'];
+$stgr = $home['stgr'];
+$observ = $home['observ'];
+$ctr = $home['ctr'];
+$telfs = $home['telfs'];
+$mails = $home['mails'];
+$aviso = $home['aviso'];
 
 $a_parametros = ['pau' => $pau, 'id_nom' => $id_nom, 'obj_pau' => $Qobj_pau];
 $base = AppUrlConfig::getPublicAppBaseUrl();
@@ -88,7 +81,6 @@ $go_ficha = HashFront::link($base . '/frontend/personas/controller/personas_edit
 $a_parametros_dossier = ['pau' => $pau, 'id_pau' => $id_nom, 'obj_pau' => $Qobj_pau];
 $godossiers = HashFront::link($base . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 
-require_once __DIR__ . '/../../dossiers/controller/lista_dossiers.php';
 $lista_dossiers_html = orbix_render_lista_dossiers($pau, $id_nom, $Qobj_pau);
 
 $a_campos = [

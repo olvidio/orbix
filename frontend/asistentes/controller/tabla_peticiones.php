@@ -5,18 +5,14 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\asistentes\helpers\TablaPeticionesRender;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/asistentes_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 /** @var \frontend\shared\web\Posicion $oPosicion */
 $oPosicion->recordar();
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) {
-    $id_activ_old = (int)strtok($a_sel[0], '#');
-} else {
-    $id_activ_old = (int)filter_input(INPUT_POST, 'id_activ_old');
-}
+$id_activ_old = asistentes_id_from_sel_post('id_activ_old');
 
 $oPosicion->setParametros([
     'id_activ_old' => $id_activ_old,
@@ -32,9 +28,8 @@ if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
-$data = PostRequest::getDataFromUrl('/src/asistentes/tabla_peticiones_data', $campos);
 /** @var array<string, mixed> $payload */
-$payload = is_array($data) ? $data : [];
+$payload = asistentes_post_data(PostRequest::getDataFromUrl('/src/asistentes/tabla_peticiones_data', $campos));
 $payload = TablaPeticionesRender::enrich($payload);
 
 $a_campos = array_merge($payload, ['oPosicion' => $oPosicion]);

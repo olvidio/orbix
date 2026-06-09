@@ -20,12 +20,12 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/devel_db_admin/helpers/devel_db_admin_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $appsPayload = PostRequest::getDataFromUrl('/src/devel_db_admin/apptables_apps_data', []);
-$appsPayload = is_array($appsPayload) ? $appsPayload : [];
-$a_apps = (array)($appsPayload['a_apps'] ?? []);
+$a_apps = devel_db_admin_desplegable_opciones($appsPayload['a_apps'] ?? []);
 
 $oDeslpApps = new Desplegable([], ['_ordre' => 'id_app']);
 $oDeslpApps->setNombre('id_app');
@@ -49,7 +49,6 @@ $dbProps = PostRequest::getDataFromUrl('/src/devel_db_admin/db_propiedades_data'
     'op' => 'apptables_esquemas',
     'default_esquema' => $esquema,
 ]);
-$dbProps = is_array($dbProps) ? $dbProps : [];
 $a_campos['oDesplEsquemas'] = $dbProps['oDesplEsquemas'] ?? '';
 
 $oView = new ViewNewPhtml('frontend\devel_db_admin\controller');

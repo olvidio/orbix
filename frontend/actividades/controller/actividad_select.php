@@ -33,6 +33,8 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\web\Lista;
+
+require_once __DIR__ . '/../helpers/actividades_support.php';
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -162,13 +164,9 @@ $data = PostRequest::getDataFromUrl('/src/actividades/actividad_select_datos', [
 // Confirmación si hay demasiadas filas: el API devuelve `advertencia_demasiadas` (specs); firmamos aquí.
 if (!empty($data['advertencia_demasiadas']) && is_array($data['advertencia_demasiadas'])) {
     $ad = $data['advertencia_demasiadas'];
-    $go_avant = !empty($ad['continuar_link_spec']) && is_array($ad['continuar_link_spec'])
-        ? HashFrontSignedLink::fromSpec($ad['continuar_link_spec'])
-        : '';
-    $go_atras = !empty($ad['volver_link_spec']) && is_array($ad['volver_link_spec'])
-        ? HashFrontSignedLink::fromSpec($ad['volver_link_spec'])
-        : '';
-    $numActiv = (int)($ad['num_actividades'] ?? 0);
+    $go_avant = HashFrontSignedLink::tryFromSpec($ad['continuar_link_spec'] ?? null);
+    $go_atras = HashFrontSignedLink::tryFromSpec($ad['volver_link_spec'] ?? null);
+    $numActiv = tessera_imprimir_int($ad['num_actividades'] ?? 0);
     $html_advertencia = '<h2>' . sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."), $numActiv) . '</h2>';
     $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_avant . "') value=" . _("continuar") . ">";
     $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_atras . "') value=" . _("volver") . ">";
@@ -176,34 +174,22 @@ if (!empty($data['advertencia_demasiadas']) && is_array($data['advertencia_demas
     die();
 }
 
-$a_valores = $data['a_valores'] ?? [];
-foreach ($a_valores as $idx => $fila) {
-    if (!is_array($fila)) {
-        continue;
-    }
-    foreach ($fila as $colKey => $cell) {
-        if (!is_array($cell) || !isset($cell['link_spec'])) {
-            continue;
-        }
-        $a_valores[$idx][$colKey]['ira'] = HashFrontSignedLink::fromSpec($cell['link_spec']);
-        unset($a_valores[$idx][$colKey]['link_spec']);
-    }
-}
+$a_valores = actividades_lista_valores_from_payload($data['a_valores'] ?? []);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('actividad_select');
-$oTabla->setCabeceras($data['a_cabeceras'] ?? []);
-$oTabla->setBotones($data['a_botones'] ?? []);
+$oTabla->setCabeceras(actividades_lista_cabeceras($data['a_cabeceras'] ?? []));
+$oTabla->setBotones(actividades_lista_botones($data['a_botones'] ?? []));
 $oTabla->setDatos($a_valores);
 $html_tabla = $oTabla->mostrar_tabla();
 unset($data['a_cabeceras'], $data['a_botones'], $data['a_valores']);
-$resultado = (string)($data['resultado'] ?? '');
-$perm_nueva = (bool)($data['perm_nueva'] ?? false);
-$mod = (string)($data['mod'] ?? '');
-$obj_pau = (string)($data['obj_pau'] ?? 'Actividad');
-$aTiposActiv = (array)($data['aTiposActiv'] ?? []);
-$extendida = (bool)($data['extendida'] ?? false);
-$id_tipo_activ_efectivo = (string)($data['id_tipo_activ_efectivo'] ?? $Qid_tipo_activ);
+$resultado = tessera_imprimir_string($data['resultado'] ?? '');
+$perm_nueva = (bool) ($data['perm_nueva'] ?? false);
+$mod = tessera_imprimir_string($data['mod'] ?? '');
+$obj_pau = tessera_imprimir_string($data['obj_pau'] ?? 'Actividad');
+$aTiposActiv = actividades_lista_datos($data['aTiposActiv'] ?? []);
+$extendida = (bool) ($data['extendida'] ?? false);
+$id_tipo_activ_efectivo = tessera_imprimir_string($data['id_tipo_activ_efectivo'] ?? $Qid_tipo_activ);
 
 $oHash = new HashFront();
 $oHash->setUrl('frontend/actividades/controller/actividad_que.php');

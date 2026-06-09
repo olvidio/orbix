@@ -7,6 +7,7 @@ use frontend\asistentes\helpers\QueCtrListaRender;
 use function frontend\shared\helpers\payload_string;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/asistentes_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -14,15 +15,14 @@ $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
 $campos = array_merge($_GET, $_POST);
-$data = PostRequest::getDataFromUrl('/src/asistentes/que_ctr_lista_data', $campos);
 /** @var array<string, mixed> $payload */
-$payload = is_array($data) ? $data : [];
+$payload = asistentes_post_data(PostRequest::getDataFromUrl('/src/asistentes/que_ctr_lista_data', $campos));
 $payload = QueCtrListaRender::enrich($payload);
 
 $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setBlanco(true);
-$oDesplCentros->setOpciones((array)($payload['opciones_centros'] ?? []));
+$oDesplCentros->setOpciones(notas_desplegable_opciones($payload['opciones_centros'] ?? []));
 $oDesplCentros->setOpcion_sel(payload_string($payload, 'id_ubi_sel'));
 $oDesplCentros->setAction('fnjs_otro(1)');
 
@@ -41,7 +41,7 @@ $a_campos = [
     'oDesplCentros' => $oDesplCentros,
     'periodo_form_html' => payload_string($payload, 'periodo_form_html'),
     'locale_us' => $payload['locale_us'] ?? false,
-    'mi_sfsv' => (int)($payload['mi_sfsv'] ?? 0),
+    'mi_sfsv' => tessera_imprimir_int($payload['mi_sfsv'] ?? 0),
 ];
 
 $oView = new ViewNewPhtml('frontend\\asistentes\\view');

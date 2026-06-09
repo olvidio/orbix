@@ -6,7 +6,6 @@ namespace frontend\asistentes\helpers;
 
 use function frontend\shared\helpers\payload_string;
 
-use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
@@ -36,23 +35,21 @@ final class SelectActividadesDeUnaPersonaRender
         $oHashSelect = new HashFront();
         $oHashSelect->setCamposForm(payload_string($hash, 'campos_form'));
         $oHashSelect->setCamposNo(payload_string($hash, 'campos_no'));
-        $hidden = $hash['campos_hidden'] ?? [];
-        $oHashSelect->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+        $hidden = asistentes_hash_campos_hidden($hash['campos_hidden'] ?? []);
+        $oHashSelect->setArrayCamposHidden($hidden);
 
         $tabla = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
         $oTabla = new Lista();
         $oTabla->setId_tabla(payload_string($tabla, 'id_tabla', 'select_actividades_de_una_persona'));
-        $oTabla->setCabeceras(is_array($tabla['cabeceras'] ?? null) ? $tabla['cabeceras'] : []);
-        $oTabla->setBotones(is_array($tabla['botones'] ?? null) ? $tabla['botones'] : []);
-        $oTabla->setDatos(is_array($tabla['valores'] ?? null) ? $tabla['valores'] : []);
+        $oTabla->setCabeceras(actividades_lista_cabeceras($tabla['cabeceras'] ?? []));
+        $oTabla->setBotones(actividades_lista_botones($tabla['botones'] ?? []));
+        $oTabla->setDatos(actividades_lista_datos($tabla['valores'] ?? []));
 
-        $modoCurso = (int)($seg['modo_curso'] ?? 1);
+        $modoCurso = tessera_imprimir_int($seg['modo_curso'] ?? 1);
         $oBotonesCurso = new BotonesCurso($modoCurso);
 
-        $dlSpecs = $seg['links_dl_specs'] ?? [];
-        $otrosSpecs = $seg['links_otros_specs'] ?? [];
-        $aLinks_dl = is_array($dlSpecs) ? DossierTipoFormLinkSpecsSigning::signLinkMap($dlSpecs) : [];
-        $aLinks_otros = is_array($otrosSpecs) ? DossierTipoFormLinkSpecsSigning::signLinkMap($otrosSpecs) : [];
+        $aLinks_dl = asistentes_sign_link_map($seg['links_dl_specs'] ?? []);
+        $aLinks_otros = asistentes_sign_link_map($seg['links_otros_specs'] ?? []);
 
         $msgErr = payload_string($seg, 'msg_err');
 

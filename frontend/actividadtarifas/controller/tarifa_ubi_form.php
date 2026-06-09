@@ -17,6 +17,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadtarifas/helpers/actividadtarifas_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -26,46 +27,33 @@ $campos = [
     'letra' => (string)filter_input(INPUT_POST, 'letra'),
 ];
 
-$data = PostRequest::getDataFromUrl('/src/actividadtarifas/tarifa_ubi_form_data', $campos);
-$payload = is_array($data) ? $data : [];
-
-$es_nuevo = (bool)($payload['es_nuevo'] ?? true);
-$id_item = (string)($payload['id_item'] ?? '');
-$id_ubi = (int)($payload['id_ubi'] ?? 0);
-$year = (int)($payload['year'] ?? 0);
-$letra = (string)($payload['letra'] ?? '');
-$cantidad = (string)($payload['cantidad'] ?? '');
-$opciones_tarifa = $payload['opciones_tarifa'] ?? [];
-$opciones_serie = $payload['opciones_serie'] ?? [];
-$id_serie_sel = (int)($payload['id_serie_sel'] ?? 1);
-// Tokens HashB autorizados por el backend. Se transportan opacamente
-// hasta la vista y vuelven al backend en los endpoints de mutación.
-$token_update = (string)($payload['token_update'] ?? '');
-$token_eliminar = (string)($payload['token_eliminar'] ?? '');
+$fields = actividadtarifas_payload_fields(
+    PostRequest::getDataFromUrl('/src/actividadtarifas/tarifa_ubi_form_data', $campos)
+);
 
 $oDesplSeries = new Desplegable();
 $oDesplSeries->setNombre('id_serie');
-$oDesplSeries->setOpciones($opciones_serie);
-$oDesplSeries->setOpcion_sel($id_serie_sel);
+$oDesplSeries->setOpciones($fields['opciones_serie']);
+$oDesplSeries->setOpcion_sel(tessera_imprimir_string($fields['id_serie_sel']));
 
 $oDesplTarifas = null;
-if ($es_nuevo) {
+if ($fields['es_nuevo']) {
     $oDesplTarifas = new Desplegable();
     $oDesplTarifas->setNombre('id_tarifa');
-    $oDesplTarifas->setOpciones($opciones_tarifa);
+    $oDesplTarifas->setOpciones($fields['opciones_tarifa']);
 }
 
 $a_campos = [
-    'es_nuevo' => $es_nuevo,
-    'id_item' => $id_item,
-    'id_ubi' => $id_ubi,
-    'year' => $year,
-    'letra' => $letra,
-    'cantidad' => $cantidad,
+    'es_nuevo' => $fields['es_nuevo'],
+    'id_item' => $fields['id_item'],
+    'id_ubi' => $fields['id_ubi'],
+    'year' => $fields['year'],
+    'letra' => $fields['letra'],
+    'cantidad' => $fields['cantidad'],
     'oDesplSeries' => $oDesplSeries,
     'oDesplTarifas' => $oDesplTarifas,
-    'token_update' => $token_update,
-    'token_eliminar' => $token_eliminar,
+    'token_update' => $fields['token_update'],
+    'token_eliminar' => $fields['token_eliminar'],
 ];
 
 $oView = new ViewNewPhtml('frontend\\actividadtarifas\\controller');

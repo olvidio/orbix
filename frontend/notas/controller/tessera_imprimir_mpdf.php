@@ -3,6 +3,7 @@
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 
 /**
  * Esta página sirve para la tessera de una persona.
@@ -16,38 +17,11 @@ use frontend\shared\FrontBootstrap;
  */
 //$_POST['h'] = empty($_GET['h'])? '' : $_GET['h'];
 
-/**
- * Funciones más comunes de la aplicación
- */
-require_once 'frontend/shared/FrontBootstrap.php';
-FrontBootstrap::boot();
-$id_nom = (int)(empty($_GET['id_nom']) ? 0 : $_GET['id_nom']);
-$id_tabla = empty($_GET['id_tabla']) ? '' : $_GET['id_tabla'];
+require_once __DIR__ . '/../helpers/tessera_imprimir_support.php';
 
-$payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
-    'id_nom' => $id_nom,
-]);
-$payload = is_array($payload) ? $payload : [];
-$nom = (string)($payload['nom'] ?? '');
-$cAsignaturas = (array)($payload['c_asignaturas'] ?? []);
-$aAprobadas = (array)($payload['a_aprobadas'] ?? []);
-/* Ahora no hace falta que sea en latín
-$nom_vernacula = $oPersona->getNom();
-$apellidos = $oPersona->getApellidos();
-$trato = $oPersona->getTrato();
-$trato = empty($trato)? '' : ' ';
-$oGesNomLatin = new personas\GestorNombreLatin();
-$nom_lat = $oGesNomLatin->getVernaculaLatin($nom_vernacula);
-$nom=$trato.$nom_vernacula.$apellidos;
-*/
-
-$region_latin = $_SESSION['oConfig']->getNomRegionLatin();
-
-// conversion
-$replace = OrbixRuntime::latinHtmlEntityReplaceMap();
-
-function titulo($id_asignatura){
-$cabecera = '<tr><td></td><td  colspan="7" class="space"></td></tr>
+function tessera_mpdf_titulo(int $id_asignatura): void
+{
+    $cabecera = '<tr><td></td><td  colspan="7" class="space"></td></tr>
                 <tr><td style="width: 2%"></td>
                 <td class="cabecera" style="width: 46%">DISCIPLIN&#198;</td>
                 <td class="cabecera" style="width: 25%">CUM NOTA</td>
@@ -57,9 +31,9 @@ $cabecera = '<tr><td></td><td  colspan="7" class="space"></td></tr>
                 <td class="cabecera" style="width: 12%">NUMERUS IN ACTIS</td>
                 <td style="width: 1%"></td>
                 </tr>';
-switch ($id_asignatura){
-case 1101:
-    ?>
+    switch ($id_asignatura) {
+        case 1101:
+            ?>
     <tr>
         <td class="space"></td>
     </tr>
@@ -78,10 +52,10 @@ case 1101:
     <tr>
         <td class="space"></td>
     </tr>
-    <?php
-    break;
-case 1201:
-    ?>
+            <?php
+            break;
+        case 1201:
+            ?>
     <tr>
         <td class="space"></td>
     </tr>
@@ -92,10 +66,10 @@ case 1201:
     <tr>
         <td class="space"></td>
     </tr>
-    <?php
-    break;
-case 2101:
-    ?>
+            <?php
+            break;
+        case 2101:
+            ?>
     <tr>
         <td class="space"></td>
     </tr>
@@ -114,10 +88,10 @@ case 2101:
     <tr>
         <td class="space"></td>
     </tr>
-    <?php
-    break;
-case 2108:
-?>
+            <?php
+            break;
+        case 2108:
+            ?>
 </table>
 </div>
 <div class="A4">
@@ -126,8 +100,8 @@ case 2108:
         <tr>
             <td class="space"></td>
         </tr>
-        <?php
-        break;
+            <?php
+            break;
         case 2201:
             ?>
             <tr>
@@ -170,32 +144,49 @@ case 2108:
             </tr>
             <?php
             break;
-        }
-        }
+    }
+}
 
-        function data($data)
-        {
-            $fecha = explode("-", $data);
-            $any = substr($fecha[0], 2);
-            $fechaok = $fecha[2] . "." . $fecha[1] . "." . $any;
-            if ($fecha[1] == 00) {
-                $fechaok = "";
-            }
-            echo "$fechaok";
-        }
+function tessera_mpdf_data(string $fechaRaw): void
+{
+    echo tessera_imprimir_fecha_local($fechaRaw);
+}
 
-        // -----------------------------
-        $rowEmpty = [
-            'id_nivel_asig' => '',
-            'id_nivel' => '',
-            'id_asignatura' => '',
-            'nombre_asignatura' => '',
-            'acta' => '',
-            'fecha_local' => '',
-            'nota' => '',
-        ];
-        // -----------------------------  cabecera ---------------------------------
-        ?>
+/**
+ * Funciones más comunes de la aplicación
+ */
+require_once 'frontend/shared/FrontBootstrap.php';
+FrontBootstrap::boot();
+$idNomRaw = filter_input(INPUT_GET, 'id_nom', FILTER_VALIDATE_INT);
+$id_nom = is_int($idNomRaw) ? $idNomRaw : 0;
+$id_tabla = tessera_imprimir_string(filter_input(INPUT_GET, 'id_tabla'));
+
+$payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
+    'id_nom' => $id_nom,
+]);
+$nom = tessera_imprimir_string($payload['nom'] ?? '');
+$cAsignaturas = tessera_imprimir_asignaturas_from_payload($payload);
+$aAprobadas = tessera_imprimir_aprobadas_from_payload($payload);
+/* Ahora no hace falta que sea en latín
+$nom_vernacula = $oPersona->getNom();
+$apellidos = $oPersona->getApellidos();
+$trato = $oPersona->getTrato();
+$trato = empty($trato)? '' : ' ';
+$oGesNomLatin = new personas\GestorNombreLatin();
+$nom_lat = $oGesNomLatin->getVernaculaLatin($nom_vernacula);
+$nom=$trato.$nom_vernacula.$apellidos;
+*/
+
+$oConfig = $_SESSION['oConfig'] ?? null;
+$region_latin = $oConfig instanceof ConfigSnapshot ? $oConfig->getNomRegionLatin() : '';
+
+// conversion
+$replace = OrbixRuntime::latinHtmlEntityReplaceMap();
+
+// -----------------------------
+$rowEmpty = tessera_imprimir_empty_row();
+// -----------------------------  cabecera ---------------------------------
+?>
         <head>
             <?php include_once(OrbixRuntime::dirEstilos() . '/tessera_mpdf.css.php'); ?>
             <title></title>
@@ -218,27 +209,23 @@ case 2108:
                 $a = 0;
                 $j = 0;
                 reset($aAprobadas);
+                $row = tessera_imprimir_current_aprobada_row($aAprobadas, $rowEmpty);
                 while ($a < count($cAsignaturas)) {
                     $oAsignatura = $cAsignaturas[$a++];
-                    $row = current($aAprobadas);
-                    if (key($aAprobadas) === null) { // ha llegado al final
-                        $row = $rowEmpty;
-                    }
                     while (($row['id_nivel_asig'] < $oAsignatura['id_nivel']) && ($j < $num_asig)) {
-                        if (key($aAprobadas) === null) { // ha llegado al final
+                        if (key($aAprobadas) === null) {
                             $row = $rowEmpty;
                             break;
-                        } else {
-                            if (next($aAprobadas) === FALSE) {
-                                $row = $rowEmpty;
-                                break;
-                            }
-                            $row = current($aAprobadas);
                         }
+                        if (next($aAprobadas) === false) {
+                            $row = $rowEmpty;
+                            break;
+                        }
+                        $row = tessera_imprimir_current_aprobada_row($aAprobadas, $rowEmpty);
                         $j++;
                     }
-                    while (($oAsignatura['id_nivel'] < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {
-                        titulo($oAsignatura['id_nivel']);
+                    while (($oAsignatura['id_nivel'] < $row['id_nivel_asig']) && ($row['id_nivel'] < 2434)) {
+                        tessera_mpdf_titulo($oAsignatura['id_nivel']);
                         $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                         ?>
                         <tr>
@@ -255,21 +242,21 @@ case 2108:
                         $oAsignatura = $cAsignaturas[$a++];
                     }
 
-                    if ($oAsignatura['id_nivel'] == $row["id_nivel_asig"]) {
-                        titulo($oAsignatura['id_nivel']);
+                    if ($oAsignatura['id_nivel'] == $row['id_nivel_asig']) {
+                        tessera_mpdf_titulo($oAsignatura['id_nivel']);
                         // para las opcionales
-                        if ($row["id_asignatura"] > 3000 && $row["id_asignatura"] < 9000) {
-                            $nombre_asignatura = strtr($row["nombre_asignatura"], $replace);
-                            $algo = $oAsignatura['nombre_asignatura'] . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
+                        if ($row['id_asignatura'] > 3000 && $row['id_asignatura'] < 9000) {
+                            $nombre_asignatura = strtr($row['nombre_asignatura'], $replace);
+                            $algo = $oAsignatura['nombre_asignatura'] . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $nombre_asignatura;
                             ?>
                             <tr>
                                 <td></td>
                                 <td class="opcional"><?= $algo ?>&nbsp;</td>
-                                <td class="dato opcional"><?= $row["nota"] ?>&nbsp;</td>
+                                <td class="dato opcional"><?= $row['nota'] ?>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td class="dato opcional"><?= $row["fecha_local"] ?>&nbsp;</td>
+                                <td class="dato opcional"><?= $row['fecha_local'] ?>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td class="dato opcional"><?= $row["acta"] ?>&nbsp;</td>
+                                <td class="dato opcional"><?= $row['acta'] ?>&nbsp;</td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -282,19 +269,19 @@ case 2108:
                             <tr>
                                 <td></td>
                                 <td><?= $nombre_asignatura ?>&nbsp;</td>
-                                <td class="dato"><?= $row["nota"] ?>&nbsp;</td>
+                                <td class="dato"><?= $row['nota'] ?>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td class="dato"><?= $row["fecha_local"] ?>&nbsp;</td>
+                                <td class="dato"><?= $row['fecha_local'] ?>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td class="dato"><?= $row["acta"] ?>&nbsp;</td>
+                                <td class="dato"><?= $row['acta'] ?>&nbsp;</td>
                                 <td></td>
                             </tr>
                             <?php
                         }
                         $num_asig++;
                     } else {
-                        if (empty($row["id_nivel"]) || ($j === $num_asig)) {
-                            titulo($oAsignatura['id_asignatura']);
+                        if ($row['id_nivel'] === 0 || ($j === $num_asig)) {
+                            tessera_mpdf_titulo($oAsignatura['id_asignatura']);
                             $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                             ?>
                             <tr>

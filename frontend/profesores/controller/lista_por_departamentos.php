@@ -1,12 +1,13 @@
 <?php
 
-use core\ViewTwig;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/profesores_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -22,8 +23,8 @@ $data = PostRequest::getDataFromUrl($url_backend, [
 if (($data['modo'] ?? '') === 'filtro') {
     $oCuadros = new Desplegable();
     $oCuadros->setNombre('dl');
-    $oCuadros->setChecked($data['a_checked'] ?? []);
-    $oCuadros->setOpciones($data['a_delegaciones'] ?? []);
+    $oCuadros->setChecked(notas_checked_ids_from_post($data['a_checked'] ?? []));
+    $oCuadros->setOpciones(notas_desplegable_opciones($data['a_delegaciones'] ?? []));
 
     $oHash = new HashFront();
     $oHash->setCamposForm('dl');
@@ -36,7 +37,7 @@ if (($data['modo'] ?? '') === 'filtro') {
         'boton_txt' => _("Aplicar filtro"),
         'oCuadros' => $oCuadros,
     ];
-    $oView = new ViewTwig('ubis/controller');
+    $oView = new ViewNewTwig('frontend/ubis/controller');
     $oView->renderizar('dl_rstgr_que.html.twig', $a_campos);
     exit();
 }

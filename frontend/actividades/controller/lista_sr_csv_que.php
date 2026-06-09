@@ -20,6 +20,7 @@ use frontend\shared\web\PeriodoQue;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -45,13 +46,13 @@ $aOpciones = [
 
 $data = PostRequest::getDataFromUrl('/src/actividades/lista_sr_csv_que_datos', []);
 if (empty($Qperiodo)) {
-    $Qperiodo = (string)($data['periodo'] ?? 'curso_ca');
+    $Qperiodo = tessera_imprimir_string($data['periodo'] ?? 'curso_ca');
 }
-$sel_ubis = (string)($data['sel_ubis'] ?? '');
-$chk_status_1 = (string)($data['chk_status_1'] ?? '');
-$chk_status_2 = (string)($data['chk_status_2'] ?? '');
-$chk_activ_crt = (string)($data['chk_activ_crt'] ?? '');
-$chk_activ_cv = (string)($data['chk_activ_cv'] ?? '');
+$sel_ubis = tessera_imprimir_string($data['sel_ubis'] ?? '');
+$chk_status_1 = tessera_imprimir_string($data['chk_status_1'] ?? '');
+$chk_status_2 = tessera_imprimir_string($data['chk_status_2'] ?? '');
+$chk_activ_crt = tessera_imprimir_string($data['chk_activ_crt'] ?? '');
+$chk_activ_cv = tessera_imprimir_string($data['chk_activ_cv'] ?? '');
 
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('modifica');

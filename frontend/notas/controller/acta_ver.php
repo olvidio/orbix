@@ -22,6 +22,7 @@ use frontend\shared\helpers\SignedDownloadToken;
 use function frontend\shared\helpers\urlsafe_b64encode;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -33,8 +34,8 @@ $lugar = '';
 $observ = '';
 
 // Si notas=(nuevo|acta), quiere decir que estoy en un include de actividadestudios/controller/acta_notas
-$notas = empty($notas) ? '' : $notas;
-$permiso = empty($permiso) ? 3 : $permiso;
+$notas = isset($notas) && is_string($notas) ? $notas : '';
+$permiso = isset($permiso) && is_int($permiso) ? $permiso : 3;
 
 // Si soy region del stgr, no puedo modificar actas (que lo hagan las dl).
 if (OrbixRuntime::miAmbito() === 'rstgr') {
@@ -45,52 +46,53 @@ $requestPayload = PostRequest::requestPayloadForHash();
 $a_sel = isset($requestPayload['sel']) && is_array($requestPayload['sel'])
     ? $requestPayload['sel']
     : [];
-$Qmod = (string)($requestPayload['mod'] ?? '');
-$Qsa_actas = (string)($requestPayload['sa_actas'] ?? '');
-$Qacta = (string)($requestPayload['acta'] ?? '');
-$Qnotas = (string)($requestPayload['notas'] ?? '');
+$Qmod = tessera_imprimir_string($requestPayload['mod'] ?? '');
+$Qsa_actas = tessera_imprimir_string($requestPayload['sa_actas'] ?? '');
+$Qacta = tessera_imprimir_string($requestPayload['acta'] ?? '');
+$Qnotas = tessera_imprimir_string($requestPayload['notas'] ?? '');
 
-if (empty($notas) && empty($Qnotas)) {
+if ($notas === '' && $Qnotas === '') {
     $oPosicion->recordar();
 }
 
 $payload = $requestPayload;
 $payload['scope_notas'] = $notas;
 $payload['scope_permiso'] = $permiso;
-if (isset($acta_notas_a_actas)) {
+if (isset($acta_notas_a_actas) && is_array($acta_notas_a_actas)) {
     $payload['acta_notas_a_actas_json'] = json_encode($acta_notas_a_actas, JSON_THROW_ON_ERROR);
 }
 if (isset($id_activ)) {
     $payload['id_activ_scope'] = $id_activ;
 }
 if (isset($id_asignatura)) {
-    $payload['id_asignatura_scope'] = (string)$id_asignatura;
+    $payload['id_asignatura_scope'] = tessera_imprimir_string($id_asignatura);
 }
 
 $d = PostRequest::getDataFromUrl('/src/notas/acta_ver_form_data', $payload);
+$form = notas_acta_ver_form_from_payload($d);
 
-$notas = (string)($d['notas'] ?? $notas);
-$permiso = (int)($d['permiso'] ?? $permiso);
-$Qmod = (string)($d['mod'] ?? $Qmod);
-$acta_actual = (string)($d['acta_actual'] ?? '');
-$acta_new = (string)($d['acta_new'] ?? '');
-$ult_acta = $d['ult_acta'] ?? '';
-$f_acta = (string)($d['f_acta'] ?? '');
-$libro = (string)($d['libro'] ?? '');
-$ult_lib = (string)($d['ult_lib'] ?? '');
-$pagina = (string)($d['pagina'] ?? '');
-$ult_pag = (string)($d['ult_pag'] ?? '');
-$linea = (string)($d['linea'] ?? '');
-$ult_lin = (string)($d['ult_lin'] ?? '');
-$lugar = (string)($d['lugar'] ?? '');
-$observ = (string)($d['observ'] ?? '');
-$id_activ = (int)($d['id_activ'] ?? 0);
-$id_asignatura_actual = (string)($d['id_asignatura_actual'] ?? '');
-$nombre_asignatura = (string)($d['nombre_asignatura'] ?? '');
-$examinadores = $d['examinadores'] ?? [];
-$a_actas = $d['a_actas'] ?? [];
-$has_pdf = !empty($d['has_pdf']);
-if (!empty($d['warn_no_id_activ'])) {
+$notas = $form['notas'] !== '' ? $form['notas'] : $notas;
+$permiso = $form['permiso'];
+$Qmod = $form['mod'] !== '' ? $form['mod'] : $Qmod;
+$acta_actual = $form['acta_actual'];
+$acta_new = $form['acta_new'];
+$ult_acta = $form['ult_acta'];
+$f_acta = $form['f_acta'];
+$libro = $form['libro'];
+$ult_lib = $form['ult_lib'];
+$pagina = $form['pagina'];
+$ult_pag = $form['ult_pag'];
+$linea = $form['linea'];
+$ult_lin = $form['ult_lin'];
+$lugar = $form['lugar'];
+$observ = $form['observ'];
+$id_activ = $form['id_activ'];
+$id_asignatura_actual = $form['id_asignatura_actual'];
+$nombre_asignatura = $form['nombre_asignatura'];
+$examinadores = $form['examinadores'];
+$a_actas = $form['a_actas'];
+$has_pdf = $form['has_pdf'];
+if ($form['warn_no_id_activ']) {
     echo _('no se guardará el ca/cv donde se cursó la asignatura');
 }
 
@@ -102,7 +104,7 @@ if ($Qmod === 'nueva' || $notas === 'nuevo') {
     $sCamposForm .= '!acta';
     $sCamposForm .= '!f_acta';
 }
-if ($examinadores !== [] && ($examinadores[0] ?? '') !== '') {
+if ($examinadores !== [] && $examinadores[0] !== '') {
     $sCamposForm .= '!examinadores';
 }
 $oHashActa->setCamposForm($sCamposForm);
@@ -110,7 +112,7 @@ $oHashActa->setCamposNo('go_to!examinadores!notas!refresh');
 $a_camposHidden = [];
 if ($Qmod === 'nueva' || $notas === 'nuevo') {
     $a_camposHidden['mod'] = 'nueva';
-    if (!empty($id_activ)) {
+    if ($id_activ !== 0) {
         $a_camposHidden['id_activ'] = $id_activ;
     }
 } else {
@@ -159,11 +161,7 @@ $oHashActaDelete = new HashFront();
 $oHashActaDelete->setArrayCamposHidden(['acta_num' => $acta_actual]);
 $h_delete = $oHashActaDelete->getParamAjax();
 
-if (OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r') {
-    $soy_rstgr = true;
-} else {
-    $soy_rstgr = false;
-}
+$soy_rstgr = OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r';
 
 $a_campos = ['obj' => $obj,
     'oPosicion' => $oPosicion,

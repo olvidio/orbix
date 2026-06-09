@@ -8,45 +8,24 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
 
-$url_backend = '/src/usuarios/usuario_preferencias';
-$data = PostRequest::getDataFromUrl($url_backend);
+$prefData = usuarios_preferencias_from_payload(
+    usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_preferencias'))
+);
 
-$layout = $data['layout'];
-$inicio = $data['inicio'];
-$oficina = $data['oficina'];
-$oficinas_posibles = $data['oficinas_posibles'];
-$estilo_azul_selected = $data['estilo_azul_selected'];
-$estilo_naranja_selected = $data['estilo_naranja_selected'];
-$estilo_verde_selected = $data['estilo_verde_selected'];
-$tipo_menu_h = $data['tipo_menu_h'];
-$tipo_menu_v = $data['tipo_menu_v'];
-$tipo_tabla_s = $data['tipo_tabla_s'];
-$tipo_tabla_h = $data['tipo_tabla_h'];
-$tipo_apellidos_ap_nom = $data['tipo_apellidos_ap_nom'];
-$tipo_apellidos_nom_ap = $data['tipo_apellidos_nom_ap'];
-$idioma = $data['idioma'];
-$zona_horaria = empty($data['zona_horaria']) ? 'UTC' : $data['zona_horaria'];
-
-
-// ----------- Página de inicio -------------------
 $cambios_installed = AppInstalled::is('cambios');
 $aOpciones = ['exterior' => ucfirst(_("home")),
     'oficina' => ucfirst(_("oficina")),
-    //'personal' => ucfirst(_("personal")),
-    //'aniversarios' => ucfirst(_("aniversarios")),
 ];
 if ($cambios_installed) {
     $aOpciones['avisos'] = ucfirst(_("avisos cambios actividades"));
 }
 
-// ----------- LayOut -------------------
 $oDesplLayout = new Desplegable();
 $oDesplLayout->setNombre('layout');
 $oDesplLayout->setOpciones([
@@ -55,39 +34,30 @@ $oDesplLayout->setOpciones([
     'pills' => 'Pills',
     'pills2' => 'Pills 2 (switcher)',
 ]);
-$oDesplLayout->setOpcion_sel($layout);
+$oDesplLayout->setOpcion_sel($prefData['layout']);
 
-// ----------- Inicio -------------------
 $oDesplInicio = new Desplegable();
 $oDesplInicio->setNombre('inicio');
 $oDesplInicio->setOpciones($aOpciones);
-$oDesplInicio->setOpcion_sel($inicio);
+$oDesplInicio->setOpcion_sel($prefData['inicio']);
 
-// ----------- Oficinas -------------------
 $oDesplOficinas = new Desplegable();
 $oDesplOficinas->setNombre('oficina');
-$oDesplOficinas->setOpciones($oficinas_posibles);
-$oDesplOficinas->setOpcion_sel($oficina);
+$oDesplOficinas->setOpciones($prefData['oficinas_posibles']);
+$oDesplOficinas->setOpcion_sel($prefData['oficina']);
 $oDesplOficinas->setBlanco(true);
 
-// ----------- Idioma -------------------
-/////////// Consulta al backend ///////////////////
-$url_backend = '/src/shared/locales_posibles';
-$data = PostRequest::getDataFromUrl($url_backend);
+$localesData = usuarios_post_data(PostRequest::getDataFromUrl('/src/shared/locales_posibles'));
+$a_locales = usuarios_locales_from_payload($localesData);
+$oDesplLocales = new Desplegable('idioma_nou', $a_locales, $prefData['idioma'], true);
 
-$a_locales = $data['a_locales'];
-$oDesplLocales = new Desplegable('idioma_nou', $a_locales, $idioma, true);
-
-// ----------- Zona Horaria -------------------
 $opciones = DateTimeZone::listIdentifiers();
-$id_zona_sel = array_search($zona_horaria, $opciones, true);
 $oDesplZonaGMT = new Desplegable();
 $oDesplZonaGMT->setNombre('zona_horaria_nou');
 $oDesplZonaGMT->setOpciones($opciones);
-$oDesplZonaGMT->setOpcion_sel($id_zona_sel);
+$oDesplZonaGMT->setOpcion_sel(usuarios_zona_horaria_opcion_sel($prefData['zona_horaria']));
 
-
-$id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
+$id_usuario = usuarios_session_auth_int('id_usuario');
 $url_avisos = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
 $url_avisos_lista = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => 1)));
 $url_avisos_mails = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => 2)));
@@ -107,15 +77,15 @@ $a_campos = [
     'oDesplLayout' => $oDesplLayout,
     'oDesplInicio' => $oDesplInicio,
     'oDesplOficinas' => $oDesplOficinas,
-    'estilo_azul_selected' => $estilo_azul_selected,
-    'estilo_naranja_selected' => $estilo_naranja_selected,
-    'estilo_verde_selected' => $estilo_verde_selected,
-    'tipo_menu_h' => $tipo_menu_h,
-    'tipo_menu_v' => $tipo_menu_v,
-    'tipo_tabla_s' => $tipo_tabla_s,
-    'tipo_tabla_h' => $tipo_tabla_h,
-    'tipo_apellidos_ap_nom' => $tipo_apellidos_ap_nom,
-    'tipo_apellidos_nom_ap' => $tipo_apellidos_nom_ap,
+    'estilo_azul_selected' => $prefData['estilo_azul_selected'],
+    'estilo_naranja_selected' => $prefData['estilo_naranja_selected'],
+    'estilo_verde_selected' => $prefData['estilo_verde_selected'],
+    'tipo_menu_h' => $prefData['tipo_menu_h'],
+    'tipo_menu_v' => $prefData['tipo_menu_v'],
+    'tipo_tabla_s' => $prefData['tipo_tabla_s'],
+    'tipo_tabla_h' => $prefData['tipo_tabla_h'],
+    'tipo_apellidos_ap_nom' => $prefData['tipo_apellidos_ap_nom'],
+    'tipo_apellidos_nom_ap' => $prefData['tipo_apellidos_nom_ap'],
     'oDesplLocales' => $oDesplLocales,
     'oDesplZonaGMT' => $oDesplZonaGMT,
     'url_cambio_password' => $url_cambio_password,

@@ -73,6 +73,9 @@ final class SignedDownloadToken
         );
     }
 
+    /**
+     * @param array<string, int|string> $claims
+     */
     private static function buildUrl(string $pathSuffix, string $scope, array $claims): string
     {
         $tk = self::mint($scope, $claims);
@@ -144,18 +147,18 @@ final class SignedDownloadToken
             return null;
         }
 
-        $exp = (int) ($data['e'] ?? 0);
+        $exp = self::parseClaimInt($data['e'] ?? null);
         if ($exp < time()) {
             return null;
         }
 
-        $scope = (string) ($data['s'] ?? '');
+        $scope = self::parseClaimString($data['s'] ?? null);
         if ($scope === '') {
             return null;
         }
 
         if ($scope === self::SCOPE_NOTAS_ACTA) {
-            $acta = (string) ($data['a'] ?? '');
+            $acta = self::parseClaimString($data['a'] ?? null);
             if ($acta === '') {
                 return null;
             }
@@ -164,7 +167,7 @@ final class SignedDownloadToken
         }
 
         if ($scope === self::SCOPE_CERT_EMITIDO || $scope === self::SCOPE_CERT_RECIBIDO) {
-            $id = (int) ($data['id'] ?? 0);
+            $id = self::parseClaimInt($data['id'] ?? null);
             if ($id <= 0) {
                 return null;
             }
@@ -173,5 +176,32 @@ final class SignedDownloadToken
         }
 
         return null;
+    }
+
+    private static function parseClaimString(mixed $value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+
+        return '';
+    }
+
+    private static function parseClaimInt(mixed $value): int
+    {
+        if (is_int($value)) {
+            return $value;
+        }
+        if (is_string($value) && is_numeric($value)) {
+            return (int) $value;
+        }
+        if (is_float($value)) {
+            return (int) $value;
+        }
+
+        return 0;
     }
 }

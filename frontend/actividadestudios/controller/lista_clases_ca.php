@@ -4,32 +4,23 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\FrontBootstrap;
 
-// INICIO Cabecera global de URL de controlador *********************************
+require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-    $parts = explode('#', $a_sel[0]);
-    $id_activ = (int)($parts[0] ?? 0);
-}
+$id_activ = actividadestudios_id_from_sel_post();
 
-$d = PostRequest::getDataFromUrl('/src/actividadestudios/lista_clases_ca_data', ['id_activ' => $id_activ]);
+$d = actividadestudios_lista_clases_ca_from_payload(actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/lista_clases_ca_data', ['id_activ' => $id_activ])));
 
-$msg_err = $d['msg_err'] ?? '';
-$nom_activ = $d['nom_activ'] ?? '';
-$nom_director_est = $d['nom_director_est'] ?? '';
-$datos_asignatura = $d['datos_asignatura'] ?? [];
+$msg_err = $d['msg_err'];
+$nom_activ = $d['nom_activ'];
+$nom_director_est = $d['nom_director_est'];
+$datos_asignatura = $d['datos_asignatura'];
 
-if (!empty($msg_err)) {
-    echo $msg_err;
+if ($msg_err !== '') {
+    actividadestudios_echo_string($msg_err);
 }
 
 $a_campos = ['oPosicion' => $oPosicion,

@@ -9,6 +9,7 @@ use frontend\shared\web\Posicion;
 use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -20,6 +21,7 @@ $Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
 $Qb_c = (string)filter_input(INPUT_POST, 'b_c');
 $Qc1 = (string)filter_input(INPUT_POST, 'c1');
 $Qc2 = (string)filter_input(INPUT_POST, 'c2');
+$Qid_sel = '';
 
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
@@ -36,11 +38,10 @@ if (!is_true($Qpersonas_n) && !is_true($Qpersonas_agd)) {
     exit(_("Debe marcar un grupo de personas (n o agd)"));
 }
 
-$a_botones = [
-    ['txt' => _("modificar stgr"), 'click' => "fnjs_modificar(\"#seleccionados\")"],
-    ['txt' => _("ver tessera"), 'click' => "fnjs_tesera(\"#seleccionados\")"],
-];
+/** @var list<array{txt: string, click: string}> $a_botones */
+$a_botones = notas_botones_modificar_tessera();
 
+/** @var list<array<string, mixed>|string> $a_cabeceras */
 $a_cabeceras = [
     ucfirst(_("tipo")),
     ['name' => _("nombre y apellidos"), 'formatter' => 'clickFormatter'],
@@ -58,34 +59,37 @@ $tabla = PostRequest::getDataFromUrl('/src/notas/asig_faltan_personas_select_dat
     'c1' => $Qc1,
     'c2' => $Qc2,
 ]);
-$titulo = (string)($tabla['titulo'] ?? '');
-$obj_pau = (string)($tabla['obj_pau'] ?? '');
-$rows = $tabla['rows'] ?? [];
+$presentacion = notas_asig_faltan_tabla_from_payload($tabla);
+$titulo = $presentacion['titulo'];
+$obj_pau = $presentacion['obj_pau'];
+$rows = $presentacion['rows'];
 
 $i = 0;
 $a_valores = [];
-if (!empty($Qid_sel)) {
+if ($Qid_sel !== '') {
     $a_valores['select'] = $Qid_sel;
 }
 foreach ($rows as $row) {
     $i++;
-    $id_nom = (int)($row['id_nom'] ?? 0);
-    $id_tabla = (string)($row['id_tabla'] ?? '');
-    $nom = (string)($row['nom'] ?? '');
-    $nombre_ubi = (string)($row['nombre_ubi'] ?? '');
-    $stgr = (string)($row['stgr'] ?? '');
-    $telfs = (string)($row['telfs'] ?? '');
-    $mails = (string)($row['mails'] ?? '');
+    $id_nom = $row['id_nom'];
+    $id_tabla = $row['id_tabla'];
+    $nom = $row['nom'];
+    $nombre_ubi = $row['nombre_ubi'];
+    $stgr = $row['stgr'];
+    $telfs = $row['telfs'];
+    $mails = $row['mails'];
 
     $pagina = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query(['id_nom' => $id_nom, 'obj_pau' => $obj_pau]));
 
-    $a_valores[$i]['sel'] = "$id_nom#$id_tabla";
-    $a_valores[$i][1] = $id_tabla;
-    $a_valores[$i][2] = ['ira' => $pagina, 'valor' => $nom];
-    $a_valores[$i][3] = $nombre_ubi;
-    $a_valores[$i][4] = $stgr;
-    $a_valores[$i][5] = $telfs;
-    $a_valores[$i][6] = $mails;
+    $a_valores[$i] = [
+        'sel' => "$id_nom#$id_tabla",
+        1 => $id_tabla,
+        2 => ['ira' => $pagina, 'valor' => $nom],
+        3 => $nombre_ubi,
+        4 => $stgr,
+        5 => $telfs,
+        6 => $mails,
+    ];
 }
 $oHash = new HashFront();
 $oHash->setCamposForm('sel');

@@ -16,6 +16,7 @@
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -41,4 +42,4 @@ $data = PostRequest::getDataFromUrl('/src/actividades/calendario_listas_datos', 
     'id_cdc' => $Qaid_cdc,
 ]);
 
-echo (string)($data['html'] ?? '');
+echo tessera_imprimir_string($data['html'] ?? '');

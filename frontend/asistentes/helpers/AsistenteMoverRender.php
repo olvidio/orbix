@@ -34,13 +34,11 @@ final class AsistenteMoverRender
                 $oHash->setCamposNo($cn);
             }
             $oHash->setCamposForm(payload_string($hm, 'campos_form'));
-            $hidden = $hm['campos_hidden'] ?? [];
-            $oHash->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+            $hidden = asistentes_hash_campos_hidden($hm['campos_hidden'] ?? []);
+            $oHash->setArrayCamposHidden($hidden);
             $payload['hash_campos_html'] = $oHash->getCamposHtml();
 
-            $opciones = isset($payload['opciones_actividades']) && is_array($payload['opciones_actividades'])
-                ? $payload['opciones_actividades']
-                : [];
+            $opciones = notas_desplegable_opciones($payload['opciones_actividades'] ?? []);
             $oDespl = new Desplegable();
             $oDespl->setNombre('id_activ');
             $oDespl->setOpciones($opciones);

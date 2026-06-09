@@ -33,13 +33,13 @@ class HashFront
      * acamposHidden de Seguridad
      * Array de campos campos hidden y sus valores.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     private array $aCamposHidden = [];
     /**
      * para poder tener un id distinto para un mismo nombre de campo hidden
      */
-    private string $prefix;
+    private string $prefix = '';
     /**
      * camposNo de Seguridad
      * Lista de campos separados por '!'.
@@ -55,9 +55,9 @@ class HashFront
      * array con los campos y valores a no tener en cuenta para el hash.
      * para ponerlos otra vez en la query después de calcular los hash
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    static private array $aValoresCamposNo = [];
+    private static array $aValoresCamposNo = [];
 
     /* CONSTRUCTOR ------------------------------ */
     public function __construct()
@@ -65,76 +65,108 @@ class HashFront
     // constructor vuit
 }
 
+    private static function asPostString(mixed $value): string
+    {
+        if ($value === null || $value === false || $value === '') {
+            return '';
+        }
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+
+        return '';
+    }
+
+    private static function asScalarString(mixed $value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        return '';
+    }
+
+    private static function serverString(string $key, string $default = ''): string
+    {
+        $value = $_SERVER[$key] ?? null;
+
+        return is_string($value) ? $value : $default;
+    }
+
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-    public function export()
-{
-    $aValoresCamposNo = self::$aValoresCamposNo ?? '';
-    $sCamposNo = $this->sCamposNo ?? '';
-    $prefix = $this->prefix ?? '';
-    $aCamposHidden = $this->aCamposHidden ?? '';
-    $sCamposForm = $this->sCamposForm ?? '';
-    $sCamposChk = $this->sCamposChk ?? '';
-    $sUrl = $this->sUrl ?? '';
+    /** @return array<string, mixed> */
+    public function export(): array
+    {
+        return [
+            'aValoresCamposNo' => self::$aValoresCamposNo,
+            'sCamposNo' => $this->sCamposNo,
+            'prefix' => $this->prefix,
+            'aCamposHidden' => $this->aCamposHidden,
+            'sCamposForm' => $this->sCamposForm,
+            'sCamposChk' => $this->sCamposChk,
+            'sUrl' => $this->sUrl,
+        ];
+    }
 
-    return [
-        'aValoresCamposNo' => $aValoresCamposNo,
-        'sCamposNo' => $sCamposNo,
-        'prefix' => $prefix,
-        'aCamposHidden' => $aCamposHidden,
-        'sCamposForm' => $sCamposForm,
-        'sCamposChk' => $sCamposChk,
-        'sUrl' => $sUrl,
-    ];
-}
-
-    public function import($data)
-{
-    self::$aValoresCamposNo = $data['aValoresCamposNo'];
-    $this->sCamposNo = $data['sCamposNo'];
-    $this->prefix = $data['prefix'];
-    $this->aCamposHidden = $data['aCamposHidden'];
-    $this->sCamposForm = $data['sCamposForm'];
-    $this->sCamposChk = $data['sCamposChk'];
-    $this->sUrl = $data['sUrl'];
-}
+    /** @param array<string, mixed> $data */
+    public function import(array $data): void
+    {
+        self::$aValoresCamposNo = is_array($data['aValoresCamposNo'] ?? null) ? $data['aValoresCamposNo'] : [];
+        $this->sCamposNo = is_string($data['sCamposNo'] ?? null) ? $data['sCamposNo'] : '';
+        $this->prefix = is_string($data['prefix'] ?? null) ? $data['prefix'] : '';
+        $this->aCamposHidden = is_array($data['aCamposHidden'] ?? null) ? $data['aCamposHidden'] : [];
+        $this->sCamposForm = is_string($data['sCamposForm'] ?? null) ? $data['sCamposForm'] : '';
+        $this->sCamposChk = is_string($data['sCamposChk'] ?? null) ? $data['sCamposChk'] : '';
+        $this->sUrl = is_string($data['sUrl'] ?? null) ? $data['sUrl'] : '';
+    }
 
     /**
      * Para validar los parámetros enviados via POST. Recalcula el hash y lo compara con el
      * que se pasa a trasvés del POST.
      *
-     * @param array $aPOST (normalmente $_POST)
-     * @return string empty si es correcto, echo error en caso contrario.
+     * @param array<string, mixed> $aPOST (normalmente $_POST)
      */
-    public function validatePost(array $aPOST)
+    public function validatePost(array $aPOST): void
 {
     if (isset($aPOST['h'])) {
         $salta = 0;
-        $h1 = $aPOST['h'];
+        $salta_txt = '';
+        $horig = '';
+        $h1 = self::asPostString($aPOST['h']);
         // hash de los campos hidden
-        $hh = empty($aPOST['hh']) ? '' : $aPOST['hh'];
+        $hh = self::asPostString($aPOST['hh'] ?? null);
         // campos hidden. (separados por !).
-        $hhc = empty($aPOST['hhc']) ? '' : $aPOST['hhc'];
+        $hhc = self::asPostString($aPOST['hhc'] ?? null);
         // campos del formulario. (separados por '!').
         //$hc = empty($aPOST['hc'])? '' : $aPOST['hc'];
         // campos que se deben quitar del hash. (separados por '!').
-        $hno = empty($aPOST['hno']) ? '' : $aPOST['hno'];
+        $hno = self::asPostString($aPOST['hno'] ?? null);
         if (!empty($hno)) {
             $a_campos_no = explode('!', $hno);
             foreach ($a_campos_no as $campo) {
                 unset($aPOST[$campo]);
             }
         }
-        $hchk = empty($aPOST['hchk']) ? '' : $aPOST['hchk'];
+        $hchk = self::asPostString($aPOST['hchk'] ?? null);
 
         //si es hnov es 1, es para no tener en cuenta los valores de los parametros en el hash.
-        $hnov = empty($aPOST['hnov']) ? '' : $aPOST['hnov'];
-        $hpos = empty($aPOST['hpos']) ? '' : $aPOST['hpos'];
+        $hnov = self::asPostString($aPOST['hnov'] ?? null);
+        $hpos = self::asPostString($aPOST['hpos'] ?? null);
 
         if (OrbixRuntime::isDebug()) {
             // Url original de la que se ha hecho el hash. Para comparar con la actual.
-            $horig = empty($aPOST['horig']) ? '' : $aPOST['horig'];
-            $hhorig = empty($aPOST['hhorig']) ? '' : $aPOST['hhorig'];
+            $horig = self::asPostString($aPOST['horig'] ?? null);
+            $hhorig = self::asPostString($aPOST['hhorig'] ?? null);
             /*
             $horig = empty($aPOST['horig'])? '' : rawurldecode($aPOST['horig']);
             $hhorig = empty($aPOST['hhorig'])? '' : rawurldecode($aPOST['hhorig']);
@@ -218,8 +250,8 @@ class HashFront
             unset($aPOST['hhc']);
             unset($aPOST['hhorig']);
             // campos que se deben quitar del hash. (separados por '!').
-            $hno = empty($aPOST['hno']) ? '' : $aPOST['hno'];
-            if (!empty($hno)) {
+            $hno = self::asPostString($aPOST['hno'] ?? null);
+            if ($hno !== '') {
                 $a_campos_no = explode('!', $hno);
                 foreach ($a_campos_no as $campo) {
                     unset($aPOST[$campo]);
@@ -230,17 +262,15 @@ class HashFront
             unset($aPOST['hnov']);
             ksort($aPOST);
 
-            if ($hnov == 1) { // borro posibles los valores de los campos
+            if ($hnov === '1') { // borro posibles los valores de los campos
                 foreach ($aPOST as $camp => $valor) {
                     $aPOST[$camp] = '';
                 }
             }
 
             $sUrl = $this->realFullUrl();
-            if (!empty($aPOST)) {
-                if (is_array($aPOST)) {
-                    array_walk($aPOST, self::poner_empty_on_null(...));
-                }
+            if ($aPOST !== []) {
+                array_walk($aPOST, self::poner_empty_on_null(...));
                 $sUrl .= '?' . http_build_query($aPOST);
             }
 
@@ -258,7 +288,10 @@ class HashFront
         if ($salta === 1) {
             if (OrbixRuntime::isDebug()) {
                 $salta_txt .= '<br>';
-                $salta_txt .= 'script: ' . $_SERVER['REQUEST_URI'] . '<br>';
+                $requestUri = isset($_SERVER['REQUEST_URI']) && is_string($_SERVER['REQUEST_URI'])
+                    ? $_SERVER['REQUEST_URI']
+                    : '';
+                $salta_txt .= 'script: ' . $requestUri . '<br>';
                 $salta_txt .= "url (h1) emisor  : $horig<br>";
                 $salta_txt .= "url (h2) receptor: $sUrl<br>";
                 //$salta_txt .= "h1: $h1; h2: $h2;  ".var_dump($h1===$h2);
@@ -267,7 +300,9 @@ class HashFront
                 //$_SESSION['oGestorErrores']->addErrorSec($err, $salta_txt, __LINE__, __FILE__);
                 exit();
             } else {
-                $salta_txt = $_SERVER["PHP_SELF"];
+                $salta_txt = isset($_SERVER['PHP_SELF']) && is_string($_SERVER['PHP_SELF'])
+                    ? $_SERVER['PHP_SELF']
+                    : '';
                 $err = _("problema general de seguridad") . "\n";
                 $err .= _("para ver más detalles define ORBIX_FRONT_DEBUG=1 en el entorno del frontend");
                 //$_SESSION['oGestorErrores']->addErrorSec($err, $salta_txt, __LINE__, __FILE__);
@@ -277,7 +312,8 @@ class HashFront
                     // Si se desea destruir la sesión completamente, borre también la cookie de sesión.
                     if (ini_get("session.use_cookies")) {
                         $params = session_get_cookie_params();
-                        setcookie(session_name(), '',
+                        $sessionName = session_name();
+                        setcookie(is_string($sessionName) ? $sessionName : 'PHPSESSID', '',
                             ['expires' => time() - 42000,
                                 'path' => $params["path"],
                                 'domain' => $params["domain"],
@@ -298,19 +334,22 @@ class HashFront
     } else {
         //evito los scripts y si va por command line (no existe REQUEST URI)
         $salta = 0;
-        if (!isset($_SERVER["REQUEST_URI"])) {
+        $requestUri = isset($_SERVER['REQUEST_URI']) && is_string($_SERVER['REQUEST_URI'])
+            ? $_SERVER['REQUEST_URI']
+            : null;
+        if ($requestUri === null) {
             $salta = 1;
         } else {
-            if (strpos($_SERVER["REQUEST_URI"], '/index.php') !== false) {
+            if (strpos($requestUri, '/index.php') !== false) {
                 $salta = 1;
             }
-            if (strpos($_SERVER["REQUEST_URI"], 'udm4') !== false) {
+            if (strpos($requestUri, 'udm4') !== false) {
                 $salta = 1;
             }
         }
-        if ($salta === 0 && (OrbixRuntime::miIdRole() === 1)) {
-            if (!str_contains($_SERVER['REQUEST_URI'], '2fa.php')) {
-                echo "<div>" . $_SERVER['REQUEST_URI'] . ':  ' . _("página con seguridad desactivada") . "</div>";
+        if ($salta === 0 && (OrbixRuntime::miIdRole() === 1) && $requestUri !== null) {
+            if (!str_contains($requestUri, '2fa.php')) {
+                echo '<div>' . $requestUri . ':  ' . _("página con seguridad desactivada") . '</div>';
             }
         }
     }
@@ -326,7 +365,7 @@ class HashFront
      *
      * @return string html
      */
-    public function getCamposHtml()
+    public function getCamposHtml(): string
 {
     $this->addHiddenToForm();
 
@@ -383,7 +422,7 @@ class HashFront
      * @param string $sUrl_full
      * @return string
      */
-    static function link(string $sUrl_full)
+    public static function link(string $sUrl_full): string
     {
         //$sUrl_org = $sUrl_full;
         $sUrl_full = self::ordenarParam($sUrl_full);
@@ -398,9 +437,7 @@ class HashFront
         if (OrbixRuntime::isDebug()) {
             $aParam['horig'] = $horig;
         }
-        if (is_array($aParam)) {
-            array_walk($aParam, self::poner_empty_on_null(...));
-        }
+        array_walk($aParam, self::poner_empty_on_null(...));
         if (strpos($sUrl_full, '?') === false) {
             $sUrl_full .= '?' . http_build_query($aParam);
         } else {
@@ -418,7 +455,7 @@ class HashFront
      * @param string $sUrl_full
      * @return string
      */
-    static function cmdConParametros(string $sUrl_full)
+    public static function cmdConParametros(string $sUrl_full): string
     {
         $sUrl_org = self::link($sUrl_full);
 
@@ -435,7 +472,7 @@ class HashFront
      * @param string $sUrl_full
      * @return string
      */
-    static function cmdSinParametros(string $sUrl_full)
+    public static function cmdSinParametros(string $sUrl_full): string
     {
         //$sUrl_int = str_replace(OrbixRuntime::webPortSf(), OrbixRuntime::webPort(), $sUrl_full);
         return self::normalizarUrlSinSfEsquema($sUrl_full);
@@ -450,7 +487,7 @@ class HashFront
      *
      * Devuelve la url + camposHidden + los parámetros h.
      */
-    public function linkConVal()
+    public function linkConVal(): string
 {
     $this->addHiddenToForm();
     $CamposFormSorted = $this->ordenarQuery($this->sCamposForm);
@@ -468,6 +505,8 @@ class HashFront
         $aCamposNo = explode('!', $CamposNo);
     }
     $CamposHidden_orig = '';
+    $CamposHidden = '';
+    $CamposHidden_hash = '';
     if (!empty($this->aCamposHidden)) {
         $aCampos = [];
         $CamposHidden = $this->array2stringCamposHidden();
@@ -520,7 +559,7 @@ class HashFront
      *
      * @return string
      */
-    public function linkSinVal()
+    public function linkSinVal(): string
 {
     return $this->buildLinkSinVal(false);
 }
@@ -585,18 +624,15 @@ class HashFront
      *   => añado hpos (viene de web\Posicion y no un formulario normal)
      *          para indicar al receptor que el hash se calcula con la url incluida.
      *
-     * @param array $aParam
-     * @param string $url
-     * @return string
+     * @param array<string, mixed>|string|null $aParam
      */
-    public static function add_hash(array|string|null $aParam, string $url)
+    public static function add_hash(array|string|null $aParam, string $url): string
 {
-    if (empty($aParam)) {
+    if ($aParam === null || $aParam === '') {
+        /** @var array<string, mixed> $aParam */
         $aParam = [];
-    }
-    if (!is_array($aParam) && !empty($aParam)) {
-        $sParam = $aParam;
-        $aParam = self::string2array($sParam);
+    } elseif (is_string($aParam)) {
+        $aParam = self::string2array($aParam);
     }
     //parece que sólo la usa web\Posicion => elimino hnov. y añado hpos
     unset($aParam['hnov']);
@@ -624,19 +660,15 @@ class HashFront
         //$query .= '&horig='.$horig;
         $aParam['horig'] = $horig;
     }
-    if (is_array($aParam)) {
-        array_walk($aParam, self::poner_empty_on_null(...));
-    }
+    array_walk($aParam, self::poner_empty_on_null(...));
     $query = http_build_query($aParam);
     return $query;
 }
 
     /**
      * Devuelve los campos en una cadena para usar en llamadas ajax
-     *
-     * return string
      */
-    public function getParamAjax()
+    public function getParamAjax(): string
 {
     $sUrl = $this->getUrl();
     $this->addHiddenToForm();
@@ -680,22 +712,23 @@ class HashFront
      *
      * return string $json_param .= "$parametro: '$valor'";
      */
-    public function getParamAjaxEnArray()
+    public function getParamAjaxEnArray(): string
 {
     $paramHash = $this->getParamsHash();
-    $json_param = "'h':'{$paramHash['h']}', 'hh':'{$paramHash['hh']}', 'hhc':'{$paramHash['hhc']}'";
-    $json_param .= ",'hno':'{$paramHash['hno']}', 'horig':'{$paramHash['horig']}'";
+    $json_param = "'h':'" . $paramHash['h'] . "', 'hh':'" . $paramHash['hh'] . "', 'hhc':'" . $paramHash['hhc'] . "'";
+    $json_param .= ",'hno':'" . $paramHash['hno'] . "', 'horig':'" . $paramHash['horig'] . "'";
 
     $aCamposHidden = $this->getArrayCamposHidden();
     foreach ($aCamposHidden as $campo => $valor) {
         $json_param .= ', ';
-        $json_param .= "'$campo': '$valor'";
+        $json_param .= "'" . $campo . "': '" . self::asScalarString($valor) . "'";
     }
 
     return $json_param;
 }
 
-    public function getArrayCampos()
+    /** @return array<string, mixed> */
+    public function getArrayCampos(): array
 {
     $paramHash = $this->getParamsHash();
     $aCamposHidden = $this->getArrayCamposHidden();
@@ -703,7 +736,10 @@ class HashFront
     return array_merge($paramHash, $aCamposHidden);
 }
 
-    private function getParamsHash()
+    /**
+     * @return array{h: string, hh: string, hhc: string, hno: string, horig: string}
+     */
+    private function getParamsHash(): array
 {
     $this->addHiddenToForm();
 
@@ -746,100 +782,57 @@ class HashFront
 
 
     /* METODES GET AND SETTERS  -----------------------------------------------------------*/
-    /**
-     * estableix el valor del atribut Url
-     *
-     * @param string sUrl
-     */
-    public function setUrl($sUrl)
-{
-    $this->sUrl = $sUrl;
-}
+    public function setUrl(string $sUrl): void
+    {
+        $this->sUrl = $sUrl;
+    }
 
-    /**
-     * recupera el valor del atribut Url
-     *
-     */
-    public function getUrl()
-{
-    return $this->sUrl;
-}
+    public function getUrl(): string
+    {
+        return $this->sUrl;
+    }
 
-    /**
-     * estableix el valor del atribut CamposChk
-     *
-     * @param string sCamposChk
-     */
-    public function setCamposChk($sCamposChk)
-{
-    $this->sCamposChk = $sCamposChk;
-}
+    public function setCamposChk(string $sCamposChk): void
+    {
+        $this->sCamposChk = $sCamposChk;
+    }
 
-    /**
-     * recupera el valor del atribut CamposChk
-     *
-     */
-    public function getCamposChk()
-{
-    return $this->sCamposChk;
-}
+    public function getCamposChk(): string
+    {
+        return $this->sCamposChk;
+    }
 
-    /**
-     * estableix el valor del atribut CamposForm
-     *
-     * @param string sCamposForm
-     */
-    public function setCamposForm($sCamposForm)
-{
-    $this->sCamposForm = $sCamposForm;
-}
+    public function setCamposForm(string $sCamposForm): void
+    {
+        $this->sCamposForm = $sCamposForm;
+    }
 
-    /**
-     * recupera el valor del atribut CamposForm
-     *
-     */
-    public function getCamposForm()
-{
-    return $this->sCamposForm;
-}
+    public function getCamposForm(): string
+    {
+        return $this->sCamposForm;
+    }
 
-    /**
-     * estableix el valor del atribut ArrayCamposHidden
-     *
-     * @param array aCamposHidden
-     */
-    public function setArrayCamposHidden($aCamposHidden)
-{
-    $this->aCamposHidden = $aCamposHidden;
-}
+    /** @param array<string, mixed> $aCamposHidden */
+    public function setArrayCamposHidden(array $aCamposHidden): void
+    {
+        $this->aCamposHidden = $aCamposHidden;
+    }
 
-    /**
-     * recupera el valor del atribut ArrayCamposHidden
-     *
-     */
-    public function getArrayCamposHidden()
-{
-    return $this->aCamposHidden;
-}
+    /** @return array<string, mixed> */
+    public function getArrayCamposHidden(): array
+    {
+        return $this->aCamposHidden;
+    }
 
-    /**
-     * estableix el valor del atribut CamposNo
-     *
-     * @param string sCamposNo
-     */
-    public function setCamposNo($sCamposNo)
-{
-    $this->sCamposNo = $sCamposNo;
-}
+    public function setCamposNo(string $sCamposNo): void
+    {
+        $this->sCamposNo = $sCamposNo;
+    }
 
-    /**
-     * recupera el valor del atribut CamposNo
-     *
-     */
-    public function getCamposNo()
-{
-    return $this->sCamposNo;
-}
+    public function getCamposNo(): string
+    {
+        return $this->sCamposNo;
+    }
     /* MÉTODOS PRIVADOS -----------------------------------------------------------*/
 
     /**
@@ -847,9 +840,9 @@ class HashFront
      *
      * @return string html
      */
-    private function getCamposHiddenHtml()
+    private function getCamposHiddenHtml(): string
 {
-    $prefix = empty($this->prefix) ? '' : $this->prefix . '_';
+    $prefix = $this->prefix === '' ? '' : $this->prefix . '_';
     $aCamposHidden = $this->aCamposHidden;
     $sCamposHiddenHtml = '';
     foreach ($aCamposHidden as $campo => $valor) {
@@ -857,12 +850,12 @@ class HashFront
             $i = 0;
             foreach ($valor as $val) {
                 $nom = $campo . "[$i]";
-                $sCamposHiddenHtml .= "<input type=\"hidden\" id=\"$prefix$nom\" name=\"$nom\" value=\"$val\">\n";
+                $sCamposHiddenHtml .= '<input type="hidden" id="' . $prefix . $nom . '" name="' . $nom . '" value="' . self::asScalarString($val) . "\">\n";
                 $i++;
             }
 
         } else {
-            $sCamposHiddenHtml .= "<input type=\"hidden\" id=\"$prefix$campo\" name=\"$campo\" value=\"$valor\">\n";
+            $sCamposHiddenHtml .= '<input type="hidden" id="' . $prefix . $campo . '" name="' . $campo . '" value="' . self::asScalarString($valor) . "\">\n";
         }
     }
     return $sCamposHiddenHtml;
@@ -874,16 +867,16 @@ class HashFront
      * Por lo que sólo sirve para la misma session.
      *
      * @param string $str
-     * @return string[]  'orig' => string original decoded y trimed
-     *                   'hash' => el md5
+     * @return array{orig: string, hash: string}
      */
-    private static function md(string $str)
+    private static function md(string $str): array
 {
-    $rta = [];
     $str = rawurldecode(trim($str));
-    $rta['orig'] = $str;
-    $rta['hash'] = md5($str . session_id() . "a+front+");
-    return $rta;
+
+    return [
+        'orig' => $str,
+        'hash' => md5($str . session_id() . "a+front+"),
+    ];
 }
 
     /**
@@ -895,7 +888,7 @@ class HashFront
      * @param ?string $sCampos (separados por '!')
      * @return string
      */
-    private function ordenarQuery(?string $sCampos)
+    private function ordenarQuery(?string $sCampos): string
 {
     $sCampos = $sCampos ?? '';
     $a_campos = explode('!', $sCampos);
@@ -923,22 +916,17 @@ class HashFront
         $aCampos[$campo] = '';
     }
 
-    if (is_array($aCampos)) {
-        array_walk($aCampos, self::poner_empty_on_null(...));
-    }
+    array_walk($aCampos, self::poner_empty_on_null(...));
     $sQuery = http_build_query($aCampos);
 
     return $sQuery;
 }
 
     /**
-     *
-     * @param array $aCampos
-     * @param string $valor 'sin_valor' Para no tener en cuenta los valores de los campos en el hash
-     * @return array  'hash' =>
-     *                 'orig' =>
+     * @param array<string, mixed> $aCampos
+     * @return array{orig: string, hash: string}
      */
-    private static function getHashArray(array $aCampos, $sin_valor = 0)
+    private static function getHashArray(array $aCampos, int $sin_valor = 0): array
 {
     $aCampos['hnov'] = $sin_valor;
     $aParamSorted = self::ordenarArrayParam($aCampos);
@@ -954,7 +942,7 @@ class HashFront
      * Afagir a la llista de camps Form, els camps hidden.
      *
      */
-    private function addHiddenToForm()
+    private function addHiddenToForm(): void
 {
     $sCamposForm = $this->array2stringCamposHidden();
     $this->sCamposForm .= empty($this->sCamposForm) ? $sCamposForm : '!' . $sCamposForm;
@@ -965,13 +953,14 @@ class HashFront
      *
      * @return string
      */
-    private function array2queryCamposHidden()
+    private function array2queryCamposHidden(): string
 {
     $sCamposHidden = '';
     $aCamposHidden = $this->aCamposHidden;
     if (!empty($aCamposHidden)) {
         foreach ($aCamposHidden as $campo => $valor) {
-            $sCamposHidden .= empty($sCamposHidden) ? "$campo=$valor" : '&' . "$campo=$valor";
+            $valorStr = self::asScalarString($valor);
+            $sCamposHidden .= $sCamposHidden === '' ? $campo . '=' . $valorStr : '&' . $campo . '=' . $valorStr;
         }
     } else { //hay que pasar algo para que lo identifique como formulario y no un link.
         $this->setArrayCamposHidden(array('hola' => 'adios'));
@@ -985,7 +974,7 @@ class HashFront
      *
      * @return string
      */
-    private function array2stringCamposHidden()
+    private function array2stringCamposHidden(): string
 {
     $sCamposHidden = '';
     $aCamposHidden = $this->aCamposHidden;
@@ -1018,16 +1007,19 @@ class HashFront
         return $url;
     }
 
-    private function realFullUrl()
+    private function realFullUrl(): string
 {
     /* Con el cambio de rutas, no coincide el uri de origen y destino.
      *  El emisor apunta algo asi: /orbix/src/usuarios/preferencias_guardar
      *  y el receptor a lo real: /orbix/src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php
      */
-    $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $requestUriRaw = self::serverString('REQUEST_URI');
+    $request_uri = parse_url($requestUriRaw, PHP_URL_PATH);
+    $request_uri = is_string($request_uri) ? $request_uri : '';
     $pattern = '/(^.*src\/[^\/]+\/)infrastructure\/ui\/http\/controllers\/([^\/]+)\.php$/';
     $replacement = '$1$2';
     $request_uri_modificada = preg_replace($pattern, $replacement, $request_uri);
+    $request_uri_modificada = is_string($request_uri_modificada) ? $request_uri_modificada : $request_uri;
     $request_uri_modificada = self::normalizarUrlSinSfEsquema($request_uri_modificada);
 
     /*
@@ -1037,32 +1029,36 @@ class HashFront
      * hay que hacer directamente SERVER_NAME + SERVER_PORT
     *
     */
-    if ($_SERVER['SERVER_ADDR'] === $_SERVER['SERVER_NAME']) {
-        if (empty($_SERVER["SERVER_PORT"])) {
-            $port = '';
-        } else {
-            $port = ':' . $_SERVER["SERVER_PORT"];
-        }
-        $sUrl = $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["SERVER_NAME"] . $port . $request_uri_modificada;
+    $serverAddr = self::serverString('SERVER_ADDR');
+    $serverName = self::serverString('SERVER_NAME');
+    $requestScheme = self::serverString('REQUEST_SCHEME', 'http');
+    $httpHost = self::serverString('HTTP_HOST');
+    $serverPort = self::serverString('SERVER_PORT');
+
+    if ($serverAddr === $serverName) {
+        $port = $serverPort === '' ? '' : ':' . $serverPort;
+        $sUrl = $requestScheme . '://' . $serverName . $port . $request_uri_modificada;
     } else {
-        if (str_contains($_SERVER['HTTP_HOST'], ':')) {
-            $sUrl = $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"] . $request_uri_modificada;
+        if (str_contains($httpHost, ':')) {
+            $sUrl = $requestScheme . '://' . $httpHost . $request_uri_modificada;
         } else {
-            $sUrl = $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["SERVER_NAME"] . ':' . $_SERVER["SERVER_PORT"] . $request_uri_modificada;
+            $port = $serverPort === '' ? '' : ':' . $serverPort;
+            $sUrl = $requestScheme . '://' . $serverName . $port . $request_uri_modificada;
         }
     }
     return $sUrl;
 }
 
-    private static function FullPath($sPath)
+    private static function FullPath(string $sPath): string
 {
-    if (!empty($sPath)) {
+    if ($sPath !== '') {
         if (substr($sPath, 0, 4) === 'http') {
             // lo dejo com está
         } else {
             $sPath = (substr($sPath, 0, 1) === '/') ? $sPath : '/' . $sPath;
         }
-        if (strpos($sPath, $_SERVER["SERVER_NAME"]) === false) {
+        $serverName = self::serverString('SERVER_NAME');
+        if (strpos($sPath, $serverName) === false) {
             if (strpos($sPath, OrbixRuntime::webPath()) === false) {
                 $sPath = AppUrlConfig::getPublicAppBaseUrl() . $sPath;
             } else {
@@ -1113,16 +1109,16 @@ class HashFront
      * Quita los parametros que no se deben incluir en el hash.
      * Elimina los valores de los parametros si hnov=1.
      *
-     * @param array $aParam
-     * @return array
+     * @param array<string, mixed> $aParam
+     * @return array<string, mixed>
      */
-    private static function ordenarArrayParam(array $aParam)
+    private static function ordenarArrayParam(array $aParam): array
 {
-    if (!empty($aParam)) {
+    if ($aParam !== []) {
         $aPOST = $aParam;
         // campos que se deben quitar del hash; separados por !.
-        $hno = empty($aPOST['hno']) ? '' : $aPOST['hno'];
-        if (!empty($hno)) {
+        $hno = self::asPostString($aPOST['hno'] ?? null);
+        if ($hno !== '') {
             $a_campos_no = explode('!', $hno);
             foreach ($a_campos_no as $campo) {
                 if (isset($aPOST[$campo])) {
@@ -1132,8 +1128,8 @@ class HashFront
             }
         }
         // Indica que los campos deben estar sin valores en el hash;
-        $hnov = empty($aPOST['hnov']) ? '' : $aPOST['hnov'];
-        if ($hnov == 1) { // borro posibles los valores de los campos
+        $hnov = self::asPostString($aPOST['hnov'] ?? null);
+        if ($hnov === '1') { // borro posibles los valores de los campos
             foreach ($aPOST as $camp => $valor) {
                 $aPOST[$camp] = '';
             }
@@ -1161,26 +1157,27 @@ class HashFront
         // puede fallar → 302 a index.php.
         $aPOST = self::collapseIndexedPostKeysToCanonical($aPOST, ['id_cdc']);
         ksort($aPOST);
-        if (is_array($aPOST)) {
-            array_walk($aPOST, self::poner_empty_on_null(...));
-        }
+        array_walk($aPOST, self::poner_empty_on_null(...));
         return $aPOST;
-    } else {
-        return [];
     }
+
+    return [];
 }
 
-    private static function ordenarParam($sUrl)
+    private static function ordenarParam(string $sUrl): string
 {
-    if (($aParam = parse_url($sUrl)) === false) { // la url puede contener ip en vez de nombre
+    $aParam = parse_url($sUrl);
+    if ($aParam === false) { // la url puede contener ip en vez de nombre
         $matches = [];
         $regex = "^(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?";
         preg_match("@$regex@", $sUrl, $matches);
-        $aParam['path'] = $matches[3];
-        $aParam['query'] = !empty($matches[5]) ? $matches[5] : '';
-
+        $aParam = [
+            'path' => $matches[3] ?? '',
+            'query' => !empty($matches[5]) ? $matches[5] : '',
+        ];
     }
-    $sPath = !empty($aParam['path']) ? self::FullPath($aParam['path']) : self::FullPath('');
+    $path = is_string($aParam['path'] ?? null) ? $aParam['path'] : '';
+    $sPath = $path !== '' ? self::FullPath($path) : self::FullPath('');
     if (!empty($aParam['query'])) {
         $aQuery = self::string2array($aParam['query']);
         $aQuerySorted = self::ordenarArrayParam($aQuery);
@@ -1194,11 +1191,10 @@ class HashFront
     /**
      * Convierte una cadena http query en un array.
      *
-     * @param string $sParam
-     * @param string $and separador '&'
-     * @return string[]
+     * @param non-empty-string $and separador '&'
+     * @return array<string, string>
      */
-    private static function string2array(string $sParam, string $and = '&')
+    private static function string2array(string $sParam, string $and = '&'): array
 {
     $aParam = [];
     if (!empty($sParam)) { //si no hay no hace falta ordenar nada.
@@ -1225,18 +1221,15 @@ class HashFront
     return $this->prefix;
 }
 
-    /**
-     * @param mixed $prefix
-     */
-    public function setPrefix(mixed $prefix)
+    public function setPrefix(string $prefix): void
 {
     $this->prefix = $prefix;
 }
 
 
-    public static function poner_empty_on_null(&$valor)
+    public static function poner_empty_on_null(mixed &$valor): void
 {
-    if ($valor === NULL) {
+    if ($valor === null) {
         $valor = '';
     }
 }

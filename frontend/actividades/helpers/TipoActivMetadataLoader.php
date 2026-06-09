@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\actividades\helpers;
 
+require_once __DIR__ . '/../../notas/helpers/tessera_imprimir_support.php';
+
 use frontend\shared\PostRequest;
 
 /**
@@ -148,14 +150,15 @@ final class TipoActivMetadataLoader
         // Cache de sesión: si ya está poblada, no volvemos a tocar HTTP en
         // toda la sesión hasta que un admin cree/edite/borre un tipo_activ
         // (esos casos de uso llaman a self::forget()).
-        if (isset($_SESSION[self::SESSION_KEY]) && is_array($_SESSION[self::SESSION_KEY])) {
-            self::$cache = $_SESSION[self::SESSION_KEY];
+        $sessionRaw = $_SESSION[self::SESSION_KEY] ?? null;
+        if (is_array($sessionRaw)) {
+            self::$cache = self::normalize($sessionRaw);
 
             return self::$cache;
         }
 
         $payload = PostRequest::getDataFromUrl('/src/actividades/tipo_activ_metadata');
-        self::$cache = self::normalize(is_array($payload) ? $payload : []);
+        self::$cache = self::normalize($payload);
 
         // Persistir en sesión solo si la sesión está activa (en CLI/tests
         // basta con la cache estática y no queremos warnings de PHP).
@@ -169,7 +172,7 @@ final class TipoActivMetadataLoader
     /**
      * Saneado defensivo del payload del backend (estructura mínima esperada).
      *
-     * @param array<string, mixed> $payload
+     * @param array<int|string, mixed> $payload
      * @return array{
      *     maps: array{
      *         sfsv: array<string, int|string>,
@@ -186,10 +189,10 @@ final class TipoActivMetadataLoader
         $rawFilas = is_array($payload['filas'] ?? null) ? $payload['filas'] : [];
 
         $maps = [
-            'sfsv' => is_array($rawMaps['sfsv'] ?? null) ? $rawMaps['sfsv'] : [],
-            'asistentes' => is_array($rawMaps['asistentes'] ?? null) ? $rawMaps['asistentes'] : [],
-            'actividad1digito' => is_array($rawMaps['actividad1digito'] ?? null) ? $rawMaps['actividad1digito'] : [],
-            'actividad2digitos' => is_array($rawMaps['actividad2digitos'] ?? null) ? $rawMaps['actividad2digitos'] : [],
+            'sfsv' => self::normalizeMap($rawMaps['sfsv'] ?? null),
+            'asistentes' => self::normalizeMap($rawMaps['asistentes'] ?? null),
+            'actividad1digito' => self::normalizeMap($rawMaps['actividad1digito'] ?? null),
+            'actividad2digitos' => self::normalizeMap($rawMaps['actividad2digitos'] ?? null),
         ];
 
         $filas = [];
@@ -198,11 +201,34 @@ final class TipoActivMetadataLoader
                 continue;
             }
             $filas[] = [
-                'id_tipo_activ' => (int)($row['id_tipo_activ'] ?? 0),
-                'nombre' => (string)($row['nombre'] ?? ''),
+                'id_tipo_activ' => tessera_imprimir_int($row['id_tipo_activ'] ?? 0),
+                'nombre' => tessera_imprimir_string($row['nombre'] ?? ''),
             ];
         }
 
         return ['maps' => $maps, 'filas' => $filas];
+    }
+
+    /**
+     * @return array<string, int|string>
+     */
+    private static function normalizeMap(mixed $raw): array
+    {
+        if (!is_array($raw)) {
+            return [];
+        }
+        $out = [];
+        foreach ($raw as $key => $value) {
+            if (!is_string($key)) {
+                continue;
+            }
+            if (is_int($value) || is_string($value)) {
+                $out[$key] = $value;
+            } else {
+                $out[$key] = tessera_imprimir_string($value);
+            }
+        }
+
+        return $out;
     }
 }

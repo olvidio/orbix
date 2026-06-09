@@ -5,16 +5,12 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $Qid_ubi = (int)(filter_input(INPUT_POST, 'id_ubi') ?? filter_input(INPUT_GET, 'id_ubi'));
-$data = PostRequest::getDataFromUrl('/src/ubis/centros_form_num', ['id_ubi' => $Qid_ubi]);
-
-$nombre_ubi = $data['nombre_ubi'] ?? '';
-$n_buzon = $data['n_buzon'] ?? '';
-$num_pi = $data['num_pi'] ?? '';
-$num_cartas = $data['num_cartas'] ?? '';
+$form = ubis_centro_num_form_from_payload(ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/centros_form_num', ['id_ubi' => $Qid_ubi])));
 
 $url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 
@@ -27,15 +23,14 @@ $oHash->setCamposForm('n_buzon!num_pi!num_cartas');
 
 $txt = "<form id='frm_num' action='$url_update'>";
 $txt .= $oHash->getCamposHtml();
-$txt .= '<h3>' . _("centro") . '  ' . $nombre_ubi . '</h3>';
-$txt .= _("número de buzón") . "   <input type=text size=12 name=n_buzon value=\"$n_buzon\">";
+$txt .= '<h3>' . _("centro") . '  ' . $form['nombre_ubi'] . '</h3>';
+$txt .= _("número de buzón") . '   <input type=text size=12 name=n_buzon value="' . $form['n_buzon'] . '">';
 $txt .= '<br>';
-$txt .= _("número de pi") . "   <input type=text size=12 name=num_pi value=\"$num_pi\">";
+$txt .= _("número de pi") . '   <input type=text size=12 name=num_pi value="' . $form['num_pi'] . '">';
 $txt .= '<br>';
-$txt .= _("número de cartas") . "   <input type=text size=12 name=num_cartas value=\"$num_cartas\">";
+$txt .= _("número de cartas") . '   <input type=text size=12 name=num_cartas value="' . $form['num_cartas'] . '">';
 $txt .= '<br><br>';
 $txt .= "<input type='button' value='" . _("guardar") . "' onclick=\"fnjs_guardar('#frm_num');\" >";
 $txt .= "<input type='button' value='" . _("cancel") . "' onclick=\"fnjs_cerrar();\" >";
 $txt .= "</form> ";
 echo $txt;
-

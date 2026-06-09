@@ -14,23 +14,24 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/cambios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
 $Qid_item_usuario_objeto = (int)filter_input(INPUT_POST, 'id_item_usuario_objeto');
 
-$data = PostRequest::getDataFromUrl('/src/cambios/cambio_usuario_objeto_pref_propiedades_data', [
+$data = cambios_post_data(PostRequest::getDataFromUrl('/src/cambios/cambio_usuario_objeto_pref_propiedades_data', [
     'objeto' => $Qobjeto,
     'id_item_usuario_objeto' => $Qid_item_usuario_objeto,
-]);
-$payload = is_array($data) ? $data : [];
-$propiedades = (array)($payload['propiedades'] ?? []);
+]));
+$propiedades = cambios_propiedades_rows($data['propiedades'] ?? []);
 
 $scamposForm = '';
 foreach ($propiedades as $p) {
-    $id_cond = $Qobjeto . '_' . $p['nom_prop'] . '_cond';
-    $td_item = $Qobjeto . '_' . $p['nom_prop'] . '_item';
+    $nomProp = cambios_propiedad_nom_prop($p);
+    $id_cond = $Qobjeto . '_' . $nomProp . '_cond';
+    $td_item = $Qobjeto . '_' . $nomProp . '_item';
     $scamposForm .= $id_cond . '!' . $td_item . '!';
 }
 

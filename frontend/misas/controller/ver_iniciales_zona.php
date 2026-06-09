@@ -7,6 +7,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
@@ -17,7 +18,7 @@ $data = PostRequest::getDataFromUrl('/src/misas/ver_iniciales_zona_data', [
 
 $columns = $data['columns'] ?? [];
 $rows = $data['rows'] ?? [];
-$id_zona = (int)($data['id_zona'] ?? $Qid_zona);
+$id_zona = misas_int($data['id_zona'] ?? $Qid_zona);
 
 // URL absoluta del endpoint backend: web\Hash genera el hash a partir de la
 // URL; el JS posteara contra la misma ruta para que el hash coincida.

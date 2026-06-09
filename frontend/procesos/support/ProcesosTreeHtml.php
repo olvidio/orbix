@@ -8,6 +8,9 @@ namespace frontend\procesos\support;
  */
 final class ProcesosTreeHtml
 {
+    /**
+     * @param array<int, array<int, array<string, mixed>>> $aPadres
+     */
     public static function dibujarTree(array $aPadres): string
     {
         if ($aPadres === []) {
@@ -17,8 +20,8 @@ final class ProcesosTreeHtml
         $html = '<div id="tree">';
         if (!empty($aPadres[0])) {
             foreach ($aPadres[0] as $padre) {
-                $id_fase_i = (int)$padre['id'];
-                $nom = $padre['nom'];
+                $id_fase_i = \tessera_imprimir_int($padre['id'] ?? 0);
+                $nom = \tessera_imprimir_string($padre['nom'] ?? '');
                 if (array_key_exists($id_fase_i, $aPadres)) {
                     $html .= '<div class="branch">';
                     $html .= '<div class="entry"><span>' . $nom . '</span>';
@@ -36,6 +39,9 @@ final class ProcesosTreeHtml
         return $html;
     }
 
+    /**
+     * @param array<int, array<int, array<string, mixed>>> $aPadres
+     */
     private static function dibujarTreeHijos(array $aPadres, int $id_fase): string
     {
         if (empty($aPadres[$id_fase])) {
@@ -43,8 +49,8 @@ final class ProcesosTreeHtml
         }
         $html = '';
         foreach ($aPadres[$id_fase] as $padre) {
-            $id_fase_i = (int)$padre['id'];
-            $nom = $padre['nom'];
+            $id_fase_i = \tessera_imprimir_int($padre['id'] ?? 0);
+            $nom = \tessera_imprimir_string($padre['nom'] ?? '');
             if (array_key_exists($id_fase_i, $aPadres)) {
                 $html .= '<div class="branch">';
                 $html .= '<div class="entry"><span>' . $nom . '</span>';

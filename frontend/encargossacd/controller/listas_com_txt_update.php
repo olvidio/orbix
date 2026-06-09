@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
@@ -16,9 +17,9 @@ require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qclave = (string)filter_input(INPUT_POST, 'clave');
-$Qidioma = (string)filter_input(INPUT_POST, 'idioma');
-$Qcomunicacion = (string)filter_input(INPUT_POST, 'comunicacion');
+$Qclave = encargossacd_post_string('clave');
+$Qidioma = encargossacd_post_string('idioma');
+$Qcomunicacion = encargossacd_post_string('comunicacion');
 
 PostRequest::getDataFromUrl('/src/encargossacd/listas_com_txt_update', [
     'clave' => $Qclave,

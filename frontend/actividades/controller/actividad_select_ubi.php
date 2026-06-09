@@ -15,11 +15,16 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-$isfsv = empty($_REQUEST['isfsv']) ? '' : $_REQUEST['isfsv'];
-$ssfsv = empty($_REQUEST['ssfsv']) ? '' : $_REQUEST['ssfsv'];
+$isfsv = isset($_REQUEST['isfsv']) && $_REQUEST['isfsv'] !== ''
+    ? tessera_imprimir_string($_REQUEST['isfsv'])
+    : '';
+$ssfsv = isset($_REQUEST['ssfsv']) && $_REQUEST['ssfsv'] !== ''
+    ? tessera_imprimir_string($_REQUEST['ssfsv'])
+    : '';
 
 if (empty($isfsv)) {
     if ($ssfsv === 'sv') {
@@ -29,9 +34,9 @@ if (empty($isfsv)) {
         $isfsv = 2;
     }
 }
-$isfsv = (int)$isfsv;
+$isfsv = tessera_imprimir_int($isfsv);
 
-$dl_org = (string)($_REQUEST['dl_org'] ?? '');
+$dl_org = tessera_imprimir_string($_REQUEST['dl_org'] ?? '');
 
 // URL + hash para cargar desplegables (freq/region) via AJAX.
 $url_desplegable = AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_select_ubi_desplegable';

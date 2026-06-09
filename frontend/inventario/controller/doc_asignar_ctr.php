@@ -7,49 +7,47 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-$str_selected_id = rawurlencode(json_encode($a_sel));
-
+$str_selected_id = rawurlencode((string)json_encode($a_sel));
 
 $oPosicion->recordar();
 
-// muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/lista_docs_asignar_ctr';
 $a_campos_backend = [
     'id_tipo_doc' => $Qid_tipo_doc,
     'sel' => $a_sel,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$a_valores = $data['a_valores'];
-$nombreDoc = $data['nombreDoc'];
-$isNumerado = $data['isNumerado'];
-$sCamposForm = $data['sCamposForm'];
+$payload = inventario_post_payload($data);
+$view = inventario_doc_asignar_from_payload($payload);
 
+$a_valores = $view['a_valores'];
+$nombreDoc = $view['nombreDoc'];
+$isNumerado = $view['isNumerado'];
+$sCamposForm = $view['sCamposForm'];
 
 if ($isNumerado) {
     $num_txt = _('número de registro');
 } else {
     $num_txt = _('número de ejemplares');
 }
-$a_cabeceras = array(ucfirst(_("centro")), $num_txt);
+$a_cabeceras = [ucfirst(_('centro')), $num_txt];
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('doc_num_tabla');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
 
-//9
 $url_guardar = AppUrlConfig::getApiBaseUrl() . '/src/inventario/doc_asignar_ctr_guardar?';
 
 $oHash = new HashFront();
-$sCamposForm .= "!f_recibido!f_asignado";
+$sCamposForm .= '!f_recibido!f_asignado';
 $oHash->setCamposForm($sCamposForm);
 $oHash->setCamposNo('numerado');
 $oHash->setArrayCamposHidden([

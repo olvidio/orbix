@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\encargossacd\model\DesplCentros;
 use frontend\shared\config\AppUrlConfig;
@@ -25,8 +26,8 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
-$Qfiltro_ctr = (int)filter_input(INPUT_POST, 'filtro_ctr');
+$Qid_ubi = encargossacd_post_int('id_ubi');
+$Qfiltro_ctr = encargossacd_post_int('filtro_ctr');
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/ctr_ficha_data', [
@@ -34,14 +35,14 @@ $data = PostRequest::getDataFromUrl('/src/encargossacd/ctr_ficha_data', [
     'filtro_ctr' => $Qfiltro_ctr,
 ]);
 
-$Qfiltro_ctr = (int)($data['filtro_ctr'] ?? $Qfiltro_ctr);
-$opciones_seccion = is_array($data['opciones_seccion'] ?? null) ? $data['opciones_seccion'] : [];
+$Qfiltro_ctr = tessera_imprimir_int($data['filtro_ctr'] ?? $Qfiltro_ctr);
+$opciones_seccion = encargossacd_desplegable_opciones($data['opciones_seccion'] ?? []);
 
 $oDesplGrupoCtrs = new Desplegable();
 $oDesplGrupoCtrs->setNombre('filtro_ctr');
 $oDesplGrupoCtrs->setOpciones($opciones_seccion);
-$oDesplGrupoCtrs->setOpcion_sel($Qfiltro_ctr);
-$oDesplGrupoCtrs->setBlanco(1);
+$oDesplGrupoCtrs->setOpcion_sel(encargossacd_desplegable_opcion_sel($Qfiltro_ctr));
+$oDesplGrupoCtrs->setBlanco(encargossacd_desplegable_blanco(1));
 $oDesplGrupoCtrs->setAction("fnjs_lista_ctrs();");
 
 $oDesplCtrs = DesplCentros::build($Qfiltro_ctr, $Qid_ubi);

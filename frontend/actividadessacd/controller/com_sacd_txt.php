@@ -23,6 +23,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadessacd/helpers/actividadessacd_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $a_Claves = [
@@ -45,7 +46,7 @@ $oDesplClaves->setOpcion_sel('com_sacd');
 $oDesplClaves->setAction('fnjs_get_texto()');
 
 $locData = PostRequest::getDataFromUrl('/src/actividadessacd/locales_desplegable_data', []);
-$a_locales = (array)($locData['a_locales'] ?? []);
+$a_locales = actividadessacd_locales_from_payload($locData);
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, 'es', true);
 $oDesplIdiomas->setAction('fnjs_get_texto()');
 
@@ -54,7 +55,7 @@ $initial = PostRequest::getDataFromUrl('/src/actividadessacd/texto_comunicacion_
     'clave' => 'com_sacd',
     'idioma' => 'es',
 ]);
-$comunicacion = (string)($initial['texto'] ?? '');
+$comunicacion = actividadessacd_texto_from_payload($initial);
 
 $api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {

@@ -8,6 +8,7 @@ use frontend\shared\FrontBootstrap;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -21,10 +22,10 @@ $url_backend = '/src/inventario/lista_docs_asignados_por_tipo';
 $a_campos_backend = ['id_tipo_doc' => $Qid_tipo_doc];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
-$a_cabeceras = $data['a_cabeceras'];
-$a_botones = $data['a_botones'];
-$a_valores = $data['a_valores'];
-$nombreDoc = $data['nombreDoc'];
+$a_cabeceras = actividades_lista_cabeceras($payload['a_cabeceras'] ?? []);
+$a_botones = actividades_lista_botones($payload['a_botones'] ?? []);
+$a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
+$nombreDoc = tessera_imprimir_string($payload['nombreDoc'] ?? '');
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('doc_ctr_tabla2');

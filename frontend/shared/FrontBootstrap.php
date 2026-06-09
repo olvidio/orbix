@@ -129,6 +129,6 @@ final class FrontBootstrap
     {
         $oValidator = new HashFront();
         $aData = $_POST !== [] ? $_POST : (isset($_GET['h']) ? $_GET : []);
-        echo $oValidator->validatePost($aData);
+        $oValidator->validatePost($aData);
     }
 }

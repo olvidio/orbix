@@ -25,7 +25,7 @@ $payload = PostRequest::getDataFromUrl(
     PostRequest::requestPayloadForHash()
 );
 
-if (!is_array($payload) || !isset($payload['html']) || !is_string($payload['html'])) {
+if (!isset($payload['html']) || !is_string($payload['html'])) {
     exit(_('No se pudo cargar la comprobación de notas.'));
 }
 

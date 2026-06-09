@@ -8,6 +8,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $id_zona = (int)filter_input(INPUT_POST, 'id_zona');
@@ -29,14 +30,14 @@ $oDesplZonas = new Desplegable();
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
-$oDesplZonas->setOpciones($data['zonas_opciones'] ?? []);
-$oDesplZonas->setOpcion_sel((string)($data['zonas_selected'] ?? 0));
+$oDesplZonas->setOpciones(misas_desplegable_opciones($data['zonas_opciones'] ?? []));
+$oDesplZonas->setOpcion_sel(misas_string($data['zonas_selected'] ?? 0));
 
 $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
-$oDesplCentros->setOpciones($data['centros_opciones'] ?? []);
+$oDesplCentros->setOpciones(misas_desplegable_opciones($data['centros_opciones'] ?? []));
 $oDesplCentros->setAction('fnjs_ver_plan_ctr()');
-$cs = (string)($data['centros_selected'] ?? '');
+$cs = misas_string($data['centros_selected'] ?? '');
 if ($cs !== '') {
     $oDesplCentros->setOpcion_sel($cs);
 }
@@ -61,7 +62,7 @@ $a_campos = [
     'url_ver_plan_ctr' => $url_ver_plan_ctr,
     'h_buscar_plan_ctr' => $h_buscar_plan_ctr,
     'h_plan_ctr' => $h_plan_ctr,
-    'id_ubi_centro' => (string)($data['id_ubi_centro'] ?? ''),
+    'id_ubi_centro' => misas_string($data['id_ubi_centro'] ?? ''),
 ];
 
 $oView = new ViewNewPhtml('frontend\\misas\\controller');

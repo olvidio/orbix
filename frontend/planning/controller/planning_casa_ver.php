@@ -23,6 +23,7 @@ use frontend\shared\FrontBootstrap;
  * (`PlanningCasaVerData`: `ActividadesPorCasasService` + `CasaPeriodosForPlanning`).
  * Las fechas del periodo se envían como `f_ini_iso` / `f_fin_iso` junto al POST del formulario.
  */
+require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
@@ -64,24 +65,19 @@ $payloadVer['f_ini_iso'] = (string)$oPeriodo->getF_ini_iso();
 $payloadVer['f_fin_iso'] = (string)$oPeriodo->getF_fin_iso();
 
 $d = PostRequest::getDataFromUrl('/src/planning/planning_casa_ver_data', $payloadVer);
-$d = is_array($d) ? $d : [];
-$a_actividades = $d['a_actividades'] ?? [];
-$casa_periodos_por_ubi = $d['casa_periodos_por_ubi'] ?? [];
+$a_actividades = planning_actividades_map($d['a_actividades'] ?? null);
+$casa_periodos_por_ubi = planning_casa_periodos_por_ubi($d['casa_periodos_por_ubi'] ?? null);
 
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
-ob_start();
-include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
-$css = ob_get_clean();
-ob_start();
-include OrbixRuntime::dirEstilos() . '/calendario.css.php';
-$css .= ob_get_clean();
+$estilos = planning_calendario_estilos();
+$css = $estilos['css'];
 
 $oPlanning = new PlanningRenderer();
-$oPlanning->setColorColumnaUno($colorColumnaUno);
-$oPlanning->setColorColumnaDos($colorColumnaDos);
-$oPlanning->setColorColumnaDomingo($colorColumnaDomingo);
-$oPlanning->setTable_border($table_border);
+$oPlanning->setColorColumnaUno($estilos['colorColumnaUno']);
+$oPlanning->setColorColumnaDos($estilos['colorColumnaDos']);
+$oPlanning->setColorColumnaDomingo($estilos['colorColumnaDomingo']);
+$oPlanning->setTable_border($estilos['table_border']);
 $oPlanning->setDd($Qdd);
 $oPlanning->setCabecera($cabecera);
 $oPlanning->setInicio($oIniPlanning);
@@ -90,7 +86,7 @@ $oPlanning->setActividades($a_actividades);
 $oPlanning->setMod($mod);
 $oPlanning->setNueva($nueva);
 $oPlanning->setDoble($doble);
-$oPlanning->setCasaPeriodosPorUbi(is_array($casa_periodos_por_ubi) ? $casa_periodos_por_ubi : []);
+$oPlanning->setCasaPeriodosPorUbi($casa_periodos_por_ubi);
 
 $a_campos = [
     'oPlanning' => $oPlanning,

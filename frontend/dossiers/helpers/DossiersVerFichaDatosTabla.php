@@ -3,7 +3,6 @@
 namespace frontend\dossiers\helpers;
 
 use frontend\shared\security\HashFront;
-use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\web\Lista;
 use src\shared\domain\DatosTablaRepo;
 
@@ -14,26 +13,21 @@ use src\shared\domain\DatosTablaRepo;
  */
 class DossiersVerFichaDatosTabla
 {
+    /**
+     * @param array<string, mixed> $seg
+     */
     public static function render(array $seg): string
     {
-        $titulo = (string) ($seg['titulo'] ?? '');
+        $parsed = dossiers_segmento_datos_tabla($seg);
+        $titulo = $parsed['titulo'];
+        $actionTablaUrl = $parsed['action_tabla_url'];
 
-        $actionTablaUrl = '';
-        if (!empty($seg['action_tabla_link_spec']) && is_array($seg['action_tabla_link_spec'])) {
-            $actionTablaUrl = HashFrontSignedLink::fromSpec($seg['action_tabla_link_spec']);
-        }
+        $script = self::buildScript($parsed['script_ctx'], $actionTablaUrl);
 
-        $script = self::buildScript(
-            is_array($seg['script_ctx'] ?? null) ? $seg['script_ctx'] : [],
-            $actionTablaUrl
-        );
-
-        $hash = isset($seg['hash']) && is_array($seg['hash']) ? $seg['hash'] : [];
         $oHashSelect = new HashFront();
-        $oHashSelect->setCamposForm((string) ($hash['campos_form'] ?? 'mod'));
-        $oHashSelect->setCamposNo((string) ($hash['campos_no'] ?? ''));
-        $hidden = $hash['campos_hidden'] ?? [];
-        $oHashSelect->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+        $oHashSelect->setCamposForm($parsed['hash_campos_form']);
+        $oHashSelect->setCamposNo($parsed['hash_campos_no']);
+        $oHashSelect->setArrayCamposHidden($parsed['hash_campos_hidden']);
 
         $html = '<script>' . $script . '</script>';
         $html .= '<h3 class=subtitulo>' . $titulo . '</h3>'
@@ -41,34 +35,18 @@ class DossiersVerFichaDatosTabla
         $html .= $oHashSelect->getCamposHtml();
         $html .= "<input type='hidden' id='mod' name='mod' value=''>";
 
-        $valores = $seg['tabla']['valores'] ?? null;
-        if (!is_array($valores)) {
-            $valores = [];
-        }
-        $cabeceras = $seg['tabla']['cabeceras'] ?? [];
-        $botones = $seg['tabla']['botones'] ?? [];
-        if (!is_array($cabeceras)) {
-            $cabeceras = [];
-        }
-        if (!is_array($botones)) {
-            $botones = [];
-        }
-
-        if (!empty($valores)) {
+        $valores = $parsed['tabla_valores'];
+        if ($valores !== []) {
             $oTabla = new Lista();
-            $oTabla->setId_tabla((string) ($seg['tabla']['id_tabla'] ?? 'datos_sql'));
-            $oTabla->setCabeceras($cabeceras);
-            $oTabla->setBotones($botones);
+            $oTabla->setId_tabla($parsed['tabla_id']);
+            $oTabla->setCabeceras($parsed['tabla_cabeceras']);
+            $oTabla->setBotones($parsed['tabla_botones']);
             $oTabla->setDatos($valores);
             $html .= $oTabla->mostrar_tabla();
         }
 
-        $permiso = (int) ($seg['permiso'] ?? 0);
-        if ($permiso === 3) {
-            $insTrasladoUrl = '';
-            if (!empty($seg['ins_traslado_link_spec']) && is_array($seg['ins_traslado_link_spec'])) {
-                $insTrasladoUrl = HashFrontSignedLink::fromSpec($seg['ins_traslado_link_spec']);
-            }
+        if ($parsed['permiso'] === 3) {
+            $insTrasladoUrl = $parsed['ins_traslado_url'];
             $html .= "<br><table class=botones><tr class=botones>\n"
                 . "\t\t\t\t\t<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
             $html .= _('nuevo');
@@ -87,16 +65,16 @@ class DossiersVerFichaDatosTabla
      * La clase sólo necesita `bloque`, `action_form`, `action_update`, `action_tabla`
      * y `eliminar_txt` para producir el script: no se requieren datos de dominio.
      *
-     * @param array<string, mixed> $ctx
+     * @param array{bloque: string, action_form: string, action_update: string, eliminar_txt: string} $ctx
      */
     private static function buildScript(array $ctx, string $actionTablaUrl): string
     {
         $repo = new DatosTablaRepo();
-        $repo->setBloque((string) ($ctx['bloque'] ?? ''));
-        $repo->setAction_form((string) ($ctx['action_form'] ?? ''));
-        $repo->setAction_update((string) ($ctx['action_update'] ?? ''));
+        $repo->setBloque($ctx['bloque']);
+        $repo->setAction_form($ctx['action_form']);
+        $repo->setAction_update($ctx['action_update']);
         $repo->setAction_tabla($actionTablaUrl);
-        $repo->setEliminar_txt((string) ($ctx['eliminar_txt'] ?? ''));
+        $repo->setEliminar_txt($ctx['eliminar_txt']);
 
         return $repo->getScript();
     }

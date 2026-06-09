@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
@@ -23,18 +24,19 @@ $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE
 if (!empty($Qid_sel)) {
     $Qid_enc = (int)strtok((string)$Qid_sel[0], '#');
 } else {
-    $Qid_enc = (int)filter_input(INPUT_POST, 'id_enc');
+    $Qid_enc = encargossacd_post_int('id_enc');
 }
 
-$Qmod = (string)filter_input(INPUT_POST, 'mod');
-$Qorigen = (string)filter_input(INPUT_POST, 'origen');
+$Qmod = encargossacd_post_string('mod');
+$Qorigen = encargossacd_post_string('origen');
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/encargo_horario_select_data', [
     'id_enc' => $Qid_enc,
 ]);
-$desc_enc = (string)($data['desc_enc'] ?? '');
-$filas = is_array($data['filas'] ?? null) ? $data['filas'] : [];
+$desc_enc = tessera_imprimir_string($data['desc_enc'] ?? '');
+$filasRaw = $data['filas'] ?? [];
+$filas = is_array($filasRaw) ? $filasRaw : [];
 
 $titulo = $desc_enc;
 
@@ -65,9 +67,10 @@ if (!empty($Qid_sel)) {
 }
 $i = 0;
 foreach ($filas as $fila) {
+    $row = encargossacd_horario_row($fila);
     $i++;
-    $id_enc_fila = (int)($fila['id_enc'] ?? 0);
-    $id_item_h = (int)($fila['id_item_h'] ?? 0);
+    $id_enc_fila = $row['id_enc'];
+    $id_item_h = $row['id_item_h'];
 
     $aQuery = [
         'mod' => 'editar',
@@ -78,20 +81,22 @@ foreach ($filas as $fila) {
     array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
     $pagina = HashFront::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
-    $a_valores[$i]['sel'] = $id_item_h;
-    $a_valores[$i][1] = ['ira' => $pagina, 'valor' => $id_enc_fila];
-    $a_valores[$i][3] = (string)($fila['dia_num'] ?? '');
-    $a_valores[$i][4] = (string)($fila['dia_ref'] ?? '');
-    $a_valores[$i][5] = (string)($fila['mas_menos'] ?? '');
-    $a_valores[$i][6] = (string)($fila['dia_inc'] ?? '');
-    $a_valores[$i][7] = (string)($fila['h_ini'] ?? '');
-    $a_valores[$i][8] = (string)($fila['h_fin'] ?? '');
-    $a_valores[$i][9] = (string)($fila['n_sacd'] ?? '');
-    $a_valores[$i][10] = (string)($fila['mes'] ?? '');
-    $a_valores[$i][11] = $fila['f_ini'] ?? null;
-    $a_valores[$i][12] = $fila['f_fin'] ?? null;
-    $a_valores[$i][13] = (string)($fila['excep'] ?? '');
-    $a_valores[$i][14] = (string)($fila['texto_horario'] ?? '');
+    $a_valores[$i] = [
+        'sel' => $id_item_h,
+        1 => ['ira' => $pagina, 'valor' => $id_enc_fila],
+        3 => $row['dia_num'],
+        4 => $row['dia_ref'],
+        5 => $row['mas_menos'],
+        6 => $row['dia_inc'],
+        7 => $row['h_ini'],
+        8 => $row['h_fin'],
+        9 => $row['n_sacd'],
+        10 => $row['mes'],
+        11 => $row['f_ini'],
+        12 => $row['f_fin'],
+        13 => $row['excep'],
+        14 => $row['texto_horario'],
+    ];
 }
 
 $aQuery = [

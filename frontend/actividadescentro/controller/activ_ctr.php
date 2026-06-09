@@ -19,6 +19,7 @@ use frontend\shared\web\PeriodoQue;
 use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../../notas/helpers/tessera_imprimir_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -31,7 +32,7 @@ $shell = PostRequest::getDataFromUrl('/src/actividadescentro/activ_ctr_shell_dat
     'year' => $Qyear,
     'periodo' => $Qperiodo,
 ]);
-$Qtipo = (string)($shell['tipo'] ?? $Qtipo);
+$Qtipo = tessera_imprimir_string($shell['tipo'] ?? $Qtipo);
 
 $signShellEndpoint = static function (array $spec): string {
     $path = (string)($spec['path'] ?? '');

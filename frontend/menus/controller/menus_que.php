@@ -8,6 +8,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 
 // Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/menus_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -20,7 +21,7 @@ $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 $url_backend = '/src/menus/grupmenu_lista';
 $data = PostRequest::getDataFromUrl($url_backend);
 
-$aOpciones = $data['a_lista'];
+$aOpciones = notas_desplegable_opciones($data['a_lista'] ?? []);
 
 $oDesplGM = new Desplegable('', $aOpciones, '', true);
 $oDesplGM->setOpcion_sel($Qfiltro_grupo);

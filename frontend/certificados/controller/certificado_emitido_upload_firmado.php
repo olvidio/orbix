@@ -1,35 +1,30 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/certificados_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
-$formData = PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_upload_firmado_data', $_POST);
-
-$Qid_item = (int)($formData['id_item'] ?? 0);
-$id_nom = (int)($formData['id_nom'] ?? 0);
-$nom = (string)($formData['nom'] ?? '');
-$apellidos_nombre = (string)($formData['apellidos_nombre'] ?? '');
+$form = certificados_upload_firmado_from_payload(certificados_post_data(
+    PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_upload_firmado_data', $_POST)
+));
 
 $oHashCertificadoPdf = new HashFront();
 $oHashCertificadoPdf->setCamposNo('certificado_pdf');
-$oHashCertificadoPdf->setArrayCamposHidden(
-    [
-        'id_item' => $Qid_item,
-        'id_nom' => $id_nom,
-        'solo_pdf' => 1
-    ]);
+$oHashCertificadoPdf->setArrayCamposHidden([
+    'id_item' => $form['id_item'],
+    'id_nom' => $form['id_nom'],
+    'solo_pdf' => 1,
+]);
 
-$a_campos = ['oPosicion' => $oPosicion,
+$a_campos = [
+    'oPosicion' => $oPosicion,
     'oHashCertificadoPdf' => $oHashCertificadoPdf,
-    'ApellidosNombre' => $apellidos_nombre,
+    'ApellidosNombre' => $form['apellidos_nombre'],
 ];
 
 $oView = new ViewNewTwig('frontend/certificados/controller');

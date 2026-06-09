@@ -19,30 +19,24 @@ use frontend\shared\web\Desplegable;
 use frontend\cartaspresentacion\helpers\CartasPresentacionBuscarOpcionesRender;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/cartaspresentacion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_buscar_data');
-$payload = is_array($data) ? $data : [];
-$payload = CartasPresentacionBuscarOpcionesRender::enrich($payload);
+$payload = CartasPresentacionBuscarOpcionesRender::enrich(cartaspresentacion_post_data($data));
+$view = cartaspresentacion_buscar_view_from_payload($payload);
 
-$opciones_region = (array)($payload['opciones_region'] ?? []);
-$opciones_pais = (array)($payload['opciones_pais'] ?? []);
-$opciones_delegacion = (array)($payload['opciones_delegacion'] ?? []);
-
-$oDesplRegion = Desplegable::desdeOpciones($opciones_region, 'region');
+$oDesplRegion = Desplegable::desdeOpciones($view['opciones_region'], 'region');
 $oDesplPais = new Desplegable();
-$oDesplPais->setOpciones($opciones_pais);
+$oDesplPais->setOpciones($view['opciones_pais']);
 $oDesplPais->setNombre('pais');
-$oDesplDelegacion = Desplegable::desdeOpciones($opciones_delegacion, 'dl');
-
-$url_lista = (string)($payload['url_lista'] ?? '');
-$hash_lista_html = (string)($payload['hash_lista_html'] ?? '');
+$oDesplDelegacion = Desplegable::desdeOpciones($view['opciones_delegacion'], 'dl');
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'hash_lista_html' => $hash_lista_html,
-    'url_lista' => $url_lista,
+    'hash_lista_html' => $view['hash_lista_html'],
+    'url_lista' => $view['url_lista'],
     'oDesplRegion' => $oDesplRegion,
     'oDesplPais' => $oDesplPais,
     'oDesplDelegacion' => $oDesplDelegacion,

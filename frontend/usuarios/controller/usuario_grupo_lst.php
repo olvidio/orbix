@@ -4,25 +4,18 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
-$url_backend = '/src/usuarios/usuario_grupo_lst';
-$a_campos_backend = ['id_usuario' => $Qid_usuario];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-
-$a_cabeceras = $data['a_cabeceras'];
-$a_botones = $data['a_botones'];
-$a_valores = $data['a_valores'];
-
+$data = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_grupo_lst', ['id_usuario' => $Qid_usuario]));
+$lista = usuarios_lista_from_payload($data);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('usuario_grupo_lst');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
+$oTabla->setCabeceras($lista['cabeceras']);
+$oTabla->setBotones($lista['botones']);
+$oTabla->setDatos($lista['valores']);
 echo $oTabla->mostrar_tabla();

@@ -11,9 +11,9 @@ class PeriodoQue
 {
     private ?string $sTitulo = null;
     private ?Desplegable $oDesplPeriodos = null;
-    private ?array $aOpcionesPeriodos = null;
     private ?Desplegable $oDesplAnys = null;
     private bool $isDesplAnysVisible = true;
+    /** @var array<int, string>|null */
     private ?array $aOpcionesAnys = null;
     private ?string $sBoton = null;
     private ?string $sAntes = null;
@@ -117,27 +117,24 @@ class PeriodoQue
 
     public function mostrarPeriodo(): bool
     {
-        $aOpciones = $this->oDesplPeriodos->getOpciones();
+        $aOpciones = $this->getDesplPeriodos()->getOpciones();
         if (is_array($aOpciones) && array_key_exists('ninguno', $aOpciones)) {
             return false;
         }
         return true;
     }
 
-    public function setPosiblesPeriodos($aOpciones): void
+    /**
+     * @param array<int|string, string> $aOpciones
+     */
+    public function setPosiblesPeriodos(array $aOpciones): void
     {
-        if (!isset($this->oDesplPeriodos)) {
-            $this->getDesplPeriodos();
-        }
-        $this->oDesplPeriodos->setOpciones($aOpciones);
+        $this->getDesplPeriodos()->setOpciones($aOpciones);
     }
 
-    public function setDesplPeriodosOpcion_sel($sOpcion_sel): void
+    public function setDesplPeriodosOpcion_sel(string $sOpcion_sel): void
     {
-        if (!isset($this->oDesplPeriodos)) {
-            $this->getDesplPeriodos();
-        }
-        $this->oDesplPeriodos->setOpcion_sel($sOpcion_sel);
+        $this->getDesplPeriodos()->setOpcion_sel($sOpcion_sel);
     }
 
     public function getDesplPeriodos(): Desplegable
@@ -145,7 +142,7 @@ class PeriodoQue
         if (!isset($this->oDesplPeriodos)) {
             $oDesplPeriodos = new Desplegable();
             $oDesplPeriodos->setNombre('periodo');
-            $oDesplPeriodos->setOpciones($this->aOpcionesPeriodos);
+            $oDesplPeriodos->setOpciones([]);
             $oDesplPeriodos->setBlanco(true);
             $oDesplPeriodos->setAction('funjs_activar_fecha()');
             $this->oDesplPeriodos = $oDesplPeriodos;
@@ -153,26 +150,28 @@ class PeriodoQue
         return $this->oDesplPeriodos;
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function getOpcionesAnys(): array
     {
         if (empty($this->aOpcionesAnys)) {
             $any = (int)date('Y');
-            $aOpcionesAnys[$any - 2] = $any - 2;
-            $aOpcionesAnys[$any - 1] = $any - 1;
-            $aOpcionesAnys[$any] = $any;
-            $aOpcionesAnys[$any + 1] = $any + 1;
-            $aOpcionesAnys[$any + 2] = $any + 2;
+            $aOpcionesAnys = [];
+            foreach ([$any - 2, $any - 1, $any, $any + 1, $any + 2] as $year) {
+                $aOpcionesAnys[$year] = (string) $year;
+            }
             $this->aOpcionesAnys = $aOpcionesAnys;
         }
         return $this->aOpcionesAnys;
     }
 
-    public function setPosiblesAnys($aOpciones): void
+    /**
+     * @param array<int|string, string> $aOpciones
+     */
+    public function setPosiblesAnys(array $aOpciones): void
     {
-        if (!isset($this->oDesplAnys)) {
-            $this->getDesplAnys();
-        }
-        $this->oDesplAnys->setOpciones($aOpciones);
+        $this->getDesplAnys()->setOpciones($aOpciones);
     }
 
     public function getDesplAnys(): Desplegable
@@ -184,7 +183,7 @@ class PeriodoQue
             $oDesplAnys->setNombre('year');
             $oDesplAnys->setOpciones($aOpciones);
             $oDesplAnys->setBlanco(false);
-            $oDesplAnys->setOpcion_sel($any);
+            $oDesplAnys->setOpcion_sel((string) $any);
             if (!empty($this->sAction)) {
                 $oDesplAnys->setAction($this->sAction);
             }
@@ -193,12 +192,12 @@ class PeriodoQue
         return $this->oDesplAnys;
     }
 
-    public function setAction($sAction): void
+    public function setAction(string $sAction): void
     {
         $this->sAction = $sAction;
     }
 
-    public function setDesplAnys($oDespl): void
+    public function setDesplAnys(Desplegable $oDespl): void
     {
         $this->oDesplAnys = $oDespl;
     }
@@ -208,54 +207,51 @@ class PeriodoQue
         $this->isDesplAnysVisible = $visible;
     }
 
-    public function setDesplAnysOpcion_sel($sOpcion_sel): void
+    public function setDesplAnysOpcion_sel(string $sOpcion_sel): void
     {
-        if (!isset($this->oDesplAnys)) {
-            $this->getDesplAnys();
-        }
-        if (!empty($sOpcion_sel)) {
-            $this->oDesplAnys->setOpcion_sel($sOpcion_sel);
+        if ($sOpcion_sel !== '') {
+            $this->getDesplAnys()->setOpcion_sel($sOpcion_sel);
         }
     }
 
-    public function setFormName($sFormName): void
+    public function setFormName(string $sFormName): void
     {
         $this->sFormName = $sFormName;
     }
 
-    public function setTitulo($sTitulo): void
+    public function setTitulo(string $sTitulo): void
     {
         $this->sTitulo = $sTitulo;
     }
 
-    public function setBoton($sBoton): void
+    public function setBoton(string $sBoton): void
     {
         $this->sBoton = $sBoton;
     }
 
-    public function setAntes($sAntes): void
+    public function setAntes(string $sAntes): void
     {
         $this->sAntes = $sAntes;
     }
 
-    public function setEmpiezaMinIso($sEmpiezaMinIso): void
+    public function setEmpiezaMinIso(string $sEmpiezaMinIso): void
     {
         $oEmpiezamin = new DateTimeLocal($sEmpiezaMinIso);
         $this->sEmpiezaMin = $oEmpiezamin->getFromLocal();
     }
 
-    public function setEmpiezaMaxIso($sEmpiezaMaxIso): void
+    public function setEmpiezaMaxIso(string $sEmpiezaMaxIso): void
     {
         $oEmpiezamax = new DateTimeLocal($sEmpiezaMaxIso);
         $this->sEmpiezaMax = $oEmpiezamax->getFromLocal();
     }
 
-    public function setEmpiezaMin($sEmpiezaMin): void
+    public function setEmpiezaMin(string $sEmpiezaMin): void
     {
         $this->sEmpiezaMin = $sEmpiezaMin;
     }
 
-    public function setEmpiezaMax($sEmpiezaMax): void
+    public function setEmpiezaMax(string $sEmpiezaMax): void
     {
         $this->sEmpiezaMax = $sEmpiezaMax;
     }

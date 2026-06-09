@@ -1,6 +1,5 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
@@ -10,91 +9,72 @@ use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/certificados_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_item = certificados_id_item_from_sel_post();
 
-if (!empty($a_sel)) { //vengo de un checkbox
-    $Qid_item = (integer)strtok($a_sel[0], "#");
-}
-
-/////////// Consulta al backend ///////////////////
-$url_backend = '/src/certificados/certificado_emitido_ver_datos';
-$a_campos_backend = ['id_item' => $Qid_item];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend, false);
+$data = certificados_post_data(PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_ver_datos', [
+    'id_item' => $Qid_item,
+], false));
 if (!empty($data['error'])) {
     $a_campos = [
         'oPosicion' => $oPosicion,
-        'aviso' => PostRequest::stripInternalCallProvenance((string)$data['error']),
+        'aviso' => PostRequest::stripInternalCallProvenance(tessera_imprimir_string($data['error'])),
     ];
     $oView = new ViewNewTwig('frontend/certificados/controller');
     $oView->renderizar('certificado_emitido_ver.html.twig', $a_campos);
     return;
 }
 
-$id_nom = $data['id_nom'];
-$nom = $data['nom'];
-$idioma = $data['idioma'];
-$destino = $data['destino'];
-$certificado = $data['certificado'];
-$f_certificado = $data['f_certificado'];
-$f_enviado = $data['f_enviado'];
-$firmado = $data['firmado'];
-if (is_true($firmado)) {
-    $chk_firmado = 'checked';
-} else {
-    $chk_firmado = '';
+$ver = certificados_emitido_ver_from_payload($data);
+$id_nom = $ver['id_nom'];
+$nom = $ver['nom'];
+$idioma = $ver['idioma'];
+$destino = $ver['destino'];
+$certificado = $ver['certificado'];
+$f_certificado = $ver['f_certificado'];
+$f_enviado = $ver['f_enviado'];
+$chk_firmado = is_true($ver['firmado']) ? 'checked' : '';
+$content_pdf = base64_decode($ver['content'], true);
+if ($content_pdf === false) {
+    $content_pdf = '';
 }
-$content_pdf = base64_decode($data['content']);
+$apellidos_nombre = $ver['apellidos_nombre'];
 
-$apellidos_nombre = $data['apellidos_nombre'];
-$nom = $data['nom'];
-
-
-//Idiomas (blanco para latín)
-/////////// Consulta al backend ///////////////////
-$url_backend = '/src/shared/locales_posibles';
-$a_campos_backend = [ 'id_nom' => $id_nom ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-
-$a_locales = $data['a_locales'];
-
+$locData = certificados_post_data(PostRequest::getDataFromUrl('/src/shared/locales_posibles', [
+    'id_nom' => $id_nom,
+]));
+$a_locales = notas_desplegable_opciones($locData['a_locales'] ?? []);
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, $idioma, true);
-
 
 $oHashCertificadoPdf = new HashFront();
 $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!destino!f_certificado!idioma!nom!f_enviado');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado');
-//cambio el nombre, porque tiene el mismo id en el otro formulario
-$oHashCertificadoPdf->setArrayCamposHidden(
-    [
-        'id_item' => $Qid_item,
-        'id_nom' => $id_nom,
-        'certificado_old' => $certificado
-    ]);
+$oHashCertificadoPdf->setArrayCamposHidden([
+    'id_item' => $Qid_item,
+    'id_nom' => $id_nom,
+    'certificado_old' => $certificado,
+]);
 
-// borrar los posibles fichero antiguos de /tmp
 $dir_tmp = OrbixRuntime::dir() . '/log/tmp/';
 $cmd_shell = "find $dir_tmp -mtime +1 -delete";
 shell_exec($cmd_shell);
 
-// Descargar el pdf en un file en log/
 $filename_sin_barra = str_replace('/', '_', $certificado);
 $filename_sin_espacio = str_replace(' ', '_', $filename_sin_barra);
 $filename_pdf = OrbixRuntime::dir() . '/log/tmp/' . $filename_sin_espacio . '.pdf';
 if (($file_handle = @fopen($filename_pdf, 'wb')) !== false) {
     fwrite($file_handle, $content_pdf);
     fclose($file_handle);
-    //file_put_contents($filename_pdf, $content_pdf);
     $filename_pdf_web = AppUrlConfig::getPublicAppBaseUrl() . '/log/tmp/' . $filename_sin_espacio . '.pdf';
 } else {
     $filename_pdf_web = '';
 }
 
-$a_campos = ['oPosicion' => $oPosicion,
+$a_campos = [
+    'oPosicion' => $oPosicion,
     'oHashCertificadoPdf' => $oHashCertificadoPdf,
     'ApellidosNombre' => $apellidos_nombre,
     'nom' => $nom,
@@ -105,7 +85,6 @@ $a_campos = ['oPosicion' => $oPosicion,
     'f_certificado' => $f_certificado,
     'f_enviado' => $f_enviado,
     'chk_firmado' => $chk_firmado,
-    // para ver pdf
     'filename_pdf' => $filename_pdf_web,
 ];
 

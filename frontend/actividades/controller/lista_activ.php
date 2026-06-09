@@ -18,8 +18,9 @@
 use frontend\actividades\helpers\ActividadStatusId;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\web\Lista;
+
+require_once __DIR__ . '/../helpers/actividades_support.php';
 use frontend\shared\web\Periodo;
 use frontend\shared\FrontBootstrap;
 
@@ -30,9 +31,8 @@ $oPosicion->recordar();
 
 $Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
 $QGstack = (integer)filter_input(INPUT_POST, 'Gstack');
-$stack = isset($_POST['stack'])
-    ? filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT)
-    : '';
+$stackRaw = filter_input(INPUT_POST, 'stack', FILTER_VALIDATE_INT);
+$stack = is_int($stackRaw) ? $stackRaw : 0;
 
 // Si vuelvo con el parametro 'continuar', los datos no estan en el POST sino
 // en `oPosicion`. Me paso la referencia del stack donde esta la informacion.
@@ -151,28 +151,16 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_activ_datos', [
     'titulo' => $tituloPrevio,
 ]);
 
-$a_valores = $data['a_valores'] ?? [];
-foreach ($a_valores as $idx => $fila) {
-    if (!is_array($fila)) {
-        continue;
-    }
-    foreach ($fila as $colKey => $cell) {
-        if (!is_array($cell) || !isset($cell['link_spec'])) {
-            continue;
-        }
-        $a_valores[$idx][$colKey]['ira'] = HashFrontSignedLink::fromSpec($cell['link_spec']);
-        unset($a_valores[$idx][$colKey]['link_spec']);
-    }
-}
+$a_valores = actividades_lista_valores_from_payload($data['a_valores'] ?? []);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('lista_activ');
-$oTabla->setCabeceras($data['a_cabeceras'] ?? []);
+$oTabla->setCabeceras(actividades_lista_cabeceras($data['a_cabeceras'] ?? []));
 $oTabla->setBotones([]);
 $oTabla->setDatos($a_valores);
 $html_tabla = $oTabla->mostrar_tabla();
 
-$titulo = (string)($data['titulo'] ?? '');
+$titulo = tessera_imprimir_string($data['titulo'] ?? '');
 
 $a_campos = [
     'oPosicion' => $oPosicion,

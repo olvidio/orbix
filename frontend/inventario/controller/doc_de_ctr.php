@@ -9,6 +9,7 @@ use frontend\shared\FrontBootstrap;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -26,8 +27,8 @@ $url_backend = '/src/inventario/lista_de_ctr_con_docs';
 $a_campos_backend = ['id_tipo_doc' => $Qid_tipo_doc, 'inventario' => $Qinventario];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
-$a_valores = $data['a_valores'];
-$nombreDoc = $data['nombreDoc'];
+$a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
+$nombreDoc = tessera_imprimir_string($payload['nombreDoc'] ?? '');
 
 //3
 $url_doc_mod = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_asignar_ctr.php?';

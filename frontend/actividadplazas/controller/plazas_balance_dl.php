@@ -18,6 +18,7 @@ use frontend\shared\web\TablaEditable;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -25,15 +26,14 @@ $campos = [
     'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),
 ];
 
-$data = PostRequest::getDataFromUrl('/src/actividadplazas/plazas_balance_data', $campos);
-$payload = is_array($data) ? $data : [];
+$payload = actividadplazas_gestion_plazas_from_payload(
+    PostRequest::getDataFromUrl('/src/actividadplazas/plazas_balance_data', $campos)
+);
 
-$dlA = (string)($payload['dlA'] ?? '');
-$dlB = (string)($payload['dlB'] ?? '');
-$concedidasA2B = (int)($payload['concedidasA2B'] ?? 0);
-$concedidasB2A = (int)($payload['concedidasB2A'] ?? 0);
-$a_cabeceras = $payload['a_cabeceras'] ?? [];
-$a_valores = $payload['a_valores'] ?? [];
+$dlA = $payload['dlA'];
+$dlB = $payload['dlB'];
+$concedidasA2B = $payload['concedidasA2B'];
+$concedidasB2A = $payload['concedidasB2A'];
 
 if ($dlB === '') {
     return;
@@ -48,9 +48,9 @@ $UpdateUrl = $apiBase . '/src/actividadplazas/gestion_plazas_update' . $oHashUpd
 $oTabla = new TablaEditable();
 $oTabla->setId_tabla('plazas_balance');
 $oTabla->setUpdateUrl($UpdateUrl);
-$oTabla->setCabeceras($a_cabeceras);
+$oTabla->setCabeceras($payload['a_cabeceras']);
 $oTabla->setBotones([]);
-$oTabla->setDatos($a_valores);
+$oTabla->setDatos($payload['a_valores']);
 
 $a_campos = [
     'dlA' => $dlA,

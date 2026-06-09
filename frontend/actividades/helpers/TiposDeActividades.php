@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\actividades\helpers;
 
+require_once __DIR__ . '/../../notas/helpers/tessera_imprimir_support.php';
+
 /**
  * Espejo en frontend de {@see \src\actividades\domain\entity\TiposActividades}:
  * misma API pública (parseo de id_tipo_activ y resolución de "posibles"), pero
@@ -25,7 +27,6 @@ namespace frontend\actividades\helpers;
  */
 class TiposDeActividades
 {
-    private string $sregexp_id_tipo_activ = '';
     private string $ssfsv = '';
     private string $sasistentes = '';
     private string $sactividad = '';
@@ -60,7 +61,7 @@ class TiposDeActividades
     /** @var array<int|string, string> */
     private array $afNom_tipo = [];
 
-    /** @var array<string, int|string> */
+    /** @var array<int, string> */
     private array $aNom_tipo = [];
 
     /**
@@ -175,7 +176,6 @@ class TiposDeActividades
                 preg_match('/(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\d{3}|\.*)/', $sregexp_id_tipo_activ, $matches);
             }
             if (!empty($matches)) {
-                $this->sregexp_id_tipo_activ = $matches[0];
                 $this->ssfsv = $matches[1];
                 $this->sasistentes = $matches[2];
                 $this->sactividad = $matches[3];
@@ -184,7 +184,7 @@ class TiposDeActividades
         }
     }
 
-    public function setPosiblesAll($bAll): void
+    public function setPosiblesAll(mixed $bAll): void
     {
         if ($bAll === false) {
             unset($this->aSfsv['all']);
@@ -194,6 +194,9 @@ class TiposDeActividades
     /**
      * Separa un id_tipo_activ con posibles asistentes en
      * un array de id_tipo_activ separados.
+     */
+    /**
+     * @return array<string, int|string>
      */
     public function getArrayAsistentesIndividual(): array
     {
@@ -306,9 +309,9 @@ class TiposDeActividades
         return (int)$this->ssfsv;
     }
 
-    public function setSfsvId($isfsv): void
+    public function setSfsvId(mixed $isfsv): void
     {
-        $this->ssfsv = (string)$isfsv;
+        $this->ssfsv = tessera_imprimir_string($isfsv);
     }
 
     public function getSfsvRegexp(): string
@@ -316,6 +319,9 @@ class TiposDeActividades
         return '^' . $this->ssfsv;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getSfsvPosibles(): array
     {
         $aText = $this->getFlipSfsv();
@@ -358,9 +364,9 @@ class TiposDeActividades
         return (int)$this->sasistentes;
     }
 
-    public function setAsistentesId($id): void
+    public function setAsistentesId(mixed $id): void
     {
-        $this->sasistentes = (string)$id;
+        $this->sasistentes = tessera_imprimir_string($id);
     }
 
     public function getAsistentesRegexp(): string
@@ -368,6 +374,9 @@ class TiposDeActividades
         return $this->getSfsvRegexp() . $this->sasistentes;
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getAsistentesPosibles(): array
     {
         $aText = $this->getFlipAsistentes();
@@ -387,7 +396,7 @@ class TiposDeActividades
         return 'all';
     }
 
-    public function setActividadText($sActividad): bool
+    public function setActividadText(mixed $sActividad): bool
     {
         if (is_string($sActividad)) {
             if (empty($sActividad) || $sActividad === '.') {
@@ -414,7 +423,7 @@ class TiposDeActividades
         return 'all';
     }
 
-    public function setActividad2DigitosText($sActividad): bool
+    public function setActividad2DigitosText(mixed $sActividad): bool
     {
         if (is_string($sActividad)) {
             if (empty($sActividad)) {
@@ -433,9 +442,9 @@ class TiposDeActividades
         return $this->sactividad;
     }
 
-    public function setActividadId($id): void
+    public function setActividadId(mixed $id): void
     {
-        $this->sactividad = (string)$id;
+        $this->sactividad = tessera_imprimir_string($id);
     }
 
     public function getActividadRegexp(): string
@@ -443,6 +452,9 @@ class TiposDeActividades
         return $this->getAsistentesRegexp() . $this->sactividad;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getActividadesPosibles1Digito(): array
     {
         $aText = $this->getFlipActividad1Digito();
@@ -450,6 +462,9 @@ class TiposDeActividades
         return $this->lookupActividadesPosibles(1, $aText, $this->getAsistentesRegexp());
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getActividadesPosibles2Digitos(): array
     {
         $aText = $this->getFlipActividad2Digitos();
@@ -471,7 +486,7 @@ class TiposDeActividades
         return 'all';
     }
 
-    public function setNom_tipoText($sNom_tipo): bool
+    public function setNom_tipoText(mixed $sNom_tipo): bool
     {
         if (is_string($sNom_tipo)) {
             $this->snom_tipo = (string)($this->aNom_tipo[$sNom_tipo] ?? '');
@@ -492,6 +507,9 @@ class TiposDeActividades
         return $this->getActividadRegexp() . $this->snom_tipo;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getNom_tipoPosibles3Digitos(): array
     {
         $rta = $this->lookupNomTipoPosibles(3, $this->getActividadRegexp());
@@ -501,6 +519,9 @@ class TiposDeActividades
         return $rta['tipo_nom'];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getNom_tipoPosibles2Digitos(): array
     {
         $rta = $this->lookupNomTipoPosibles(2, $this->getActividadRegexp());
@@ -514,6 +535,9 @@ class TiposDeActividades
      * Retorna els posibles id_tipo en format de array.
      *
      * @param string $regexp expresió regular per tornar el id (substring('bla' from regexp) del postgresql).
+     */
+    /**
+     * @return array<string, true>
      */
     public function getId_tipoPosibles(string $regexp = '.*'): array
     {

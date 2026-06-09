@@ -62,7 +62,7 @@ final class OrbixRuntime
 
     public static function webdirIsPruebas(): bool
     {
-        return \src\shared\config\ConfigGlobal::WEBDIR === 'pruebas';
+        return \src\shared\config\ConfigGlobal::esEntornoPruebas();
     }
 
     public static function webdir(): string
@@ -244,7 +244,7 @@ final class OrbixRuntime
     }
 
     /** Valor de `$_SESSION['session_auth']['role_pau']`. */
-    public static function miRolePau()
+    public static function miRolePau(): string
     {
         return \src\shared\config\ConfigGlobal::mi_role_pau();
     }

@@ -5,6 +5,7 @@ use frontend\shared\PostRequest;
 use frontend\ubiscamas\helpers\UbiscamasFormHashCompose;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/ubiscamas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -15,39 +16,19 @@ $campos = array_merge($_GET, $_POST);
 
 // Resolver estado de navegación aquí (frontend): recortar hacia delante desde $stack.
 // Sólo tiene sentido si no se está creando una habitación nueva.
-$Qnuevo = (string)($campos['nuevo'] ?? '');
+$Qnuevo = tessera_imprimir_string($campos['nuevo'] ?? '');
 $stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
 if ($Qnuevo === '' && $stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
-$data = PostRequest::getDataFromUrl('/src/ubiscamas/habitacion_form_data', $campos);
-$payload = is_array($data) ? $data : [];
-$hashBlock = UbiscamasFormHashCompose::habitacionForm($payload);
+$data = ubiscamas_post_data(PostRequest::getDataFromUrl('/src/ubiscamas/habitacion_form_data', $campos));
+$hashBlock = UbiscamasFormHashCompose::habitacionForm($data);
 
-$a_campos = [
-    'oPosicion' => $oPosicion,
-    'hash_form_html' => $hashBlock['hash_form_html'],
-    'hash_actualizar_html' => $hashBlock['hash_actualizar_html'],
-    'id_habitacion' => (string)($payload['id_habitacion'] ?? ''),
-    'id_ubi' => (int)($payload['id_ubi'] ?? 0),
-    'orden' => $payload['orden'] ?? '',
-    'nombre' => (string)($payload['nombre'] ?? ''),
-    'numero_camas' => $payload['numero_camas'] ?? '',
-    'numero_camas_vip' => $payload['numero_camas_vip'] ?? '',
-    'planta' => (string)($payload['planta'] ?? ''),
-    'sillon' => (bool)($payload['sillon'] ?? false),
-    'adaptada' => (bool)($payload['adaptada'] ?? false),
-    'observaciones' => (string)($payload['observaciones'] ?? ''),
-    'despacho' => (bool)($payload['despacho'] ?? false),
-    'tipoLavabo' => $payload['tipoLavabo'] ?? null,
-    'a_tipos_tipoLavabo' => (array)($payload['a_tipos_tipoLavabo'] ?? []),
-    'a_camas' => (array)($payload['a_camas'] ?? []),
-    'url_cama_form' => $hashBlock['url_cama_form'],
-    'h_cama_form_params' => $hashBlock['h_cama_form_params'],
-    'url_cama_delete' => $hashBlock['url_cama_delete'],
-    'h_cama_delete_params' => $hashBlock['h_cama_delete_params'],
-];
+$a_campos = array_merge(
+    ['oPosicion' => $oPosicion],
+    ubiscamas_habitacion_form_view_from_payload($data, $hashBlock)
+);
 
 $oView = new ViewNewPhtml('frontend\\ubiscamas\\controller');
 $oView->renderizar('habitacion_form.phtml', $a_campos);

@@ -11,15 +11,15 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/devel_db_admin/helpers/devel_db_admin_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $dbProps = PostRequest::getDataFromUrl('/src/devel_db_admin/db_propiedades_data', [
     'op' => 'db_que_esquema_ref',
 ]);
-$dbProps = is_array($dbProps) ? $dbProps : [];
 $oEsquemaRef = $dbProps['oEsquemaRef'] ?? '';
-$a_opciones_regiones = (array) ($dbProps['a_opciones_regiones'] ?? []);
+$a_opciones_regiones = devel_db_admin_desplegable_opciones($dbProps['a_opciones_regiones'] ?? []);
 
 $oDesplRegiones = Desplegable::desdeOpciones($a_opciones_regiones, 'region');
 $oDesplRegiones->setAction('fnjs_dl()');

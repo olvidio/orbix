@@ -16,6 +16,7 @@ use frontend\shared\FrontBootstrap;
  * Migrado desde `apps/planning/controller/planning_ctr_que.php`
  * (slice 2 de la migracion del modulo planning).
  */
+require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
@@ -31,7 +32,7 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto((int)$_SESSION['oConfig']->getMesFinStgr());
+$periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto(planning_mes_fin_stgr());
 
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');

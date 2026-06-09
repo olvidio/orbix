@@ -8,19 +8,21 @@
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/procesos/tipo_activ_proceso_lst_posibles', PostRequest::requestPayloadForHash());
-$aProcesos = (array)($data['a_procesos'] ?? []);
-$id_tipo_activ = (int)($data['id_tipo_activ'] ?? 0);
-$propio = (string)($data['propio'] ?? '');
+$aProcesos = is_array($data['a_procesos'] ?? null) ? $data['a_procesos'] : [];
+$id_tipo_activ = tessera_imprimir_int($data['id_tipo_activ'] ?? 0);
+$propio = tessera_imprimir_string($data['propio'] ?? '');
 
 echo '<table>';
 echo '<tr><td class=cabecera>' . _("procesos") . '</td></tr>';
 foreach ($aProcesos as $p) {
-    $id_tipo_proceso = (int)$p['id_tipo_proceso'];
-    $nom_proceso = (string)$p['nom_proceso'];
+    $row = procesos_tipo_proceso_posible_row($p);
+    $id_tipo_proceso = $row['id_tipo_proceso'];
+    $nom_proceso = $row['nom_proceso'];
     $onclick = "fnjs_asignar_proceso(event,'$id_tipo_activ','$propio','$id_tipo_proceso')";
     echo "<tr><td class=link id=\"$id_tipo_proceso\" onclick=\"$onclick\"> $nom_proceso</td></tr>";
 }

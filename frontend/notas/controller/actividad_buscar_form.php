@@ -15,6 +15,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -27,21 +28,17 @@ $data = PostRequest::getDataFromUrl('/src/notas/actividades_buscar_data', [
     'f_acta_iso' => $Qf_acta_iso,
     'id_activ' => $Qid_activ,
 ]);
+$buscar = notas_actividades_buscar_from_payload($data);
 
-$aDelegaciones = $data['delegaciones'] ?? [];
-$aActividades = $data['actividades'] ?? [];
-$dl_org_sel = $data['dl_org_sel'] ?? '';
-$id_activ_sel = $data['id_activ_sel'] ?? '';
-
-$oDesplDelegaciones = Desplegable::desdeOpciones($aDelegaciones, 'dl_org');
-$oDesplDelegaciones->setOpcion_sel($dl_org_sel);
+$oDesplDelegaciones = Desplegable::desdeOpciones($buscar['delegaciones'], 'dl_org');
+$oDesplDelegaciones->setOpcion_sel($buscar['dl_org_sel']);
 $oDesplDelegaciones->setAction('fnjs_buscar_ca()');
 
 $oDesplActividades = new Desplegable();
-$oDesplActividades->setOpciones($aActividades);
-$oDesplActividades->setBlanco(1);
+$oDesplActividades->setOpciones($buscar['actividades']);
+$oDesplActividades->setBlanco(true);
 $oDesplActividades->setNombre('id_activ_sel');
-$oDesplActividades->setOpcion_sel($id_activ_sel);
+$oDesplActividades->setOpcion_sel($buscar['id_activ_sel']);
 
 $oHash = new HashFront();
 $oHash->setCamposForm('pres_nom!pres_telf!pres_mail!zona!observ');

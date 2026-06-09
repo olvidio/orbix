@@ -10,11 +10,20 @@ final class AppInstalled
 {
     public static function is(string $nomApp): bool
     {
-        if (empty($_SESSION['config']['a_apps'][$nomApp])) {
+        $config = $_SESSION['config'] ?? null;
+        if (!is_array($config)) {
             return false;
         }
-        $id_app = $_SESSION['config']['a_apps'][$nomApp];
+        $apps = $config['a_apps'] ?? null;
+        if (!is_array($apps) || !isset($apps[$nomApp]) || $apps[$nomApp] === '') {
+            return false;
+        }
+        $idApp = $apps[$nomApp];
+        $installed = $config['app_installed'] ?? null;
+        if (!is_array($installed)) {
+            return false;
+        }
 
-        return in_array($id_app, $_SESSION['config']['app_installed'], true);
+        return in_array($idApp, $installed, true);
     }
 }

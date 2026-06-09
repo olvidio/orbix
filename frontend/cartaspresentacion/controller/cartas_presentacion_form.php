@@ -14,6 +14,7 @@ use frontend\shared\PostRequest;
 use frontend\cartaspresentacion\helpers\CartaPresentacionFormRender;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/cartaspresentacion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -23,20 +24,8 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/cartaspresentacion/carta_presentacion_form_data', $campos);
-$payload = is_array($data) ? $data : [];
-$payload = CartaPresentacionFormRender::enrich($payload);
-
-$a_campos = [
-    'ok' => (bool)($payload['ok'] ?? false),
-    'mensaje' => (string)($payload['mensaje'] ?? ''),
-    'nombre_ubi' => (string)($payload['nombre_ubi'] ?? ''),
-    'pres_nom' => (string)($payload['pres_nom'] ?? ''),
-    'pres_telf' => (string)($payload['pres_telf'] ?? ''),
-    'pres_mail' => (string)($payload['pres_mail'] ?? ''),
-    'zona' => (string)($payload['zona'] ?? ''),
-    'observ' => (string)($payload['observ'] ?? ''),
-    'hash_update_html' => (string)($payload['hash_update_html'] ?? ''),
-];
+$payload = CartaPresentacionFormRender::enrich(cartaspresentacion_post_data($data));
+$a_campos = cartaspresentacion_form_view_from_payload($payload);
 
 $oView = new ViewNewPhtml('frontend\\cartaspresentacion\\view');
 $oView->renderizar('cartas_presentacion_form.phtml', $a_campos);

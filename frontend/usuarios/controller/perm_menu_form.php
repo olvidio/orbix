@@ -5,41 +5,39 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-    $Qid_usuario = (integer)strtok($a_sel[0], "#");
-    $Qid_item = (integer)strtok("#");
+if (!empty($a_sel)) {
+    $sel0 = usuarios_sel_first_item($a_sel);
+    $Qid_usuario = usuarios_id_from_sel_item($sel0);
+    $Qid_item = usuarios_id_from_sel_second($sel0);
 }
 
-$url_backend = '/src/usuarios/perm_menu_info';
-$a_campos_backend = ['id_usuario' => $Qid_usuario, 'id_item' => $Qid_item];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$data = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/perm_menu_info', [
+    'id_usuario' => $Qid_usuario,
+    'id_item' => $Qid_item,
+]));
 
-$nombre = $data['nombre'];
-$menu_perm = (int)$data['menu_perm'];
-$menu_perm_dl_map = [];
-if (isset($data['menu_perm_dl_map']) && is_array($data['menu_perm_dl_map'])) {
-    $menu_perm_dl_map = $data['menu_perm_dl_map'];
-}
+$nombre = tessera_imprimir_string($data['nombre'] ?? '');
+$menu_perm = tessera_imprimir_int($data['menu_perm'] ?? 0);
+$menu_perm_dl_map = usuarios_perm_menu_dl_map_from_payload($data['menu_perm_dl_map'] ?? null);
 
 $oHash = new HashFront();
 $oHash->setCamposForm('menu_perm');
-$aCamposHidden = array(
+$oHash->setArraycamposHidden([
     'id_usuario' => $Qid_usuario,
     'id_item' => $Qid_item,
     'que' => 'perm_menu_update',
-);
-$oHash->setArraycamposHidden($aCamposHidden);
+]);
 
-$a_campos = ['oPosicion' => $oPosicion,
+$a_campos = [
+    'oPosicion' => $oPosicion,
     'nombre' => $nombre,
     'oHash' => $oHash,
     'menu_perm_dl_map' => $menu_perm_dl_map,

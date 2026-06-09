@@ -6,21 +6,18 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/inventario_support.php';
 FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
-
 
 $Qid_grupo = (int)filter_input(INPUT_POST, 'id_grupo');
 $Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
 $Qid_item_egm = (int)filter_input(INPUT_POST, 'id_item_egm');
 
-// posibles tipos de documento
 $url_backend = '/src/inventario/lista_tipo_doc';
 $data = PostRequest::getDataFromUrl($url_backend);
-
-$a_opciones = $data['a_opciones'];
+$payload = inventario_post_payload($data);
+$a_opciones = inventario_desplegable_opciones($payload['a_opciones'] ?? []);
 
 $oDesplTiposDoc = new Desplegable('id_tipo_doc', $a_opciones, '', true);
 $oDesplTiposDoc->setAction('fnjs_docs_libres()');

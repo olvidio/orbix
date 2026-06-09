@@ -8,6 +8,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
@@ -23,7 +24,7 @@ $a_opciones_zona = $data['a_opciones_zona'] ?? [];
 // Desplegable de zonas para el modal: cambiar la zona recarga el desplegable
 // de encargos via `fnjs_prepara_select_encargo()`.
 $oDesplZonasCtr = new Desplegable();
-$oDesplZonasCtr->setOpciones($a_opciones_zona);
+$oDesplZonasCtr->setOpciones(misas_desplegable_opciones($a_opciones_zona));
 $oDesplZonasCtr->setBlanco(true);
 $oDesplZonasCtr->setNombre('id_zona_enc');
 $oDesplZonasCtr->setAction('fnjs_prepara_select_encargo()');

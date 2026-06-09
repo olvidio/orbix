@@ -19,7 +19,8 @@ final class ActividadTipoTwigHashCompose
      */
     public static function withHashTokens(array $a_campos): array
     {
-        $url = (string)($a_campos['url'] ?? '');
+        $urlRaw = $a_campos['url'] ?? null;
+        $url = is_string($urlRaw) ? $urlRaw : '';
         $oHashTipo = new HashFront();
         $oHashTipo->setUrl($url);
         $oHashTipo->setCamposForm('extendida!modo!salida!entrada');

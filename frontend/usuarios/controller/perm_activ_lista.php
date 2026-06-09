@@ -6,10 +6,9 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
@@ -19,14 +18,8 @@ if (empty($Qolvidar)) {
     $oPosicion->recordar();
 }
 
-$url_backend = '/src/usuarios/perm_activ_lista';
-$a_campos_backend = ['id_usuario' => $Qid_usuario];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-
-$a_cabeceras = $data['a_cabeceras'];
-$a_botones = $data['a_botones'];
-$a_valores = $data['a_valores'];
-
+$data = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/perm_activ_lista', ['id_usuario' => $Qid_usuario]));
+$lista = usuarios_lista_from_payload($data);
 
 $oHash3 = new HashFront();
 $oHash3->setCamposForm('que!sel');
@@ -36,13 +29,13 @@ $a_camposHidden = array(
     'quien' => $Qquien
 );
 $oHash3->setArraycamposHidden($a_camposHidden);
-$oHash3->setPrefix('perm'); // prefijo par el id.
+$oHash3->setPrefix('perm');
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('perm_activ_lista');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
+$oTabla->setCabeceras($lista['cabeceras']);
+$oTabla->setBotones($lista['botones']);
+$oTabla->setDatos($lista['valores']);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

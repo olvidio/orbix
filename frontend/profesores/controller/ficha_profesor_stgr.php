@@ -2,30 +2,24 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/profesores_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) {
-    $id_nom = (int)strtok($a_sel[0], "#");
-    $Qid_tabla = (string)strtok("#");
-} else {
-    $Qid_pau = (int)filter_input(INPUT_POST, 'id_pau');
-    $Qid_nom = (int)filter_input(INPUT_POST, 'id_nom');
-    $id_nom = empty($Qid_nom) ? $Qid_pau : $Qid_nom;
-    $Qid_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
-}
+$sel = profesores_id_from_sel_post();
+$id_nom = $sel['id_nom'];
+$Qid_tabla = $sel['id_tabla'];
 
-$stack = (string)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+$stackRaw = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+$stack = is_string($stackRaw) ? (int) $stackRaw : 0;
 if ($stack !== 0) {
     $oPosicion2 = new frontend\shared\web\Posicion();
-    if ($oPosicion2->goStack($stack)) {
-        $oPosicion2->olvidar($stack);
+    if ($oPosicion2->goStack((string) $stack)) {
+        $oPosicion2->olvidar((string) $stack);
     }
 }
 
@@ -34,7 +28,8 @@ $Qdepende = (string)filter_input(INPUT_POST, 'depende');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qprint = (int)filter_input(INPUT_POST, 'print');
 
-if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+$oPerm = profesores_o_perm();
+if ($oPerm !== null && $oPerm->have_perm_oficina('est')) {
     $Qpermiso = '3';
 }
 
@@ -50,35 +45,22 @@ if (!empty($data['error'])) {
     exit($data['error']);
 }
 
-$goCosasLinkSpecs = $data['go_cosas_link_specs'] ?? [];
-$fichaSelfLinkSpec = $data['ficha_self_link_spec'] ?? [];
+$goCosasLinkSpecs = profesores_go_cosas_link_specs($data['go_cosas_link_specs'] ?? null);
+$fichaSelfLinkSpec = $data['ficha_self_link_spec'] ?? null;
 unset($data['go_cosas_link_specs'], $data['ficha_self_link_spec']);
 
-$goTo = HashFrontSignedLink::fromSpec(is_array($fichaSelfLinkSpec) ? $fichaSelfLinkSpec : []);
-$go_cosas = [];
-foreach (is_array($goCosasLinkSpecs) ? $goCosasLinkSpecs : [] as $key => $spec) {
-    if (!is_array($spec)) {
-        continue;
-    }
-    if ($key === 'print') {
-        $go_cosas[$key] = HashFrontSignedLink::fromSpec($spec);
-        continue;
-    }
-    $query = isset($spec['query']) && is_array($spec['query']) ? $spec['query'] : [];
-    $query['go_to'] = $goTo;
-    $spec['query'] = $query;
-    $go_cosas[$key] = HashFrontSignedLink::fromSpec($spec);
-}
-$data['go_cosas'] = $go_cosas;
+$data['go_cosas'] = profesores_go_cosas_from_specs($fichaSelfLinkSpec, $goCosasLinkSpecs);
 
 $Qprint = !empty($data['use_print_phtml']) ? 1 : 0;
 unset($data['use_print_phtml']);
 
 echo $oPosicion->mostrar_left_slide(1);
 
+$viewVars = profesores_ficha_view_vars($data);
+
 $oView = new ViewNewPhtml('frontend\profesores\controller');
 if (!empty($Qprint)) {
-    $oView->renderizar('ficha_profesor_stgr.print.phtml', $data);
+    $oView->renderizar('ficha_profesor_stgr.print.phtml', $viewVars);
 } else {
-    $oView->renderizar('ficha_profesor_stgr.phtml', $data);
+    $oView->renderizar('ficha_profesor_stgr.phtml', $viewVars);
 }

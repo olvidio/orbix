@@ -25,7 +25,9 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -38,25 +40,30 @@ $Qid_pau = (int)filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qpermiso = (int)filter_input(INPUT_POST, 'permiso');
 
-$datos = PostRequest::getDataFromUrl('/src/notas/nota_persona_form_data', [
+$selRaw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$sel = is_array($selRaw) ? $selRaw : [];
+
+$payload = PostRequest::getDataFromUrl('/src/notas/nota_persona_form_data', [
     'id_pau' => $Qid_pau,
     'id_asignatura_real' => (string)filter_input(INPUT_POST, 'id_asignatura_real'),
-    'sel' => (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'sel' => $sel,
     'pau' => $Qpau,
     'mod' => (string)filter_input(INPUT_POST, 'mod'),
 ]);
+$datos = notas_persona_form_from_payload($payload);
 $mod = $datos['mod'];
 $id_asignatura_real = $datos['id_asignatura_real'];
 
-$vo = $datos['vo'] ?? [];
 $oDesplNotas = new Desplegable();
-$oDesplNotas->setOpciones((array)($datos['aOpcionesSituacion'] ?? []));
+$oDesplNotas->setOpciones($datos['aOpcionesSituacion']);
 $oDesplNotas->setNombre('id_situacion');
-$ns = (array)($vo['NotaSituacion'] ?? []);
-$id_situacion = empty($datos['id_situacion']) ? (int)($ns['NUMERICA'] ?? 10) : $datos['id_situacion'];
+$ns = $datos['vo']['NotaSituacion'];
+$id_situacion = $datos['id_situacion'] === '' || $datos['id_situacion'] === 0
+    ? (string)($ns['NUMERICA'] ?? 10)
+    : (string)$datos['id_situacion'];
 $oDesplNotas->setOpcion_sel($id_situacion);
 
-$lista_situacion_no_acta = (string)($datos['lista_situacion_no_acta'] ?? '"11"');
+$lista_situacion_no_acta = $datos['lista_situacion_no_acta'];
 
 $oDesplProfesores = [];
 $oDesplNiveles = [];
@@ -64,34 +71,36 @@ if ($mod === 'editar') {
     $oDesplProfesores = new Desplegable();
     $oDesplProfesores->setNombre('id_preceptor');
     $oDesplProfesores->setOpciones($datos['profesores']);
-    $oDesplProfesores->setOpcion_sel($datos['id_preceptor']);
-    $oDesplProfesores->setBlanco(1);
+    $oDesplProfesores->setOpcion_sel((string)$datos['id_preceptor']);
+    $oDesplProfesores->setBlanco(true);
 } else {
     $oDesplNiveles = new Desplegable();
     $oDesplNiveles->setNombre('id_nivel');
     $oDesplNiveles->setOpciones($datos['asignaturas_faltan']);
-    $oDesplNiveles->setBlanco(1);
+    $oDesplNiveles->setBlanco(true);
     $oDesplNiveles->setAction('fnjs_cmb_opcional()');
 }
 
 $chk_preceptor = !empty($datos['preceptor']) ? 'checked' : '';
 
 $tipo_acta = $datos['tipo_acta'];
-$ta = (array)($vo['TipoActa'] ?? []);
-if (!empty($tipo_acta)) {
-    $chk_acta = (int)$tipo_acta === (int)($ta['FORMATO_ACTA'] ?? 0) ? 'checked' : '';
-    $chk_certificado = (int)$tipo_acta === (int)($ta['FORMATO_CERTIFICADO'] ?? 0) ? 'checked' : '';
+$ta = $datos['vo']['TipoActa'];
+if ($tipo_acta !== '' && $tipo_acta !== 0) {
+    $tipoActaInt = tessera_imprimir_int($tipo_acta);
+    $chk_acta = $tipoActaInt === ($ta['FORMATO_ACTA'] ?? 0) ? 'checked' : '';
+    $chk_certificado = $tipoActaInt === ($ta['FORMATO_CERTIFICADO'] ?? 0) ? 'checked' : '';
 } else {
     $chk_acta = 'checked';
     $chk_certificado = '';
 }
 
 $epoca = $datos['epoca'];
-$ne = (array)($vo['NotaEpoca'] ?? []);
-if (!empty($epoca)) {
-    $chk_epoca_ca = (int)$epoca === (int)($ne['EPOCA_CA'] ?? 0) ? 'checked' : '';
-    $chk_epoca_inv = (int)$epoca === (int)($ne['EPOCA_INVIERNO'] ?? 0) ? 'checked' : '';
-    $chk_epoca_otro = (int)$epoca === (int)($ne['EPOCA_OTRO'] ?? 0) ? 'checked' : '';
+$ne = $datos['vo']['NotaEpoca'];
+if ($epoca !== '' && $epoca !== 0) {
+    $epocaInt = tessera_imprimir_int($epoca);
+    $chk_epoca_ca = $epocaInt === ($ne['EPOCA_CA'] ?? 0) ? 'checked' : '';
+    $chk_epoca_inv = $epocaInt === ($ne['EPOCA_INVIERNO'] ?? 0) ? 'checked' : '';
+    $chk_epoca_otro = $epocaInt === ($ne['EPOCA_OTRO'] ?? 0) ? 'checked' : '';
 } else {
     $chk_epoca_ca = 'checked';
     $chk_epoca_inv = '';
@@ -113,7 +122,7 @@ $a_camposHidden = [
     'permiso' => $Qpermiso,
     'id_activ' => $datos['id_activ'],
 ];
-if (!empty($id_asignatura_real)) {
+if ($id_asignatura_real !== '') {
     $a_camposHidden['id_asignatura_real'] = $id_asignatura_real;
     $a_camposHidden['id_asignatura'] = $id_asignatura_real;
     $a_camposHidden['id_nivel'] = $datos['id_nivel'];
@@ -153,12 +162,15 @@ $h_buscar_acta = $oHashBuscarActa->linkSinValParams();
 $url_persona_nota_nueva = $web . '/src/notas/persona_nota_nueva';
 $url_persona_nota_editar = $web . '/src/notas/persona_nota_editar';
 
-$nota_max_default = $_SESSION['oConfig']->getNotaMax();
-$nota_max = empty($datos['nota_max']) ? $nota_max_default : $datos['nota_max'];
+$oConfig = $_SESSION['oConfig'] ?? null;
+$nota_max_default = $oConfig instanceof ConfigSnapshot ? tessera_imprimir_int($oConfig->getNotaMax()) : 0;
+$nota_max = $datos['nota_max'] === '' || $datos['nota_max'] === 0
+    ? $nota_max_default
+    : tessera_imprimir_int($datos['nota_max'], $nota_max_default);
 
 $a_campos = [
     'obj' => $obj,
-    'vo' => $vo,
+    'vo' => $datos['vo'],
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'url_posibles_opcionales' => $url_posibles_opcionales,

@@ -18,32 +18,27 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadtarifas/helpers/actividadtarifas_support.php';
 
 FrontBootstrap::boot();
 $campos = [
     'id_tarifa' => (string)filter_input(INPUT_POST, 'id_tarifa'),
 ];
 
-$data = PostRequest::getDataFromUrl('/src/actividadtarifas/tipo_tarifa_form_data', $campos);
-$payload = is_array($data) ? $data : [];
-
-$id_tarifa = (string)($payload['id_tarifa'] ?? 'nuevo');
-$es_nuevo = (bool)($payload['es_nuevo'] ?? true);
-$letra = (string)($payload['letra'] ?? '');
-$modo = (int)($payload['modo'] ?? 0);
-$observ = (string)($payload['observ'] ?? '');
-$opciones_modo = $payload['opciones_modo'] ?? [];
+$fields = actividadtarifas_payload_fields(
+    PostRequest::getDataFromUrl('/src/actividadtarifas/tipo_tarifa_form_data', $campos)
+);
 
 $oDesplModo = new Desplegable();
 $oDesplModo->setNombre('modo');
-$oDesplModo->setOpciones($opciones_modo);
-$oDesplModo->setOpcion_sel($modo);
+$oDesplModo->setOpciones($fields['opciones_modo']);
+$oDesplModo->setOpcion_sel(tessera_imprimir_string($fields['modo']));
 
 $a_campos = [
-    'id_tarifa' => $id_tarifa,
-    'es_nuevo' => $es_nuevo,
-    'letra' => $letra,
-    'observ' => $observ,
+    'id_tarifa' => $fields['id_tarifa'],
+    'es_nuevo' => $fields['es_nuevo'],
+    'letra' => $fields['letra'],
+    'observ' => $fields['observ'],
     'oDesplModo' => $oDesplModo,
 ];
 

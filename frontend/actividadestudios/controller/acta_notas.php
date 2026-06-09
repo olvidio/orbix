@@ -18,20 +18,18 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-//require_once 'apps/core/global_object.inc';
 
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
 $notas = 1;
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
 $Qid_sel = '';
-$Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
+$Qscroll_id = tessera_imprimir_string(filter_input(INPUT_POST, 'scroll_id'));
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
@@ -44,37 +42,31 @@ if (isset($_POST['stack'])) {
     }
 }
 
-if (!empty($a_sel)) {
-    $parts = explode('#', $a_sel[0]);
-    $id_activ = (int)($parts[0] ?? 0);
-    $id_asignatura = (int)($parts[1] ?? 0);
-} else {
-    $id_asignatura = (int)filter_input(INPUT_POST, 'id_asignatura');
-    $id_activ = (int)filter_input(INPUT_POST, 'id_activ');
-}
+$ids = actividadestudios_id_activ_asignatura_from_post();
+$id_activ = $ids['id_activ'];
+$id_asignatura = $ids['id_asignatura'];
 
-$d = PostRequest::getDataFromUrl('/src/actividadestudios/acta_notas_data', [
+$d = actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/acta_notas_data', [
     'id_activ' => $id_activ,
     'id_asignatura' => $id_asignatura,
-]);
+]));
+$datos = actividadestudios_acta_notas_from_payload($d);
 
-$permiso = (int)($d['permiso'] ?? 1);
-$nom_activ = $d['nom_activ'] ?? '';
-$matriculados = (int)($d['matriculados'] ?? 0);
-$matriculas_rows = $d['matriculas_rows'] ?? [];
-$notas = $d['notas'] ?? 'nuevo';
-$acta_principal = $d['acta_principal'] ?? '';
-$acta_notas_a_actas = $d['acta_notas_a_actas'] ?? [];
-$acta_txt_cursada = (string)($d['acta_txt_cursada'] ?? '');
+$permiso = $datos['permiso'];
+$nom_activ = $datos['nom_activ'];
+$matriculados = $datos['matriculados'];
+$matriculas_rows = $datos['matriculas_rows'];
+$notas = $datos['notas'];
+$acta_principal = $datos['acta_principal'];
+$acta_notas_a_actas = $datos['acta_notas_a_actas'];
+$acta_txt_cursada = $datos['acta_txt_cursada'];
 
-$aOpciones = $d['despl_actas_opciones'] ?? [];
 $oDesplActas = new Desplegable();
 $oDesplActas->setNombre('acta_nota[]');
-$oDesplActas->setOpciones($aOpciones);
+$oDesplActas->setOpciones($datos['despl_actas_opciones']);
 
-$msg_err = $d['msg_err'] ?? '';
-
-$nota_max_default = $_SESSION['oConfig']->getNotaMax();
+$msg_err = $datos['msg_err'];
+$nota_max_default = actividadestudios_nota_max_default();
 
 $oHashNotas = new HashFront();
 $oHashNotas->setCamposForm('id_nom!nota_num!nota_max!form_preceptor!acta_nota');
@@ -82,15 +74,15 @@ $oHashNotas->setCamposNo('que');
 $oHashNotas->setArraycamposHidden([
     'id_pau' => (int)filter_input(INPUT_POST, 'id_pau'),
     'id_activ' => $id_activ,
-    'opcional' => (string)filter_input(INPUT_POST, 'opcional'),
-    'primary_key_s' => (string)filter_input(INPUT_POST, 'primary_key_s'),
+    'opcional' => tessera_imprimir_string(filter_input(INPUT_POST, 'opcional')),
+    'primary_key_s' => tessera_imprimir_string(filter_input(INPUT_POST, 'primary_key_s')),
     'id_asignatura' => $id_asignatura,
     'id_nivel' => (int)filter_input(INPUT_POST, 'id_nivel'),
     'matriculados' => $matriculados,
 ]);
 
-if (!empty($msg_err)) {
-    echo $msg_err;
+if ($msg_err !== '') {
+    actividadestudios_echo_string($msg_err);
 }
 
 if ($matriculados === 0) {
@@ -110,7 +102,7 @@ $a_campos = [
     'oPosicion' => $oPosicion,
     'oHashNotas' => $oHashNotas,
     'permiso' => $permiso,
-    'Qque' => (string)filter_input(INPUT_POST, 'que'),
+    'Qque' => tessera_imprimir_string(filter_input(INPUT_POST, 'que')),
     'matriculas_rows' => $matriculas_rows,
     'oDesplActas' => $oDesplActas,
     'acta_principal' => $acta_principal,

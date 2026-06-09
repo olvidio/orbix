@@ -7,76 +7,41 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
 
 $Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
 $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
-//Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
+        if ($oPosicion2->goStack($stack)) {
+            $Qid_sel = actividades_posicion_string($oPosicion2->getParametro('id_sel'));
+            $Qscroll_id = actividades_posicion_string($oPosicion2->getParametro('scroll_id'));
             $oPosicion2->olvidar($stack);
         }
     }
 }
 
-// Se usa al buscar:
 $Qusername = (string)filter_input(INPUT_POST, 'username');
 $oPosicion->setParametros(array('username' => $Qusername), 1);
 
-
-$url_backend = '/src/usuarios/usuario_lista';
-$a_campos_backend = ['username' => $Qusername];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$data = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_lista', ['username' => $Qusername]));
 if (!empty($data['error'])) {
    exit($data['error']);
 }
 
-$a_cabeceras = $data['a_cabeceras'];
-$a_botones = $data['a_botones'];
-$a_valores = $data['a_valores'];
-
-$baseUrl = AppUrlConfig::getPublicAppBaseUrl();
-foreach ($a_valores as $idx => $fila) {
-    if (!is_array($fila)) {
-        continue;
-    }
-    foreach ($fila as $colKey => $cell) {
-        if (!is_array($cell) || !isset($cell['link_spec'])) {
-            continue;
-        }
-        $spec = $cell['link_spec'];
-        $path = (string)($spec['path'] ?? '');
-        $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
-        if ($path === '') {
-            continue;
-        }
-        $url = $baseUrl . '/' . ltrim($path, '/') . '?' . http_build_query($query);
-        $a_valores[$idx][$colKey]['ira'] = HashFront::link($url);
-        unset($a_valores[$idx][$colKey]['link_spec']);
-    }
-}
-
-if (isset($Qid_sel) && !empty($Qid_sel)) {
-    $a_valores['select'] = $Qid_sel;
-}
-if (isset($Qscroll_id) && !empty($Qscroll_id)) {
-    $a_valores['scroll_id'] = $Qscroll_id;
-}
+$lista = usuarios_lista_from_payload($data);
+$a_valores = usuarios_lista_apply_nav($lista['valores'], $Qid_sel, $Qscroll_id);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('usuario_lista');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
+$oTabla->setCabeceras($lista['cabeceras']);
+$oTabla->setBotones($lista['botones']);
 $oTabla->setDatos($a_valores);
 
 $oHash = new HashFront();

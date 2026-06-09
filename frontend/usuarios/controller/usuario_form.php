@@ -5,14 +5,12 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use frontend\shared\web\DesplegableArray;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
@@ -22,72 +20,43 @@ $Qquien = (string)filter_input(INPUT_POST, 'quien');
 
 $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-// Hay que usar isset y empty porque puede tener el valor =0.
-// Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
-        // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+        if ($oPosicion2->goStack($stack)) {
             $a_sel = $oPosicion2->getParametro('id_sel');
             if (!empty($a_sel)) {
-                $Qid_usuario = (integer)strtok($a_sel[0], "#");
+                $Qid_usuario = usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
             } else {
-                $Qid_usuario = $oPosicion2->getParametro('id_usuario');
-                $Qquien = $oPosicion2->getParametro('quien');
+                $Qid_usuario = actividades_posicion_int($oPosicion2->getParametro('id_usuario'));
+                $Qquien = actividades_posicion_string($oPosicion2->getParametro('quien'));
             }
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
+            $Qscroll_id = actividades_posicion_int($oPosicion2->getParametro('scroll_id'));
             $oPosicion2->olvidar($stack);
         }
     }
-} elseif (!empty($a_sel)) { //vengo de un checkbox
+} elseif (!empty($a_sel)) {
     $Qque = (string)filter_input(INPUT_POST, 'que');
-    if ($Qque !== 'del_grupmenu') { //En el caso de venir de borrar un grupmenu, no hago nada
-        $Qid_usuario = (integer)strtok($a_sel[0], "#");
+    if ($Qque !== 'del_grupmenu') {
+        $Qid_usuario = usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
     }
 }
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
-//////////////////////// Usuario o Grupo ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/usuario_form';
-$a_campos_backend = [
+$formData = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_form', [
     'id_usuario' => $Qid_usuario,
-    'quien' => $Qquien
-];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$a_campos_src = $data['a_campos'];
+    'quien' => $Qquien,
+]));
+$a_camposRaw = $formData['a_campos'] ?? [];
+$a_campos_src = usuarios_form_campos_from_payload(is_array($a_camposRaw) ? $a_camposRaw : []);
 
 $txt_guardar = _("guardar datos usuario");
 $txt_eliminar = _("¿Está seguro que desea quitar este permiso?");
 
-
-// recomponer los campos desplegables.
-$aOpcionesRoles = $a_campos_src['aOpcionesRoles'];
-$id_role = $a_campos_src['id_role'];
-$oDesplRoles = new Desplegable('id_role', $aOpcionesRoles, $id_role, true);
+$oDesplRoles = new Desplegable('id_role', $a_campos_src['aOpcionesRoles'], $a_campos_src['id_role'], true);
 $a_campos['oDesplRoles'] = $oDesplRoles;
-
-if (!empty($a_campos_src['aDataDespl'])) {
-    $tipo = $a_campos_src['aDataDespl']['tipo'];
-    if ($tipo === 'simple') {
-        $oDesplArrayCtrCasas = new Desplegable();
-        $oDesplArrayCtrCasas->setNombre($a_campos_src['aDataDespl']['nom']);
-        $oDesplArrayCtrCasas->setOpciones($a_campos_src['aDataDespl']['aOpciones']);
-        $oDesplArrayCtrCasas->setOpcion_sel($a_campos_src['aDataDespl']['opcion_sel']);
-        $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
-    } else {
-        $oDesplArrayCtrCasas = new DesplegableArray();
-        $oDesplArrayCtrCasas->setAccionConjunto($a_campos_src['aDataDespl']['accionConjunto']);
-        $oDesplArrayCtrCasas->setNomConjunto($a_campos_src['aDataDespl']['nom']);
-        $oDesplArrayCtrCasas->setOpciones($a_campos_src['aDataDespl']['aOpciones']);
-        $oDesplArrayCtrCasas->setSeleccionados($a_campos_src['aDataDespl']['opcion_sel']);
-        $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
-    }
-} else {
-    $oDesplArrayCtrCasas = new DesplegableArray();
-}
-$a_campos['oDesplArrayCtrCasas'] = $oDesplArrayCtrCasas;
+$a_campos['oDesplArrayCtrCasas'] = usuarios_desplegable_casas_from_data($a_campos_src['aDataDespl']);
 
 $oHash = new HashFront();
 $camposMas = $a_campos_src['camposMas'];
@@ -95,20 +64,16 @@ $camposForm = 'que!usuario!nom_usuario!password!email!id_role';
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
     'quien' => $Qquien,
-    'ctx' => (string)($a_campos_src['ctx_guardar'] ?? ''),
+    'ctx' => $a_campos_src['ctx_guardar'],
 );
-if (!empty($camposMas)) {
+if ($camposMas !== '') {
     $camposForm .= '!' . $camposMas;
-//$a_camposHidden []= $camposMas;
 }
-//$camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
 $oHash->setCamposForm($camposForm);
 $oHash->setcamposNo('password!id_ctr!id_nom!casas!cambio_password!has_2fa');
 $oHash->setArraycamposHidden($a_camposHidden);
 $a_campos['oHash'] = $oHash;
 
-
-// añadir Posicion
 $a_campos['oPosicion'] = $oPosicion;
 $a_campos['txt_guardar'] = $txt_guardar;
 $a_campos['txt_eliminar'] = $txt_eliminar;
@@ -116,32 +81,25 @@ $a_campos['url_usuario_guardar'] = HashFront::link(AppUrlConfig::getPublicAppBas
     . '/src/usuarios/usuario_guardar'
 );
 
-//$a_campos['url_usuario_ajax'] = '';
-//$url_usuario_ajax = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_ajax';
-
-
 $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_grupo_lst.php';
 $oHash1 = new HashFront();
 $oHash1->setUrl($url);
 $oHash1->setCamposForm('id_usuario');
 $oHash1->setCamposNo('scroll_id');
-$h_lst = $oHash1->linkSinValParams();
-$a_campos['h_lst'] = $h_lst;
+$a_campos['h_lst'] = $oHash1->linkSinValParams();
 
 $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_grupo_del_lst.php';
 $oHash2 = new HashFront();
 $oHash2->setUrl($url);
 $oHash2->setCamposForm('id_usuario');
 $oHash2->setCamposNo('scroll_id');
-$h_del_lst = $oHash2->linkSinValParams();
-$a_campos['h_del_lst'] = $h_del_lst;
+$a_campos['h_del_lst'] = $oHash2->linkSinValParams();
 
 $url_usuario_update = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_check_pwd';
 $oHash3 = new HashFront();
 $oHash3->setUrl($url_usuario_update);
 $oHash3->setCamposForm('id_usuario!usuario!password');
-$h_pwd = $oHash3->linkSinValParams();
-$a_campos['h_pwd'] = $h_pwd;
+$a_campos['h_pwd'] = $oHash3->linkSinValParams();
 
 $a_campos['id_usuario'] = $a_campos_src['id_usuario'];
 $a_campos['usuario'] = $a_campos_src['usuario'];
@@ -153,24 +111,17 @@ $a_campos['chk_cambio_password'] = $a_campos_src['chk_cambio_password'];
 $a_campos['chk_has_2fa'] = $a_campos_src['chk_has_2fa'];
 $a_campos['obj'] = $a_campos_src['obj'];
 
-
 $oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('usuario_form.phtml', $a_campos);
 
-// los nuevos no tienen lo que sigue.
 if (!empty($Qid_usuario)) {
-    //////////////////////// Grupos del usuario ///////////////////////////////////////////////////
-    $url_backend = '/src/usuarios/usuario_info';
-    $a_campos_backend = ['id_usuario' => $Qid_usuario];
-    $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-    $a_campos['grupos_txt'] = $data['grupos_txt'];
+    $infoData = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_info', ['id_usuario' => $Qid_usuario]));
+    $a_campos['grupos_txt'] = tessera_imprimir_string($infoData['grupos_txt'] ?? '');
 
     $a_campos['procesos_installed'] = AppInstalled::is('procesos');
     $oView = new ViewNewPhtml('frontend\usuarios\controller');
     $oView->renderizar('usuario_grupo.phtml', $a_campos);
 
-
-    //////////// Permisos en actividades ////////////
     if (AppInstalled::is('procesos')) {
         $url = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
             . '/frontend/usuarios/controller/perm_activ_lista.php'
@@ -184,7 +135,6 @@ if (!empty($Qid_usuario)) {
         echo PostRequest::getContent($url, $hash_params);
     }
 
-    //////////// Condiciones para los avisos de cambios ////////////
     if (AppInstalled::is('cambios')) {
         $url_avisos = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
             . '/frontend/cambios/controller/usuario_form_avisos.php?'

@@ -19,13 +19,14 @@ use frontend\shared\web\PeriodoQue;
 use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$Qyear = (string) filter_input(INPUT_POST, 'year');
-$Qperiodo = (string) filter_input(INPUT_POST, 'periodo');
-$Qempiezamin = (string) filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string) filter_input(INPUT_POST, 'empiezamax');
+$Qyear = tessera_imprimir_string(filter_input(INPUT_POST, 'year'));
+$Qperiodo = tessera_imprimir_string(filter_input(INPUT_POST, 'periodo'));
+$Qempiezamin = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamin'));
+$Qempiezamax = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamax'));
 $continuar = (int) filter_input(INPUT_POST, 'continuar');
 
 if (empty($continuar)) {
@@ -61,17 +62,16 @@ if (empty($continuar)) {
         'oHashPeriodo' => $oHashPeriodo,
     ];
 } else {
-    $data = PostRequest::getDataFromUrl('/src/actividadestudios/docencia_actualizar', [
+    $data = actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/docencia_actualizar', [
         'continuar' => $continuar,
         'year' => $Qyear,
         'periodo' => $Qperiodo,
         'empiezamin' => $Qempiezamin,
         'empiezamax' => $Qempiezamax,
-    ]);
-    $txt_rta = (string)($data['txt_rta'] ?? '');
+    ]));
     $a_campos = [
         'mod' => 'fin',
-        'txt_rta' => $txt_rta,
+        'txt_rta' => tessera_imprimir_string($data['txt_rta'] ?? ''),
     ];
 }
 

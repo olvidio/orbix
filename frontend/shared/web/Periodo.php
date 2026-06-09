@@ -8,6 +8,7 @@ require_once dirname(__DIR__, 3) . '/src/shared/domain/helpers/func_tablas.php';
 
 use frontend\shared\PostRequest;
 use frontend\shared\domain\value_objects\DateTimeLocal;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use function frontend\shared\helpers\curso_est;
 
 /**
@@ -28,6 +29,9 @@ class Periodo
     {
     }
 
+    /**
+     * @param array<string, int> $calendario
+     */
     public function setCalendarioEscolar(array $calendario): void
     {
         $this->calendarioEscolar = $calendario;
@@ -44,8 +48,41 @@ class Periodo
             '/src/configuracion/periodo_calendario_escolar_data',
             [],
         );
-        $o->setCalendarioEscolar($data);
+        $o->setCalendarioEscolar(self::calendarioFromPostRequestData($data));
         return $o;
+    }
+
+    /**
+     * @param array<int|string, mixed> $data
+     * @return array<string, int>
+     */
+    private static function calendarioFromPostRequestData(array $data): array
+    {
+        $keys = [
+            'mes_fin_stgr',
+            'mes_fin_crt',
+            'dia_ini_stgr',
+            'mes_ini_stgr',
+            'dia_fin_stgr',
+            'dia_ini_crt',
+            'mes_ini_crt',
+            'dia_fin_crt',
+            'any_final_est',
+            'any_final_crt',
+        ];
+        $calendario = [];
+        foreach ($keys as $key) {
+            $value = $data[$key] ?? 0;
+            if (is_int($value)) {
+                $calendario[$key] = $value;
+            } elseif (is_string($value) && is_numeric($value)) {
+                $calendario[$key] = (int) $value;
+            } else {
+                $calendario[$key] = 0;
+            }
+        }
+
+        return $calendario;
     }
 
     private function mesFinStgr(): int
@@ -53,8 +90,9 @@ class Periodo
         if ($this->calendarioEscolar !== null) {
             return (int)($this->calendarioEscolar['mes_fin_stgr'] ?? 0);
         }
-        if (isset($_SESSION['oConfig'])) {
-            return $_SESSION['oConfig']->getMesFinStgr();
+        $oConfig = $_SESSION['oConfig'] ?? null;
+        if ($oConfig instanceof ConfigSnapshot) {
+            return $oConfig->getMesFinStgr();
         }
         throw new \RuntimeException(_('Falta calendario escolar: use Periodo::conCalendarioDesdeBackend() o sesión oConfig.'));
     }
@@ -64,8 +102,9 @@ class Periodo
         if ($this->calendarioEscolar !== null) {
             return (int)($this->calendarioEscolar['mes_fin_crt'] ?? 0);
         }
-        if (isset($_SESSION['oConfig'])) {
-            return $_SESSION['oConfig']->getMesFinCrt();
+        $oConfig = $_SESSION['oConfig'] ?? null;
+        if ($oConfig instanceof ConfigSnapshot) {
+            return $oConfig->getMesFinCrt();
         }
         throw new \RuntimeException(_('Falta calendario escolar: use Periodo::conCalendarioDesdeBackend() o sesión oConfig.'));
     }
@@ -76,17 +115,17 @@ class Periodo
         return $this->calendarioEscolar;
     }
 
-    public function setDefaultAny($any): void
+    public function setDefaultAny(string $any): void
     {
         switch ($any) {
             case 'prev':
             case 'previo':
             case 'previous':
-                $any = (int)date('Y') - 1;
+                $any = (string) ((int) date('Y') - 1);
                 break;
             case 'siguiente':
             case 'next':
-                $any = (int)date('Y') + 1;
+                $any = (string) ((int) date('Y') + 1);
                 break;
             case 'actual':
             default:
@@ -95,42 +134,48 @@ class Periodo
         $this->setAny($any);
     }
 
-    public function setEmpiezaMax($sempiezamax = ''): void
+    public function setEmpiezaMax(string $sempiezamax = ''): void
     {
         if (!empty($sempiezamax)) {
             $oEmpiezamax = DateTimeLocal::createFromLocal($sempiezamax);
-            $empiezamaxIso = $oEmpiezamax->getIso();
-            $this->setEmpiezaMaxIso($empiezamaxIso);
+            if ($oEmpiezamax instanceof DateTimeLocal) {
+                $this->setEmpiezaMaxIso($oEmpiezamax->getIso());
+            } else {
+                $this->setEmpiezaMaxIso();
+            }
         } else {
             $this->setEmpiezaMaxIso();
         }
     }
 
-    public function setEmpiezaMin($sempiezamin = ''): void
+    public function setEmpiezaMin(string $sempiezamin = ''): void
     {
         if (!empty($sempiezamin)) {
             $oEmpiezamin = DateTimeLocal::createFromLocal($sempiezamin);
-            $empiezaminIso = $oEmpiezamin->getIso();
-            $this->setEmpiezaMinIso($empiezaminIso);
+            if ($oEmpiezamin instanceof DateTimeLocal) {
+                $this->setEmpiezaMinIso($oEmpiezamin->getIso());
+            } else {
+                $this->setEmpiezaMinIso();
+            }
         } else {
             $this->setEmpiezaMinIso();
         }
     }
 
-    public function setEmpiezaMaxIso($sempiezamaxiso = ''): void
+    public function setEmpiezaMaxIso(string $sempiezamaxiso = ''): void
     {
         $this->sempiezamaxiso = $sempiezamaxiso;
     }
 
-    public function setEmpiezaMinIso($sempiezaminiso = ''): void
+    public function setEmpiezaMinIso(string $sempiezaminiso = ''): void
     {
         $this->sempiezaminiso = $sempiezaminiso;
     }
 
-    public function setAny($iany): void
+    public function setAny(int|string $iany): void
     {
-        if (!empty($iany)) {
-            $this->iany = (int)$iany;
+        if ($iany !== '' && $iany !== 0 && $iany !== '0') {
+            $this->iany = (int) $iany;
         }
     }
 
@@ -146,12 +191,30 @@ class Periodo
 
     public function getF_ini(): DateTimeLocal
     {
+        if ($this->sf_ini === null || $this->sf_ini === '') {
+            throw new \RuntimeException(_('Fecha de inicio no establecida: llame a setPeriodo() antes.'));
+        }
+
         return new DateTimeLocal($this->sf_ini);
     }
 
     public function getF_fin(): DateTimeLocal
     {
+        if ($this->sf_fin === null || $this->sf_fin === '') {
+            throw new \RuntimeException(_('Fecha de fin no establecida: llame a setPeriodo() antes.'));
+        }
+
         return new DateTimeLocal($this->sf_fin);
+    }
+
+    private static function formatDateFromMktime(int $month, int $day, int $year, string $format = 'Y-m-d'): string
+    {
+        $timestamp = mktime(0, 0, 0, $month, $day, $year);
+        if ($timestamp === false) {
+            throw new \RuntimeException(sprintf(_('Fecha inválida: %d-%02d-%02d'), $year, $month, $day));
+        }
+
+        return date($format, $timestamp);
     }
 
     public function getTxt_cusro(): string
@@ -172,20 +235,21 @@ class Periodo
      */
     public function setPeriodo(string $sPeriodo): void
     {
-        $any = empty($this->iany) ? date('Y') : $this->iany;
-        $mes = date('m');
+        $any = $this->iany ?? (int) date('Y');
+        $mes = (int) date('m');
+        $dia = (int) date('d');
         switch ($sPeriodo) {
             case "otro":
-                $inicio = $this->sempiezaminiso;
-                $fin = $this->sempiezamaxiso;
+                $inicio = $this->sempiezaminiso ?? '';
+                $fin = $this->sempiezamaxiso ?? '';
                 break;
             case 'actual':
-                $inicio = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d') - 40, date('Y')));
-                $fin = date('Y-m-d', mktime(0, 0, 0, date('m') + 9, 0, date('Y')));
+                $inicio = self::formatDateFromMktime($mes, $dia - 40, $any);
+                $fin = self::formatDateFromMktime($mes + 9, 0, $any);
                 break;
             case "desdeHoy":
                 $inicio = date('Y/m/d');
-                $fin = date('Y/m/d', mktime(0, 0, 0, $mes + 6, 0, $any));
+                $fin = self::formatDateFromMktime($mes + 6, 0, $any, 'Y/m/d');
                 break;
             case "curso":
                 $fin_m = $this->mesFinStgr();
@@ -219,15 +283,15 @@ class Periodo
                 break;
             case "navidad":
                 $inicio = $any . "/12/1";
-                $fin = date('Y/m/d', mktime(0, 0, 0, $mes + 1, 0, $any));
+                $fin = self::formatDateFromMktime($mes + 1, 0, $any, 'Y/m/d');
                 break;
             case "trimestre":
-                $inicio = $any . "/$mes/1";
-                $fin = date('Y/m/d', mktime(0, 0, 0, $mes + 3, 0, $any));
+                $inicio = $any . '/' . $mes . '/1';
+                $fin = self::formatDateFromMktime($mes + 3, 0, $any, 'Y/m/d');
                 break;
             case "mes":
-                $inicio = $any . "/$mes/1";
-                $fin = date('Y/m/d', mktime(0, 0, 0, $mes + 1, 0, $any));
+                $inicio = $any . '/' . $mes . '/1';
+                $fin = self::formatDateFromMktime($mes + 1, 0, $any, 'Y/m/d');
                 break;
             case "verano":
                 $inicio = $any . "/6/1";

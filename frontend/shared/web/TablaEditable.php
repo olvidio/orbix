@@ -11,14 +11,17 @@ use function frontend\shared\helpers\is_true;
  */
 class TablaEditable
 {
-    private $sNombre;
-    private $ikey;
-    private $aGrupos;
-    private $aCabeceras;
-    private $ssortCol;
+    /** @var list<string>|array<int|string, string> */
+    private array $aGrupos = [];
+    /** @var list<array<string, mixed>|string> */
+    private array $aCabeceras = [];
+    private string $ssortCol = '';
+    /** @var array<string, bool|string> */
     private array $aColVisible = [];
-    private $aDatos;
-    private $aBotones;
+    /** @var array<int|string, mixed> */
+    private array $aDatos = [];
+    /** @var list<array<string, mixed>> */
+    private array $aBotones = [];
     private string $sid_tabla = 'uno';
     private bool $bFiltro = true;
     private bool $bColVis = true;
@@ -28,9 +31,40 @@ class TablaEditable
     {
     }
 
+    private static function scalarString(mixed $value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        return '';
+    }
+
+    /** @param array<string, mixed>|string $cabecera */
+    private static function cabeceraFieldKey(array|string $cabecera, string $key): ?string
+    {
+        if (!is_array($cabecera)) {
+            return null;
+        }
+        $val = $cabecera[$key] ?? null;
+        if ($val === null || $val === '') {
+            return null;
+        }
+
+        return self::scalarString($val);
+    }
+
     /**
      * Llama al endpoint backend que devuelve las preferencias SlickGrid
      * (colVisible, colWidths, tamaños) para el usuario actual.
+     *
+     * @return array<int|string, mixed>|null
      */
     private function fetchPreferenciaTabla(string $id_tabla): ?array
     {
@@ -38,10 +72,9 @@ class TablaEditable
             '/src/usuarios/preferencia_tabla_get',
             ['id_tabla' => $id_tabla]
         );
-        if (!is_array($data)) {
-            return null;
-        }
-        return is_array($data['slickgrid'] ?? null) ? $data['slickgrid'] : null;
+        $slickgrid = $data['slickgrid'] ?? null;
+
+        return is_array($slickgrid) ? $slickgrid : null;
     }
 
     public function mostrar_tabla(): string
@@ -63,40 +96,44 @@ class TablaEditable
         $sortcol = $this->ssortCol;
         $botones = "";
         $tt = "";
-        $chk = "";
-        $b = 0;
-        if (empty($a_valores)) {
+        $numBotones = 0;
+        if ($a_valores === []) {
             return '<br>' . _("no hay ninguna fila");
         }
-        if (!empty($a_botones)) {
-            if ($a_botones === "ninguno") {
-                $b = "x";
-            } else {
-                foreach ($a_botones as $a_boton) {
-                    $btn = "btn" . $b++;
-                    $botones .= "<INPUT id='$btn' name='$btn' type=button value=\"" . $a_boton['txt'] . "\" onClick='" . $a_boton['click'] . "'>";
-                }
-            }
+        foreach ($a_botones as $a_boton) {
+            $btn = 'btn' . $numBotones++;
+            $botones .= '<INPUT id="' . $btn . '" name="' . $btn . '" type=button value="' . self::scalarString($a_boton['txt'] ?? '') . '" onClick=\'' . self::scalarString($a_boton['click'] ?? '') . '\'>';
         }
 
-        $aColsVisible = '';
+        /** @var array<string, mixed>|string|null $aColsVisible */
+        $aColsVisible = null;
+        /** @var array<string, mixed> $aColsWidth */
         $aColsWidth = [];
         $bPanelVis = false;
-        $grid_height = '500';
+        $grid_height = '0';
         $aPrefs = $this->fetchPreferenciaTabla($id_tabla);
         if (is_array($aPrefs)) {
-            if (!empty($aPrefs['colVisible'])) {
-                $aColsVisible = empty($aPrefs['colVisible']) ? '*' : $aPrefs['colVisible'];
+            $colVisible = $aPrefs['colVisible'] ?? null;
+            if (is_array($colVisible)) {
+                $aColsVisible = $colVisible;
+            } elseif (is_string($colVisible) && $colVisible !== '') {
+                $aColsVisible = $colVisible;
             }
-            $bPanelVis = ($aPrefs['panelVis'] ?? '') === "si";
-            if (!empty($aPrefs['colWidths'])) {
+            $bPanelVis = self::scalarString($aPrefs['panelVis'] ?? '') === 'si';
+            if (!empty($aPrefs['colWidths']) && is_array($aPrefs['colWidths'])) {
                 $aColsWidth = $aPrefs['colWidths'];
             }
-            $grid_width = (!empty($aPrefs['widthGrid'])) ? $aPrefs['widthGrid'] : '900';
-            $grid_height = (!empty($aPrefs['heightGrid'])) ? $aPrefs['heightGrid'] : '500';
+            $grid_width = self::scalarString($aPrefs['widthGrid'] ?? '900');
+            $grid_height = self::scalarString($aPrefs['heightGrid'] ?? '0');
+        }
+        if ($this->aColVisible !== []) {
+            $aColsVisible = $this->aColVisible;
+        }
+        if (!$this->bFiltro) {
+            $bPanelVis = false;
         }
 
-        $aCols = $this->getHeader($a_cabeceras);
+        $aCols = $this->getHeader($a_cabeceras, $aColsVisible, $aColsWidth);
         $sColumns = $aCols['cols'];
         $sColumnsVisible = $aCols['colsVivible'];
         $sColFilters = $aCols['colFilters'];
@@ -104,10 +141,15 @@ class TablaEditable
         $ahora = date("Hms");
         $f = 1;
         $aFilas = [];
-        $scroll_id = !empty($a_valores['scroll_id']) ? $a_valores['scroll_id'] : 0;
+        $scroll_id = !empty($a_valores['scroll_id']) ? self::scalarString($a_valores['scroll_id']) : '0';
         unset($a_valores['scroll_id']);
-        $a_valores_chk = $a_valores['select'] ?? [];
+        $selectRaw = $a_valores['select'] ?? null;
+        $a_valores_chk = is_array($selectRaw) ? $selectRaw : [];
+        unset($a_valores['select']);
         foreach ($a_valores as $num_fila => $fila) {
+            if (!is_array($fila)) {
+                continue;
+            }
             $f++;
             $id_fila = $f . $ahora;
             ksort($fila);
@@ -115,55 +157,56 @@ class TablaEditable
             $aFilas[$num_fila]['editable'] = '';
             foreach ($fila as $col => $valor) {
                 if ($col === "clase") {
-                    $aFilas[$num_fila]["clase"] = addslashes($valor);
+                    $aFilas[$num_fila]["clase"] = addslashes(self::scalarString($valor));
                     continue;
                 }
                 if ($col === "order" || $col === "select") {
                     continue;
                 }
                 if ($col === "sel") {
-                    if (empty($b)) {
+                    if ($numBotones === 0) {
                         continue;
                     }
+                    $chk = '';
                     if (is_array($valor)) {
-                        $chk = !empty($valor['select']) ? $valor['select'] : "";
-                        $id = $valor['id'];
+                        $chk = !empty($valor['select']) ? self::scalarString($valor['select']) : '';
+                        $id = self::scalarString($valor['id'] ?? '');
                     } else {
-                        $id = $valor;
+                        $id = self::scalarString($valor);
                     }
-                    if (!empty($id)) {
-                        $chk = in_array($id, $a_valores_chk) ? 'checked' : '';
+                    if ($id !== '') {
+                        $chk = in_array($id, $a_valores_chk, true) ? 'checked' : $chk;
                         $aFilas[$num_fila]["sel"] = $chk . '#' . addslashes($id);
                     } else {
                         $aFilas[$num_fila]["sel"] = '';
                     }
                 } else {
                     if (is_array($valor)) {
-                        $val = $valor['valor'];
+                        $val = self::scalarString($valor['valor'] ?? '');
                         if (!empty($valor['editable']) && is_true($valor['editable'])) {
-                            $aFilas[$num_fila]['editable'] .= (!empty($aFilas[$num_fila]['editable'])) ? "," . $col : $col;
+                            $aFilas[$num_fila]['editable'] .= ($aFilas[$num_fila]['editable'] !== '') ? ',' . $col : $col;
                         }
                         if (!empty($valor['editor'])) {
-                            $aFilas[$num_fila]['editor'] = $valor['editor'];
+                            $aFilas[$num_fila]['editor'] = self::scalarString($valor['editor']);
                         }
                         if (!empty($valor['clase'])) {
-                            $aFilas[$num_fila]['clase'] = $valor['clase'];
+                            $aFilas[$num_fila]['clase'] = self::scalarString($valor['clase']);
                         }
                         if (!empty($valor['ira'])) {
-                            $aFilas[$num_fila]['ira'] = $valor['ira'];
+                            $aFilas[$num_fila]['ira'] = self::scalarString($valor['ira']);
                         }
                         if (!empty($valor['ira2'])) {
-                            $aFilas[$num_fila]['ira2'] = $valor['ira2'];
+                            $aFilas[$num_fila]['ira2'] = self::scalarString($valor['ira2']);
                         }
                         if (!empty($valor['script'])) {
-                            $aFilas[$num_fila]['script'] = addslashes($valor['script']);
+                            $aFilas[$num_fila]['script'] = addslashes(self::scalarString($valor['script']));
                         }
                         if (!empty($valor['script2'])) {
-                            $aFilas[$num_fila]['script2'] = addslashes($valor['script2']);
+                            $aFilas[$num_fila]['script2'] = addslashes(self::scalarString($valor['script2']));
                         }
-                        $aFilas[$num_fila][$col] = addslashes($val ?? '');
+                        $aFilas[$num_fila][$col] = addslashes($val);
                     } else {
-                        $aFilas[$num_fila][$col] = addslashes($valor ?? '');
+                        $aFilas[$num_fila][$col] = addslashes(self::scalarString($valor));
                     }
                 }
             }
@@ -179,18 +222,17 @@ class TablaEditable
             foreach ($fila as $camp => $valor) {
                 $c++;
                 if ($c > 1) $sData .= ',';
-                $val = str_replace(["\r\n", "\n", "\r"], ' ', $valor);
-                $sData .= "\"$camp\": \"$val\"";
+                $val = str_replace(["\r\n", "\n", "\r"], ' ', self::scalarString($valor));
+                $sData .= '"' . $camp . '": "' . $val . '"';
             }
             $sData .= '}';
         }
         $sData .= ']';
 
-        if (empty($grid_height) && $f < 12) {
-            $grid_height = (4 + $f) * 25;
-            $grid_height = ($grid_height < 200) ? 200 : $grid_height;
-        } else {
-            $grid_height = empty($grid_height) ? 350 : $grid_height;
+        if (($grid_height === '' || $grid_height === '0') && $f < 12) {
+            $grid_height = (string) max(200, (4 + $f) * 25);
+        } elseif ($grid_height === '' || $grid_height === '0') {
+            $grid_height = '350';
         }
 
         $tt = "<input id=\"scroll_id\" name=\"scroll_id\" value=\"$scroll_id\" type=\"hidden\">";
@@ -549,7 +591,7 @@ class TablaEditable
             $tt .= "}";
         }
 
-        if (isset($scroll_id)) {
+        if ($scroll_id !== '' && $scroll_id !== '0') {
             $tt .= " grid_$id_tabla.scrollRowToTop($scroll_id);";
         }
 
@@ -569,16 +611,24 @@ class TablaEditable
 		</script>
 		";
 
-        $ta = "<div id=\"GridContainer_" . $id_tabla . "\"  style=\"width:100%; max-width:{$grid_width}px; height:auto;\" >
-		<div class=\"grid-header\">
-		  <span style=\"width:90%; display: inline-block;\">$botones</span>
-		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\"" . _("guardar selección de columnas") . "\"
-				onclick=\"fnjs_def_tabla('" . $id_tabla . "')\"></span>
-		  <span style=\"float:right\" class=\"ui-icon ui-icon-search\" title=\"" . _("ver/ocultar panel de búsqueda") . "\"
-				onclick=\"toggleFilterRow_$id_tabla()\"></span>
+        $colVisIcon = '';
+        if ($this->bColVis) {
+            $colVisIcon = '<span style="float:right" class="ui-icon ui-icon-disk" title="' . _("guardar selección de columnas") . '"
+				onclick="fnjs_def_tabla(\'' . $id_tabla . '\')"></span>';
+        }
+        $filtroIcon = '';
+        if ($this->bFiltro) {
+            $filtroIcon = '<span style="float:right" class="ui-icon ui-icon-search" title="' . _("ver/ocultar panel de búsqueda") . '"
+				onclick="toggleFilterRow_' . $id_tabla . '()"></span>';
+        }
+        $ta = '<div id="GridContainer_' . $id_tabla . '" style="width:100%; max-width:' . $grid_width . 'px; height:auto;">
+		<div class="grid-header">
+		  <span style="width:90%; display: inline-block;">' . $botones . '</span>
+		  ' . $colVisIcon . '
+		  ' . $filtroIcon . '
 		</div>
-		<div id=\"grid_$id_tabla\"  style=\"width:{$grid_width}px; height:{$grid_height}px;\" ></div>
-		";
+		<div id="grid_' . $id_tabla . '" style="width:' . $grid_width . 'px; height:' . $grid_height . 'px;"></div>
+		';
         $ta .= "</div>";
 
         $ta .= "
@@ -603,9 +653,14 @@ class TablaEditable
         return $ta . $tt;
     }
 
-    public function getHeader($aHeader): array
+    /**
+     * @param list<array<string, mixed>|string> $aHeader
+     * @param array<string, mixed>|string|null $aColsVisible
+     * @param array<string, mixed> $aColsWidth
+     * @return array{cols: string, colsVivible: string, colFilters: string, header_num: int}
+     */
+    private function getHeader(array $aHeader, array|string|null $aColsVisible, array $aColsWidth): array
     {
-        global $aColsVisible;
         $header_num = 1;
         $sColumns = '';
         $sColumnsVisible = '';
@@ -613,58 +668,66 @@ class TablaEditable
         foreach ($aHeader as $Cabecera) {
             $visible = true;
             if (is_array($Cabecera)) {
-                $name = $Cabecera['name'];
+                $name = self::scalarString($Cabecera['name'] ?? '');
                 $name_idx = str_replace(' ', '', $name);
-                $id = !empty($Cabecera['id']) ? $Cabecera['id'] : str_replace(' ', '', $name);
-                $field = !empty($Cabecera['field']) ? $Cabecera['field'] : '';
-                $toolTip = !empty($Cabecera['title']) ? ", toolTip: \"{$Cabecera['title']}\"" : ", toolTip: \"{$Cabecera['name']}\"";
-                $class = !empty($Cabecera['class']) ? ", cssClass: \"{$Cabecera['class']}\"" : '';
-                $sortable = !empty($Cabecera['sortable']) ? $Cabecera['sortable'] : 'true';
-                $width = !empty($Cabecera['width']) ? $Cabecera['width'] : '';
-                $formatter = !empty($Cabecera['formatter']) ? $Cabecera['formatter'] : '';
-                $editor = !empty($Cabecera['editor']) ? $Cabecera['editor'] : '';
-                if (!empty($Cabecera['visible']) && ($Cabecera['visible'] === 'No' || $Cabecera['visible'] === 'no')) {
+                $id = self::cabeceraFieldKey($Cabecera, 'id') ?? $name_idx;
+                $field = self::cabeceraFieldKey($Cabecera, 'field') ?? '';
+                $title = self::scalarString($Cabecera['title'] ?? $name);
+                $toolTip = ', toolTip: "' . $title . '"';
+                $class = !empty($Cabecera['class']) ? ', cssClass: "' . self::scalarString($Cabecera['class']) . '"' : '';
+                $sortable = !empty($Cabecera['sortable']) ? self::scalarString($Cabecera['sortable']) : 'true';
+                $width = !empty($Cabecera['width']) ? self::scalarString($Cabecera['width']) : '';
+                $formatter = !empty($Cabecera['formatter']) ? self::scalarString($Cabecera['formatter']) : '';
+                $editor = !empty($Cabecera['editor']) ? self::scalarString($Cabecera['editor']) : '';
+                $vis = self::scalarString($Cabecera['visible'] ?? '');
+                if ($vis === 'No' || $vis === 'no') {
                     $visible = false;
                 }
 
-                $sDefCol = "{id: \"$id\", name: \"$name\", sortable: $sortable" . $class . $toolTip;
+                $sDefCol = '{id: "' . $id . '", name: "' . $name . '", sortable: ' . $sortable . $class . $toolTip;
 
-                if (!empty($field)) $sDefCol .= ", field: \"$field\" ";
-
-                if (isset($aColsWidth[$name_idx])) {
-                    $sDefCol .= ", width: " . $aColsWidth[$name_idx];
-                } elseif (!empty($width)) {
-                    $sDefCol .= ", width: $width";
+                if ($field !== '') {
+                    $sDefCol .= ', field: "' . $field . '" ';
                 }
 
-                if (!empty($formatter)) $sDefCol .= ", formatter: $formatter";
-                if (!empty($editor)) $sDefCol .= ", editor: $editor";
+                if (isset($aColsWidth[$name_idx])) {
+                    $sDefCol .= ', width: ' . self::scalarString($aColsWidth[$name_idx]);
+                } elseif ($width !== '') {
+                    $sDefCol .= ', width: ' . $width;
+                }
+
+                if ($formatter !== '') {
+                    $sDefCol .= ', formatter: ' . $formatter;
+                }
+                if ($editor !== '') {
+                    $sDefCol .= ', editor: ' . $editor;
+                }
 
                 if (!empty($Cabecera['children'])) {
-                    $sDefCol .= ", colspan: 2";
+                    $sDefCol .= ', colspan: 2';
                 }
-                $sDefCol .= "}";
+                $sDefCol .= '}';
 
             } else {
-                $name = $Cabecera;
-                $name_idx = str_replace(' ', '', $Cabecera);
-                $toolTip = ", toolTip: \"$name\"";
-                $sDefCol = "{id: \"$name_idx\", name: \"$name\", field: \"$name_idx\", sortable: true" . $toolTip;
+                $name = self::scalarString($Cabecera);
+                $name_idx = str_replace(' ', '', $name);
+                $toolTip = ', toolTip: "' . $name . '"';
+                $sDefCol = '{id: "' . $name_idx . '", name: "' . $name . '", field: "' . $name_idx . '", sortable: true' . $toolTip;
                 if (isset($aColsWidth[$name_idx])) {
-                    $sDefCol .= ", width: " . $aColsWidth[$name_idx];
+                    $sDefCol .= ', width: ' . self::scalarString($aColsWidth[$name_idx]);
                 }
-                $sDefCol .= "}";
+                $sDefCol .= '}';
             }
             if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && is_true($aColsVisible[$name_idx]))
                 || !is_array($aColsVisible)) {
                 if (!$visible) {
                     continue;
                 }
-                $sColumnsVisible .= empty($sColumnsVisible) ? $sDefCol : ',' . $sDefCol;
+                $sColumnsVisible .= $sColumnsVisible === '' ? $sDefCol : ',' . $sDefCol;
             }
 
-            $sColumns .= empty($sColumns) ? $sDefCol : ',' . $sDefCol;
-            $sColFilters .= empty($sColFilters) ? "\"$name_idx\"" : ",\"$name_idx\"";
+            $sColumns .= $sColumns === '' ? $sDefCol : ',' . $sDefCol;
+            $sColFilters .= $sColFilters === '' ? '"' . $name_idx . '"' : ',"' . $name_idx . '"';
         }
         $sColumns = '[' . $sColumns . ']';
         $sColumnsVisible = '[' . $sColumnsVisible . ']';
@@ -673,47 +736,58 @@ class TablaEditable
         return ['cols' => $sColumns, 'colsVivible' => $sColumnsVisible, 'colFilters' => $sColFilters, 'header_num' => $header_num];
     }
 
-    public function setGrupos($aGrupos): void
+    /** @return list<string>|array<int|string, string> */
+    public function getGrupos(): array
+    {
+        return $this->aGrupos;
+    }
+
+    /** @param list<string>|array<int|string, string> $aGrupos */
+    public function setGrupos(array $aGrupos): void
     {
         $this->aGrupos = $aGrupos;
     }
 
-    public function setCabeceras($aCabeceras): void
+    /** @param list<array<string, mixed>|string> $aCabeceras */
+    public function setCabeceras(array $aCabeceras): void
     {
         $this->aCabeceras = $aCabeceras;
     }
 
-    public function setSortCol($ssortcol): void
+    public function setSortCol(string $ssortcol): void
     {
         $this->ssortCol = str_replace(' ', '', $ssortcol);
     }
 
-    public function setColVisible($aColVisible): void
+    /** @param array<string, bool|string> $aColVisible */
+    public function setColVisible(array $aColVisible): void
     {
         $this->aColVisible = $aColVisible;
     }
 
-    public function setDatos($aDatos): void
+    /** @param array<int|string, mixed> $aDatos */
+    public function setDatos(array $aDatos): void
     {
         $this->aDatos = $aDatos;
     }
 
-    public function setBotones($aBotones): void
+    /** @param list<array<string, mixed>> $aBotones */
+    public function setBotones(array $aBotones): void
     {
         $this->aBotones = $aBotones;
     }
 
-    public function setId_tabla($sid_tabla): void
+    public function setId_tabla(string $sid_tabla): void
     {
         $this->sid_tabla = $sid_tabla;
     }
 
-    public function setFiltro($bFiltro): void
+    public function setFiltro(bool $bFiltro): void
     {
         $this->bFiltro = $bFiltro;
     }
 
-    public function setColVis($bColVis): void
+    public function setColVis(bool $bColVis): void
     {
         $this->bColVis = $bColVis;
     }
@@ -723,7 +797,7 @@ class TablaEditable
         return $this->supdateUrl;
     }
 
-    public function setUpdateUrl($supdateUrl): void
+    public function setUpdateUrl(string $supdateUrl): void
     {
         $this->supdateUrl = $supdateUrl;
     }

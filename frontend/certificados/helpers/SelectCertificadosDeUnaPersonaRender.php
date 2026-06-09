@@ -24,51 +24,49 @@ final class SelectCertificadosDeUnaPersonaRender
     {
         $paths = isset($seg['paths']) && is_array($seg['paths']) ? $seg['paths'] : [];
         $publicBase = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $delRel = (string)($paths['certificado_recibido_delete'] ?? '');
+        $delRel = tessera_imprimir_string($paths['certificado_recibido_delete'] ?? '');
         $urlCertificadoRecibidoDelete = $delRel !== '' ? $publicBase . '/' . ltrim($delRel, '/') : '';
 
         $tablaSeg = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
-        $valoresRaw = isset($tablaSeg['valores']) && is_array($tablaSeg['valores']) ? $tablaSeg['valores'] : [];
+        $valoresRaw = actividades_lista_datos($tablaSeg['valores'] ?? []);
 
         $pdfSignedUrls = [];
         foreach ($valoresRaw as $idx => $row) {
             if (!is_int($idx) || !is_array($row) || !isset($row['sel'])) {
                 continue;
             }
-            $idItem = (int)$row['sel'];
+            $idItem = tessera_imprimir_int($row['sel']);
             if ($idItem <= 0) {
                 continue;
             }
-            $pdfSignedUrls[(string)$idItem] = SignedDownloadToken::urlCertificadoRecibido($idItem);
+            $pdfSignedUrls[(string) $idItem] = SignedDownloadToken::urlCertificadoRecibido($idItem);
         }
 
-        $urlNuevoSpec = isset($seg['url_nuevo_spec']) && is_array($seg['url_nuevo_spec']) ? $seg['url_nuevo_spec'] : [];
         $signed = SelectCertificadosDeUnaPersonaUrlSigning::sign([
-            'url_nuevo_spec' => $urlNuevoSpec,
+            'url_nuevo_spec' => $seg['url_nuevo_spec'] ?? null,
         ]);
 
         $hashMain = isset($seg['hash_main']) && is_array($seg['hash_main']) ? $seg['hash_main'] : [];
         $oHashSelect = new HashFront();
-        $cf = (string)($hashMain['campos_form'] ?? '');
+        $cf = tessera_imprimir_string($hashMain['campos_form'] ?? '');
         if ($cf !== '') {
             $oHashSelect->setCamposForm($cf);
         }
-        $oHashSelect->setCamposNo((string)($hashMain['campos_no'] ?? ''));
-        $hidden = $hashMain['campos_hidden'] ?? [];
-        $oHashSelect->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+        $oHashSelect->setCamposNo(tessera_imprimir_string($hashMain['campos_no'] ?? ''));
+        $oHashSelect->setArrayCamposHidden(certificados_hash_campos_hidden($hashMain['campos_hidden'] ?? []));
 
         $tabla = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
         $oTabla = new Lista();
-        $oTabla->setId_tabla((string)($tabla['id_tabla'] ?? 'select_certificados_de_una_persona'));
-        $oTabla->setCabeceras(is_array($tabla['cabeceras'] ?? null) ? $tabla['cabeceras'] : []);
-        $oTabla->setBotones(is_array($tabla['botones'] ?? null) ? $tabla['botones'] : []);
-        $oTabla->setDatos(is_array($tabla['valores'] ?? null) ? $tabla['valores'] : []);
+        $oTabla->setId_tabla(tessera_imprimir_string($tabla['id_tabla'] ?? 'select_certificados_de_una_persona'));
+        $oTabla->setCabeceras(actividades_lista_cabeceras($tabla['cabeceras'] ?? []));
+        $oTabla->setBotones(actividades_lista_botones($tabla['botones'] ?? []));
+        $oTabla->setDatos(actividades_lista_datos($tabla['valores'] ?? []));
 
         $oView = new ViewNewPhtml('frontend\certificados\view');
 
         return $oView->renderizar('select_certificados_de_una_persona.phtml', [
             'oTabla' => $oTabla,
-            'url_nuevo' => (string)($signed['url_nuevo'] ?? ''),
+            'url_nuevo' => $signed['url_nuevo'],
             'oHashSelect' => $oHashSelect,
             'pdf_signed_urls_json' => json_encode($pdfSignedUrls, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP),
             'url_certificado_recibido_delete' => $urlCertificadoRecibidoDelete,

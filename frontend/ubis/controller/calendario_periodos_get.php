@@ -4,15 +4,16 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 $Qque = 'get';
-$data = PostRequest::getDataFromUrl('/src/ubis/calendario_periodos_get_data', [
+$data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/calendario_periodos_get_data', [
     'id_ubi' => $Qid_ubi,
-]);
-$rows = $data['rows'];
+]));
+$rows = ubis_calendario_periodo_rows($data['rows'] ?? []);
 $oHash = new HashFront();
 $i = 0;
 $txt = '';
@@ -22,23 +23,9 @@ foreach ($rows as $row) {
     $id_ubi = $row['id_ubi'];
     $f_ini = $row['f_ini'];
     $f_fin = $row['f_fin'];
-    $sfsv = (int)$row['sfsv'];
-
-    if ($sfsv === 1) {
-        $sel_sv = 'selected';
-    } else {
-        $sel_sv = '';
-    }
-    if ($sfsv === 2) {
-        $sel_sf = 'selected';
-    } else {
-        $sel_sf = '';
-    }
-    if ($sfsv === 3) {
-        $sel_res = 'selected';
-    } else {
-        $sel_res = '';
-    }
+    $sel_sv = $row['sel_sv'];
+    $sel_sf = $row['sel_sf'];
+    $sel_res = $row['sel_res'];
 
     $form = $i . '_form_' . $id_ubi;
     $form_id_ubi = $i . '_form_' . $id_ubi . '_id_ubi';
@@ -65,4 +52,4 @@ foreach ($rows as $row) {
     $txt .= "  <span class=link onclick=fnjs_grabar($id_ubi,$i,'update')>" . _('grabar') . "</span>";
     $txt .= "  <span class=link onclick=fnjs_grabar($id_ubi,$i,'borrar')>" . _('borrar') . "</span></form>";
 }
-echo json_encode(['que' => $Qque, 'txt' => $txt], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+ubis_json_echo(['que' => $Qque, 'txt' => $txt]);

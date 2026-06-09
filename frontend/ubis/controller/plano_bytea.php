@@ -1,53 +1,35 @@
 <?php
-/**
- *
- *Página que pregunta dónde está la foto, y la copia en la base de datos
- *
- */
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\MultipartUploadHelper;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-// para que funcione bien la seguridad
+require_once __DIR__ . '/../helpers/ubis_support.php';
+
 $_POST = $_REQUEST;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $Qact = (string)filter_input(INPUT_POST, 'act');
-$Qid_direccion = (integer)filter_input(INPUT_POST, 'id_direccion');
+$Qid_direccion = (int)filter_input(INPUT_POST, 'id_direccion');
 $Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');
-// Cuando abro una nueva ventana, los parametros están en $_GET
 if (empty($Qact)) {
     $Qact = (string)filter_input(INPUT_GET, 'act');
-    $Qid_direccion = (integer)filter_input(INPUT_GET, 'id_direccion');
+    $Qid_direccion = (int)filter_input(INPUT_GET, 'id_direccion');
     $Qobj_dir = (string)filter_input(INPUT_GET, 'obj_dir');
 }
-$obj = 'ubis\\model\\entity\\' . $Qobj_dir;
 
 switch ($Qact) {
 case "eliminar":
-    $oDireccion = new $obj($Qid_direccion);
-    $aDatosPlano = $oDireccion->planoBorrar();
+    ubis_plano_borrar($Qobj_dir, $Qid_direccion);
     echo "<body onload=\"window.close();\" ></body>";
     break;
 case "comprobar":
-    // compruebo si existe:
-    $oDireccion = new $obj($Qid_direccion);
-    $aDatosPlano = $oDireccion->planoDownload();
-
-    $plano_nom = $aDatosPlano['plano_nom'];
-    $plano_extension = $aDatosPlano['plano_extension'];
+    $aDatosPlano = ubis_plano_download($Qobj_dir, $Qid_direccion);
     $plano_doc = $aDatosPlano['plano_doc'];
-
-    if (empty($plano_doc)) {
-        $rta = 'no';
-    } else {
-        $rta = 'si';
-    }
-    echo "$rta";
+    echo empty($plano_doc) ? 'no' : 'si';
     break;
 case "upload":
     if (MultipartUploadHelper::isPostTooLarge()) {
@@ -58,33 +40,25 @@ case "upload":
         echo htmlspecialchars(_("No se ha recibido ningún archivo."), ENT_QUOTES, 'UTF-8');
         break;
     }
-    $uploadErr = (int) $_FILES['userfile']['error'];
-    if ($uploadErr !== UPLOAD_ERR_OK) {
-        $nomFile = (string) ($_FILES['userfile']['name'] ?? '');
+    $upload = ubis_upload_file_from_post($_FILES['userfile']);
+    if ($upload['error'] !== UPLOAD_ERR_OK) {
         echo htmlspecialchars(
-            MultipartUploadHelper::messageForPhpUploadError($uploadErr, $nomFile),
+            MultipartUploadHelper::messageForPhpUploadError($upload['error'], $upload['name']),
             ENT_QUOTES,
             'UTF-8'
         );
         break;
     }
-    $path_parts = pathinfo($_FILES['userfile']['name']);
-
-    $nom = $path_parts['filename'];
-    $extension = $path_parts['extension'] ?? '';
-    $userfile = $_FILES['userfile']['tmp_name'];
-
-    $fichero = file_get_contents($userfile);
-
-    $oDireccion = new $obj($Qid_direccion);
-    $oDireccion->planoUpload($nom, $extension, $fichero);
-    //echo "sql: $sql_update<br>";
-    //echo "<body onload='window.opener.fnjs_buscar(1); window.close();' ></body>";
+    $fichero = file_get_contents($upload['tmp_name']);
+    if (!is_string($fichero)) {
+        echo htmlspecialchars(_("No se ha podido leer el archivo."), ENT_QUOTES, 'UTF-8');
+        break;
+    }
+    ubis_plano_upload($Qobj_dir, $Qid_direccion, $upload['filename'], $upload['extension'], $fichero);
     echo "<body onload='window.close();' ></body>";
     break;
 case "download":
-    $oDireccion = new $obj($Qid_direccion);
-    $aDatosPlano = $oDireccion->planoDownload();
+    $aDatosPlano = ubis_plano_download($Qobj_dir, $Qid_direccion);
 
     $plano_nom = $aDatosPlano['plano_nom'];
     $plano_extension = $aDatosPlano['plano_extension'];
@@ -96,7 +70,6 @@ case "download":
 
     $nom_ext = $plano_nom . "." . $plano_extension;
 
-    // Determine Content Type
     switch ($plano_extension) {
         case "odt":
             $ctype = "application/vnd.oasis.opendocument.text";
@@ -136,42 +109,36 @@ case "download":
             $ctype = "application/force-download";
     }
 
-    header("Pragma: public"); // required
+    header("Pragma: public");
     header("Expires: 0");
     header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-    header("Cache-Control: private", false); // required for certain browsers
+    header("Cache-Control: private", false);
     header("Content-Type: $ctype");
-    //header("Content-Disposition: attachment; filename=\"".basename($fullPath)."\";" );
     header("Content-Disposition: attachment; filename=\"" . $nom_ext . "\";");
     header("Content-Transfer-Encoding: binary");
-    //header("Content-Length: ".$fsize);
 
     ob_start();
     ob_clean();
     flush();
-    echo fpassthru($plano_doc);
+    if (is_resource($plano_doc)) {
+        echo fpassthru($plano_doc);
+    } elseif (is_string($plano_doc)) {
+        echo $plano_doc;
+    }
     die();
 case 'adjuntar':
 $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/ubis/controller/plano_bytea.php';
 $oHashComprobar = new HashFront();
 $oHashComprobar->setUrl($url);
-/*
-$a_camposHidden = array(
-        'id_direccion' => $Qid_direccion,
-        'obj_dir' => $Qobj_dir,
-        'act' => 'comprobar',
-        );
-$oHashComprobar->setArraycamposHidden($a_camposHidden);
-*/
 $oHashComprobar->setCamposForm('id_direccion!obj_dir!act');
 $h = $oHashComprobar->linkSinValParams();
 
 $oHash = new HashFront();
-$a_camposHidden = array(
+$a_camposHidden = [
     'id_direccion' => $Qid_direccion,
     'obj_dir' => $Qobj_dir,
     'act' => 'upload',
-);
+];
 $camposForm = 'name_file!userfile';
 $oHash->setCamposForm($camposForm);
 $oHash->setCamposNo('userfile');

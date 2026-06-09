@@ -12,6 +12,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/cartaspresentacion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -21,16 +22,12 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/cartaspresentacion/ubis_lista_data', $campos);
-$payload = is_array($data) ? $data : [];
-
-$a_cabeceras = $payload['a_cabeceras'] ?? [];
-$a_valores = $payload['a_valores'] ?? [];
-$explicacion = (string)($payload['explicacion'] ?? '');
+$lista = cartaspresentacion_ubis_lista_from_payload(cartaspresentacion_post_data($data));
 
 $oLista = new Lista();
 $oLista->setId_tabla('cartas_presentacion_ubis_lista');
-$oLista->setCabeceras($a_cabeceras);
-$oLista->setDatos($a_valores);
+$oLista->setCabeceras($lista['cabeceras']);
+$oLista->setDatos($lista['valores']);
 
-echo $explicacion;
+echo $lista['explicacion'];
 echo $oLista->mostrar_tabla();

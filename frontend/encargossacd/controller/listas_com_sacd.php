@@ -13,11 +13,12 @@ use frontend\shared\FrontBootstrap;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qsel = (string)filter_input(INPUT_POST, 'sel');
+$Qsel = encargossacd_post_string('sel');
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_com_sacd_data', ['sel' => $Qsel]);
 
@@ -25,7 +26,7 @@ $a_campos = [
     'oPosicion' => $oPosicion,
     'array_modo' => is_array($datos['array_modo'] ?? null) ? $datos['array_modo'] : [],
     'Qsel' => $Qsel,
-    'lugar_fecha' => (string)($datos['lugar_fecha'] ?? ''),
+    'lugar_fecha' => tessera_imprimir_string($datos['lugar_fecha'] ?? ''),
 ];
 
 $oView = new ViewNewPhtml('frontend\\encargossacd\\controller');

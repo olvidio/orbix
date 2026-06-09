@@ -1,33 +1,27 @@
 <?php
-/**
- * Lista con los datos básicos de los cp.
- *
- * @package    delegacion
- * @subpackage    sg
- * @author    Daniel Serrabou
- * @since        6/10/08.
- *
- */
 
-// INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$data = PostRequest::getDataFromUrl('/src/ubis/lista_ctrs_data', []);
-if (isset($data['error']) && $data['error'] !== '') {
-    exit((string)$data['error']);
+$data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/lista_ctrs_data', []));
+$error = ubis_api_error($data);
+if ($error !== '') {
+    exit($error);
 }
+
+$lista = ubis_lista_from_payload($data);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('lista_ctrs');
-$oTabla->setCabeceras($data['a_cabeceras'] ?? []);
-$oTabla->setDatos($data['a_valores'] ?? []);
+$oTabla->setCabeceras($lista['cabeceras']);
+$oTabla->setDatos($lista['valores']);
 
-$num_total_s = (int)($data['num_total_s'] ?? 0);
+$num_total_s = tessera_imprimir_int($data['num_total_s'] ?? 0);
 
 echo "<h3>" . ucfirst(sprintf(_("número total de s: %s"), $num_total_s)) . "</h3>";
 echo $oTabla->mostrar_tabla();

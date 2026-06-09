@@ -22,9 +22,6 @@ final class DossierTipoFormLinkSpecsSigning
     {
         $out = [];
         foreach ($specsByLabel as $label => $spec) {
-            if (!is_array($spec)) {
-                continue;
-            }
             $out[$label] = self::fromSpec($spec);
         }
 
@@ -36,7 +33,7 @@ final class DossierTipoFormLinkSpecsSigning
      */
     public static function fromSpec(array $spec): string
     {
-        $path = (string)($spec['path'] ?? '');
+        $path = $spec['path'];
         $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
         if ($path === '') {
             return '';

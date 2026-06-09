@@ -4,15 +4,16 @@ use frontend\shared\config\OrbixRuntime;
 use Mpdf\Mpdf;
 
 // Este controlador se abre via `window.open` (GET). El incluido
-// `acta_imprimir_mpdf.php` solo usa la variable `$acta` de scope y
-// `filter_input(INPUT_POST, ...)` para `refresh`, por lo que leemos el
-// parametro directamente de GET sin necesidad de reasignar `$_POST`.
+// `acta_imprimir_mpdf.php` lee `acta` desde GET.
 $acta = (string)filter_input(INPUT_GET, 'acta');
 $acta = empty($acta) ? '' : urldecode($acta);
 
 ob_start();
 include __DIR__ . '/acta_imprimir_mpdf.php';
 $content = ob_get_clean();
+if ($content === false) {
+    $content = '';
+}
 
 require_once OrbixRuntime::dirLibs() . '/vendor/autoload.php';
 

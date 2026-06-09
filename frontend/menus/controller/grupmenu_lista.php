@@ -9,6 +9,7 @@ use frontend\shared\FrontBootstrap;
 
 
 // Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/menus_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -22,7 +23,7 @@ $Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
 $url_backend = '/src/menus/grupmenu_lista';
 $data = PostRequest::getDataFromUrl($url_backend);
 
-$a_valores = $data['a_valores'];
+$a_valores = menus_lista_datos($data['a_valores'] ?? []);
 
 $a_cabeceras = [_("grupMenu"),
     _("orden"),

@@ -2,7 +2,10 @@
 
 namespace frontend\actividades\helpers;
 
+require_once __DIR__ . '/actividades_support.php';
+
 use frontend\shared\PostRequest;
+use src\permisos\domain\PermisosActividades;
 
 /**
  * Rellena {@see \src\permisos\domain\PermisosActividades::setFasesCompletadas}
@@ -13,8 +16,13 @@ final class PrefillPermActividadesFases
 {
     public static function desdeBackend(int $idActiv): void
     {
+        $oPermActividades = actividades_o_perm_actividades();
+        if (!$oPermActividades instanceof PermisosActividades) {
+            return;
+        }
+
         if ($idActiv <= 0) {
-            $_SESSION['oPermActividades']->setFasesCompletadas([]);
+            $oPermActividades->setFasesCompletadas([]);
 
             return;
         }
@@ -23,6 +31,6 @@ final class PrefillPermActividadesFases
             'id_activ' => $idActiv,
         ]);
         $fases = $row['fases_completadas'] ?? [];
-        $_SESSION['oPermActividades']->setFasesCompletadas(\is_array($fases) ? $fases : []);
+        $oPermActividades->setFasesCompletadas(actividades_fases_completadas_from_payload($fases));
     }
 }

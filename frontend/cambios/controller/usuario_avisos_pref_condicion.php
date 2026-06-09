@@ -15,6 +15,7 @@ use frontend\shared\web\DesplegableArray;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/cambios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -27,13 +28,7 @@ $data = PostRequest::getDataFromUrl('/src/cambios/cambio_usuario_propiedad_pref_
     'propiedad' => $Qpropiedad,
     'id_item' => $Qid_item,
 ]);
-$payload = is_array($data) ? $data : [];
-
-$valor = (string)($payload['valor'] ?? '');
-$operador = (string)($payload['operador'] ?? '');
-$chk_old = (string)($payload['chk_old'] ?? 'checked');
-$chk_new = (string)($payload['chk_new'] ?? 'checked');
-$aOpcionesCasas = (array)($payload['aOpcionesCasas'] ?? []);
+$form = cambios_usuario_avisos_pref_condicion_from_payload(cambios_post_data($data));
 
 $a_operadores = [
     '=' => _("igual"),
@@ -44,7 +39,7 @@ $a_operadores = [
 
 $oSelects = null;
 if ($Qpropiedad === 'id_ubi') {
-    $oSelects = new DesplegableArray($valor, $aOpcionesCasas, 'id_ubi');
+    $oSelects = new DesplegableArray($form['valor'], $form['aOpcionesCasas'], 'id_ubi');
     $oSelects->setBlanco('t');
     $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
 }
@@ -59,10 +54,10 @@ $a_campos = [
     'Qobjeto' => $Qobjeto,
     'Qpropiedad' => $Qpropiedad,
     'Qid_item' => $Qid_item,
-    'valor' => $valor,
-    'operador' => $operador,
-    'chk_old' => $chk_old,
-    'chk_new' => $chk_new,
+    'valor' => $form['valor'],
+    'operador' => $form['operador'],
+    'chk_old' => $form['chk_old'],
+    'chk_new' => $form['chk_new'],
     'a_operadores' => $a_operadores,
     'oSelects' => $oSelects,
     'oHash' => $oHash,

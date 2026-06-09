@@ -11,26 +11,16 @@ use frontend\shared\FrontBootstrap;
 
 /**
  * Formulario para cambiar el `nivel_stgr` de una persona.
- *
- * Migrado desde `apps/personas/controller/stgr_cambio.php` (slice 1) y, en un
- * segundo paso, refactorizado conforme a `refactor.md`: la resolucion del
- * repositorio y la lectura de la persona viven ahora en
- * `src/personas/application/StgrCambioData.php` tras el endpoint
- * `/src/personas/stgr_cambio_data`. Este controlador no importa clases `src\`.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/personas_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) {
-    $id_nom = (int)strtok($a_sel[0], "#");
-    $id_tabla = (string)strtok("#");
-} else {
-    $id_nom = (int)filter_input(INPUT_POST, 'id_nom');
-    $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
-}
+$ids = personas_id_from_sel_post();
+$id_nom = $ids['id_nom'];
+$id_tabla = $ids['id_tabla'];
 
 $campos = [
     'id_nom' => $id_nom,
@@ -38,11 +28,12 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/personas/stgr_cambio_data', $campos);
-$payload = is_array($data) ? $data : [];
+$payload = personas_post_payload($data);
+$view = personas_stgr_cambio_from_payload($payload);
 
-$nom = (string)($payload['nom'] ?? '');
-$stgr = (string)($payload['nivel_stgr'] ?? '');
-$opciones = (array)($payload['opciones_nivel_stgr'] ?? []);
+$nom = $view['nom'];
+$stgr = $view['nivel_stgr'];
+$opciones = $view['opciones_nivel_stgr'];
 
 $oDespl = new Desplegable();
 $oDespl->setNombre('nivel_stgr');

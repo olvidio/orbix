@@ -20,11 +20,12 @@ use frontend\shared\FrontBootstrap;
  */
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/dossiers/helpers/dossiers_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $requestPayload = PostRequest::requestPayloadForHash();
-$Qrefresh = (int)($requestPayload['refresh'] ?? 0);
+$Qrefresh = tessera_imprimir_int($requestPayload['refresh'] ?? 0);
 $oPosicion->recordar($Qrefresh);
 
 // Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
@@ -38,8 +39,8 @@ if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
 }
 
 $apiPayload = PostRequest::requestPayloadForHash();
-$idDossierReq = trim((string)($apiPayload['id_dossier'] ?? ''));
-$claseInfoReq = trim((string)($apiPayload['clase_info'] ?? ''));
+$idDossierReq = trim(tessera_imprimir_string($apiPayload['id_dossier'] ?? ''));
+$claseInfoReq = trim(tessera_imprimir_string($apiPayload['clase_info'] ?? ''));
 if ($idDossierReq === '' && $claseInfoReq === '') {
     foreach (['queSel', 'que', 'mod', 'sel', 'clase_info', 'bloque', 'permiso', 'depende', 'id_dossier'] as $extraKey) {
         unset($apiPayload[$extraKey]);
@@ -47,16 +48,13 @@ if ($idDossierReq === '' && $claseInfoReq === '') {
 }
 
 $data = PostRequest::getDataFromUrl('/src/dossiers/dossiers_ver_pantalla_data', $apiPayload, false);
-if (!is_array($data)) {
-    echo _('No se pudo cargar la pantalla de dossiers.');
-    return;
-}
-if (!empty($data['error'])) {
-    echo PostRequest::stripInternalCallProvenance((string) $data['error']);
+$errorMsg = tessera_imprimir_string($data['error'] ?? '');
+if ($errorMsg !== '') {
+    echo PostRequest::stripInternalCallProvenance($errorMsg);
     return;
 }
 
-$avisoRegionStgr = (string)($data['aviso'] ?? '');
+$avisoRegionStgr = tessera_imprimir_string($data['aviso'] ?? '');
 if ($avisoRegionStgr !== '') {
     echo '<div class="certificado-aviso-config" role="alert" style="max-width: 42rem; padding: 1rem 1.25rem; margin: 1rem 0; border: 1px solid #c9a227; background: #fffbea; color: #3d3500; line-height: 1.5;">';
     echo '<div style="margin: 0;">' . $avisoRegionStgr . '</div>';
@@ -64,49 +62,42 @@ if ($avisoRegionStgr !== '') {
 }
 
 // ----- Firma de link_specs en el frontend (HashFront vive sólo en frontend/) -----
-$topData = (array)($data['top_data'] ?? []);
-$goDossiers = isset($topData['go_dossiers_link_spec']) && is_array($topData['go_dossiers_link_spec'])
-    ? HashFrontSignedLink::fromSpec($topData['go_dossiers_link_spec'])
-    : '';
-$goHome = isset($topData['go_home_link_spec']) && is_array($topData['go_home_link_spec'])
-    ? HashFrontSignedLink::fromSpec($topData['go_home_link_spec'])
-    : '';
+$topData = $data['top_data'] ?? [];
+if (!is_array($topData)) {
+    $topData = [];
+}
+$goDossiers = HashFrontSignedLink::tryFromSpec($topData['go_dossiers_link_spec'] ?? null);
+$goHome = HashFrontSignedLink::tryFromSpec($topData['go_home_link_spec'] ?? null);
 
 echo $oPosicion->mostrar_left_slide(1);
 
 $oViewTop = new ViewNewPhtml('frontend\\dossiers\\view');
 $oViewTop->renderizar('dossiers_ver_top.phtml', [
-    'web_icons' => (string) ($topData['web_icons'] ?? ''),
-    'alt_dossiers' => (string) ($topData['alt_dossiers'] ?? ''),
-    'txt_dossiers' => (string) ($topData['txt_dossiers'] ?? ''),
-    'nom_cabecera' => (string) ($topData['nom_cabecera'] ?? ''),
+    'web_icons' => tessera_imprimir_string($topData['web_icons'] ?? ''),
+    'alt_dossiers' => tessera_imprimir_string($topData['alt_dossiers'] ?? ''),
+    'txt_dossiers' => tessera_imprimir_string($topData['txt_dossiers'] ?? ''),
+    'nom_cabecera' => tessera_imprimir_string($topData['nom_cabecera'] ?? ''),
     'go_dossiers' => $goDossiers,
     'go_home' => $goHome,
 ]);
 
-if (($data['modo'] ?? '') === 'lista') {
-    $a_filas = HashFrontSignedLink::signRowLinkSpecs(
-        (array)($data['lista_a_filas'] ?? []),
-        ['href_ver', 'href_abrir']
-    );
+if (tessera_imprimir_string($data['modo'] ?? '') === 'lista') {
+    $a_filas = dossiers_sign_lista_filas($data['lista_a_filas'] ?? [], ['href_ver', 'href_abrir']);
     echo "<div id=\"ficha\">";
     $oView = new ViewNewPhtml('frontend\\dossiers\\controller');
     $oView->renderizar('lista_dossiers.phtml', [
         'a_filas' => $a_filas,
-        'web_icons' => (string)($topData['web_icons'] ?? OrbixRuntime::getWebIcons()),
+        'web_icons' => tessera_imprimir_string($topData['web_icons'] ?? OrbixRuntime::getWebIcons()),
     ]);
     echo "</div>";
 } else {
-    $segmentos = (array) ($data['ficha_segmentos'] ?? []);
+    $segmentos = dossiers_list_rows($data['ficha_segmentos'] ?? []);
     foreach ($segmentos as $seg) {
-        if (!is_array($seg)) {
-            continue;
-        }
-        $id = (string) ($seg['id'] ?? '');
-        $tipo = (string) ($seg['tipo'] ?? '');
+        $id = tessera_imprimir_string($seg['id'] ?? '');
+        $tipo = tessera_imprimir_string($seg['tipo'] ?? '');
         echo '<div id="' . htmlspecialchars($id, ENT_QUOTES, 'UTF-8') . '">';
         if ($tipo === 'html') {
-            echo (string) ($seg['html'] ?? '');
+            echo tessera_imprimir_string($seg['html'] ?? '');
         } elseif ($tipo === 'select_habitaciones_cdc') {
             echo SelectHabitacionesCdcRender::render($seg);
         } elseif ($tipo === 'select_asignaturas_de_una_actividad') {

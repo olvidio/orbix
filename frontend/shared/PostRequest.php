@@ -60,6 +60,49 @@ class PostRequest
         return [self::INNER_SCALAR_ENVELOPE_KEY => $decoded];
     }
 
+    private static function rewriteDockerInUrl(string $url): string
+    {
+        $rewritten = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $url);
+
+        return is_string($rewritten) ? $rewritten : $url;
+    }
+
+    private static function rewriteDockerHost(string $host): string
+    {
+        if ($host === '') {
+            return '';
+        }
+        $rewritten = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host);
+
+        return is_string($rewritten) ? $rewritten : $host;
+    }
+
+    /**
+     * @return array<string, int|string>
+     */
+    private static function parseHttpUrl(string $url): array
+    {
+        $parsed = parse_url($url);
+
+        return is_array($parsed) ? $parsed : [];
+    }
+
+    /**
+     * @param array<string, mixed> $requestOptions
+     * @param array<string, string> $extraHeaders
+     * @return array<string, mixed>
+     */
+    private static function mergeGuzzleHeaders(array $requestOptions, array $extraHeaders): array
+    {
+        $headers = $requestOptions['headers'] ?? [];
+        if (!is_array($headers)) {
+            $headers = [];
+        }
+        $requestOptions['headers'] = array_merge($headers, $extraHeaders);
+
+        return $requestOptions;
+    }
+
     /**
      * Para enviar archivos pdf (...) en los parámetros:
      * @param string $url
@@ -70,45 +113,26 @@ class PostRequest
     public static function getDataMultipart(string $url, array $hash_params): array
     {
         $url = self::absoluteHttpUrlFromAppRelative($url);
-        $parts = parse_url($url);
-        $host_original = $parts['host'] ?? '';
-        $url = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $url);
-        $host_rewritten = (string) parse_url($url, PHP_URL_HOST);
+        $parts = self::parseHttpUrl($url);
+        $host_original = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
+        $url_rewritten = self::rewriteDockerInUrl($url);
+        $host_rewritten = self::rewriteDockerHost($host_original);
 
         $cookies = self::cookiesForInternalRequest();
 
-        // Use a specific cookie jar
         $client = new Client();
         $reqOpts = self::withPreservedHttpHostHeader(
             $host_original,
             $host_rewritten,
             $parts,
-            array_merge(
-                self::internalGuzzleOptions($cookies, ['multipart' => $hash_params]),
-            )
+            self::internalGuzzleOptions($cookies, ['multipart' => $hash_params]),
         );
-        $response2 = $client->request('POST', $url, $reqOpts);
+        $response2 = $client->request('POST', $url_rewritten, $reqOpts);
 
-        $code = $response2->getStatusCode(); // 200
-        $reason = $response2->getReasonPhrase(); // OK
-        $body = $response2->getBody();
-        $content = $body->getContents();
-        if (is_string($content)) {
-            $msg = sprintf(_("Respuesta de: %s"), $url);
-            $msg .= "<br>" . $content;
-            return ['error' => $msg];
-        }
-        $rta_json = json_decode($body->getContents(), TRUE); //remainingBytes
+        $code = $response2->getStatusCode();
+        $content = $response2->getBody()->getContents();
 
-        if ($rta_json === null) {
-            $msg = sprintf(_("No se obtiene respuesta de: %s"), $url);
-            exit ($msg);
-        }
-        if (!$rta_json['success']) {
-            exit((string) $rta_json['mensaje'] . self::sufijoDiagnosticoLlamadaInterna($url));
-        }
-
-        return self::envelopeDataFieldToArray($rta_json['data'] ?? null);
+        return self::dataFromJsonResponseBody($content, $url_rewritten, $code);
     }
 
     /**
@@ -131,9 +155,19 @@ class PostRequest
      * frontend/shared/bootstrap/after_global_object.inc (tras global_object.inc):
      * POST si el cuerpo no está vacío; si no, GET cuando existe el parámetro `h` (p. ej. HashFront::link).
      */
+    /**
+     * @return array<string, mixed>
+     */
     public static function requestPayloadForHash(): array
     {
-        return (!empty($_POST)) ? $_POST : ((isset($_GET['h'])) ? $_GET : []);
+        if (!empty($_POST)) {
+            return $_POST;
+        }
+        if (isset($_GET['h'])) {
+            return $_GET;
+        }
+
+        return [];
     }
 
     /**
@@ -243,7 +277,7 @@ class PostRequest
             unset($campos[$metaKey]);
         }
         foreach (array_keys($campos) as $k) {
-            if (is_string($k) && str_starts_with($k, 'scroll_id_')) {
+            if (str_starts_with($k, 'scroll_id_')) {
                 unset($campos[$k]);
             }
         }
@@ -260,6 +294,10 @@ class PostRequest
      * hace que filter_input devuelva false y (array)false sea [false] en el backend.
      * Omitir la clave equivale a "sin fases" y filter_input(null) → (array) → [].
      */
+    /**
+     * @param array<string, mixed> $campos
+     * @return array<string, mixed>
+     */
     private static function normalizeCamposParaHash(array $campos): array
     {
         foreach ($campos as $k => $v) {
@@ -275,7 +313,7 @@ class PostRequest
      * pero el header Host sería el interno; PHP y la app usan HTTP_HOST del navegador
      * (sesión, esquema, validaciones). Forzar el Host público evita “perder el hilo”.
      *
-     * @param array<string, mixed> $parsedOriginal resultado de parse_url() antes del rewrite
+     * @param array<string, int|string> $parsedOriginal resultado de parse_url() antes del rewrite
      * @param array<string, mixed> $requestOptions opciones Guzzle (se añade 'headers')
      * @return array<string, mixed>
      */
@@ -288,17 +326,18 @@ class PostRequest
         if ($hostRewritten === $hostOriginal || $hostOriginal === '') {
             return $requestOptions;
         }
-        if (!empty($_SERVER['HTTP_HOST'])) {
-            $hostHeader = (string) $_SERVER['HTTP_HOST'];
+        $serverHost = $_SERVER['HTTP_HOST'] ?? null;
+        if (is_string($serverHost) && $serverHost !== '') {
+            $hostHeader = $serverHost;
         } else {
             $hostHeader = $hostOriginal;
-            if (!empty($parsedOriginal['port'])) {
-                $hostHeader .= ':' . $parsedOriginal['port'];
+            $port = $parsedOriginal['port'] ?? null;
+            if (is_int($port) || (is_string($port) && $port !== '')) {
+                $hostHeader .= ':' . $port;
             }
         }
-        $requestOptions['headers'] = array_merge($requestOptions['headers'] ?? [], ['Host' => $hostHeader]);
 
-        return $requestOptions;
+        return self::mergeGuzzleHeaders($requestOptions, ['Host' => $hostHeader]);
     }
 
     /**
@@ -314,17 +353,23 @@ class PostRequest
     {
         $cookies = [];
         foreach ($_COOKIE as $name => $value) {
-            if (is_string($name) && (is_string($value) || is_numeric($value))) {
+            if (!is_string($name)) {
+                continue;
+            }
+            if (is_string($value) || is_numeric($value)) {
                 $cookies[$name] = (string) $value;
             }
         }
         $sessionName = session_name();
-        if ($sessionName === '') {
+        if (!is_string($sessionName)) {
             $sessionName = 'PHPSESSID';
         }
         $sid = session_id();
+        if (!is_string($sid)) {
+            $sid = '';
+        }
         if ($sid === '' && isset($_POST[$sessionName]) && is_string($_POST[$sessionName])
-            && preg_match('/^[a-zA-Z0-9,-]{16,128}$/', $_POST[$sessionName])) {
+            && preg_match('/^[a-zA-Z0-9,-]{16,128}$/', $_POST[$sessionName]) === 1) {
             $sid = $_POST[$sessionName];
         }
         if ($sid !== '') {
@@ -361,7 +406,7 @@ class PostRequest
     {
         $options = $extra;
         if ($cookies !== []) {
-            $options['headers'] = array_merge($options['headers'] ?? [], [
+            $options = self::mergeGuzzleHeaders($options, [
                 'Cookie' => self::buildCookieHeader($cookies),
             ]);
         }
@@ -375,6 +420,82 @@ class PostRequest
     }
 
     /**
+     * @param array<string, int|string> $parts
+     */
+    private static function buildDockerInternalUrl(array $parts, string $hostRewritten): string
+    {
+        $hostOriginal = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
+        $pathFinal = isset($parts['path']) && is_string($parts['path']) ? $parts['path'] : '';
+
+        $dockerHostRewrite = ($hostRewritten !== $hostOriginal && $hostOriginal !== '');
+        if ($dockerHostRewrite && $pathFinal !== '') {
+            $segments = explode('/', $pathFinal);
+            if (isset($segments[2]) && strpos($segments[2], '-') !== false) {
+                unset($segments[2]);
+                $pathFinal = implode('/', $segments);
+            }
+        }
+
+        $url = '';
+        if (isset($parts['scheme']) && is_string($parts['scheme'])) {
+            $url .= $parts['scheme'] . '://';
+        }
+        $url .= $hostRewritten;
+        $port = $parts['port'] ?? null;
+        if (is_int($port) || (is_string($port) && $port !== '')) {
+            $url .= ':' . $port;
+        }
+        $url .= $pathFinal;
+        if (isset($parts['query']) && is_string($parts['query'])) {
+            $url .= '?' . $parts['query'];
+        }
+        if (isset($parts['fragment']) && is_string($parts['fragment'])) {
+            $url .= '#' . $parts['fragment'];
+        }
+
+        return $url;
+    }
+
+    /**
+     * @return array<int|string, mixed>
+     */
+    private static function dataFromJsonResponseBody(string $content, string $urlLimpia, int $code): array
+    {
+        $rta_json = json_decode($content, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            if (self::looksLikeLoginHtml($content)) {
+                $msg = sprintf(
+                    _('Sesión no autenticada en llamada interna a %s (status %d).'),
+                    $urlLimpia,
+                    $code
+                );
+                $msg .= '<br>' . _('El backend ha devuelto el formulario de login en lugar de JSON. Vuelve a entrar en Orbix.');
+
+                return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($urlLimpia)];
+            }
+            $preview = mb_substr(trim($content), 0, 500);
+            $msg = sprintf(_("Respuesta no-JSON de %s (status %d)."), $urlLimpia, $code);
+            $msg .= '<br>' . htmlspecialchars($preview, ENT_QUOTES, 'UTF-8');
+
+            return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($urlLimpia)];
+        }
+
+        if (!is_array($rta_json)) {
+            $msg = sprintf(_("No se obtiene respuesta de: %s"), $urlLimpia);
+
+            return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($urlLimpia)];
+        }
+        if (empty($rta_json['success'])) {
+            $mensaje = $rta_json['mensaje'] ?? '';
+            $mensajeStr = is_string($mensaje) ? $mensaje : (is_scalar($mensaje) ? (string) $mensaje : '');
+
+            return ['error' => $mensajeStr . self::sufijoDiagnosticoLlamadaInterna($urlLimpia)];
+        }
+
+        return self::envelopeDataFieldToArray($rta_json['data'] ?? null);
+    }
+
+    /**
      * @param string $url
      * @param array<string, mixed> $hash_params
      * @return array<int|string, mixed>
@@ -384,57 +505,21 @@ class PostRequest
     {
         $cookies = self::cookiesForInternalRequest();
 
-        $parts = parse_url($url);
-        // 1. Canviem el host original (ex: orbix.docker) per l'intern de Docker
-        $host_original = $parts['host'] ?? '';
-        $host_nuevo = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host_original);
+        $parts = self::parseHttpUrl($url);
+        $host_original = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
+        $host_nuevo = self::rewriteDockerHost($host_original);
+        $url_limpia = self::buildDockerInternalUrl($parts, $host_nuevo);
 
-        // 2. Path: solo amb host reescrit a Docker ( *.docker → host.docker.internal ), treiem
-        // el segment d'esquema amb guió a la posició 2 (ex. "/orbix/H-dlbv/src/...").
-        // En instal·lacions HTTP reals, el mateix gest pot treure '/pruebas/H-XXX' del URL
-        // intern i el vhost espera '/pruebas/H-XXX/src/...' → 404.
-        $path_final = $parts['path'] ?? '';
-
-        $dockerHostRewrite = ($host_nuevo !== $host_original && $host_original !== '');
-        if ($dockerHostRewrite && $path_final !== '') {
-            $segments = explode('/', $path_final);
-            if (isset($segments[2]) && strpos($segments[2], '-') !== false) {
-                unset($segments[2]);
-                $path_final = implode('/', $segments);
-            }
-        }
-
-        // 2. Reconstruïm incloent el protocol (scheme)
-        $url_limpia = "";
-        if (isset($parts['scheme'])) {
-            $url_limpia .= $parts['scheme'] . "://"; // Aquí afegim el http:// o https://
-        }
-        $url_limpia .= $host_nuevo;
-        if (isset($parts['port'])) {
-            $url_limpia .= ':' . $parts['port'];
-        }
-        $url_limpia .= $path_final;
-
-        if (isset($parts['query'])) {
-            $url_limpia .= '?' . $parts['query'];
-        }
-        if (isset($parts['fragment'])) {
-            $url_limpia .= '#' . $parts['fragment'];
-        }
-
-        //$domain = 'docker.internal';
         $client = new Client();
         $reqOpts = self::withPreservedHttpHostHeader(
             $host_original,
             $host_nuevo,
             $parts,
-            array_merge(
-                self::internalGuzzleOptions($cookies, [
-                    'form_params' => $hash_params,
-                    'allow_redirects' => false,
-                    'http_errors' => false,
-                ]),
-            )
+            self::internalGuzzleOptions($cookies, [
+                'form_params' => $hash_params,
+                'allow_redirects' => false,
+                'http_errors' => false,
+            ]),
         );
         $response2 = $client->request('POST', $url_limpia, $reqOpts);
 
@@ -448,66 +533,39 @@ class PostRequest
                 $location !== '' ? $location : _('sin Location')
             );
             $msg .= '<br>' . _("Probable causa: validación de hash/sesión. Revisa que el endpoint no requiera firma que no se está generando igual server-to-server.");
+
             return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
         }
         if ($code >= 400) {
             $msg = sprintf(_("Error HTTP %d en llamada interna a %s"), $code, $url_limpia);
-            return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
-        }
-        $body = $response2->getBody();
-        $content = $body->getContents();
-        $rta_json = json_decode($content, TRUE);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            if (self::looksLikeLoginHtml((string) $content)) {
-                $msg = sprintf(
-                    _('Sesión no autenticada en llamada interna a %s (status %d).'),
-                    $url_limpia,
-                    $code
-                );
-                $msg .= '<br>' . _('El backend ha devuelto el formulario de login en lugar de JSON. Vuelve a entrar en Orbix.');
-                return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
-            }
-            $preview = mb_substr(trim((string)$content), 0, 500);
-            $msg = sprintf(_("Respuesta no-JSON de %s (status %d)."), $url_limpia, $code);
-            $msg .= '<br>' . htmlspecialchars($preview, ENT_QUOTES, 'UTF-8');
+
             return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
         }
 
-        if ($rta_json === null) {
-            $msg = sprintf(_("No se obtiene respuesta de: %s"), $url_limpia);
-            return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
-        }
-        if (!$rta_json['success']) {
-            return ['error' => (string) $rta_json['mensaje'] . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
-        }
-
-        return self::envelopeDataFieldToArray($rta_json['data'] ?? null);
+        return self::dataFromJsonResponseBody($response2->getBody()->getContents(), $url_limpia, $code);
     }
 
-    public static function getContent(array|string $url, array $hash_params): mixed
+    /**
+     * @param array<string, mixed> $hash_params
+     */
+    public static function getContent(string $url, array $hash_params): string
     {
-        $url = self::absoluteHttpUrlFromAppRelative((string) $url);
-        $parts = parse_url($url);
-        $host_original = $parts['host'] ?? '';
-        $url = preg_replace('/(.*?)\.docker/', 'host.docker.internal', (string) $url);
-        $host_rewritten = (string) parse_url($url, PHP_URL_HOST);
+        $url = self::absoluteHttpUrlFromAppRelative($url);
+        $parts = self::parseHttpUrl($url);
+        $host_original = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
+        $url_rewritten = self::rewriteDockerInUrl($url);
+        $host_rewritten = self::rewriteDockerHost($host_original);
 
         $cookies = self::cookiesForInternalRequest();
 
-        // Use a specific cookie jar
         $client = new Client();
         $reqOpts = self::withPreservedHttpHostHeader(
             $host_original,
             $host_rewritten,
             $parts,
-            array_merge(
-                self::internalGuzzleOptions($cookies, ['form_params' => $hash_params]),
-            )
+            self::internalGuzzleOptions($cookies, ['form_params' => $hash_params]),
         );
-        $response2 = $client->request('POST', $url, $reqOpts);
-
-        $code = $response2->getStatusCode(); // 200
-        $reason = $response2->getReasonPhrase(); // OK
+        $response2 = $client->request('POST', $url_rewritten, $reqOpts);
 
         return $response2->getBody()->getContents();
     }
@@ -515,54 +573,29 @@ class PostRequest
     /**
      * POST interno con cookies de sesión (misma lógica de URL/host que {@see getData});
      * devuelve el cuerpo tal cual (p. ej. respuestas AJAX text/plain).
+     *
+     * @param array<string, mixed> $formParams
      */
     public static function sendRawPost(string $relativeUrl, array $formParams): string
     {
         $url = self::absoluteHttpUrlFromAppRelative($relativeUrl);
 
         $cookies = self::cookiesForInternalRequest();
-        $parts = parse_url($url);
-        $host_original = $parts['host'] ?? '';
-        $host_nuevo = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host_original);
-
-        $path_final = $parts['path'] ?? '';
-        $dockerHostRewrite = ($host_nuevo !== $host_original && $host_original !== '');
-        if ($dockerHostRewrite && $path_final !== '') {
-            $segments = explode('/', $path_final);
-            if (isset($segments[2]) && strpos($segments[2], '-') !== false) {
-                unset($segments[2]);
-                $path_final = implode('/', $segments);
-            }
-        }
-
-        $url_limpia = '';
-        if (isset($parts['scheme'])) {
-            $url_limpia .= $parts['scheme'] . '://';
-        }
-        $url_limpia .= $host_nuevo;
-        if (isset($parts['port'])) {
-            $url_limpia .= ':' . $parts['port'];
-        }
-        $url_limpia .= $path_final;
-        if (isset($parts['query'])) {
-            $url_limpia .= '?' . $parts['query'];
-        }
-        if (isset($parts['fragment'])) {
-            $url_limpia .= '#' . $parts['fragment'];
-        }
+        $parts = self::parseHttpUrl($url);
+        $host_original = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
+        $host_nuevo = self::rewriteDockerHost($host_original);
+        $url_limpia = self::buildDockerInternalUrl($parts, $host_nuevo);
 
         $client = new Client();
         $reqOpts = self::withPreservedHttpHostHeader(
             $host_original,
             $host_nuevo,
             $parts,
-            array_merge(
-                self::internalGuzzleOptions($cookies, ['form_params' => $formParams]),
-            )
+            self::internalGuzzleOptions($cookies, ['form_params' => $formParams]),
         );
         $response = $client->request('POST', $url_limpia, $reqOpts);
 
-        return (string)$response->getBody()->getContents();
+        return $response->getBody()->getContents();
     }
 
     /**
@@ -573,9 +606,10 @@ class PostRequest
         $s = self::DIAGNOSTIC_MARKER;
         $s .= '<br><strong>' . _('Endpoint') . ':</strong> <code>'
             . htmlspecialchars($urlLimpia, ENT_QUOTES, 'UTF-8') . '</code>';
-        if (!empty($_SERVER['REQUEST_URI'])) {
+        $requestUri = $_SERVER['REQUEST_URI'] ?? null;
+        if (is_string($requestUri) && $requestUri !== '') {
             $s .= '<br><strong>' . _('Página') . ':</strong> <code>'
-                . htmlspecialchars((string) $_SERVER['REQUEST_URI'], ENT_QUOTES, 'UTF-8') . '</code>';
+                . htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8') . '</code>';
         }
         $s .= self::procedenciaLlamadaInternaGetData();
 

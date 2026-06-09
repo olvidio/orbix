@@ -8,6 +8,8 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
+require_once __DIR__ . '/ubiscamas_support.php';
+
 /**
  * Compone el bloque dossier 3102 (habitaciones CDC) en frontend: HashFront + URLs firmadas.
  *
@@ -22,34 +24,23 @@ final class SelectHabitacionesCdcRender
     {
         $hash = isset($seg['hash']) && is_array($seg['hash']) ? $seg['hash'] : [];
         $oHashSelect = new HashFront();
-        $oHashSelect->setCamposForm((string)($hash['campos_form'] ?? ''));
-        $oHashSelect->setCamposNo((string)($hash['campos_no'] ?? ''));
-        $hidden = $hash['campos_hidden'] ?? [];
-        $oHashSelect->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+        $oHashSelect->setCamposForm(tessera_imprimir_string($hash['campos_form'] ?? ''));
+        $oHashSelect->setCamposNo(tessera_imprimir_string($hash['campos_no'] ?? ''));
+        $oHashSelect->setArrayCamposHidden(ubiscamas_hash_campos_hidden($hash['campos_hidden'] ?? []));
 
         $tabla = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
         $oTabla = new Lista();
-        $oTabla->setId_tabla((string)($tabla['id_tabla'] ?? 'select2006'));
-        $cabeceras = $tabla['cabeceras'] ?? [];
-        $botones = $tabla['botones'] ?? [];
-        $valores = $tabla['valores'] ?? [];
-        $oTabla->setCabeceras(is_array($cabeceras) ? $cabeceras : []);
-        $oTabla->setBotones(is_array($botones) ? $botones : []);
-        $oTabla->setDatos(is_array($valores) ? $valores : []);
+        $oTabla->setId_tabla(tessera_imprimir_string($tabla['id_tabla'] ?? 'select2006'));
+        $oTabla->setCabeceras(actividades_lista_cabeceras($tabla['cabeceras'] ?? []));
+        $oTabla->setBotones(actividades_lista_botones($tabla['botones'] ?? []));
+        $oTabla->setDatos(actividades_lista_datos($tabla['valores'] ?? []));
 
-        $urlNuevoSpec = $seg['url_nuevo_spec'] ?? null;
-        $aLinksDlSpecs = $seg['a_links_dl_specs'] ?? [];
-        if (!is_array($urlNuevoSpec)) {
-            $urlNuevoSpec = [];
-        }
-        if (!is_array($aLinksDlSpecs)) {
-            $aLinksDlSpecs = [];
-        }
-
-        $signed = SelectHabitacionesCdcUrlSigning::sign([
-            'url_nuevo_spec' => $urlNuevoSpec,
-            'a_links_dl_specs' => $aLinksDlSpecs,
-        ]);
+        $signed = SelectHabitacionesCdcUrlSigning::sign(
+            ubiscamas_cdc_url_signing_input(
+                $seg['url_nuevo_spec'] ?? null,
+                $seg['a_links_dl_specs'] ?? []
+            )
+        );
 
         $oView = new ViewNewPhtml('frontend\ubiscamas\view');
 

@@ -4,27 +4,26 @@ use frontend\shared\PostRequest;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\FrontBootstrap;
 
-// INICIO Cabecera global de URL de controlador *********************************
+require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
-// Archivos requeridos por esta url **********************************************
 include_once(OrbixRuntime::dirEstilos() . '/e43_mpdf.css.php');
-// Crea los objetos de uso global **********************************************
 
-// FIN de  Cabecera global de URL de controlador ********************************
+$id_nom = (int)filter_input(INPUT_GET, 'id_nom');
+$id_activ = (int)filter_input(INPUT_GET, 'id_activ');
 
-$d = PostRequest::getDataFromUrl('/src/actividadestudios/e43_imprimir_mpdf_data', [
+$d = actividadestudios_e43_from_payload(actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/e43_imprimir_mpdf_data', [
     'id_nom' => $id_nom,
     'id_activ' => $id_activ,
-]);
-$msg_err = $d['msg_err'] ?? '';
-$nom = $d['nom'] ?? '';
-$txt_nacimiento = $d['txt_nacimiento'] ?? '';
-$dl_origen = $d['dl_origen'] ?? '';
-$dl_destino = $d['dl_destino'] ?? '';
-$txt_actividad = $d['txt_actividad'] ?? '';
-$matriculas = (int)($d['matriculas'] ?? 0);
-$aAsignaturasMatriculadas = $d['aAsignaturasMatriculadas'] ?? [];
+])));
+$msg_err = $d['msg_err'];
+$nom = $d['nom'];
+$txt_nacimiento = $d['txt_nacimiento'];
+$dl_origen = $d['dl_origen'];
+$dl_destino = $d['dl_destino'];
+$txt_actividad = $d['txt_actividad'];
+$matriculas = $d['matriculas'];
+$aAsignaturasMatriculadas = $d['aAsignaturasMatriculadas'];
 
 ?>
 <meta charset="utf-8">
@@ -32,23 +31,23 @@ $aAsignaturasMatriculadas = $d['aAsignaturasMatriculadas'] ?? [];
     <div class="A4">
         <table class="A4">
             <tr>
-                <td><?= $dl_destino ?></td>
-                <td class="derecha"><?= $dl_origen ?></td>
+                <td><?= htmlspecialchars($dl_destino, ENT_QUOTES, 'UTF-8') ?></td>
+                <td class="derecha"><?= htmlspecialchars($dl_origen, ENT_QUOTES, 'UTF-8') ?></td>
             </tr>
         </table>
         <br><br>
         <table class="cabecera">
             <tr>
                 <td><?= ucfirst(_("nombre y apellidos")); ?>:</td>
-                <td><?= $nom ?></td>
+                <td><?= htmlspecialchars($nom, ENT_QUOTES, 'UTF-8') ?></td>
             </tr>
             <tr>
                 <td><?= ucfirst(_("lugar y fecha de nacimiento")); ?>:</td>
-                <td><?= $txt_nacimiento ?></td>
+                <td><?= htmlspecialchars($txt_nacimiento, ENT_QUOTES, 'UTF-8') ?></td>
             </tr>
             <tr>
                 <td><?= ucfirst(_("fecha y lugar del sem, ca o cv")); ?>:</td>
-                <td><?= $txt_actividad ?></td>
+                <td><?= htmlspecialchars($txt_actividad, ENT_QUOTES, 'UTF-8') ?></td>
             </tr>
         </table>
         <br>
@@ -62,14 +61,13 @@ $aAsignaturasMatriculadas = $d['aAsignaturasMatriculadas'] ?? [];
             </tr>
             <?php
             if ($matriculas > 0) {
-                $i = 0;
-                foreach ($aAsignaturasMatriculadas as $key => $aAsignaturas) {
-                    echo "<tr>";
-                    echo "<td class='calif'>" . $aAsignaturas['nom_asignatura'] . "</td>";
-                    echo "<td class='calif'>" . $aAsignaturas['nota'] . "</td>";
-                    echo "<td class='calif'>" . $aAsignaturas['f_acta'] . "</td>";
-                    echo "<td class='calif'>" . $aAsignaturas['acta'] . "</td>";
-                    echo "</tr>";
+                foreach ($aAsignaturasMatriculadas as $aAsignaturas) {
+                    echo '<tr>';
+                    echo "<td class='calif'>" . htmlspecialchars($aAsignaturas['nom_asignatura'], ENT_QUOTES, 'UTF-8') . '</td>';
+                    echo "<td class='calif'>" . htmlspecialchars($aAsignaturas['nota'], ENT_QUOTES, 'UTF-8') . '</td>';
+                    echo "<td class='calif'>" . htmlspecialchars($aAsignaturas['f_acta'], ENT_QUOTES, 'UTF-8') . '</td>';
+                    echo "<td class='calif'>" . htmlspecialchars($aAsignaturas['acta'], ENT_QUOTES, 'UTF-8') . '</td>';
+                    echo '</tr>';
                 }
             }
             ?>

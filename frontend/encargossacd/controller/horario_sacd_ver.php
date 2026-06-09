@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
@@ -14,12 +15,12 @@ require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-$Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
-$Qmod = (integer)filter_input(INPUT_POST, 'mod');
-$Qfiltro_sacd = (string)filter_input(INPUT_POST, 'filtro_sacd');
-$Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
-$Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
+$Qid_nom = encargossacd_post_int('id_nom');
+$Qid_enc = encargossacd_post_int('id_enc');
+$Qmod = encargossacd_post_int('mod');
+$Qfiltro_sacd = encargossacd_post_string('filtro_sacd');
+$Qid_item = encargossacd_post_int('id_item');
+$Qdesc_enc = encargossacd_post_string('desc_enc');
 
 /** @var array<string, mixed> $d */
 $d = PostRequest::getDataFromUrl('/src/encargossacd/horario_sacd_ver_data', [
@@ -29,20 +30,20 @@ $d = PostRequest::getDataFromUrl('/src/encargossacd/horario_sacd_ver_data', [
     'desc_enc' => $Qdesc_enc,
 ]);
 
-$ap_nom = (string)($d['ap_nom'] ?? '');
-$titulo = (string)($d['titulo'] ?? '');
-$id_item = (int)($d['id_item'] ?? 0);
-$desc_enc = (string)($d['desc_enc'] ?? '');
-$f_ini_iso = (string)($d['f_ini_iso'] ?? '');
-$f_fin_iso = (string)($d['f_fin_iso'] ?? '');
-$dia_ref = (string)($d['dia_ref'] ?? '');
-$dia_num = (string)($d['dia_num'] ?? '');
-$mas_menos = (string)($d['mas_menos'] ?? '');
-$dia_inc = (string)($d['dia_inc'] ?? '');
-$h_ini = (string)($d['h_ini'] ?? '');
-$h_fin = (string)($d['h_fin'] ?? '');
+$ap_nom = tessera_imprimir_string($d['ap_nom'] ?? '');
+$titulo = tessera_imprimir_string($d['titulo'] ?? '');
+$id_item = tessera_imprimir_int($d['id_item'] ?? 0);
+$desc_enc = tessera_imprimir_string($d['desc_enc'] ?? '');
+$f_ini_iso = tessera_imprimir_string($d['f_ini_iso'] ?? '');
+$f_fin_iso = tessera_imprimir_string($d['f_fin_iso'] ?? '');
+$dia_ref = tessera_imprimir_string($d['dia_ref'] ?? '');
+$dia_num = tessera_imprimir_string($d['dia_num'] ?? '');
+$mas_menos = tessera_imprimir_string($d['mas_menos'] ?? '');
+$dia_inc = tessera_imprimir_string($d['dia_inc'] ?? '');
+$h_ini = tessera_imprimir_string($d['h_ini'] ?? '');
+$h_fin = tessera_imprimir_string($d['h_fin'] ?? '');
 $tiene_excepciones = !empty($d['tiene_excepciones']);
-$dia = (string)($d['dia'] ?? '');
+$dia = tessera_imprimir_string($d['dia'] ?? '');
 $opciones_dia_semana = is_array($d['opciones_dia_semana'] ?? null) ? $d['opciones_dia_semana'] : [];
 $opciones_dia_ref = is_array($d['opciones_dia_ref'] ?? null) ? $d['opciones_dia_ref'] : [];
 $opciones_ordinales = is_array($d['opciones_ordinales'] ?? null) ? $d['opciones_ordinales'] : [];

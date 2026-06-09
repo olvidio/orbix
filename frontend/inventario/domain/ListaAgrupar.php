@@ -6,16 +6,29 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 
+require_once __DIR__ . '/../helpers/inventario_support.php';
+
 class ListaAgrupar
 {
     private string $texto = '';
+
+    /** @var array<int|string, string> */
     private array $aOpciones = [];
 
-    public function listaAgrupar($a_valores, $id_grupo = 0)
+    /**
+     * @param list<array{
+     *     nombre: string,
+     *     identificador: string,
+     *     carta: string,
+     *     coleccion: string,
+     *     ejemplares: string,
+     *     lugar: string,
+     * }> $a_valores
+     */
+    public function listaAgrupar(array $a_valores, int $id_grupo = 0): string
     {
         $pencil = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/images/pencil.png';
 
-        // para el grupo == 0, no añado la opción de modificar el texto.
         if ($id_grupo > 0) {
             $html_g = "<span id='docs_grupo_$id_grupo' >";
         } else {
@@ -33,68 +46,54 @@ class ListaAgrupar
         $que_cuento = '';
         $id_coleccion = '';
         foreach ($a_valores as $row) {
-            //si son iguales; contarlos. OJO hay que distinguir si es por colección o por documento
             if (($id_tipo_old === $row['nombre'])) {
                 $que_cuento = 'tipo_doc';
-                if (!empty($ident_num) && !empty($row['identificador'])) {
+                if ($ident_num !== '' && $row['identificador'] !== '') {
                     $ident_num .= ',' . $row['identificador'];
                 }
-                $ident_txt = empty($ident_num) ? "" : " ($ident_num)";
+                $ident_txt = $ident_num === '' ? '' : " ($ident_num)";
                 $count++;
                 continue;
             }
-            if (!empty($row['carta']) && ($agrupar_old == $row['carta']) && ($coleccion_old == $row['coleccion'])) {
+            if ($row['carta'] !== '' && ($agrupar_old == $row['carta']) && ($coleccion_old == $row['coleccion'])) {
                 $que_cuento = 'coleccion';
-                $id_coleccion = !empty($row['coleccion']) ? $row['coleccion'] : '';
-                if (!empty($ident_num) && !empty($row['identificador'])) {
+                $id_coleccion = $row['coleccion'] !== '' ? $row['coleccion'] : '';
+                if ($ident_num !== '' && $row['identificador'] !== '') {
                     $ident_num .= ',' . $row['identificador'];
                 }
-                $ident_txt = empty($ident_num) ? "" : " ($ident_num)";
-                if ($que_cuento === 'tipo_doc') {
-                    $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion,$ejemplares_old);
-                    $id_tipo_old = $row['nombre'];
-                    $id_old = $row['identificador'];
-                    $agrupar_old = $row['carta'];
-                    $coleccion_old = $row['coleccion'];
-                    $ejemplares_old = $row['ejemplares'];
-                    $count = 1;
-                    $ident_num = $id_old;
-                    $ident_txt = '';
-                }
+                $ident_txt = $ident_num === '' ? '' : " ($ident_num)";
                 $count++;
                 continue;
             }
-            if (!empty($id_tipo_old)) {
-                $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion,$ejemplares_old);
+            if ($id_tipo_old !== '') {
+                $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion, $ejemplares_old);
             }
-            if ((!empty($row['lugar']) && $lugar_old != $row['lugar'])) {
+            if ($row['lugar'] !== '' && $lugar_old != $row['lugar']) {
                 $html_g .= '<u>' . $row['lugar'] . '</u><br>';
                 $lugar_old = $row['lugar'];
             }
             $id_tipo_old = $row['nombre'];
             $id_old = $row['identificador'];
-            $agrupar_old = empty($row['carta']) ? '' : $row['carta'];
-            $coleccion_old = empty($row['coleccion']) ? '' : $row['coleccion'];
+            $agrupar_old = $row['carta'] === '' ? '' : $row['carta'];
+            $coleccion_old = $row['coleccion'] === '' ? '' : $row['coleccion'];
             $ejemplares_old = $row['ejemplares'];
             $count = 1;
             $ident_num = $id_old;
             $ident_txt = '';
             $id_coleccion = '';
         }
-        // para el último.
-        $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion,$ejemplares_old);
+        $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion, $ejemplares_old);
 
-        // para el grupo == 0, no añado la opción de modificar el texto.
         if ($id_grupo > 0) {
             $html_g .= "<div class=\"no_print\" style=\"margin-bottom: 10px\">";
             $html_g .= "<img class=\"no_print\" style=\"float: left; margin-right: 10px; height:22px;\" src=\"$pencil\" 
                 title='" . _("modificar texto") . "''
                 alt='" . _("modificar texto") . "'
                 onClick=\"fnjs_mod_texto_equipaje('docs_grupo_$id_grupo')\" >";
-            $html_g .= empty($this->texto) ? _("introducir texto") : '';
+            $html_g .= $this->texto === '' ? _("introducir texto") : '';
             $html_g .= "</div>";
             $html_g .= $this->texto;
-            $html_g .= "</span>"; // id='docs_grupo_$id_grupo'
+            $html_g .= "</span>";
         } else {
             $html_g .= $this->texto;
         }
@@ -102,48 +101,59 @@ class ListaAgrupar
         return $html_g;
     }
 
-    private function escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion, $ejemplares_old)
-    {
+    private function escribir(
+        string $ident_num,
+        int $count,
+        string $id_old,
+        string $ident_txt,
+        string $agrupar_old,
+        string $id_tipo_old,
+        string $id_coleccion,
+        string $ejemplares_old
+    ): string {
         $aColecciones = $this->getColecciones();
         $html_g = '';
-        if (!empty($ident_num) && $count > 1) {
-            if (!empty($ejemplares_old)) {
+        if ($ident_num !== '' && $count > 1) {
+            if ($ejemplares_old !== '') {
                 $html_g .= $ejemplares_old . ' x ';
             }
-            $html_g .= !empty($count) ? $count . ' ' . _("ejemplares") . ' ' : '';
+            $html_g .= $count . ' ' . _("ejemplares") . ' ';
         } else {
-            $html_g .= !empty($id_old) ? "-" . $id_old . "- " : '';
+            $html_g .= $id_old !== '' ? '-' . $id_old . '- ' : '';
         }
-        if (!empty($ident_txt)) {
+        if ($ident_txt !== '') {
             $ident_txt2 = trim($ident_txt);
-            $ident_txt2 = trim($ident_txt2, "()");
+            $ident_txt2 = trim($ident_txt2, '()');
             $a_ident_txt = explode(',', $ident_txt2);
             $first = reset($a_ident_txt);
             $last = end($a_ident_txt);
-            if (((int)$last - (int)$first) === ($count - 1)) {
+            if (((int) $last - (int) $first) === ($count - 1)) {
                 $ident_txt = sprintf(_(" (del %d al %d)"), $first, $last);
             }
         }
-        if (!empty($agrupar_old)) {
+        if ($agrupar_old !== '') {
             $txt_cartas = $aColecciones[$id_coleccion] ?? '????';
             $html_g .= $txt_cartas . $ident_txt;
         } else {
             $html_g .= $id_tipo_old . $ident_txt;
         }
-        $html_g .= empty($html_g) ? '' : "<br />";
-        return $html_g;
+        $html_g .= $html_g === '' ? '' : '<br />';
 
+        return $html_g;
     }
 
-    private function getColecciones()
+    /**
+     * @return array<int|string, string>
+     */
+    private function getColecciones(): array
     {
-        if (empty($this->aOpciones)) {
-            //-------- listado de colecciones -----------------------------------
+        if ($this->aOpciones === []) {
             $url_backend = '/src/inventario/lista_colecciones';
             $data = PostRequest::getDataFromUrl($url_backend);
-
-            $this->aOpciones = $data['a_opciones'];
+            $payload = inventario_post_payload($data);
+            $this->aOpciones = inventario_colecciones_opciones($payload['a_opciones'] ?? []);
         }
+
         return $this->aOpciones;
     }
 
@@ -151,5 +161,4 @@ class ListaAgrupar
     {
         $this->texto = $texto;
     }
-
 }

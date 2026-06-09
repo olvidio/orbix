@@ -10,15 +10,18 @@ use function frontend\shared\helpers\is_true;
  */
 class Lista
 {
-    private string $sNombre;
-    private int $ikey;
+    /** @var list<string>|array<int|string, string> */
     private array $aGrupos = [];
     private bool $botones_grupo = false;
+    /** @var list<array<string, mixed>|string> */
     private array $aCabeceras = [];
     private string $sPie = '';
     private string $ssortCol = '';
+    /** @var array<string, bool|string> */
     private array $aColVisible = [];
+    /** @var array<int|string, mixed> */
     private array $aDatos = [];
+    /** @var list<array<string, mixed>> */
     private array $aBotones = [];
     private string $sid_tabla = 'uno';
     private bool $bFiltro = true;
@@ -32,10 +35,237 @@ class Lista
     {
     }
 
+    private static function scalarString(mixed $value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        return '';
+    }
+
+    private static function slickgridDimension(mixed $value, ?string $fallback = null): ?string
+    {
+        $s = self::scalarString($value);
+        if ($s === '' || !is_numeric($s)) {
+            return $fallback;
+        }
+
+        return $s;
+    }
+
+    private static function jsQuotedString(string $value): string
+    {
+        return '"' . addslashes($value) . '"';
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function normalizeSelectedIds(mixed $selectRaw): array
+    {
+        if (is_array($selectRaw)) {
+            $out = [];
+            foreach ($selectRaw as $item) {
+                $s = self::scalarString($item);
+                if ($s !== '') {
+                    $out[] = $s;
+                }
+            }
+
+            return $out;
+        }
+        if ($selectRaw === null || $selectRaw === '') {
+            return [];
+        }
+
+        return [self::scalarString($selectRaw)];
+    }
+
+    /** @param array<string, mixed>|string $cabecera */
+    private static function cabeceraFieldKey(array|string $cabecera, string $key): ?string
+    {
+        if (!is_array($cabecera)) {
+            return null;
+        }
+        $val = $cabecera[$key] ?? null;
+        if ($val === null || $val === '') {
+            return null;
+        }
+
+        return self::scalarString($val);
+    }
+
+    /**
+     * @param array<string, mixed>|string $cabecera
+     * @return array{class: string, width: string, visible: bool, name: string}
+     */
+    private static function cabeceraHtmlMeta(array|string $cabecera): array
+    {
+        $class = '';
+        $width = '';
+        $visible = true;
+        $name = self::cabeceraFieldKey($cabecera, 'name') ?? self::scalarString($cabecera);
+        if (is_array($cabecera)) {
+            if (!empty($cabecera['class'])) {
+                $class = 'class="' . self::scalarString($cabecera['class']) . '"';
+            }
+            if (!empty($cabecera['width'])) {
+                $width = 'width="' . self::scalarString($cabecera['width']) . '"';
+            }
+            $vis = $cabecera['visible'] ?? null;
+            if ($vis !== null && $vis !== '' && strtolower(self::scalarString($vis)) === 'no') {
+                $visible = false;
+            }
+        }
+
+        return ['class' => $class, 'width' => $width, 'visible' => $visible, 'name' => $name];
+    }
+
+    /** @param array<string, mixed> $valor */
+    private static function renderArrayValorTd(array $valor): string
+    {
+        $val = self::scalarString($valor['valor'] ?? '');
+        $html = '<td>';
+        if (!empty($valor['ira'])) {
+            $ira = self::scalarString($valor['ira']);
+            $html .= '<span class="link" onclick="fnjs_update_div(\'#main\',\'' . $ira . '\')" >' . $val . '</span>';
+        } elseif (!empty($valor['script'])) {
+            $ira = self::scalarString($valor['script']);
+            $html .= '<span class="link" onclick=\'' . $ira . '\' >' . $val . '</span>';
+        } else {
+            $html .= $val;
+        }
+        for ($idx = 2; $idx <= 3; $idx++) {
+            if (!empty($valor["ira$idx"])) {
+                $ira = self::scalarString($valor["ira$idx"]);
+                $html .= ' <span class="link" onclick="fnjs_update_div(\'#main\',\'' . $ira . '\')" >' . $val . '</span>';
+            }
+            if (!empty($valor["script$idx"])) {
+                $ira = self::scalarString($valor["script$idx"]);
+                $html .= ' <span class="link" onclick=\'' . $ira . '\' >' . $val . '</span>';
+            }
+        }
+
+        return $html . '</td>';
+    }
+
+    private static function renderScalarValorTd(mixed $valor): string
+    {
+        $text = self::scalarString($valor);
+        $fechaIso = self::formatFechaIsoFromDmy($text);
+        if ($fechaIso !== null) {
+            return "<td class='fecha' fecha_iso='$fechaIso'>$text</td>";
+        }
+
+        return '<td>' . $text . '</td>';
+    }
+
+    private static function formatFechaIsoFromDmy(string $valor): ?string
+    {
+        if (!preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
+            return null;
+        }
+        $parts = preg_split('/[:\/\.-]/', $valor);
+        if (!is_array($parts) || count($parts) < 3) {
+            return null;
+        }
+        $ts = mktime(0, 0, 0, (int) $parts[1], (int) $parts[0], (int) $parts[2]);
+        if ($ts === false) {
+            return null;
+        }
+
+        return date('Y-m-d', $ts);
+    }
+
+    /** @param array<int|string, mixed> $fila */
+    private static function resolveStartIcol(array $fila): int
+    {
+        if (!isset($fila[0]) && isset($fila[1])) {
+            return 1;
+        }
+        if (!isset($fila[0])) {
+            return 0;
+        }
+        $isId = false;
+        if (isset($fila['sel'])) {
+            $sel = $fila['sel'];
+            $selId = is_array($sel) ? self::scalarString($sel['id'] ?? '') : self::scalarString($sel);
+            $fila0 = self::scalarString($fila[0]);
+            if (strpos($selId, $fila0) !== false || preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}/i', $fila0)) {
+                $isId = true;
+            }
+        } elseif (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}/i', self::scalarString($fila[0]))) {
+            $isId = true;
+        }
+
+        return $isId ? 1 : 0;
+    }
+
+    /**
+     * @param array<int|string, mixed> $fila
+     * @param list<array<string, mixed>|string> $aCabeceras
+     * @param array<int, bool> $aColsVisible
+     */
+    private static function renderCeldasDatos(array $fila, array $aCabeceras, array $aColsVisible, int $startIcol): string
+    {
+        $tbody = '';
+        $icolOffset = 0;
+        foreach ($aCabeceras as $numCol => $cabecera) {
+            if (empty($aColsVisible[$numCol])) {
+                continue;
+            }
+            $field = self::cabeceraFieldKey($cabecera, 'field');
+            $id = self::cabeceraFieldKey($cabecera, 'id');
+            $valor = '';
+            if ($field !== null && array_key_exists($field, $fila)) {
+                $valor = $fila[$field];
+            } elseif ($id !== null && array_key_exists($id, $fila)) {
+                $valor = $fila[$id];
+            } else {
+                $targetIdx = $startIcol + $icolOffset;
+                $valor = $fila[$targetIdx] ?? '';
+                $icolOffset++;
+            }
+            if (is_array($valor) && array_key_exists('valor', $valor)) {
+                $tbody .= self::renderArrayValorTd($valor);
+            } else {
+                $tbody .= self::renderScalarValorTd($valor);
+            }
+        }
+
+        return $tbody;
+    }
+
+    private function resolveIdiomaCode(): string
+    {
+        $idioma = '';
+        if (isset($_SESSION['session_auth']) && is_array($_SESSION['session_auth'])) {
+            $authIdioma = $_SESSION['session_auth']['idioma'] ?? null;
+            if (is_string($authIdioma)) {
+                $idioma = $authIdioma;
+            }
+        }
+        if ($idioma === '' && isset($_SESSION['oConfig']) && is_object($_SESSION['oConfig']) && method_exists($_SESSION['oConfig'], 'getIdioma_default')) {
+            $idioma = self::scalarString($_SESSION['oConfig']->getIdioma_default());
+        }
+        $aIdioma = explode('.', $idioma);
+
+        return $aIdioma[0];
+    }
+
     /**
      * Llama al endpoint backend que devuelve las preferencias de tabla para
      * el usuario actual. Se usa para decidir HTML vs SlickGrid y, para
      * SlickGrid, recuperar colVisible/colWidths/tamaños.
+     *
+     * @return array{formato_tabla: string, slickgrid: array<int|string, mixed>|null}
      */
     private function fetchPreferenciaTabla(string $id_tabla = ''): array
     {
@@ -43,12 +273,12 @@ class Lista
             '/src/usuarios/preferencia_tabla_get',
             ['id_tabla' => $id_tabla]
         );
-        if (!is_array($data)) {
-            return ['formato_tabla' => '', 'slickgrid' => null];
-        }
+        $formato = $data['formato_tabla'] ?? '';
+        $slickgrid = $data['slickgrid'] ?? null;
+
         return [
-            'formato_tabla' => (string)($data['formato_tabla'] ?? ''),
-            'slickgrid' => is_array($data['slickgrid'] ?? null) ? $data['slickgrid'] : null,
+            'formato_tabla' => self::scalarString($formato),
+            'slickgrid' => is_array($slickgrid) ? $slickgrid : null,
         ];
     }
 
@@ -65,32 +295,15 @@ class Lista
         $aColsVisible = [];
         $num_col = 0;
         foreach ($aCabeceras as $Cabecera) {
-            $class = '';
-            $width = '';
-            $visible = true;
-            if (is_array($Cabecera)) {
-                $name = $Cabecera['name'];
-                if (!empty($Cabecera['class'])) {
-                    $class = "class=\"{$Cabecera['class']}\"";
-                }
-                if (!empty($Cabecera['width'])) {
-                    $width = "width=\"{$Cabecera['width']}\"";
-                }
-                if (!empty($Cabecera['visible']) && strtolower($Cabecera['visible']) === 'no') {
-                    $visible = false;
-                }
-            } else {
-                $name = $Cabecera;
-            }
-
-            $aColsVisible[$num_col] = $visible;
+            $meta = self::cabeceraHtmlMeta($Cabecera);
+            $aColsVisible[$num_col] = $meta['visible'];
             $num_col++;
 
-            if ($visible) {
-                if (!empty($name)) {
-                    $cabecera .= "<th class=cabecera $width $class >" . trim($name) . "</th>\n";
+            if ($meta['visible']) {
+                if ($meta['name'] !== '') {
+                    $cabecera .= '<th class=cabecera ' . $meta['width'] . ' ' . $meta['class'] . ' >' . trim($meta['name']) . "</th>\n";
                 } else {
-                    $cabecera .= "<th class=cabecera tipo='notext' $width $class ></th>\n";
+                    $cabecera .= '<th class=cabecera tipo=\'notext\' ' . $meta['width'] . ' ' . $meta['class'] . " ></th>\n";
                 }
                 $cab++;
             }
@@ -106,88 +319,17 @@ class Lista
 
         $f = 1;
         foreach ($aDatos as $num_fila => $fila) {
+            if (!is_array($fila)) {
+                continue;
+            }
             $clase = "imp";
             $f % 2 ? 0 : $clase = "par";
             $f++;
             if (!empty($fila['clase'])) {
-                $clase .= " " . $fila['clase'];
+                $clase .= ' ' . self::scalarString($fila['clase']);
             }
             $tbody .= "<tr class='$clase' >";
-
-            // Heurística para localizar la columna inicial de datos cuando hay IDs en la fila.
-            $start_icol = 0;
-            if (!isset($fila[0]) && isset($fila[1])) {
-                $start_icol = 1;
-            } elseif (isset($fila[0])) {
-                $is_id = false;
-                if (isset($fila['sel'])) {
-                    $sel_id = is_array($fila['sel']) ? $fila['sel']['id'] : (string)$fila['sel'];
-                    if (strpos($sel_id, (string)$fila[0]) !== false || preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}/i', (string)$fila[0])) {
-                        $is_id = true;
-                    }
-                } elseif (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}/i', (string)$fila[0])) {
-                    $is_id = true;
-                }
-
-                if ($is_id) {
-                    $start_icol = 1;
-                }
-            }
-
-            $icol_offset = 0;
-            foreach ($aCabeceras as $num_col => $Cabecera) {
-                if ($aColsVisible[$num_col]) {
-                    $field = (is_array($Cabecera) && !empty($Cabecera['field'])) ? $Cabecera['field'] : null;
-                    $id = (is_array($Cabecera) && !empty($Cabecera['id'])) ? $Cabecera['id'] : null;
-
-                    $valor = '';
-                    if ($field && array_key_exists($field, $fila)) {
-                        $valor = $fila[$field];
-                    } elseif ($id && array_key_exists($id, $fila)) {
-                        $valor = $fila[$id];
-                    } else {
-                        $target_idx = $start_icol + $icol_offset;
-                        $valor = $fila[$target_idx] ?? '';
-                        $icol_offset++;
-                    }
-                    if (is_array($valor)) {
-                        $val = $valor['valor'];
-                        $tbody .= "<td>";
-                        if (!empty($valor['ira'])) {
-                            $ira = $valor['ira'];
-                            $tbody .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span>";
-                        } elseif (!empty($valor['script'])) {
-                            $ira = $valor['script'];
-                            $tbody .= "<span class=\"link\" onclick='$ira' >$val</span>";
-                        } else {
-                            $tbody .= $val;
-                        }
-
-                        for ($idx = 2; $idx <= 3; $idx++) {
-                            if (!empty($valor["ira$idx"])) {
-                                $ira = $valor["ira$idx"];
-                                $tbody .= " <span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span>";
-                            }
-                            if (!empty($valor["script$idx"])) {
-                                $ira = $valor["script$idx"];
-                                $tbody .= " <span class=\"link\" onclick='$ira' >$val</span>";
-                            }
-                        }
-
-                        $tbody .= "</td>";
-
-                    } else {
-                        $valor = $valor ?? '';
-                        if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
-                            [$d, $m, $y] = preg_split('/[:\/.-]/', $valor);
-                            $fecha_iso = date("Y-m-d", mktime(0, 0, 0, $m, $d, $y));
-                            $tbody .= "<td class='fecha' fecha_iso='$fecha_iso'>$valor</td>";
-                        } else {
-                            $tbody .= "<td>$valor</td>";
-                        }
-                    }
-                }
-            }
+            $tbody .= self::renderCeldasDatos($fila, $aCabeceras, $aColsVisible, self::resolveStartIcol($fila));
             $tbody .= "</tr>\n";
         }
 
@@ -205,8 +347,8 @@ class Lista
         reset($aGrupos);
         $Html = '';
         foreach ($aGrupos as $key => $titulo) {
-            $this->aDatos = $aDatos[$key] ?? [];
-            $this->ikey = $key;
+            $grupoDatos = $aDatos[$key] ?? [];
+            $this->aDatos = is_array($grupoDatos) ? $grupoDatos : [];
             $Html .= "<div class=salta_pag>";
             $Html .= "<h2>$titulo</h2>";
             $Html .= $this->lista();
@@ -226,30 +368,24 @@ class Lista
         $id_tabla = $this->sid_tabla;
         reset($aGrupos);
         $Html = '';
-        if (!empty($a_botones)) {
+        if ($a_botones !== []) {
             $botones = '';
-            if ($a_botones === "ninguno") {
-                $b = 0;
-            } else {
-                $b = 0;
-                foreach ($a_botones as $a_boton) {
-                    $prefix = empty($a_boton['prefix']) ? '' : $a_boton['prefix'] . '_';
-                    $btn = $prefix . "btn" . $b++;
-                    $botones .= "<INPUT id='$btn' name='$btn' type=button value=\"" . $a_boton['txt'] . "\" onClick='" . $a_boton['click'] . "'>";
-                }
-                $botones .= "</td></tr>";
+            $b = 0;
+            foreach ($a_botones as $a_boton) {
+                $prefix = empty($a_boton['prefix']) ? '' : self::scalarString($a_boton['prefix']) . '_';
+                $btn = $prefix . 'btn' . $b++;
+                $botones .= '<INPUT id="' . $btn . '" name="' . $btn . '" type=button value="' . self::scalarString($a_boton['txt'] ?? '') . '" onClick=\'' . self::scalarString($a_boton['click'] ?? '') . '\'>';
             }
+            $botones .= '</td></tr>';
             $cab = count($this->aCabeceras);
-            $botones = "<tr class=botones><td colspan='$cab'>" . $botones;
-            if ($b > 0) {
-                $this->botones_grupo = true;
-                $Html .= "<table>$botones</table>\n";
-            }
+            $botones = '<tr class=botones><td colspan=\'' . $cab . '\'>' . $botones;
+            $this->botones_grupo = true;
+            $Html .= '<table>' . $botones . "</table>\n";
         }
         $this->setBotones([]);
         foreach ($aGrupos as $key => $titulo) {
-            $this->aDatos = $aDatos[$key] ?? [];
-            $this->ikey = $key;
+            $grupoDatos = $aDatos[$key] ?? [];
+            $this->aDatos = is_array($grupoDatos) ? $grupoDatos : [];
             $id_tabla_key = $id_tabla . '_' . $key;
             $this->setId_tabla($id_tabla_key);
             $Html .= "<div class=salta_pag>";
@@ -300,99 +436,114 @@ class Lista
         $sortcol = $this->ssortCol;
         $botones = "";
         $tt = "";
-        $b = 0;
-        $scroll_id = !empty($a_valores['scroll_id']) ? $a_valores['scroll_id'] : 0;
+        $numBotones = 0;
+        $scroll_id = !empty($a_valores['scroll_id']) ? self::scalarString($a_valores['scroll_id']) : '0';
         unset($a_valores['scroll_id']);
-        if (isset($a_valores['select'])) {
-            $a_valores_chk = $a_valores['select'];
-            unset($a_valores['select']);
-        } else {
-            $a_valores_chk = [];
-        }
-        if (empty($a_valores)) {
+        $a_valores_chk = self::normalizeSelectedIds($a_valores['select'] ?? null);
+        unset($a_valores['select']);
+        if ($a_valores === []) {
             return _("no hay ninguna fila");
         }
-        if (!empty($a_botones)) {
-            if ($a_botones === "ninguno") {
-                $b = "x";
-            } else {
-                foreach ($a_botones as $a_boton) {
-                    $prefix = empty($a_boton['prefix']) ? '' : $a_boton['prefix'] . '_';
-                    $btn = $prefix . "btn" . $b++;
-                    $botones .= "<INPUT id='$btn' name='$btn' type=button value=\"" . $a_boton['txt'] . "\" onClick='" . $a_boton['click'] . "'>";
-                }
-            }
+        foreach ($a_botones as $a_boton) {
+            $prefix = empty($a_boton['prefix']) ? '' : self::scalarString($a_boton['prefix']) . '_';
+            $btn = $prefix . 'btn' . $numBotones++;
+            $botones .= '<INPUT id="' . $btn . '" name="' . $btn . '" type=button value="' . self::scalarString($a_boton['txt'] ?? '') . '" onClick=\'' . self::scalarString($a_boton['click'] ?? '') . '\'>';
         }
 
-        $aColsVisible = '';
+        /** @var array<string, mixed>|null $aColsVisible */
+        $aColsVisible = null;
+        /** @var array<string, mixed> $aColsWidth */
         $aColsWidth = [];
         $bPanelVis = false;
         $aPrefs = $this->fetchPreferenciaTabla($id_tabla)['slickgrid'] ?? null;
         if (is_array($aPrefs)) {
-            if (!empty($aPrefs['colVisible'])) {
+            if (!empty($aPrefs['colVisible']) && is_array($aPrefs['colVisible'])) {
                 $aColsVisible = $aPrefs['colVisible'];
             }
-            $bPanelVis = ($aPrefs['panelVis'] ?? '') === "si";
-            if (!empty($aPrefs['colWidths'])) {
+            $bPanelVis = self::scalarString($aPrefs['panelVis'] ?? '') === 'si';
+            if (!empty($aPrefs['colWidths']) && is_array($aPrefs['colWidths'])) {
                 $aColsWidth = $aPrefs['colWidths'];
             }
-            $grid_width = (!empty($aPrefs['widthGrid'])) ? $aPrefs['widthGrid'] : '900';
-            $grid_height = (!empty($aPrefs['heightGrid'])) ? $aPrefs['heightGrid'] : 0;
+            $grid_width = self::slickgridDimension($aPrefs['widthGrid'] ?? null, '900') ?? '900';
+            $grid_height = self::slickgridDimension($aPrefs['heightGrid'] ?? null, '0') ?? '0';
+        }
+        if ($this->aColVisible !== []) {
+            $aColsVisible = $this->aColVisible;
+        }
+        if (!$this->bFiltro) {
+            $bPanelVis = false;
         }
 
         $c = 0;
+        $cf = 0;
         $cv = 0;
         $sColumns = '[';
         $sColumnsVisible = '[';
         $sColFilters = '[';
         $aFields = [];
-        if ($b !== 0 || $b === 'x' || $this->bConSel) {
+        $showSelCol = ($numBotones > 0) || $this->bConSel;
+        if ($showSelCol) {
             $c++;
-            $width = $aColsWidth['sel'] ?? 30;
-            $sColumns .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter}";
-            if (!is_array($aColsVisible) || is_true($aColsVisible['sel'])) {
-                $sColumnsVisible .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter},";
+            $width = self::slickgridDimension($aColsWidth['sel'] ?? null, '30') ?? '30';
+            $selCol = '{id: "sel", name: "sel", field: "sel", width:' . $width . ', sortable: false, formatter: checkboxSelectionFormatter}';
+            $sColumns .= $selCol;
+            if ($aColsVisible === null || !array_key_exists('sel', $aColsVisible) || is_true($aColsVisible['sel'])) {
+                $sColumnsVisible .= $selCol;
+                $cv = 1;
             }
         }
         foreach ($a_cabeceras as $Cabecera) {
             $visible = true;
             if (is_array($Cabecera)) {
-                $name = $Cabecera['name'];
+                $name = self::scalarString($Cabecera['name'] ?? '');
                 $name_idx = str_replace(' ', '', $name);
-                $id = !empty($Cabecera['id']) ? $Cabecera['id'] : str_replace(' ', '', $name);
-                $field = !empty($Cabecera['field']) ? $Cabecera['field'] : str_replace(' ', '', $name);
-                $toolTip = !empty($Cabecera['title']) ? ", toolTip: \"{$Cabecera['title']}\"" : ", toolTip: \"{$Cabecera['name']}\"";
-                $class = !empty($Cabecera['class']) ? ", cssClass: \"{$Cabecera['class']}\"" : '';
-                $sortable = !empty($Cabecera['sortable']) ? $Cabecera['sortable'] : 'true';
-                $width = !empty($Cabecera['width']) ? $Cabecera['width'] : '';
-                $width = filter_var($width, FILTER_SANITIZE_NUMBER_INT);
-                $formatter = !empty($Cabecera['formatter']) ? $Cabecera['formatter'] : '';
-                if (!empty($Cabecera['visible']) && strtolower($Cabecera['visible'] ?? '') === 'no') {
+                $id = self::cabeceraFieldKey($Cabecera, 'id') ?? $name_idx;
+                $field = self::cabeceraFieldKey($Cabecera, 'field') ?? $name_idx;
+                $title = self::scalarString($Cabecera['title'] ?? $name);
+                $toolTip = ', toolTip: ' . self::jsQuotedString($title);
+                $class = !empty($Cabecera['class']) ? ', cssClass: ' . self::jsQuotedString(self::scalarString($Cabecera['class'])) : '';
+                $sortable = !empty($Cabecera['sortable']) ? self::scalarString($Cabecera['sortable']) : 'true';
+                $widthRaw = self::scalarString($Cabecera['width'] ?? '');
+                $width = filter_var($widthRaw, FILTER_SANITIZE_NUMBER_INT);
+                $width = is_string($width) ? $width : '';
+                $formatter = !empty($Cabecera['formatter']) ? self::scalarString($Cabecera['formatter']) : '';
+                $vis = $Cabecera['visible'] ?? null;
+                if ($vis !== null && $vis !== '' && strtolower(self::scalarString($vis)) === 'no') {
                     $visible = false;
                 }
-                $sDefCol = "id: \"$id\", name: \"$name\", field: \"$field\", sortable: $sortable" . $class . $toolTip;
+                $sDefCol = 'id: ' . self::jsQuotedString($id)
+                    . ', name: ' . self::jsQuotedString($name)
+                    . ', field: ' . self::jsQuotedString($field)
+                    . ', sortable: ' . $sortable . $class . $toolTip;
 
-                if (isset($aColsWidth[$name_idx])) {
-                    $sDefCol .= ", width: " . $aColsWidth[$name_idx];
-                } elseif (!empty($width)) {
-                    $sDefCol .= ", width: $width";
+                $prefWidth = self::slickgridDimension($aColsWidth[$name_idx] ?? null);
+                if ($prefWidth !== null) {
+                    $sDefCol .= ', width: ' . $prefWidth;
+                } elseif ($width !== '') {
+                    $sDefCol .= ', width: ' . $width;
                 }
 
-                if (!empty($formatter)) $sDefCol .= ", formatter: $formatter";
-                $sDefCol = "{" . $sDefCol . "}";
+                if ($formatter !== '') {
+                    $sDefCol .= ', formatter: ' . $formatter;
+                }
+                $sDefCol = '{' . $sDefCol . '}';
                 $aFields[] = $field;
             } else {
-                $name = $Cabecera;
-                $name_idx = str_replace(' ', '', $Cabecera);
-                $toolTip = ", toolTip: \"$name\"";
-                $sDefCol = "{id: \"$name_idx\", name: \"$name\", field: \"$name_idx\", sortable: true" . $toolTip;
-                if (isset($aColsWidth[$name_idx])) {
-                    $sDefCol .= ", width: " . $aColsWidth[$name_idx];
+                $name = self::scalarString($Cabecera);
+                $name_idx = str_replace(' ', '', $name);
+                $toolTip = ', toolTip: ' . self::jsQuotedString($name);
+                $sDefCol = '{id: ' . self::jsQuotedString($name_idx)
+                    . ', name: ' . self::jsQuotedString($name)
+                    . ', field: ' . self::jsQuotedString($name_idx)
+                    . ', sortable: true' . $toolTip;
+                $prefWidth = self::slickgridDimension($aColsWidth[$name_idx] ?? null);
+                if ($prefWidth !== null) {
+                    $sDefCol .= ', width: ' . $prefWidth;
                 }
-                $sDefCol .= "}";
+                $sDefCol .= '}';
                 $aFields[] = $name_idx;
             }
-            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx] === "true")) || !is_array($aColsVisible)) {
+            if (($aColsVisible !== null && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx] === 'true')) || $aColsVisible === null) {
                 if (!$visible) continue;
                 if ($cv > 0) {
                     $sColumnsVisible .= ',';
@@ -402,10 +553,13 @@ class Lista
             }
             if ($c > 0) {
                 $sColumns .= ',';
-                $sColFilters .= ',';
             }
             $sColumns .= $sDefCol;
-            $sColFilters .= "\"$name_idx\"";
+            if ($cf > 0) {
+                $sColFilters .= ',';
+            }
+            $sColFilters .= self::jsQuotedString($name_idx);
+            $cf++;
             $c++;
         }
         $sColumns .= ']';
@@ -416,6 +570,9 @@ class Lista
         $f = 1;
         $aFilas = [];
         foreach ($a_valores as $num_fila => $fila) {
+            if (!is_array($fila)) {
+                continue;
+            }
             $f++;
             $id_fila = $f . $ahora;
             ksort($fila);
@@ -423,57 +580,57 @@ class Lista
             $aFilas[$num_fila]["id"] = $id_fila;
             foreach ($fila as $col => $valor) {
                 if ($col === "clase") {
-                    $id = $valor;
-                    $aFilas[$num_fila]["clase"] = addslashes($id);
+                    $aFilas[$num_fila]["clase"] = addslashes(self::scalarString($valor));
                     continue;
                 }
                 if ($col === "order" || $col === "select") {
                     continue;
                 }
                 if ($col === "sel") {
-                    if (empty($b) && !$this->bConSel) {
+                    if (!$showSelCol) {
                         continue;
                     }
+                    $chk = '';
                     if (is_array($valor)) {
-                        $chk = !empty($valor['select']) ? $valor['select'] : "";
-                        $id = $valor['id'];
+                        $chk = !empty($valor['select']) ? self::scalarString($valor['select']) : '';
+                        $id = self::scalarString($valor['id'] ?? '');
                     } else {
-                        $id = $valor;
+                        $id = self::scalarString($valor);
                     }
-                    if (!empty($id)) {
-                        $chk = in_array($id, $a_valores_chk) ? 'checked' : '';
+                    if ($id !== '') {
+                        $chk = in_array($id, $a_valores_chk, true) ? 'checked' : $chk;
                         $aFilas[$num_fila]["sel"] = $chk . '#' . addslashes($id);
                     } else {
                         $aFilas[$num_fila]["sel"] = '';
                     }
                 } else {
-                    if (is_array($valor) && !empty($valor)) {
-                        $val = $valor['valor'];
+                    if (is_array($valor) && $valor !== []) {
+                        $val = self::scalarString($valor['valor'] ?? '');
                         if (!empty($valor['clase'])) {
-                            $aFilas[$num_fila]['clase'] = $valor['clase'];
+                            $aFilas[$num_fila]['clase'] = self::scalarString($valor['clase']);
                         }
                         if (!empty($valor['ira'])) {
-                            $aFilas[$num_fila]['ira'] = $valor['ira'];
+                            $aFilas[$num_fila]['ira'] = self::scalarString($valor['ira']);
                         }
                         if (!empty($valor['ira2'])) {
-                            $aFilas[$num_fila]['ira2'] = $valor['ira2'];
+                            $aFilas[$num_fila]['ira2'] = self::scalarString($valor['ira2']);
                         }
                         if (!empty($valor['ira3'])) {
-                            $aFilas[$num_fila]['ira3'] = $valor['ira3'];
+                            $aFilas[$num_fila]['ira3'] = self::scalarString($valor['ira3']);
                         }
                         if (!empty($valor['script'])) {
-                            $aFilas[$num_fila]['script'] = addslashes($valor['script'] ?? '');
+                            $aFilas[$num_fila]['script'] = addslashes(self::scalarString($valor['script']));
                         }
                         if (!empty($valor['script2'])) {
-                            $aFilas[$num_fila]['script2'] = addslashes($valor['script2'] ?? '');
+                            $aFilas[$num_fila]['script2'] = addslashes(self::scalarString($valor['script2']));
                         }
                         if (!empty($valor['script3'])) {
-                            $aFilas[$num_fila]['script3'] = addslashes($valor['script3'] ?? '');
+                            $aFilas[$num_fila]['script3'] = addslashes(self::scalarString($valor['script3']));
                         }
                         if (!empty($valor['span'])) {
-                            $span = $valor['span'];
+                            $span = (int) self::scalarString($valor['span']);
                             if (isset($aFields[$icol])) {
-                                $aFilas[$num_fila][$aFields[$icol]] = addslashes($val ?? '');
+                                $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
                                 $icol++;
                                 for ($s = 1; $s < $span; $s++) {
                                     if (isset($aFields[$icol])) {
@@ -485,21 +642,21 @@ class Lista
                             }
                         } else {
                             if (isset($aFields[$icol])) {
-                                $aFilas[$num_fila][$aFields[$icol]] = addslashes($val ?? '');
+                                $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
                                 $icol++;
                             } elseif (!is_numeric($col)) {
-                                $aFilas[$num_fila][$col] = addslashes($val ?? '');
+                                $aFilas[$num_fila][$col] = addslashes($val);
                             }
                         }
                     } else {
                         // Filas asociativas (field => valor): mapear por nombre de columna.
                         // ksort() ordena alfabéticamente; la asignación solo con $aFields[$icol] dejaba casi todo vacío.
                         if (!is_numeric($col) && in_array($col, $aFields, true)) {
-                            $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes((string) $valor);
+                            $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes(self::scalarString($valor));
                         } elseif (isset($aFields[$icol])) {
-                            $aFilas[$num_fila][$aFields[$icol]] = ($valor === '' || $valor === null) ? '' : addslashes((string) $valor);
+                            $aFilas[$num_fila][$aFields[$icol]] = ($valor === '' || $valor === null) ? '' : addslashes(self::scalarString($valor));
                         } elseif (!is_numeric($col)) {
-                            $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes((string) $valor);
+                            $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes(self::scalarString($valor));
                         }
                         if (is_numeric($col)) {
                             $icol++;
@@ -509,29 +666,29 @@ class Lista
             }
         }
 
-        $f = 0;
-        $sData = '[';
-        foreach ($aFilas as $num_fila => $fila) {
-            $f++;
-            if ($f > 1) $sData .= ',';
-            $c = 0;
-            $sData .= '{';
+        $f = count($aFilas);
+        $rowsForJson = [];
+        foreach ($aFilas as $fila) {
+            $row = [];
             foreach ($fila as $camp => $valor) {
-                $c++;
-                if ($c > 1) $sData .= ',';
                 $remove = ["\r\n", "\n", "\r"];
-                $valor = str_replace($remove, ' ', $valor);
-                $sData .= "\"$camp\": \"$valor\"";
+                $row[self::scalarString($camp)] = str_replace($remove, ' ', self::scalarString($valor));
             }
-            $sData .= '}';
+            $rowsForJson[] = $row;
         }
-        $sData .= ']';
+        $sData = json_encode(
+            $rowsForJson,
+            JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS
+        );
+        if ($sData === false) {
+            $sData = '[]';
+        }
 
-        if (empty($grid_height) && $f < 12) {
-            $grid_height = (3 + $f) * 25;
-            $grid_height = ($grid_height < 200) ? 200 : $grid_height;
-        } else {
-            $grid_height = empty($grid_height) ? 350 : $grid_height;
+        if (($grid_height === '' || $grid_height === '0') && $f < 12) {
+            $grid_height = (string) ((3 + $f) * 25);
+            $grid_height = ((int) $grid_height < 200) ? '200' : $grid_height;
+        } elseif ($grid_height === '' || $grid_height === '0') {
+            $grid_height = '350';
         }
 
         $tt = "<input class=\"scroll_id\" id=\"scroll_id_$id_tabla\" name=\"scroll_id_$id_tabla\" data-tabla=\"$id_tabla\" value=\"$scroll_id\" type=\"hidden\">";
@@ -651,12 +808,7 @@ class Lista
 			
 			";
 
-        $idioma = $_SESSION['session_auth']['idioma'];
-        if (!isset($idioma)) {
-            $idioma = $_SESSION['oConfig']->getIdioma_default();
-        }
-        $a_idioma = explode('.', $idioma);
-        $code_lng = $a_idioma[0];
+        $code_lng = $this->resolveIdiomaCode();
         switch ($code_lng) {
             case 'en_US':
                 $fecha_local = "
@@ -946,7 +1098,7 @@ class Lista
 			});
 		";
 
-        if (isset($scroll_id)) {
+        if ($scroll_id !== '' && $scroll_id !== '0') {
             $tt .= " 
                 setTimeout(function() {
                     var scroll_id_final = $('#scroll_id_$id_tabla').val();
@@ -995,16 +1147,24 @@ class Lista
 		</script>
 		";
 
-        $ta = "<div id=\"GridContainer_" . $id_tabla . "\"  style=\"width:100%; max-width:{$grid_width}px; height:auto;\" >
-		<div class=\"grid-header\">
-          <span style=\"width:90%; display: inline-block;\">$botones</span>
-		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\"" . _("guardar selección de columnas") . "\"
-				onclick=\"fnjs_def_tabla('" . $id_tabla . "')\"></span>
-		  <span style=\"float:right\" class=\"ui-icon ui-icon-search\" title=\"" . _("ver/ocultar panel de búsqueda") . "\"
-				onclick=\"toggleFilterRow_$id_tabla()\"></span>
+        $colVisIcon = '';
+        if ($this->bColVis) {
+            $colVisIcon = '<span style="float:right" class="ui-icon ui-icon-disk" title="' . _("guardar selección de columnas") . '"
+				onclick="fnjs_def_tabla(\'' . $id_tabla . '\')"></span>';
+        }
+        $filtroIcon = '';
+        if ($this->bFiltro) {
+            $filtroIcon = '<span style="float:right" class="ui-icon ui-icon-search" title="' . _("ver/ocultar panel de búsqueda") . '"
+				onclick="toggleFilterRow_' . $id_tabla . '()"></span>';
+        }
+        $ta = '<div id="GridContainer_' . $id_tabla . '" style="width:100%; max-width:' . $grid_width . 'px; height:auto;">
+		<div class="grid-header">
+          <span style="width:90%; display: inline-block;">' . $botones . '</span>
+		  ' . $colVisIcon . '
+		  ' . $filtroIcon . '
 		</div>
-		<div id=\"grid_$id_tabla\"  style=\"width:{$grid_width}px; height:{$grid_height}px;\" ></div>
-		";
+		<div id="grid_' . $id_tabla . '" style="width:' . $grid_width . 'px; height:' . $grid_height . 'px;"></div>
+		';
         $ta .= "</div>";
 
         $ta .= "
@@ -1030,103 +1190,84 @@ class Lista
         $cabecera = "";
         $tbody = "";
         $tt = "";
-        $b = 0;
-        if (empty($a_valores)) {
+        $numBotones = 0;
+        if ($a_valores === []) {
             return _("no hay ninguna fila");
         }
-        if (!empty($a_botones)) {
-            if ($a_botones === "ninguno") {
-                $b = "x";
-            } else {
-                foreach ($a_botones as $a_boton) {
-                    $prefix = empty($a_boton['prefix']) ? '' : $a_boton['prefix'] . '_';
-                    $btn = $prefix . "btn" . $b++;
-                    $botones .= "<INPUT id='$btn' name='$btn' type=button value=\"" . $a_boton['txt'] . "\" onClick='" . $a_boton['click'] . "'>";
-                }
-                $botones .= "</td></tr>";
-            }
+        foreach ($a_botones as $a_boton) {
+            $prefix = empty($a_boton['prefix']) ? '' : self::scalarString($a_boton['prefix']) . '_';
+            $btn = $prefix . 'btn' . $numBotones++;
+            $botones .= '<INPUT id="' . $btn . '" name="' . $btn . '" type=button value="' . self::scalarString($a_boton['txt'] ?? '') . '" onClick=\'' . self::scalarString($a_boton['click'] ?? '') . '\'>';
+        }
+        if ($numBotones > 0) {
+            $botones .= '</td></tr>';
         }
         if ($this->botones_grupo) {
-            $b = 5;
+            $numBotones = 5;
         }
+        $showSelCol = ($numBotones > 0) || $this->bConSel;
 
         $cab = 1;
         $aColsVisible = [];
         $num_col = 0;
         foreach ($a_cabeceras as $Cabecera) {
-            $class = '';
-            $width = '';
-            $visible = true;
-            if (is_array($Cabecera)) {
-                $name = $Cabecera['name'];
-                if (!empty($Cabecera['class'])) {
-                    $class = "class=\"{$Cabecera['class']}\"";
-                }
-                if (!empty($Cabecera['width'])) {
-                    $width = "width=\"{$Cabecera['width']}\"";
-                }
-                if (!empty($Cabecera['visible']) && strtolower($Cabecera['visible']) === 'no') {
-                    $visible = false;
-                }
-            } else {
-                $name = $Cabecera;
-            }
-
-            $aColsVisible[$num_col] = $visible;
+            $meta = self::cabeceraHtmlMeta($Cabecera);
+            $aColsVisible[$num_col] = $meta['visible'];
             $num_col++;
 
-            if ($visible) {
-                if (!empty($name)) {
-                    $cabecera .= "<th class=cabecera $width $class >" . trim($name) . "</th>\n";
+            if ($meta['visible']) {
+                if ($meta['name'] !== '') {
+                    $cabecera .= '<th class=cabecera ' . $meta['width'] . ' ' . $meta['class'] . ' >' . trim($meta['name']) . "</th>\n";
                 } else {
-                    $cabecera .= "<th class=cabecera tipo='notext' $width $class ></th>\n";
+                    $cabecera .= '<th class=cabecera tipo=\'notext\' ' . $meta['width'] . ' ' . $meta['class'] . " ></th>\n";
                 }
                 $cab++;
             }
         }
-        if ((!empty($b) && $b !== 'x') || $this->bConSel) {
+        if ($showSelCol) {
             $cabecera = "<th class=cabecera tipo='notext' width='20' ></th>\n" . $cabecera;
             $cab++;
         }
         $cabecera .= "</tr>\n";
         $ahora = date("Hms");
         $f = 1;
-        $tt .= "<!-- DEBUG HTML TABLE: id=$id_tabla, num_headers=" . count($a_cabeceras) . ", b=" . $b . " -->\n";
+        $scroll_id = !empty($a_valores['scroll_id']) ? self::scalarString($a_valores['scroll_id']) : '0';
+        $tt .= '<!-- DEBUG HTML TABLE: id=' . $id_tabla . ', num_headers=' . count($a_cabeceras) . ', b=' . $numBotones . " -->\n";
 
-        if (isset($a_valores['select'])) {
-            $a_valores_chk = $a_valores['select'];
-            unset($a_valores['select']);
-        } else {
-            $a_valores_chk = [];
-        }
+        $a_valores_chk = self::normalizeSelectedIds($a_valores['select'] ?? null);
+        unset($a_valores['select']);
 
         unset($a_valores['scroll_id']);
         foreach ($a_valores as $num_fila => $fila) {
+            if (!is_array($fila)) {
+                continue;
+            }
             $clase = "imp";
             $f % 2 ? 0 : $clase = "par";
             $f++;
             $id_fila = $f . $ahora;
             if (!empty($fila['clase'])) {
-                $clase .= " " . $fila['clase'];
+                $clase .= ' ' . self::scalarString($fila['clase']);
             }
-            $tbody .= "<tr id='$id_fila' class='$clase' onclick='fnjs_clic_fila(this, event)' data-json='" . htmlspecialchars(json_encode($fila), ENT_QUOTES, 'UTF-8') . "'>";
+            $filaJson = json_encode($fila);
+            $tbody .= "<tr id='$id_fila' class='$clase' onclick='fnjs_clic_fila(this, event)' data-json='" . htmlspecialchars($filaJson !== false ? $filaJson : '', ENT_QUOTES, 'UTF-8') . "'>";
 
-            if ((!empty($b) && $b !== 'x') || $this->bConSel) {
+            if ($showSelCol) {
                 if (isset($fila['sel'])) {
                     $valor = $fila['sel'];
+                    $chk = '';
                     if (is_array($valor)) {
-                        $chk = !empty($valor['select']) ? $valor['select'] : "";
-                        $id = $valor['id'];
+                        $chk = !empty($valor['select']) ? self::scalarString($valor['select']) : '';
+                        $id = self::scalarString($valor['id'] ?? '');
                     } else {
-                        $id = $valor;
-                        $chk = "";
+                        $id = self::scalarString($valor);
                     }
-                    if (!empty($id)) {
-                        if (!empty($a_valores_chk)) {
-                            $chk = in_array($id, $a_valores_chk) ? 'checked' : '';
+                    if ($id !== '') {
+                        if ($a_valores_chk !== []) {
+                            $chk = in_array($id, $a_valores_chk, true) ? 'checked' : '';
                         }
                         $tbody .= "<td tipo='sel' title='" . _("clic para seleccionar") . "'>";
-                        $tbody .= "<input class='sel' type='checkbox' $chk  name='sel[]' id='a$id' value='$id'>";
+                        $tbody .= '<input class=\'sel\' type=\'checkbox\' ' . $chk . "  name='sel[]' id='a" . $id . "' value='" . $id . "'>";
                         $tbody .= "</td>";
                     } else {
                         $tbody .= "<td></td>";
@@ -1136,86 +1277,13 @@ class Lista
                 }
             }
 
-            $start_icol = 0;
-            if (!isset($fila[0]) && isset($fila[1])) {
-                $start_icol = 1;
-            } elseif (isset($fila[0])) {
-                $is_id = false;
-                if (isset($fila['sel'])) {
-                    $sel_id = is_array($fila['sel']) ? $fila['sel']['id'] : (string)$fila['sel'];
-                    if (strpos($sel_id, (string)$fila[0]) !== false || preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}/i', (string)$fila[0])) {
-                        $is_id = true;
-                    }
-                } elseif (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}/i', (string)$fila[0])) {
-                    $is_id = true;
-                }
-
-                if ($is_id) {
-                    $start_icol = 1;
-                }
-            }
-
-            $icol_offset = 0;
-            foreach ($a_cabeceras as $num_col => $Cabecera) {
-                if ($aColsVisible[$num_col]) {
-                    $field = (is_array($Cabecera) && !empty($Cabecera['field'])) ? $Cabecera['field'] : null;
-                    $id = (is_array($Cabecera) && !empty($Cabecera['id'])) ? $Cabecera['id'] : null;
-
-                    $valor = '';
-                    if ($field && array_key_exists($field, $fila)) {
-                        $valor = $fila[$field];
-                    } elseif ($id && array_key_exists($id, $fila)) {
-                        $valor = $fila[$id];
-                    } else {
-                        $target_idx = $start_icol + $icol_offset;
-                        $valor = $fila[$target_idx] ?? '';
-                        $icol_offset++;
-                    }
-                    if (is_array($valor)) {
-                        $val = $valor['valor'];
-                        $tbody .= "<td>";
-                        if (!empty($valor['ira'])) {
-                            $ira = $valor['ira'];
-                            $tbody .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span>";
-                        } elseif (!empty($valor['script'])) {
-                            $ira = $valor['script'];
-                            $tbody .= "<span class=\"link\" onclick='$ira' >$val</span>";
-                        } else {
-                            $tbody .= $val;
-                        }
-
-                        for ($idx = 2; $idx <= 3; $idx++) {
-                            if (!empty($valor["ira$idx"])) {
-                                $ira = $valor["ira$idx"];
-                                $tbody .= " <span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span>";
-                            }
-                            if (!empty($valor["script$idx"])) {
-                                $ira = $valor["script$idx"];
-                                $tbody .= " <span class=\"link\" onclick='$ira' >$val</span>";
-                            }
-                        }
-
-                        $tbody .= "</td>";
-
-                    } else {
-                        $valor = $valor ?? '';
-                        if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
-                            [$d, $m, $y] = preg_split('/[:\/\.-]/', $valor);
-                            $fecha_iso = date("Y-m-d", mktime(0, 0, 0, $m, $d, $y));
-                            $tbody .= "<td class='fecha' fecha_iso='$fecha_iso'>$valor</td>";
-                        } else {
-                            $tbody .= "<td>$valor</td>";
-                        }
-                    }
-                }
-            }
+            $tbody .= self::renderCeldasDatos($fila, $a_cabeceras, $aColsVisible, self::resolveStartIcol($fila));
             $tbody .= "</tr>\n";
         }
 
-        if (!empty($b) && $b !== 'x') {
+        if ($numBotones > 0) {
             $botones = "<tr class=botones><td colspan='$cab'>" . $botones;
         }
-        $scroll_id = !empty($a_valores['scroll_id']) ? $a_valores['scroll_id'] : 0;
         $tt = "<input class=\"scroll_id\" id=\"scroll_id_$id_tabla\" name=\"scroll_id_$id_tabla\" data-tabla=\"$id_tabla\" value=\"$scroll_id\" type=\"hidden\">";
         $tt .= "<table>$botones</table>\n";
         $tt .= "<table border=1  class='sortable' id='$id_tabla'>\n";
@@ -1251,7 +1319,7 @@ class Lista
         return $tt;
     }
 
-    public function text_first($a, $b): int
+    public function text_first(mixed $a, mixed $b): int
     {
         if (is_numeric($a)) {
             if (is_numeric($b)) {
@@ -1262,10 +1330,10 @@ class Lista
         if (is_numeric($b)) {
             return -1;
         }
-        return strcasecmp($a, $b);
+        return strcasecmp(self::scalarString($a), self::scalarString($b));
     }
 
-    public function getCsv($filename): void
+    public function getCsv(string $filename): void
     {
         $a_valores = $this->aDatos;
 
@@ -1279,7 +1347,14 @@ class Lista
         header("Content-Transfer-Encoding: binary");
 
         $fp = fopen('php://output', 'w');
+        if ($fp === false) {
+            return;
+        }
         foreach ($a_valores as $num_fila => $fila) {
+            if (!is_array($fila)) {
+                continue;
+            }
+            /** @var list<string> $a_valores_simple */
             $a_valores_simple = [];
             uksort($fila, [$this, 'text_first']);
             foreach ($fila as $col => $valor) {
@@ -1287,20 +1362,16 @@ class Lista
                     continue;
                 }
                 if ($col === "sel") {
-                    $id = is_array($valor) ? $valor['id'] : $valor;
-                    if (!empty($id)) {
+                    $id = is_array($valor) ? self::scalarString($valor['id'] ?? '') : self::scalarString($valor);
+                    if ($id !== '') {
                         $a_valores_simple[] = $id;
                     }
                 } elseif (is_array($valor)) {
-                    $a_valores_simple[] = $valor['valor'];
+                    $a_valores_simple[] = self::scalarString($valor['valor'] ?? '');
                 } else {
-                    if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
-                        [$d, $m, $y] = preg_split('/[:\/\.-]/', $valor);
-                        $fecha_iso = date("Y-m-d", mktime(0, 0, 0, $m, $d, $y));
-                        $a_valores_simple[] = $fecha_iso;
-                    } else {
-                        $a_valores_simple[] = $valor;
-                    }
+                    $text = self::scalarString($valor);
+                    $fechaIso = self::formatFechaIsoFromDmy($text);
+                    $a_valores_simple[] = $fechaIso ?? $text;
                 }
             }
             fputcsv($fp, $a_valores_simple, "\t", '"');
@@ -1308,11 +1379,13 @@ class Lista
         fclose($fp);
     }
 
+    /** @param list<string>|array<int|string, string> $aGrupos */
     public function setGrupos(array $aGrupos): void
     {
         $this->aGrupos = $aGrupos;
     }
 
+    /** @param list<array<string, mixed>|string> $aCabeceras */
     public function setCabeceras(array $aCabeceras): void
     {
         $this->aCabeceras = $aCabeceras;
@@ -1338,16 +1411,19 @@ class Lista
         $this->ssortCol = str_replace(' ', '', $ssortcol);
     }
 
+    /** @param array<string, bool|string> $aColVisible */
     public function setColVisible(array $aColVisible): void
     {
         $this->aColVisible = $aColVisible;
     }
 
+    /** @param array<int|string, mixed> $aDatos */
     public function setDatos(array $aDatos): void
     {
         $this->aDatos = $aDatos;
     }
 
+    /** @param list<array<string, mixed>> $aBotones */
     public function setBotones(array $aBotones): void
     {
         $this->aBotones = $aBotones;

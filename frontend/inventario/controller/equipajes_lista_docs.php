@@ -6,33 +6,34 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/inventario_support.php';
 FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_grupo = (int)filter_input(INPUT_POST, 'id_grupo');
 $Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
 $Qid_lugar = (int)filter_input(INPUT_POST, 'id_lugar');
 $Qid_item_egm = (int)filter_input(INPUT_POST, 'id_item_egm');
 
-if (!empty($Qid_lugar)) {
+$url_backend = '';
+if ($Qid_lugar !== 0) {
     $url_backend = '/src/inventario/lista_docs_de_lugar';
-}
-if (!empty($Qid_item_egm)) {
+} elseif ($Qid_item_egm !== 0) {
     $url_backend = '/src/inventario/lista_docs_de_egm';
 }
 $a_campos_backend = [
     'id_lugar' => $Qid_lugar,
-    'id_item_egm' => $Qid_item_egm
+    'id_item_egm' => $Qid_item_egm,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$a_valores = $data['a_valores'];
-$nombre_valija = $data['nombre_valija'];
+$payload = inventario_post_payload($data);
+$view = inventario_lista_docs_grupo_from_payload($payload);
+$a_valores = $view['a_valores'];
+$nombre_valija = $view['nombre_valija'];
 
-$a_cabeceras[] = ucfirst(_("sigla"));
-$a_cabeceras[] = ucfirst(_("identificador"));
-//$a_cabeceras[] = ucfirst(_("num reg"));
+$a_cabeceras = [];
+$a_cabeceras[] = ucfirst(_('sigla'));
+$a_cabeceras[] = ucfirst(_('identificador'));
 
 $oLista = new Lista();
 $oLista->setId_tabla('docs_' . $Qid_grupo);

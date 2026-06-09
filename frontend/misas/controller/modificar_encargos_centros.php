@@ -7,6 +7,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 // Si el use case devuelve error (p.ej. permiso denegado), PostRequest hace
@@ -16,7 +17,7 @@ $data = PostRequest::getDataFromUrl('/src/misas/modificar_encargos_centros_data'
 $a_opciones_zona = $data['a_opciones_zona'] ?? [];
 
 $oDesplZonas = new Desplegable();
-$oDesplZonas->setOpciones($a_opciones_zona);
+$oDesplZonas->setOpciones(misas_desplegable_opciones($a_opciones_zona));
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_encargos_centros()');

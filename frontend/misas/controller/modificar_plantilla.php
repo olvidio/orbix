@@ -7,32 +7,33 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/misas/modificar_plantilla_data');
 
 $oDesplZonas = new Desplegable();
-$oDesplZonas->setOpciones($data['zonas_opciones'] ?? []);
+$oDesplZonas->setOpciones(misas_desplegable_opciones($data['zonas_opciones'] ?? []));
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_plantilla_zona()');
 
 $oDesplTipoPlantilla = new Desplegable();
-$oDesplTipoPlantilla->setOpciones($data['tipos_plantilla'] ?? []);
+$oDesplTipoPlantilla->setOpciones(misas_desplegable_opciones($data['tipos_plantilla'] ?? []));
 $oDesplTipoPlantilla->setNombre('tipo_plantilla');
-$oDesplTipoPlantilla->setOpcion_sel((string)($data['plantilla_selected'] ?? ''));
+$oDesplTipoPlantilla->setOpcion_sel(misas_string($data['plantilla_selected'] ?? ''));
 $oDesplTipoPlantilla->setAction('fnjs_ver_plantilla_zona()');
 
 $a_TiposPlantilla2 = array_merge(
     ['-' => ''],
-    $data['tipos_plantilla'] ?? []
+    misas_desplegable_opciones($data['tipos_plantilla'] ?? [])
 );
 $oDesplImportarDePlantilla = new Desplegable();
-$oDesplImportarDePlantilla->setOpciones($a_TiposPlantilla2);
+$oDesplImportarDePlantilla->setOpciones(misas_desplegable_opciones($a_TiposPlantilla2));
 $oDesplImportarDePlantilla->setNombre('importar_de_plantilla');
 
 $oDesplOrden = new Desplegable();
-$oDesplOrden->setOpciones($data['orden_opciones'] ?? []);
+$oDesplOrden->setOpciones(misas_desplegable_opciones($data['orden_opciones'] ?? []));
 $oDesplOrden->setNombre('orden');
 $oDesplOrden->setAction('fnjs_ver_plantilla_zona()');
 

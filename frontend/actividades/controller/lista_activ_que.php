@@ -14,6 +14,7 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -21,10 +22,7 @@ $oPosicion->recordar();
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-$permiso_des = false;
-if ($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des')) {
-    $permiso_des = true;
-}
+$permiso_des = actividades_perm_des();
 
 $url_lista = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/lista_activ.php';
 

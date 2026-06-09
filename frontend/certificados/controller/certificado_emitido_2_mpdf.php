@@ -6,26 +6,27 @@ use Mpdf\Mpdf;
 use Mpdf\MpdfException;
 use frontend\shared\security\HashFront;
 
-$Qguardar = empty($_GET['guardar']) ? '' : $_GET['guardar'];
+require_once __DIR__ . '/../helpers/certificados_support.php';
 
-// defino estas variables vacías, para que el IDE no señale errores, pero se definen en el include
-$nom = '';
+$Qguardar = tessera_imprimir_string($_GET['guardar'] ?? '');
+
 $footer = '';
 $certificado = '';
-$Qid_item = '';
-$id_nom = '';
+$Qid_item = 0;
+$id_nom = 0;
 
 ob_start();
-include(__DIR__ . '/certificado_emitido_imprimir_mpdf.php');
+include __DIR__ . '/certificado_emitido_imprimir_mpdf.php';
 $content = ob_get_clean();
+if ($content === false) {
+    $content = '';
+}
 
-// convert to PDF
-require_once(OrbixRuntime::dirLibs() . '/vendor/autoload.php');
+require_once OrbixRuntime::dirLibs() . '/vendor/autoload.php';
 
-//echo "$content";
-//exit();
-// quitar los acentos , ñ etc. del nombre
-$nom = frontend\shared\web\QuitarAcentos::convert($nom);
+$nomArchivo = (isset($nom) && is_string($nom) && $nom !== '')
+    ? frontend\shared\web\QuitarAcentos::convert($nom)
+    : 'certificado';
 
 $config = [
     'format' => 'A4',
@@ -41,56 +42,44 @@ try {
     $mpdf = new Mpdf($config);
     $mpdf->SetDisplayMode('fullpage');
 } catch (MpdfException $e) {
-    $msg_err = $e->getMessage();
-    echo($msg_err);
+    echo $e->getMessage();
     die();
 }
-$mpdf->list_indent_first_level = 0;    // 1 or 0 - whether to indent the first level of a list
+$mpdf->list_indent_first_level = 0;
 $mpdf->setHTMLFooter($footer);
 try {
     $mpdf->WriteHTML($content);
 } catch (MpdfException $e) {
-    $msg_err = $e->getMessage();
-    echo($msg_err);
+    echo $e->getMessage();
     die();
 }
 
-// grabar en la DB
-if (!empty($Qguardar)) {
+if ($Qguardar !== '') {
     try {
-        $pdf = $mpdf->Output("certificado($nom).pdf", 'S');
+        $pdf = $mpdf->Output("certificado($nomArchivo).pdf", 'S');
     } catch (MpdfException $e) {
-        $msg_err = $e->getMessage();
-        echo($msg_err);
+        echo $e->getMessage();
         die();
     }
-    /////////// Ejecutar en el backend ///////////////////
-    ///
-    // Codificar el PDF en base64 para envío seguro
     $pdf_base64 = base64_encode($pdf);
     $certificado_base64 = base64_encode($certificado);
 
-    $url_backend = '/src/certificados/certificado_emitido_guardar_pdf';
-    $a_campos_backend = [
+    require_once __DIR__ . '/certificado_emitido_aviso_html.php';
+    $data = certificados_post_data(PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_guardar_pdf', [
         'id_item' => $Qid_item,
         'id_nom' => $id_nom,
         'certificado' => $certificado_base64,
         'pdf' => $pdf_base64,
-    ];
-    require_once __DIR__ . '/certificado_emitido_aviso_html.php';
-    $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend, false);
+    ], false));
     if (!empty($data['error'])) {
         certificado_emitido_echo_aviso_y_salir(
-            PostRequest::stripInternalCallProvenance((string)$data['error'])
+            PostRequest::stripInternalCallProvenance(tessera_imprimir_string($data['error']))
         );
     }
 }
 
-    // Poner la salida del pdf al final, para poder mostrar si hay errores al guardar.
-    try {
-        $mpdf->Output("certificado($nom).pdf", 'D');
-    } catch (MpdfException $e) {
-        $msg_err = $e->getMessage();
-        echo($msg_err);
-    }
-
+try {
+    $mpdf->Output("certificado($nomArchivo).pdf", 'D');
+} catch (MpdfException $e) {
+    echo $e->getMessage();
+}

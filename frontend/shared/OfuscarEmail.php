@@ -14,11 +14,10 @@ class OfuscarEmail
      * @param string $maskChar El carácter a usar para la ofuscación (por defecto '*').
      * @return string La dirección de correo electrónico ofuscada, o la original si no es un formato válido.
      */
-    public static function ofuscarEmailParcial($email, $showCharsUser = 3, $showCharsDomain = 1, $maskChar = '*')
+    public static function ofuscarEmailParcial(string $email, int $showCharsUser = 3, int $showCharsDomain = 1, string $maskChar = '*'): string
     {
-        // Validar si el email tiene un formato básico válido con '@'
-        if (!is_string($email) || !str_contains($email, '@')) {
-            return $email; // Retorna el email original si no tiene un formato esperado
+        if (!str_contains($email, '@')) {
+            return $email;
         }
 
         $partes = explode('@', $email);

@@ -9,12 +9,14 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
-$Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$QdlRaw = filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qdl = is_array($QdlRaw) ? $QdlRaw : [];
 $Qfiltro = (int)filter_input(INPUT_POST, 'filtro');
 
 $rstgr = OrbixRuntime::miAmbito() === 'rstgr';
@@ -29,12 +31,12 @@ $a_profesores_numeros = ['lista' => 0];
 $a_profesores_listado = ['lista' => 1];
 
 if ($rstgr && $Qfiltro === 1) {
-    $aChecked = $Qdl;
+    $aChecked = notas_checked_ids_from_post($Qdl);
     $region_stgr = OrbixRuntime::miDele();
     $deleg = PostRequest::getDataFromUrl('/src/ubis/delegaciones_region_stgr_data', [
         'region_stgr' => $region_stgr,
     ]);
-    $a_delegacionesStgr = $deleg['a_delegaciones'] ?? [];
+    $a_delegacionesStgr = notas_desplegable_opciones($deleg['a_delegaciones'] ?? []);
 
     $oCuadros = new Desplegable();
     $oCuadros->setNombre('dl');
@@ -46,7 +48,7 @@ if ($rstgr && $Qfiltro === 1) {
     $oHash->setcamposNo('dl');
     $oHash->setArrayCamposHidden(['filtro' => 1]);
 
-    if (!empty($Qdl)) {
+    if ($Qdl !== []) {
         $a_comprobar_n = ['id_tabla' => 'n', 'dl' => $Qdl];
         $a_comprobar_a = ['id_tabla' => 'a', 'dl' => $Qdl];
         $a_n_listado = ['lista' => 1, 'dl' => $Qdl];
@@ -56,6 +58,17 @@ if ($rstgr && $Qfiltro === 1) {
         $a_profesores_numeros = ['lista' => 0, 'dl' => $Qdl];
         $a_profesores_listado = ['lista' => 1, 'dl' => $Qdl];
     }
+
+    $url = 'frontend/notas/controller/resumen_anual.php';
+    $a_camposFiltro = [
+        'oHash' => $oHash,
+        'url' => $url,
+        'boton_txt' => _("Aplicar filtro"),
+        'oCuadros' => $oCuadros,
+    ];
+
+    $oViewFiltro = new ViewNewTwig('frontend/ubis/controller');
+    $oViewFiltro->renderizar('dl_rstgr_que.html.twig', $a_camposFiltro);
 }
 
 $go['comprobar_n'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_n));
@@ -69,20 +82,8 @@ $go['profesores_listado'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() 
 $go['asig_faltan'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/asig_faltan_que.php');
 $go['filtro'] = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/resumen_anual.php?' . http_build_query(['filtro' => 1]));
 
-if ($rstgr && $Qfiltro === 1) {
-    $url = 'frontend/notas/controller/resumen_anual.php';
-    $a_campos = [
-        'oHash' => $oHash,
-        'url' => $url,
-        'boton_txt' => _("Aplicar filtro"),
-        'oCuadros' => $oCuadros,
-    ];
-
-    $oView = new ViewNewTwig('frontend/ubis/controller');
-    $oView->renderizar('dl_rstgr_que.html.twig', $a_campos);
-}
-
-if (!$rstgr || ($rstgr && !($Qfiltro === 1 && empty($Qdl)))) {
+$mostrarResumen = !$rstgr || $Qfiltro !== 1 || $Qdl !== [];
+if ($mostrarResumen) {
     $a_campos = [
         'go' => $go,
         'rstgr' => $rstgr,

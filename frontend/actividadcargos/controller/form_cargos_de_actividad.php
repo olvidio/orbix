@@ -16,21 +16,22 @@ use frontend\shared\PostRequest;
 use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadcargos/helpers/actividadcargos_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
-$data = PostRequest::getDataFromUrl('/src/actividadcargos/form_cargos_de_actividad_data', PostRequest::requestPayloadForHash());
-if (!empty($data['error'])) {
-    exit($data['error']);
+$raw = PostRequest::getDataFromUrl('/src/actividadcargos/form_cargos_de_actividad_data', PostRequest::requestPayloadForHash());
+if (!empty($raw['error'])) {
+    exit($raw['error']);
 }
-if (($data['redir'] ?? '') === 'go_atras') {
+if (($raw['redir'] ?? '') === 'go_atras') {
     echo $oPosicion->go_atras(1);
     return;
 }
-unset($data['redir'], $data['error']);
+unset($raw['redir'], $raw['error']);
 
-$data = FormCargosDeActividadHashCompose::withHashCamposHtml($data);
+$data = FormCargosDeActividadHashCompose::withHashCamposHtml(actividadcargos_string_key_payload($raw));
 $data = FormCargosDeActividadHashCompose::withDesplegablesHtml($data);
 
 $data['oPosicion'] = $oPosicion;

@@ -10,10 +10,15 @@ $id_tabla = (string)filter_input(INPUT_GET, 'id_tabla');
 ob_start();
 include __DIR__ . '/tessera_imprimir_mpdf.php';
 $content = ob_get_clean();
+if ($content === false) {
+    $content = '';
+}
 
 require_once OrbixRuntime::dirLibs() . '/vendor/autoload.php';
 
-$nom_archivo = isset($nom) ? frontend\shared\web\QuitarAcentos::convert($nom) : (string)$id_nom;
+$nom_archivo = isset($nom) && is_string($nom)
+    ? frontend\shared\web\QuitarAcentos::convert($nom)
+    : (string)$id_nom;
 
 $config = [
     'mode' => 'utf-8',

@@ -28,7 +28,9 @@ use frontend\shared\security\HashFront;
 use frontend\actividades\helpers\PrefillPermActividadesFases;
 use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
+use src\permisos\domain\PermisosActividades;
 
+require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -37,12 +39,7 @@ $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { // vengo de un checkbox
-    $Qid_activ = (integer)strtok($a_sel[0], "#");
-} else {
-    $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
-}
+$Qid_activ = actividades_id_activ_from_post();
 
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
@@ -54,15 +51,10 @@ $aQuery = array(
     'id_pau' => $Qid_activ,
     'obj_pau' => $Qobj_pau,
 );
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
-}
+array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
 $godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
-$permiso_des = FALSE;
-if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
-    $permiso_des = TRUE;
-}
+$permiso_des = actividades_perm_des();
 
 $alt = '';
 $dos = '';
@@ -91,6 +83,7 @@ $status = 0;
 $Bdl = 't';
 $isfsv = 0;
 $calc_tarifa_inicial = false;
+$dataRender = [];
 
 if (!empty($Qid_activ)) { // caso de modificar
     $alt = _("ver dossiers");
@@ -102,49 +95,51 @@ if (!empty($Qid_activ)) { // caso de modificar
     $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
         'with_all' => 't',
     ]);
-    $a_status = $labelsRow['id_to_label'] ?? [];
+    $a_status = actividades_status_labels_from_payload($labelsRow);
 
     // Primera pasada: leemos solo la entidad para resolver permisos e isfsv.
     $dataEntidad = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
         'id_activ' => $Qid_activ,
     ]);
-    $entidad = $dataEntidad['entidad'] ?? null;
-    if ($entidad === null) {
-        die(_("No se encuentra la actividad"));
-    }
+    $entidad = actividades_entidad_from_ver_datos($dataEntidad);
 
-    $id_tipo_activ = (string)$entidad['id_tipo_activ'];
-    $dl_org = (string)$entidad['dl_org'];
-    $nom_activ = (string)$entidad['nom_activ'];
-    $id_ubi = (int)$entidad['id_ubi'];
-    $f_ini = (string)$entidad['f_ini'];
-    $h_ini = (string)$entidad['h_ini'];
-    $f_fin = (string)$entidad['f_fin'];
-    $h_fin = (string)$entidad['h_fin'];
+    $id_tipo_activ = $entidad['id_tipo_activ'];
+    $dl_org = $entidad['dl_org'];
+    $nom_activ = $entidad['nom_activ'];
+    $id_ubi = $entidad['id_ubi'];
+    $f_ini = $entidad['f_ini'];
+    $h_ini = $entidad['h_ini'];
+    $f_fin = $entidad['f_fin'];
+    $h_fin = $entidad['h_fin'];
     $precio = $entidad['precio'];
-    $status = (int)$entidad['status'];
-    $observ = (string)$entidad['observ'];
-    $nivel_stgr = $entidad['nivel_stgr'] ?? NivelStgrId::N;
-    $lugar_esp = (string)$entidad['lugar_esp'];
+    $status = $entidad['status'];
+    $observ = $entidad['observ'];
+    $nivel_stgr = $entidad['nivel_stgr'] !== '' ? $entidad['nivel_stgr'] : NivelStgrId::N;
+    $lugar_esp = $entidad['lugar_esp'];
     $tarifa = $entidad['tarifa'];
-    $id_repeticion = (int)$entidad['id_repeticion'];
+    $id_repeticion = $entidad['id_repeticion'];
     $publicado = $entidad['publicado'];
     $plazas = $entidad['plazas'];
-    $idioma = (string)$entidad['idioma'];
+    $idioma = $entidad['idioma'];
 
-    $_SESSION['oPermActividades']->setActividad($Qid_activ, $id_tipo_activ, $dl_org);
+    $oPermActividades = actividades_o_perm_actividades();
+    if (!$oPermActividades instanceof PermisosActividades) {
+        die();
+    }
+    $oPermActividades->setActividad($Qid_activ, $id_tipo_activ, $dl_org);
     PrefillPermActividadesFases::desdeBackend($Qid_activ);
-    $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+    $oPermActiv = $oPermActividades->getPermisoActual('datos');
 
     if ($oPermActiv->only_perm('ocupado')) {
         die();
     }
 
-    $ssfsv = (string)($dataEntidad['ssfsv'] ?? '');
-    $sasistentes = (string)($dataEntidad['sasistentes'] ?? '');
-    $sactividad = (string)($dataEntidad['sactividad'] ?? '');
-    $snom_tipo = (string)($dataEntidad['snom_tipo'] ?? '');
-    $isfsv = (int)($dataEntidad['isfsv'] ?? 0);
+    $renderEntidad = actividades_ver_render_from_payload($dataEntidad);
+    $ssfsv = $renderEntidad['ssfsv'];
+    $sasistentes = $renderEntidad['sasistentes'];
+    $sactividad = $renderEntidad['sactividad'];
+    $snom_tipo = $renderEntidad['snom_tipo'];
+    $isfsv = $renderEntidad['isfsv'];
 
     if (AppInstalled::is('procesos')) {
         $Bdl = $oPermActiv->have_perm_activ('ver') ? 't' : 'f';
@@ -160,7 +155,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
         'with_all' => 'f',
     ]);
-    $a_status = $labelsRow['id_to_label'] ?? [];
+    $a_status = actividades_status_labels_from_payload($labelsRow);
     $dl_org = OrbixRuntime::miDelef();
     $status = ActividadStatusId::PROYECTO;
     $id_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
@@ -207,17 +202,18 @@ if (!empty($Qid_activ)) { // caso de modificar
             'id_tipo_activ' => $id_tipo_activ,
             'dl_propia' => 't',
         ]);
-        $crearPropia = $rowPropia['permiso_crear'] ?? false;
+        $crearPropia = actividades_permiso_crear_from_row($rowPropia);
         if (!empty($rowPropia['aviso'])) {
-            echo '<br>' . $rowPropia['aviso'];
+            echo '<br>' . tessera_imprimir_string($rowPropia['aviso']);
         }
-        if ($crearPropia === FALSE) {
+        if ($crearPropia === null) {
             echo '<br>';
             die (_("No tiene permiso para crear una actividad de este tipo"));
         }
 
+        $oPerm = actividades_o_perm();
         $of_responsable_txt = $crearPropia['of_responsable_txt'];
-        if (!empty($of_responsable_txt) && $_SESSION['oPerm']->have_perm_oficina($of_responsable_txt)) {
+        if (!empty($of_responsable_txt) && $oPerm !== null && $oPerm->have_perm_oficina($of_responsable_txt)) {
             $Bdl = 't';
             $status = $crearPropia['status'];
         } else {
@@ -230,16 +226,16 @@ if (!empty($Qid_activ)) { // caso de modificar
                     'id_tipo_activ' => $id_tipo_activ,
                     'dl_propia' => 'f',
                 ]);
-                $crearEx = $rowEx['permiso_crear'] ?? false;
+                $crearEx = actividades_permiso_crear_from_row($rowEx);
                 if (!empty($rowEx['aviso'])) {
-                    echo '<br>' . $rowEx['aviso'];
+                    echo '<br>' . tessera_imprimir_string($rowEx['aviso']);
                 }
-                if ($crearEx === false || !is_array($crearEx)) {
+                if ($crearEx === null) {
                     die (_("No tiene permiso para crear una actividad de este tipo"));
                 }
                 $of_responsable_txt = $crearEx['of_responsable_txt'];
                 $status = $crearEx['status'];
-                if (!$_SESSION['oPerm']->have_perm_oficina($of_responsable_txt)) {
+                if ($oPerm === null || !$oPerm->have_perm_oficina($of_responsable_txt)) {
                     die (_("No tiene permiso para crear una actividad de este tipo"));
                 }
             }
@@ -254,7 +250,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         $dataNivelDef = PostRequest::getDataFromUrl('/src/actividades/actividad_nivel_stgr_default_datos', [
             'id_tipo_activ' => $id_tipo_activ,
         ]);
-        $nivel_stgr = (int)($dataNivelDef['nivel_stgr_default'] ?? 9);
+        $nivel_stgr = tessera_imprimir_int($dataNivelDef['nivel_stgr_default'] ?? 9);
     }
 
     // Pedir desplegables + tarifa inicial para el caso 'nuevo'.
@@ -276,12 +272,13 @@ if (!empty($Qid_activ)) { // caso de modificar
     }
 }
 
-$html_despl_dl_org = (string)($dataRender['html_despl_dl_org'] ?? '');
-$html_despl_tarifa = (string)($dataRender['html_despl_tarifa'] ?? '');
-$html_despl_nivel_stgr = (string)($dataRender['html_despl_nivel_stgr'] ?? '');
-$html_despl_idioma = (string)($dataRender['html_despl_idioma'] ?? '');
-$html_despl_repeticion = (string)($dataRender['html_despl_repeticion'] ?? '');
-$nombre_ubi = (string)($dataRender['nombre_ubi'] ?? '');
+$renderForm = actividades_ver_render_from_payload($dataRender);
+$html_despl_dl_org = $renderForm['html_despl_dl_org'];
+$html_despl_tarifa = $renderForm['html_despl_tarifa'];
+$html_despl_nivel_stgr = $renderForm['html_despl_nivel_stgr'];
+$html_despl_idioma = $renderForm['html_despl_idioma'];
+$html_despl_repeticion = $renderForm['html_despl_repeticion'];
+$nombre_ubi = $renderForm['nombre_ubi'];
 
 // En el caso 'nuevo' pedimos tarifa_inicial; si vino, hay que regenerar el
 // desplegable de tarifa con la opcion ya seleccionada.
@@ -299,7 +296,10 @@ if (!empty($tarifa) && !empty($calc_tarifa_inicial)) {
         'id_tipo_activ' => $id_tipo_activ,
         'calc_tarifa_inicial' => 0,
     ]);
-    $html_despl_tarifa = (string)($dataTarifa['html_despl_tarifa'] ?? $html_despl_tarifa);
+    $renderTarifa = actividades_ver_render_from_payload($dataTarifa);
+    if ($renderTarifa['html_despl_tarifa'] !== '') {
+        $html_despl_tarifa = $renderTarifa['html_despl_tarifa'];
+    }
 }
 
 $oHash = new HashFront();
@@ -337,7 +337,7 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'snom_tipo' => $snom_tipo,
     'extendida' => $extendida ? 't' : '',
 ]);
-$actividad_tipo_html = (string)($dataTipoBloque['actividad_tipo_html'] ?? '');
+$actividad_tipo_html = tessera_imprimir_string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 

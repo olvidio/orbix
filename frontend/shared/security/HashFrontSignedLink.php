@@ -14,16 +14,23 @@ use frontend\shared\config\AppUrlConfig;
  */
 final class HashFrontSignedLink
 {
+    public static function tryFromSpec(mixed $value): string
+    {
+        $spec = self::parseLinkSpec($value);
+
+        return $spec === null ? '' : self::fromSpec($spec);
+    }
+
     /**
      * @param array{path: string, query?: array<string, mixed>} $spec
      */
     public static function fromSpec(array $spec): string
     {
-        $path = (string) ($spec['path'] ?? '');
+        $path = $spec['path'];
         if ($path === '') {
             return '';
         }
-        $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
+        $query = $spec['query'] ?? [];
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $url = $base . '/' . ltrim($path, '/');
         if ($query !== []) {
@@ -43,13 +50,50 @@ final class HashFrontSignedLink
     {
         $out = [];
         foreach ($specsByLabel as $label => $spec) {
-            if (!is_array($spec)) {
-                continue;
-            }
             $out[$label] = self::fromSpec($spec);
         }
 
         return $out;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private static function parseQuery(mixed $query): ?array
+    {
+        if (!is_array($query)) {
+            return null;
+        }
+        $out = [];
+        foreach ($query as $key => $val) {
+            $out[(string) $key] = $val;
+        }
+
+        return $out;
+    }
+
+    /**
+     * @return array{path: string, query?: array<string, mixed>}|null
+     */
+    private static function parseLinkSpec(mixed $value): ?array
+    {
+        if (!is_array($value)) {
+            return null;
+        }
+        $path = $value['path'] ?? null;
+        if (!is_string($path) || $path === '') {
+            return null;
+        }
+        $query = $value['query'] ?? null;
+        if ($query === null) {
+            return ['path' => $path];
+        }
+        $normalizedQuery = self::parseQuery($query);
+        if ($normalizedQuery === null) {
+            return null;
+        }
+
+        return ['path' => $path, 'query' => $normalizedQuery];
     }
 
     /**
@@ -63,15 +107,14 @@ final class HashFrontSignedLink
     public static function signRowLinkSpecs(array $rows, array $cols): array
     {
         foreach ($rows as $i => $row) {
-            if (!is_array($row)) {
-                continue;
-            }
             foreach ($cols as $col) {
                 $specKey = $col . '_link_spec';
-                if (!empty($row[$specKey]) && is_array($row[$specKey])) {
-                    $rows[$i][$col] = self::fromSpec($row[$specKey]);
-                    unset($rows[$i][$specKey]);
+                $spec = self::parseLinkSpec($row[$specKey] ?? null);
+                if ($spec === null) {
+                    continue;
                 }
+                $rows[$i][$col] = self::fromSpec($spec);
+                unset($rows[$i][$specKey]);
             }
         }
 

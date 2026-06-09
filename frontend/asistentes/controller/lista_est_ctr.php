@@ -4,6 +4,7 @@ use frontend\shared\PostRequest;
 use function frontend\shared\helpers\payload_string;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/asistentes_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -27,8 +28,7 @@ $oPosicion->setParametros([
 ], 1);
 
 $campos = array_merge($_GET, $_POST);
-$data = PostRequest::getDataFromUrl('/src/asistentes/lista_est_ctr_data', $campos);
-$payload = is_array($data) ? $data : [];
+$payload = asistentes_post_data(PostRequest::getDataFromUrl('/src/asistentes/lista_est_ctr_data', $campos));
 
 echo $oPosicion->mostrar_left_slide(1);
 echo payload_string($payload, 'lista_html');

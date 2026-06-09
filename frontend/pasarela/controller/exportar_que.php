@@ -18,6 +18,7 @@ use frontend\shared\FrontBootstrap;
  * @since        2/8/2011.
  */
 
+require_once __DIR__ . '/../helpers/pasarela_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -57,7 +58,7 @@ $dataTipoHtml = PostRequest::getDataFromUrl('/src/pasarela/exportar_que_activida
     'sactividad' => $Qsactividad,
     'snom_tipo' => $Qsnom_tipo,
 ]);
-$html_actividad_tipo = (string)($dataTipoHtml['html'] ?? '');
+$html_actividad_tipo = tessera_imprimir_string($dataTipoHtml['html'] ?? '');
 
 $aOpciones = [
     'tot_any' => _('todo el año'),

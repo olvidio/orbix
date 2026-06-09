@@ -24,7 +24,6 @@ $Qlista = (string)filter_input(INPUT_POST, 'lista');
 $datos = PostRequest::getDataFromUrl('/src/notas/informe_stgr_profesores_data', [
     'lista' => $Qlista,
 ]);
-$datos = is_array($datos) ? $datos : [];
 
 $a_campos = [
     'titulo' => strtoupper_dlb(_("profesores stgr")),

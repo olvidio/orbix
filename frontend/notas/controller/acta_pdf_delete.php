@@ -1,8 +1,8 @@
 <?php
 
-use frontend\shared\FrontBootstrap;
-
 declare(strict_types=1);
+
+use frontend\shared\FrontBootstrap;
 
 /**
  * Eliminación AJAX del PDF firmado del acta.

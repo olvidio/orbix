@@ -8,6 +8,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -19,11 +20,11 @@ $campos = [
     'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
 ];
 
-$data = PostRequest::getDataFromUrl('/src/casas/casa_actividades_lista_data', $campos);
-$payload = is_array($data) ? $data : [];
+$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/casa_actividades_lista_data', $campos));
+$lista = casas_actividades_lista_from_payload($data);
 
 $oLista = new Lista();
-$oLista->setGrupos($payload['a_grupos'] ?? []);
-$oLista->setCabeceras($payload['a_cabeceras'] ?? []);
-$oLista->setDatos($payload['a_valores'] ?? []);
+$oLista->setGrupos($lista['grupos']);
+$oLista->setCabeceras($lista['cabeceras']);
+$oLista->setDatos($lista['valores']);
 echo $oLista->listaPaginada();

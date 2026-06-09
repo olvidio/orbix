@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
@@ -35,9 +36,9 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
-$Qid_tipo_enc = (int)filter_input(INPUT_POST, 'id_tipo_enc');
-$Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
+$Qtitulo = encargossacd_post_string('titulo');
+$Qid_tipo_enc = encargossacd_post_int('id_tipo_enc');
+$Qdesc_enc = encargossacd_post_string('desc_enc');
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/encargo_select_data', [
@@ -70,9 +71,10 @@ if (!empty($Qscroll_id)) {
 $i = 0;
 foreach ($filas as $fila) {
     $i++;
-    $id_enc = (int)($fila['id_enc'] ?? 0);
-    $sf_sv = (int)($fila['sf_sv'] ?? 0);
-    $desc_enc = (string)($fila['desc_enc'] ?? '');
+    $row = encargossacd_encargo_select_row($fila);
+    $id_enc = $row['id_enc'];
+    $sf_sv = $row['sf_sv'];
+    $desc_enc = $row['desc_enc'];
 
     $aQuery = ['que' => 'editar', 'id_enc' => $id_enc];
     array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
@@ -82,11 +84,11 @@ foreach ($filas as $fila) {
         $a_valores[$i]['clase'] = 'tono2';
     }
     $a_valores[$i]['sel'] = $id_enc;
-    $a_valores[$i][1] = (string)($fila['seccion'] ?? '');
+    $a_valores[$i][1] = $row['seccion'];
     $a_valores[$i][2] = ['ira' => $pagina, 'valor' => $desc_enc];
-    $a_valores[$i][3] = (string)($fila['nombre_ubi'] ?? '');
-    $a_valores[$i][4] = (string)($fila['desc_lugar'] ?? '');
-    $a_valores[$i][5] = (string)($fila['idioma'] ?? '');
+    $a_valores[$i][3] = $row['nombre_ubi'];
+    $a_valores[$i][4] = $row['desc_lugar'];
+    $a_valores[$i][5] = $row['idioma'];
 }
 
 $aQuery = ['que' => 'nuevo', 'id_tipo_enc' => $Qid_tipo_enc];

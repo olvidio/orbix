@@ -12,12 +12,13 @@ use frontend\shared\FrontBootstrap;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qsf = (int)filter_input(INPUT_POST, 'sf');
+$Qsf = encargossacd_post_int('sf');
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_d_data', ['sf' => $Qsf]);
 
-echo (string)($datos['Html'] ?? '');
+echo tessera_imprimir_string($datos['Html'] ?? '');

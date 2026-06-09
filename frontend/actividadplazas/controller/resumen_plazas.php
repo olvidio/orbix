@@ -20,14 +20,15 @@ use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) {
-    $id_activ = (int)strtok($a_sel[0], '#');
-    $nom_activ = (string)strtok('#');
+$selParts = actividadplazas_sel_hash_parts();
+if ($selParts !== null) {
+    $id_activ = tessera_imprimir_int($selParts['first']);
+    $nom_activ = $selParts['second'];
 } else {
     $id_activ = (int)filter_input(INPUT_POST, 'id_activ');
     $nom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
@@ -41,23 +42,13 @@ $campos = [
     'nom_activ' => $nom_activ,
 ];
 
-$data = PostRequest::getDataFromUrl('/src/actividadplazas/resumen_plazas_data', $campos);
-$payload = is_array($data) ? $data : [];
-
-$publicado = (bool)($payload['publicado'] ?? false);
-$otra_dl = (bool)($payload['otra_dl'] ?? false);
-$a_plazas = $payload['a_plazas'] ?? [];
-$plazas_totales = (int)($payload['plazas_totales'] ?? 0);
-$tot_calendario = (int)($payload['tot_calendario'] ?? 0);
-$tot_cedidas = (int)($payload['tot_cedidas'] ?? 0);
-$tot_conseguidas = (int)($payload['tot_conseguidas'] ?? 0);
-$tot_disponibles = (int)($payload['tot_disponibles'] ?? 0);
-$tot_ocupadas = (int)($payload['tot_ocupadas'] ?? 0);
-$dl_opciones = $payload['dl_opciones'] ?? [];
+$payload = actividadplazas_gestion_plazas_from_payload(
+    PostRequest::getDataFromUrl('/src/actividadplazas/resumen_plazas_data', $campos)
+);
 
 $oDesplDelegaciones = new Desplegable();
 $oDesplDelegaciones->setNombre('region_dl');
-$oDesplDelegaciones->setOpciones($dl_opciones);
+$oDesplDelegaciones->setOpciones($payload['dl_opciones']);
 
 $oHash = new HashFront();
 $oHash->setCamposForm('num_plazas!region_dl');
@@ -82,16 +73,16 @@ $a_campos = [
     'oPosicion' => $oPosicion,
     'oHashActualizar' => $oHashActualizar,
     'oHash' => $oHash,
-    'publicado' => $publicado,
-    'otra_dl' => $otra_dl,
+    'publicado' => $payload['publicado'],
+    'otra_dl' => $payload['otra_dl'],
     'nom_activ' => $nom_activ,
-    'a_plazas' => $a_plazas,
-    'tot_calendario' => $tot_calendario,
-    'plazas_totales' => $plazas_totales,
-    'tot_cedidas' => $tot_cedidas,
-    'tot_conseguidas' => $tot_conseguidas,
-    'tot_disponibles' => $tot_disponibles,
-    'tot_ocupadas' => $tot_ocupadas,
+    'a_plazas' => $payload['a_plazas'],
+    'tot_calendario' => $payload['tot_calendario'],
+    'plazas_totales' => $payload['plazas_totales'],
+    'tot_cedidas' => $payload['tot_cedidas'],
+    'tot_conseguidas' => $payload['tot_conseguidas'],
+    'tot_disponibles' => $payload['tot_disponibles'],
+    'tot_ocupadas' => $payload['tot_ocupadas'],
     'oDesplDelegaciones' => $oDesplDelegaciones,
     'url_ceder' => $url_ceder,
 ];

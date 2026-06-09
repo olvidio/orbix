@@ -18,6 +18,7 @@ use frontend\shared\FrontBootstrap;
  * (slice 3 de la migracion del modulo planning). La plantilla se ha
  * reescrito como PHTML; ya no se usa Twig.
  */
+require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
@@ -65,16 +66,15 @@ if (empty($Qtrimestre)) {
 }
 
 $zonesData = PostRequest::getDataFromUrl('/src/planning/planning_zones_que_data', []);
-$aOpciones = (array)($zonesData['opciones_zonas'] ?? []);
+$aOpciones = notas_desplegable_opciones($zonesData['opciones_zonas'] ?? []);
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
 $oDesplZonas->setBlanco(false);
-$oDesplZonas->setBlanco(0);
-if (!empty($Qid_zona)) {
-    $oDesplZonas->setOpcion_sel($Qid_zona);
+if ($Qid_zona !== 0) {
+    $oDesplZonas->setOpcion_sel(planning_desplegable_opcion_sel($Qid_zona));
 }
 
-$is_jefeCalendario = $_SESSION['oConfig']->is_jefeCalendario();
+$is_jefeCalendario = planning_is_jefe_calendario();
 $url = 'frontend/planning/controller/planning_zones_select.php';
 
 $oHash = new HashFront();
@@ -87,17 +87,9 @@ $oHash->setCamposForm('actividad!year!id_zona!trimestre');
 $oHash->setCamposNo('modelo');
 
 $oFormAny = new PeriodoQue();
-$any = (int)date('Y');
-$aOpcionesAnys = [
-    $any - 4 => $any - 4,
-    $any - 3 => $any - 3,
-    $any - 2 => $any - 2,
-    $any - 1 => $any - 1,
-    $any => $any,
-    $any + 1 => $any + 1,
-];
+$aOpcionesAnys = planning_periodo_anys_opciones();
 $oFormAny->setPosiblesAnys($aOpcionesAnys);
-$oFormAny->setDesplAnysOpcion_sel($year);
+$oFormAny->setDesplAnysOpcion_sel(planning_desplegable_opcion_sel($year));
 
 $chk_actividad_si = ($Qactividad !== '' && $Qactividad === 'no') ? '' : 'checked';
 $chk_actividad_no = ($Qactividad === 'no') ? 'checked' : '';

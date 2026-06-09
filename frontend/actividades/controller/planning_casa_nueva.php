@@ -21,16 +21,14 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
-$Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
+$Qid_ubi = tessera_imprimir_int(filter_input(INPUT_POST, 'id_ubi'));
 
-$permiso_des = false;
-if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
-    $permiso_des = true;
-}
+$permiso_des = actividades_perm_des();
 
 $id_tipo_activ = '';
 $isfsv_input = OrbixRuntime::miSfsv();
@@ -45,13 +43,13 @@ $data = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
     'id_tipo_activ' => $id_tipo_activ,
 ]);
 
-$isfsv = (int)($data['isfsv'] ?? $isfsv_input);
-$html_despl_dl_org = (string)($data['html_despl_dl_org'] ?? '');
-$html_despl_tarifa = (string)($data['html_despl_tarifa'] ?? '');
-$html_despl_nivel_stgr = (string)($data['html_despl_nivel_stgr'] ?? '');
-$html_despl_idioma = (string)($data['html_despl_idioma'] ?? '');
-$html_despl_repeticion = (string)($data['html_despl_repeticion'] ?? '');
-$nombre_ubi = (string)($data['nombre_ubi'] ?? '');
+$render = actividades_ver_render_from_payload($data);
+$html_despl_dl_org = $render['html_despl_dl_org'];
+$html_despl_tarifa = $render['html_despl_tarifa'];
+$html_despl_nivel_stgr = $render['html_despl_nivel_stgr'];
+$html_despl_idioma = $render['html_despl_idioma'];
+$html_despl_repeticion = $render['html_despl_repeticion'];
+$nombre_ubi = $render['nombre_ubi'];
 
 $nom_activ = '';
 $f_ini = '';
@@ -89,7 +87,7 @@ $h = $oHash1->linkSinValParams();
 $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
     'with_all' => 'f',
 ]);
-$a_status = $labelsRow['id_to_label'] ?? [];
+$a_status = actividades_status_labels_from_payload($labelsRow);
 
 $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
     'perm_jefe' => 'f',
@@ -102,7 +100,7 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'snom_tipo' => $snom_tipo,
     'extendida' => '',
 ]);
-$actividad_tipo_html = (string)($dataTipoBloque['actividad_tipo_html'] ?? '');
+$actividad_tipo_html = tessera_imprimir_string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 

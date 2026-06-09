@@ -19,6 +19,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -35,7 +36,7 @@ if ($Qok === 1) {
         'ver_lista' => $Qver_lista,
     ]);
 
-    echo (string)($data['html'] ?? '');
+    echo tessera_imprimir_string($data['html'] ?? '');
     return;
 }
 

@@ -1,28 +1,18 @@
 <?php
 
-use frontend\shared\config\AppUrlConfig;
-use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
-/**
- * Esta página muestra una tabla con los ubis seleccionados.
- *
- * @package    delegacion
- * @subpackage    ubis
- * @author    Daniel Serrabou
- * @since        15/5/02.
- *
- * Se tiene en cuenta si es una vuelta de un go_to
- */
+require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
-//Si vengo por medio de Posicion, borro la última
 $Qid_sel = null;
 $Qscroll_id = null;
 if (isset($_POST['stack'])) {
@@ -37,66 +27,37 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$params = $_POST;
+$params = ubis_post_data($_POST);
 if ($Qid_sel !== null && $Qid_sel !== '') {
-    $params['id_sel'] = $Qid_sel;
+    $params['id_sel'] = tessera_imprimir_string($Qid_sel);
 }
 if ($Qscroll_id !== null && $Qscroll_id !== '') {
-    $params['scroll_id'] = $Qscroll_id;
+    $params['scroll_id'] = tessera_imprimir_string($Qscroll_id);
 }
 
-$data = PostRequest::getDataFromUrl('/src/ubis/ubis_tabla_data', $params);
+$tabla = ubis_tabla_from_payload(ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/ubis_tabla_data', $params)));
 
-$oPosicion->setParametros($data['go_back'], 1);
+$oPosicion->setParametros($tabla['go_back'], 1);
 
-$a_valores = $data['a_valores'];
-$baseUrl = AppUrlConfig::getPublicAppBaseUrl();
-foreach ($a_valores as $idx => $fila) {
-    if (!is_array($fila)) {
-        continue;
-    }
-    foreach ($fila as $colKey => $cell) {
-        if (!is_array($cell) || !isset($cell['link_spec'])) {
-            continue;
-        }
-        $spec = $cell['link_spec'];
-        $path = (string)($spec['path'] ?? '');
-        $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
-        if ($path === '') {
-            continue;
-        }
-        $url = $baseUrl . '/' . ltrim($path, '/') . '?' . http_build_query($query);
-        $a_valores[$idx][$colKey]['ira'] = HashFront::link($url);
-        unset($a_valores[$idx][$colKey]['link_spec']);
-    }
-}
-
-$pagina_link = '';
-if (!empty($data['pagina_link_spec']) && is_array($data['pagina_link_spec'])) {
-    $spec = $data['pagina_link_spec'];
-    $path = (string)($spec['path'] ?? '');
-    $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
-    if ($path !== '') {
-        $pagina_link = HashFront::link($baseUrl . '/' . ltrim($path, '/') . '?' . http_build_query($query));
-    }
-}
+$a_valores = ubis_sign_lista_valores($tabla['valores']);
+$pagina_link = ubis_pagina_link_from_tabla($tabla);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('ubis_tabla');
-$oTabla->setCabeceras($data['a_cabeceras']);
-$oTabla->setBotones($data['a_botones']);
+$oTabla->setCabeceras($tabla['cabeceras']);
+$oTabla->setBotones($tabla['botones']);
 $oTabla->setDatos($a_valores);
 
 $oHash = new HashFront();
 $oHash->setCamposForm('!sel');
 $oHash->setCamposNo('!scroll_id');
-$oHash->setArrayCamposHidden($data['hash_hidden']);
+$oHash->setArrayCamposHidden($tabla['hash_hidden']);
 
 $a_campos = [
     'oHash' => $oHash,
-    'titulo' => $data['titulo'],
+    'titulo' => $tabla['titulo'],
     'oTabla' => $oTabla,
-    'nueva_ficha' => $data['nueva_ficha'],
+    'nueva_ficha' => $tabla['nueva_ficha'],
     'pagina_link' => $pagina_link,
 ];
 

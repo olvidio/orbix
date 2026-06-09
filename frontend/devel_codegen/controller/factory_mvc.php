@@ -2,7 +2,9 @@
 
 namespace frontend\devel_codegen\controller;
 
+use frontend\shared\FrontBootstrap;
 use frontend\shared\config\OrbixRuntime;
+use src\shared\infrastructure\GlobalPdo;
 
 /**
  * programa per generar les classes a partir de la taula
@@ -12,6 +14,7 @@ use frontend\shared\config\OrbixRuntime;
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
+require_once __DIR__ . '/../helpers/devel_codegen_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 require_once __DIR__ . '/func_factory.php';
@@ -28,27 +31,23 @@ if (empty($Qtabla)) {
 	exit("Ha de dir quina taula");
 }
 // si la tabla tiene el schema, hay que separalo:
-$schema_sql = '';
-$tabla = $Qtabla;
-$schema = strtok($tabla, '.');
-if ($schema !== $tabla) {
-	$tabla = strtok('.');
-	$schema_sql = "and n.nspname='$schema' ";
-}
-else {
-	$schema = 'public';
-}
+$schemaParts = devel_codegen_schema_table_parts($Qtabla);
+$schema_sql = $schemaParts['schema_sql'];
+$tabla = $schemaParts['tabla'];
+$schema = $schemaParts['schema'];
 
 
-if (isset($Qdb)) {
-	switch ($Qdb) {
+if ($Qdb === '') {
+	exit("Ha de dir quina base de dades");
+}
+switch ($Qdb) {
 		case "tramity":
-			$oDbl = $oDBT;
+			$oDbl = GlobalPdo::get('oDBT');
 			$oDB_txt = 'oDBT';
 			$prefix = '';
 			break;
 		case "comun":
-			$oDbl = $oDBC;
+			$oDbl = GlobalPdo::get('oDBC');
 			$oDB_txt = 'oDBC';
 			$prefix = '';
 			switch ($schema) {
@@ -65,7 +64,7 @@ if (isset($Qdb)) {
 			break;
 		case "sv":
 		case "sf":
-			$oDbl = $oDB;
+			$oDbl = GlobalPdo::get('oDB');
 			$oDB_txt = 'oDB';
 			$prefix = '';
 			switch ($schema) {
@@ -85,7 +84,7 @@ if (isset($Qdb)) {
 			break;
 		case "test-dl_interior":
 		case "dl_interior":
-			$oDbl = $oDB;
+			$oDbl = GlobalPdo::get('oDB');
 			$oDB_txt = 'oDB';
 			$prefix = '';
 			switch ($schema) {
@@ -114,31 +113,27 @@ if (isset($Qdb)) {
 			break;
 		case "test-actividades":
 		case "actividades":
-			$oDbl = $oDBA;
+			$oDbl = GlobalPdo::get('oDBA');
 			$oDB_txt = 'oDBA';
 			$prefix = '';
 			break;
 		case "registro":
-			$oDbl = $oDBR;
+			$oDbl = GlobalPdo::get('oDBR');
 			$oDB_txt = 'oDBR';
 			$prefix = '';
 			break;
 		case "documentos":
-			$oDbl = $oDBD;
+			$oDbl = GlobalPdo::get('oDBD');
 			$oDB_txt = 'oDBD';
 			$prefix = '';
 			break;
 		case "dlbf":
-			$oDbl = $oDBF;
+			$oDbl = GlobalPdo::get('oDBF');
 			$oDB_txt = 'oDBF';
 			$prefix = '';
 			break;
 		default:
 			exit("Ha de dir quina base de dades");
-	}
-}
-else {
-	exit("Ha de dir quina base de dades");
 }
 
 
@@ -230,7 +225,8 @@ $altres_gets_set = "";
 $query_if = "";
 $err_bool = "";
 $a_auto = [];
-foreach ($oDbl->query($sql) as $row) {
+$aClaus2 = [];
+foreach (devel_codegen_sql_rows($oDbl, $sql) as $row) {
 	$nomcamp = $row['field'];
 	if ($nomcamp === 'id_schema') {
 		continue;
@@ -238,6 +234,9 @@ foreach ($oDbl->query($sql) as $row) {
 	$NomCamp = ucwords($nomcamp);
 	$tipo = $row['type'];
 	$not_null = $row['notnull'];
+	$tip = 's';
+	$tipo_db = 'string';
+	$tip_val = '';
 
 	$sql_get_default = "SELECT pg_get_expr(adbin, adrelid) AS rowdefault
 				FROM pg_catalog.pg_attrdef d,
@@ -251,7 +250,7 @@ foreach ($oDbl->query($sql) as $row) {
 					and d.adnum =" . $row['attnum'];
 
 	//echo "sql_def: $sql_get_default<br>";
-	$default = $oDbl->query($sql_get_default)->fetchColumn();
+	$default = devel_codegen_fetch_column($oDbl, $sql_get_default);
 	$auto = 0;
 	if (!empty($default)) { //nomes agafo un. li dono preferencia al id_local
 		$matches = [];
@@ -305,6 +304,11 @@ foreach ($oDbl->query($sql) as $row) {
 			$tipo_db = 'boolean';
 			$tip = 'b';
 			$tip_val = 'f';
+			break;
+		default:
+			$tipo_db = 'string';
+			$tip = 's';
+			$tip_val = '';
 			break;
 	}
 	$atributs .= '

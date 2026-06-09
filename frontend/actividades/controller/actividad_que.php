@@ -21,6 +21,7 @@ use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -43,7 +44,7 @@ $Qmodo = (string)filter_input(INPUT_POST, 'modo');
 $Qmodo = empty($Qmodo) ? 'buscar' : $Qmodo;
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qstatus = (integer)filter_input(INPUT_POST, 'status');
-$Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+$Qid_tipo_activ = tessera_imprimir_string(filter_input(INPUT_POST, 'id_tipo_activ'));
 $Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
@@ -59,7 +60,7 @@ $Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
 
 $isfsv = OrbixRuntime::miSfsv();
 $ssfsv = '';
-if (!($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des'))) {
+if (!actividades_perm_des()) {
     if ($isfsv === 1) {
         $ssfsv = 'sv';
     }
@@ -142,9 +143,7 @@ $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
 $h = $oHash1->linkSinValParams();
 
 $aQuery = array('que' => $Qque, 'sactividad' => $Qsactividad, 'sasistentes' => $Qsasistentes);
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
-}
+array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
 $Link_borrar = HashFront::link('frontend/actividades/controller/actividad_que.php?' . http_build_query($aQuery));
 
 switch ($Qmodo) {
@@ -177,13 +176,9 @@ switch ($Qque) {
         break;
 }
 
-$perm_jefe = FALSE;
-if ($_SESSION['oConfig']->is_jefeCalendario()
-    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && OrbixRuntime::miSfsv() === 1)
-    || ($_SESSION['oPerm']->have_perm_oficina('admin_sf') && OrbixRuntime::miSfsv() === 2)
-) {
-    $perm_jefe = TRUE;
-}
+$perm_jefe = actividades_is_jefe_calendario()
+    || ((actividades_have_perm_oficina('des') || actividades_have_perm_oficina('vcsd')) && OrbixRuntime::miSfsv() === 1)
+    || (actividades_have_perm_oficina('admin_sf') && OrbixRuntime::miSfsv() === 2);
 
 $data_que = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
     'perm_jefe' => $perm_jefe ? 't' : 'f',
@@ -196,7 +191,7 @@ $data_que = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', 
     'extendida' => $extendida ? 't' : '',
 ]);
 
-$actividad_tipo_html = $data_que['actividad_tipo_html'] ?? '';
+$actividad_tipo_html = tessera_imprimir_string($data_que['actividad_tipo_html'] ?? '');
 
 $chk_status_1 = ($Qstatus === ActividadStatusId::PROYECTO) ? "checked='true'" : '';
 $chk_status_2 = ($Qstatus === ActividadStatusId::ACTUAL) ? "checked='true'" : '';

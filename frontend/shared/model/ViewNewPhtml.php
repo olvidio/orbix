@@ -2,71 +2,39 @@
 
 namespace frontend\shared\model;
 
-
 use frontend\shared\config\OrbixRuntime;
 
 /**
- * Set
- *
- * Classe per a gestionar una col·lecció d'objectes.
- *
- * @package delegación
- * @subpackage model
- * @author
- * @version 1.0
- * @created 22/9/2010
+ * Renderiza plantillas `.phtml` bajo `frontend/.../view/` a partir del namespace del controlador.
  */
 class ViewNewPhtml
 {
-    /* ATRIBUTOS ----------------------------------------------------------------- */
+    private string $snamespace;
 
-    /**
-     * Namespace
-     *
-     * @var string
-     */
-    private $snamespace;
-
-
-    /* CONSTRUCTOR -------------------------------------------------------------- */
-    /**
-     * Constructor de la classe.
-     *
-     *
-     */
-    function __construct($namespace)
+    public function __construct(string $namespace)
     {
         $this->snamespace = $namespace;
     }
 
-
-    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
-
     /**
      * @param array<string, mixed> $variables
-     * @return string HTML capturado (y opcionalmente emitido si $echo es true).
      */
-    function renderizar($file, $variables = array(), bool $echo = true): string
+    public function renderizar(string $file, array $variables = [], bool $echo = true): string
     {
-
         extract($variables);
 
         ob_start();
-        $dir_apps = OrbixRuntime::webPath();
-        $base_dir = $_SERVER['DOCUMENT_ROOT'] . $dir_apps;
+        $dirApps = OrbixRuntime::webPath();
+        $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
+        $baseDir = is_string($docRoot) ? $docRoot . $dirApps : $dirApps;
 
-        // reemplazo controller o model por view
-        $patterns = [];
-        $patterns[0] = '/controller/';
-        $patterns[1] = '/model/';
-        $replacements = [];
-        $replacements[0] = 'view';
-        $replacements[1] = 'view';
-        $new_dir = preg_replace($patterns, $replacements, $this->snamespace);
+        $patterns = ['/controller/', '/model/'];
+        $replacements = ['view', 'view'];
+        $newDir = preg_replace($patterns, $replacements, $this->snamespace);
+        $newDir = is_string($newDir) ? $newDir : $this->snamespace;
+        $newDir = str_replace('\\', DIRECTORY_SEPARATOR, $newDir);
 
-        $new_dir = str_replace('\\', DIRECTORY_SEPARATOR, $new_dir);
-
-        $fileName = $base_dir . DIRECTORY_SEPARATOR . $new_dir . DIRECTORY_SEPARATOR . $file;
+        $fileName = $baseDir . DIRECTORY_SEPARATOR . $newDir . DIRECTORY_SEPARATOR . $file;
 
         require $fileName;
 
@@ -75,6 +43,7 @@ class ViewNewPhtml
         if ($echo) {
             echo $out2;
         }
+
         return $out2;
     }
 }

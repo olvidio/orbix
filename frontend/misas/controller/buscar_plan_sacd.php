@@ -8,12 +8,13 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/misas/buscar_plan_sacd_data');
 
 $a_sacd = $data['sacd_opciones'] ?? [];
-$sacd_selected = (string)($data['sacd_selected'] ?? '');
+$sacd_selected = misas_string($data['sacd_selected'] ?? '');
 
 $periodo_td_html = PeriodoTdHelper::build([
     'esta_semana' => _('esta semana'),
@@ -26,7 +27,7 @@ $periodo_td_html = PeriodoTdHelper::build([
 
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setNombre('id_sacd');
-$oDesplSacd->setOpciones($a_sacd);
+$oDesplSacd->setOpciones(misas_desplegable_opciones($a_sacd));
 $oDesplSacd->setBlanco(false);
 $oDesplSacd->setAction('fnjs_ver_plan_sacd()');
 if ($sacd_selected !== '') {

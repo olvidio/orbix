@@ -7,19 +7,16 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
 
-
-// muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/lista_de_ctr';
 $data = PostRequest::getDataFromUrl($url_backend);
-
-$a_opciones = $data['a_opciones'];
+$payload = inventario_post_payload($data);
+$a_opciones = inventario_desplegable_opciones($payload['a_opciones'] ?? []);
 
 $oDesplUbis = new Desplegable('id_ubi', $a_opciones, '', true);
 $oDesplUbis->setAction('fnjs_busca_lugares_origen()');
@@ -44,4 +41,3 @@ $a_campos = [
 
 $oView = new ViewNewPhtml('frontend\inventario\controller');
 $oView->renderizar('traslado_doc_que.phtml', $a_campos);
-

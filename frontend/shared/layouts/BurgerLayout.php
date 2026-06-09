@@ -3,7 +3,6 @@
 namespace frontend\shared\layouts;
 
 use frontend\shared\config\OrbixRuntime;
-use frontend\shared\PostRequest;
 
 /**
  * Layout hamburguesa (grupmenús en columna).
@@ -12,31 +11,11 @@ use frontend\shared\PostRequest;
  */
 class BurgerLayout implements LayoutInterface
 {
-    /** @var array<string, mixed> */
-    private array $menuConfigArray = [];
-
-    /**
-     * @var array<int|string, string>
-     */
-    private array $listaGrupMenu = [];
+    use MenusBurgerLayoutSupport;
 
     public function generateMenuHtml(array $params): array
     {
-        $this->listaGrupMenu = $params['listaGrupMenu'] ?? [];
-
-        $payload = PostRequest::getDataFromUrl('/src/menus/menus_burger_layout_data', [
-            'lista_grup_menu_json' => json_encode($this->listaGrupMenu, JSON_UNESCAPED_UNICODE),
-        ]);
-        $this->menuConfigArray = [];
-        $user_menus = '';
-        if (is_array($payload)) {
-            if (isset($payload['menu_config']) && is_array($payload['menu_config'])) {
-                $this->menuConfigArray = $payload['menu_config'];
-            }
-            if (isset($payload['user_menus_html']) && is_string($payload['user_menus_html'])) {
-                $user_menus = $payload['user_menus_html'];
-            }
-        }
+        $user_menus = $this->loadBurgerMenuPayload($params);
 
         $html_aside = "
           <!-- Botón toggle para móvil -->
@@ -55,13 +34,11 @@ class BurgerLayout implements LayoutInterface
                 <nav class=\"group-menu\" id=\"groupMenu\">
                     <ul>";
 
-        if (isset($params['grupMenuData'])) {
-            ksort($params['grupMenuData']);
-
-            foreach ($params['grupMenuData'] as $grupMenuItem) {
-                $id_gm = $grupMenuItem['id_gm'];
+        if (isset($params['grupMenuData']) && is_array($params['grupMenuData'])) {
+            foreach (self::layoutGrupMenuItems($params['grupMenuData']) as $grupMenuItem) {
                 $grup_menu = $grupMenuItem['grup_menu'];
-                $html_aside .= "<li><a href='#' onclick=\"setActiveGroup(this, '$grup_menu');\" >$grup_menu</a></li>";
+                $esc = htmlspecialchars($grup_menu, ENT_QUOTES, 'UTF-8');
+                $html_aside .= "<li><a href='#' onclick=\"setActiveGroup(this, '" . $esc . "');\" >" . $esc . '</a></li>';
             }
         }
 
@@ -74,12 +51,11 @@ class BurgerLayout implements LayoutInterface
         $html_aside .= '</nav>';
         $html_aside .= '</aside>';
 
-        $li_submenus = '';
-        $htmlComponents['li_submenus'] = $li_submenus;
-        $htmlComponents['html_aside'] = $html_aside;
-        $htmlComponents['user_menus'] = $user_menus;
-
-        return $htmlComponents;
+        return [
+            'li_submenus' => '',
+            'html_aside' => $html_aside,
+            'user_menus' => $user_menus,
+        ];
     }
 
     public function includeCss(array $params): string
@@ -88,21 +64,18 @@ class BurgerLayout implements LayoutInterface
 
         include_once (OrbixRuntime::dirEstilos() . '/layout_hamburguesa.css.php');
 
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     public function includeJs(array $params): string
     {
-        $defaultGrupMenu = (empty($params['id_grupmenu'])) ? '' : ($this->listaGrupMenu[$params['id_grupmenu']] ?? '');
-        $menuJson = json_encode($this->menuConfigArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        if ($menuJson === false) {
-            $menuJson = '{}';
-        }
+        $defaultGrupMenu = $this->defaultGrupMenuFromParams($params);
+        $menuJson = $this->menuConfigJson();
         ob_start();
         ?>
         <script>
             window.orbixLayout = {
-                defaultGrupMenu: <?= json_encode((string)$defaultGrupMenu, JSON_UNESCAPED_UNICODE) ?>,
+                defaultGrupMenu: <?= json_encode($defaultGrupMenu, JSON_UNESCAPED_UNICODE) ?>,
                 menuConfig: <?= $menuJson ?>
             };
             if (!window.__orbixLayoutBurgerJsLoaded) {
@@ -114,14 +87,14 @@ class BurgerLayout implements LayoutInterface
         </script>
         <?php
 
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     public function renderHtml(array $htmlComponents, array $params): string
     {
-        $li_submenus = $htmlComponents['li_submenus'] ?? '';
-        $html_aside = $htmlComponents['html_aside'] ?? '';
-        $user_menus = $htmlComponents['user_menus'] ?? '';
+        $li_submenus = self::layoutScalarString($htmlComponents['li_submenus'] ?? '');
+        $html_aside = self::layoutScalarString($htmlComponents['html_aside'] ?? '');
+        $user_menus = self::layoutScalarString($htmlComponents['user_menus'] ?? '');
 
         ob_start();
 
@@ -156,6 +129,6 @@ class BurgerLayout implements LayoutInterface
         </header>
         <?php
 
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 }

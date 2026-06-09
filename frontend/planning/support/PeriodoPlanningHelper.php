@@ -52,7 +52,8 @@ final class PeriodoPlanningHelper
         $oForm->setTitulo($titulo);
         $oForm->setPosiblesPeriodos(self::opcionesTrimestrales());
         $oForm->setDesplPeriodosOpcion_sel($periodo);
-        $oForm->setDesplAnysOpcion_sel(empty($year) ? (int)date('Y') : (int)$year);
+        $yearSel = empty($year) ? (string)date('Y') : \tessera_imprimir_string($year);
+        $oForm->setDesplAnysOpcion_sel($yearSel);
         $oForm->setEmpiezaMin($empiezaMin);
         $oForm->setEmpiezaMax($empiezaMax);
 

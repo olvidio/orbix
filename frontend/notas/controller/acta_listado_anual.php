@@ -9,6 +9,7 @@ use frontend\shared\web\PeriodoQue;
 use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -35,9 +36,9 @@ $data = PostRequest::getDataFromUrl('/src/notas/acta_listado_anual_data', [
     'finIso' => $finIso,
 ]);
 
-$aActas = $data['aActas'] ?? [];
-$QinicioLocal = (string)($data['inicio_local'] ?? '');
-$QfinLocal = (string)($data['fin_local'] ?? '');
+$aActas = is_array($data['aActas'] ?? null) ? $data['aActas'] : [];
+$QinicioLocal = tessera_imprimir_string($data['inicio_local'] ?? '');
+$QfinLocal = tessera_imprimir_string($data['fin_local'] ?? '');
 
 $aOpciones = [
     'tot_any' => _("todo el año"),

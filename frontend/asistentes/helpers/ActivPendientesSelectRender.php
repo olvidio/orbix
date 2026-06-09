@@ -37,50 +37,25 @@ final class ActivPendientesSelectRender
         if ($cn !== '') {
             $oHashForm->setCamposNo($cn);
         }
-        $hidden = $hashMain['campos_hidden'] ?? [];
-        if (is_array($hidden) && $hidden !== []) {
+        $hidden = asistentes_hash_campos_hidden($hashMain['campos_hidden'] ?? []);
+        if ($hidden !== []) {
             $oHashForm->setArrayCamposHidden($hidden);
         }
         $payload['hash_campos_html'] = $oHashForm->getCamposHtml();
 
-        $baseUrl = AppUrlConfig::getPublicAppBaseUrl();
-        $resolveLinks = static function (array $a_valores) use ($baseUrl): array {
-            foreach ($a_valores as $idx => $fila) {
-                if (!is_array($fila)) {
-                    continue;
-                }
-                foreach ($fila as $colKey => $cell) {
-                    if (!is_array($cell) || !isset($cell['link_spec'])) {
-                        continue;
-                    }
-                    $spec = $cell['link_spec'];
-                    $path = payload_string($spec, 'path');
-                    $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
-                    if ($path === '') {
-                        continue;
-                    }
-                    $url = rtrim($baseUrl, '/') . '/' . ltrim($path, '/') . '?' . http_build_query($query);
-                    $a_valores[$idx][$colKey]['ira'] = HashFront::link($url);
-                    unset($a_valores[$idx][$colKey]['link_spec']);
-                }
-            }
-
-            return $a_valores;
-        };
-
-        $a_cabeceras = $payload['a_cabeceras_activ_pendientes'] ?? [];
-        $a_valores_dl = $resolveLinks((array)($payload['a_valores_activ_pendientes_dl'] ?? []));
-        $a_valores_otras = $resolveLinks((array)($payload['a_valores_activ_pendientes_otras'] ?? []));
+        $a_cabeceras = actividades_lista_cabeceras($payload['a_cabeceras_activ_pendientes'] ?? []);
+        $a_valores_dl = asistentes_sign_lista_valores($payload['a_valores_activ_pendientes_dl'] ?? []);
+        $a_valores_otras = asistentes_sign_lista_valores($payload['a_valores_activ_pendientes_otras'] ?? []);
 
         $oTablaDl = new Lista();
         $oTablaDl->setId_tabla('activ_pendientes_select');
-        $oTablaDl->setCabeceras(is_array($a_cabeceras) ? $a_cabeceras : []);
+        $oTablaDl->setCabeceras($a_cabeceras);
         $oTablaDl->setDatos($a_valores_dl);
         $payload['tabla_dl_html'] = $oTablaDl->mostrar_tabla();
 
         $oTablaOtrasDl = new Lista();
         $oTablaOtrasDl->setId_tabla('activ_pendientes_select_otras');
-        $oTablaOtrasDl->setCabeceras(is_array($a_cabeceras) ? $a_cabeceras : []);
+        $oTablaOtrasDl->setCabeceras($a_cabeceras);
         $oTablaOtrasDl->setDatos($a_valores_otras);
         $payload['tabla_otras_html'] = $oTablaOtrasDl->mostrar_tabla();
 

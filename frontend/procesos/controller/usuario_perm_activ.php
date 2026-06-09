@@ -8,6 +8,7 @@ use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -15,21 +16,14 @@ $oPosicion->recordar();
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) {
-    $Qid_usuario = (int)strtok($a_sel[0], "#");
-    $Qid_item = (string)strtok("#");
-    $Qid_tipo_activ_txt = (string)strtok("#");
-    $Qdl_propia = (string)strtok("#");
-} else {
-    $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
-    $Qid_item = '';
-    $Qid_tipo_activ_txt = (string)filter_input(INPUT_POST, 'id_tipo_activ_txt');
-    $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
-}
+$sel = procesos_sel_tokens_from_post();
+$Qid_usuario = $sel['id_usuario'];
+$Qid_item = tessera_imprimir_string($sel['id_item']);
+$Qid_tipo_activ_txt = $sel['id_tipo_activ_txt'];
+$Qdl_propia = $sel['dl_propia'];
 
-$Qquien = (string)filter_input(INPUT_POST, 'quien');
-$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qquien = procesos_post_string('quien');
+$Qque = procesos_post_string('que');
 
 $data = PostRequest::getDataFromUrl($apiBase . '/src/procesos/usuario_perm_activ_data', [
     'id_usuario' => $Qid_usuario,
@@ -37,23 +31,23 @@ $data = PostRequest::getDataFromUrl($apiBase . '/src/procesos/usuario_perm_activ
     'dl_propia' => $Qdl_propia,
 ]);
 
-$nombre = $data['nombre'] ?? '';
-$Qdl_propia = $data['dl_propia'] ?? 't';
-$tipo_actividad_html = (string)($data['tipo_actividad_html'] ?? '');
-$a_fases = (array)($data['a_fases'] ?? []);
-$a_acciones = (array)($data['a_acciones'] ?? []);
-$aPermData = (array)($data['aPerm'] ?? []);
+$nombre = tessera_imprimir_string($data['nombre'] ?? '');
+$Qdl_propia = tessera_imprimir_string($data['dl_propia'] ?? 't');
+$tipo_actividad_html = tessera_imprimir_string($data['tipo_actividad_html'] ?? '');
+$a_fases = notas_desplegable_opciones($data['a_fases'] ?? []);
+$a_acciones = notas_desplegable_opciones($data['a_acciones'] ?? []);
+$aPermData = procesos_usuario_perm_rows($data['aPerm'] ?? null);
 
 $aPerm = [];
 foreach ($aPermData as $i => $fila) {
     $oDesplFases = new Desplegable();
     $oDesplFases->setOpciones($a_fases);
     $oDesplFases->setBlanco(true);
-    $oDesplFases->setNombre("fase_ref[]");
-    $oDesplFases->setOpcion_sel((string)$fila['fase_ref']);
+    $oDesplFases->setNombre('fase_ref[]');
+    $oDesplFases->setOpcion_sel($fila['fase_ref']);
 
-    $oDesplPermOn = new Desplegable('perm_on[]', $a_acciones, (string)$fila['perm_on'], false);
-    $oDesplPermOff = new Desplegable('perm_off[]', $a_acciones, (string)$fila['perm_off'], false);
+    $oDesplPermOn = new Desplegable('perm_on[]', $a_acciones, $fila['perm_on'], false);
+    $oDesplPermOff = new Desplegable('perm_off[]', $a_acciones, $fila['perm_off'], false);
 
     $aPerm[] = [
         'afecta_a' => $fila['afecta_a'],
@@ -91,7 +85,7 @@ if (is_true($Qdl_propia)) {
 }
 
 $titulo = _("Añadir nuevo permiso a");
-if (!empty($Qid_item)) {
+if ($Qid_item !== '') {
     $titulo = _("Modificar el permiso para");
 }
 

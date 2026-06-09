@@ -53,14 +53,15 @@ final class FormAsistentesAUnaActividadRender
         $oHash = new HashFront();
         $oHash->setCamposForm(payload_string($hashMain, 'campos_form'));
         $oHash->setCamposNo(payload_string($hashMain, 'campos_no'));
-        $hidden = $hashMain['campos_hidden'] ?? [];
-        $oHash->setArrayCamposHidden(is_array($hidden) ? $hidden : []);
+        $hidden = asistentes_hash_campos_hidden($hashMain['campos_hidden'] ?? []);
+        $oHash->setArrayCamposHidden($hidden);
 
         $desplegable_personas_html = '';
-        if (isset($payload['personas_opciones']) && is_array($payload['personas_opciones'])) {
+        $personasOpciones = notas_desplegable_opciones($payload['personas_opciones'] ?? []);
+        if ($personasOpciones !== []) {
             $oDespl = new Desplegable();
             $oDespl->setNombre('id_nom');
-            $oDespl->setOpciones($payload['personas_opciones']);
+            $oDespl->setOpciones($personasOpciones);
             $onChange = $payload['personas_onchange'] ?? null;
             if (is_string($onChange) && $onChange !== '') {
                 $oDespl->setAction($onChange);
@@ -71,18 +72,14 @@ final class FormAsistentesAUnaActividadRender
         $desplegable_plaza_html = '';
         $desplegable_propietarios_html = '';
         if ($plazas_installed) {
-            $plazaOpciones = isset($payload['plaza_opciones']) && is_array($payload['plaza_opciones'])
-                ? $payload['plaza_opciones']
-                : [];
+            $plazaOpciones = notas_desplegable_opciones($payload['plaza_opciones'] ?? []);
             $oPlaza = new Desplegable();
             $oPlaza->setNombre('plaza');
             $oPlaza->setOpciones($plazaOpciones);
             $oPlaza->setOpcion_sel(payload_string($payload, 'plaza_selected'));
             $desplegable_plaza_html = $oPlaza->desplegable();
 
-            $propOpciones = isset($payload['propietario_opciones']) && is_array($payload['propietario_opciones'])
-                ? $payload['propietario_opciones']
-                : [];
+            $propOpciones = notas_desplegable_opciones($payload['propietario_opciones'] ?? []);
             $oProp = new Desplegable();
             $oProp->setNombre('propietario');
             $oProp->setOpciones($propOpciones);

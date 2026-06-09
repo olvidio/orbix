@@ -19,6 +19,7 @@ use frontend\shared\FrontBootstrap;
  * Migrado desde `apps/planning/controller/planning_persona_ver.php`
  * (slice 2 de la migracion del modulo planning).
  */
+require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
@@ -60,7 +61,7 @@ $cabecera_title = ucfirst(_("persona seleccionada"));
 
 $payload = $_POST;
 $apiData = PostRequest::getDataFromUrl('/src/planning/planning_persona_ver_data', $payload);
-$a_actividades = (array)($apiData['a_actividades'] ?? []);
+$a_actividades = planning_actividades_map($apiData['a_actividades'] ?? null);
 
 $aGoBack = [
     'modelo' => $Qmodelo,
@@ -77,14 +78,13 @@ $aGoBack = [
 ];
 $oPosicion->setParametros($aGoBack, 1);
 
-include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
-include_once(OrbixRuntime::dirEstilos() . '/calendario.css.php');
+$estilos = planning_calendario_estilos();
 
 $oPlanning = new PlanningRenderer();
-$oPlanning->setColorColumnaUno($colorColumnaUno);
-$oPlanning->setColorColumnaDos($colorColumnaDos);
-$oPlanning->setColorColumnaDomingo($colorColumnaDomingo);
-$oPlanning->setTable_border($table_border);
+$oPlanning->setColorColumnaUno($estilos['colorColumnaUno']);
+$oPlanning->setColorColumnaDos($estilos['colorColumnaDos']);
+$oPlanning->setColorColumnaDomingo($estilos['colorColumnaDomingo']);
+$oPlanning->setTable_border($estilos['table_border']);
 $oPlanning->setDd($Qdd);
 $oPlanning->setInicio($oIniPlanning);
 $oPlanning->setFin($oFinPlanning);

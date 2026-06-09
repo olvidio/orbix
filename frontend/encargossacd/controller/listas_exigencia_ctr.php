@@ -14,25 +14,21 @@ use frontend\shared\FrontBootstrap;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qsf = (int)filter_input(INPUT_POST, 'sf');
-$Qctr_igl = (string)filter_input(INPUT_POST, 'ctr_igl');
+$Qsf = encargossacd_post_int('sf');
+$Qctr_igl = encargossacd_post_string('ctr_igl');
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_exigencia_ctr_data', [
     'sf' => $Qsf,
     'ctr_igl' => $Qctr_igl,
 ]);
 
-$a_campos = [
-    'oPosicion' => $oPosicion,
-    'cabecera_left' => (string)($datos['cabecera_left'] ?? ''),
-    'cabecera_right' => (string)($datos['cabecera_right'] ?? ''),
-    'cabecera_right_2' => (string)($datos['cabecera_right_2'] ?? ''),
-    'Html' => (string)($datos['Html'] ?? ''),
-];
+$listaCampos = encargossacd_listas_campos_from_payload($datos);
+$a_campos = ['oPosicion' => $oPosicion] + $listaCampos;
 
 $oView = new ViewNewPhtml('frontend\\encargossacd\\controller');
 $oView->renderizar('listas.phtml', $a_campos);

@@ -11,21 +11,18 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$data = PostRequest::getDataFromUrl('/src/casas/grupo_lista_data');
-$payload = is_array($data) ? $data : [];
-
-$a_cabeceras = $payload['a_cabeceras'] ?? [];
-$a_valores = $payload['a_valores'] ?? [];
-$puede_anadir = (bool)($payload['puede_anadir'] ?? false);
+$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/grupo_lista_data'));
+$lista = casas_grupo_lista_from_payload($data);
 
 $oLista = new Lista();
-$oLista->setCabeceras($a_cabeceras);
-$oLista->setDatos($a_valores);
+$oLista->setCabeceras($lista['cabeceras']);
+$oLista->setDatos($lista['valores']);
 echo $oLista->lista();
 
-if ($puede_anadir) {
+if ($lista['puede_anadir']) {
     echo '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">' . _("nuevo") . '</span>';
 }

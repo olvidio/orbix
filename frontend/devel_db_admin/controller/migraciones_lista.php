@@ -12,15 +12,15 @@ use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/devel_db_admin/helpers/devel_db_admin_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/devel_db_admin/migraciones_lista_data');
-$data = is_array($data) ? $data : [];
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('devel_db_admin_migraciones');
-$oTabla->setCabeceras((array) ($data['a_cabeceras'] ?? []));
-$oTabla->setDatos((array) ($data['a_valores'] ?? []));
+$oTabla->setCabeceras(actividades_lista_cabeceras($data['a_cabeceras'] ?? []));
+$oTabla->setDatos(actividades_lista_datos($data['a_valores'] ?? []));
 $oTabla->setBotones([
     ['txt' => _('ejecutar seleccionadas'), 'click' => 'fnjs_migraciones_ejecutar_seleccion()'],
     ['txt' => _('ejecutar hasta la marcada'), 'click' => 'fnjs_migraciones_ejecutar_hasta()'],

@@ -16,6 +16,7 @@ use frontend\shared\FrontBootstrap;
  * Migrado desde `apps/planning/controller/planning_persona_que.php`
  * (slice 2 de la migracion del modulo planning).
  */
+require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
@@ -38,7 +39,7 @@ $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 
-$periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto((int)$_SESSION['oConfig']->getMesFinStgr());
+$periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto(planning_mes_fin_stgr());
 $locale_us = OrbixRuntime::isLocaleUs();
 
 $oHash = new HashFront();

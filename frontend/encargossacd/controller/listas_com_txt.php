@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
@@ -42,8 +43,8 @@ $a_Claves = [
 ];
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_com_txt_data', []);
-$a_locales = is_array($datos['a_locales'] ?? null) ? $datos['a_locales'] : [];
-$comunicacion = (string)($datos['texto_inicial'] ?? '');
+$a_locales = encargossacd_desplegable_opciones($datos['a_locales'] ?? []);
+$comunicacion = tessera_imprimir_string($datos['texto_inicial'] ?? '');
 
 $oDesplClaves = new Desplegable();
 $oDesplClaves->setNombre('clave');

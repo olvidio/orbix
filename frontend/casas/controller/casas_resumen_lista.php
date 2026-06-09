@@ -8,6 +8,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -20,22 +21,16 @@ $campos = [
     'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
     'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
 ];
-$data = PostRequest::getDataFromUrl('/src/casas/casas_resumen_data', $campos);
-$payload = is_array($data) ? $data : [];
-
-$modo = (string)($payload['modo'] ?? 'periodo');
-$a_resumen = (array)($payload['a_resumen'] ?? []);
-$tot = (array)($payload['tot'] ?? []);
-$avisos = (array)($payload['avisos'] ?? []);
-$a_anys = (array)($payload['a_anys'] ?? []);
+$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/casas_resumen_data', $campos));
+$resumen = casas_resumen_lista_from_payload($data);
 
 $a_campos = [
-    'a_resumen' => $a_resumen,
-    'tot' => $tot,
-    'avisos' => $avisos,
-    'a_anys' => $a_anys,
+    'a_resumen' => $resumen['a_resumen'],
+    'tot' => $resumen['tot'],
+    'avisos' => $resumen['avisos'],
+    'a_anys' => $resumen['a_anys'],
 ];
 
-$template = ($modo === 'anual') ? 'casas_resumen_anual.phtml' : 'casas_resumen_periodo.phtml';
+$template = ($resumen['modo'] === 'anual') ? 'casas_resumen_anual.phtml' : 'casas_resumen_periodo.phtml';
 $oView = new ViewNewPhtml('frontend\\casas\\controller');
 $oView->renderizar($template, $a_campos);

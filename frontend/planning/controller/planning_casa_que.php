@@ -22,6 +22,7 @@ use frontend\shared\FrontBootstrap;
  * Migrado desde `apps/planning/controller/planning_casa_que.php`
  * (slice 2 de la migracion del modulo planning).
  */
+require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
@@ -38,12 +39,9 @@ if (isset($_POST['stack'])) {
 }
 
 $queCasasPayload = PostRequest::getDataFromUrl('/src/planning/planning_casa_que_data', []);
-$queCasasPayload = is_array($queCasasPayload) ? $queCasasPayload : [];
-$filtroCasasQue = (array)($queCasasPayload['filtro'] ?? ['active' => true]);
-$modoCasasQue = (string)($queCasasPayload['modo_casas'] ?? 'all');
-if ($modoCasasQue === '') {
-    $modoCasasQue = 'all';
-}
+$casaQue = planning_casa_que_from_payload($queCasasPayload);
+$filtroCasasQue = $casaQue['filtro'];
+$modoCasasQue = $casaQue['modo_casas'];
 
 $Qpropuesta_calendario = (string)filter_input(INPUT_POST, 'propuesta_calendario');
 $Qsin_activ = (int)filter_input(INPUT_POST, 'sin_activ');

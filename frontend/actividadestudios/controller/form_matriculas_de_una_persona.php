@@ -20,6 +20,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -43,34 +44,36 @@ if (!empty($a_sel)) {
     $camposMatricula['sel'] = $a_sel;
 }
 
-$d = PostRequest::getDataFromUrl('/src/actividadestudios/form_matriculas_de_una_persona_data', $camposMatricula);
+$d = actividadestudios_form_matriculas_from_payload(
+    actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/form_matriculas_de_una_persona_data', $camposMatricula))
+);
 
-$nom_activ = $d['nom_activ'] ?? '';
-$mod = $d['mod'] ?? 'nuevo';
-$id_asignatura_real = $d['id_asignatura_real'] ?? 0;
-$nombre_corto = $d['nombre_corto'] ?? '';
-$chk_preceptor = $d['chk_preceptor'] ?? '';
-$id_preceptor = $d['id_preceptor'] ?? '';
-$condicion_js = $d['condicion_js'] ?? '';
+$nom_activ = $d['nom_activ'];
+$mod = $d['mod'];
+$id_asignatura_real = $d['id_asignatura_real'];
+$nombre_corto = $d['nombre_corto'];
+$chk_preceptor = $d['chk_preceptor'];
+$id_preceptor = $d['id_preceptor'];
+$condicion_js = $d['condicion_js'];
 
 $oDesplNiveles = new Desplegable();
 $oDesplNiveles->setNombre('id_nivel');
-$oDesplNiveles->setOpciones($d['oDesplNiveles_opciones'] ?? []);
-$oDesplNiveles->setBlanco(1);
+$oDesplNiveles->setOpciones($d['oDesplNiveles_opciones']);
+$oDesplNiveles->setBlanco(actividadestudios_desplegable_blanco(1));
 $oDesplNiveles->setAction('fnjs_cmb_opcional()');
 
 $oDesplProfesores = new Desplegable();
-if (!empty($d['oDesplProfesores_opciones'])) {
+if ($d['oDesplProfesores_opciones'] !== []) {
     $oDesplProfesores->setOpciones($d['oDesplProfesores_opciones']);
-    $oDesplProfesores->setBlanco(1);
+    $oDesplProfesores->setBlanco(actividadestudios_desplegable_blanco(1));
     $oDesplProfesores->setNombre('id_preceptor');
-    $oDesplProfesores->setOpcion_sel($id_preceptor);
+    $oDesplProfesores->setOpcion_sel(actividadestudios_desplegable_opcion_sel($id_preceptor));
 }
 
 $oHash = new HashFront();
 $oHash->setCamposNo('preceptor!id_preceptor');
-$oHash->setCamposForm($d['camposForm'] ?? '');
-$oHash->setArraycamposHidden($d['a_camposHidden'] ?? []);
+$oHash->setCamposForm($d['camposForm']);
+$oHash->setArraycamposHidden($d['a_camposHidden']);
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 

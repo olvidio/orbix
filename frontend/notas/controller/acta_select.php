@@ -19,7 +19,10 @@ use frontend\shared\security\HashFront;
 use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\permisos\domain\XPermisos;
 
+require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -28,6 +31,9 @@ $mi_region = OrbixRuntime::miRegion();
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
+
+$Qid_sel = '';
+$Qscroll_id = '';
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -53,23 +59,29 @@ $aGoBack = array(
     'acta' => $Qacta);
 $oPosicion->setParametros($aGoBack, 1);
 
+$oConfig = $_SESSION['oConfig'] ?? null;
+$mesFinStgr = $oConfig instanceof ConfigSnapshot ? $oConfig->getMesFinStgr() : 6;
+
 $d = PostRequest::getDataFromUrl('/src/notas/acta_select_data', [
     'titulo' => $Qtitulo,
     'acta' => $Qacta,
-    'mes_fin_stgr' => (int)$_SESSION['oConfig']->getMesFinStgr(),
+    'mes_fin_stgr' => $mesFinStgr,
 ]);
-$titulo = (string)($d['titulo'] ?? '');
-$a_asignaturas = $d['a_asignaturas'] ?? [];
-$cActasData = $d['actas'] ?? [];
+$presentacion = notas_acta_select_from_payload($d);
+$titulo = $presentacion['titulo'];
+$a_asignaturas = $presentacion['a_asignaturas'];
+$cActasData = $presentacion['actas'];
 
 $botones = 0; // para 'añadir acta'
+/** @var list<array{txt: string, click: string}> $a_botones */
 $a_botones = [];
 // Si soy region del stgr, no puedo modificar actas: que lo hagan las dl.
 if (OrbixRuntime::miAmbito() === 'rstgr') {
     $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
     $botones = 0;
 } else {
-    if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+    $oPerm = $_SESSION['oPerm'] ?? null;
+    if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('est')) {
         $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#seleccionados\")");
         $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
         $botones = 1; // para 'añadir acta'
@@ -79,6 +91,7 @@ if (OrbixRuntime::miAmbito() === 'rstgr') {
 $a_botones[] = ['txt' => _("imprimir"), 'click' => "fnjs_imprimir(\"#seleccionados\")"];
 $a_botones[] = ['txt' => _("descargar pdf"), 'click' => "fnjs_descargar_pdf(\"#seleccionados\")"];
 
+/** @var list<array<string, mixed>|string> $a_cabeceras */
 $a_cabeceras = [['name' => ucfirst(_("acta")), 'formatter' => 'clickFormatter'],
     ['name' => ucfirst(_("fecha")), 'class' => 'fecha'],
     _("asignatura"),
@@ -91,12 +104,12 @@ $a_valores = [];
 $pdf_signed_urls = [];
 foreach ($cActasData as $oActa) {
     $i++;
-    $acta = (string)($oActa['acta'] ?? '');
-    $f_acta = $oActa['f_acta'] ?? null;
-    $id_asignatura = (int)($oActa['id_asignatura'] ?? 0);
-    $hasPdf = empty($oActa['has_pdf']) ? '' : _("Sí");
+    $acta = $oActa['acta'];
+    $f_acta = $oActa['f_acta'];
+    $id_asignatura = $oActa['id_asignatura'];
+    $hasPdf = $oActa['has_pdf'] ? _("Sí") : '';
 
-    if (empty($a_asignaturas[$id_asignatura])) {
+    if (!isset($a_asignaturas[$id_asignatura]) || $a_asignaturas[$id_asignatura] === '') {
         $nombre_corto = sprintf(_("nombre corto no definido para id asignatura: %s"), $id_asignatura);
     } else {
         $nombre_corto = $a_asignaturas[$id_asignatura];
@@ -106,7 +119,8 @@ foreach ($cActasData as $oActa) {
     $pdf_signed_urls[$acta_2] = SignedDownloadToken::urlNotasActa($acta);
     $pagina = HashFront::link('frontend/notas/controller/acta_ver.php?' . http_build_query(array('acta' => $acta)));
     $a_valores[$i]['sel'] = $acta_2;
-    if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+    $oPerm = $_SESSION['oPerm'] ?? null;
+    if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('est')) {
         $a_valores[$i][1] = array('ira' => $pagina, 'valor' => $acta);
     } else {
         $a_valores[$i][1] = $acta;
@@ -115,10 +129,10 @@ foreach ($cActasData as $oActa) {
     $a_valores[$i][3] = $nombre_corto;
     $a_valores[$i][4] = $hasPdf;
 }
-if (isset($Qid_sel) && !empty($Qid_sel)) {
+if ($Qid_sel !== '') {
     $a_valores['select'] = $Qid_sel;
 }
-if (isset($Qscroll_id) && !empty($Qscroll_id)) {
+if ($Qscroll_id !== '') {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 

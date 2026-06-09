@@ -29,26 +29,28 @@ use frontend\shared\domain\value_objects\DateTimeLocal;
  */
 class PlanningRenderer
 {
-    private $scolorColumnaUno;
-    private $scolorColumnaDos;
-    private $scolorColumnaDomingo;
-    private $stable_border;
+    private string $scolorColumnaUno = '';
+    private string $scolorColumnaDos = '';
+    private string $scolorColumnaDomingo = '';
+    private string $stable_border = '';
 
-    private $idd;
-    private $scabecera;
-    private $oInicio;
-    private $oFin;
-    private $a_actividades;
-    private $imod;
-    private $inueva;
-    private $idoble = 1;
-    private DateTimeLocal|false $oFinAct;
-
+    private int $idd = 1;
+    private string $scabecera = '';
+    private ?\DateTimeInterface $oInicio = null;
+    private ?\DateTimeInterface $oFin = null;
+    /** @var array<int|string, array<int|string, list<array<string, mixed>>>> */
+    private array $a_actividades = [];
+    private int $imod = 0;
+    private int $inueva = 0;
+    private int $idoble = 1;
     /** @var array<int, array<int, array{iso_ini: string, iso_fin: string, sfsv: int}>>|null */
     private ?array $casaPeriodosPorUbi = null;
 
     public function dibujar(): string
     {
+        if ($this->oInicio === null || $this->oFin === null) {
+            return '';
+        }
         $html = '';
         $semana = array(_("D"), _("L"), _("M"), _("X"), _("J"), _("V"), _("S"));
         $mes = array(_("enero"), _("febrero"), _("marzo"), _("abril"), _("mayo"), _("junio"), _("julio"),
@@ -69,8 +71,8 @@ class PlanningRenderer
         $mfi_0 = $this->oFin->format('m');
         $afi_0 = $this->oFin->format('Y');
 
-        (float)$num_sec_ini_0 = mktime($h_ini_0, $m_ini_0, $s_ini_0, $mini_0, $dini_0, $aini_0);
-        (float)$num_sec_fi_0 = mktime($h_fi_0, $m_fi_0, $s_fi_0, $mfi_0, $dfi_0, $afi_0);
+        (float)$num_sec_ini_0 = mktime($h_ini_0, $m_ini_0, $s_ini_0, (int)$mini_0, (int)$dini_0, (int)$aini_0);
+        (float)$num_sec_fi_0 = mktime($h_fi_0, $m_fi_0, $s_fi_0, (int)$mfi_0, (int)$dfi_0, (int)$afi_0);
         (float)$num_sec = $num_sec_fi_0 - $num_sec_ini_0;
         $total_dias_0 = round($num_sec / 86400) + 1;
 
@@ -81,8 +83,10 @@ class PlanningRenderer
         $txt_head = "<tr> <th rowspan=3  class=\"cap\">$this->scabecera </th>";
         $c_anterior = 0;
         for ($c = 0; $c < $total_dias_0; $c++) {
-            $m = date("m", mktime(0, 0, 0, $mini_0, $dini_0 + $c, $aini_0)) - 1;
-            $any = (string)date("Y", mktime(0, 0, 0, $mini_0, $dini_0 + $c - 1, $aini_0));
+            $tsMes = mktime(0, 0, 0, (int)$mini_0, (int)$dini_0 + $c, (int)$aini_0);
+            $tsAny = mktime(0, 0, 0, (int)$mini_0, (int)$dini_0 + $c - 1, (int)$aini_0);
+            $m = ($tsMes !== false ? (int)date('m', $tsMes) : 1) - 1;
+            $any = $tsAny !== false ? date('Y', $tsAny) : (string)$aini_0;
             if ($c == 0) {
                 $m_anterior = $m;
             }
@@ -104,7 +108,8 @@ class PlanningRenderer
         }
 
         for ($c = 0; $c < $total_dias / $this->idd; $c++) {
-            $w = date("w", mktime(0, 0, 0, $mini_0, $dini_0 + $c, $aini_0));
+            $tsDia = mktime(0, 0, 0, (int)$mini_0, (int)$dini_0 + $c, (int)$aini_0);
+            $w = $tsDia !== false ? (int)date('w', $tsDia) : 0;
             $diumenge = ($w == 0) ? "diumenge" : "lletra";
             $lletra_dia = $semana[$w];
             $txt_head .= "<th colspan=$this->idd style='text-align:center' class=$diumenge >$lletra_dia</th>";
@@ -112,9 +117,10 @@ class PlanningRenderer
         $txt_head .= "</tr><tr>";
 
         for ($c = 0; $c < $total_dias / $this->idd; $c++) {
-            $w = date("w", mktime(0, 0, 0, $mini_0, $dini_0 + $c, $aini_0));
+            $tsDia = mktime(0, 0, 0, (int)$mini_0, (int)$dini_0 + $c, (int)$aini_0);
+            $w = $tsDia !== false ? (int)date('w', $tsDia) : 0;
             $diumenge = ($w == 0) ? "diumengenum" : "num";
-            $num_dia = date("j", mktime(0, 0, 0, $mini_0, $dini_0 + $c, $aini_0));
+            $num_dia = $tsDia !== false ? date('j', $tsDia) : '0';
             $txt_head .= "<th colspan=$this->idd style='text-align:center' class=$diumenge >$num_dia</th>";
         }
         $txt_head .= "</tr>";
@@ -129,7 +135,8 @@ class PlanningRenderer
         $periodos_sv = $this->casaPeriodosPorUbi ?? [];
         foreach ($this->a_actividades as $ww) {
             foreach ($ww as $per => $actividad) {
-                list($pau, $id_pau, $persona) = explode('#', $per);
+                list($pau, $id_pau, $persona) = explode('#', (string)$per);
+                $id_ubi = 0;
 
                 if ($pau === 'u') {
                     $id_ubi = (int)$id_pau;
@@ -167,31 +174,31 @@ class PlanningRenderer
                 $css = [];
                 for ($a = 0; $a < $num_a; $a++) {
                     $activi = $actividad[$a];
-                    $nom_curt[$a] = $activi["nom_curt"] ?? '';
-                    $nom[$a] = $activi["nom_llarg"] ?? '';
-                    $ini = $activi["f_ini"] ?? '';
-                    $hini = $activi["h_ini"] ?? '';
-                    $fi = $activi["f_fi"] ?? '';
-                    $hfi = $activi["h_fi"] ?? '';
-                    $id_activ[$a] = $activi["id_activ"] ?? 0;
-                    $css[$a] = $activi["css"] ?? '';
+                    $nom_curt[$a] = \tessera_imprimir_string($activi['nom_curt'] ?? '');
+                    $nom[$a] = \tessera_imprimir_string($activi['nom_llarg'] ?? '');
+                    $ini = \tessera_imprimir_string($activi['f_ini'] ?? '');
+                    $hini = \tessera_imprimir_string($activi['h_ini'] ?? '');
+                    $fi = \tessera_imprimir_string($activi['f_fi'] ?? '');
+                    $hfi = \tessera_imprimir_string($activi['h_fi'] ?? '');
+                    $id_activ[$a] = \tessera_imprimir_int($activi['id_activ'] ?? 0);
+                    $css[$a] = \tessera_imprimir_string($activi['css'] ?? '');
 
                     if (empty($ini)) {
                         $html .= _("PREMIO: Ha conseguido crear una actividad sin fecha de inicio.") . '<br>';
-                        $html .= sprintf(_("id_activ: %s, nombre: %s %s"), $id_activ[$a], $nom_curt[$a], $nom[$a]) . '<br>';
+                        $html .= sprintf(_('id_activ: %s, nombre: %s %s'), (string)$id_activ[$a], $nom_curt[$a], $nom[$a]) . '<br>';
                         unset($actividad[$a]);
                         continue;
                     }
                     if (empty($fi)) {
                         $html .= _("PREMIO: Ha conseguido crear una actividad sin fecha finalización.") . '<br>';
-                        $html .= sprintf(_("id_activ: %s, nombre: %s %s"), $id_activ[$a], $nom_curt[$a], $nom[$a]) . '<br>';
+                        $html .= sprintf(_('id_activ: %s, nombre: %s %s'), (string)$id_activ[$a], $nom_curt[$a], $nom[$a]) . '<br>';
                         unset($actividad[$a]);
                         continue;
                     }
-                    $id_tipo_activ[$a] = $activi["id_tipo_activ"] ?? '';
-                    $lnk[$a] = $activi["pagina"] ?? '';
-                    $propio[$a] = $activi["propio"] ?? '';
-                    $plaza[$a] = $activi["plaza"] ?? '';
+                    $id_tipo_activ[$a] = \tessera_imprimir_string($activi['id_tipo_activ'] ?? '');
+                    $lnk[$a] = \tessera_imprimir_string($activi['pagina'] ?? '');
+                    $propio[$a] = \tessera_imprimir_string($activi['propio'] ?? '');
+                    $plaza[$a] = \tessera_imprimir_string($activi['plaza'] ?? '');
 
                     $hora_ini[$a] = 0;
                     $m_ini[$a] = 0;
@@ -200,41 +207,44 @@ class PlanningRenderer
                     $m_fi[$a] = 0;
                     $s_fi[$a] = 0;
                     if ($this->idd > 1) {
-                        if (empty($hini)) {
-                            $hini = ($ini == $fi) ? "3:00" : "21:00";
+                        if ($hini === '') {
+                            $hini = ($ini == $fi) ? '3:00' : '21:00';
                         }
-                        if (empty($hfi)) {
-                            $hfi = ($ini == $fi) ? "20:00" : "10:00";
+                        if ($hfi === '') {
+                            $hfi = ($ini == $fi) ? '20:00' : '10:00';
                         }
-                        if (!empty($hini)) {
-                            $time = explode(':', $hini);
-                            if (isset($time[0])) $hora_ini[$a] = $time[0];
-                            if (isset($time[1])) $m_ini[$a] = $time[1];
-                            if (isset($time[2])) $s_ini[$a] = $time[2];
-                        }
-                        if (!empty($hfi)) {
-                            $time = explode(':', $hfi);
-                            if (isset($time[0])) $hora_fi[$a] = $time[0];
-                            if (isset($time[1])) $m_fi[$a] = $time[1];
-                            if (isset($time[2])) $s_fi[$a] = $time[2];
-                        }
+                        $timeIni = explode(':', $hini);
+                        $hora_ini[$a] = (int)$timeIni[0];
+                        $m_ini[$a] = (int)($timeIni[1] ?? 0);
+                        $s_ini[$a] = (int)($timeIni[2] ?? 0);
+                        $timeFi = explode(':', $hfi);
+                        $hora_fi[$a] = (int)$timeFi[0];
+                        $m_fi[$a] = (int)($timeFi[1] ?? 0);
+                        $s_fi[$a] = (int)($timeFi[2] ?? 0);
                     }
 
                     $oIniAct = DateTimeLocal::createFromLocal($ini);
-                    $dini[$a] = $oIniAct->format('d');
-                    $mini[$a] = $oIniAct->format('m');
-                    $aini[$a] = $oIniAct->format('Y');
-                    $this->oFinAct = DateTimeLocal::createFromLocal($fi);
-                    $dfi[$a] = $this->oFinAct->format('d');
-                    $mfi[$a] = $this->oFinAct->format('m');
-                    $afi[$a] = $this->oFinAct->format('Y');
+                    if (!$oIniAct instanceof DateTimeLocal) {
+                        unset($actividad[$a]);
+                        continue;
+                    }
+                    $dini[$a] = (int)$oIniAct->format('d');
+                    $mini[$a] = (int)$oIniAct->format('m');
+                    $aini[$a] = (int)$oIniAct->format('Y');
+                    $oFinActRow = DateTimeLocal::createFromLocal($fi);
+                    if (!$oFinActRow instanceof DateTimeLocal) {
+                        unset($actividad[$a]);
+                        continue;
+                    }
+                    $dfi[$a] = (int)$oFinActRow->format('d');
+                    $mfi[$a] = (int)$oFinActRow->format('m');
+                    $afi[$a] = (int)$oFinActRow->format('Y');
 
-                    $dini[$a] = (int)$dini[$a];
-                    $dfi[$a] = (int)$dfi[$a];
-
-                    (int)$sec_dias_del_any_ini = mktime($hora_ini[$a], $m_ini[$a], $s_ini[$a], $mini[$a], $dini[$a], $aini[$a]);
-                    $dias_del_any_ini = round(($sec_dias_del_any_ini - $num_sec_ini_0) / 86400);
-                    (int)$sec_dias_del_any_fi = mktime($hora_fi[$a], $m_fi[$a], $s_fi[$a], $mfi[$a], $dfi[$a], $afi[$a]);
+                    $sec_dias_del_any_ini = mktime((int)$hora_ini[$a], (int)$m_ini[$a], (int)$s_ini[$a], (int)$mini[$a], (int)$dini[$a], (int)$aini[$a]);
+                    $dias_del_any_ini = $sec_dias_del_any_ini !== false
+                        ? round(($sec_dias_del_any_ini - $num_sec_ini_0) / 86400)
+                        : 0.0;
+                    $sec_dias_del_any_fi = mktime((int)$hora_fi[$a], (int)$m_fi[$a], (int)$s_fi[$a], (int)$mfi[$a], (int)$dfi[$a], (int)$afi[$a]);
                     $dias_del_any_fi = round(($sec_dias_del_any_fi - $num_sec_ini_0) / 86400);
 
                     if ($this->idd > 1) {
@@ -294,7 +304,7 @@ class PlanningRenderer
                             continue;
                         }
                         if ($n_dfi[$a] < $n_dini[$a]) {
-                            $error = "Error. La actividad: " . $nom[$a] . " de " . $persona . " Termina antes de empezar.";
+                            $error = 'Error. La actividad: ' . $nom[$a] . ' de ' . $persona . ' Termina antes de empezar.';
                             $e3 = $n_dfi[$a];
                             $e4 = $n_dini[$a];
                             $html .= "$error $e3-$e4 <br>";
@@ -350,7 +360,7 @@ class PlanningRenderer
                         $texto = "";
                         $reserva = "";
                         if ($pau === "u") {
-                            $reserva = $this->reservado($mini_0, $dini_0, $d, $aini_0, $id_ubi, $periodos_sv);
+                            $reserva = $this->reservado((int)$mini_0, (int)$dini_0, (int)$d, (int)$aini_0, $id_ubi, $periodos_sv);
                         }
                         for ($a = 0; $a < $num_a; $a++) {
                             if (isset($fila[$a]) && $fila[$a] == $f) {
@@ -361,7 +371,7 @@ class PlanningRenderer
                                     }
                                     $inc2 = $inc + 1;
                                     $clase_act = $css[$a];
-                                    if (substr((string)$id_tipo_activ[$a], 0, 1) == 1 && $reserva === "sf") {
+                                    if (substr($id_tipo_activ[$a], 0, 1) === '1' && $reserva === 'sf') {
                                         $conflicto = "link_red";
                                     } else {
                                         $conflicto = "link";
@@ -378,12 +388,13 @@ class PlanningRenderer
                         }
                         if ($d > $total_dias && $texto) {
                         } else {
-                            $dia = \bcdiv(($d - 1), $this->idd, 0);
-                            $p = $d - (($dia) * $this->idd);
+                            $dia = (int)\bcdiv((string)($d - 1), (string)$this->idd, 0);
+                            $p = $d - ($dia * $this->idd);
                             if ($p > 1) {
                                 $p = 2;
                             }
-                            $w = \date("w", mktime(0, 0, 0, $mini_0, (int)$dini_0 + (int)$dia, $aini_0));
+                            $tsCelda = mktime(0, 0, 0, (int)$mini_0, (int)$dini_0 + $dia, (int)$aini_0);
+                            $w = $tsCelda !== false ? (int)date('w', $tsCelda) : 0;
                             if ($w == 0) {
                                 $diumenge = "diumenge" . $p;
                             } else {
@@ -444,38 +455,52 @@ class PlanningRenderer
      * Selecciona el codigo de fondo (sv/sf/res/pascua) si el dia esta
      * reservado para un periodo sf/sv/res o coincide con domingo de pascua.
      */
-    private function reservado($mini_0, $dini_0, $dia, $aini_0, $id_ubi, $periodos_sv): string
+    /**
+     * @param array<int, array<int, array{iso_ini: string, iso_fin: string, sfsv: int}>> $periodos_sv
+     */
+    private function reservado(int $mini_0, int $dini_0, int $dia, int $aini_0, int $id_ubi, array $periodos_sv): string
     {
-        if ($id_ubi == 1) {
-            return "";
+        if ($id_ubi === 1) {
+            return '';
         }
-        $periodo_ubi = $periodos_sv[$id_ubi];
+        $periodo_ubi = $periodos_sv[$id_ubi] ?? null;
         if (!is_array($periodo_ubi)) {
-            return "";
+            return '';
         }
         $dia2 = (int)($dia / $this->idd);
-        $dia_real = date("Ymd", mktime(0, 0, 0, $mini_0, $dini_0 + $dia2, $aini_0));
-        $color = "";
-        $dia_pascua = date("Ymd", easter_date($aini_0));
-        if ($dia_real == $dia_pascua) {
-            return "pascua";
+        $tsReal = mktime(0, 0, 0, $mini_0, $dini_0 + $dia2, $aini_0);
+        $dia_real = $tsReal !== false ? date('Ymd', $tsReal) : '';
+        $color = '';
+        $dia_pascua = date('Ymd', easter_date($aini_0));
+        if ($dia_real === $dia_pascua) {
+            return 'pascua';
         }
         foreach ($periodo_ubi as $per) {
-            if ($dia_real <= $per['iso_fin'] && $dia_real >= $per['iso_ini']) {
-                if ($per['sfsv'] == 1) $color = "sv";
-                if ($per['sfsv'] == 2) $color = "sf";
-                if ($per['sfsv'] == 3) $color = "res";
+            $isoIni = $per['iso_ini'];
+            $isoFin = $per['iso_fin'];
+            $sfsv = $per['sfsv'];
+            if ($dia_real <= $isoFin && $dia_real >= $isoIni) {
+                if ($sfsv === 1) {
+                    $color = 'sv';
+                }
+                if ($sfsv === 2) {
+                    $color = 'sf';
+                }
+                if ($sfsv === 3) {
+                    $color = 'res';
+                }
                 break;
             }
-            if ($dia_real < $per['iso_ini']) {
-                $color = "";
+            if ($dia_real < $isoIni) {
+                $color = '';
                 break;
             }
         }
+
         return $color;
     }
 
-    public function getInicio(): \DateTimeInterface
+    public function getInicio(): ?\DateTimeInterface
     {
         return $this->oInicio;
     }
@@ -486,7 +511,7 @@ class PlanningRenderer
         return $this;
     }
 
-    public function getFin(): \DateTimeInterface
+    public function getFin(): ?\DateTimeInterface
     {
         return $this->oFin;
     }
@@ -497,7 +522,7 @@ class PlanningRenderer
         return $this;
     }
 
-    public function getColorColumnaUno()
+    public function getColorColumnaUno(): string
     {
         return $this->scolorColumnaUno;
     }
@@ -508,7 +533,7 @@ class PlanningRenderer
         return $this;
     }
 
-    public function getColorColumnaDos()
+    public function getColorColumnaDos(): string
     {
         return $this->scolorColumnaDos;
     }
@@ -519,7 +544,7 @@ class PlanningRenderer
         return $this;
     }
 
-    public function getColorColumnaDomingo()
+    public function getColorColumnaDomingo(): string
     {
         return $this->scolorColumnaDomingo;
     }
@@ -530,7 +555,7 @@ class PlanningRenderer
         return $this;
     }
 
-    public function getTable_border()
+    public function getTable_border(): string
     {
         return $this->stable_border;
     }
@@ -541,7 +566,7 @@ class PlanningRenderer
         return $this;
     }
 
-    public function getDd()
+    public function getDd(): int
     {
         return $this->idd;
     }
@@ -552,7 +577,7 @@ class PlanningRenderer
         return $this;
     }
 
-    public function getCabecera()
+    public function getCabecera(): string
     {
         return $this->scabecera;
     }
@@ -563,18 +588,24 @@ class PlanningRenderer
         return $this;
     }
 
-    public function getActividades()
+    /**
+     * @return array<int|string, array<int|string, list<array<string, mixed>>>>
+     */
+    public function getActividades(): array
     {
         return $this->a_actividades;
     }
 
+    /**
+     * @param array<int|string, array<int|string, list<array<string, mixed>>>> $a_actividades
+     */
     public function setActividades(array $a_actividades): self
     {
         $this->a_actividades = $a_actividades;
         return $this;
     }
 
-    public function getMod()
+    public function getMod(): int
     {
         return $this->imod;
     }
@@ -585,7 +616,7 @@ class PlanningRenderer
         return $this;
     }
 
-    public function getNueva()
+    public function getNueva(): int
     {
         return $this->inueva;
     }
@@ -596,7 +627,7 @@ class PlanningRenderer
         return $this;
     }
 
-    public function getDoble()
+    public function getDoble(): int
     {
         return $this->idoble;
     }

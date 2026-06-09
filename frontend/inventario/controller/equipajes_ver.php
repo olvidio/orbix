@@ -6,11 +6,9 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-
-// Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/inventario_support.php';
 FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qfiltro = (string)filter_input(INPUT_POST, 'filtro');
 $Qimprimir = (string)filter_input(INPUT_POST, 'imprimir');
@@ -20,8 +18,7 @@ $f_ini_iso = date('Y-m-d');
 $chk_hoy = 'checked';
 $chk_curs = '';
 $chk_tot = '';
-if (!empty($Qfiltro)) {
-    // if ($Qfiltro === 'hoy') --> ya es por defecto
+if ($Qfiltro !== '') {
     if ($Qfiltro === 'tot') {
         $f_ini_iso = date('Y') . '-01-01';
         $chk_hoy = '';
@@ -38,21 +35,20 @@ if (!empty($Qfiltro)) {
 }
 
 $url_backend = '/src/inventario/lista_equipajes_desde_fecha';
-$a_campos_backend = [ 'f_ini_iso' => $f_ini_iso];
+$a_campos_backend = ['f_ini_iso' => $f_ini_iso];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-
-$a_opciones = $data['a_opciones'];
-
+$payload = inventario_post_payload($data);
+$a_opciones = inventario_desplegable_opciones($payload['a_opciones'] ?? []);
 
 $oDesplEquipajes = new Desplegable('id_equipaje', $a_opciones, '', true);
 
-if (!empty($Qimprimir)) {
+if ($Qimprimir !== '') {
     $oDesplEquipajes->setAction('fnjs_ver_2()');
 } else {
     $oDesplEquipajes->setAction('fnjs_ver_1()');
 }
 
-if (!empty($Qeliminar)) {
+if ($Qeliminar !== '') {
     $oDesplEquipajes->setAction('');
 }
 

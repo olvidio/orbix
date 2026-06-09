@@ -22,6 +22,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -32,7 +33,7 @@ $Qinc_t = (int)filter_input(INPUT_POST, 'inc_t');
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 
 $filtro = ['active' => '1'];
-if (!($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
+if (!actividades_have_perm_oficina('des') && !actividades_have_perm_oficina('vcsd')) {
     $miSfsv = OrbixRuntime::miSfsv();
     if ($miSfsv === 1) {
         $filtro['sv'] = '1';
@@ -40,13 +41,12 @@ if (!($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_p
         $filtro['sf'] = '1';
     }
 }
-$dataCasas = PostRequest::getDataFromUrl('/src/ubis/casas_opciones_data', $filtro);
-$aCasas = (is_array($dataCasas) && isset($dataCasas['opciones']) && is_array($dataCasas['opciones']))
-    ? $dataCasas['opciones'] : [];
+$dataCasas = casas_post_data(PostRequest::getDataFromUrl('/src/ubis/casas_opciones_data', $filtro));
+$aCasas = casas_calendario_casas_opciones($dataCasas)['opciones'];
 $oDesplCasas = new Desplegable();
 $oDesplCasas->setNombre('id_ubi');
 $oDesplCasas->setOpciones($aCasas);
-$oDesplCasas->setOpcion_sel($Qid_ubi);
+$oDesplCasas->setOpcion_sel(casas_desplegable_opcion_sel($Qid_ubi));
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 

@@ -7,6 +7,7 @@ use frontend\asistentes\helpers\ListaUltimQueCtrRender;
 use function frontend\shared\helpers\payload_string;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/asistentes_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -14,12 +15,11 @@ $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
 $campos = array_merge($_GET, $_POST);
-$data = PostRequest::getDataFromUrl('/src/asistentes/lista_ultim_que_ctr_data', $campos);
 /** @var array<string, mixed> $payload */
-$payload = is_array($data) ? $data : [];
+$payload = asistentes_post_data(PostRequest::getDataFromUrl('/src/asistentes/lista_ultim_que_ctr_data', $campos));
 $payload = ListaUltimQueCtrRender::enrich($payload);
 
-$opciones = (array)($payload['opciones_centros'] ?? []);
+$opciones = notas_desplegable_opciones($payload['opciones_centros'] ?? []);
 $oDeplCentros = new Desplegable('id_ubi', $opciones, '', true);
 
 $oView = new ViewNewPhtml('frontend\\asistentes\\view');

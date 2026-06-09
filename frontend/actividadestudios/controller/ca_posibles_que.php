@@ -8,24 +8,17 @@ use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
 
-// INICIO Cabecera global de URL de controlador *********************************
+require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
 
-//Si vengo de vuelta y le paso la referencia del stack donde está la información.
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
-        // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+        if ($oPosicion2->goStack($stack)) {
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
             $oPosicion2->olvidar($stack);
@@ -35,23 +28,25 @@ if (isset($_POST['stack'])) {
     $stack = '';
 }
 
-$Qna = (string)filter_input(INPUT_POST, 'na');
-$Qid_ctr_n = (string)filter_input(INPUT_POST, 'id_ctr_n');
-$Qid_ctr_agd = (string)filter_input(INPUT_POST, 'id_ctr_agd');
-$Qiasistentes_val = (string)filter_input(INPUT_POST, 'iasistentes_val');
-$Qiactividad_val = (string)filter_input(INPUT_POST, 'actividad_val');
-$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)filter_input(INPUT_POST, 'year');
-$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
-$Qref = (string)filter_input(INPUT_POST, 'ref');
-$Qgrupo_estudios = (string)filter_input(INPUT_POST, 'grupo_estudios');
-$Qca_estudios = (string)filter_input(INPUT_POST, 'ca_estudios');
-$Qca_repaso = (string)filter_input(INPUT_POST, 'ca_repaso');
-$Qca_todos = (string)filter_input(INPUT_POST, 'ca_todos');
+$Qna = tessera_imprimir_string(filter_input(INPUT_POST, 'na'));
+$Qid_ctr_n = tessera_imprimir_string(filter_input(INPUT_POST, 'id_ctr_n'));
+$Qid_ctr_agd = tessera_imprimir_string(filter_input(INPUT_POST, 'id_ctr_agd'));
+$Qiasistentes_val = tessera_imprimir_string(filter_input(INPUT_POST, 'iasistentes_val'));
+$Qiactividad_val = tessera_imprimir_string(filter_input(INPUT_POST, 'actividad_val'));
+$Qperiodo = tessera_imprimir_string(filter_input(INPUT_POST, 'periodo'));
+$Qyear = tessera_imprimir_string(filter_input(INPUT_POST, 'year'));
+$Qempiezamax = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamax'));
+$Qempiezamin = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamin'));
+$Qref = tessera_imprimir_string(filter_input(INPUT_POST, 'ref'));
+$Qgrupo_estudios = tessera_imprimir_string(filter_input(INPUT_POST, 'grupo_estudios'));
+$Qca_estudios = tessera_imprimir_string(filter_input(INPUT_POST, 'ca_estudios'));
+$Qca_repaso = tessera_imprimir_string(filter_input(INPUT_POST, 'ca_repaso'));
+$Qca_todos = tessera_imprimir_string(filter_input(INPUT_POST, 'ca_todos'));
 
-$dq = PostRequest::getDataFromUrl('/src/actividadestudios/ca_posibles_que_data', []);
-$grupo_estudios = $dq['grupo_estudios'] ?? '';
+$dq = actividadestudios_ca_posibles_que_from_payload(
+    actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/ca_posibles_que_data', []))
+);
+$grupo_estudios = $dq['grupo_estudios'];
 $mi_grupo = $dq['mi_grupo'];
 $aCentrosNExt = $dq['aCentrosNExt'];
 $aCentrosAgdExt = $dq['aCentrosAgdExt'];
@@ -60,17 +55,16 @@ $oDesplCtrN = new Desplegable();
 $oDesplCtrN->setNombre('id_ctr_n');
 $oDesplCtrN->setOpciones($aCentrosNExt);
 $oDesplCtrN->setOpcion_sel($Qid_ctr_n);
-$oDesplCtrN->setBlanco(1);
+$oDesplCtrN->setBlanco(actividadestudios_desplegable_blanco(1));
 $oDesplCtrN->setAction("fnjs_n_a('n')");
 
 $oDesplCtrAgd = new Desplegable();
 $oDesplCtrAgd->setNombre('id_ctr_agd');
 $oDesplCtrAgd->setOpciones($aCentrosAgdExt);
 $oDesplCtrAgd->setOpcion_sel($Qid_ctr_agd);
-$oDesplCtrAgd->setBlanco(1);
+$oDesplCtrAgd->setBlanco(actividadestudios_desplegable_blanco(1));
 $oDesplCtrAgd->setAction("fnjs_n_a('agd')");
 
-// Selección de periodo
 $any = empty($Qyear) ? date('Y') : $Qyear;
 $aOpciones = array(
     'verano' => _("verano"),

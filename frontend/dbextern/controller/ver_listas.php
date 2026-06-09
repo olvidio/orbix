@@ -6,6 +6,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/dbextern_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -17,73 +18,51 @@ $id = (string)filter_input(INPUT_POST, 'id');
 $mov = (string)filter_input(INPUT_POST, 'mov');
 
 $cont_sync = 0;
-$first_load = empty($id);
+$first_load = $id === '';
 
 if ($first_load) {
-    $id = 1;
-    // Pedir la lista completa al backend
+    $id = '1';
     $data = PostRequest::getDataFromUrl('/src/dbextern/ver_listas_datos', [
         'region' => $region,
         'dl' => $dl,
         'tipo_persona' => $tipo_persona,
-        'first_load' => $first_load ? '1' : '',
+        'first_load' => '1',
     ]);
-    $a_lista = $data['lista'] ?? [];
-    $cont_sync = $data['cont_sync'] ?? 0;
+    $a_lista = dbextern_lista_from_backend($data['lista'] ?? []);
+    $cont_sync = tessera_imprimir_int($data['cont_sync'] ?? 0);
 
     session_start();
     $_SESSION['DBListas'] = $a_lista;
     session_write_close();
 }
 
-// Navegación por sesión
-function otro_listas($id, $mov, $max)
-{
-    switch ($mov) {
-        case '-':
-            $id--;
-            if ($id < 1) return 1;
-            break;
-        case '+':
-            $id++;
-            if ($id > $max) return $max;
-            break;
-        default:
-            $id = 1;
-    }
-    if (isset($_SESSION['DBListas'][$id])) {
-        return $id;
-    }
-    return otro_listas($id, $mov, $max);
-}
-
-$max = count($_SESSION['DBListas']);
+$listas = dbextern_session_db_listas();
+$max = count($listas);
 $a_lista_orbix = [];
 $persona_listas = [];
 $a_lista_orbix_otradl = [];
 $new_id = 0;
 $id_nom_bdu = '';
 
-if (!empty($max)) {
-    $new_id = otro_listas($id, $mov, $max);
+if ($max > 0) {
+    $idInt = is_numeric($id) ? (int) $id : 1;
+    $new_id = dbextern_otro_listas($idInt, $mov, $max);
 }
 
-if (!empty($new_id) && isset($_SESSION['DBListas'][$new_id])) {
-    $persona_listas = $_SESSION['DBListas'][$new_id];
-    $id_nom_bdu = $persona_listas['id_nom_listas'];
+if ($new_id > 0 && isset($listas[$new_id])) {
+    $persona_listas = $listas[$new_id];
+    $id_nom_bdu = dbextern_persona_listas_row($persona_listas)['id_nom_listas'];
 
-    // Pedir posibles matches al backend
     $matches = PostRequest::getDataFromUrl('/src/dbextern/ver_listas_datos', [
         'region' => $region,
         'dl' => $dl,
         'tipo_persona' => $tipo_persona,
         'id_nom_bdu' => $id_nom_bdu,
     ]);
-    $a_lista_orbix = $matches['posibles_misma_dl'] ?? [];
-    $a_lista_orbix_otradl = $matches['posibles_otra_dl'] ?? [];
+    $a_lista_orbix = dbextern_lista_from_backend($matches['posibles_misma_dl'] ?? []);
+    $a_lista_orbix_otradl = dbextern_lista_from_backend($matches['posibles_otra_dl'] ?? []);
 }
 
-// Hash para el formulario de navegación
 $url_sincro_ver = AppUrlConfig::getApiBaseUrl() . '/frontend/dbextern/controller/ver_listas.php';
 $oHash = new HashFront();
 $oHash->setUrl($url_sincro_ver);
@@ -96,7 +75,6 @@ $a_camposHidden = [
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 
-// Hash para AJAX crear/unir/crear_todos
 $url_sincro_crear = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_crear';
 $oHash1 = new HashFront();
 $oHash1->setUrl($url_sincro_crear);

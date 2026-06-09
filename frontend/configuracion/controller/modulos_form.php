@@ -5,6 +5,7 @@ use frontend\shared\PostRequest;
 use frontend\configuracion\helpers\ModulosFormRender;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/configuracion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -15,28 +16,29 @@ $oPosicion->recordar($Qrefresh);
 
 $campos = array_merge($_GET, $_POST);
 
-// Resolver estado de navegación aquí (frontend): recortar hacia delante desde $stack.
-$Qmod = (string)($campos['mod'] ?? '');
+$Qmod = tessera_imprimir_string($campos['mod'] ?? '');
 $stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
 if ($Qmod !== 'nuevo' && $stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
 $data = PostRequest::getDataFromUrl('/src/configuracion/modulos_form_data', $campos);
-$payload = is_array($data) ? $data : [];
+$payload = configuracion_string_key_payload($data);
+$payload = ModulosFormRender::enrich($payload);
+$view = configuracion_modulos_form_view_from_payload($payload);
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'hash_form_html' => (string)($payload['hash_form_html'] ?? ''),
-    'hash_actualizar_html' => (string)($payload['hash_actualizar_html'] ?? ''),
-    'id_mod' => (int)($payload['id_mod'] ?? 0),
-    'nom' => (string)($payload['nom'] ?? ''),
-    'descripcion' => (string)($payload['descripcion'] ?? ''),
-    'a_mods_todos' => (array)($payload['a_mods_todos'] ?? []),
-    'a_apps_todas' => (array)($payload['a_apps_todas'] ?? []),
-    'a_mods_req' => (array)($payload['a_mods_req'] ?? []),
-    'a_apps_req' => (array)($payload['a_apps_req'] ?? []),
-    'a_apps_mod' => (array)($payload['a_apps_mod'] ?? []),
+    'hash_form_html' => $view['hash_form_html'],
+    'hash_actualizar_html' => $view['hash_actualizar_html'],
+    'id_mod' => $view['id_mod'],
+    'nom' => $view['nom'],
+    'descripcion' => $view['descripcion'],
+    'a_mods_todos' => $view['a_mods_todos'],
+    'a_apps_todas' => $view['a_apps_todas'],
+    'a_mods_req' => $view['a_mods_req'],
+    'a_apps_req' => $view['a_apps_req'],
+    'a_apps_mod' => $view['a_apps_mod'],
 ];
 
 $oView = new ViewNewPhtml('frontend\\configuracion\\view');

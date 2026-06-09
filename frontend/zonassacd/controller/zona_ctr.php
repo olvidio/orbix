@@ -7,14 +7,14 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/zonassacd/helpers/zonassacd_support.php';
 
 FrontBootstrap::boot();
-$data = PostRequest::getDataFromUrl('/src/zonassacd/zona_ctr');
+$page = zonassacd_page_from_payload(PostRequest::getDataFromUrl('/src/zonassacd/zona_ctr'));
 
 $oDesplZonas = new Desplegable();
-$oDesplZonas->setOpciones($data['a_opciones']);
+$oDesplZonas->setOpciones($page['a_opciones']);
 $oDesplZonas->setBlanco(false);
-$oDesplZonas->setBlanco(0);
 
 $url_ajax_lista = 'frontend/zonassacd/controller/zona_ctr_lista_ajax.php';
 $url_ajax_update = 'frontend/zonassacd/controller/zona_ctr_update_ajax.php';
@@ -33,7 +33,7 @@ $a_campos = [
     'url_ajax_lista' => $url_ajax_lista,
     'url_ajax_update' => $url_ajax_update,
     'h_ctr' => $h_ctr,
-    'perm_des' => !empty($data['perm_des']),
+    'perm_des' => $page['perm_des'],
     'oDesplZonas' => $oDesplZonas,
 ];
 

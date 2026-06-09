@@ -13,16 +13,17 @@ use frontend\shared\web\Periodo;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-//Si vengo por medio de Posicion, borro la última
+$Qid_sel = null;
+$Qscroll_id = null;
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
-        // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+        if ($oPosicion2->goStack($stack)) {
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
             $oPosicion2->olvidar($stack);
@@ -32,15 +33,13 @@ if (isset($_POST['stack'])) {
 $oPosicion->recordar();
 
 $aviso = '';
-$form = '';
-$traslados = '';
-$Qmod = (string)filter_input(INPUT_POST, 'mod');
-$Qyear = (string)filter_input(INPUT_POST, 'year');
-$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
-$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qmod = tessera_imprimir_string(filter_input(INPUT_POST, 'mod'));
+$Qyear = tessera_imprimir_string(filter_input(INPUT_POST, 'year'));
+$Qperiodo = tessera_imprimir_string(filter_input(INPUT_POST, 'periodo'));
+$Qempiezamin = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamin'));
+$Qempiezamax = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamax'));
 
-if (empty($Qperiodo)) {
+if ($Qperiodo === '') {
     $Qperiodo = 'curso_ca';
 }
 
@@ -53,14 +52,14 @@ $oPeriodo->setPeriodo($Qperiodo);
 $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
 
-$data = PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_lista_data', [
+$lista = actividadestudios_matriculas_lista_from_payload(actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_lista_data', [
     'inicioIso' => $inicioIso,
     'finIso' => $finIso,
-]);
+])));
 
-$titulo = (string)($data['titulo'] ?? '');
-$msg_err = (string)($data['msg_err'] ?? '');
-$a_valores = $data['a_valores'] ?? [];
+$titulo = $lista['titulo'];
+$msg_err = $lista['msg_err'];
+$a_valores = actividadestudios_lista_valores($lista['a_valores'], $Qid_sel, $Qscroll_id);
 
 $a_cabeceras = [
     _('alumno'),
@@ -77,13 +76,6 @@ $a_botones = [
     ['txt' => _('borrar matrícula'), 'click' => 'fnjs_borrar(this.form)'],
 ];
 
-if (isset($Qid_sel) && !empty($Qid_sel)) {
-    $a_valores['select'] = $Qid_sel;
-}
-if (isset($Qscroll_id) && !empty($Qscroll_id)) {
-    $a_valores['scroll_id'] = $Qscroll_id;
-}
-
 $oHash = new HashFront();
 $oHash->setCamposNo('sel!mod!pau!scroll_id');
 $a_camposHidden = [
@@ -94,8 +86,8 @@ $a_camposHidden = [
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 
-if (!empty($msg_err)) {
-    echo $msg_err;
+if ($msg_err !== '') {
+    actividadestudios_echo_string($msg_err);
 }
 
 $oTabla = new Lista();

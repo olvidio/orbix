@@ -18,7 +18,7 @@ class CuadriculaZonaRenderer
     /**
      * Cuadrícula de solo lectura (ver plan, ver misas zona, …).
      *
-     * @param array<string, mixed> $data
+     * @param array<int|string, mixed> $data
      * @param array<string, mixed> $post
      * @param array<string, mixed> $overrides
      */
@@ -35,7 +35,7 @@ class CuadriculaZonaRenderer
     /**
      * Cuadrícula editable (modificar plan/plantilla, crear periodo, …).
      *
-     * @param array<string, mixed> $data
+     * @param array<int|string, mixed> $data
      * @param array<string, mixed> $post
      * @param array<string, mixed> $overrides
      */
@@ -50,7 +50,7 @@ class CuadriculaZonaRenderer
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param array<int|string, mixed> $data
      * @param array<string, mixed> $post
      * @param array<string, mixed> $overrides
      */
@@ -78,8 +78,8 @@ class CuadriculaZonaRenderer
             $value = $data[$key] ?? $defaultFromPost;
 
             return match ($type) {
-                'int' => (int)$value,
-                'string' => (string)$value,
+                'int' => tessera_imprimir_int($value),
+                'string' => tessera_imprimir_string($value),
                 default => $value,
             };
         };
@@ -95,8 +95,8 @@ class CuadriculaZonaRenderer
             'orden' => $pick('orden', $post['orden'] ?? '', 'string'),
             'seleccion' => $pick('seleccion', $post['seleccion'] ?? 0, 'int'),
             'periodo' => $pick('periodo', $post['periodo'] ?? '', 'string'),
-            'empieza_min' => (string)($data['empieza_min'] ?? $post['empiezamin'] ?? ''),
-            'empieza_max' => (string)($data['empieza_max'] ?? $post['empiezamax'] ?? ''),
+            'empieza_min' => tessera_imprimir_string($data['empieza_min'] ?? $post['empiezamin'] ?? ''),
+            'empieza_max' => tessera_imprimir_string($data['empieza_max'] ?? $post['empiezamax'] ?? ''),
             'fila' => $pick('fila', $post['fila'] ?? 0, 'int'),
             'columna' => $pick('columna', $post['columna'] ?? 0, 'int'),
             'h_cuadricula_update' => '',

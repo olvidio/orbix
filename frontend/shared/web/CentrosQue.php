@@ -14,10 +14,11 @@ use frontend\shared\PostRequest;
 class CentrosQue
 {
     private ?string $sTitulo = null;
+    /** @var array<int, string> */
     private array $aCentros = [];
     private ?Desplegable $oDesplCentros = null;
-    private mixed $sBoton = null;
-    private mixed $sAntes = null;
+    private ?string $sBoton = null;
+    private ?string $sAntes = null;
 
     /**
      * Filtro whitelisted aplicado al obtener el listado de centros.
@@ -35,7 +36,7 @@ class CentrosQue
      */
     public function getHtmlTabla2(): string
     {
-        $aOpcionesCentros = $this->getDesplCentros()->getOpciones();
+        $aOpcionesCentros = self::opcionesComoArray($this->getDesplCentros()->getOpciones());
         $oSelects = new DesplegableArray('', $aOpcionesCentros, 'id_ctr');
         $oSelects->setBlanco('t');
         $oSelects->setAccionConjunto('fnjs_mas_centros(event)');
@@ -79,7 +80,7 @@ class CentrosQue
      */
     public function getHtmlTabla(): string
     {
-        $aOpcionesCentros = $this->getDesplCentros()->getOpciones();
+        $aOpcionesCentros = self::opcionesComoArray($this->getDesplCentros()->getOpciones());
         $oSelects = new DesplegableArray('', $aOpcionesCentros, 'id_ctr');
         $oSelects->setBlanco('t');
         $oSelects->setAccionConjunto('fnjs_mas_centros(event)');
@@ -127,7 +128,7 @@ class CentrosQue
         return $sHtml;
     }
 
-    public function setCentros($sQue): void
+    public function setCentros(string $sQue): void
     {
         $this->aCentros = [];
         switch ($sQue) {
@@ -186,9 +187,12 @@ class CentrosQue
         $this->oDesplCentros->setOpciones($this->fetchOpciones($filtro));
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function getPosiblesCentros(): array
     {
-        return $this->oDesplCentros?->getOpciones() ?? [];
+        return self::opcionesComoArray($this->oDesplCentros?->getOpciones());
     }
 
     public function getDesplCentros(): Desplegable
@@ -204,7 +208,7 @@ class CentrosQue
         return $this->oDesplCentros;
     }
 
-    public function setAction($sAction): void
+    public function setAction(string $sAction): void
     {
         if (!isset($this->oDesplCentros)) {
             $oDesplCentros = new Desplegable();
@@ -215,19 +219,43 @@ class CentrosQue
         $this->oDesplCentros->setAction($sAction);
     }
 
-    public function setTitulo($sTitulo): void
+    public function setTitulo(string $sTitulo): void
     {
         $this->sTitulo = $sTitulo;
     }
 
-    public function setBoton($sBoton): void
+    public function setBoton(string $sBoton): void
     {
         $this->sBoton = $sBoton;
     }
 
-    public function setAntes($sAntes): void
+    public function setAntes(string $sAntes): void
     {
         $this->sAntes = $sAntes;
+    }
+
+    /**
+     * @return array<int|string, string>
+     */
+    private static function opcionesComoArray(mixed $opciones): array
+    {
+        if ($opciones === null) {
+            return [];
+        }
+        if (!is_array($opciones) && !$opciones instanceof \Traversable) {
+            return [];
+        }
+        $out = [];
+        foreach ($opciones as $key => $value) {
+            if (!is_int($key) && !is_string($key)) {
+                continue;
+            }
+            if (is_string($value) || is_numeric($value)) {
+                $out[$key] = (string) $value;
+            }
+        }
+
+        return $out;
     }
 
     /**
@@ -243,7 +271,18 @@ class CentrosQue
         if (!isset($data['opciones']) || !is_array($data['opciones'])) {
             return [];
         }
-        return $data['opciones'];
+        $out = [];
+        foreach ($data['opciones'] as $id => $nombre) {
+            if (!is_int($id) && !is_numeric($id)) {
+                continue;
+            }
+            if (!is_string($nombre) && !is_numeric($nombre)) {
+                continue;
+            }
+            $out[(int) $id] = (string) $nombre;
+        }
+
+        return $out;
     }
 
     /**
@@ -261,13 +300,23 @@ class CentrosQue
             }
         }
         if (!empty($filtro['id_ubi_in']) && is_array($filtro['id_ubi_in'])) {
-            $ids = array_values(array_filter(array_map('intval', $filtro['id_ubi_in']), static fn ($v) => $v > 0));
-            if (!empty($ids)) {
+            $ids = [];
+            foreach ($filtro['id_ubi_in'] as $id) {
+                if (!is_int($id) && !(is_string($id) && is_numeric($id))) {
+                    continue;
+                }
+                $v = (int) $id;
+                if ($v > 0) {
+                    $ids[] = $v;
+                }
+            }
+            if ($ids !== []) {
                 $campos['id_ubi_in'] = implode(',', $ids);
             }
         }
-        if (!empty($filtro['tipo_ctr'])) {
-            $campos['tipo_ctr'] = (string)$filtro['tipo_ctr'];
+        $tipoCtr = $filtro['tipo_ctr'] ?? null;
+        if (is_string($tipoCtr) && $tipoCtr !== '') {
+            $campos['tipo_ctr'] = $tipoCtr;
         }
         return $campos;
     }

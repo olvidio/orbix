@@ -3,6 +3,7 @@
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 
 /**
 * Esta página está como include de acta_2_mpdf.php
@@ -12,47 +13,48 @@ use frontend\shared\FrontBootstrap;
 *@subpackage	estudios
 *@author	Daniel Serrabou
 *@since		24/10/03.
-*		
+*
 */
+
+require_once __DIR__ . '/../helpers/acta_imprimir_support.php';
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 include_once(OrbixRuntime::dirEstilos() . '/actas_mpdf.css.php');
 
+$acta = acta_imprimir_acta_from_request();
+
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
-$region_latin = $_SESSION['oConfig']->getNomRegionLatin();
+$oConfig = $_SESSION['oConfig'] ?? null;
+$region_latin = $oConfig instanceof ConfigSnapshot ? $oConfig->getNomRegionLatin() : '';
 $nombre_prelatura = strtr('PRAELATURA SANCTAE CRUCIS ET OPERIS DEI', $replace);
 $reg_stgr = 'Stgr' . OrbixRuntime::miRegion();
 
-$d = PostRequest::getDataFromUrl('/src/notas/acta_imprimir_presentacion_data', [
+$payload = PostRequest::getDataFromUrl('/src/notas/acta_imprimir_presentacion_data', [
     'acta' => $acta,
     'mode' => 'mpdf',
 ]);
-$aPersonasNotas = [];
-foreach ($d['aPersonasNotas_list'] ?? [] as $row) {
-    $aPersonasNotas[$row['nom']] = $row['nota'];
-}
-$num_alumnos = (int)($d['num_alumnos'] ?? 0);
-$lin_tribunal = (int)($d['lin_tribunal'] ?? 0);
-$lin_max_cara_A = (int)($d['lin_max_cara_A'] ?? 0);
-$alum_cara_A = (int)($d['alum_cara_A'] ?? 0);
-$alum_cara_B = (int)($d['alum_cara_B'] ?? 0);
-$curso = (string)($d['curso'] ?? '');
-$any = (string)($d['any'] ?? '');
-$nombre_asignatura = (string)($d['nombre_asignatura'] ?? '');
-$libro = (string)($d['libro'] ?? '');
-$pagina = (string)($d['pagina'] ?? '');
-$linea = (string)($d['linea'] ?? '');
-$tribunal_html = (string)($d['tribunal_html'] ?? '');
-
-$cara = 'A';
+$presentacion = acta_imprimir_presentacion_from_payload($payload);
+$aPersonasNotas = $presentacion['aPersonasNotas'];
+$num_alumnos = $presentacion['num_alumnos'];
+$lin_tribunal = $presentacion['lin_tribunal'];
+$lin_max_cara_A = $presentacion['lin_max_cara_A'];
+$alum_cara_A = $presentacion['alum_cara_A'];
+$alum_cara_B = $presentacion['alum_cara_B'];
+$curso = $presentacion['curso'];
+$any = $presentacion['any'];
+$nombre_asignatura = $presentacion['nombre_asignatura'];
+$libro = $presentacion['libro'];
+$pagina = $presentacion['pagina'];
+$linea = $presentacion['linea'];
+$tribunal_html = $presentacion['tribunal_html'];
+$acta = $presentacion['acta'] !== '' ? $presentacion['acta'] : $acta;
 
 // ---------------------------------------------------------------------------------------
 ?>
 <meta charset="utf-8">
 <div class="A4" >
-<?php if ($cara==="A") { ?>
 <div class="cabecera"><?= $nombre_prelatura ?></div>
 <div class="region">STUDIUM GENERALE REGIONIS: <?= $region_latin ?></div>
 <div class="curso"><?= sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s",$curso,$any); ?></div>
@@ -82,17 +84,18 @@ $cara = 'A';
 	}
 	echo "</table>";
 
+$tribunal = 0;
+if ($num_alumnos + $lin_tribunal < $lin_max_cara_A) {
+    $tribunal = 1;
+}
+if ($num_alumnos + $lin_tribunal > $lin_max_cara_A) {
+    $tribunal = 0;
 }
 
-if ($cara==="A" && $num_alumnos+$lin_tribunal<$lin_max_cara_A) { $tribunal=1; }
-if ($cara==="A" && $num_alumnos+$lin_tribunal>$lin_max_cara_A) { $tribunal=0; }
-
-if (!empty($tribunal)){
-	echo $tribunal_html; 
-	$tribunal=0;
+if ($tribunal !== 0) {
+	echo $tribunal_html;
 }
 
-if ($cara==="A") {
 ?>
 </div>
 <div class="pie">
@@ -106,12 +109,10 @@ if ($cara==="A") {
 </div>
 <div class="f7">F7</div>
 <?php
-}
-$cara='B';
 
 echo '<div class="A4" >';
 
-if ($cara==="B" && $alum_cara_B > 0 ) {
+if ($alum_cara_B > 0) {
 	?>
 	<table class="alumni" height="<?= $alum_cara_B ?>" >
 	<tr><td width="55%" class="alumni"></td><td  width="10%"></td><td width="35%"></td></tr>
@@ -136,8 +137,11 @@ if ($cara==="B" && $alum_cara_B > 0 ) {
 }
 
 // tribunal -----------------
-if ($cara==="B" && $num_alumnos+$lin_tribunal>=$lin_max_cara_A) { $tribunal=1; }
-if (!empty($tribunal)){
+$tribunal = 0;
+if ($num_alumnos + $lin_tribunal >= $lin_max_cara_A) {
+    $tribunal = 1;
+}
+if ($tribunal !== 0) {
 	echo $tribunal_html;
 }
 echo "</div>";

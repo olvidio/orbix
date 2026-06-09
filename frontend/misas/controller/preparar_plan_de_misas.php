@@ -8,6 +8,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/misas/plan_de_misas_pantalla_data', ['pantalla' => 'preparar']);
@@ -19,19 +20,19 @@ $periodo_td_html = PeriodoTdHelper::build([
 ], 'proxima_semana');
 
 $oDesplZonas = new Desplegable();
-$oDesplZonas->setOpciones($data['zonas_opciones'] ?? []);
+$oDesplZonas->setOpciones(misas_desplegable_opciones($data['zonas_opciones'] ?? []));
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_cuadricula_zona()');
 
 $oDesplTipoPlantilla = new Desplegable();
-$oDesplTipoPlantilla->setOpciones($data['tipos_plantilla'] ?? []);
+$oDesplTipoPlantilla->setOpciones(misas_desplegable_opciones($data['tipos_plantilla'] ?? []));
 $oDesplTipoPlantilla->setNombre('tipoplantilla');
-$oDesplTipoPlantilla->setOpcion_sel((string)($data['plantilla_selected'] ?? ''));
+$oDesplTipoPlantilla->setOpcion_sel(misas_string($data['plantilla_selected'] ?? ''));
 $oDesplTipoPlantilla->setAction('fnjs_ver_cuadricula_zona()');
 
 $oDesplOrden = new Desplegable();
-$oDesplOrden->setOpciones($data['orden_opciones'] ?? []);
+$oDesplOrden->setOpciones(misas_desplegable_opciones($data['orden_opciones'] ?? []));
 $oDesplOrden->setNombre('orden');
 $oDesplOrden->setAction('fnjs_ver_cuadricula_zona()');
 

@@ -12,28 +12,33 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
 
 $campos = ['id_item' => $Qid_item];
-$data = PostRequest::getDataFromUrl('/src/casas/grupo_form_data', $campos);
-$payload = is_array($data) ? $data : [];
+$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/grupo_form_data', $campos));
+$form = casas_grupo_form_from_payload($data);
 
-$es_nuevo = (bool)($payload['es_nuevo'] ?? true);
-$id_item = (string)($payload['id_item'] ?? 'nuevo');
-$id_ubi_padre = (int)($payload['id_ubi_padre'] ?? 0);
-$id_ubi_hijo = (int)($payload['id_ubi_hijo'] ?? 0);
-$opciones_casas = $payload['opciones_casas'] ?? [];
-
-$oDesplCasaMadre = new Desplegable('id_ubi_padre', $opciones_casas, $id_ubi_padre, '');
-$oDesplCasaHija = new Desplegable('id_ubi_hijo', $opciones_casas, $id_ubi_hijo, '');
+$oDesplCasaMadre = new Desplegable(
+    'id_ubi_padre',
+    $form['opciones_casas'],
+    casas_desplegable_opcion_sel($form['id_ubi_padre']),
+    ''
+);
+$oDesplCasaHija = new Desplegable(
+    'id_ubi_hijo',
+    $form['opciones_casas'],
+    casas_desplegable_opcion_sel($form['id_ubi_hijo']),
+    ''
+);
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'es_nuevo' => $es_nuevo,
-    'id_item' => $id_item,
+    'es_nuevo' => $form['es_nuevo'],
+    'id_item' => $form['id_item'],
     'oDesplCasaMadre' => $oDesplCasaMadre,
     'oDesplCasaHija' => $oDesplCasaHija,
 ];

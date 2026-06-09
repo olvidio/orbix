@@ -9,32 +9,15 @@ use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
-/**
- * Página para realizar algunos listados standard de ubis
- *
- *
- *
- * @package    delegacion
- * @subpackage    ubis
- * @author    Josep Companys
- * @since        15/5/02.
- *
- * Llegamos desde menú: "centros y casas" y
- * submenú "listados"
- * Las funciones que podré hacer con los ubis son
- * idénticas a las que realizamos en submenú "buscar"
- *
- * Se tiene en cuenta si es una vuelta de un go_to
- */
+require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+
 $oPosicion = FrontBootstrap::boot();
-//Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
-        // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+        if ($oPosicion2->goStack($stack)) {
             $obj_pau = $oPosicion2->getParametro('obj_pau');
             $id_ubi = $oPosicion2->getParametro('id_ubi');
             $Qid_sel = $oPosicion2->getParametro('id_sel');
@@ -54,40 +37,21 @@ if (empty($Qque_lista)) {
     $Qque_lista = 'ctr_n';
 }
 
-$id_sel = isset($Qid_sel) ? (string)$Qid_sel : '';
-$scroll_id = isset($Qscroll_id) ? (string)$Qscroll_id : '';
+$id_sel = isset($Qid_sel) ? tessera_imprimir_string($Qid_sel) : '';
+$scroll_id = isset($Qscroll_id) ? tessera_imprimir_string($Qscroll_id) : '';
 
-$data = PostRequest::getDataFromUrl('/src/ubis/list_ctr_data', [
+$data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/list_ctr_data', [
     'que_lista' => $Qque_lista,
     'loc' => $Qloc,
     'id_sel' => $id_sel,
     'scroll_id' => $scroll_id,
-]);
-if (!empty($data['error'])) {
-    exit((string)$data['error']);
+]));
+$error = ubis_api_error($data);
+if ($error !== '') {
+    exit($error);
 }
 
-$a_valores = $data['a_valores'] ?? [];
-$baseUrl = AppUrlConfig::getPublicAppBaseUrl();
-foreach ($a_valores as $idx => $fila) {
-    if (!is_array($fila)) {
-        continue;
-    }
-    foreach ($fila as $colKey => $cell) {
-        if (!is_array($cell) || !isset($cell['link_spec'])) {
-            continue;
-        }
-        $spec = $cell['link_spec'];
-        $path = (string)($spec['path'] ?? '');
-        $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
-        if ($path === '') {
-            continue;
-        }
-        $url = $baseUrl . '/' . ltrim($path, '/') . '?' . http_build_query($query);
-        $a_valores[$idx][$colKey]['ira'] = HashFront::link($url);
-        unset($a_valores[$idx][$colKey]['link_spec']);
-    }
-}
+$lista = ubis_list_ctr_from_payload($data);
 
 $aGoBack = [
     'loc' => $Qloc,
@@ -98,9 +62,9 @@ $oPosicion->recordar();
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('list_ctr');
-$oTabla->setCabeceras($data['a_cabeceras'] ?? []);
-$oTabla->setBotones($data['a_botones'] ?? []);
-$oTabla->setDatos($a_valores);
+$oTabla->setCabeceras($lista['cabeceras']);
+$oTabla->setBotones($lista['botones']);
+$oTabla->setDatos($lista['valores']);
 
 $oHash = new HashFront();
 $oHash->setCamposForm('loc!que_lista');
@@ -122,8 +86,8 @@ $h2 = $oHash2->linkSinVal();
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
-    'opciones_loc' => $data['opciones_loc'] ?? [],
-    'opciones_que_lista' => $data['opciones_que_lista'] ?? [],
+    'opciones_loc' => $lista['opciones_loc'],
+    'opciones_que_lista' => $lista['opciones_que_lista'],
     'loc' => $Qloc,
     'que_lista' => $Qque_lista,
     'oHash1' => $oHash1,

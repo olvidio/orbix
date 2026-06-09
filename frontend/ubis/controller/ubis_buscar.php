@@ -6,25 +6,15 @@ use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
-/**
- * Es un formulario para introducir las condiciones de búsqueda de los ubis.
- *
- *
- * @package    delegacion
- * @subpackage    ubis
- * @author    Daniel Serrabou
- * @since        15/5/02.
- *
- */
+require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-FrontBootstrap::boot();
-$data = PostRequest::getDataFromUrl('/src/ubis/ubis_buscar_data', []);
-$opciones_region = $data['opciones_region'] ?? [];
-$opciones_tipo_ctr = $data['opciones_tipo_ctr'] ?? [];
-$opciones_tipo_casa = $data['opciones_tipo_casa'] ?? [];
-$opciones_pais = $data['opciones_pais'] ?? [];
 
-$Qsimple = (integer)filter_input(INPUT_POST, 'simple');
+FrontBootstrap::boot();
+$data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/ubis_buscar_data', []));
+$opciones = ubis_editar_opciones_from_payload($data);
+$opciones_pais = notas_desplegable_opciones($data['opciones_pais'] ?? []);
+
+$Qsimple = (int)filter_input(INPUT_POST, 'simple');
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qloc = (string)filter_input(INPUT_POST, 'loc');
 
@@ -32,52 +22,40 @@ $simple = empty($Qsimple) ? 1 : $Qsimple;
 $tipo = empty($Qtipo) ? "tot" : $Qtipo;
 $loc = empty($Qloc) ? "tot" : $Qloc;
 
+$nomUbi = ubis_buscar_nom_ubi($tipo);
+
 switch ($tipo) {
     case "ctrdl" :
         $titulo = strtoupper_dlb(_("centros de la delegación"));
         $tituloGros = strtoupper_dlb(_("¿qué centro te interesa?"));
-        $nomUbi = ucfirst(_("nombre del centro"));
         break;
     case "vu_ex" :
         $titulo = strtoupper(_("centros o casas de otras dl/r"));
         $tituloGros = strtoupper_dlb(_("¿qué centro o casa te interesa?"));
-        $nomUbi = ucfirst(_("nombre del centro o casa"));
         break;
     case "ctrex" :
         $titulo = strtoupper(_("centros de otras dl/r"));
         $tituloGros = strtoupper_dlb(_("¿qué centro te interesa?"));
-        $nomUbi = ucfirst(_("nombre del centro"));
         break;
     case "cdcdl" :
         $titulo = strtoupper_dlb(_("casas de la delegación"));
         $tituloGros = strtoupper_dlb(_("¿qué casa te interesa?"));
-        $nomUbi = ucfirst(_("nombre de la casa"));
         break;
     case "cdcex" :
         $titulo = strtoupper(_("casas de otras dl/r"));
         $tituloGros = strtoupper_dlb(_("¿qué casa te interesa?"));
-        $nomUbi = ucfirst(_("nombre de la casa"));
         break;
     case "mail" :
         $titulo = ucfirst(_("buscar e-mails de los centros de la dl"));
         $tituloGros = ucfirst(_("escoge un grupo de centros"));
-        $nomUbi = ucfirst(_("nombre del centro"));
         break;
     case "ctrsf" :
         $titulo = strtoupper(_("centros de la sf"));
         $tituloGros = strtoupper_dlb(_("¿qué centro te interesa?"));
-        $nomUbi = ucfirst(_("nombre del centro"));
         break;
-}
-switch ($tipo) {
-    case "ctr" :
-        $nomUbi = ucfirst(_("nombre del centro"));
-        break;
-    case "cdc" :
-        $nomUbi = ucfirst(_("nombre de la casa"));
-        break;
-    case "tot" :
-        $nomUbi = ucfirst(_("nombre de la casa o centro"));
+    default:
+        $titulo = '';
+        $tituloGros = '';
         break;
 }
 
@@ -97,11 +75,10 @@ if ($simple === 2) {
 }
 $oHash->setCamposForm($s_camposForm);
 
-
 if ($simple === 1) {
-    $pagina = HashFront::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '2')));
+    $pagina = HashFront::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(['simple' => '2']));
 } else {
-    $pagina = HashFront::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '1')));
+    $pagina = HashFront::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(['simple' => '1']));
 }
 
 $a_campos = [
@@ -109,11 +86,11 @@ $a_campos = [
     'tipo' => $tipo,
     'simple' => $simple,
     'nomUbi' => $nomUbi,
-    'opciones_region' => $opciones_region,
+    'opciones_region' => $opciones['opciones_region'],
     'opciones_pais' => $opciones_pais,
     'loc' => $loc,
-    'opciones_tipo_casa' => $opciones_tipo_casa,
-    'opciones_tipo_ctr' => $opciones_tipo_ctr,
+    'opciones_tipo_casa' => $opciones['opciones_tipo_casa'],
+    'opciones_tipo_ctr' => $opciones['opciones_tipo_ctr'],
     'pagina' => $pagina,
 ];
 

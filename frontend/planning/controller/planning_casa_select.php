@@ -32,7 +32,7 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qsin_activ = (int)filter_input(INPUT_POST, 'sin_activ');
 $aIdCdc = (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$aIdCdc = array_filter($aIdCdc, static fn($v) => $v !== null && $v !== '');
+$aIdCdc = array_filter($aIdCdc, static fn($v) => $v !== false && $v !== '');
 $sCdc = $Qcdc_sel === 9 ? implode(',', $aIdCdc) : '';
 
 $aGoBack = [

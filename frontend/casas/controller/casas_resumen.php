@@ -16,6 +16,7 @@ use frontend\shared\web\PeriodoQue;
 use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -24,19 +25,17 @@ $oPosicion->recordar();
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qsfsv = (string)filter_input(INPUT_POST, 'sfsv');
 
-$oMiUsuario = $_SESSION['session_auth']['MiUsuario'];
-$miSfsv = OrbixRuntime::miSfsv();
-$miRolePau = OrbixRuntime::miRolePau();
-
 $oForm = new CasasQue();
 $oForm->setTitulo(strtoupper_dlb((string)_('búsqueda de casas cuyo resumen económico interesa')));
 $filtro = ['active' => true];
+$miSfsv = OrbixRuntime::miSfsv();
+$miRolePau = OrbixRuntime::miRolePau();
 // PauType::PAU_CDC (literal 'cdc').
 if ($miRolePau === 'cdc') {
-    $id_pau = $oMiUsuario->getCsv_id_pau();
-    $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', (string)$id_pau)), static fn ($v) => $v > 0));
+    $id_pau = casas_mi_usuario_csv_id_pau();
+    $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
     $oForm->setCasas('casa');
-} elseif ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
+} elseif (actividades_have_perm_oficina('des') || actividades_have_perm_oficina('vcsd')) {
     $oForm->setCasas('all');
 } elseif ($miSfsv === 1) {
     $oForm->setCasas('sv');
@@ -64,7 +63,7 @@ $oFormP = new PeriodoQue();
 $oFormP->setFormName('seleccion');
 $oFormP->setTitulo(strtoupper_dlb((string)_('periodo para el resumen económico')));
 $oFormP->setPosiblesPeriodos($aOpciones);
-$oFormP->setDesplAnysOpcion_sel((int)date('Y'));
+$oFormP->setDesplAnysOpcion_sel(casas_periodo_year_sel((int)date('Y')));
 $oFormP->setAntes($oSelects->ListaSelects());
 $oFormP->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "' onclick='fnjs_ver();'>");
 

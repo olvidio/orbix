@@ -4,9 +4,9 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/dbextern_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -22,23 +22,20 @@ $region = $data['region'];
 $dl_listas = $data['dl_listas'];
 $fecha_actualizacion = $data['fecha_actualizacion'];
 
-// Firmar link_specs
-$ver_2 = HashFrontSignedLink::fromSpec($data['link_spec_ver_traslados']);
-$ver_3 = HashFrontSignedLink::fromSpec($data['link_spec_ver_desaparecidos_orbix']);
-$ver_456 = HashFrontSignedLink::fromSpec($data['link_spec_ver_listas']);
-$ver_7 = HashFrontSignedLink::fromSpec($data['link_spec_ver_orbix_otradl']);
-$ver_8 = HashFrontSignedLink::fromSpec($data['link_spec_ver_desaparecidos_listas']);
-$ver_910 = HashFrontSignedLink::fromSpec($data['link_spec_ver_orbix']);
-$url_actualizar = HashFrontSignedLink::fromSpec($data['link_spec_self']);
+$ver_2 = dbextern_signed_link($data['link_spec_ver_traslados'] ?? null);
+$ver_3 = dbextern_signed_link($data['link_spec_ver_desaparecidos_orbix'] ?? null);
+$ver_456 = dbextern_signed_link($data['link_spec_ver_listas'] ?? null);
+$ver_7 = dbextern_signed_link($data['link_spec_ver_orbix_otradl'] ?? null);
+$ver_8 = dbextern_signed_link($data['link_spec_ver_desaparecidos_listas'] ?? null);
+$ver_910 = dbextern_signed_link($data['link_spec_ver_orbix'] ?? null);
+$url_actualizar = dbextern_signed_link($data['link_spec_self'] ?? null);
 
-// Hash para AJAX syncro
 $url_sincro_syncro =  AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_syncro';
 $oHash1 = new HashFront();
 $oHash1->setUrl($url_sincro_syncro);
 $oHash1->setCamposForm('region!dl_listas!tipo_persona');
 $h1 = $oHash1->linkSinValParams();
 
-// Hash para AJAX refrescar
 $url_refrescar = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/refrescar_bdu';
 $oHash2 = new HashFront();
 $oHash2->setUrl($url_refrescar);

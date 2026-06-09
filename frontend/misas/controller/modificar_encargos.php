@@ -7,6 +7,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 // Si el use case devuelve error (p.ej. permiso denegado), PostRequest hace
@@ -21,13 +22,13 @@ $a_orden = $data['a_orden'] ?? [
 ];
 
 $oDesplZonas = new Desplegable();
-$oDesplZonas->setOpciones($a_opciones_zona);
+$oDesplZonas->setOpciones(misas_desplegable_opciones($a_opciones_zona));
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_encargos_zona()');
 
 $oDesplOrden = new Desplegable();
-$oDesplOrden->setOpciones($a_orden);
+$oDesplOrden->setOpciones(misas_desplegable_opciones($a_orden));
 $oDesplOrden->setNombre('orden_select');
 $oDesplOrden->setAction('fnjs_ver_encargos_zona()');
 

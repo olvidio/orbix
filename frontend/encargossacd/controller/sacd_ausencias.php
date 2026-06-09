@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\encargossacd\support\SacdFichaAjaxHashes;
 use frontend\shared\model\ViewNewPhtml;
@@ -21,7 +22,7 @@ $oPosicion = FrontBootstrap::boot();
 
 $oPosicion->recordar();
 
-$Qfiltro_sacd = (string)filter_input(INPUT_POST, 'filtro_sacd');
+$Qfiltro_sacd = encargossacd_post_string('filtro_sacd');
 
 $hashes = SacdFichaAjaxHashes::hashesComunes();
 $oDesplFiltroSacd = SacdFichaAjaxHashes::desplegableFiltroSacd($Qfiltro_sacd);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\actividadcargos\helpers;
 
+require_once __DIR__ . '/actividadcargos_support.php';
+
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
 
@@ -26,9 +28,9 @@ final class FormCargosDeActividadHashCompose
      */
     public static function withHashCamposHtml(array $data): array
     {
-        $cfg = $data['hash_form_config'] ?? null;
+        $cfg = actividadcargos_hash_form_config($data['hash_form_config'] ?? null);
         unset($data['hash_form_config']);
-        if (!is_array($cfg)) {
+        if ($cfg === null) {
             $data['hash_campos_html'] = '';
 
             return $data;
@@ -49,9 +51,9 @@ final class FormCargosDeActividadHashCompose
         if (is_string($cf) && $cf !== '') {
             $oHash->setCamposForm($cf);
         }
-        $oHash->setCamposNo((string)($cfg['campos_no'] ?? ''));
+        $oHash->setCamposNo($cfg['campos_no']);
         $hidden = $cfg['campos_hidden'] ?? [];
-        if (is_array($hidden) && $hidden !== []) {
+        if ($hidden !== []) {
             $oHash->setArrayCamposHidden($hidden);
         }
 
@@ -77,24 +79,25 @@ final class FormCargosDeActividadHashCompose
      */
     public static function withDesplegablesHtml(array $data): array
     {
-        $personas = $data['personas_select'] ?? null;
+        $personas = actividadcargos_desplegable_select($data['personas_select'] ?? null);
         unset($data['personas_select']);
-        if (is_array($personas) && isset($personas['opciones']) && is_array($personas['opciones'])) {
+        if ($personas !== null) {
             $d = Desplegable::desdeOpciones($personas['opciones'], 'id_nom', true);
-            $sel = $personas['opcion_sel'] ?? '';
-            if ($sel !== '' && $sel !== null) {
-                $d->setOpcion_sel((string)$sel);
+            if ($personas['opcion_sel'] !== '') {
+                $d->setOpcion_sel($personas['opcion_sel']);
             }
             $data['desplegable_personas_html'] = $d->desplegable();
         } else {
             $data['desplegable_personas_html'] = '';
         }
 
-        $cargos = $data['cargos_select'] ?? null;
+        $cargos = actividadcargos_desplegable_select($data['cargos_select'] ?? null);
         unset($data['cargos_select']);
-        if (is_array($cargos) && isset($cargos['opciones']) && is_array($cargos['opciones'])) {
+        if ($cargos !== null) {
             $d = Desplegable::desdeOpciones($cargos['opciones'], 'id_cargo', true);
-            $d->setOpcion_sel((string)($cargos['opcion_sel'] ?? ''));
+            if ($cargos['opcion_sel'] !== '') {
+                $d->setOpcion_sel($cargos['opcion_sel']);
+            }
             $data['desplegable_cargos_html'] = $d->desplegable();
         } else {
             $data['desplegable_cargos_html'] = '';

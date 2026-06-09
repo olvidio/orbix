@@ -1,75 +1,41 @@
 <?php
 
-use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\web\Lista;
 use frontend\shared\security\HashFront;
+use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-// Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
-$Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
+$Qdl = (string)filter_input(INPUT_POST, 'dl');
 
 $oPosicion->recordar();
-$aGoBack = array(
-    'inventario' => $Qinventario,
-    'id_tipo_doc' => $Qid_tipo_doc);
-$oPosicion->setParametros($aGoBack, 1);
 
-// muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/lista_docs_de_dlb';
-$a_campos_backend = [
-    'id_tipo_doc' => $Qid_tipo_doc,
-    'inventario' => $Qinventario
-];
+$a_campos_backend = ['dl' => $Qdl];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$a_valores = $data['a_valores'];
-$aGrupos = $data['aGrupos'];
-$nombreDoc = $data['nombreDoc'];
+$payload = inventario_post_payload($data);
+$view = inventario_doc_de_dlb_from_payload($payload);
 
-//6
-$url_doc_mod = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_asignar_dlb.php?';
-//13
-$url_imprimir = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_imprimir_dlb.php?';
-
-if (empty($Qinventario)) {
-    $a_botones[] = array('txt' => _("Asignar"), 'click' => "fnjs_go(\"$url_doc_mod\")");
-} else {
-    $nombreDoc = _("Para imprimir inventario");
-    $a_botones[] = array('txt' => _('Imprimir dl'), 'click' => " $(\"#dl\").val(\"true\"); fnjs_go(\"$url_imprimir\")");
-    $a_botones[] = array('txt' => _('Imprimir'), 'click' => "fnjs_go(\"$url_imprimir\")");
-}
-
-$a_cabeceras = array(ucfirst(_("centro - lugar")));
-$a_botones[] = array('txt' => _('marcar/desmarcar todos'), 'click' => "fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"toggle\")");
-$a_botones[] = array('txt' => _('marcar todos'), 'click' => "fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"all\")");
-$a_botones[] = array('txt' => _('desmarcar todos'), 'click' => "fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"none\")");
+$a_valores = $view['a_valores'];
+$a_grupos = $view['a_grupos'];
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('doc_dlb_tabla');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
-$oTabla->setGrupos($aGrupos);
+$oTabla->setGrupos($a_grupos);
 
 $oHash = new HashFront();
-$oHash->setCamposForm('sel');
-$oHash->setArrayCamposHidden([
-    'dl' => false,
-    //'inventario' => $Qinventario,
-    'id_tipo_doc' => $Qid_tipo_doc
-]);
-$oHash->setCamposNo('dl');
+$oHash->setCamposForm('dl');
+$oHash->setArrayCamposHidden(['inventario' => $Qinventario]);
 
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
-    'nombreDoc' => $nombreDoc,
     'oTabla' => $oTabla,
 ];
 

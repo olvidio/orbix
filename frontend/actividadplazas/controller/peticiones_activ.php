@@ -21,25 +21,24 @@ use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qtodos = (int)filter_input(INPUT_POST, 'todos');
 
 $oPosicion->recordar();
-if (isset($_POST['stack'])) {
-    $stack2 = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack2 !== '') {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack2)) {
-            $oPosicion2->olvidar($stack2);
-        }
+$stack2 = actividadplazas_stack_from_post();
+if ($stack2 !== null) {
+    $oPosicion2 = new Posicion();
+    if ($oPosicion2->goStack($stack2)) {
+        $oPosicion2->olvidar($stack2);
     }
 }
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) {
-    $Qid_nom = (int)strtok($a_sel[0], '#');
-    $Qna = strtok('#');
+$selParts = actividadplazas_sel_hash_parts();
+if ($selParts !== null) {
+    $Qid_nom = tessera_imprimir_int($selParts['first']);
+    $Qna = $selParts['second'];
     $Qsactividad = (string)(filter_input(INPUT_POST, 'sactividad') ?: filter_input(INPUT_POST, 'que'));
     $Qtodos = empty($Qtodos) ? 1 : $Qtodos;
 } else {
@@ -57,14 +56,15 @@ $campos = [
     'id_ctr_n' => (int)filter_input(INPUT_POST, 'id_ctr_n'),
 ];
 
-$data = PostRequest::getDataFromUrl('/src/actividadplazas/peticiones_activ_data', $campos);
-$payload = is_array($data) ? $data : [];
+$payload = actividadplazas_gestion_plazas_from_payload(
+    PostRequest::getDataFromUrl('/src/actividadplazas/peticiones_activ_data', $campos)
+);
 
-$ap_nom = (string)($payload['ap_nom'] ?? '');
-$sid_activ = (string)($payload['sid_activ'] ?? '');
-$aOpciones = $payload['opciones'] ?? [];
-$Qsactividad = (string)($payload['sactividad'] ?? $Qsactividad);
-$Qna = (string)($payload['na'] ?? $Qna);
+$ap_nom = $payload['ap_nom'];
+$sid_activ = $payload['sid_activ'];
+$aOpciones = $payload['opciones'];
+$Qsactividad = $payload['sactividad'] !== '' ? $payload['sactividad'] : $Qsactividad;
+$Qna = $payload['na'] !== '' ? $payload['na'] : $Qna;
 
 $oSelects = new DesplegableArray($sid_activ, $aOpciones, 'actividades');
 $oSelects->setBlanco('t');

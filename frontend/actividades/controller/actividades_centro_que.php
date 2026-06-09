@@ -14,6 +14,7 @@ use frontend\shared\web\PeriodoQue;
 use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -32,7 +33,11 @@ $oForm = new CentrosQue();
 $miRolePau = OrbixRuntime::miRolePau();
 $filtro = ['active' => true];
 if ($miRolePau === 'ctr') { // PauType::PAU_CTR
-    $id_pau = (string)$_SESSION['session_auth']['MiUsuario']->getCsv_id_pau();
+    $sessionAuth = $_SESSION['session_auth'] ?? null;
+    $oMiUsuario = is_array($sessionAuth) ? ($sessionAuth['MiUsuario'] ?? null) : null;
+    $id_pau = is_object($oMiUsuario) && method_exists($oMiUsuario, 'getCsv_id_pau')
+        ? tessera_imprimir_string($oMiUsuario->getCsv_id_pau())
+        : '';
     $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
     $oForm->setCentros('centro');
 } else {
@@ -47,7 +52,7 @@ if ($miRolePau === 'ctr') { // PauType::PAU_CTR
             $filtro['tipo_ctr'] = 'seccion_no_s';
         }
     } else {
-        if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
+        if (actividades_have_perm_oficina('des') || actividades_have_perm_oficina('vcsd')) {
             $oForm->setCentros('all');
         } else {
             if (OrbixRuntime::miSfsv() === 1) {

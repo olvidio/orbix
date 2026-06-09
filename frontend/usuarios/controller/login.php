@@ -10,75 +10,31 @@ use src\shared\application\HydratePermisosActividades;
 use src\shared\web\ContestarJson;
 use src\usuarios\application\LoginProcesar;
 
-/**
- * Guardia de sesion del sistema web.
- *
- * No es una URL convencional: se incluye via `require_once(...)` desde los
- * bootstraps globales (`src/shared/global_object.inc` y
- * `frontend\shared\FrontBootstrap`) en CADA request del frontend.
- *
- *   - Si hay `$_SESSION['session_auth']` ya asentada -> asegura gettext y
- *     sigue.
- *   - Si no hay sesion y llega POST con username/password -> invoca
- *     `src\usuarios\application\LoginProcesar` para validar y, si todo va
- *     bien, rellena `$_SESSION['session_auth']` y `$_SESSION['config']`,
- *     pone cookies y deja que la request continue. Los permisos de menú
- *     (`iPermMenus`, `oPerm`, `oPermActividades`) los calcula el backend
- *     una vez por sesión (tras login) via `HydratePermisosActividades` en
- *     `global_object.inc`; en peticiones siguientes usa la caché de sesión.
- *   - Si la validacion da error o no hay POST -> dibuja el form de login y
- *     mata la request.
- *
- * Se asume que el autoload de Composer ya esta cargado y `session_start()`
- * ya ha sido invocado por quien incluye este fichero.
- */
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 
 /**
- * Ajusta locale y gettext al idioma preferido (sesion, navegador o default).
+ * Renderiza el formulario de login con los campos indicados.
  */
-function cambiar_idioma($idioma = '')
-{
-    if (empty($idioma)) {
-        if (empty($_SESSION['session_auth']['idioma'])) {
-            if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-                $a_idiomas = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-                $numero_de_idiomas = count($a_idiomas);
-                for ($i = 0; $i < $numero_de_idiomas; $i++) {
-                    if (!isset($idioma)) {
-                        if (substr($a_idiomas[$i], 0, 2) === 'ca') {
-                            $idioma = 'ca_ES.UTF-8';
-                        }
-                        if (substr($a_idiomas[$i], 0, 2) === 'es') {
-                            $idioma = 'es_ES.UTF-8';
-                        }
-                        if (substr($a_idiomas[$i], 0, 2) === 'en') {
-                            $idioma = 'en_US.UTF-8';
-                        }
-                        if (substr($a_idiomas[$i], 0, 2) === 'de') {
-                            $idioma = 'de_DE.UTF-8';
-                        }
-                    }
-                }
-            }
-        } else {
-            $idioma = $_SESSION['session_auth']['idioma'];
-        }
-        if (!isset($idioma)) {
-            $idioma = $_SESSION['oConfig']->getIdioma_default();
-        }
-    }
-    $domain = 'orbix';
-    setlocale(LC_ALL, '');
-    putenv("LC_ALL=''");
-    putenv('LANGUAGE=');
-
-    setlocale(LC_ALL, $idioma);
-    putenv("LC_ALL={$idioma}");
-    putenv("LANG={$idioma}");
-
-    bindtextdomain($domain, OrbixRuntime::gettextLanguagesDir());
-    textdomain($domain);
-    bind_textdomain_codeset($domain, 'UTF-8');
+function render_login_form(
+    string $username,
+    string|false $ubicacion,
+    string $idioma,
+    string $esquema,
+    int $error,
+    string $esquema_web = ''
+): void {
+    $oDBPropiedades = new DBPropiedades();
+    $a_campos = [
+        'error' => $error,
+        'ubicacion' => $ubicacion,
+        'esquema_web' => $esquema_web,
+        'DesplRegiones' => $oDBPropiedades->posibles_esquemas($esquema),
+        'idioma' => $idioma,
+        'username' => $username,
+        'url' => AppUrlConfig::getPublicAppBaseUrl(),
+    ];
+    $oView = new ViewNewPhtml(__NAMESPACE__);
+    $oView->renderizar('login_form.phtml', $a_campos);
 }
 
 /**
@@ -103,8 +59,9 @@ function orbix_es_peticion_api_src(): bool
  */
 function orbix_marcar_respuesta_ajax_sin_sesion(): void
 {
-    $esAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
-        && strtolower((string) $_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    $requestedWith = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? null;
+    $esAjax = is_string($requestedWith) && $requestedWith !== ''
+        && strtolower($requestedWith) === 'xmlhttprequest';
     if ($esAjax || orbix_es_peticion_api_src()) {
         header('X-Orbix-Auth-Required: 1');
     }
@@ -120,36 +77,21 @@ function orbix_responder_login_api_sin_sesion(): void
     ContestarJson::enviar(_('Sesión no autenticada'), ['code' => 'auth_required']);
 }
 
-/**
- * Renderiza el formulario de login con los campos indicados.
- */
-function render_login_form($username, $ubicacion, $idioma, $esquema, $error, $esquema_web = ''): void
-{
-    $oDBPropiedades = new DBPropiedades();
-    $a_campos = [
-        'error' => $error,
-        'ubicacion' => $ubicacion,
-        'esquema_web' => $esquema_web,
-        'DesplRegiones' => $oDBPropiedades->posibles_esquemas($esquema),
-        'idioma' => $idioma,
-        'username' => $username,
-        'url' => AppUrlConfig::getPublicAppBaseUrl(),
-    ];
-    $oView = new ViewNewPhtml(__NAMESPACE__);
-    $oView->renderizar('login_form.phtml', $a_campos);
-}
-
 $esquema_web = getenv('ESQUEMA');
 $ubicacion = getenv('UBICACION');
 $private = getenv('PRIVATE');
 
 $_SESSION['sfsv'] = $ubicacion;
 
-if (!empty($esquema_web)) {
+$esquema_web_str = is_string($esquema_web) ? $esquema_web : '';
+$ubicacion_str = is_string($ubicacion) ? $ubicacion : '';
+$private_str = is_string($private) ? $private : '';
+
+if ($esquema_web_str !== '') {
     $oDBPropiedades = new DBPropiedades();
     $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(false, true);
-    if (!in_array($esquema_web, $a_posibles_esquemas)) {
-        $msg = sprintf(_('No existe este equema: %s'), $esquema_web);
+    if (!is_array($a_posibles_esquemas) || !in_array($esquema_web_str, $a_posibles_esquemas, true)) {
+        $msg = sprintf(_('No existe este equema: %s'), $esquema_web_str);
         die($msg);
     }
 }
@@ -159,21 +101,16 @@ if (!isset($_SESSION['session_auth'])) {
     $idioma = '';
 
     if (isset($_POST['username']) && isset($_POST['password'])) {
-        $_SESSION['private'] = $private;
+        $_SESSION['private'] = $private_str;
 
+        $loginInput = usuarios_login_input_from_post();
         $useCase = new LoginProcesar();
         $result = $useCase->execute(
-            [
-                'username' => $_POST['username'],
-                'password' => $_POST['password'],
-                'esquema' => $_POST['esquema'] ?? '',
-                'verification_code' => $_POST['verification_code'] ?? '',
-            ],
-            (string)$esquema_web,
-            (string)$ubicacion
+            $loginInput,
+            $esquema_web_str,
+            $ubicacion_str
         );
 
-        // 2FA pendiente de configuracion -> redirigir a pagina de ayuda.
         if (!$result['ok'] && isset($result['redirect_ayuda_2fa'])) {
             $url_base = AppUrlConfig::getPublicAppBaseUrl() . '/';
             $a_params = $result['redirect_ayuda_2fa'];
@@ -188,18 +125,26 @@ if (!isset($_SESSION['session_auth'])) {
             if (orbix_es_peticion_api_src()) {
                 orbix_responder_login_api_sin_sesion();
             }
-            $error = $result['error'] ?? 1;
-            $esquema_form = $_POST['esquema'] ?? $esquema_web;
-            render_login_form($_POST['username'], $ubicacion, $idioma, $esquema_form, $error, $esquema_web);
+            $error = tessera_imprimir_int($result['error'] ?? 1);
+            $esquema_form = $loginInput['esquema'] !== '' ? $loginInput['esquema'] : $esquema_web_str;
+            render_login_form($loginInput['username'], $ubicacion, $idioma, $esquema_form, $error, $esquema_web_str);
             die();
         }
 
-        // Login OK: rellenar sesion y cookies.
-        HydratePermisosActividades::invalidateSessionCache();
-        $_SESSION['session_auth'] = $result['session_auth'];
-        $_SESSION['config'] = $result['session_config'];
+        $loginSession = usuarios_login_ok_session_from_result($result);
+        if ($loginSession === null) {
+            if (orbix_es_peticion_api_src()) {
+                orbix_responder_login_api_sin_sesion();
+            }
+            render_login_form($loginInput['username'], $ubicacion, $idioma, $loginInput['esquema'], 1, $esquema_web_str);
+            die();
+        }
 
-        cambiar_idioma();
+        HydratePermisosActividades::invalidateSessionCache();
+        $_SESSION['session_auth'] = $loginSession['session_auth'];
+        $_SESSION['config'] = $loginSession['session_config'];
+
+        usuarios_cambiar_idioma();
 
         $time_expire_cookie = time() + (86400 * 30);
         $arr_cookie_options = [
@@ -209,28 +154,23 @@ if (!isset($_SESSION['session_auth'])) {
             'httponly' => true,
             'samesite' => 'Lax',
         ];
-        setcookie('esquema', $result['esquema'], $arr_cookie_options);
-        setcookie('idioma', $result['idioma'], $arr_cookie_options);
+        setcookie('esquema', $loginSession['esquema'], $arr_cookie_options);
+        setcookie('idioma', $loginSession['idioma'], $arr_cookie_options);
     } else {
         if (orbix_es_peticion_api_src()) {
             orbix_responder_login_api_sin_sesion();
         }
-        // Primera visita: pintar el form con cookies previas si existen.
-        $esquema = $_COOKIE['esquema'] ?? '';
-        $idioma = $_COOKIE['idioma'] ?? '';
-        cambiar_idioma($idioma);
-        render_login_form('', $ubicacion, $idioma, $esquema, 0, $esquema_web);
+        $esquema = tessera_imprimir_string($_COOKIE['esquema'] ?? '');
+        $idioma = tessera_imprimir_string($_COOKIE['idioma'] ?? '');
+        usuarios_cambiar_idioma($idioma);
+        render_login_form('', $ubicacion, $idioma, $esquema, 0, $esquema_web_str);
         die();
     }
 } else {
-    // Ya esta registrado; setlocale vive en el proceso, hay que asegurarlo
-    // cada request para que gettext traduzca.
-    cambiar_idioma();
+    usuarios_cambiar_idioma();
 }
 
 if (!isset($_SESSION['session_go_to'])) {
     $_SESSION['session_go_to'] = 'a';
-    // Para que la primera vez vaya a la pagina de inicio personalizada
-    // (se mira en index.php):
     $primera = 1;
 }

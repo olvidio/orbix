@@ -7,6 +7,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/pasarela_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -42,7 +43,8 @@ switch ($Qque) {
         break;
     case 'lista':
         $data = PostRequest::getDataFromUrl('/src/pasarela/nombre_lista');
-        echo render_nombre_lista_html($data);
+        $lista = pasarela_excepcion_lista_from_payload($data);
+        echo pasarela_render_excepcion_lista_html($lista, 'fnjs_modificar');
         break;
     case 'form_modificar':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
@@ -51,7 +53,7 @@ switch ($Qque) {
         $data = PostRequest::getDataFromUrl('/src/pasarela/tipo_activ_txt_data', [
             'id_tipo_activ' => $Qid_tipo_activ,
         ]);
-        $tipo_txt = (string)($data['tipo_txt'] ?? '');
+        $tipo_txt = pasarela_tipo_txt_from_payload($data);
 
         $oHash = new HashFront();
         $oHash->setUrl($url_ajax);
@@ -105,27 +107,4 @@ switch ($Qque) {
         $oView = new ViewNewTwig('frontend\\pasarela\\controller');
         $oView->renderizar('nombre_form_nuevo.html.twig', $a_campos);
         break;
-}
-
-/**
- * Renderiza el HTML del listado de excepciones de nombre para `#div_tabla`.
- *
- * @param array{excepciones?: array<int, array{id_tipo_activ: string, etiqueta: string, valor: string}>} $data
- */
-function render_nombre_lista_html(array $data): string
-{
-    $excepciones = $data['excepciones'] ?? [];
-
-    $html = '<table>';
-    foreach ($excepciones as $row) {
-        $id_tipo_activ = (int)($row['id_tipo_activ'] ?? 0);
-        $etiqueta = htmlspecialchars((string)($row['etiqueta'] ?? ''), ENT_QUOTES, 'UTF-8');
-        $valor = (string)($row['valor'] ?? '');
-        $valor_js = htmlspecialchars(addslashes($valor), ENT_QUOTES, 'UTF-8');
-        $valor_html = htmlspecialchars($valor, ENT_QUOTES, 'UTF-8');
-        $html .= "<tr><td>$etiqueta</td><td>";
-        $html .= "<span class=\"link\" onclick=\"fnjs_modificar($id_tipo_activ,'$valor_js')\" size=\"200\">$valor_html</span></td></tr>";
-    }
-    $html .= '</table>';
-    return $html;
 }

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
@@ -11,20 +12,13 @@ use frontend\shared\FrontBootstrap;
  * backend a traves de {@see \src\encargossacd\application\CtrGetFichaData}
  * (`/src/encargossacd/ctr_get_ficha_data`). Aqui solo se arman los
  * `frontend\shared\web\Desplegable` / HTML de colaboradores y se pasan a la vista.
- *
- * @package    delegacion
- * @subpackage    des
- * @author    Daniel Serrabou
- * @since        12/12/06.
  */
 
-// INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
-$Qseleccion_sacd = (int)filter_input(INPUT_POST, 'seleccion_sacd');
+$Qid_ubi = encargossacd_post_int('id_ubi');
+$Qseleccion_sacd = encargossacd_post_int('seleccion_sacd');
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/ctr_get_ficha_data', [
@@ -32,16 +26,17 @@ $data = PostRequest::getDataFromUrl('/src/encargossacd/ctr_get_ficha_data', [
     'seleccion_sacd' => $Qseleccion_sacd,
 ]);
 
-$mod = (string)($data['mod'] ?? 'nuevo');
-$tipo_centro = (string)($data['tipo_centro'] ?? '');
-$num_enc = (int)($data['num_enc'] ?? 0);
-$chk_prelatura = (string)($data['chk_prelatura'] ?? '');
-$chk_de_paso = (string)($data['chk_de_paso'] ?? '');
-$chk_sssc = (string)($data['chk_sssc'] ?? '');
-$aOpcionesSacd = is_array($data['opciones_sacd'] ?? null) ? $data['opciones_sacd'] : [];
-$aOpcionesSacdSssc = is_array($data['opciones_sacd_sssc'] ?? null) ? $data['opciones_sacd_sssc'] : null;
-$encargos = is_array($data['encargos'] ?? null) ? $data['encargos'] : [];
-$perm_des = (bool)($data['perm_des'] ?? false);
+$ficha = encargossacd_ctr_get_ficha_from_payload($data);
+$mod = $ficha['mod'];
+$tipo_centro = $ficha['tipo_centro'];
+$num_enc = $ficha['num_enc'];
+$chk_prelatura = $ficha['chk_prelatura'];
+$chk_de_paso = $ficha['chk_de_paso'];
+$chk_sssc = $ficha['chk_sssc'];
+$aOpcionesSacd = $ficha['opciones_sacd'];
+$aOpcionesSacdSssc = $ficha['opciones_sacd_sssc'];
+$encargos = $ficha['encargos'];
+$perm_des = $ficha['perm_des'];
 
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setBlanco(true);
@@ -66,22 +61,22 @@ $a_despl_suplente = [];
 $a_Hash = [];
 
 foreach ($encargos as $idx => $enc) {
-    $e = (int)$idx + 1;
-    $id_enc_e = (int)($enc['id_enc'] ?? 0);
-    $mod_horario_e = (int)($enc['mod_horario'] ?? 0);
-    $sacd_num[$e] = (int)($enc['sacd_num'] ?? 1);
-    $cl_checked[$e] = (string)($enc['cl_checked'] ?? '');
+    $e = $idx + 1;
+    $id_enc_e = $enc['id_enc'];
+    $mod_horario_e = $enc['mod_horario'];
+    $sacd_num[$e] = $enc['sacd_num'];
+    $cl_checked[$e] = $enc['cl_checked'];
     $mod_horario[$e] = $mod_horario_e;
     $a_id_enc[$e] = $id_enc_e;
-    $a_observ[$e] = (string)($enc['observ'] ?? '');
-    $a_desc_enc[$e] = (string)($enc['desc_enc'] ?? '');
-    $dedic_m[$e] = is_array($enc['dedic_m'] ?? null) ? $enc['dedic_m'] : [''];
-    $dedic_t[$e] = is_array($enc['dedic_t'] ?? null) ? $enc['dedic_t'] : [''];
-    $dedic_v[$e] = is_array($enc['dedic_v'] ?? null) ? $enc['dedic_v'] : [''];
-    $dedic_sacd[$e] = is_array($enc['dedic_sacd'] ?? null) ? $enc['dedic_sacd'] : [''];
-    $dedic_ctr_m[$e] = (string)($enc['dedic_ctr_m'] ?? '');
-    $dedic_ctr_t[$e] = (string)($enc['dedic_ctr_t'] ?? '');
-    $dedic_ctr_v[$e] = (string)($enc['dedic_ctr_v'] ?? '');
+    $a_observ[$e] = $enc['observ'];
+    $a_desc_enc[$e] = $enc['desc_enc'];
+    $dedic_m[$e] = $enc['dedic_m'];
+    $dedic_t[$e] = $enc['dedic_t'];
+    $dedic_v[$e] = $enc['dedic_v'];
+    $dedic_sacd[$e] = $enc['dedic_sacd'];
+    $dedic_ctr_m[$e] = $enc['dedic_ctr_m'];
+    $dedic_ctr_t[$e] = $enc['dedic_ctr_t'];
+    $dedic_ctr_v[$e] = $enc['dedic_ctr_v'];
 
     $oHash = new HashFront();
     $oHash->setArrayCamposHidden([
@@ -102,19 +97,19 @@ foreach ($encargos as $idx => $enc) {
     $oDesplTitular = new Desplegable();
     $oDesplTitular->setBlanco(true);
     $oDesplTitular->setOpciones($aOpcionesSacd);
-    $oDesplTitular->setOpcion_sel((int)($enc['actual_id_sacd_titular'] ?? 0));
+    $oDesplTitular->setOpcion_sel(encargossacd_desplegable_opcion_sel($enc['actual_id_sacd_titular']));
     $a_despl_titular[$e] = $oDesplTitular;
 
     $oDesplSuplente = new Desplegable();
     $oDesplSuplente->setBlanco(true);
     $oDesplSuplente->setOpciones($aOpcionesSacd);
-    $oDesplSuplente->setOpcion_sel((int)($enc['actual_id_sacd_suplente'] ?? 0));
+    $oDesplSuplente->setOpcion_sel(encargossacd_desplegable_opcion_sel($enc['actual_id_sacd_suplente']));
     $a_despl_suplente[$e] = $oDesplSuplente;
 
-    $otros_sacd[$e] = construir_otros_sacd(
+    $otros_sacd[$e] = encargossacd_construir_otros_sacd(
         $e,
         $mod_horario_e,
-        is_array($enc['colaboradores'] ?? null) ? $enc['colaboradores'] : [],
+        $enc['colaboradores'],
         $dedic_m[$e],
         $dedic_t[$e],
         $dedic_v[$e],
@@ -125,10 +120,6 @@ foreach ($encargos as $idx => $enc) {
 }
 
 if ($num_enc === 0) {
-    // La vista iteraria hasta num_enc=0 y no pintaria nada: forzamos al menos
-    // una entrada vacia equivalente al "mod = nuevo" del backend (ya viene en
-    // el payload, pero `num_enc` puede ser 0 si el endpoint no devuelve encargos
-    // y no aplica el caso "nuevo").
     $num_enc = count($encargos);
 }
 
@@ -175,64 +166,3 @@ $a_campos = [
 
 $oView = new ViewNewPhtml('frontend\\encargossacd\\controller');
 $oView->renderizar('ctr_get_ficha.phtml', $a_campos);
-
-/**
- * Construye el bloque HTML de colaboradores (sacd adicionales) de un encargo.
- * El desplegable de cada colaborador se construye en frontend (patron del
- * refactor: backend solo devuelve `opciones` value=>label).
- *
- * @param array<int, array<string, mixed>> $colaboradores
- * @param array<int, string>               $dedicM
- * @param array<int, string>               $dedicT
- * @param array<int, string>               $dedicV
- * @param array<int, string>               $dedicSacd
- * @param array<string, string>            $opcionesBase
- * @param array<string, string>|null       $opcionesConSssc
- */
-function construir_otros_sacd(
-    int $e,
-    int $mod_horario_e,
-    array $colaboradores,
-    array $dedicM,
-    array $dedicT,
-    array $dedicV,
-    array $dedicSacd,
-    array $opcionesBase,
-    ?array $opcionesConSssc,
-): string {
-    if (count($colaboradores) === 0) {
-        return '';
-    }
-
-    $html = '';
-    foreach ($colaboradores as $colab) {
-        $s = (int)($colab['s'] ?? 0);
-        $id_nom = (int)($colab['id_nom'] ?? 0);
-        $necesitaSssc = !empty($colab['necesita_sssc']);
-
-        $opciones = $necesitaSssc && $opcionesConSssc !== null ? $opcionesConSssc : $opcionesBase;
-        $oDespl = new Desplegable();
-        $oDespl->setBlanco(true);
-        $oDespl->setOpciones($opciones);
-        $oDespl->setOpcion_sel($id_nom);
-
-        $html .= "<tr><td>sacd $s:</td><td colspan=3 class=contenido><select name=id_sacd[$s]>";
-        $html .= $oDespl->options();
-        $html .= '</td></tr><tr><td class=etiqueta >' . ucfirst(_('dedicación')) . '</td>';
-
-        if ($mod_horario_e === 3) {
-            $txtHorario = (string)($dedicSacd[$s] ?? '');
-            $html .= '<td>' . $txtHorario . '</td></tr><tr>';
-        } else {
-            $m = (string)($dedicM[$s] ?? '');
-            $t = (string)($dedicT[$s] ?? '');
-            $v = (string)($dedicV[$s] ?? '');
-            $html .= "<td><input type=text size=1 name=dedic_m[$s] value=$m>" . _('mañanas');
-            $html .= "</td><td><input type=text size=1 name=dedic_t[$s] value=$t>" . _('tarde 1ª hora');
-            $html .= "</td><td><input type=text size=1 name=dedic_v[$s] value=$v>" . _('tarde 2ª hora');
-            $html .= '</td></tr><tr>';
-        }
-    }
-
-    return $html;
-}

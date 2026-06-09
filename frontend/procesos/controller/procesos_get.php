@@ -9,13 +9,14 @@ use frontend\procesos\support\ProcesosTreeHtml;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/procesos/procesos_get', PostRequest::requestPayloadForHash());
-$aPadres = $data['aPadres'] ?? [];
+$aPadres = procesos_tree_padres($data['aPadres'] ?? null);
 
-if (empty($aPadres)) {
+if ($aPadres === []) {
     return;
 }
 

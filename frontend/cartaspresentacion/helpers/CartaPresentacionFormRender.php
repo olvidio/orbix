@@ -7,6 +7,8 @@ namespace frontend\cartaspresentacion\helpers;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 
+require_once __DIR__ . '/cartaspresentacion_support.php';
+
 /**
  * Completa el JSON de {@see \src\cartaspresentacion\application\CartaPresentacionFormData} para la vista.
  */
@@ -24,18 +26,18 @@ final class CartaPresentacionFormRender
 
         if ($ok && $hu !== []) {
             $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-            $rel = (string)($paths['update'] ?? '');
+            $rel = tessera_imprimir_string($paths['update'] ?? '');
             $url = $rel !== '' ? $base . '/' . ltrim($rel, '/') : '';
             $oHash = new HashFront();
             $oHash->setUrl($url);
-            $hidden = $hu['campos_hidden'] ?? [];
-            if (is_array($hidden) && $hidden !== []) {
+            $hidden = cartaspresentacion_hash_campos_hidden($hu['campos_hidden'] ?? []);
+            if ($hidden !== []) {
                 $oHash->setArrayCamposHidden($hidden);
             }
-            $oHash->setCamposForm((string)($hu['campos_form'] ?? ''));
+            $oHash->setCamposForm(tessera_imprimir_string($hu['campos_form'] ?? ''));
             $payload['hash_update_html'] = $oHash->getCamposHtml();
         } else {
-            $payload['hash_update_html'] = (string)($payload['hash_update_html'] ?? '');
+            $payload['hash_update_html'] = tessera_imprimir_string($payload['hash_update_html'] ?? '');
         }
 
         unset($payload['paths'], $payload['hash_update']);

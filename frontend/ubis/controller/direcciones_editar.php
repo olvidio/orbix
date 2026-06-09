@@ -7,6 +7,7 @@ use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -20,17 +21,17 @@ $Qid_direccion = (string)filter_input(INPUT_POST, 'id_direccion');
 $Qidx = (int)filter_input(INPUT_POST, 'idx');
 $Qinc = (string)filter_input(INPUT_POST, 'inc');
 
-$data = PostRequest::getDataFromUrl('/src/ubis/direcciones_editar', [
+$data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/direcciones_editar', [
     'id_ubi' => $Qid_ubi,
     'mod' => $Qmod,
     'obj_dir' => $Qobj_dir,
     'id_direccion' => $Qid_direccion,
     'idx' => $Qidx,
     'inc' => $Qinc,
-]);
+]));
 
 if (!empty($data['sin_direccion'])) {
-    echo "<table><tr><td>{$data['msg_sin_direccion']}</td></tr></table><br>";
+    echo '<table><tr><td>' . tessera_imprimir_string($data['msg_sin_direccion'] ?? '') . '</td></tr></table><br>';
     $golistadir = HashFront::link('frontend/ubis/controller/direcciones_que.php?' . http_build_query(['id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir]));
     echo "<span class='link' onclick=\"fnjs_update_div('#ficha','$golistadir');\">" . mb_strtoupper(_("asignar una dirección")) . "</span>";
     return;
@@ -77,7 +78,7 @@ $oHashPlano2->setUrl('frontend/ubis/controller/plano_bytea.php');
 $oHashPlano2->setCamposForm('obj_dir!act!id_direccion');
 $h = $oHashPlano2->linkSinValParams();
 
-$a_campos = array_merge($data, [
+$a_campos = ubis_view_vars($data, [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'id_ubi' => $Qid_ubi,

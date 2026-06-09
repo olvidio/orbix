@@ -1,5 +1,4 @@
 <?php
-// para que funcione bien la seguridad
 $_POST = (empty($_POST)) ? $_GET : $_POST;
 
 use frontend\shared\config\AppUrlConfig;
@@ -8,13 +7,11 @@ use frontend\shared\web\UrlBaseProject;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-/**
- * Formulario para cambiar el password por parte del usuario.
- */
-// Capturar sesión antes de global_header (index.php ya hizo bootstrap vía global_object).
-$id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
-$usuario = (string)($_SESSION['session_auth']['username'] ?? '');
-$expire = $_SESSION['session_auth']['expire'] ?? null;
+require_once __DIR__ . '/../helpers/usuarios_support.php';
+
+$id_usuario = usuarios_session_auth_int('id_usuario');
+$usuario = usuarios_session_auth_string('username');
+$expire = usuarios_session_auth_string('expire');
 
 if (!defined('ORBIX_INDEX_EMBED')) {
     require_once 'frontend/shared/FrontBootstrap.php';
@@ -22,19 +19,14 @@ if (!defined('ORBIX_INDEX_EMBED')) {
 } else {
     global $oPosicion;
     if (!isset($oPosicion)) {
-        $oPosicion = new frontend\shared\web\Posicion($_SERVER['PHP_SELF'], $_POST);
+        $phpSelf = isset($_SERVER['PHP_SELF']) && is_string($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '';
+        $oPosicion = new frontend\shared\web\Posicion($phpSelf, $_POST);
     }
 }
 
-// FIN de  Cabecera global de URL de controlador ********************************
-
 $oHash = new HashFront();
 $oHash->setCamposForm('password!password1');
-$a_camposHidden = array(
-//    'pass' => $pass,
-    'id_usuario' => $id_usuario,
-);
-$oHash->setArraycamposHidden($a_camposHidden);
+$oHash->setArraycamposHidden(['id_usuario' => $id_usuario]);
 
 $url_usuario_guardar = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_guardar_pwd';
 $url_usuario_chk = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_check_pwd';

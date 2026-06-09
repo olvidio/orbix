@@ -5,13 +5,13 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\asistentes\helpers\ActivPendientesSelectRender;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/asistentes_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $campos = array_merge($_GET, $_POST);
-$data = PostRequest::getDataFromUrl('/src/asistentes/activ_pendientes_select_data', $campos);
 /** @var array<string, mixed> $payload */
-$payload = is_array($data) ? $data : [];
+$payload = asistentes_post_data(PostRequest::getDataFromUrl('/src/asistentes/activ_pendientes_select_data', $campos));
 $payload = ActivPendientesSelectRender::enrich($payload);
 
 (new ViewNewPhtml('frontend\\asistentes\\view'))

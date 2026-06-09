@@ -27,16 +27,16 @@ final class DesplCentros
         ]);
 
         $oDesplCtr = new Desplegable();
-        $oDesplCtr->setNombre((string)($data['id'] ?? 'lst_ctrs'));
-        $oDesplCtr->setOpciones(is_array($data['opciones'] ?? null) ? $data['opciones'] : []);
+        $oDesplCtr->setNombre(\tessera_imprimir_string($data['id'] ?? 'lst_ctrs'));
+        $oDesplCtr->setOpciones(\encargossacd_desplegable_opciones($data['opciones'] ?? []));
         if (!empty($data['blanco'])) {
             $oDesplCtr->setBlanco(true);
         }
         if (array_key_exists('val_blanco', $data)) {
-            $oDesplCtr->setValBlanco((string)$data['val_blanco']);
+            $oDesplCtr->setValBlanco(\tessera_imprimir_string($data['val_blanco']));
         }
-        $oDesplCtr->setOpcion_sel((string)($data['selected'] ?? ''));
-        $oDesplCtr->setAction((string)($data['action'] ?? ''));
+        $oDesplCtr->setOpcion_sel(\tessera_imprimir_string($data['selected'] ?? ''));
+        $oDesplCtr->setAction(\tessera_imprimir_string($data['action'] ?? ''));
 
         return $oDesplCtr;
     }

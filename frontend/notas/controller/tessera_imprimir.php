@@ -20,55 +20,11 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 
-require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/tessera_imprimir_support.php';
 
-$oPosicion = FrontBootstrap::boot();
-// En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
-
-echo "<script>fnjs_left_side_hide()</script>";
-include_once(OrbixRuntime::dirEstilos() . '/tessera.css.php');
-
-//Si vengo por medio de Posicion, borro la última
-if (isset($_POST['stack'])) {
-    $stack2 = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack2 !== '') {
-        $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack2);
-        }
-    }
-}
-
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-    $id_nom = (integer)strtok($a_sel[0], "#");
-    $id_tabla = (string)strtok("#");
-} else {
-    $id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-    $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
-}
-
-$Qcara = (string)filter_input(INPUT_POST, 'cara');
-$Qcara = empty($Qcara) ? "A" : $Qcara;
-
-$payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
-    'id_nom' => $id_nom,
-]);
-$payload = is_array($payload) ? $payload : [];
-$nom = (string)($payload['nom'] ?? '');
-$cAsignaturas = (array)($payload['c_asignaturas'] ?? []);
-$aAprobadas = (array)($payload['a_aprobadas'] ?? []);
-$region_latin = $_SESSION['oConfig']->getNomRegionLatin();
-
-// conversion
-$replace = OrbixRuntime::latinHtmlEntityReplaceMap();
-
-function titulo($id_asignatura, $cara = "")
+function titulo(int $id_asignatura, string $cara = ''): string
 {
     $html = '';
     $cabecera = '<tr><td class="space"></td></tr>
@@ -155,30 +111,69 @@ function titulo($id_asignatura, $cara = "")
 			";
             break;
     }
+
     return $html;
 }
 
-function data($data)
+function data(string $fechaRaw): void
 {
-    $fecha = explode("-", $data);
-    $any = substr($fecha[0], 2);
-    $fechaok = $fecha[2] . "." . $fecha[1] . "." . $any;
-    if ($fecha[1] == 00) {
-        $fechaok = "";
-    }
-    echo "$fechaok";
+    echo tessera_imprimir_fecha_local($fechaRaw);
 }
 
+require_once 'frontend/shared/FrontBootstrap.php';
+
+$oPosicion = FrontBootstrap::boot();
+// En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
+
+echo "<script>fnjs_left_side_hide()</script>";
+include_once(OrbixRuntime::dirEstilos() . '/tessera.css.php');
+
+//Si vengo por medio de Posicion, borro la última
+if (isset($_POST['stack'])) {
+    $stack2 = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    if ($stack2 !== 0) {
+        $oPosicion2 = new frontend\shared\web\Posicion();
+        if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
+            $Qid_sel = $oPosicion2->getParametro('id_sel');
+            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
+            $oPosicion2->olvidar($stack2);
+        }
+    }
+}
+
+$a_sel_raw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = is_array($a_sel_raw) ? $a_sel_raw : [];
+if ($a_sel !== []) { //vengo de un checkbox
+    $sel0 = $a_sel[0];
+    $selStr = is_string($sel0) ? $sel0 : '';
+    $tok = strtok($selStr, '#');
+    $id_nom = is_string($tok) ? (int) $tok : 0;
+    $tokTabla = strtok('#');
+    $id_tabla = is_string($tokTabla) ? $tokTabla : '';
+} else {
+    $id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+    $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
+}
+
+$Qcara = (string)filter_input(INPUT_POST, 'cara');
+$Qcara = empty($Qcara) ? "A" : $Qcara;
+
+$payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
+    'id_nom' => $id_nom,
+]);
+$nom = tessera_imprimir_string($payload['nom'] ?? '');
+$cAsignaturas = tessera_imprimir_asignaturas_from_payload($payload);
+$aAprobadas = tessera_imprimir_aprobadas_from_payload($payload);
+$oConfig = $_SESSION['oConfig'] ?? null;
+$region_latin = $oConfig instanceof ConfigSnapshot ? $oConfig->getNomRegionLatin() : '';
+
+// conversion
+$replace = OrbixRuntime::latinHtmlEntityReplaceMap();
+
 // -----------------------------
-$rowEmpty = [
-    'id_nivel_asig' => '',
-    'id_nivel' => '',
-    'id_asignatura' => '',
-    'nombre_asignatura' => '',
-    'acta' => '',
-    'fecha_local' => '',
-    'nota' => '',
-];
+$rowEmpty = tessera_imprimir_empty_row();
 // -----------------------------  cabecera ---------------------------------
 $caraA = HashFront::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 $caraB = HashFront::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
@@ -245,7 +240,10 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                     $j = 0;
                                     $i = 0;
                                     reset($aAprobadas);
-                                    $row = current($aAprobadas);
+                                    $rowCurrent = current($aAprobadas);
+                                    $row = is_array($rowCurrent)
+                                        ? tessera_imprimir_aprobada_row($rowCurrent)
+                                        : $rowEmpty;
                                     if (key($aAprobadas) === null) { // ha llegado al final
                                         $row = $rowEmpty;
                                     }
@@ -256,7 +254,10 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                     // para imprimir sólo una cara:
                                     // cara A hasta la asignatura 2107
                                     if ($Qcara === "A" && $oAsignatura['id_nivel'] > 2107) {
-                                        $row = current($aAprobadas);
+                                        $rowCurrent = current($aAprobadas);
+                                        $row = is_array($rowCurrent)
+                                            ? tessera_imprimir_aprobada_row($rowCurrent)
+                                            : $rowEmpty;
                                         continue;
                                     }
                                     if ($Qcara === "B" && $oAsignatura['id_nivel'] < 2108) {
@@ -267,7 +268,10 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                             if (key($aAprobadas) === null) { // ha llegado al final
                                                 $row = $rowEmpty;
                                             } else {
-                                                $row = current($aAprobadas);
+                                                $rowCurrent = current($aAprobadas);
+                                                $row = is_array($rowCurrent)
+                                                    ? tessera_imprimir_aprobada_row($rowCurrent)
+                                                    : $rowEmpty;
                                             }
                                             if (next($aAprobadas) === FALSE) {
                                                 $row = $rowEmpty;
@@ -282,13 +286,16 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                             $row = $rowEmpty;
                                             break;
                                         }
-                                        $row = current($aAprobadas);
-                                        if (next($aAprobadas) === FALSE) {
+                                        $rowCurrent = current($aAprobadas);
+                                        $row = is_array($rowCurrent)
+                                            ? tessera_imprimir_aprobada_row($rowCurrent)
+                                            : $rowEmpty;
+                                        if (next($aAprobadas) === false) {
                                             break;
                                         }
                                         $j++;
                                     }
-                                    while (($oAsignatura['id_nivel'] < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {
+                                    while (($oAsignatura['id_nivel'] < $row['id_nivel_asig']) && ($row['id_nivel'] < 2434)) {
                                     $clase = "impar";
                                     $i % 2 ? 0 : $clase = "par";
                                     $i++;

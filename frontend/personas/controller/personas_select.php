@@ -14,17 +14,9 @@ use frontend\shared\FrontBootstrap;
 
 /**
  * Tabla de personas que cumplen la condicion introducida en `personas_que`.
- *
- * Migrado desde `apps/personas/controller/personas_select.php` (slice 4) y
- * refactorizado para cumplir `refactor.md`: toda la obtencion de datos
- * (filtros contra repositorios, busqueda de centros, preferencia de usuario,
- * traduccion de `nivel_stgr`) vive ahora en
- * `src/personas/application/PersonasSelectData.php` tras el endpoint
- * `/src/personas/personas_select_data`. Este controlador frontend no importa
- * clases de `src\...`; construye la UI (`web\Lista`, `web\Hash`, botones JS)
- * con el array que devuelve el backend.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/personas_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -44,32 +36,27 @@ $Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
 $Qapellido2 = (string)filter_input(INPUT_POST, 'apellido2');
 $Qcentro = (string)filter_input(INPUT_POST, 'centro');
 
-// Si vengo por medio de Posicion, borro la ultima.
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            // Recupero campos de busqueda del stack para poder regenerar filtros.
-            $Qque = $oPosicion2->getParametro('que') ?? $Qque;
-            $Qexacto = $oPosicion2->getParametro('exacto') ?? $Qexacto;
-            $Qcmb = $oPosicion2->getParametro('cmb') ?? $Qcmb;
-            $Qnombre = $oPosicion2->getParametro('nombre') ?? $Qnombre;
-            $Qapellido1 = $oPosicion2->getParametro('apellido1') ?? $Qapellido1;
-            $Qapellido2 = $oPosicion2->getParametro('apellido2') ?? $Qapellido2;
-            $Qcentro = $oPosicion2->getParametro('centro') ?? $Qcentro;
-            $tabla = $oPosicion2->getParametro('tabla') ?? $tabla;
-            $Qna = $oPosicion2->getParametro('na') ?? $Qna;
-            $tipo = $oPosicion2->getParametro('tipo') ?? $tipo;
-            $Qes_sacd = (int)($oPosicion2->getParametro('es_sacd') ?? $Qes_sacd);
-            $oPosicion2->olvidar($stack);
-        }
+$stack = personas_stack_from_post();
+if ($stack !== null && $stack !== 0) {
+    $oPosicion2 = new Posicion();
+    if ($oPosicion2->goStack($stack)) {
+        $Qid_sel = tessera_imprimir_string($oPosicion2->getParametro('id_sel'));
+        $Qscroll_id = tessera_imprimir_string($oPosicion2->getParametro('scroll_id'));
+        $Qque = tessera_imprimir_string($oPosicion2->getParametro('que') ?? $Qque);
+        $Qexacto = tessera_imprimir_string($oPosicion2->getParametro('exacto') ?? $Qexacto);
+        $Qcmb = tessera_imprimir_string($oPosicion2->getParametro('cmb') ?? $Qcmb);
+        $Qnombre = tessera_imprimir_string($oPosicion2->getParametro('nombre') ?? $Qnombre);
+        $Qapellido1 = tessera_imprimir_string($oPosicion2->getParametro('apellido1') ?? $Qapellido1);
+        $Qapellido2 = tessera_imprimir_string($oPosicion2->getParametro('apellido2') ?? $Qapellido2);
+        $Qcentro = tessera_imprimir_string($oPosicion2->getParametro('centro') ?? $Qcentro);
+        $tabla = tessera_imprimir_string($oPosicion2->getParametro('tabla') ?? $tabla);
+        $Qna = tessera_imprimir_string($oPosicion2->getParametro('na') ?? $Qna);
+        $tipo = tessera_imprimir_string($oPosicion2->getParametro('tipo') ?? $tipo);
+        $Qes_sacd = personas_posicion_int_param($oPosicion2->getParametro('es_sacd'), $Qes_sacd);
+        $oPosicion2->olvidar($stack);
     }
 }
 
-// Guardo los datos actuales para poder volver.
 $oPosicion->setParametros([
     'que' => $Qque,
     'exacto' => $Qexacto,
@@ -100,7 +87,7 @@ $campos = [
 $data = PostRequest::getDataFromUrl('/src/personas/personas_select_data', $campos, false);
 $aviso = '';
 if (!empty($data['error'])) {
-    $errorHtml = PostRequest::stripInternalCallProvenance((string)$data['error']);
+    $errorHtml = PostRequest::stripInternalCallProvenance(tessera_imprimir_string($data['error']));
     if (
         str_contains($errorHtml, _('persona no válida'))
         || str_contains($errorHtml, 'persona no válida')
@@ -118,92 +105,90 @@ if (!empty($data['error'])) {
         return;
     }
 }
-$payload = is_array($data) ? $data : [];
+$payload = personas_post_payload($data);
+$select = personas_select_tabla_from_payload($payload, $tabla, $aviso);
 
-$tabla = (string)($payload['tabla'] ?? $tabla);
-$obj_pau = (string)($payload['obj_pau'] ?? '');
-$id_tabla = (string)($payload['id_tabla'] ?? '');
-$permiso = (int)($payload['permiso'] ?? 1);
-$sPrefs = (string)($payload['sPrefs'] ?? '');
-$total = (int)($payload['total'] ?? 0);
-$a_filas = (array)($payload['personas'] ?? []);
-$aviso = (string)($payload['aviso'] ?? $aviso);
+$tabla = $select['tabla'];
+$obj_pau = $select['obj_pau'];
+$id_tabla = $select['id_tabla'];
+$permiso = $select['permiso'];
+$sPrefs = $select['sPrefs'];
+$total = $select['total'];
+$a_filas = $select['personas'];
+$aviso = $select['aviso'];
 
-// Botones y scripts: son UI (dependen de `$_SESSION['oPerm']`, apps instaladas
-// y ambito) y se construyen en el frontend.
 $a_botones = [];
 $script = [];
 
-if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
-    $a_botones[] = ['txt' => _("cambio de ctr"), 'click' => 'fnjs_modificar_ctr("#seleccionados")'];
+if (personas_have_perm_oficina('sm')) {
+    $a_botones[] = ['txt' => _('cambio de ctr'), 'click' => 'fnjs_modificar_ctr("#seleccionados")'];
 }
 $script['fnjs_modificar_ctr'] = 1;
-$a_botones[] = ['txt' => _("ver dossiers"), 'click' => 'fnjs_dossiers("#seleccionados")'];
+$a_botones[] = ['txt' => _('ver dossiers'), 'click' => 'fnjs_dossiers("#seleccionados")'];
 $script['fnjs_dossiers'] = 1;
-$a_botones[] = ['txt' => _("ficha"), 'click' => 'fnjs_ficha("#seleccionados")'];
+$a_botones[] = ['txt' => _('ficha'), 'click' => 'fnjs_ficha("#seleccionados")'];
 $script['fnjs_ficha'] = 1;
 
 if (AppInstalled::is('asistentes')) {
-    $a_botones[] = ['txt' => _("ver actividades"), 'click' => 'fnjs_actividades("#seleccionados")'];
+    $a_botones[] = ['txt' => _('ver actividades'), 'click' => 'fnjs_actividades("#seleccionados")'];
     $script['fnjs_actividades'] = 1;
 }
 if (AppInstalled::is('notas')) {
-    if ($tabla === "p_numerarios" || $tabla === "p_agregados" || $tabla === "p_de_paso_ex") {
-        $a_botones[] = ['txt' => _("ver tessera"), 'click' => 'fnjs_tessera("#seleccionados")'];
+    if ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex') {
+        $a_botones[] = ['txt' => _('ver tessera'), 'click' => 'fnjs_tessera("#seleccionados")'];
         $script['fnjs_tessera'] = 1;
     }
-    if ($_SESSION['oPerm']->have_perm_oficina('est')) {
-        $a_botones[] = ['txt' => _("modificar stgr"), 'click' => 'fnjs_modificar("#seleccionados")'];
+    if (personas_have_perm_oficina('est')) {
+        $a_botones[] = ['txt' => _('modificar stgr'), 'click' => 'fnjs_modificar("#seleccionados")'];
         $script['fnjs_modificar'] = 1;
-        $a_botones[] = ['txt' => _("imprimir tessera"), 'click' => 'fnjs_imp_tessera("#seleccionados")'];
+        $a_botones[] = ['txt' => _('imprimir tessera'), 'click' => 'fnjs_imp_tessera("#seleccionados")'];
         $script['fnjs_imp_tessera'] = 1;
-        $a_botones[] = ['txt' => _("ver notas"), 'click' => 'fnjs_notas("#seleccionados")'];
+        $a_botones[] = ['txt' => _('ver notas'), 'click' => 'fnjs_notas("#seleccionados")'];
         $script['fnjs_notas'] = 1;
     }
 }
 if (
     AppInstalled::is('actividadestudios')
-    && ($_SESSION['oPerm']->have_perm_oficina('sm') || $_SESSION['oPerm']->have_perm_oficina('est'))
-    && ($tabla === "p_numerarios" || $tabla === "p_agregados" || $tabla === "p_de_paso_ex")
+    && (personas_have_perm_oficina('sm') || personas_have_perm_oficina('est'))
+    && ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex')
 ) {
-    $a_botones[] = ['txt' => _("posibles ca"), 'click' => 'fnjs_posibles_ca("#seleccionados")'];
+    $a_botones[] = ['txt' => _('posibles ca'), 'click' => 'fnjs_posibles_ca("#seleccionados")'];
     $script['fnjs_posibles_ca'] = 1;
 }
 if (AppInstalled::is('actividadplazas')) {
-    if ($tabla === "p_numerarios" || $tabla === "p_agregados" || $tabla === "p_de_paso_ex") {
-        $a_botones[] = ['txt' => _("petición ca"), 'click' => 'fnjs_peticion_activ("#seleccionados","ca")'];
-        $a_botones[] = ['txt' => _("petición crt"), 'click' => 'fnjs_peticion_activ("#seleccionados","crt")'];
+    if ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex') {
+        $a_botones[] = ['txt' => _('petición ca'), 'click' => 'fnjs_peticion_activ("#seleccionados","ca")'];
+        $a_botones[] = ['txt' => _('petición crt'), 'click' => 'fnjs_peticion_activ("#seleccionados","crt")'];
         $script['fnjs_posibles_activ'] = 1;
     }
 }
-if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+if (personas_have_perm_oficina('est')) {
     if (AppInstalled::is('actividadestudios')) {
-        $a_botones[] = ['txt' => _("plan estudios"), 'click' => 'fnjs_matriculas("#seleccionados")'];
+        $a_botones[] = ['txt' => _('plan estudios'), 'click' => 'fnjs_matriculas("#seleccionados")'];
         $script['fnjs_matriculas'] = 1;
     }
     if (AppInstalled::is('profesores')) {
-        $a_botones[] = ['txt' => _("ficha profesor stgr"), 'click' => 'fnjs_ficha_profe("#seleccionados")'];
+        $a_botones[] = ['txt' => _('ficha profesor stgr'), 'click' => 'fnjs_ficha_profe("#seleccionados")'];
         $script['fnjs_ficha_profe'] = 1;
     }
-    $a_botones[] = ['txt' => _("copiar tessera"), 'click' => 'fnjs_copiar_tessera("#seleccionados")'];
+    $a_botones[] = ['txt' => _('copiar tessera'), 'click' => 'fnjs_copiar_tessera("#seleccionados")'];
     $script['fnjs_copiar_tessera'] = 1;
 
     if (OrbixRuntime::miAmbito() === 'r') {
-        $a_botones[] = ['txt' => _("imprimir certificado"), 'click' => 'fnjs_imp_certificado("#seleccionados")'];
+        $a_botones[] = ['txt' => _('imprimir certificado'), 'click' => 'fnjs_imp_certificado("#seleccionados")'];
         $script['fnjs_imp_certificado'] = 1;
-        $a_botones[] = ['txt' => _("adjuntar certificado"), 'click' => 'fnjs_upload_certificado("#seleccionados")'];
+        $a_botones[] = ['txt' => _('adjuntar certificado'), 'click' => 'fnjs_upload_certificado("#seleccionados")'];
         $script['fnjs_upload_certificado'] = 1;
     }
 }
 
-// Para rstgr, sobreescribe los botones.
 if (OrbixRuntime::miAmbito() === 'rstgr') {
     $a_botones = [
-        ['txt' => _("ver tessera"), 'click' => 'fnjs_tessera("#seleccionados")'],
-        ['txt' => _("imprimir tessera"), 'click' => 'fnjs_imp_tessera("#seleccionados")'],
-        ['txt' => _("imprimir certificado"), 'click' => 'fnjs_imp_certificado("#seleccionados")'],
-        ['txt' => _("adjuntar certificado"), 'click' => 'fnjs_upload_certificado("#seleccionados")'],
-        ['txt' => _("ficha profesor stgr"), 'click' => 'fnjs_ficha_profe("#seleccionados")'],
+        ['txt' => _('ver tessera'), 'click' => 'fnjs_tessera("#seleccionados")'],
+        ['txt' => _('imprimir tessera'), 'click' => 'fnjs_imp_tessera("#seleccionados")'],
+        ['txt' => _('imprimir certificado'), 'click' => 'fnjs_imp_certificado("#seleccionados")'],
+        ['txt' => _('adjuntar certificado'), 'click' => 'fnjs_upload_certificado("#seleccionados")'],
+        ['txt' => _('ficha profesor stgr'), 'click' => 'fnjs_ficha_profe("#seleccionados")'],
     ];
     $script = [
         'fnjs_tessera' => 1,
@@ -214,35 +199,35 @@ if (OrbixRuntime::miAmbito() === 'rstgr') {
     ];
 }
 
-if (AppInstalled::is('actividadessacd') && $_SESSION['oPerm']->have_perm_oficina('des')) {
-    $a_botones[] = ['txt' => _("atención actividades"), 'click' => 'fnjs_lista_activ("#seleccionados")'];
+if (AppInstalled::is('actividadessacd') && personas_have_perm_oficina('des')) {
+    $a_botones[] = ['txt' => _('atención actividades'), 'click' => 'fnjs_lista_activ("#seleccionados")'];
     $script['fnjs_lista_activ'] = 1;
 }
 
 $a_cabeceras = [
-    ucfirst(_("tabla")),
-    ['name' => _("nombre y apellidos"), 'width' => 250, 'formatter' => 'clickFormatter'],
+    ucfirst(_('tabla')),
+    ['name' => _('nombre y apellidos'), 'width' => 250, 'formatter' => 'clickFormatter'],
 ];
-if ($tabla === "p_sssc") {
-    $a_cabeceras[] = ucfirst(_("socio"));
+if ($tabla === 'p_sssc') {
+    $a_cabeceras[] = ucfirst(_('socio'));
 }
-$a_cabeceras[] = ucfirst(_("centro"));
-if ($tabla === "p_numerarios" || $tabla === "p_agregados" || $tabla === "p_de_paso_ex") {
-    $a_cabeceras[] = ucfirst(_("stgr"));
+$a_cabeceras[] = ucfirst(_('centro'));
+if ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex') {
+    $a_cabeceras[] = ucfirst(_('stgr'));
 }
-if (!empty($Qcmb)) {
-    $a_cabeceras[] = ucfirst(_("situación"));
-    $a_cabeceras[] = ['name' => ucfirst(_("fecha cambio situación")), 'class' => 'fecha'];
+if ($Qcmb !== '') {
+    $a_cabeceras[] = ucfirst(_('situación'));
+    $a_cabeceras[] = ['name' => ucfirst(_('fecha cambio situación')), 'class' => 'fecha'];
 }
 
 $a_valores = [];
 $c = 0;
 foreach ($a_filas as $fila) {
     $c++;
-    $id_nom = (int)($fila['id_nom'] ?? 0);
-    $id_tabla_persona = (string)($fila['id_tabla'] ?? '');
-    $nom = (string)($fila['nom'] ?? '');
-    $nombre_ubi = (string)($fila['nombre_ubi'] ?? '');
+    $id_nom = $fila['id_nom'];
+    $id_tabla_persona = $fila['id_tabla'];
+    $nom = $fila['nom'];
+    $nombre_ubi = $fila['nombre_ubi'];
 
     $a_val = [];
     $a_val['sel'] = "$id_nom#$id_tabla_persona";
@@ -258,18 +243,18 @@ foreach ($a_filas as $fila) {
     }
     $a_val[4] = $nombre_ubi;
     if (($tabla === 'p_numerarios' || $tabla === 'p_agregados') && $tipo !== 'planning') {
-        $a_val[5] = (string)($fila['nivel_stgr'] ?? '');
+        $a_val[5] = $fila['nivel_stgr'];
     }
-    if (!empty($Qcmb)) {
-        $a_val[6] = (string)($fila['situacion'] ?? '');
-        $a_val[7] = (string)($fila['f_situacion'] ?? '');
+    if ($Qcmb !== '') {
+        $a_val[6] = $fila['situacion'];
+        $a_val[7] = $fila['f_situacion'];
     }
     $a_valores[$c] = $a_val;
 }
-if (!empty($Qid_sel)) {
+if ($Qid_sel !== '') {
     $a_valores['select'] = $Qid_sel;
 }
-if (!empty($Qscroll_id)) {
+if ($Qscroll_id !== '') {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 
@@ -299,7 +284,7 @@ $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'script' => $script,
-    'resultado' => sprintf(_("%s personas encontradas"), $total),
+    'resultado' => sprintf(_('%s personas encontradas'), $total),
     'oTabla' => $oTabla,
     'pagina' => $pagina,
     'permiso' => $permiso,

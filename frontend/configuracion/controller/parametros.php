@@ -8,6 +8,7 @@ use frontend\shared\FrontBootstrap;
 
 
 // Crea los objetos de uso global **********************************************
+require_once __DIR__ . '/../helpers/configuracion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -20,7 +21,8 @@ if (!empty($data['error'])) {
     exit($data['error']);
 }
 
-$a_campos = $data;
+$a_campos = configuracion_parametros_view_from_payload($data);
+$idiomaDespl = configuracion_parametros_idioma_desplegable($data);
 
 // añadir url update
 $url = 'src/configuracion/parametros_update';
@@ -136,9 +138,7 @@ $oHashI->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashI'] = $oHashI;
 
-$a_locales = $data['a_locales'];
-$idioma_select = $data['idioma_select'];
-$oDeplIdiomas = new Desplegable('valor', $a_locales,$idioma_select,true);
+$oDeplIdiomas = new Desplegable('valor', $idiomaDespl['a_locales'], $idiomaDespl['idioma_select'], true);
 
 if (empty($valor)) {
     //$valor = "es_ES.UTF-8";

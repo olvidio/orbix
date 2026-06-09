@@ -17,6 +17,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -25,11 +26,11 @@ $campos = [
     'year' => (int)filter_input(INPUT_POST, 'year'),
 ];
 
-$data = PostRequest::getDataFromUrl('/src/casas/casa_ec_gastos_form_data', $campos);
-$payload = is_array($data) ? $data : [];
+$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/casa_ec_gastos_form_data', $campos));
+$form = casas_ec_gastos_from_payload($data);
 
-if (($payload['ok'] ?? false) === false) {
-    echo $payload['error'] ?? (string)_("No se pueden obtener los datos.");
+if (!$form['ok']) {
+    echo $form['error'] !== '' ? $form['error'] : (string)_("No se pueden obtener los datos.");
     return;
 }
 
@@ -44,8 +45,8 @@ $oHashGuardar->setCamposForm($sCamposForm);
 $url_guardar = $web . '/src/casas/casa_ec_gastos_guardar' . $oHashGuardar->linkSinVal();
 
 $a_campos = [
-    'casas' => $payload['casas'] ?? [],
-    'year' => (int)($payload['year'] ?? 0),
+    'casas' => $form['casas'],
+    'year' => $form['year'],
     'url_guardar' => $url_guardar,
 ];
 

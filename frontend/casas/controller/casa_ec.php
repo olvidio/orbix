@@ -17,21 +17,21 @@ use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
 $oForm = new CasasQue();
-$oMiUsuario = $_SESSION['session_auth']['MiUsuario'];
 $miRolePau = OrbixRuntime::miRolePau();
 $filtro = ['active' => true];
 // PauType::PAU_CDC (literal 'cdc').
 if ($miRolePau === 'cdc') {
-    $id_pau = $oMiUsuario->getCsv_id_pau();
-    $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', (string)$id_pau)), static fn ($v) => $v > 0));
+    $id_pau = casas_mi_usuario_csv_id_pau();
+    $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
     $oForm->setCasas('casa');
-} elseif ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
+} elseif (actividades_have_perm_oficina('des') || actividades_have_perm_oficina('vcsd')) {
     $oForm->setCasas('all');
 } elseif (OrbixRuntime::miSfsv() === 1) {
     $oForm->setCasas('sv');

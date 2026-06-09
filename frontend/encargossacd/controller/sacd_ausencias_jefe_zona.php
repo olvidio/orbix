@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\encargossacd\support\SacdFichaAjaxHashes;
 use frontend\shared\model\ViewNewPhtml;
@@ -23,11 +24,9 @@ $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/sacd_ausencias_jefe_zona_data', []);
-$a_sacd = is_array($datos['a_sacd'] ?? null) ? $datos['a_sacd'] : [];
-
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setNombre('id_sacd');
-$oDesplSacd->setOpciones($a_sacd);
+$oDesplSacd->setOpciones(encargossacd_desplegable_opciones($datos['a_sacd'] ?? []));
 $oDesplSacd->setBlanco(false);
 $oDesplSacd->setAction('fnjs_ver_ficha()');
 

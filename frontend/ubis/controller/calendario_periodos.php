@@ -14,13 +14,14 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 // Sólo quiero ver las casas comunes (active + sv + sf).
 $oForm = new frontend\shared\web\CasasQue();
 $oForm->setFiltroCasas(['active' => true, 'sv' => true, 'sf' => true]);
-if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
+if (actividades_have_perm_oficina('des') || actividades_have_perm_oficina('vcsd')) {
     $oForm->setCasas('all');
 } else {
     $oForm->setCasas('sv');

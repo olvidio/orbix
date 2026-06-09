@@ -14,14 +14,14 @@ require_once(\src\shared\config\ConfigGlobal::$dir_libs . '/vendor/autoload.php'
 /**
  * ViewNewTwig: motor de plantillas Twig para el árbol de frontend/
  *
- * - Mantiene la misma API pública que core\ViewTwig (renderizar)
+ * - Mantiene la misma API pública que core.ViewTwig (renderizar)
  * - Resuelve rutas de plantillas bajo frontend/... sustituyendo controller|model por view
  */
 class ViewNewTwig extends Environment
 {
-    /** @var FilesystemLoader */
-    private $loader;
-
+    /**
+     * @param array<string, string> $paths
+     */
     public function __construct(string $dirname, array $paths = [])
     {
         $abs_dir = $this->setAbsolutePath($dirname);
@@ -32,7 +32,6 @@ class ViewNewTwig extends Environment
             $loader->addPath($abs_path, $namespace);
         }
 
-        // añadir scripts globales
         $dir_js = $this->getJsPath();
         $loader->addPath($dir_js, 'global_js');
 
@@ -53,15 +52,14 @@ class ViewNewTwig extends Environment
 
     private function setAbsolutePath(string $dirname): string
     {
-        // Rutas absolutas se devuelven tal cual.
         if ($dirname !== '' && $dirname[0] === DIRECTORY_SEPARATOR) {
             return $dirname;
         }
 
-        // reemplazo controller o model por view
         $patterns = ['/controller/', '/model/'];
         $replacements = ['view', 'view'];
         $new_dir = preg_replace($patterns, $replacements, $dirname);
+        $new_dir = is_string($new_dir) ? $new_dir : $dirname;
         $new_dir = str_replace('\\', DIRECTORY_SEPARATOR, $new_dir);
 
         return OrbixRuntime::dir() . DIRECTORY_SEPARATOR . $new_dir;
@@ -69,11 +67,13 @@ class ViewNewTwig extends Environment
 
     private function getJsPath(): string
     {
-        // scripts están en la raíz del proyecto
         return OrbixRuntime::dir() . DIRECTORY_SEPARATOR . 'scripts';
     }
 
-    public function renderizar($name, $context): void
+    /**
+     * @param array<string, mixed> $context
+     */
+    public function renderizar(string $name, array $context): void
     {
         try {
             $tpl = $this->load($name);

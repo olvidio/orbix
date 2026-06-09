@@ -19,6 +19,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 
 FrontBootstrap::boot();
 $post = [
@@ -27,11 +28,8 @@ $post = [
     'sactividad' => (string)filter_input(INPUT_POST, 'sactividad'),
 ];
 $dataShell = PostRequest::getDataFromUrl('/src/actividadplazas/plazas_balance_que_data', $post);
-$delegacionesOpc = $dataShell['delegaciones_opciones'] ?? [];
-if (!is_array($delegacionesOpc)) {
-    $delegacionesOpc = [];
-}
-$Qid_tipo_activ = (string)($dataShell['id_tipo_activ'] ?? '');
+$delegacionesOpc = notas_desplegable_opciones($dataShell['delegaciones_opciones'] ?? []);
+$Qid_tipo_activ = tessera_imprimir_string($dataShell['id_tipo_activ'] ?? '');
 
 $desplDelegaciones = Desplegable::desdeOpciones($delegacionesOpc, 'dl');
 $desplDelegaciones->setAction('fnjs_comparativa()');

@@ -19,6 +19,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -45,12 +46,12 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_sr_csv_datos', [
 ]);
 
 if (!empty($data['pref_error'])) {
-    echo $data['pref_error'];
+    echo tessera_imprimir_string($data['pref_error']);
 }
 
 if ($Qque === 'file') {
-    $a_cabeceras = (array)($data['a_cabeceras'] ?? []);
-    $a_valores = (array)($data['a_valores'] ?? []);
+    $a_cabeceras = actividades_lista_cabeceras($data['a_cabeceras'] ?? []);
+    $a_valores = actividades_lista_valores_from_payload($data['a_valores'] ?? []);
     $oTabla = new Lista();
     $oTabla->setId_tabla('lista_activ');
     $oTabla->setCabeceras($a_cabeceras);
@@ -64,8 +65,8 @@ if ($Qque === 'lista') {
 
     $a_campos = [
         'oPosicion' => $oPosicion,
-        'titulo' => (string)($data['titulo'] ?? ''),
-        'html_tabla' => (string)($data['html_tabla'] ?? ''),
+        'titulo' => tessera_imprimir_string($data['titulo'] ?? ''),
+        'html_tabla' => tessera_imprimir_string($data['html_tabla'] ?? ''),
     ];
 
     $oView = new ViewNewPhtml('frontend\actividades\controller');

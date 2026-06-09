@@ -6,6 +6,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/cambios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -16,9 +17,7 @@ $oPosicion->recordar();
 
 $url_backend = '/src/cambios/usuario_form_avisos_data';
 $a_campos_backend = ['id_usuario' => $Qid_usuario, 'quien' => $Qquien];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$a_valores_avisos = $data['a_valores'];
-$nombre_usuario = $data['nombre_usuario'];
+$view = cambios_usuario_form_avisos_from_payload(cambios_post_data(PostRequest::getDataFromUrl($url_backend, $a_campos_backend)));
 
 $a_cabeceras_avisos = [
     _("objeto"),
@@ -40,7 +39,7 @@ $oTablaAvisos = new Lista();
 $oTablaAvisos->setId_tabla('usuario_form_avisos');
 $oTablaAvisos->setCabeceras($a_cabeceras_avisos);
 $oTablaAvisos->setBotones($a_botones_avisos);
-$oTablaAvisos->setDatos($a_valores_avisos);
+$oTablaAvisos->setDatos($view['a_valores']);
 
 
 $url_usuario_ajax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/usuario_avisos_pref.php';
@@ -60,7 +59,7 @@ $a_camposAvisos = [
     'oPosicion' => $oPosicion,
     'oHashAvisos' => $oHashAvisos,
     'oTablaAvisos' => $oTablaAvisos,
-    'nombre_usuario' => $nombre_usuario,
+    'nombre_usuario' => $view['nombre_usuario'],
 ];
 
 $oView = new ViewNewPhtml('frontend\cambios\controller');

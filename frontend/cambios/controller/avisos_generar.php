@@ -11,6 +11,7 @@ use frontend\shared\web\Lista;
 use frontend\cambios\helpers\AvisosGenerarListaRender;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/cambios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -18,13 +19,13 @@ $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 $QGstack = (int)filter_input(INPUT_POST, 'Gstack');
 
-$is_admin = $_SESSION['oPerm']->only_perm('admin_sf') || $_SESSION['oPerm']->only_perm('admin_sv');
+$is_admin = cambios_is_admin();
 
 if ($is_admin) {
     if (!empty($Qrefresh) && !empty($QGstack)) {
         $oPosicion->goStack($QGstack);
-        $Qid_usuario = (int)$oPosicion->getParametro('id_usuario');
-        $Qaviso_tipo = (int)$oPosicion->getParametro('aviso_tipo');
+        $Qid_usuario = tessera_imprimir_int($oPosicion->getParametro('id_usuario'));
+        $Qaviso_tipo = tessera_imprimir_int($oPosicion->getParametro('aviso_tipo'));
     } else {
         $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
         $Qaviso_tipo = (int)filter_input(INPUT_POST, 'aviso_tipo');
@@ -34,37 +35,33 @@ if ($is_admin) {
     $Qaviso_tipo = 0;
 }
 
-$data = PostRequest::getDataFromUrl('/src/cambios/avisos_generar_lista_data', [
+$data = AvisosGenerarListaRender::enrich(cambios_post_data(PostRequest::getDataFromUrl('/src/cambios/avisos_generar_lista_data', [
     'id_usuario' => $Qid_usuario,
     'aviso_tipo' => $Qaviso_tipo,
     'is_admin' => $is_admin ? 1 : 0,
-]);
-$data = is_array($data) ? $data : [];
-$data = AvisosGenerarListaRender::enrich($data);
-$Qid_usuario = (int)($data['effective_id_usuario'] ?? $Qid_usuario);
-$Qaviso_tipo = (int)($data['effective_aviso_tipo'] ?? $Qaviso_tipo);
+])));
+$view = cambios_avisos_generar_from_payload($data);
+$Qid_usuario = $view['effective_id_usuario'];
+$Qaviso_tipo = $view['effective_aviso_tipo'];
 $oPosicion->setParametros([
     'id_usuario' => $Qid_usuario,
     'aviso_tipo' => $Qaviso_tipo,
 ], 1);
-$a_valores = $data['a_valores'] ?? [];
-$aOpcionesUsuarios = $data['aOpcionesUsuarios'] ?? [];
-$aOpcionesAvisoTipo = $data['aOpcionesAvisoTipo'] ?? [];
 
 $oDesplUsuarios = new Desplegable();
 $oDesplUsuarios->setNombre('id_usuario');
 $oDesplUsuarios->setBlanco('false');
-$oDesplUsuarios->setOpciones($aOpcionesUsuarios);
-if (!empty($Qid_usuario)) {
-    $oDesplUsuarios->setOpcion_sel($Qid_usuario);
+$oDesplUsuarios->setOpciones($view['aOpcionesUsuarios']);
+if ($Qid_usuario !== 0) {
+    $oDesplUsuarios->setOpcion_sel(tessera_imprimir_string($Qid_usuario));
 }
 
 $oDesplTiposAviso = new Desplegable();
 $oDesplTiposAviso->setNombre('aviso_tipo');
 $oDesplTiposAviso->setBlanco('false');
-$oDesplTiposAviso->setOpciones($aOpcionesAvisoTipo);
-if (!empty($Qaviso_tipo)) {
-    $oDesplTiposAviso->setOpcion_sel($Qaviso_tipo);
+$oDesplTiposAviso->setOpciones($view['aOpcionesAvisoTipo']);
+if ($Qaviso_tipo !== 0) {
+    $oDesplTiposAviso->setOpcion_sel(tessera_imprimir_string($Qaviso_tipo));
 }
 
 $stack = $oPosicion->getStack();
@@ -75,11 +72,7 @@ $oHashCond->setCamposForm("id_usuario!aviso_tipo");
 
 $oTabla = null;
 $oHash = null;
-$url_eliminar = (string)($data['url_eliminar'] ?? '');
-$url_eliminar_fecha = (string)($data['url_eliminar_fecha'] ?? '');
-$h_eliminar = (string)($data['h_eliminar'] ?? '');
-$h_eliminar_fecha = (string)($data['h_eliminar_fecha'] ?? '');
-if (!empty($Qid_usuario)) {
+if ($Qid_usuario !== 0) {
     $a_cabeceras = [
         ['name' => ucfirst(_("fecha cambio")), 'class' => 'fecha_hora'],
         ucfirst(_("quien")),
@@ -94,7 +87,7 @@ if (!empty($Qid_usuario)) {
     $oTabla->setId_tabla('avisos_tabla');
     $oTabla->setCabeceras($a_cabeceras);
     $oTabla->setBotones($a_botones);
-    $oTabla->setDatos($a_valores);
+    $oTabla->setDatos($view['a_valores']);
 
     $oHash = new HashFront();
     $oHash->setArrayCamposHidden([
@@ -114,10 +107,10 @@ $a_campos_view = [
     'oHashCond' => $oHashCond,
     'oTabla' => $oTabla,
     'oHash' => $oHash,
-    'url_eliminar' => $url_eliminar,
-    'url_eliminar_fecha' => $url_eliminar_fecha,
-    'h_eliminar' => $h_eliminar,
-    'h_eliminar_fecha' => $h_eliminar_fecha,
+    'url_eliminar' => $view['url_eliminar'],
+    'url_eliminar_fecha' => $view['url_eliminar_fecha'],
+    'h_eliminar' => $view['h_eliminar'],
+    'h_eliminar_fecha' => $view['h_eliminar_fecha'],
 ];
 
 $oView = new ViewNewPhtml('frontend\\cambios\\view');

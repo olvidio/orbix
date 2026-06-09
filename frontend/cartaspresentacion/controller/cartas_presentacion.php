@@ -8,14 +8,14 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\DesplegableArray;
 use frontend\cartaspresentacion\helpers\CartasPresentacionShellRender;
 use frontend\shared\FrontBootstrap;
+
+require_once __DIR__ . '/../helpers/cartaspresentacion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-$shell = PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_shell_data', []);
-if (!is_array($shell)) {
-    $shell = [];
-}
+$shell = cartaspresentacion_post_data(PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_shell_data', []));
 $shell = CartasPresentacionShellRender::enrich($shell);
-$mi_dele = (string)($shell['mi_dele'] ?? '');
+$view = cartaspresentacion_shell_view_from_payload($shell);
+$mi_dele = $view['mi_dele'];
 
 $aOpcionesCiudad = [
     'get_dl' => $mi_dele,
@@ -29,17 +29,17 @@ $oSelCiudades->setAction('fnjs_poblacion()');
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oSelCiudades' => $oSelCiudades,
-    'url_ctr' => (string)($shell['url_ctr'] ?? ''),
-    'h_ctr' => (string)($shell['h_ctr'] ?? ''),
-    'url_lista' => (string)($shell['url_lista'] ?? ''),
-    'hash_lista_html' => (string)($shell['hash_lista_html'] ?? ''),
-    'url_form' => (string)($shell['url_form'] ?? ''),
-    'h_form' => (string)($shell['h_form'] ?? ''),
-    'url_poblaciones' => (string)($shell['url_poblaciones'] ?? ''),
-    'h_poblaciones' => (string)($shell['h_poblaciones'] ?? ''),
-    'url_update' => (string)($shell['url_update'] ?? ''),
-    'url_eliminar' => (string)($shell['url_eliminar'] ?? ''),
-    'h_eliminar' => (string)($shell['h_eliminar'] ?? ''),
+    'url_ctr' => $view['url_ctr'],
+    'h_ctr' => $view['h_ctr'],
+    'url_lista' => $view['url_lista'],
+    'hash_lista_html' => $view['hash_lista_html'],
+    'url_form' => $view['url_form'],
+    'h_form' => $view['h_form'],
+    'url_poblaciones' => $view['url_poblaciones'],
+    'h_poblaciones' => $view['h_poblaciones'],
+    'url_update' => $view['url_update'],
+    'url_eliminar' => $view['url_eliminar'],
+    'h_eliminar' => $view['h_eliminar'],
     'txt_confirmar_eliminar' => (string)_("¿Está seguro que quiere quitar los datos de presentación de este centro?"),
 ];
 

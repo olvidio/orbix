@@ -4,11 +4,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\UrlBaseProject;
 
-/**
- * Página de ayuda para restablecer la autenticación de dos factores (2FA).
- * Esta página proporciona instrucciones detalladas para usuarios que han perdido
- * acceso a su aplicación de autenticación y necesitan restablecer su configuración de 2FA.
- */
+require_once __DIR__ . '/../helpers/usuarios_support.php';
 require __DIR__ . '/../../../libs/vendor/autoload.php';
 
 $Qusername = (string)filter_input(INPUT_POST, 'username');
@@ -16,36 +12,29 @@ $Qubicacion = (string)filter_input(INPUT_POST, 'ubicacion');
 $Qesquema = (string)filter_input(INPUT_POST, 'esquema');
 $Qesquema_web = (string)filter_input(INPUT_POST, 'esquema_web');
 
-
 if (empty($Qusername)) {
     exit (_("Debe ingresar un nombre de usuario"));
 }
 
-$mi_ruta = 'src/usuarios/usuario_ayuda_info';
 $url_base = UrlBaseProject::getUrlBase();
-$url_backend = $url_base . $mi_ruta;
+$url_backend = $url_base . 'src/usuarios/usuario_ayuda_info';
 
 $a_cosas = ['url_base' => $url_base, 'username' => $Qusername, 'ubicacion' => $Qubicacion, 'esquema' => $Qesquema];
 $linkEnviarMailPasswd = 'frontend/usuarios/controller/recuperar_password.php?' . http_build_query($a_cosas);
-
 $linkAyuda2FA = 'frontend/usuarios/controller/ayuda_2fa_reset.php?' . http_build_query($a_cosas);
 
-$a_campos_backend = [
+$data = usuarios_post_data(PostRequest::getDataFromUrl($url_backend, [
     'username' => $Qusername,
     'esquema' => $Qesquema,
     'ubicacion' => $Qubicacion,
-];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$errores = $data['errores'];
-$emailOfuscado = $data['emailOfuscado'];
-$mail_admin = $data['mail_admin'];
+]));
 
 $a_campos = [
-    'error_txt' => $errores,
+    'error_txt' => tessera_imprimir_string($data['errores'] ?? ''),
     'linkEnviarMailPasswd' => $linkEnviarMailPasswd,
-    'emailOfuscado' => $emailOfuscado,
+    'emailOfuscado' => tessera_imprimir_string($data['emailOfuscado'] ?? ''),
     'linkAyuda2FA' => $linkAyuda2FA,
-    'mail_admin' => $mail_admin,
+    'mail_admin' => tessera_imprimir_string($data['mail_admin'] ?? ''),
     'url_base' => $url_base,
 ];
 

@@ -4,6 +4,8 @@ namespace frontend\shared\layouts;
 
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
+use src\menus\domain\PermisoMenu;
+use src\usuarios\domain\entity\Usuario;
 
 /**
  * Layout clásico (árbol UDM + barra de grupos).
@@ -17,34 +19,34 @@ class LegacyLayout implements LayoutInterface
         $htmlComponents = [];
         $li_submenus = '';
         $indice_old = 1;
-        $id_grupmenu = (string)($params['id_grupmenu'] ?? '1');
-        $oPermisoMenu = $params['oPermisoMenu'];
-        $oUsuario = $params['oUsuario'];
-        $gm = $params['gm'];
+        $id_grupmenu = self::scalarString($params['id_grupmenu'] ?? '1');
+        $oPermisoMenu = $params['oPermisoMenu'] ?? null;
+        $oUsuario = $params['oUsuario'] ?? null;
+        $gm = self::scalarInt($params['gm'] ?? 0);
 
         $payload = PostRequest::getDataFromUrl('/src/menus/menus_legacy_layout_items_data', [
             'id_grupmenu' => $id_grupmenu,
         ]);
         $menuData = [];
-        if (is_array($payload) && isset($payload['items']) && is_array($payload['items'])) {
-            $menuData = $payload['items'];
+        if (isset($payload['items']) && is_array($payload['items'])) {
+            $menuData = $this->parseMenuItems($payload['items']);
         }
 
         foreach ($menuData as $menuItem) {
-            $indice = (int)($menuItem['indice'] ?? 0);
-            $menu = $menuItem['menu'] ?? '';
-            $url = $menuItem['url'] ?? null;
-            $full_url = $menuItem['full_url'] ?? '';
-            $parametros = $menuItem['parametros'] ?? '';
-            $menu_perm = $menuItem['menu_perm'] ?? '';
+            $indice = $menuItem['indice'];
+            $menu = $menuItem['menu'];
+            $url = $menuItem['url'];
+            $full_url = $menuItem['full_url'];
+            $parametros = $menuItem['parametros'];
+            $menu_perm = $menuItem['menu_perm'];
 
-            if (!$oPermisoMenu->visible($menu_perm)) {
+            if (!$oPermisoMenu instanceof PermisoMenu || !$oPermisoMenu->visible($menu_perm)) {
                 continue;
             }
 
             if ($indice == $indice_old) {
-                if (!empty($full_url)) {
-                    if (!is_null($url) && str_contains((string)$url, 'fnjs')) {
+                if ($full_url !== '') {
+                    if ($url !== '' && str_contains($url, 'fnjs')) {
                         $li_submenus .= "<li><a class=\"nohref dropdown\" onclick=\"$url;\"  >" . _($menu) . '</a>';
                     } else {
                         $li_submenus .= "<li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . '</a>';
@@ -53,7 +55,7 @@ class LegacyLayout implements LayoutInterface
                     $li_submenus .= "<li><a class=\"nohref dropdown\" >" . _($menu) . '</a>';
                 }
             } elseif ($indice > $indice_old) {
-                if (!is_null($url) && str_contains((string)$url, 'fnjs')) {
+                if ($url !== '' && str_contains($url, 'fnjs')) {
                     $li_submenus .= "<ul><li><a class=\"nohref dropdown\" onclick=\"$url;\"  >" . _($menu) . '</a>';
                 } else {
                     $li_submenus .= "<ul><li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . '</a>';
@@ -62,7 +64,7 @@ class LegacyLayout implements LayoutInterface
                 for ($n = $indice; $n < $indice_old; $n++) {
                     $li_submenus .= '</li></ul>';
                 }
-                if (!is_null($url) && str_contains((string)$url, 'fnjs')) {
+                if ($url !== '' && str_contains($url, 'fnjs')) {
                     $li_submenus .= "</li><li><a class=\"nohref\" onclick=\"$url;\"  >" . _($menu) . '</a>';
                 } else {
                     $li_submenus .= "</li><li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . '</a>';
@@ -77,19 +79,19 @@ class LegacyLayout implements LayoutInterface
         }
         $li_submenus .= '</li>';
 
+        $usuarioLabel = $oUsuario instanceof Usuario ? $oUsuario->getUsuarioAsString() : '';
+
         if ($gm < 2) {
             $html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| " . ucfirst(_('salir')) . '</a></li>';
-            $html_exit .= '<li><a class="nohref"> (login as: ' . $oUsuario->getUsuarioAsString() . '[' . OrbixRuntime::miRegionDl() . '])</a></li>';
+            $html_exit .= '<li><a class="nohref"> (login as: ' . $usuarioLabel . '[' . OrbixRuntime::miRegionDl() . '])</a></li>';
 
             $li_submenus .= $html_exit;
         }
         $li_submenus .= '</ul>';
 
         $html_barra = '<ul id="menu" class="menu">';
-        if (isset($params['grupMenuData'])) {
-            ksort($params['grupMenuData']);
-
-            foreach ($params['grupMenuData'] as $grupMenuItem) {
+        if (isset($params['grupMenuData']) && is_array($params['grupMenuData'])) {
+            foreach ($this->parseGrupMenuItems($params['grupMenuData']) as $grupMenuItem) {
                 $id_gm = $grupMenuItem['id_gm'];
                 $grup_menu = $grupMenuItem['grup_menu'];
                 $clase = $grupMenuItem['clase'];
@@ -98,7 +100,7 @@ class LegacyLayout implements LayoutInterface
         }
 
         $html_exit = '<li onclick="fnjs_logout();" >' . ucfirst(_('salir'));
-        $html_exit .= ' (login as: ' . $oUsuario->getUsuarioAsString() . '[' . OrbixRuntime::miRegionDl() . '])</li>';
+        $html_exit .= ' (login as: ' . $usuarioLabel . '[' . OrbixRuntime::miRegionDl() . '])</li>';
         $html_barra .= $html_exit;
         $html_barra .= '</ul>';
 
@@ -110,7 +112,7 @@ class LegacyLayout implements LayoutInterface
 
     public function includeCss(array $params): string
     {
-        $tipo_menu = $params['tipo_menu'] ?? 'horizontal';
+        $tipo_menu = self::scalarString($params['tipo_menu'] ?? 'horizontal');
 
         ob_start();
         ?>
@@ -128,7 +130,7 @@ class LegacyLayout implements LayoutInterface
                 break;
         }
 
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     public function includeJs(array $params): string
@@ -138,9 +140,9 @@ class LegacyLayout implements LayoutInterface
 
     public function renderHtml(array $htmlComponents, array $params): string
     {
-        $li_submenus = $htmlComponents['li_submenus'] ?? '';
-        $html_barra = $htmlComponents['html_barra'] ?? '';
-        $gm = $params['gm'] ?? 0;
+        $li_submenus = self::scalarString($htmlComponents['li_submenus'] ?? '');
+        $html_barra = self::scalarString($htmlComponents['html_barra'] ?? '');
+        $gm = self::scalarInt($params['gm'] ?? 0);
 
         ob_start();
 
@@ -164,6 +166,83 @@ class LegacyLayout implements LayoutInterface
         </div>
         <?php
 
-        return ob_get_clean();
+        return (string) ob_get_clean();
+    }
+
+    private static function scalarString(mixed $value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+        if (is_string($value)) {
+            return $value;
+        }
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        return '';
+    }
+
+    private static function scalarInt(mixed $value): int
+    {
+        if (is_int($value)) {
+            return $value;
+        }
+        if (is_string($value) && is_numeric($value)) {
+            return (int) $value;
+        }
+        if (is_float($value)) {
+            return (int) $value;
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param array<int|string, mixed> $itemsRaw
+     * @return list<array{indice:int,menu:string,url:string,full_url:string,parametros:string,menu_perm:int}>
+     */
+    private function parseMenuItems(array $itemsRaw): array
+    {
+        $items = [];
+        foreach ($itemsRaw as $raw) {
+            if (!is_array($raw)) {
+                continue;
+            }
+            $items[] = [
+                'indice' => self::scalarInt($raw['indice'] ?? 0),
+                'menu' => self::scalarString($raw['menu'] ?? ''),
+                'url' => self::scalarString($raw['url'] ?? ''),
+                'full_url' => self::scalarString($raw['full_url'] ?? ''),
+                'parametros' => self::scalarString($raw['parametros'] ?? ''),
+                'menu_perm' => self::scalarInt($raw['menu_perm'] ?? 0),
+            ];
+        }
+
+        return $items;
+    }
+
+    /**
+     * @param array<int|string, mixed> $grupMenuData
+     * @return list<array{id_gm:string,grup_menu:string,clase:string}>
+     */
+    private function parseGrupMenuItems(array $grupMenuData): array
+    {
+        ksort($grupMenuData);
+
+        $items = [];
+        foreach ($grupMenuData as $raw) {
+            if (!is_array($raw)) {
+                continue;
+            }
+            $items[] = [
+                'id_gm' => self::scalarString($raw['id_gm'] ?? ''),
+                'grup_menu' => self::scalarString($raw['grup_menu'] ?? ''),
+                'clase' => self::scalarString($raw['clase'] ?? ''),
+            ];
+        }
+
+        return $items;
     }
 }

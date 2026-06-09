@@ -8,6 +8,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
+require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -28,7 +29,7 @@ if (isset($_POST['stack'])) {
 }
 
 $data = PostRequest::getDataFromUrl('/src/procesos/procesos_select_data', []);
-$aTiposProceso = $data['a_tipos_proceso'] ?? [];
+$aTiposProceso = notas_desplegable_opciones($data['a_tipos_proceso'] ?? []);
 
 $oDespl = new Desplegable();
 $oDespl->setOpciones($aTiposProceso);

@@ -23,6 +23,7 @@ use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
@@ -39,16 +40,16 @@ $campos = [
     'sactividad2' => (string)filter_input(INPUT_POST, 'sactividad2'),
 ];
 
-$payload = PostRequest::getDataFromUrl('/src/actividadplazas/gestion_plazas_data', $campos);
+$payload = actividadplazas_gestion_plazas_from_payload(
+    PostRequest::getDataFromUrl('/src/actividadplazas/gestion_plazas_data', $campos)
+);
 
-$a_cabeceras = $payload['a_cabeceras'] ?? [];
-$a_valores = $payload['a_valores'] ?? [];
-$Qid_tipo_activ = (string)($payload['id_tipo_activ'] ?? '');
-$Qyear = (string)($payload['year'] ?? '');
-$Qperiodo = (string)($payload['periodo'] ?? '');
-$Qempiezamin = (string)($payload['empiezamin'] ?? '');
-$Qempiezamax = (string)($payload['empiezamax'] ?? '');
-$extendida = (bool)($payload['extendida'] ?? false);
+$Qid_tipo_activ = $payload['id_tipo_activ'];
+$Qyear = $payload['year'];
+$Qperiodo = $payload['periodo'];
+$Qempiezamin = $payload['empiezamin'];
+$Qempiezamax = $payload['empiezamax'];
+$extendida = $payload['extendida'];
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $oHashUpdate = new HashFront();
@@ -59,9 +60,9 @@ $UpdateUrl = $apiBase . '/src/actividadplazas/gestion_plazas_update' . $oHashUpd
 $oTabla = new TablaEditable();
 $oTabla->setId_tabla('gestion_plazas');
 $oTabla->setUpdateUrl($UpdateUrl);
-$oTabla->setCabeceras($a_cabeceras);
+$oTabla->setCabeceras($payload['a_cabeceras']);
 $oTabla->setBotones([]);
-$oTabla->setDatos($a_valores);
+$oTabla->setDatos($payload['a_valores']);
 
 $boton = "<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >";
 $aOpciones = [

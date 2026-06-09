@@ -21,49 +21,60 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\actividades\helpers\PrefillPermActividadesFases;
 use frontend\shared\FrontBootstrap;
+use src\permisos\domain\PermisosActividades;
 
+require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
-$Qid_activ = (int)filter_input(INPUT_POST, 'id_activ');
-
-$permiso_des = false;
-if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
-    $permiso_des = true;
+$Qid_activ = actividades_id_activ_from_post();
+if ($Qid_activ === 0) {
+    $Qid_activ = tessera_imprimir_int(filter_input(INPUT_POST, 'id_activ'));
 }
+
+$permiso_des = actividades_perm_des();
 
 $data = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
     'id_activ' => $Qid_activ,
 ]);
 
-$entidad = (array)($data['entidad'] ?? []);
-$isfsv = (int)($data['isfsv'] ?? 0);
-$html_despl_dl_org = (string)($data['html_despl_dl_org'] ?? '');
-$html_despl_tarifa = (string)($data['html_despl_tarifa'] ?? '');
-$html_despl_nivel_stgr = (string)($data['html_despl_nivel_stgr'] ?? '');
-$html_despl_idioma = (string)($data['html_despl_idioma'] ?? '');
-$html_despl_repeticion = (string)($data['html_despl_repeticion'] ?? '');
-$nombre_ubi = (string)($data['nombre_ubi'] ?? '');
+$entidad = actividades_entidad_from_ver_datos($data);
+$render = actividades_ver_render_from_payload($data);
 
-$id_tipo_activ = (string)($entidad['id_tipo_activ'] ?? '');
-$dl_org = (string)($entidad['dl_org'] ?? '');
-$nom_activ = (string)($entidad['nom_activ'] ?? '');
-$id_ubi = (int)($entidad['id_ubi'] ?? 0);
-$f_ini = (string)($entidad['f_ini'] ?? '');
-$h_ini = (string)($entidad['h_ini'] ?? '');
-$f_fin = (string)($entidad['f_fin'] ?? '');
-$h_fin = (string)($entidad['h_fin'] ?? '');
-$precio = $entidad['precio'] ?? '';
-$status = (int)($entidad['status'] ?? 0);
-$observ = (string)($entidad['observ'] ?? '');
-$lugar_esp = (string)($entidad['lugar_esp'] ?? '');
-$publicado = (bool)($entidad['publicado'] ?? false);
-$plazas = $entidad['plazas'] ?? '';
+$id_tipo_activ = $entidad['id_tipo_activ'];
+$dl_org = $entidad['dl_org'];
+$nom_activ = $entidad['nom_activ'];
+$id_ubi = $entidad['id_ubi'];
+$f_ini = $entidad['f_ini'];
+$h_ini = $entidad['h_ini'];
+$f_fin = $entidad['f_fin'];
+$h_fin = $entidad['h_fin'];
+$precio = $entidad['precio'];
+$status = $entidad['status'];
+$observ = $entidad['observ'];
+$lugar_esp = $entidad['lugar_esp'];
+$publicado = $entidad['publicado'];
+$plazas = $entidad['plazas'];
 
-$_SESSION['oPermActividades']->setActividad($Qid_activ, $id_tipo_activ, $dl_org);
+$html_despl_dl_org = $render['html_despl_dl_org'];
+$html_despl_tarifa = $render['html_despl_tarifa'];
+$html_despl_nivel_stgr = $render['html_despl_nivel_stgr'];
+$html_despl_idioma = $render['html_despl_idioma'];
+$html_despl_repeticion = $render['html_despl_repeticion'];
+$nombre_ubi = $render['nombre_ubi'];
+$ssfsv = $render['ssfsv'];
+$sasistentes = $render['sasistentes'];
+$sactividad = $render['sactividad'];
+$snom_tipo = $render['snom_tipo'];
+
+$oPermActividades = actividades_o_perm_actividades();
+if (!$oPermActividades instanceof PermisosActividades) {
+    die();
+}
+$oPermActividades->setActividad($Qid_activ, $id_tipo_activ, $dl_org);
 PrefillPermActividadesFases::desdeBackend($Qid_activ);
-$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+$oPermActiv = $oPermActividades->getPermisoActual('datos');
 
 if ($oPermActiv->only_perm('ocupado')) {
     die();
@@ -77,15 +88,10 @@ if ($oPermActiv->have_perm_activ('ver') === true) {
     }
 }
 
-$ssfsv = (string)($data['ssfsv'] ?? '');
-$sasistentes = (string)($data['sasistentes'] ?? '');
-$sactividad = (string)($data['sactividad'] ?? '');
-$snom_tipo = (string)($data['snom_tipo'] ?? '');
-
 $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
     'with_all' => 'f',
 ]);
-$a_status = $labelsRow['id_to_label'] ?? [];
+$a_status = actividades_status_labels_from_payload($labelsRow);
 
 $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
     'perm_jefe' => 'f',
@@ -98,7 +104,7 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'snom_tipo' => $snom_tipo,
     'extendida' => '',
 ]);
-$actividad_tipo_html = (string)($dataTipoBloque['actividad_tipo_html'] ?? '');
+$actividad_tipo_html = tessera_imprimir_string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $oHash = new HashFront();
 $camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!extendida!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!id_tarifa';
