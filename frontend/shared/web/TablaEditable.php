@@ -46,6 +46,17 @@ class TablaEditable
         return '';
     }
 
+    /** Literal JavaScript seguro (traducciones con apóstrofos, URLs, etc.). */
+    private static function jsStringLiteral(string $value): string
+    {
+        $encoded = json_encode(
+            $value,
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE
+        );
+
+        return is_string($encoded) ? $encoded : '""';
+    }
+
     /** @param array<string, mixed>|string $cabecera */
     private static function cabeceraFieldKey(array|string $cabecera, string $key): ?string
     {
@@ -224,7 +235,7 @@ class TablaEditable
         }
         $sData = json_encode(
             $rowsForJson,
-            JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS
+            JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
         );
         if ($sData === false) {
             $sData = '[]';
@@ -273,7 +284,7 @@ class TablaEditable
 				,autosizeColsMode: Slick.GridAutosizeColsMode.LegacyForceFit
 			};
 
-			var sortcol = \"" . $sortcol . "\";
+			var sortcol = " . self::jsStringLiteral($sortcol) . ";
 			var sortdir = 1;
 			var searchString = \"\";
 			var columnFilters_$id_tabla = $sColumns;
@@ -674,8 +685,8 @@ class TablaEditable
                 $id = self::cabeceraFieldKey($Cabecera, 'id') ?? $name_idx;
                 $field = self::cabeceraFieldKey($Cabecera, 'field') ?? '';
                 $title = self::scalarString($Cabecera['title'] ?? $name);
-                $toolTip = ', toolTip: "' . $title . '"';
-                $class = !empty($Cabecera['class']) ? ', cssClass: "' . self::scalarString($Cabecera['class']) . '"' : '';
+                $toolTip = ', toolTip: ' . self::jsStringLiteral($title);
+                $class = !empty($Cabecera['class']) ? ', cssClass: ' . self::jsStringLiteral(self::scalarString($Cabecera['class'])) : '';
                 $sortable = !empty($Cabecera['sortable']) ? self::scalarString($Cabecera['sortable']) : 'true';
                 $width = !empty($Cabecera['width']) ? self::scalarString($Cabecera['width']) : '';
                 $formatter = !empty($Cabecera['formatter']) ? self::scalarString($Cabecera['formatter']) : '';
@@ -685,10 +696,10 @@ class TablaEditable
                     $visible = false;
                 }
 
-                $sDefCol = '{id: "' . $id . '", name: "' . $name . '", sortable: ' . $sortable . $class . $toolTip;
+                $sDefCol = '{id: ' . self::jsStringLiteral($id) . ', name: ' . self::jsStringLiteral($name) . ', sortable: ' . $sortable . $class . $toolTip;
 
                 if ($field !== '') {
-                    $sDefCol .= ', field: "' . $field . '" ';
+                    $sDefCol .= ', field: ' . self::jsStringLiteral($field) . ' ';
                 }
 
                 if (isset($aColsWidth[$name_idx])) {
@@ -712,8 +723,8 @@ class TablaEditable
             } else {
                 $name = self::scalarString($Cabecera);
                 $name_idx = str_replace(' ', '', $name);
-                $toolTip = ', toolTip: "' . $name . '"';
-                $sDefCol = '{id: "' . $name_idx . '", name: "' . $name . '", field: "' . $name_idx . '", sortable: true' . $toolTip;
+                $toolTip = ', toolTip: ' . self::jsStringLiteral($name);
+                $sDefCol = '{id: ' . self::jsStringLiteral($name_idx) . ', name: ' . self::jsStringLiteral($name) . ', field: ' . self::jsStringLiteral($name_idx) . ', sortable: true' . $toolTip;
                 if (isset($aColsWidth[$name_idx])) {
                     $sDefCol .= ', width: ' . self::scalarString($aColsWidth[$name_idx]);
                 }
@@ -728,7 +739,7 @@ class TablaEditable
             }
 
             $sColumns .= $sColumns === '' ? $sDefCol : ',' . $sDefCol;
-            $sColFilters .= $sColFilters === '' ? '"' . $name_idx . '"' : ',"' . $name_idx . '"';
+            $sColFilters .= $sColFilters === '' ? self::jsStringLiteral($name_idx) : ',' . self::jsStringLiteral($name_idx);
         }
         $sColumns = '[' . $sColumns . ']';
         $sColumnsVisible = '[' . $sColumnsVisible . ']';
@@ -810,8 +821,11 @@ class TablaEditable
         if (!empty($url)) {
             $txtRespuesta = _('respuesta');
             $txtError = _('hay un error, no se ha guardado');
+            $urlJs = self::jsStringLiteral($url);
+            $txtRespuestaJs = self::jsStringLiteral($txtRespuesta);
+            $txtErrorJs = self::jsStringLiteral($txtError);
             $fnjs = "
-				var url='$url';
+				var url={$urlJs};
 				\$('#form_update').one('submit', function() {
 					\$.ajax({
 						url: url,
@@ -821,12 +835,12 @@ class TablaEditable
 					})
 					.done(function (json) {
 						if (!json || json.success !== true) {
-							var msg = (json && json.mensaje) ? json.mensaje : '$txtError';
-							alert('$txtRespuesta: ' + msg);
+							var msg = (json && json.mensaje) ? json.mensaje : {$txtErrorJs};
+							alert({$txtRespuestaJs} + ': ' + msg);
 						}
 					})
 					.fail(function (xhr) {
-						alert('$txtRespuesta: ' + (xhr.responseText || '$txtError'));
+						alert({$txtRespuestaJs} + ': ' + (xhr.responseText || {$txtErrorJs}));
 					});
 					return false;
 				});
