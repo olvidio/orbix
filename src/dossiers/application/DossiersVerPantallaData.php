@@ -64,14 +64,13 @@ class DossiersVerPantallaData
         }
 
         $Qid_sel = '';
-        $Qscroll_id = input_int($post, 'scroll_id');
+        $Qscroll_id = $this->scrollIdFromPost($post);
         $stack = '';
         if (isset($post['stack']) && input_string($post, 'stack') !== '') {
             $stack = (string) filter_var(input_string($post, 'stack'), FILTER_SANITIZE_NUMBER_INT);
             if ($stack !== '' && $stack !== '0') {
                 if (array_key_exists('restored_id_sel', $post)) {
-                    $restored = $post['restored_id_sel'];
-                    $Qid_sel = is_scalar($restored) ? (string) $restored : '';
+                    $Qid_sel = $this->idSelScalar($post['restored_id_sel']);
                 }
                 if (array_key_exists('restored_scroll_id', $post)) {
                     $Qscroll_id = input_int($post, 'restored_scroll_id');
@@ -81,6 +80,7 @@ class DossiersVerPantallaData
             $first = $a_sel[0] ?? '';
             $Qid_sel = is_scalar($first) ? (string) $first : '';
         }
+        $Qid_sel = $this->idSelFromPost($post, $Qid_sel);
 
         $Qid_pau = input_int($post, 'id_pau');
         $pau = input_string($post, 'pau');
@@ -270,7 +270,11 @@ class DossiersVerPantallaData
                     $fichaSegmentos[] = $segment;
                 }
             } else {
-                $clase_info = DossierVerDatosTablaInfoClassResolver::resolveFullyQualifiedClassName($oTipoDossier);
+                $clase_info = DossierVerDatosTablaInfoClassResolver::tryResolveFullyQualifiedClassName($oTipoDossier);
+                if ($clase_info === null || !class_exists($clase_info)) {
+                    $id_dossier = strtok('y');
+                    continue;
+                }
                 $resolved = $this->fichaSelectRunner->resolveDatosInfo($clase_info, $id_pau, $Qobj_pau);
                 $oInfoClase = $resolved['info'];
                 $Qclase_info_enc = $resolved['clase_info_encoded'];
@@ -344,6 +348,17 @@ class DossiersVerPantallaData
             $id_dossier = strtok('y');
         }
 
+        if ($fichaSegmentos === []) {
+            return $this->withAvisoRegionStgr([
+                'error' => sprintf(
+                    'El dossier %s no está disponible (sin widget ni datos configurados en d_tipos_dossiers).',
+                    $Qid_dossier,
+                ),
+                'top_data' => $top_data,
+                'ficha_segmentos' => [],
+            ], $problemasRegionStgr);
+        }
+
         return $this->withAvisoRegionStgr([
             'top_data' => $top_data,
             'modo' => 'ficha',
@@ -364,6 +379,61 @@ class DossiersVerPantallaData
         }
 
         return $result;
+    }
+
+    /**
+     * @param array<string, mixed> $post
+     */
+    private function idSelFromPost(array $post, string $current): string
+    {
+        if ($current !== '') {
+            return $current;
+        }
+
+        return $this->idSelScalar($post['id_sel'] ?? null);
+    }
+
+    private function idSelScalar(mixed $raw): string
+    {
+        if (is_string($raw) && $raw !== '') {
+            return $raw;
+        }
+        if (is_int($raw) || is_float($raw)) {
+            return (string) $raw;
+        }
+        if (is_array($raw) && $raw !== []) {
+            $first = $raw[0] ?? '';
+
+            return is_scalar($first) ? (string) $first : '';
+        }
+
+        return '';
+    }
+
+    /**
+     * @param array<string, mixed> $post
+     */
+    private function scrollIdFromPost(array $post): int
+    {
+        $direct = input_int($post, 'scroll_id');
+        if ($direct > 0) {
+            return $direct;
+        }
+
+        foreach ($post as $key => $value) {
+            if (!is_string($key) || !str_starts_with($key, 'scroll_id_')) {
+                continue;
+            }
+            if (!is_scalar($value)) {
+                continue;
+            }
+            $n = (int) $value;
+            if ($n > 0) {
+                return $n;
+            }
+        }
+
+        return 0;
     }
 
     /**

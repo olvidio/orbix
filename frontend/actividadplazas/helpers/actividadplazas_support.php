@@ -35,6 +35,69 @@ function actividadplazas_stack_from_post(): ?int
 }
 
 /**
+ * Parámetros de filtro de gestion_plazas (POST + restauración desde Posicion).
+ *
+ * @return array{
+ *     id_tipo_activ: string,
+ *     year: string,
+ *     periodo: string,
+ *     empiezamin: string,
+ *     empiezamax: string,
+ *     sasistentes: string,
+ *     sactividad: string,
+ *     sactividad2: string,
+ *     extendida: string,
+ * }
+ */
+function actividadplazas_gestion_plazas_request_campos(
+    \frontend\shared\web\Posicion $oPosicion,
+    int $stackFromPost,
+): array {
+    $read = static fn (string $key): string => tessera_imprimir_string(filter_input(INPUT_POST, $key) ?? '');
+
+    $campos = [
+        'id_tipo_activ' => $read('id_tipo_activ'),
+        'year' => $read('year'),
+        'periodo' => $read('periodo'),
+        'empiezamin' => $read('empiezamin'),
+        'empiezamax' => $read('empiezamax'),
+        'sasistentes' => $read('sasistentes'),
+        'sactividad' => $read('sactividad'),
+        'sactividad2' => $read('sactividad2'),
+        'extendida' => $read('extendida'),
+    ];
+
+    if ($stackFromPost !== 0) {
+        $oPosicion2 = new \frontend\shared\web\Posicion();
+        if ($oPosicion2->goStack($stackFromPost)) {
+            foreach (array_keys($campos) as $key) {
+                $restored = $oPosicion2->getParametro($key);
+                if (is_scalar($restored) && tessera_imprimir_string($restored) !== '') {
+                    $campos[$key] = tessera_imprimir_string($restored);
+                }
+            }
+            $scrollRestored = $oPosicion2->getParametro('scroll_id');
+            if (is_scalar($scrollRestored) && tessera_imprimir_string($scrollRestored) !== '') {
+                $_POST['scroll_id'] = tessera_imprimir_string($scrollRestored);
+            }
+            $oPosicion2->olvidar($stackFromPost);
+        }
+    } else {
+        foreach (array_keys($campos) as $key) {
+            if ($campos[$key] !== '') {
+                continue;
+            }
+            $restored = $oPosicion->getParametro($key, 0);
+            if (is_scalar($restored) && tessera_imprimir_string($restored) !== '') {
+                $campos[$key] = tessera_imprimir_string($restored);
+            }
+        }
+    }
+
+    return $campos;
+}
+
+/**
  * @param array<int|string, mixed> $payload
  * @return array{
  *     ap_nom: string,

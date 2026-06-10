@@ -151,8 +151,9 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
     fnjs_cmb_preceptor = function () {
         if ($('#preceptor').prop('checked')) {
             $.ajax({
-                url: '<?= $url_posibles_preceptores . $h_posibles_preceptores ?>',
+                url: '<?= $url_posibles_preceptores ?>',
                 type: 'post',
+                data: '<?= ltrim($h_posibles_preceptores, '&') ?>',
                 dataType: 'json'
             })
                 .done(function (json) {

@@ -98,6 +98,7 @@ final class SelectNotasDeUnaPersonaRender
             'aviso' => $aviso,
             'msg' => $aviso,
             'url_persona_nota_eliminar' => $urlPersonaNotaEliminar,
+            'id_sel_value' => tessera_imprimir_string($seg['id_sel_value'] ?? ''),
         ], false);
     }
 }

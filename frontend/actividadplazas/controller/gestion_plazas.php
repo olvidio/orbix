@@ -23,22 +23,16 @@ use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
+$stackFromPost = actividadplazas_stack_from_post() ?? 0;
 $oPosicion->recordar($Qrefresh);
 
-$campos = [
-    'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),
-    'year' => (string)filter_input(INPUT_POST, 'year'),
-    'periodo' => (string)filter_input(INPUT_POST, 'periodo'),
-    'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
-    'sasistentes' => (string)filter_input(INPUT_POST, 'sasistentes'),
-    'sactividad' => (string)filter_input(INPUT_POST, 'sactividad'),
-    'sactividad2' => (string)filter_input(INPUT_POST, 'sactividad2'),
-];
+$campos = actividadplazas_gestion_plazas_request_campos($oPosicion, $stackFromPost);
+$Qscroll_id = list_nav_scroll_id_from_post();
 
 $payload = actividadplazas_gestion_plazas_from_payload(
     PostRequest::getDataFromUrl('/src/actividadplazas/gestion_plazas_data', $campos)
@@ -51,6 +45,24 @@ $Qempiezamin = $payload['empiezamin'];
 $Qempiezamax = $payload['empiezamax'];
 $extendida = $payload['extendida'];
 
+$aValores = $payload['a_valores'];
+if ($Qscroll_id !== '') {
+    $aValores['scroll_id'] = $Qscroll_id;
+}
+
+$oPosicion->setParametros([
+    'id_tipo_activ' => $Qid_tipo_activ,
+    'year' => $Qyear,
+    'periodo' => $Qperiodo,
+    'empiezamin' => $Qempiezamin,
+    'empiezamax' => $Qempiezamax,
+    'sasistentes' => $campos['sasistentes'],
+    'sactividad' => $campos['sactividad'],
+    'sactividad2' => $campos['sactividad2'],
+    'extendida' => $extendida ? '1' : '',
+    'scroll_id' => $Qscroll_id,
+], 0);
+
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $oHashUpdate = new HashFront();
 $oHashUpdate->setUrl($apiBase . '/src/actividadplazas/gestion_plazas_update');
@@ -62,7 +74,7 @@ $oTabla->setId_tabla('gestion_plazas');
 $oTabla->setUpdateUrl($UpdateUrl);
 $oTabla->setCabeceras($payload['a_cabeceras']);
 $oTabla->setBotones([]);
-$oTabla->setDatos($payload['a_valores']);
+$oTabla->setDatos($aValores);
 
 $boton = "<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >";
 $aOpciones = [
@@ -90,14 +102,16 @@ $oFormP->setEmpiezaMax($Qempiezamax);
 $oFormP->setBoton($boton);
 
 $oHash = new HashFront();
-$CamposForm = 'empiezamax!empiezamin!iactividad_val!iasistentes_val!id_tipo_activ!periodo!year';
-if ($extendida) {
-    $CamposForm .= '!extendida';
-}
-$oHash->setCamposForm($CamposForm);
-$oHash->setCamposNo('!refresh');
+$oHash->setCamposForm(
+    'empiezamax!empiezamin!iactividad_val!iasistentes_val!id_tipo_activ!periodo!year!sasistentes!sactividad!sactividad2!extendida'
+);
+$oHash->setCamposNo('!refresh!scroll_id');
 $oHash->setArraycamposHidden([
     'id_tipo_activ' => $Qid_tipo_activ,
+    'sasistentes' => $campos['sasistentes'],
+    'sactividad' => $campos['sactividad'],
+    'sactividad2' => $campos['sactividad2'],
+    'extendida' => $extendida ? '1' : '',
 ]);
 
 $a_campos = [

@@ -14,10 +14,12 @@ use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/notas_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
+list_nav_persist_selection_to_posicion($oPosicion, 1);
 
 $a_sel_raw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $a_sel = is_array($a_sel_raw) ? $a_sel_raw : [];

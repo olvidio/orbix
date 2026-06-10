@@ -86,7 +86,7 @@ $h_posibles_opcionales = $oHashOpcionales->linkSinValParams();
 $url_posibles_preceptores = $web . '/src/notas/posibles_preceptores_data';
 $oHashPreceptores = new HashFront();
 $oHashPreceptores->setUrl($url_posibles_preceptores);
-$h_posibles_preceptores = $oHashPreceptores->linkSinVal();
+$h_posibles_preceptores = $oHashPreceptores->linkSinValParams();
 
 $url_matricula_nueva = $web . '/src/actividadestudios/matricula_nueva';
 $url_matricula_editar = $web . '/src/actividadestudios/matricula_editar';

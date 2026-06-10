@@ -28,10 +28,12 @@ use frontend\shared\FrontBootstrap;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 
 require_once __DIR__ . '/../helpers/notas_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
+list_nav_persist_selection_to_posicion($oPosicion, 1);
 
 $obj = 'notas\\model\\entity\\PersonaNotaDB';
 
@@ -145,7 +147,7 @@ $h_posibles_opcionales = $oHashOpcionales->linkSinValParams();
 $url_posibles_preceptores = $web . '/src/notas/posibles_preceptores_data';
 $oHashPreceptores = new HashFront();
 $oHashPreceptores->setUrl($url_posibles_preceptores);
-$h_posibles_preceptores = $oHashPreceptores->linkSinVal();
+$h_posibles_preceptores = $oHashPreceptores->linkSinValParams();
 
 $url_actividad_buscar = $web . '/frontend/notas/controller/actividad_buscar_form.php';
 $oHashActivBuscar = new HashFront();

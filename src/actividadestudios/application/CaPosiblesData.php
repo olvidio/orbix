@@ -92,6 +92,13 @@ final class CaPosiblesData
             $QidCtrAgd = input_int($post, 'id_ctr_agd');
             $QidCtrN = input_int($post, 'id_ctr_n');
             $Qna = input_string($post, 'na');
+            if ($Qna === '') {
+                if ($QidCtrN > 0) {
+                    $Qna = 'n';
+                } elseif ($QidCtrAgd > 0) {
+                    $Qna = 'a';
+                }
+            }
             $Qyear = input_int($post, 'year');
             $Qperiodo = input_string($post, 'periodo');
             $Qempiezamin = input_string($post, 'empiezamin');
@@ -183,7 +190,7 @@ final class CaPosiblesData
         } else {
             switch ($idTablaPersona) {
                 case 'n':
-                    $aWhere['nivel_stgr'] = array_keys(NivelStgrId::getArrayNivelStgrOn());
+                    $aWhere['nivel_stgr'] = NivelStgrId::getArrayNivelStgrOn();
                     $aOperador['nivel_stgr'] = 'IN';
                     $personaRepository = $this->personaNRepository;
                     break;
@@ -492,10 +499,62 @@ final class CaPosiblesData
             ];
         }
 
+        if ($tablaFilas === [] && empty($aSel)) {
+            $msgTxt .= $this->mensajeCuadroVacio(
+                count($cPersonas),
+                count($aDatosCa),
+                $Qna,
+                $QidCtrN,
+                $QidCtrAgd,
+                $inicioIso,
+                $finIso,
+            );
+        }
+
         return [
             'modo' => 'tabla',
+            'msg_txt' => $msgTxt,
             'tabla_filas' => $tablaFilas,
         ];
+    }
+
+    private function mensajeCuadroVacio(
+        int $numPersonas,
+        int $numActividades,
+        string $na,
+        int $idCtrN,
+        int $idCtrAgd,
+        string $inicioIso,
+        string $finIso,
+    ): string {
+        $partes = [];
+        $idCtr = $na === 'n' ? $idCtrN : $idCtrAgd;
+        if ($idCtr > 1) {
+            $oCentro = $this->centroDlRepository->findById($idCtr);
+            $nomCentro = $oCentro !== null ? $oCentro->getNombre_ubi() : (string) $idCtr;
+            $partes[] = sprintf(_('Centro: %s.'), $nomCentro);
+        }
+        if ($numPersonas === 0) {
+            if ($na === 'n') {
+                $partes[] = _(
+                    'No hay numerarios activos en ese centro con nivel de estudios bienio o cuadrienio.'
+                );
+            } else {
+                $partes[] = _('No hay agregados activos en ese centro.');
+            }
+        }
+        if ($numActividades === 0 && $inicioIso !== '' && $finIso !== '') {
+            $partes[] = sprintf(
+                _('No hay actividades de centro de estudios en el periodo %s — %s (compruebe fechas y tipo de CA).'),
+                $inicioIso,
+                $finIso,
+            );
+        }
+        if ($partes === []) {
+            $partes[] = _('No hay datos para generar el cuadro.');
+        }
+
+        return implode('<br>', $partes) . '<br>';
     }
 
     /**

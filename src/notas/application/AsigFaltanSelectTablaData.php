@@ -6,6 +6,7 @@ namespace src\notas\application;
 
 
 use src\actividades\domain\value_objects\NivelStgrId;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\value_objects\CursoStgr;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -32,6 +33,7 @@ final class AsigFaltanSelectTablaData
         private readonly PersonaDlRepositoryInterface $personaDlRepository,
         private readonly PersonaNRepositoryInterface $personaNRepository,
         private readonly PersonaAgdRepositoryInterface $personaAgdRepository,
+        private readonly AsignaturaRepositoryInterface $asignaturaRepository,
     ) {
     }
     /**
@@ -98,7 +100,7 @@ final class AsigFaltanSelectTablaData
         }
 
         $lista = $isTrue($Qlista);
-        $Pendientes = new AsignaturasPendientes($personas);
+        $Pendientes = new AsignaturasPendientes($this->asignaturaRepository, $personas);
         $aId_nom = $lista
             ? $Pendientes->listarFaltantesPorPersona($Qnumero, $curso)
             : $Pendientes->contarFaltantesPorPersona($Qnumero, $curso);

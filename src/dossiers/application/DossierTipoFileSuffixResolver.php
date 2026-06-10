@@ -142,4 +142,19 @@ final class DossierTipoFileSuffixResolver
         $p4 = $this->projectRoot . '/src/' . $app . '/domain/' . $baseName . '.php';
         return is_file($p4) ? $p4 : null;
     }
+
+    /**
+     * Indica si el tipo puede mostrarse en dossiers_ver (widget Select_* o DatosInfoRepo).
+     */
+    public function canRenderFichaSegment(TipoDossier $tipo): bool
+    {
+        $selectFqcn = $this->resolveSelectClassFqcn($tipo);
+        if ($selectFqcn !== null && class_exists($selectFqcn)) {
+            return true;
+        }
+
+        $infoFqcn = DossierVerDatosTablaInfoClassResolver::tryResolveFullyQualifiedClassName($tipo);
+
+        return $infoFqcn !== null && class_exists($infoFqcn);
+    }
 }

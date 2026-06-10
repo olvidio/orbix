@@ -98,7 +98,7 @@ final class AsigFaltanPersonasSelectTablaData
         $nom_asignatura = $oAsignatura->getNombre_corto();
         $id_tipo_asignatura = (int) ($oAsignatura->getId_tipo() ?? 0);
 
-        $Pendientes = new AsignaturasPendientes($personas);
+        $Pendientes = new AsignaturasPendientes($this->asignaturaRepository, $personas);
         $aId_nom = $Pendientes->personasQueLesFaltaAsignatura($Qid_asignatura, $curso, $id_tipo_asignatura);
 
         $PersonaFinderService = $this->personaFinderService;

@@ -44,7 +44,7 @@ final class PosiblesAsignaturasCaData
         $aTiposStgr = NivelStgrId::getArrayNivelStgrOn();
         $aAlumnosFinC = [];
         $aAlumnos = [];
-        $pendientes = new AsignaturasPendientes();
+        $pendientes = new AsignaturasPendientes($this->asignaturaRepository);
         foreach ($this->asistenteRepository->getAsistentes(['id_activ' => $idActiv]) as $oAsistente) {
             $idNom = $oAsistente->getId_nom();
             $oPersona = Persona::findPersonaEnGlobal($idNom);

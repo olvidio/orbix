@@ -86,8 +86,16 @@ if (empty($a_sel)) {
     $oPosicion->setParametros($aGoBack, 1);
 }
 
-$data = actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/ca_posibles_data', PostRequest::requestPayloadForHash()));
-$caPosibles = actividadestudios_ca_posibles_from_payload($data);
+$data = PostRequest::getDataFromUrl(
+    '/src/actividadestudios/ca_posibles_data',
+    PostRequest::requestPayloadForHash(),
+    false,
+);
+if (!empty($data['error'])) {
+    echo PostRequest::stripInternalCallProvenance(tessera_imprimir_string($data['error']));
+    return;
+}
+$caPosibles = actividadestudios_ca_posibles_from_payload(actividadestudios_post_data($data));
 
 if ($caPosibles['modo'] === 'lista') {
     if ($caPosibles['msg_txt'] !== '') {
@@ -103,6 +111,12 @@ if ($caPosibles['modo'] === 'lista') {
     $oView = new ViewNewPhtml('frontend\\actividadestudios\\controller');
     $oView->renderizar('ca_posibles_lista.phtml', $a_campos);
 } else {
+    if ($caPosibles['msg_txt'] !== '') {
+        echo "<div class='no_print'>" . $caPosibles['msg_txt'] . '</div>';
+    }
+    if ($caPosibles['filas'] === []) {
+        echo '<p class="comentario">' . _('No hay datos para mostrar.') . '</p>';
+    }
     foreach ($caPosibles['filas'] as $fila) {
         $a_campos = ['oPosicion' => $oPosicion,
             'msg_txt' => $fila['msg_txt'],

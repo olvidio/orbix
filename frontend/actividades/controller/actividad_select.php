@@ -46,10 +46,11 @@ $oPosicion->recordar();
 $Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
 // Solo sirve para esta pagina: importar, publicar, duplicar
 $QGstack = (integer)filter_input(INPUT_POST, 'Gstack');
-$stack = 0;
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-}
+$stackFromPost = isset($_POST['stack']) ? (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
+
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = '';
+$Qscroll_id = '';
 
 // Si vengo de vuelta con el parametro 'continuar', los datos no estan en el POST,
 // sino en $Posicion. Le paso la referencia del stack donde esta la informacion.
@@ -69,8 +70,14 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qfases_on = $oPosicion->getParametro('fases_on');
     $Qfases_off = $oPosicion->getParametro('fases_off');
     $Qpublicado = $oPosicion->getParametro('publicado');
-    $Qid_sel = $oPosicion->getParametro('id_sel');
-    $Qscroll_id = $oPosicion->getParametro('scroll_id');
+    $restoredSel = list_nav_id_sel_for_lista($oPosicion->getParametro('id_sel'));
+    if (!list_nav_id_sel_is_empty($restoredSel)) {
+        $Qid_sel = $restoredSel;
+    }
+    $restoredScroll = $oPosicion->getParametro('scroll_id');
+    if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
+        $Qscroll_id = (string) $restoredScroll;
+    }
     $oPosicion->olvidar($QGstack);
 
     if (empty($Qperiodo)) {
@@ -81,16 +88,9 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qsactividad = '';
     $Qsactividad2 = '';
 } else {
-    $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qid_sel = list_nav_id_sel_from_post();
     $Qscroll_id = list_nav_scroll_id_from_post();
-    if ($stack !== 0) {
-        $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack);
-        }
-    }
+
     $Qmodo = (string)filter_input(INPUT_POST, 'modo');
     $Qstatus = (integer)filter_input(INPUT_POST, 'status');
     $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
@@ -105,6 +105,35 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qfases_on = (array)filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     $Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     $Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
+
+    if ($stackFromPost !== 0) {
+        $oPosicion2 = new frontend\shared\web\Posicion();
+        if ($oPosicion2->goStack($stackFromPost)) {
+            $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
+            if (!list_nav_id_sel_is_empty($restoredSel)) {
+                $Qid_sel = $restoredSel;
+            }
+            $restoredScroll = $oPosicion2->getParametro('scroll_id');
+            if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
+                $Qscroll_id = (string) $restoredScroll;
+            }
+            $Qmodo = tessera_imprimir_string($oPosicion2->getParametro('modo') ?? $Qmodo);
+            $Qstatus = (int)($oPosicion2->getParametro('status') ?? $Qstatus);
+            $Qid_tipo_activ = tessera_imprimir_string($oPosicion2->getParametro('id_tipo_activ') ?? $Qid_tipo_activ);
+            $Qfiltro_lugar = tessera_imprimir_string($oPosicion2->getParametro('filtro_lugar') ?? $Qfiltro_lugar);
+            $Qid_ubi = (int)($oPosicion2->getParametro('id_ubi') ?? $Qid_ubi);
+            $Qnom_activ = tessera_imprimir_string($oPosicion2->getParametro('nom_activ') ?? $Qnom_activ);
+            $Qperiodo = tessera_imprimir_string($oPosicion2->getParametro('periodo') ?? $Qperiodo);
+            $Qyear = tessera_imprimir_string($oPosicion2->getParametro('year') ?? $Qyear);
+            $Qdl_org = tessera_imprimir_string($oPosicion2->getParametro('dl_org') ?? $Qdl_org);
+            $Qempiezamin = tessera_imprimir_string($oPosicion2->getParametro('empiezamin') ?? $Qempiezamin);
+            $Qempiezamax = tessera_imprimir_string($oPosicion2->getParametro('empiezamax') ?? $Qempiezamax);
+            $Qfases_on = is_array($oPosicion2->getParametro('fases_on')) ? $oPosicion2->getParametro('fases_on') : $Qfases_on;
+            $Qfases_off = is_array($oPosicion2->getParametro('fases_off')) ? $oPosicion2->getParametro('fases_off') : $Qfases_off;
+            $Qpublicado = (int)($oPosicion2->getParametro('publicado') ?? $Qpublicado);
+            $oPosicion2->olvidar($stackFromPost);
+        }
+    }
 
     if (empty($Qperiodo)) {
         $Qperiodo = 'actual';
@@ -134,14 +163,22 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
         'publicado' => $Qpublicado,
     ];
     $oPosicion->setParametros($aGoBack, 1);
+
+    list_nav_persist_selection_on_list_page(
+        $oPosicion,
+        $Qid_sel,
+        $Qscroll_id,
+        $stackFromPost !== 0,
+    );
 }
 
-if (!empty($Qid_sel) || $Qscroll_id !== '') {
-    $oPosicion->setParametros([
-        'id_sel' => $Qid_sel,
-        'scroll_id' => $Qscroll_id,
-    ], 0);
+if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
+    list_nav_persist_selection_on_list_page($oPosicion, $Qid_sel, $Qscroll_id, false);
 }
+
+$selForApi = list_nav_id_sel_is_empty($Qid_sel)
+    ? []
+    : (is_array($Qid_sel) ? array_values(array_map('strval', $Qid_sel)) : [(string) $Qid_sel]);
 
 // Delegamos TODA la generacion del listado al caso de uso backend.
 $data = PostRequest::getDataFromUrl('/src/actividades/actividad_select_datos', [
@@ -164,7 +201,7 @@ $data = PostRequest::getDataFromUrl('/src/actividades/actividad_select_datos', [
     'sasistentes' => $Qsasistentes,
     'sactividad' => $Qsactividad,
     'sactividad2' => $Qsactividad2,
-    'sel' => $Qid_sel,
+    'sel' => $selForApi,
     'scroll_id' => $Qscroll_id,
     'stack_go' => $oPosicion->getStack(),
 ]);
@@ -222,7 +259,7 @@ $oHash->setCamposNo('extendida!modo!id_tipo_activ!id_ubi!nom_activ!periodo!year!
 
 $oHashSel = new HashFront();
 $oHashSel->setCamposForm('!mod!queSel!id_dossier');
-$oHashSel->setcamposNo('continuar!sel!scroll_id!fases_on!fases_off');
+$oHashSel->setcamposNo('continuar!sel!scroll_id!fases_on!fases_off!id_sel');
 $a_camposHiddenSel = [
     'obj_pau' => $obj_pau,
     'pau' => 'a',
@@ -230,6 +267,8 @@ $a_camposHiddenSel = [
     'Gstack' => $oPosicion->getStack(),
 ];
 $oHashSel->setArraycamposHidden($a_camposHiddenSel);
+
+$id_sel_value = is_array($Qid_sel) ? (string) ($Qid_sel[0] ?? '') : (string) $Qid_sel;
 
 $a_campos = [
     'oPosicion' => $oPosicion,
@@ -240,6 +279,7 @@ $a_campos = [
     'perm_nueva' => $perm_nueva,
     'mod' => $mod,
     'html_tabla' => $html_tabla,
+    'id_sel_value' => $id_sel_value,
 ];
 
 $oView = new ViewNewPhtml('frontend\actividades\controller');

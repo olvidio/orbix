@@ -68,6 +68,14 @@ function fnjs_solo_uno(formulario, multiple = false) {
 	if (s==0) {
 		alert ("<?php printf (_("No ha seleccionado ninguna fila. debe hacer click en algún chekbox de la izquierda. ")); ?>");
 	}
+	if (s > 0) {
+		var idSel = sel.first().val();
+		var hid = $(formulario).find('input[name="id_sel"]');
+		if (hid.length === 0) {
+			hid = $('<input type="hidden" name="id_sel">').appendTo(formulario);
+		}
+		hid.val(idSel);
+	}
 	return s;
 }
 

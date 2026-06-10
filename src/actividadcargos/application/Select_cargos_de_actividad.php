@@ -174,7 +174,7 @@ class Select_cargos_de_actividad
         $url_cargo_eliminar = $web . '/src/actividadcargos/cargo_eliminar';
 
         $hash_select_config = [
-            'campos_no' => 'sel!mod!scroll_id!refresh',
+            'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
             'campos_hidden' => [
                 'pau' => $this->pau,
                 'id_pau' => $this->id_pau,
@@ -193,6 +193,7 @@ class Select_cargos_de_actividad
             'bloque' => $this->bloque,
             'url_form' => DossierTipoPublicUrls::relativeFormController((int) $this->id_dossier),
             'url_cargo_eliminar' => $url_cargo_eliminar,
+            'id_sel_value' => is_scalar($this->Qid_sel ?? '') ? (string) $this->Qid_sel : '',
         ];
 
         return (new ViewNewPhtml('frontend\\actividadcargos\\controller'))

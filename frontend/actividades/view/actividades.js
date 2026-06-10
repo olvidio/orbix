@@ -127,6 +127,7 @@ jsForm.mandar = function (formulario, que) {
             break;
         case "asig":
             $('#queSel').val(que);
+            $('#id_dossier').val(3005);
             this.action = "frontend/dossiers/controller/dossiers_ver.php";
             break;
         case "carg":

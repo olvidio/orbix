@@ -32,6 +32,13 @@
             $('#id_ctr_agd').val('');
         }
     }
+    $(function () {
+        if ($('#id_ctr_n').val() !== '' && $('#id_ctr_n').val() !== '0') {
+            fnjs_n_a('n');
+        } else if ($('#id_ctr_agd').val() !== '' && $('#id_ctr_agd').val() !== '0') {
+            fnjs_n_a('agd');
+        }
+    });
     fnjs_left_side_hide();
 </script>
 <form id="modifica" name="modifica" action="frontend/actividadestudios/controller/ca_posibles.php" method="POST">

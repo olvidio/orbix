@@ -17,6 +17,7 @@ class DossiersListaFichasData
     public function __construct(
         private TipoDossierRepositoryInterface $tipoDossierRepository,
         private DossierRepositoryInterface $dossierRepository,
+        private DossierTipoFileSuffixResolver $suffixResolver,
     ) {
     }
 
@@ -43,6 +44,9 @@ class DossiersListaFichasData
             $id_dossier = $id_tipo_dossier;
 
             if (!$this->isTipoDossierDisponible($oTipoDossier)) {
+                continue;
+            }
+            if (!$this->suffixResolver->canRenderFichaSegment($oTipoDossier)) {
                 continue;
             }
             if (ConfigGlobal::mi_ambito() === 'rstgr') {

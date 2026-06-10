@@ -14,9 +14,11 @@ use frontend\shared\FrontBootstrap;
  */
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/personas_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
+list_nav_persist_selection_to_posicion($oPosicion, 1);
 
 $ids = personas_id_from_sel_post();
 $id_nom = $ids['id_nom'];

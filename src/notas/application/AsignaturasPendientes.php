@@ -50,10 +50,13 @@ final class AsignaturasPendientes
      *   Se parametriza para poder tests deterministas; si es `null` se
      *   resuelve en runtime.
      */
-    public function __construct(?string $tablaPersonas = null, ?string $ambito = null)
-    {
+    public function __construct(
+        AsignaturaRepositoryInterface $asignaturaRepository,
+        ?string $tablaPersonas = null,
+        ?string $ambito = null,
+    ) {
         $this->pdo = GlobalPdo::get('oDB');
-        $this->asignaturaRepository = $this->asignaturaRepository;
+        $this->asignaturaRepository = $asignaturaRepository;
         $this->tablaPersonas = $tablaPersonas;
         $ambito ??= ConfigGlobal::mi_ambito();
         $this->tablaNotas = $ambito === 'rstgr' ? 'publicv.e_notas' : 'e_notas_dl';

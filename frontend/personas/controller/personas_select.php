@@ -17,6 +17,7 @@ use frontend\shared\FrontBootstrap;
  */
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/personas_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -26,8 +27,9 @@ $Qna = (string)filter_input(INPUT_POST, 'na');
 $tipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qes_sacd = (int)filter_input(INPUT_POST, 'es_sacd');
 
-$Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
-$Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = list_nav_id_sel_from_post();
+$Qscroll_id = list_nav_scroll_id_from_post();
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qexacto = (string)filter_input(INPUT_POST, 'exacto');
 $Qcmb = (string)filter_input(INPUT_POST, 'cmb');
@@ -40,8 +42,14 @@ $stack = personas_stack_from_post();
 if ($stack !== null && $stack !== 0) {
     $oPosicion2 = new Posicion();
     if ($oPosicion2->goStack($stack)) {
-        $Qid_sel = tessera_imprimir_string($oPosicion2->getParametro('id_sel'));
-        $Qscroll_id = tessera_imprimir_string($oPosicion2->getParametro('scroll_id'));
+        $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
+        if (!list_nav_id_sel_is_empty($restoredSel)) {
+            $Qid_sel = $restoredSel;
+        }
+        $restoredScroll = $oPosicion2->getParametro('scroll_id');
+        if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
+            $Qscroll_id = (string) $restoredScroll;
+        }
         $Qque = tessera_imprimir_string($oPosicion2->getParametro('que') ?? $Qque);
         $Qexacto = tessera_imprimir_string($oPosicion2->getParametro('exacto') ?? $Qexacto);
         $Qcmb = tessera_imprimir_string($oPosicion2->getParametro('cmb') ?? $Qcmb);
@@ -70,6 +78,13 @@ $oPosicion->setParametros([
     'tipo' => $tipo,
     'es_sacd' => $Qes_sacd,
 ], 1);
+
+list_nav_persist_selection_on_list_page(
+    $oPosicion,
+    $Qid_sel,
+    $Qscroll_id,
+    $stack !== null && $stack !== 0,
+);
 
 $campos = [
     'tabla' => $tabla,
@@ -251,7 +266,7 @@ foreach ($a_filas as $fila) {
     }
     $a_valores[$c] = $a_val;
 }
-if ($Qid_sel !== '') {
+if (!list_nav_id_sel_is_empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
 if ($Qscroll_id !== '') {
@@ -271,7 +286,7 @@ $pagina = HashFront::link(
 
 $oHash = new HashFront();
 $oHash->setCamposForm('sel!que!id_dossier');
-$oHash->setcamposNo('que!id_dossier!scroll_id');
+$oHash->setcamposNo('que!id_dossier!scroll_id!id_sel');
 $oHash->setArraycamposHidden([
     'pau' => 'p',
     'obj_pau' => $obj_pau,
@@ -279,6 +294,8 @@ $oHash->setArraycamposHidden([
     'na' => $Qna,
     'permiso' => $permiso,
 ]);
+
+$id_sel_value = is_array($Qid_sel) ? (string) ($Qid_sel[0] ?? '') : (string) $Qid_sel;
 
 $a_campos = [
     'oPosicion' => $oPosicion,
@@ -289,6 +306,7 @@ $a_campos = [
     'pagina' => $pagina,
     'permiso' => $permiso,
     'aviso' => $aviso,
+    'id_sel_value' => $id_sel_value,
 ];
 
 $oView = new ViewNewPhtml('frontend\personas\controller');

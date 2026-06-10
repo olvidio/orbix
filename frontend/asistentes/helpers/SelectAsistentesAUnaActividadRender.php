@@ -100,6 +100,7 @@ final class SelectAsistentesAUnaActividadRender
             'oTabla' => $oTabla,
             'oHash' => $oHash,
             'oHash1' => $oHash1,
+            'id_sel_value' => payload_string($seg, 'id_sel_value'),
             'id_pau' => tessera_imprimir_int($seg['id_pau'] ?? 0),
             'h3' => $h3,
             'h4' => $h4,

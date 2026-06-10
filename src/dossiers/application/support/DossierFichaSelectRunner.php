@@ -47,8 +47,10 @@ final class DossierFichaSelectRunner
         $stackActual = $post['stack_actual'] ?? 0;
         $this->callIfExists($select, 'setStackActual', is_numeric($stackActual) ? (int) $stackActual : 0);
 
-        if ($stack !== '' && $stack !== '0') {
+        if ($idSel !== '' && $idSel !== null && !(is_array($idSel) && $idSel === [])) {
             $this->callIfExists($select, 'setQId_sel', $idSel);
+        }
+        if ($scrollId > 0) {
             $this->callIfExists($select, 'setQScroll_id', $scrollId);
         }
 

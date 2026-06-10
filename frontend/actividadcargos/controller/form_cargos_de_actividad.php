@@ -17,9 +17,11 @@ use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once 'frontend/actividadcargos/helpers/actividadcargos_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
+list_nav_persist_selection_to_posicion($oPosicion, 1);
 
 $raw = PostRequest::getDataFromUrl('/src/actividadcargos/form_cargos_de_actividad_data', PostRequest::requestPayloadForHash());
 if (!empty($raw['error'])) {

@@ -27,6 +27,33 @@ function ubiscamas_post_data(mixed $data): array
 }
 
 /**
+ * @return list<array{id_nom: int, apellidos: string}>
+ */
+function ubiscamas_asistentes_sin_cama_list(mixed $raw): array
+{
+    if (!is_array($raw)) {
+        return [];
+    }
+    $out = [];
+    foreach ($raw as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $idNom = tessera_imprimir_int($item['id_nom'] ?? 0);
+        $apellidos = tessera_imprimir_string($item['apellidos'] ?? '');
+        if ($idNom <= 0 && $apellidos === '') {
+            continue;
+        }
+        $out[] = [
+            'id_nom' => $idNom,
+            'apellidos' => $apellidos,
+        ];
+    }
+
+    return $out;
+}
+
+/**
  * @return array<string, mixed>
  */
 function ubiscamas_hash_campos_hidden(mixed $raw): array
@@ -81,7 +108,7 @@ function ubiscamas_link_spec(mixed $raw): ?array
  *     id_ubi: int|string,
  *     habitaciones_con_camas: array<int|string, mixed>,
  *     camas_con_asistentes: array<int|string, mixed>,
- *     asistentes_sin_cama: int|string,
+ *     asistentes_sin_cama: list<array{id_nom: int, apellidos: string}>,
  *     solo_vip: bool|string,
  *     url_update_cama_full: string,
  *     ctx_update_cama: string,
@@ -108,7 +135,7 @@ function ubiscamas_habitaciones_lista_from_payload(array $data): array
         'id_ubi' => notas_form_scalar($data['id_ubi'] ?? 0),
         'habitaciones_con_camas' => actividades_lista_datos($data['habitaciones_con_camas'] ?? []),
         'camas_con_asistentes' => actividades_lista_datos($data['camas_con_asistentes'] ?? []),
-        'asistentes_sin_cama' => notas_form_scalar($data['asistentes_sin_cama'] ?? 0),
+        'asistentes_sin_cama' => ubiscamas_asistentes_sin_cama_list($data['asistentes_sin_cama'] ?? []),
         'solo_vip' => notas_form_bool_or_string($data['solo_vip'] ?? ''),
         'url_update_cama_full' => tessera_imprimir_string($data['url_update_cama_full'] ?? ''),
         'ctx_update_cama' => tessera_imprimir_string($data['ctx_update_cama'] ?? ''),

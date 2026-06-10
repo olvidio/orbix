@@ -64,6 +64,23 @@
         <table>
             <tr>
                 <th colspan='3' class=titulo_inv><?= $titulo ?></Th>
+            </tr>
+            <?php if (!empty($readonly)) { ?>
+            <tr>
+                <td colspan="9" class="comentario">
+                    <?= _("Esta acta ya está firmada (tiene PDF adjunto) y no se puede modificar.") ?>
+                    <?php if ($soy_rstgr) { ?>
+                        <?= ' ' . _("Para volver a editar los datos, elimine el PDF firmado con el botón inferior.") ?>
+                    <?php } ?>
+                </td>
+            </tr>
+            <?php } elseif ($permiso != 3 && $mod != 'nueva' && $notas != 'nuevo') { ?>
+            <tr>
+                <td colspan="9" class="comentario">
+                    <?= _("No tiene permiso para modificar actas.") ?>
+                </td>
+            </tr>
+            <?php } ?>
             <tr>
                 <td class=etiqueta><?= ucfirst(_("acta")); ?>:
                 </td>

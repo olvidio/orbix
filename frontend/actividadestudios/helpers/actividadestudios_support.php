@@ -316,6 +316,55 @@ function actividadestudios_signed_link(mixed $spec): string
 }
 
 /**
+ * @return list<array{nom_activ: string, creditos: string, aLista: array<mixed>}>
+ */
+function actividadestudios_ca_posibles_actividades(mixed $raw): array
+{
+    if (!is_array($raw)) {
+        return [];
+    }
+    $out = [];
+    foreach ($raw as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $out[] = [
+            'nom_activ' => tessera_imprimir_string($item['nom_activ'] ?? ''),
+            'creditos' => tessera_imprimir_string($item['creditos'] ?? ''),
+            'aLista' => is_array($item['aLista'] ?? null) ? $item['aLista'] : [],
+        ];
+    }
+
+    return $out;
+}
+
+/**
+ * @return array<string, array{stgr: string, aActividades: list<array{nom_activ: string, creditos: string, aLista: array<mixed>}>}>
+ */
+function actividadestudios_ca_posibles_c_personas(mixed $raw): array
+{
+    if (!is_array($raw)) {
+        return [];
+    }
+    $out = [];
+    foreach ($raw as $nomPersona => $datos) {
+        if (!is_array($datos)) {
+            continue;
+        }
+        $nom = tessera_imprimir_string($nomPersona);
+        if ($nom === '') {
+            continue;
+        }
+        $out[$nom] = [
+            'stgr' => tessera_imprimir_string($datos['stgr'] ?? ''),
+            'aActividades' => actividadestudios_ca_posibles_actividades($datos['aActividades'] ?? null),
+        ];
+    }
+
+    return $out;
+}
+
+/**
  * @param array<string, mixed> $row
  * @return array<string, mixed>
  */
@@ -335,8 +384,8 @@ function actividadestudios_ca_posible_row(array $row): array
         'ctr' => tessera_imprimir_string($row['ctr'] ?? ''),
         'ref' => tessera_imprimir_string($row['ref'] ?? ''),
         'height' => tessera_imprimir_string($row['height'] ?? ''),
-        'cPersonas' => notas_form_scalar($row['cPersonas'] ?? 0),
-        'aActividades' => is_array($row['aActividades'] ?? null) ? $row['aActividades'] : [],
+        'cPersonas' => actividadestudios_ca_posibles_c_personas($row['cPersonas'] ?? null),
+        'aActividades' => actividadestudios_ca_posibles_actividades($row['aActividades'] ?? null),
     ];
 }
 
@@ -378,7 +427,7 @@ function actividadestudios_ca_posibles_from_payload(array $payload): array
         'msg_txt' => tessera_imprimir_string($payload['msg_txt'] ?? ''),
         'titulo' => tessera_imprimir_string($payload['titulo'] ?? ''),
         'stgr' => tessera_imprimir_string($payload['stgr'] ?? ''),
-        'aActividades' => is_array($payload['aActividades'] ?? null) ? $payload['aActividades'] : [],
+        'aActividades' => actividadestudios_ca_posibles_actividades($payload['aActividades'] ?? null),
         'pagina' => actividadestudios_signed_link($payload['pagina_link_spec'] ?? null),
         'filas' => actividadestudios_ca_posibles_rows($payload['tabla_filas'] ?? []),
     ];

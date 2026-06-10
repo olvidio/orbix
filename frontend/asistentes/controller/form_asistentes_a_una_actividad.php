@@ -6,6 +6,7 @@ use frontend\asistentes\helpers\FormAsistentesAUnaActividadRender;
 use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/asistentes_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -13,6 +14,7 @@ $oPosicion = FrontBootstrap::boot();
 $Qactualizar = (int)filter_input(INPUT_POST, 'actualizar');
 if (empty($Qactualizar)) {
     $oPosicion->recordar();
+    list_nav_persist_selection_to_posicion($oPosicion, 1);
 }
 
 $campos = array_merge($_GET, $_POST);

@@ -23,6 +23,7 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\XPermisos;
 
 require_once __DIR__ . '/../helpers/notas_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -32,19 +33,24 @@ $mi_region = OrbixRuntime::miRegion();
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$Qid_sel = '';
-$Qscroll_id = '';
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = list_nav_id_sel_from_post();
+$Qscroll_id = list_nav_scroll_id_from_post();
 
+$stackFromPost = isset($_POST['stack']) ? (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
 //Si vengo por medio de Posicion, borro la última
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack);
+if ($stackFromPost !== 0) {
+    $oPosicion2 = new frontend\shared\web\Posicion();
+    if ($oPosicion2->goStack($stackFromPost)) { // devuelve false si no puede ir
+        $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
+        if (!list_nav_id_sel_is_empty($restoredSel)) {
+            $Qid_sel = $restoredSel;
         }
+        $restoredScroll = $oPosicion2->getParametro('scroll_id');
+        if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
+            $Qscroll_id = (string) $restoredScroll;
+        }
+        $oPosicion2->olvidar($stackFromPost);
     }
 }
 
@@ -58,6 +64,13 @@ $aGoBack = array(
     'titulo' => $Qtitulo,
     'acta' => $Qacta);
 $oPosicion->setParametros($aGoBack, 1);
+
+list_nav_persist_selection_on_list_page(
+    $oPosicion,
+    $Qid_sel,
+    $Qscroll_id,
+    $stackFromPost !== 0,
+);
 
 $oConfig = $_SESSION['oConfig'] ?? null;
 $mesFinStgr = $oConfig instanceof ConfigSnapshot ? $oConfig->getMesFinStgr() : 6;
@@ -129,7 +142,7 @@ foreach ($cActasData as $oActa) {
     $a_valores[$i][3] = $nombre_corto;
     $a_valores[$i][4] = $hasPdf;
 }
-if ($Qid_sel !== '') {
+if (!list_nav_id_sel_is_empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
 if ($Qscroll_id !== '') {
@@ -141,7 +154,7 @@ $oHash->setCamposForm('acta');
 
 $oHash1 = new HashFront();
 $oHash1->setCamposForm('sel!mod');
-$oHash1->setCamposNo('sel!scroll_id!mod!refresh');
+$oHash1->setCamposNo('sel!scroll_id!mod!refresh!id_sel');
 
 $url_acta_eliminar = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_eliminar';
 
@@ -153,6 +166,8 @@ $oTabla->setDatos($a_valores);
 
 $txt_eliminar = _("esto eliminará los datos del acta, pero no las notas que mantendrán el número de acta");
 
+$id_sel_value = is_array($Qid_sel) ? (string) ($Qid_sel[0] ?? '') : (string) $Qid_sel;
+
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'oHash1' => $oHash1,
@@ -162,6 +177,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_eliminar' => $txt_eliminar,
     'pdf_signed_urls_json' => json_encode($pdf_signed_urls, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP),
     'url_acta_eliminar' => $url_acta_eliminar,
+    'id_sel_value' => $id_sel_value,
 ];
 
 $oView = new ViewNewPhtml('frontend\notas\controller');

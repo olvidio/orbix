@@ -36,6 +36,21 @@ final class DossierVerDatosTablaInfoClassResolver
 
     public static function resolveFullyQualifiedClassName(TipoDossier $tipo): string
     {
+        $fqcn = self::tryResolveFullyQualifiedClassName($tipo);
+        if ($fqcn === null) {
+            throw new \InvalidArgumentException(
+                sprintf('Tipo dossier id=%d sin app/class para DatosInfoRepo', $tipo->getId_tipo_dossier())
+            );
+        }
+
+        return $fqcn;
+    }
+
+    /**
+     * @return class-string|null
+     */
+    public static function tryResolveFullyQualifiedClassName(TipoDossier $tipo): ?string
+    {
         $id = $tipo->getId_tipo_dossier();
         if (isset(self::ID_STGR_TO_INFO[$id])) {
             return self::ID_STGR_TO_INFO[$id];
@@ -44,9 +59,7 @@ final class DossierVerDatosTablaInfoClassResolver
         $app = $tipo->getApp();
         $clase = $tipo->getClass();
         if ($app === null || $app === '' || $clase === null || $clase === '') {
-            throw new \InvalidArgumentException(
-                sprintf('Tipo dossier id=%d sin app/class para DatosInfoRepo', $id)
-            );
+            return null;
         }
 
         return 'src\\' . $app . '\\domain\\Info' . $clase;

@@ -1,5 +1,13 @@
 <script>
     fnjs_buscar = function () {
+        var scroll = $('#scroll_id').val();
+        $('#periodo_form input[name="scroll_id"]').remove();
+        if (scroll) {
+            $('#periodo_form').append(
+                '<input type="hidden" name="scroll_id" value="' + scroll + '">'
+            );
+        }
+        $('#periodo_form input[name="refresh"]').remove();
         var campo = '<input type="hidden" name="refresh" value=1>';
         $('#periodo_form').attr('action', "frontend/actividadplazas/controller/gestion_plazas.php");
         $('#periodo_form').append(campo);

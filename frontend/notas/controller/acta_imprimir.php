@@ -20,11 +20,13 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
  */
 
 require_once __DIR__ . '/../helpers/acta_imprimir_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
+list_nav_persist_selection_to_posicion($oPosicion, 1);
 
 $acta = acta_imprimir_acta_from_post();
 $cara = acta_imprimir_cara_from_post();

@@ -28,7 +28,22 @@ $oPosicion = FrontBootstrap::boot();
 $requestPayload = PostRequest::requestPayloadForHash();
 $Qrefresh = tessera_imprimir_int($requestPayload['refresh'] ?? 0);
 $oPosicion->recordar($Qrefresh);
-list_nav_persist_selection_to_posicion($oPosicion, 1);
+
+$idDossierEarly = trim(tessera_imprimir_string($requestPayload['id_dossier'] ?? ''));
+$claseInfoEarly = trim(tessera_imprimir_string($requestPayload['clase_info'] ?? ''));
+if ($Qrefresh > 0) {
+    list_nav_persist_selection_on_list_page(
+        $oPosicion,
+        list_nav_id_sel_from_post(),
+        list_nav_scroll_id_from_post(),
+        false,
+    );
+} elseif ($idDossierEarly === '' && $claseInfoEarly === '') {
+    list_nav_persist_selection_to_posicion($oPosicion, 1);
+} elseif (list_nav_sel_from_post() !== [] || list_nav_scroll_id_from_post() !== '') {
+    // Entrada directa a un segmento (cargos, asistentes, …) desde un listado externo.
+    list_nav_persist_selection_to_posicion($oPosicion, 1);
+}
 
 // Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
 $requestPayload['stack_actual'] = $oPosicion->getStack(0);
@@ -44,8 +59,14 @@ $apiPayload = PostRequest::requestPayloadForHash();
 $idDossierReq = trim(tessera_imprimir_string($apiPayload['id_dossier'] ?? ''));
 $claseInfoReq = trim(tessera_imprimir_string($apiPayload['clase_info'] ?? ''));
 if ($idDossierReq === '' && $claseInfoReq === '') {
-    foreach (['queSel', 'que', 'mod', 'sel', 'clase_info', 'bloque', 'permiso', 'depende', 'id_dossier'] as $extraKey) {
+    foreach (['queSel', 'que', 'mod', 'clase_info', 'bloque', 'permiso', 'depende', 'id_dossier'] as $extraKey) {
         unset($apiPayload[$extraKey]);
+    }
+    // Solo descartar sel si ya conocemos id_pau (p. ej. volver a la lista desde una ficha).
+    // Desde listados externos (personas_select) id_pau no viaja y sel es la fuente del id.
+    $idPauReq = tessera_imprimir_int($apiPayload['id_pau'] ?? 0);
+    if ($idPauReq > 0) {
+        unset($apiPayload['sel']);
     }
 }
 

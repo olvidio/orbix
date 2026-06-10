@@ -23,6 +23,7 @@ use function frontend\shared\helpers\urlsafe_b64encode;
 use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/notas_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -53,6 +54,7 @@ $Qnotas = tessera_imprimir_string($requestPayload['notas'] ?? '');
 
 if ($notas === '' && $Qnotas === '') {
     $oPosicion->recordar();
+    list_nav_persist_selection_to_posicion($oPosicion, 1);
 }
 
 $payload = $requestPayload;
