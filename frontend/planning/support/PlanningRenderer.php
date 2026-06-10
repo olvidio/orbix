@@ -135,7 +135,10 @@ class PlanningRenderer
         $periodos_sv = $this->casaPeriodosPorUbi ?? [];
         foreach ($this->a_actividades as $ww) {
             foreach ($ww as $per => $actividad) {
-                list($pau, $id_pau, $persona) = explode('#', (string)$per);
+                [$pau, $id_pau, $persona, $actividad] = $this->parsePersonaFila(
+                    (string)$per,
+                    is_array($actividad) ? $actividad : []
+                );
                 $id_ubi = 0;
 
                 if ($pau === 'u') {
@@ -144,7 +147,7 @@ class PlanningRenderer
                         $periodos_sv[$id_ubi] = [];
                     }
                 }
-                $long = strlen($persona);
+                $long = strlen((string)$persona);
                 if ($ancho < $long) {
                     $ancho = $long;
                 }
@@ -435,6 +438,33 @@ class PlanningRenderer
         $html .= '</table></div>';
 
         return $html;
+    }
+
+    /**
+     * Descompone la clave `pau#id#nombre` (o fila envuelta con indice numerico).
+     *
+     * @param array<int|string, mixed> $actividad
+     * @return array{0: string, 1: string, 2: string, 3: array<int|string, mixed>}
+     */
+    private function parsePersonaFila(string $per, array $actividad): array
+    {
+        if (ctype_digit($per) && $actividad !== []) {
+            $nestedKey = array_key_first($actividad);
+            if (is_string($nestedKey) && str_contains($nestedKey, '#')) {
+                $nested = $actividad[$nestedKey];
+                $per = $nestedKey;
+                $actividad = is_array($nested) ? $nested : [];
+            }
+        }
+
+        $parts = explode('#', $per, 4);
+
+        return [
+            $parts[0] ?? '',
+            $parts[1] ?? '',
+            $parts[2] ?? '',
+            $actividad,
+        ];
     }
 
     /**

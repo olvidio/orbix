@@ -1,7 +1,11 @@
 <?php
 
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 use src\ubis\application\CentrosUpdate;
 
-header('Content-Type: text/plain; charset=UTF-8');
-echo DependencyResolver::get(CentrosUpdate::class)->execute($_POST);
+/** @var CentrosUpdate $useCase */
+$useCase = DependencyResolver::get(CentrosUpdate::class);
+
+$error = $useCase->execute($_POST);
+ContestarJson::enviar($error, 'ok');

@@ -8,7 +8,7 @@ operacion: "mutacion"
 controller: "src/ubis/infrastructure/ui/http/controllers/centros_update.php"
 entrada: ["post.id_ubi:integer", "post.labor:string", "post.n_buzon:integer", "post.num_cartas:integer", "post.num_habit_indiv:integer", "post.num_pi:integer", "post.plazas:integer", "post.sede:string", "post.tipo_ctr:string", "post.tipo_labor:mixed"]
 entrada_obligatoria: []
-respuesta: "raw_response"
+respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: ["Hay un error, no se ha guardado."]
 frontend_referencias: ["frontend/ubis/controller/centros_form_labor.php", "frontend/ubis/controller/centros_form_num.php", "frontend/ubis/controller/centros_form_plazas.php", "frontend/ubis/controller/centros_que.php"]
@@ -19,7 +19,7 @@ estado_revision: "generado"
 
 # Centros Update
 
-Actualiza datos de centro DL (labor / num / plazas según POST).
+Actualiza datos de centro DL según el formulario enviado (labor, num o plazas). Solo modifica el bloque de campos presente en el POST; el resto se conserva.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -49,9 +49,10 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Salida
 
-- Helper: `echo`
-- Forma: `raw_response`
-- Exito: `success: true`, `data: "ok"`.
+- Helper: `ContestarJson::enviar`
+- Forma: `standard_envelope_string_data`
+- Exito: `{ "success": true, "data": "ok" }`.
+- Error: `{ "success": false, "mensaje": "<texto>", "data": "ok" }`.
 
 ## Errores conocidos
 

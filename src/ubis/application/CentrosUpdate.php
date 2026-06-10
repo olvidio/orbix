@@ -6,6 +6,7 @@ use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\input_int;
 
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\entity\CentroDl;
 use function src\shared\domain\helpers\is_true;
 
 final class CentrosUpdate
@@ -18,6 +19,9 @@ final class CentrosUpdate
     /**
      * Actualiza datos de centro DL (labor / num / plazas según POST).
      *
+     * Cada formulario de `centros_que` envía solo su bloque de campos; el resto
+     * no debe tocarse (antes se pisaban con 0 / vacío).
+     *
      * @param array<string, mixed> $input
      * @return string Texto de error para mostrar al usuario, o cadena vacía si OK
      */
@@ -28,48 +32,104 @@ final class CentrosUpdate
             return '';
         }
 
-        $Qtipo_ctr = input_string($input, 'tipo_ctr');
-        $Qlabor = input_string($input, 'labor');
-        $aTipo_labor = $input['tipo_labor'] ?? [];
-        if (!is_array($aTipo_labor)) {
-            $aTipo_labor = [];
-        }
-
-        $Qn_buzon = input_int($input, 'n_buzon');
-        $Qnum_pi = input_int($input, 'num_pi');
-        $Qnum_cartas = input_int($input, 'num_cartas');
-        $Qnum_habit_indiv = input_int($input, 'num_habit_indiv');
-        $Qplazas = input_int($input, 'plazas');
-        $Qsede = input_string($input, 'sede');
-
-        $CentroDlRepository = $this->centroDlRepository;
-        $oCentro = $CentroDlRepository->findById($Qid_ubi);
+        $oCentro = $this->centroDlRepository->findById($Qid_ubi);
         if ($oCentro === null) {
             return '';
         }
 
-        $oCentro->setTipo_ctr($Qtipo_ctr);
-        if ($Qlabor === 'si' && !empty($aTipo_labor)) {
-            $byte = 0;
-            foreach ($aTipo_labor as $bit) {
-                if (!is_int($bit) && !is_string($bit) && !is_float($bit) && !is_bool($bit) && $bit !== null) {
-                    continue;
-                }
-                $byte += (int) $bit;
-            }
-            $oCentro->setTipo_labor($byte);
+        $updated = false;
+        if ($this->isLaborUpdate($input)) {
+            $this->applyLabor($oCentro, $input);
+            $updated = true;
+        } elseif ($this->isNumUpdate($input)) {
+            $this->applyNum($oCentro, $input);
+            $updated = true;
+        } elseif ($this->isPlazasUpdate($input)) {
+            $this->applyPlazas($oCentro, $input);
+            $updated = true;
         }
-        $oCentro->setN_buzon($Qn_buzon);
-        $oCentro->setNum_pi($Qnum_pi);
-        $oCentro->setNum_cartas($Qnum_cartas);
-        $oCentro->setNum_habit_indiv($Qnum_habit_indiv);
-        $oCentro->setPlazas($Qplazas);
-        $oCentro->setSede(is_true($Qsede));
 
-        if ($CentroDlRepository->Guardar($oCentro) === false) {
+        if (!$updated) {
+            return '';
+        }
+
+        if ($this->centroDlRepository->Guardar($oCentro) === false) {
             return (string)_("Hay un error, no se ha guardado.");
         }
 
         return '';
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    private function isLaborUpdate(array $input): bool
+    {
+        return input_string($input, 'labor') === 'si';
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    private function isNumUpdate(array $input): bool
+    {
+        return array_key_exists('n_buzon', $input)
+            || array_key_exists('num_pi', $input)
+            || array_key_exists('num_cartas', $input);
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    private function isPlazasUpdate(array $input): bool
+    {
+        return array_key_exists('num_habit_indiv', $input)
+            || array_key_exists('plazas', $input)
+            || array_key_exists('sede', $input);
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    private function applyLabor(CentroDl $oCentro, array $input): void
+    {
+        $oCentro->setTipo_ctr(input_string($input, 'tipo_ctr'));
+
+        $aTipo_labor = $input['tipo_labor'] ?? [];
+        if (!is_array($aTipo_labor)) {
+            $aTipo_labor = [];
+        }
+        if ($aTipo_labor === []) {
+            return;
+        }
+
+        $byte = 0;
+        foreach ($aTipo_labor as $bit) {
+            if (!is_int($bit) && !is_string($bit) && !is_float($bit) && !is_bool($bit) && $bit !== null) {
+                continue;
+            }
+            $byte += (int) $bit;
+        }
+        $oCentro->setTipo_labor($byte);
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    private function applyNum(CentroDl $oCentro, array $input): void
+    {
+        $oCentro->setN_buzon(input_int($input, 'n_buzon'));
+        $oCentro->setNum_pi(input_int($input, 'num_pi'));
+        $oCentro->setNum_cartas(input_int($input, 'num_cartas'));
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    private function applyPlazas(CentroDl $oCentro, array $input): void
+    {
+        $oCentro->setNum_habit_indiv(input_int($input, 'num_habit_indiv'));
+        $oCentro->setPlazas(input_int($input, 'plazas'));
+        $oCentro->setSede(is_true(input_string($input, 'sede')));
     }
 }

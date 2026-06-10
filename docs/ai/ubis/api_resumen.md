@@ -113,7 +113,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `ubis.centros_update`
 - Controller: `src/ubis/infrastructure/ui/http/controllers/centros_update.php`
 - Entrada: `post.id_ubi:integer`, `post.labor:string`, `post.n_buzon:integer`, `post.num_cartas:integer`, `post.num_habit_indiv:integer`, `post.num_pi:integer`, `post.plazas:integer`, `post.sede:string`, `post.tipo_ctr:string`, `post.tipo_labor:mixed`
-- Respuesta: `raw_response`
+- Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/delegacion_que_data`
 

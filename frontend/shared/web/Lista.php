@@ -580,7 +580,7 @@ class Lista
             $aFilas[$num_fila]["id"] = $id_fila;
             foreach ($fila as $col => $valor) {
                 if ($col === "clase") {
-                    $aFilas[$num_fila]["clase"] = addslashes(self::scalarString($valor));
+                    $aFilas[$num_fila]["clase"] = self::scalarString($valor);
                     continue;
                 }
                 if ($col === "order" || $col === "select") {
@@ -599,7 +599,7 @@ class Lista
                     }
                     if ($id !== '') {
                         $chk = in_array($id, $a_valores_chk, true) ? 'checked' : $chk;
-                        $aFilas[$num_fila]["sel"] = $chk . '#' . addslashes($id);
+                        $aFilas[$num_fila]["sel"] = $chk . '#' . $id;
                     } else {
                         $aFilas[$num_fila]["sel"] = '';
                     }
@@ -619,18 +619,18 @@ class Lista
                             $aFilas[$num_fila]['ira3'] = self::scalarString($valor['ira3']);
                         }
                         if (!empty($valor['script'])) {
-                            $aFilas[$num_fila]['script'] = addslashes(self::scalarString($valor['script']));
+                            $aFilas[$num_fila]['script'] = self::scalarString($valor['script']);
                         }
                         if (!empty($valor['script2'])) {
-                            $aFilas[$num_fila]['script2'] = addslashes(self::scalarString($valor['script2']));
+                            $aFilas[$num_fila]['script2'] = self::scalarString($valor['script2']);
                         }
                         if (!empty($valor['script3'])) {
-                            $aFilas[$num_fila]['script3'] = addslashes(self::scalarString($valor['script3']));
+                            $aFilas[$num_fila]['script3'] = self::scalarString($valor['script3']);
                         }
                         if (!empty($valor['span'])) {
                             $span = (int) self::scalarString($valor['span']);
                             if (isset($aFields[$icol])) {
-                                $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
+                                $aFilas[$num_fila][$aFields[$icol]] = $val;
                                 $icol++;
                                 for ($s = 1; $s < $span; $s++) {
                                     if (isset($aFields[$icol])) {
@@ -642,21 +642,21 @@ class Lista
                             }
                         } else {
                             if (isset($aFields[$icol])) {
-                                $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
+                                $aFilas[$num_fila][$aFields[$icol]] = $val;
                                 $icol++;
                             } elseif (!is_numeric($col)) {
-                                $aFilas[$num_fila][$col] = addslashes($val);
+                                $aFilas[$num_fila][$col] = $val;
                             }
                         }
                     } else {
                         // Filas asociativas (field => valor): mapear por nombre de columna.
                         // ksort() ordena alfabéticamente; la asignación solo con $aFields[$icol] dejaba casi todo vacío.
                         if (!is_numeric($col) && in_array($col, $aFields, true)) {
-                            $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes(self::scalarString($valor));
+                            $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : self::scalarString($valor);
                         } elseif (isset($aFields[$icol])) {
-                            $aFilas[$num_fila][$aFields[$icol]] = ($valor === '' || $valor === null) ? '' : addslashes(self::scalarString($valor));
+                            $aFilas[$num_fila][$aFields[$icol]] = ($valor === '' || $valor === null) ? '' : self::scalarString($valor);
                         } elseif (!is_numeric($col)) {
-                            $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes(self::scalarString($valor));
+                            $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : self::scalarString($valor);
                         }
                         if (is_numeric($col)) {
                             $icol++;

@@ -166,6 +166,58 @@ function planning_casa_periodos_por_ubi(mixed $raw): array
 }
 
 /**
+ * Mapa persona/casa: claves `p#…`, `u#…`, `##`, etc.
+ */
+function planning_is_persona_casa_map(array $items): bool
+{
+    if ($items === []) {
+        return true;
+    }
+    foreach (array_keys($items) as $k) {
+        if (!is_string($k) || !str_contains($k, '#')) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @return list<array<string, mixed>>
+ */
+function planning_parse_actividad_list(mixed $items): array
+{
+    if (!is_array($items)) {
+        return [];
+    }
+    if (array_is_list($items)) {
+        $parsedItems = [];
+        foreach ($items as $item) {
+            if (is_array($item)) {
+                $parsedItems[] = $item;
+            }
+        }
+
+        return $parsedItems;
+    }
+
+    return [$items];
+}
+
+/**
+ * @return array<int|string, list<array<string, mixed>>>
+ */
+function planning_parse_persona_casa_map(array $items): array
+{
+    $out = [];
+    foreach ($items as $k => $acts) {
+        $out[$k] = planning_parse_actividad_list($acts);
+    }
+
+    return $out;
+}
+
+/**
  * @return array<int|string, array<int|string, list<array<string, mixed>>>>
  */
 function planning_actividades_map(mixed $raw): array
@@ -183,14 +235,10 @@ function planning_actividades_map(mixed $raw): array
             if (!is_array($items)) {
                 continue;
             }
-            if (array_is_list($items)) {
-                $parsedItems = [];
-                foreach ($items as $item) {
-                    if (is_array($item)) {
-                        $parsedItems[] = $item;
-                    }
-                }
-                $parsedGroup[$gKey] = $parsedItems;
+            if (planning_is_persona_casa_map($items)) {
+                $parsedGroup[$gKey] = planning_parse_persona_casa_map($items);
+            } elseif (array_is_list($items)) {
+                $parsedGroup[$gKey] = planning_parse_actividad_list($items);
             } else {
                 $parsedGroup[$gKey] = [$items];
             }

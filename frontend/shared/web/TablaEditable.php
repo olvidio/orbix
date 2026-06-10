@@ -157,7 +157,7 @@ class TablaEditable
             $aFilas[$num_fila]['editable'] = '';
             foreach ($fila as $col => $valor) {
                 if ($col === "clase") {
-                    $aFilas[$num_fila]["clase"] = addslashes(self::scalarString($valor));
+                    $aFilas[$num_fila]["clase"] = self::scalarString($valor);
                     continue;
                 }
                 if ($col === "order" || $col === "select") {
@@ -176,7 +176,7 @@ class TablaEditable
                     }
                     if ($id !== '') {
                         $chk = in_array($id, $a_valores_chk, true) ? 'checked' : $chk;
-                        $aFilas[$num_fila]["sel"] = $chk . '#' . addslashes($id);
+                        $aFilas[$num_fila]["sel"] = $chk . '#' . $id;
                     } else {
                         $aFilas[$num_fila]["sel"] = '';
                     }
@@ -199,35 +199,36 @@ class TablaEditable
                             $aFilas[$num_fila]['ira2'] = self::scalarString($valor['ira2']);
                         }
                         if (!empty($valor['script'])) {
-                            $aFilas[$num_fila]['script'] = addslashes(self::scalarString($valor['script']));
+                            $aFilas[$num_fila]['script'] = self::scalarString($valor['script']);
                         }
                         if (!empty($valor['script2'])) {
-                            $aFilas[$num_fila]['script2'] = addslashes(self::scalarString($valor['script2']));
+                            $aFilas[$num_fila]['script2'] = self::scalarString($valor['script2']);
                         }
-                        $aFilas[$num_fila][$col] = addslashes($val);
+                        $aFilas[$num_fila][$col] = $val;
                     } else {
-                        $aFilas[$num_fila][$col] = addslashes(self::scalarString($valor));
+                        $aFilas[$num_fila][$col] = self::scalarString($valor);
                     }
                 }
             }
         }
 
-        $f = 0;
-        $sData = '[';
-        foreach ($aFilas as $num_fila => $fila) {
-            $f++;
-            if ($f > 1) $sData .= ',';
-            $c = 0;
-            $sData .= '{';
+        $f = count($aFilas);
+        $rowsForJson = [];
+        foreach ($aFilas as $fila) {
+            $row = [];
             foreach ($fila as $camp => $valor) {
-                $c++;
-                if ($c > 1) $sData .= ',';
-                $val = str_replace(["\r\n", "\n", "\r"], ' ', self::scalarString($valor));
-                $sData .= '"' . $camp . '": "' . $val . '"';
+                $remove = ["\r\n", "\n", "\r"];
+                $row[self::scalarString($camp)] = str_replace($remove, ' ', self::scalarString($valor));
             }
-            $sData .= '}';
+            $rowsForJson[] = $row;
         }
-        $sData .= ']';
+        $sData = json_encode(
+            $rowsForJson,
+            JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS
+        );
+        if ($sData === false) {
+            $sData = '[]';
+        }
 
         if (($grid_height === '' || $grid_height === '0') && $f < 12) {
             $grid_height = (string) max(200, (4 + $f) * 25);
