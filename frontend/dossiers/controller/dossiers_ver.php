@@ -21,12 +21,14 @@ use frontend\shared\FrontBootstrap;
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once 'frontend/dossiers/helpers/dossiers_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $requestPayload = PostRequest::requestPayloadForHash();
 $Qrefresh = tessera_imprimir_int($requestPayload['refresh'] ?? 0);
 $oPosicion->recordar($Qrefresh);
+list_nav_persist_selection_to_posicion($oPosicion, 1);
 
 // Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
 $requestPayload['stack_actual'] = $oPosicion->getStack(0);

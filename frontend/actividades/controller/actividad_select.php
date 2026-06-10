@@ -35,6 +35,7 @@ use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\web\Lista;
 
 require_once __DIR__ . '/../helpers/actividades_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -81,7 +82,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qsactividad2 = '';
 } else {
     $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
+    $Qscroll_id = list_nav_scroll_id_from_post();
     if ($stack !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
@@ -133,6 +134,13 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
         'publicado' => $Qpublicado,
     ];
     $oPosicion->setParametros($aGoBack, 1);
+}
+
+if (!empty($Qid_sel) || $Qscroll_id !== '') {
+    $oPosicion->setParametros([
+        'id_sel' => $Qid_sel,
+        'scroll_id' => $Qscroll_id,
+    ], 0);
 }
 
 // Delegamos TODA la generacion del listado al caso de uso backend.

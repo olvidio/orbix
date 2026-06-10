@@ -207,14 +207,9 @@ class Posicion
 
     private function guardar(): void
     {
-        if ($this->existsSession()) {
-            $position = $this->positionStackRef();
-            end($position);
-            $key = key($position);
-            $stack = ($key === null) ? 0 : (int) $key;
-        } else {
-            $stack = $this->stack;
-        }
+        // Tras go($n), $this->stack apunta a la entrada que hay que persistir
+        // (p. ej. setParametros(..., 1) actualiza la página anterior en la pila).
+        $stack = $this->stack;
         session_start();
         $position = &$this->positionStackRef();
         $position[$stack] = [

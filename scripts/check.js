@@ -42,6 +42,32 @@ function fnjs_normalizar_url(url) {
  * Guarda el estado de la UI (scroll y selección) en sessionStorage
  * keyed por la URL actual de la base del bloque (usualmente #main).
  */
+function fnjs_collect_sel_from_checked_inputs(container) {
+    var sel = [];
+    container.find('input.sel:checked').each(function () {
+        var v = $(this).val();
+        if (v) {
+            sel.push(v);
+        }
+    });
+    return sel;
+}
+
+function fnjs_parse_slick_sel_value(raw) {
+    if (raw === undefined || raw === null) {
+        return '';
+    }
+    var val = raw.toString();
+    if (val.indexOf('checked#') === 0) {
+        return val.split('#').slice(1).join('#');
+    }
+    var pos = val.indexOf('#');
+    if (pos !== -1) {
+        return val.substring(pos + 1);
+    }
+    return val;
+}
+
 function fnjs_guardar_estado() {
     var base = $('#main').attr('refe');
     if (!base) {
@@ -54,6 +80,16 @@ function fnjs_guardar_estado() {
         if (!tabla) return;
         var scroll_id = $(this).val();
         var sel = [];
+        var key = 'state_' + base + '_' + tabla;
+        var existing = null;
+        try {
+            var prev = sessionStorage.getItem(key);
+            if (prev) {
+                existing = JSON.parse(prev);
+            }
+        } catch (e) {
+            existing = null;
+        }
 
         if (typeof window['grid_' + tabla] !== 'undefined' && typeof window['dataView_' + tabla] !== 'undefined') {
             var grid = window['grid_' + tabla];
@@ -61,28 +97,37 @@ function fnjs_guardar_estado() {
             var selectedIndices = grid.getSelectedRows();
             selectedIndices.forEach(function (idx) {
                 var item = dataView.getItem(idx);
-                if (item && item.sel) {
-                    var val = item.sel.toString();
-                    if (val.indexOf('checked#') === 0) {
-                        var parts = val.split('#');
-                        val = parts.slice(1).join('#');
-                    }
-                    sel.push(val);
+                var id = fnjs_parse_slick_sel_value(item ? item.sel : '');
+                if (id) {
+                    sel.push(id);
                 }
             });
+            if (sel.length === 0) {
+                var gridRoot = $('#grid_' + tabla).closest('form');
+                if (!gridRoot.length) {
+                    gridRoot = $('#grid_' + tabla).parent();
+                }
+                sel = fnjs_collect_sel_from_checked_inputs(gridRoot);
+            }
         } else {
-            $('#tabla_' + tabla + ' input.sel:checked').each(function () {
-                sel.push($(this).val());
-            });
+            var tableEl = $('#tabla_' + tabla);
+            if (!tableEl.length) tableEl = $('#' + tabla);
+            sel = fnjs_collect_sel_from_checked_inputs(tableEl);
+        }
+
+        if (sel.length === 0 && existing && existing.sel && existing.sel.length > 0) {
+            sel = existing.sel;
+        }
+        if ((scroll_id == 0 || scroll_id === '' || scroll_id === '0') && existing && existing.scroll_id) {
+            scroll_id = existing.scroll_id;
         }
 
         if (scroll_id > 0 || sel.length > 0) {
-            var state = {
+            sessionStorage.setItem(key, JSON.stringify({
                 scroll_id: scroll_id,
                 sel: sel,
                 timestamp: new Date().getTime()
-            };
-            sessionStorage.setItem('state_' + base + '_' + tabla, JSON.stringify(state));
+            }));
         }
     });
 }

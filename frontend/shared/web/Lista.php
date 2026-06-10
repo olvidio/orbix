@@ -1098,13 +1098,13 @@ class Lista
 			});
 		";
 
-        if ($scroll_id !== '' && $scroll_id !== '0') {
+        if ($showSelCol) {
             $tt .= " 
                 setTimeout(function() {
                     var scroll_id_final = $('#scroll_id_$id_tabla').val();
-                    
                     var rowsToSelect = [];
-                    if (savedState && savedState.sel && !backendHasSel) {
+
+                    if (savedState && savedState.sel && savedState.sel.length > 0 && !backendHasSel) {
                         var totalItems = dataView_{$id_tabla}.getLength();
                         for (var i=0; i<totalItems; i++) {
                             var item = dataView_{$id_tabla}.getItem(i);
@@ -1116,12 +1116,20 @@ class Lista
                                 }
                             }
                         }
-                        if (rowsToSelect.length > 0) {
-                            grid_{$id_tabla}.setSelectedRows(rowsToSelect);
+                    }
+
+                    if (rowsToSelect.length === 0) {
+                        var totalItemsBackend = dataView_{$id_tabla}.getLength();
+                        for (var j=0; j<totalItemsBackend; j++) {
+                            var rowItem = dataView_{$id_tabla}.getItem(j);
+                            if (rowItem && rowItem.sel && rowItem.sel.indexOf('checked') === 0) {
+                                rowsToSelect.push(j);
+                            }
                         }
                     }
 
                     if (rowsToSelect.length > 0) {
+                        grid_{$id_tabla}.setSelectedRows(rowsToSelect);
                         grid_{$id_tabla}.scrollRowIntoView(rowsToSelect[0]);
                     } else if (scroll_id_final > 0 && scroll_id_final < data_{$id_tabla}.length) {
                         grid_{$id_tabla}.scrollRowToTop(scroll_id_final);

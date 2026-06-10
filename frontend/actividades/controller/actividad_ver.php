@@ -31,6 +31,7 @@ use frontend\shared\FrontBootstrap;
 use src\permisos\domain\PermisosActividades;
 
 require_once __DIR__ . '/../helpers/actividades_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -38,6 +39,7 @@ $oPosicion = FrontBootstrap::boot();
 // (Como tambien afecta al status de la actividad, mejor rehacer toda la pagina).
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
+list_nav_persist_selection_to_posicion($oPosicion, 1);
 
 $Qid_activ = actividades_id_activ_from_post();
 
