@@ -183,8 +183,14 @@ function showPortada(groupName) {
     });
 
     request.done(function (rta) {
+        if (typeof fnjs_mostra_resposta === 'function') {
+            fnjs_mostra_resposta(rta, '#main');
+            return;
+        }
         const sidebar = document.getElementById('main');
-        sidebar.innerHTML = rta;
+        if (sidebar) {
+            sidebar.innerHTML = rta;
+        }
     });
 }
 

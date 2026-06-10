@@ -21,6 +21,7 @@ $Qid_lugar = (int)filter_input(INPUT_POST, $Qnom_grupo);
 $url_backend = '/src/inventario/lista_docs_de_lugar';
 $a_campos_backend = [ 'id_lugar' => $Qid_lugar];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$payload = inventario_post_payload($data);
 
 $a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
 

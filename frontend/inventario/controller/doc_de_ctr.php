@@ -26,6 +26,7 @@ $oPosicion->setParametros($aGoBack, 1);
 $url_backend = '/src/inventario/lista_de_ctr_con_docs';
 $a_campos_backend = ['id_tipo_doc' => $Qid_tipo_doc, 'inventario' => $Qinventario];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$payload = inventario_post_payload($data);
 
 $a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
 $nombreDoc = tessera_imprimir_string($payload['nombreDoc'] ?? '');

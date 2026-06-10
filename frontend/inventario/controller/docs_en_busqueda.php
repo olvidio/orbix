@@ -15,6 +15,7 @@ FrontBootstrap::boot();
 // muestra los documentos en búsqueda.
 $url_backend = '/src/inventario/lista_docs_en_busqueda';
 $data = PostRequest::getDataFromUrl($url_backend);
+$payload = inventario_post_payload($data);
 
 $a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
 

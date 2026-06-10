@@ -305,19 +305,32 @@ if (!isset($h)) {
         top.location.href = path + 'index.php?' + parametros;
     }
 
-    function fnjs_redirect_a_login() {
-        var path = window.location.pathname;
+    var _orbixAuthRedirectPending = false;
 
-        if (path.endsWith('/index.php')) {
-            top.location.href = path;
+    function fnjs_redirect_a_login() {
+        if (_orbixAuthRedirectPending) {
             return;
         }
+        _orbixAuthRedirectPending = true;
 
-        if (!path.endsWith('/')) {
-            path += '/';
+        var path = window.location.pathname;
+        var target;
+
+        if (path.endsWith('/index.php')) {
+            target = path;
+        } else {
+            if (!path.endsWith('/')) {
+                path += '/';
+            }
+            target = path + 'index.php';
         }
 
-        top.location.href = path + 'index.php';
+        try {
+            document.documentElement.innerHTML = '';
+        } catch (e) {
+        }
+
+        window.top.location.replace(target);
     }
 
     function fnjs_es_resposta_login(html) {
@@ -327,14 +340,83 @@ if (!isset($h)) {
         return /id=["']frm_login["']/.test(html) || /form-signin/.test(html);
     }
 
+    function fnjs_es_json_auth_required(html) {
+        if (!html || html.charAt(0) !== '{') {
+            return false;
+        }
+        try {
+            var j = JSON.parse(html);
+            if (!j || j.success !== false) {
+                return false;
+            }
+            var data = j.data;
+            if (typeof data === 'string' && data !== '') {
+                try {
+                    data = JSON.parse(data);
+                } catch (e2) {
+                }
+            }
+            return !!(data && data.code === 'auth_required');
+        } catch (e) {
+            return false;
+        }
+    }
+
     function fnjs_resposta_requiere_login(respuesta, html) {
         if (typeof respuesta === 'object' && respuesta && typeof respuesta.getResponseHeader === 'function') {
             if (respuesta.getResponseHeader('X-Orbix-Auth-Required')) {
                 return true;
             }
         }
+        if (fnjs_es_json_auth_required(html)) {
+            return true;
+        }
         return fnjs_es_resposta_login(html);
     }
+
+    function fnjs_comprobar_respuesta_ajax_login(xhr, data) {
+        if (_orbixAuthRedirectPending) {
+            return true;
+        }
+        var html = typeof data === 'string' ? data : (xhr && xhr.responseText ? xhr.responseText : '');
+        if (fnjs_resposta_requiere_login(xhr, html)) {
+            fnjs_redirect_a_login();
+            return true;
+        }
+        return false;
+    }
+
+    (function fnjs_instalar_interceptor_ajax_login() {
+        if (typeof $ === 'undefined' || !$.ajaxPrefilter) {
+            return;
+        }
+
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+            jqXHR.done(function (data, textStatus, xhr) {
+                fnjs_comprobar_respuesta_ajax_login(xhr || jqXHR, data);
+            });
+
+            var originalComplete = options.complete;
+            options.complete = function (xhr, status) {
+                if (fnjs_comprobar_respuesta_ajax_login(xhr, xhr.responseText)) {
+                    return;
+                }
+                if (originalComplete) {
+                    originalComplete.apply(this, arguments);
+                }
+            };
+
+            var originalSuccess = options.success;
+            if (originalSuccess) {
+                options.success = function (data, textStatus, xhr) {
+                    if (fnjs_comprobar_respuesta_ajax_login(xhr, data)) {
+                        return;
+                    }
+                    originalSuccess.apply(this, arguments);
+                };
+            }
+        });
+    })();
 
     function fnjs_windowopen(url) { //para poder hacerlo por el menu
         var parametros = '';
@@ -697,6 +779,9 @@ if (!isset($h)) {
     }
 
     function fnjs_mostra_resposta(respuesta, bloque) {
+        if (_orbixAuthRedirectPending) {
+            return;
+        }
         var myText = '';
         switch (typeof respuesta) {
             case 'object':
@@ -706,8 +791,7 @@ if (!isset($h)) {
                 myText = respuesta.trim();
                 break;
         }
-        if (fnjs_resposta_requiere_login(respuesta, myText)) {
-            fnjs_redirect_a_login();
+        if (fnjs_comprobar_respuesta_ajax_login(respuesta, myText)) {
             return;
         }
         $(bloque).empty().append(myText);

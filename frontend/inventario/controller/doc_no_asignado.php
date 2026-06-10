@@ -21,6 +21,7 @@ $oPosicion->recordar();
 $url_backend = '/src/inventario/lista_docs_no_asignados_por_tipo';
 $a_campos_backend = [ 'id_tipo_doc' => $Qid_tipo_doc] ;
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$payload = inventario_post_payload($data);
 
 $a_cabeceras = actividades_lista_cabeceras($payload['a_cabeceras'] ?? []);
 $a_botones = actividades_lista_botones($payload['a_botones'] ?? []);

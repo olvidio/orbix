@@ -21,6 +21,7 @@ $Qid_item_egm = (int)filter_input(INPUT_POST, 'id_item_egm');
 $url_backend = '/src/inventario/lista_docs_de_egm';
 $a_campos_backend = [ 'id_item_egm' => $Qid_item_egm];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$payload = inventario_post_payload($data);
 
 $a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
 

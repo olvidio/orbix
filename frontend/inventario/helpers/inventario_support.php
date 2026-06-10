@@ -76,7 +76,7 @@ function inventario_doc_asignar_from_payload(array $payload): array
  */
 function inventario_doc_de_dlb_from_payload(array $payload): array
 {
-    $gruposRaw = $payload['a_grupos'] ?? [];
+    $gruposRaw = $payload['a_grupos'] ?? $payload['aGrupos'] ?? [];
     $grupos = [];
     if (is_array($gruposRaw)) {
         foreach ($gruposRaw as $key => $value) {

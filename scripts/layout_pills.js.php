@@ -163,6 +163,10 @@ function showPortada(groupName) {
     });
 
     request.done(function (rta) {
+        if (typeof fnjs_mostra_resposta === 'function') {
+            fnjs_mostra_resposta(rta, '#main');
+            return;
+        }
         const main = document.getElementById('main');
         if (main) {
             main.innerHTML = rta;
