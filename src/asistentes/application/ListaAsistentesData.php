@@ -2,9 +2,6 @@
 
 namespace src\asistentes\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use DateTime;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -14,19 +11,22 @@ use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaPub;
 use src\shared\config\ConfigGlobal;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
 /**
  * Listado de asistentes a una actividad (`lista_asistentes.php`).
  */
-final class ListaAsistentesData
+final readonly class ListaAsistentesData
 {
     public function __construct(
-        private ActividadAllRepositoryInterface $actividadAllRepository,
-        private AsistenteRepositoryInterface $asistenteRepository,
+        private ActividadAllRepositoryInterface   $actividadAllRepository,
+        private AsistenteRepositoryInterface      $asistenteRepository,
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
-        private CargoRepositoryInterface $cargoRepository,
-    ) {
+        private CargoRepositoryInterface          $cargoRepository,
+    )
+    {
     }
 
     /**
@@ -196,7 +196,7 @@ final class ListaAsistentesData
             $a_datos_cl = [];
             if ($queSel === 'listcl') {
                 $a_datos_cl = $this->datosPersona($oPersona);
-                $a_datos_cl['observ'] = (string) ($a_valores[$k][6] ?? '');
+                $a_datos_cl['observ'] = (string)($a_valores[$k][6] ?? '');
             }
 
             $aAsistentes[$c] = [
@@ -226,7 +226,13 @@ final class ListaAsistentesData
 
         if ($oPersona instanceof PersonaPub) {
             $profesion = $oPersona->getProfesion() ?? '';
-            $edad = (string) ($oPersona->getEdad() ?? '');
+            // si no es de paso si tiene f_nacimiento:
+            $oF_nacimiento = $oPersona->getF_nacimiento();
+            if ($oF_nacimiento !== null) {
+                $edad = (string)$oF_nacimiento->diff(new DateTime())->y;
+            } else {
+                $edad = (string)($oPersona->getEdad() ?? '');
+            }
             $inc = $oPersona->getInc();
             $f_inc = $oPersona->getF_inc()?->getFromLocal();
             if (!empty($inc)) {
@@ -236,7 +242,7 @@ final class ListaAsistentesData
         } else {
             $profesion = $oPersona->getProfesion() ?? '';
             $oF_nacimiento = $oPersona->getF_nacimiento();
-            $edad = $oF_nacimiento !== null ? (string) $oF_nacimiento->diff(new DateTime())->y : '';
+            $edad = $oF_nacimiento !== null ? (string)$oF_nacimiento->diff(new DateTime())->y : '';
             $inc = $oPersona->getInc();
             if (empty($inc) || $inc === '?') {
                 $f_inc = '?';
@@ -255,7 +261,7 @@ final class ListaAsistentesData
             'edad' => (string)$edad,
             'inc_f_inc' => $inc_f_inc,
             'eap' => $eap,
-            'observ' => (string) $observ,
+            'observ' => (string)$observ,
         ];
     }
 }
