@@ -2,6 +2,7 @@
 
 namespace src\actividadestudios\application;
 
+use RuntimeException;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -17,21 +18,20 @@ use function frontend\shared\helpers\is_true;
  *
  * @return array{msg_err: string, aviso: string, a_valores: array<int|string, array<string|int, mixed>>}
  */
-final class MatriculasPendientesData
+final readonly class MatriculasPendientesData
 {
     public function __construct(
-        private MatriculaDlRepositoryInterface $matriculaDlRepository,
-        private AsignaturaRepositoryInterface $asignaturaRepository,
+        private MatriculaDlRepositoryInterface  $matriculaDlRepository,
+        private AsignaturaRepositoryInterface   $asignaturaRepository,
         private ActividadAllRepositoryInterface $actividadAllRepository,
-        private PersonaFinderService $personaFinderService,
+        private PersonaFinderService            $personaFinderService,
     ) {
     }
 
     /**
-     * @param array<string, mixed> $input
      * @return array{msg_err: string, aviso: string, a_valores: array<int|string, array<string|int, mixed>>}
      */
-    public function execute(array $input = []): array
+    public function execute(): array
     {
         $cMatriculasPendientes = $this->matriculaDlRepository->getMatriculasPendientes();
 
@@ -52,11 +52,13 @@ final class MatriculasPendientesData
             $i++;
             $idNom = $oMatricula->getId_nom();
             $idActiv = $oMatricula->getId_activ();
-            $idAsignatura = $oMatricula->getId_asignatura();
+            $idAsignatura = $oMatricula->getIdAsignaturaVo()->value();
             $preceptorTxt = is_true($oMatricula->isPreceptor()) ? 'x' : '';
 
             $oPersona = $personaLookup->resolver($idNom, $msgErr, $problemasRegionStgr);
             if ($oPersona === null) {
+                // borrar la matricula
+                $this->matriculaDlRepository->Eliminar($oMatricula);
                 continue;
             }
 
@@ -67,7 +69,7 @@ final class MatriculasPendientesData
 
             $nombreCorto = $this->nombreAsignatura($idAsignatura, $asignaturasCache);
             if ($nombreCorto === null) {
-                throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string) $idAsignatura));
+                throw new RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string) $idAsignatura));
             }
 
             $apellidosNombre = $oPersona->getPrefApellidosNombre();
@@ -115,7 +117,7 @@ final class MatriculasPendientesData
             return null;
         }
 
-        $nomActiv = $oActividad->getNom_activ();
+        $nomActiv = $oActividad->getNomActivVo()->value();
         $actividadesCache[$idActiv] = $nomActiv;
 
         return $nomActiv;
