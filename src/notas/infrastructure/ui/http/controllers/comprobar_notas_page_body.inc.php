@@ -11,6 +11,9 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\shared\infrastructure\DependencyResolver;
 
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+
 /**
  * Cuerpo de la pantalla legacy “comprobar notas” (SQL + HTML).
  *
@@ -37,20 +40,17 @@ $nivel_stgr_N = NivelStgrId::N;
 $nota_situ_numerica = NotaSituacion::NUMERICA;
 $nota_situ_cursada = NotaSituacion::CURSADA;
 
-$Qactualizar = (string)filter_input(INPUT_POST, 'actualizar');
-$Qid_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
+$requestInput = $_POST !== [] ? $_POST : $_GET;
+$Qactualizar = input_string($requestInput, 'actualizar');
+$Qid_tabla = input_string($requestInput, 'id_tabla');
 
-$tabla = 'p_numerarios';
-$tabla_txt = 'Numerarios';
-
-if ($Qid_tabla === 'n') {
-    $tabla = 'p_numerarios';
-    $tabla_txt = 'Numerarios';
-}
-if ($Qid_tabla === 'a') {
-    $tabla = 'p_agregados';
-    $tabla_txt = 'Agregados';
-}
+[$tabla, $tabla_txt] = match ($Qid_tabla) {
+    'n' => ['p_numerarios', 'Numerarios'],
+    'a', 'agd' => ['p_agregados', 'Agregados'],
+    default => throw new RuntimeException(
+        'comprobar_notas: id_tabla no válido (' . ($Qid_tabla === '' ? 'vacío' : $Qid_tabla) . ')'
+    ),
+};
 
 $superada = "(n.id_situacion = " . $nota_situ_numerica . " OR n.id_situacion::text ~ '[1345]')";
 
@@ -117,8 +117,8 @@ if ($Qactualizar === 'r') {
 }
 if ($Qactualizar === 'borrar_cursada') {
 
-    $Qid_nom = (string)filter_input(INPUT_POST, 'id_nom');
-    $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
+    $Qid_nom = (string)input_int($requestInput, 'id_nom');
+    $Qid_asignatura = input_string($requestInput, 'id_asignatura');
 
     $ssql = "DELETE FROM e_notas_dl n 
 		WHERE n.id_situacion = " . $nota_situ_cursada . "
