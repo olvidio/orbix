@@ -11,18 +11,13 @@
                 $('#mod').val("eliminar");
                 $(formulario).attr('action', "frontend/configuracion/controller/modulos_update.php");
                 $(formulario).one("submit", function () {
-                    $.ajax({
+                    fnjs_ajax_json({
                         url: $(this).attr('action'),
-                        type: 'post',
-                        data: $(this).serialize()
-                    })
-                        .done(function (rta_txt) {
-                            if (rta_txt !== '' && rta_txt !== '\\n') {
-                                alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
-                            } else {
-                                fnjs_actualizar(formulario);
-                            }
-                        });
+                        data: $(this).serialize(),
+                        onSuccess: function () {
+                            fnjs_actualizar(formulario);
+                        }
+                    });
                     return false;
                 });
                 $(formulario).trigger("submit");

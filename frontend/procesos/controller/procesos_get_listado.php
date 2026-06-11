@@ -10,11 +10,13 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/procesos/procesos_get_listado', PostRequest::requestPayloadForHash());
 $aRows = procesos_listado_rows($data['a_rows'] ?? null);
 
+ob_start();
 echo '<table>';
 echo '<tr><th>' . _("status") . '</th><th>' . _("responsable") . '</th>';
 echo '<th colspan=3>' . _("fase - tarea") . '</th><th>' . _("modificar") . '</th><th>' . _("eliminar") . '</th></tr>';
@@ -39,3 +41,4 @@ foreach ($aRows as $row) {
 }
 
 echo '</table>';
+ajax_json_html((string) ob_get_clean());

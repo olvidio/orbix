@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\PostRequest;
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
@@ -20,6 +19,7 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -42,9 +42,7 @@ switch ($Qque) {
         $oDespl->setNombre('lst_sacds');
         $oDespl->setAction('fnjs_ver_ficha()');
 
-        echo $prefix;
-        echo $oDespl->desplegable();
-        break;
+        ajax_json_html($prefix . $oDespl->desplegable());
 
     case 'ficha':
         $data = PostRequest::getDataFromUrl('/src/encargossacd/sacd_ficha_data', [
@@ -90,13 +88,11 @@ switch ($Qque) {
             'id_nom' => $Qid_nom,
         ];
 
-        $oView = new ViewNewPhtml('frontend\\encargossacd\\controller');
-        $oView->renderizar('sacd_ficha_ajax_ficha.phtml', $a_campos);
-        break;
+        ajax_json_render_phtml('frontend\\encargossacd\\controller', 'sacd_ficha_ajax_ficha.phtml', $a_campos);
 
     case 'update':
         PostRequest::getDataFromUrl('/src/encargossacd/sacd_ficha_update', PostRequest::requestPayloadForHash());
-        break;
+        ajax_json_response();
 
     default:
         $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);

@@ -12,12 +12,12 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\TablaEditable;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 
 FrontBootstrap::boot();
@@ -36,7 +36,7 @@ $concedidasA2B = $payload['concedidasA2B'];
 $concedidasB2A = $payload['concedidasB2A'];
 
 if ($dlB === '') {
-    return;
+    ajax_json_html('');
 }
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
@@ -60,5 +60,4 @@ $a_campos = [
     'oTabla' => $oTabla,
 ];
 
-$oView = new ViewNewPhtml('frontend\\actividadplazas\\controller');
-$oView->renderizar('plazas_balance_dl.phtml', $a_campos);
+ajax_json_render_phtml('frontend\\actividadplazas\\controller', 'plazas_balance_dl.phtml', $a_campos);

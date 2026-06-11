@@ -9,6 +9,7 @@ use frontend\shared\FrontBootstrap;
  */
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qclave = encargossacd_post_string('clave');
@@ -19,5 +20,4 @@ $data = PostRequest::getDataFromUrl('/src/encargossacd/listas_com_txt_get', [
     'idioma' => $Qidioma,
 ]);
 
-header('Content-Type: text/html; charset=UTF-8');
-echo encargossacd_listas_com_txt_response($data);
+ajax_json_response('', ['text' => encargossacd_listas_com_txt_response($data)]);

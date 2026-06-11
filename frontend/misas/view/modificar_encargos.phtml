@@ -28,15 +28,7 @@
 
             let parametros = 'id_zona=' + id_zona + '&orden=' + orden + '<?= $h_zona ?>';
 
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: parametros,
-                dataType: 'html'
-            })
-                .done(function (rta_txt) {
-                    $('#div_encargos').html(rta_txt);
-                });
+            fnjs_ajax_json_html({ url: url, data: parametros, target: '#div_encargos' });
         }
     }
     fnjs_ver_encargos_zona();

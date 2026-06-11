@@ -40,16 +40,14 @@
     fnjs_ver = function () {
         var id_ubi = $('#id_cdc').val();
         var year = $('#year').val();
-        $.ajax({
+        fnjs_ajax_json_html({
             url: URL_LISTA,
-            type: 'post',
-            data: { id_ubi: id_ubi, year: year }
-        }).done(function (rta_txt) {
-            if (rta_txt) {
-                $('#ficha').html(rta_txt);
+            data: { id_ubi: id_ubi, year: year },
+            target: '#ficha',
+            onDone: function () {
+                document.getElementById("overlay").style.display = "none";
             }
         });
-        document.getElementById("overlay").style.display = "none";
     };
 
     fnjs_modificar = function (id_item, letra) {

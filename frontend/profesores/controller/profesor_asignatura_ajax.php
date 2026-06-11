@@ -1,12 +1,12 @@
 <?php
 
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/profesores_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $Qid_asignatura = (int)filter_input(INPUT_POST, 'id_asignatura');
@@ -21,9 +21,4 @@ $oTabla->setCabeceras($tabla['a_cabeceras']);
 $oTabla->setBotones($tabla['a_botones']);
 $oTabla->setDatos($tabla['a_valores']);
 
-$a_campos = [
-    'oTabla' => $oTabla,
-];
-
-$oView = new ViewNewPhtml('frontend\profesores\controller');
-$oView->renderizar('profesor_asignatura_ajax.phtml', $a_campos);
+ajax_json_html($oTabla->mostrar_tabla());

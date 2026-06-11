@@ -30,14 +30,7 @@
     fnjs_ver_movimientos = function () {
         let parametros = $('#seleccionados').serialize();
         let url = 'frontend/inventario/controller/equipajes_movimientos.php';
-        let request = $.ajax({
-            data: parametros,
-            url: url,
-            type: 'post'
-        });
-        request.done(function (rta_txt) {
-            $('#exportar').html(rta_txt);
-        });
+        fnjs_ajax_json_html({ url: url, data: parametros, target: '#exportar' });
     }
 </script>
 <div id='seleccionar' class='no_print'>

@@ -28,16 +28,7 @@ fnjs_detalles = function (id_ubi, any) {
 
 fnjs_ver = function () {
     var pata = $('#seleccion').serialize();
-    $.ajax({
-        url: '<?= $url_ajax ?>',
-        type: 'post',
-        data: pata,
-        success: function (rta_txt) {
-            if (rta_txt) {
-                $('#exportar').html(rta_txt);
-            }
-        }
-    });
+    fnjs_ajax_json_html({ url: '<?= $url_ajax ?>', data: pata, target: '#exportar' });
 };
 </script>
 <form id="seleccion" name="seleccion" action="">

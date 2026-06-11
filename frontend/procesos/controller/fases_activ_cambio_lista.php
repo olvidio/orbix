@@ -7,9 +7,9 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 $oPosicion = FrontBootstrap::boot();
-header('Content-Type: text/html; charset=UTF-8');
 
 $requestPayload = PostRequest::requestPayloadForHash();
 
@@ -19,8 +19,7 @@ $data = PostRequest::getDataFromUrl('/src/procesos/fases_activ_cambio_lista', $r
 
 $error = tessera_imprimir_string($data['error'] ?? '');
 if ($error !== '') {
-    echo '<h2>' . $error . '</h2>';
-    return;
+    ajax_json_html('<h2>' . $error . '</h2>', $error);
 }
 
 $msg = tessera_imprimir_string($data['msg'] ?? '');
@@ -53,8 +52,9 @@ $oHash->setArraycamposHidden([
     'accion' => $accion,
 ]);
 
-echo $msg;
-echo '<form id="seleccionados" name="seleccionados" action="" method="post">';
-echo $oHash->getCamposHtml();
-echo $oTabla->mostrar_tabla();
-echo '</form>';
+$html = $msg;
+$html .= '<form id="seleccionados" name="seleccionados" action="" method="post">';
+$html .= $oHash->getCamposHtml();
+$html .= $oTabla->mostrar_tabla();
+$html .= '</form>';
+ajax_json_html($html);

@@ -5,28 +5,20 @@ fnjs_get_texto=function(){
 
 	var url='<?= $url_get ?>';
 	var parametros='clave='+clave+'&idioma='+idioma+'<?= $h_get ?>';
-	$.ajax({
+	fnjs_ajax_json({
 		url: url,
-		type: 'post',
 		data: parametros,
-		dataType: 'html'
-	})
-	.done(function (rta_txt) {
-		$('#comunicacion').val(rta_txt);
+		onSuccess: function (data) {
+			$('#comunicacion').val(data.text || data.html || '');
+		}
 	});
 }
 
 fnjs_guardar=function(formulario){
 	$(formulario).one("submit", function() {
-		$.ajax({
+		fnjs_ajax_json_alert({
 			url: $(this).attr('action'),
-			type: 'post',
 			data: $(this).serialize()
-		})
-		.done(function (rta_txt) {
-			if (rta_txt != '' && rta_txt != '\n') {
-				alert (rta_txt);
-			}
 		});
 		return false;
 	});

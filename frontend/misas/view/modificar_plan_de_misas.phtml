@@ -43,15 +43,7 @@
             let parametros = 'id_zona=' + encodeURIComponent(id_zona) + '&periodo=' + encodeURIComponent(periodo)
                 + '&empiezamin=' + encodeURIComponent(empiezamin) + '&empiezamax=' + encodeURIComponent(empiezamax)
                 + '&orden=' + encodeURIComponent(orden) + '&tipo_plantilla=p<?= $h_zona_periodo ?>';
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: parametros,
-                dataType: 'html'
-            })
-                .done(function (rta_txt) {
-                    $('#div_cuadricula').html(rta_txt);
-                });
+            fnjs_ajax_json_html({ url: url, data: parametros, target: '#div_cuadricula' });
         }
     };
 

@@ -10,6 +10,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -33,4 +34,6 @@ $a_campos = [
 
 $template = ($resumen['modo'] === 'anual') ? 'casas_resumen_anual.phtml' : 'casas_resumen_periodo.phtml';
 $oView = new ViewNewPhtml('frontend\\casas\\controller');
+ob_start();
 $oView->renderizar($template, $a_campos);
+ajax_json_html((string) ob_get_clean());

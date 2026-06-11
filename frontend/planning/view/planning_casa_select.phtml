@@ -39,17 +39,14 @@ use frontend\shared\config\AppUrlConfig;
         var parametros = "<?= $param_ver ?>";
 
         $('#ficha').html('');
-        $.ajax({
+        fnjs_ajax_json_html({
             url: url,
-            type: 'post',
-            data: parametros
-        })
-            .done(function (rta_txt) {
-                if (rta_txt) {
-                    $('#ficha').html(rta_txt);
-                }
-            });
-        document.getElementById("overlay").style.display = "none";
+            data: parametros,
+            target: '#ficha',
+            onDone: function () {
+                document.getElementById("overlay").style.display = "none";
+            }
+        });
     }
 
     $(document).ready(fnjs_ver());

@@ -5,6 +5,7 @@ use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 require_once 'frontend/zonassacd/helpers/zonassacd_support.php';
 
 FrontBootstrap::boot();
@@ -17,4 +18,4 @@ $oTabla->setCabeceras($lista['a_cabeceras']);
 $oTabla->setBotones($lista['a_botones']);
 $oTabla->setConSel($lista['con_sel']);
 $oTabla->setDatos($lista['a_valores']);
-echo $oTabla->mostrar_tabla();
+ajax_json_html($oTabla->mostrar_tabla());

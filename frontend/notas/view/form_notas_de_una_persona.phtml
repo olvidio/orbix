@@ -128,14 +128,11 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
 
     fnjs_buscar_ca = function () {
         var dl_org = $('#dl_org').val();
-        $.ajax({
+        fnjs_ajax_json_html({
             url: '<?= $url_actividad_buscar ?>',
-            type: 'post',
-            data: 'f_acta_iso=<?= $f_acta_iso ?>&dl_org=' + dl_org + '<?= $h_actividad_buscar ?>'
-        })
-            .done(function (rta_txt) {
-                $('#div_modificar').html(rta_txt);
-            });
+            data: 'f_acta_iso=<?= $f_acta_iso ?>&dl_org=' + dl_org + '<?= $h_actividad_buscar ?>',
+            target: '#div_modificar'
+        });
     }
 
     fnjs_update_activ = function () {

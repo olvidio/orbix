@@ -2,13 +2,10 @@
 fnjs_actualizar_propiedades = function (id_item_usuario_objeto) {
     if (isNaN(id_item_usuario_objeto)) id_item_usuario_objeto = 0;
     var objeto = $('#objeto').val();
-    $.ajax({
+    fnjs_ajax_json_html({
         url: '<?= $url_get_propiedades ?>',
-        type: 'post',
         data: 'salida=propiedades&objeto=' + objeto + '&id_item_usuario_objeto=' + id_item_usuario_objeto + '<?= $h_propiedades ?>',
-        success: function (rta_txt) {
-            $('#tr_tabla').html(rta_txt);
-        }
+        target: '#tr_tabla'
     });
 };
 
@@ -25,12 +22,10 @@ fnjs_actualizar_fases = function () {
     var id_usuario = $('#id_usuario').val();
     var objeto = $('#objeto').val();
 
-    $.ajax({
+    fnjs_ajax_json_html({
         url: '<?= $url_get_fases ?>',
-        type: 'post',
-        data: 'salida=av_fases&dl_propia=' + dl_propia + '&id_tipo_activ=' + id_tipo_activ + '&id_usuario=' + id_usuario + '&objeto=' + objeto + '<?= $h_actualizar ?>'
-    }).done(function (rta_txt) {
-        $('#fases').html(rta_txt);
+        data: 'salida=av_fases&dl_propia=' + dl_propia + '&id_tipo_activ=' + id_tipo_activ + '&id_usuario=' + id_usuario + '&objeto=' + objeto + '<?= $h_actualizar ?>',
+        target: '#fases'
     });
 };
 

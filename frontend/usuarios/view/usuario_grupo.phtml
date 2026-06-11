@@ -8,27 +8,13 @@ use frontend\shared\config\AppUrlConfig;
         var url = 'frontend/usuarios/controller/usuario_grupo_lst.php';
         var parametros = 'id_usuario=<?= $id_usuario ?><?= $h_lst ?>';
 
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: parametros
-        })
-            .done(function (rta_txt) {
-                $('#lst_grupos').html(rta_txt);
-            });
+        fnjs_ajax_json_html({ url: url, data: parametros, target: '#lst_grupos' });
     }
     fnjs_lst_del_grup = function () {
         var url = 'frontend/usuarios/controller/usuario_grupo_del_lst.php';
         var parametros = 'id_usuario=<?= $id_usuario ?><?= $h_del_lst ?>';
 
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: parametros
-        })
-            .done(function (rta_txt) {
-                $('#lst_grupos').html(rta_txt);
-            });
+        fnjs_ajax_json_html({ url: url, data: parametros, target: '#lst_grupos' });
     }
     fnjs_add_grup = function (param) {
         let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/usuario_grupo_add';

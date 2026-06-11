@@ -5,7 +5,26 @@
 - **Ubicación**: Las funciones comunes se encuentran en `scripts/index.js.php`. Las funciones específicas de una vista deben integrarse en el bloque `<script>` del archivo `.phtml` correspondiente.
 
 ## Llamadas AJAX Modernas (JSON)
-Las nuevas funcionalidades deben usar respuestas JSON para una mejor gestión de errores y flexibilidad.
+Las nuevas funcionalidades y las recargas parciales de vista deben usar respuestas JSON (`ContestarJson`) para una gestión uniforme de errores.
+
+### Helpers globales (`scripts/index.js.php`)
+
+| Función | Uso |
+|---------|-----|
+| `fnjs_parse_rta(rta, errorPrefix?)` | Extrae y parsea `data` del envelope `{success, mensaje?, data}` |
+| `fnjs_ajax_json({ url, data, onSuccess, onFail?, errorPrefix? })` | POST con `dataType: 'json'` y manejo de errores |
+| `fnjs_ajax_json_html({ url, data, target, onDone? })` | Inyecta `data.html` en un selector |
+| `fnjs_ajax_json_alert({ url, data, onDone? })` | Muestra `data.text` / `data.mensaje` en un alert |
+
+`fnjs_update_div` / `fnjs_mostra_resposta` también entienden el envelope JSON y extraen `data.html` si el backend devuelve JSON.
+
+### Helpers PHP (`frontend/shared/helpers/ajax_json_support.php`)
+
+| Función | Uso |
+|---------|-----|
+| `ajax_json_response($error, $data)` | Respuesta genérica ContestarJson |
+| `ajax_json_html($html, $error)` | `{ success: true, data: { html: "..." } }` |
+| `ajax_json_render_phtml($ns, $template, $vars, $error)` | Renderiza `.phtml` y envía como JSON html |
 
 ### Patrón Estándar (`fnjs_guardar`)
 ```javascript
@@ -33,8 +52,11 @@ fnjs_guardar = function (formulario) {
 ```
 
 ### Reglas:
-- Especificar siempre `dataType: 'json'`.
-- El backend debe devolver un objeto con `success` (boolean) y opcionalmente `mensaje` (string).
+- Especificar siempre `dataType: 'json'` (o usar `fnjs_ajax_json*`).
+- El backend debe devolver `{ success, mensaje?, data }` vía `ContestarJson` o `ajax_json_*`.
+- Fragmentos HTML parciales: `ajax_json_html()` / `data.html` en cliente con `fnjs_ajax_json_html`.
+- Datos estructurados (tablas construidas en cliente): `/src/...` + `fnjs_parse_rta` (ver `activ_sacd.phtml`).
+- No usar `dataType: 'html'` ni respuestas texto plano en nuevos endpoints.
 - No usar el patrón antiguo de `$(formulario).one("submit", ...)`.
 
 ## Interactividad en Tablas

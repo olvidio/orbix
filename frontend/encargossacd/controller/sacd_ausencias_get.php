@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
@@ -17,6 +16,7 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -85,5 +85,4 @@ $a_campos = [
     'array_tipo_ausencias' => $array_tipo_ausencias,
 ];
 
-$oView = new ViewNewPhtml('frontend\\encargossacd\\controller');
-$oView->renderizar('sacd_ausencias_get.phtml', $a_campos);
+ajax_json_render_phtml('frontend\\encargossacd\\controller', 'sacd_ausencias_get.phtml', $a_campos);

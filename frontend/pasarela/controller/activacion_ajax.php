@@ -9,6 +9,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/pasarela_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 /**
@@ -34,36 +35,26 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 switch ($Qque) {
     case 'eliminar':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-        PostRequest::getDataFromUrl('/src/pasarela/activacion_excepcion_eliminar', [
+        ajax_json_proxy_post_request('/src/pasarela/activacion_excepcion_eliminar', [
             'id_tipo_activ' => $Qid_tipo_activ,
         ]);
-        header('Content-Type: application/json; charset=UTF-8');
-        echo json_encode(['success' => true], JSON_THROW_ON_ERROR);
-        break;
     case 'update':
     case 'nuevo':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qactivacion = (string)filter_input(INPUT_POST, 'activacion');
-        PostRequest::getDataFromUrl('/src/pasarela/activacion_excepcion_guardar', [
+        ajax_json_proxy_post_request('/src/pasarela/activacion_excepcion_guardar', [
             'id_tipo_activ' => $Qid_tipo_activ,
             'valor' => $Qactivacion,
         ]);
-        header('Content-Type: application/json; charset=UTF-8');
-        echo json_encode(['success' => true], JSON_THROW_ON_ERROR);
-        break;
     case 'update_default':
         $Qdefault = (string)filter_input(INPUT_POST, 'default');
-        PostRequest::getDataFromUrl('/src/pasarela/activacion_default_guardar', [
+        ajax_json_proxy_post_request('/src/pasarela/activacion_default_guardar', [
             'default' => $Qdefault,
         ]);
-        header('Content-Type: application/json; charset=UTF-8');
-        echo json_encode(['success' => true], JSON_THROW_ON_ERROR);
-        break;
     case 'lista':
         $data = PostRequest::getDataFromUrl('/src/pasarela/activacion_lista');
         $lista = pasarela_excepcion_lista_con_default_from_payload($data);
-        echo pasarela_render_excepcion_lista_con_default_html($lista, 'fnjs_modificar_activacion_default()', 'fnjs_modificar_activacion');
-        break;
+        ajax_json_html(pasarela_render_excepcion_lista_con_default_html($lista, 'fnjs_modificar_activacion_default()', 'fnjs_modificar_activacion'));
     case 'form_default':
         $data = PostRequest::getDataFromUrl('/src/pasarela/activacion_default_data');
         $default = tessera_imprimir_string($data['default'] ?? '');
@@ -80,8 +71,9 @@ switch ($Qque) {
         ];
 
         $oView = new ViewNewTwig('frontend\\pasarela\\controller');
+        ob_start();
         $oView->renderizar('activacion_default_form.html.twig', $a_campos);
-        break;
+        ajax_json_html((string) ob_get_clean());
     case 'form_modificar':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qactivacion = (string)filter_input(INPUT_POST, 'activacion');
@@ -110,8 +102,9 @@ switch ($Qque) {
         ];
 
         $oView = new ViewNewTwig('frontend\\pasarela\\controller');
+        ob_start();
         $oView->renderizar('activacion_form.html.twig', $a_campos);
-        break;
+        ajax_json_html((string) ob_get_clean());
     case 'form_nuevo':
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
@@ -142,6 +135,7 @@ switch ($Qque) {
         ];
 
         $oView = new ViewNewTwig('frontend/pasarela/controller');
+        ob_start();
         $oView->renderizar('activacion_form_nuevo.html.twig', $a_campos);
-        break;
+        ajax_json_html((string) ob_get_clean());
 }

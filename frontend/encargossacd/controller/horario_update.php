@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../helpers/encargossacd_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
-use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
 /**
@@ -40,6 +40,4 @@ if (isset($_POST['sel_nom'])) {
     $campos['sel_nom'] = $_POST['sel_nom'];
 }
 
-PostRequest::getDataFromUrl('/src/encargossacd/horario_update_data', $campos);
-header('Content-Type: text/plain; charset=UTF-8');
-echo '';
+ajax_json_proxy_post_request('/src/encargossacd/horario_update_data', $campos);

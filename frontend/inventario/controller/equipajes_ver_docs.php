@@ -8,6 +8,7 @@ use frontend\shared\FrontBootstrap;
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -49,6 +50,7 @@ $oHash->setArrayCamposHidden([
 ]);
 
 
+ob_start();
 echo "<form id='form_$Qid_grupo'>";
 echo $oHash->getCamposHtml();
 if ($Qid_lugar === 1) { // nuevo.
@@ -58,3 +60,4 @@ if ($Qid_lugar === 1) { // nuevo.
 }
 echo $oLista->mostrar_tabla_html();
 echo "</form>";
+ajax_json_html((string) ob_get_clean());

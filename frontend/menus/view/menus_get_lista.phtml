@@ -8,15 +8,7 @@ use frontend\shared\permisos\MenuPermisoMenuHtml;
         var filtro_grupo = $('#filtro_grupo').val();
         var url = '<?= $url ?>';
         var parametros = 'id_menu=' + id_menu + '&filtro_grupo=' + filtro_grupo + '<?= $h2 ?>';
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: parametros,
-            dataType: 'html'
-        })
-            .done(function (rta_txt) {
-                $('#ficha').html(rta_txt);
-            });
+        fnjs_ajax_json_html({ url: url, data: parametros, target: '#ficha' });
     }
 </script>
 <ul>

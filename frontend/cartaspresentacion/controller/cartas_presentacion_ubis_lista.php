@@ -14,6 +14,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/cartaspresentacion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -29,5 +30,4 @@ $oLista->setId_tabla('cartas_presentacion_ubis_lista');
 $oLista->setCabeceras($lista['cabeceras']);
 $oLista->setDatos($lista['valores']);
 
-echo $lista['explicacion'];
-echo $oLista->mostrar_tabla();
+ajax_json_html($lista['explicacion'] . $oLista->mostrar_tabla());

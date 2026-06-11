@@ -10,6 +10,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -27,4 +28,4 @@ $oLista = new Lista();
 $oLista->setGrupos($lista['grupos']);
 $oLista->setCabeceras($lista['cabeceras']);
 $oLista->setDatos($lista['valores']);
-echo $oLista->listaPaginada();
+ajax_json_html($oLista->listaPaginada());

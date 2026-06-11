@@ -5,15 +5,10 @@ fnjs_guardar=function(formulario){
 	if (err != 1) {
         $(formulario).attr('action','<?= $url_update ?>');
 		$(formulario).one("submit", function() {
-			$.ajax({
-                url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt !== '' && rta_txt !== '\n') {
-					alert (<?= json_encode(_("respuesta") . ": ") ?>+rta_txt);
-				} else {
+			fnjs_ajax_json({
+				url: $(this).attr('action'),
+				data: $(this).serialize(),
+				onSuccess: function () {
 					<?= $oPosicion->js_atras(1) ?>
 				}
 			});

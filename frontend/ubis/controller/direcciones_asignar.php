@@ -4,6 +4,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 PostRequest::getDataFromUrl('/src/ubis/direcciones_asignar', [
@@ -12,4 +13,4 @@ PostRequest::getDataFromUrl('/src/ubis/direcciones_asignar', [
     'id_direccion' => (int)filter_input(INPUT_POST, 'id_direccion'),
 ]);
 
-echo '';
+ajax_json_response();

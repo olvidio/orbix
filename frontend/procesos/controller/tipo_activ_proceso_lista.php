@@ -6,9 +6,9 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
-header('Content-Type: text/html; charset=UTF-8');
 
 $data = PostRequest::getDataFromUrl('/src/procesos/tipo_activ_proceso_lista', []);
 $a_cabeceras = actividades_lista_cabeceras($data['a_cabeceras'] ?? null);
@@ -35,4 +35,4 @@ foreach ($a_tipos as $fila) {
 $oLista = new Lista();
 $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_valores);
-echo $oLista->lista();
+ajax_json_html($oLista->lista());

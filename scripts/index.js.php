@@ -778,6 +778,141 @@ if (!isset($h)) {
         });
     }
 
+    /**
+     * Extrae HTML (o texto) de una respuesta AJAX en envelope ContestarJson o HTML plano.
+     */
+    function fnjs_extract_html_from_ajax_body(text) {
+        if (!text || typeof text !== 'string') {
+            return '';
+        }
+        var trimmed = text.trim();
+        if (trimmed.charAt(0) !== '{') {
+            return trimmed;
+        }
+        try {
+            var json = JSON.parse(trimmed);
+            if (json && json.success === false) {
+                if (json.mensaje) {
+                    alert(json.mensaje);
+                }
+                return '';
+            }
+            if (!json || json.success !== true) {
+                return trimmed;
+            }
+            var data = json.data;
+            if (typeof data === 'string') {
+                try {
+                    data = JSON.parse(data);
+                } catch (e) {
+                    return data;
+                }
+            }
+            if (data && typeof data === 'object') {
+                if (data.html !== undefined && data.html !== null) {
+                    return String(data.html);
+                }
+                if (data.text !== undefined && data.text !== null) {
+                    return String(data.text);
+                }
+            }
+            return trimmed;
+        } catch (e) {
+            return trimmed;
+        }
+    }
+
+    /**
+     * Parsea el envelope `{success, mensaje?, data}` de ContestarJson.
+     * @returns {object|null}
+     */
+    function fnjs_parse_rta(rta, errorPrefix) {
+        if (!rta || rta.success !== true) {
+            var msg = (rta && rta.mensaje) ? rta.mensaje : 'Error desconocido';
+            alert((errorPrefix || '') + msg);
+            return null;
+        }
+        try {
+            return (typeof rta.data === 'string') ? JSON.parse(rta.data) : rta.data;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    /**
+     * AJAX POST estándar con respuesta JSON (ContestarJson).
+     */
+    function fnjs_ajax_json(options) {
+        var settings = $.extend({ type: 'post', dataType: 'json' }, options || {});
+        return $.ajax(settings)
+            .done(function (rta) {
+                if (typeof settings.onSuccess === 'function') {
+                    var data = fnjs_parse_rta(rta, settings.errorPrefix || '');
+                    if (data !== null) {
+                        settings.onSuccess(data, rta);
+                    }
+                    return;
+                }
+                if (typeof settings.onData === 'function') {
+                    var parsed = fnjs_parse_rta(rta, settings.errorPrefix || '');
+                    if (parsed !== null) {
+                        settings.onData(parsed, rta);
+                    }
+                }
+            })
+            .fail(function (xhr, status, error) {
+                if (typeof settings.onFail === 'function') {
+                    settings.onFail(xhr, status, error);
+                    return;
+                }
+                alert('Error en la conexión con el servidor: ' + error);
+            });
+    }
+
+    /**
+     * AJAX JSON que inyecta `data.html` en un selector jQuery.
+     */
+    function fnjs_ajax_json_html(options) {
+        var target = options.target;
+        return fnjs_ajax_json({
+            url: options.url,
+            type: options.type || 'post',
+            data: options.data,
+            errorPrefix: options.errorPrefix,
+            onSuccess: function (data) {
+                if (target) {
+                    $(target).html(data.html || '');
+                }
+                if (typeof options.onDone === 'function') {
+                    options.onDone(data);
+                }
+            },
+            onFail: options.onFail
+        });
+    }
+
+    /**
+     * AJAX JSON que muestra `data.text` o `data.mensaje` en un alert.
+     */
+    function fnjs_ajax_json_alert(options) {
+        return fnjs_ajax_json({
+            url: options.url,
+            type: options.type || 'post',
+            data: options.data,
+            errorPrefix: options.errorPrefix,
+            onSuccess: function (data) {
+                var txt = data.text || data.mensaje || '';
+                if (txt !== '') {
+                    alert(txt);
+                }
+                if (typeof options.onDone === 'function') {
+                    options.onDone(data);
+                }
+            },
+            onFail: options.onFail
+        });
+    }
+
     function fnjs_mostra_resposta(respuesta, bloque) {
         if (_orbixAuthRedirectPending) {
             return;
@@ -792,6 +927,10 @@ if (!isset($h)) {
                 break;
         }
         if (fnjs_comprobar_respuesta_ajax_login(respuesta, myText)) {
+            return;
+        }
+        myText = fnjs_extract_html_from_ajax_body(myText);
+        if (myText === '') {
             return;
         }
         $(bloque).empty().append(myText);

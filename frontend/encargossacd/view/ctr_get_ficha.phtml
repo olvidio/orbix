@@ -48,15 +48,7 @@
         var url = '<?= $url_ficha ?>';
         var parametros = 'id_ubi=<?= (int)$id_ubi ?>&seleccion_sacd=' + seleccion_sacd + '<?= $h_ficha ?>';
 
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: parametros,
-            dataType: 'html'
-        })
-            .done(function (rta_txt) {
-                $('#ficha').html(rta_txt);
-            });
+        fnjs_ajax_json_html({ url: url, data: parametros, target: '#ficha' });
     }
 </script>
 <p><?= _("Selección de sacd") ?>:

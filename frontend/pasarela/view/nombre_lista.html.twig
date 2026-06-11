@@ -31,18 +31,14 @@
             $('#que').val(que);
             $(formulario).attr('action', '{{ url_ajax }}');
             $(formulario).one("submit", function () {
-                $.ajax({
+                fnjs_ajax_json({
                     url: $(this).attr('action'),
-                    type: 'post',
-                    data: $(this).serialize()
-                })
-                    .done(function (rta_txt) {
-                        if (rta_txt !== '' && rta_txt !== '\n') {
-                            alert(rta_txt);
-                        }
+                    data: $(this).serialize(),
+                    onSuccess: function () {
                         fnjs_lista();
                         fnjs_cerrar();
-                    });
+                    }
+                });
                 return false;
             });
             $(formulario).trigger("submit");
@@ -121,17 +117,14 @@
         let url = '{{ url_ajax|raw }}';
         let parametros = 'que=lista' + '{{ h_lista|raw }}';
 
-        $.ajax({
+        fnjs_ajax_json_html({
             url: url,
-            type: 'post',
-            data: parametros
-        })
-            .done(function (rta_txt) {
-                if (rta_txt) {
-                    $('#div_tabla').html(rta_txt);
-                }
+            data: parametros,
+            target: '#div_tabla',
+            onDone: function () {
                 fnjs_cerrar();
-            });
+            }
+        });
     }
 
     fnjs_cerrar = function () {

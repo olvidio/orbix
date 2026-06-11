@@ -10,8 +10,8 @@ use frontend\shared\FrontBootstrap;
  */
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $data = PostRequest::getDataFromUrl('/src/encargossacd/comprobaciones_ctr');
-header('Content-Type: text/plain; charset=UTF-8');
-echo encargossacd_comprobaciones_texto($data);
+ajax_json_response('', ['text' => encargossacd_comprobaciones_texto($data)]);

@@ -14,18 +14,13 @@
                 $('#av_salida').val('eliminar');
                 $(formulario).attr('action', 'apps/cambios/controller/usuario_avisos_pref_ajax.php');
                 $(formulario).one("submit", function () {
-                    $.ajax({
+                    fnjs_ajax_json({
                         url: $(this).attr('action'),
-                        type: 'post',
-                        data: $(this).serialize()
-                    })
-                        .done(function (rta_txt) {
-                            if (rta_txt !== '' && rta_txt !== '\\n') {
-                                alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
-                            } else {
-                                <?= $oPosicion->js_atras(0); ?>
-                            }
-                        });
+                        data: $(this).serialize(),
+                        onSuccess: function () {
+                            <?= $oPosicion->js_atras(0); ?>
+                        }
+                    });
                     return false;
                 });
                 $(formulario).trigger("submit");

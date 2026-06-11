@@ -64,7 +64,7 @@
         let id_zona = $('#lst_zonas').val();
         if (id_zona) {
             let parametros = 'id_zona=' + id_zona + '<?= $h_sacd ?>';
-            $.ajax({ url: '<?= $url_ajax_lista ?>', type: 'post', data: parametros, dataType: 'html' }).done(function (rta_txt) { $('#lst_sacds').html(rta_txt); });
+            fnjs_ajax_json_html({ url: '<?= $url_ajax_lista ?>', data: parametros, target: '#lst_sacds' });
         }
     }
     fnjs_guardar = function (formulario, n) {

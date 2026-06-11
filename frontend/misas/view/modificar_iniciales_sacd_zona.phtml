@@ -24,15 +24,7 @@
             let url = '<?= $url_ver_iniciales_zona ?>';
             let parametros = 'id_zona=' + id_zona + '<?= $h_zona ?>';
 
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: parametros,
-                dataType: 'html'
-            })
-                .done(function (rta_txt) {
-                    $('#div_iniciales').html(rta_txt);
-                });
+            fnjs_ajax_json_html({ url: url, data: parametros, target: '#div_iniciales' });
         }
     }
 </script>

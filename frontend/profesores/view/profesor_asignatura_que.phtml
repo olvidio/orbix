@@ -2,15 +2,7 @@
     fnjs_profes = function () {
         id_asignatura = $("#id_asignatura").val();
         var parametros = 'id_asignatura=' + id_asignatura + '<?= $h ?>';
-        $.ajax({
-            url: '<?= $url_ajax ?>',
-            type: 'post',
-            data: parametros,
-            dataType: 'html'
-        })
-            .done(function (rta_txt) {
-                $('#resultados').html(rta_txt);
-            });
+        fnjs_ajax_json_html({ url: '<?= $url_ajax ?>', data: parametros, target: '#resultados' });
     };
     fnjs_left_side_hide();
 </script>

@@ -3,15 +3,10 @@ fnjs_ver_activ=function(formulario) {
 	var url = "frontend/procesos/controller/actividad_proceso.php";
 	rta=fnjs_solo_uno(formulario);
 	if (rta == 1) {
-		$.ajax({
+		fnjs_ajax_json_html({
 			url: url,
-			type: 'post',
-			data: $(formulario).serialize()
-		})
-		.done(function (rta_txt) {
-			if (rta_txt) {
-				fnjs_mostra_resposta(rta_txt,'#main');
-			}
+			data: $(formulario).serialize(),
+			target: '#main'
 		});
 	}
 }
@@ -60,15 +55,7 @@ fnjs_lista=function(){
 	/* obtener el listado de fases */
 	var url='{{ url_lista }}';
 	var parametros='accion='+accion+'&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&id_fase_nueva='+id_fase_nueva+'&periodo='+periodo+'&year='+year+'&empiezamax='+empiezamax+'&empiezamin='+empiezamin+'{{ h_lista|raw }}';
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros,
-		dataType: 'html'
-	})
-	.done(function (rta_txt) {
-		$('#div_resultado').html(rta_txt);			
-	});
+	fnjs_ajax_json_html({ url: url, data: parametros, target: '#div_resultado' });
 }
 
 fnjs_construir_desplegable=function(json){

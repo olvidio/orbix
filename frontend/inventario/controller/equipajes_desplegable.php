@@ -6,6 +6,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qfiltro = (string)filter_input(INPUT_POST, 'filtro');
@@ -41,4 +42,4 @@ if ($Qeliminar !== '') {
     $oDesplEquipajes->setAction('');
 }
 
-echo $oDesplEquipajes->desplegable();
+ajax_json_html($oDesplEquipajes->desplegable());

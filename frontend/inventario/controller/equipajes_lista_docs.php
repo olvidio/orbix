@@ -1,6 +1,5 @@
 <?php
 
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
@@ -8,6 +7,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qid_grupo = (int)filter_input(INPUT_POST, 'id_grupo');
@@ -55,5 +55,4 @@ $a_campos = [
     'oHashGrupo' => $oHashGrupo,
 ];
 
-$oView = new ViewNewPhtml('frontend\inventario\controller');
-$oView->renderizar('equipajes_doc_maleta.phtml', $a_campos);
+ajax_json_render_phtml('frontend\inventario\controller', 'equipajes_doc_maleta.phtml', $a_campos);

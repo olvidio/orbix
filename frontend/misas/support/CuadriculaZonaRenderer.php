@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace frontend\misas\support;
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
+
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 /**
  * Renderiza la cuadrícula de zona a partir de datos del backend.
@@ -124,7 +125,6 @@ class CuadriculaZonaRenderer
             $a_campos['h_desplegable_sacd'] = $h_desplegable_sacd;
         }
 
-        $oView = new ViewNewPhtml('frontend\\misas\\controller');
-        $oView->renderizar($plantilla, $a_campos);
+        ajax_json_render_phtml('frontend\\misas\\controller', $plantilla, $a_campos);
     }
 }

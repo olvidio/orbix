@@ -7,6 +7,7 @@ use frontend\shared\FrontBootstrap;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -40,7 +41,7 @@ $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_valores);
 $oLista->setBotones($a_botones);
 
-echo $oLista->mostrar_tabla_html();
+ajax_json_html($oLista->mostrar_tabla_html());
 
 
 

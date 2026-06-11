@@ -7,6 +7,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qregion = (string)(filter_input(INPUT_GET, 'region') ?? '');
@@ -25,6 +26,7 @@ $hash_params = $oHash->getArrayCampos();
 $resp = usuarios_post_data(PostRequest::getData($url_lista_backend, $hash_params));
 $aContactos = usuarios_contactos_from_payload($resp['contactos'] ?? null);
 
+ob_start();
 if (!empty($resp['success']) && $resp['success'] === true) {
     echo '<div class="mails-region">';
     $titulo = empty($Qregion) ? 'Contactos' : 'Contactos de ' . htmlspecialchars($Qregion);
@@ -53,3 +55,4 @@ if (!empty($resp['success']) && $resp['success'] === true) {
     $msg = tessera_imprimir_string($resp['mensaje'] ?? 'Error al obtener los mails');
     echo '<div class="mails-region-error">' . htmlspecialchars($msg) . '</div>';
 }
+ajax_json_html((string) ob_get_clean());

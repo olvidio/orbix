@@ -33,9 +33,7 @@
     };
 
     fnjs_ver = function () {
-        $.ajax({ url: URL_LISTA, type: 'post' }).done(function (rta_txt) {
-            if (rta_txt) { $('#ficha').html(rta_txt); }
-        });
+        fnjs_ajax_json_html({ url: URL_LISTA, data: {}, target: '#ficha' });
         document.getElementById("overlay").style.display = "none";
     };
 

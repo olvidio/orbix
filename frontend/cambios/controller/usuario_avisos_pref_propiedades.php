@@ -2,20 +2,15 @@
 /**
  * Controlador AJAX HTML: fragmento con la tabla de propiedades seleccionables
  * para el `CambioUsuarioObjetoPref` indicado.
- *
- * Sucesor de la rama `propiedades` del dispatcher legacy
- * `apps/cambios/controller/usuario_avisos_pref_ajax.php`. Consume el endpoint
- * JSON `/src/cambios/cambio_usuario_objeto_pref_propiedades_data` y renderiza
- * `usuario_avisos_pref_propiedades.phtml`.
  */
 
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/cambios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
@@ -48,5 +43,4 @@ $a_campos = [
     'oHash' => $oHash,
 ];
 
-$oView = new ViewNewPhtml('frontend\\cambios\\controller');
-$oView->renderizar('usuario_avisos_pref_propiedades.phtml', $a_campos);
+ajax_json_render_phtml('frontend\\cambios\\controller', 'usuario_avisos_pref_propiedades.phtml', $a_campos);

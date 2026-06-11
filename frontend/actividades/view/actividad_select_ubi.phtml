@@ -132,13 +132,10 @@ use frontend\shared\config\OrbixRuntime;
     bloque = '#main';
 }
     var url = '<?= AppUrlConfig::getPublicAppBaseUrl() . '/frontend/ubis/controller/ubis_lista.php' ?>';
-    $.ajax({
+    fnjs_ajax_json_html({
     url: url,
-    type: 'post',
-    data: $(id_form).serialize()
-})
-    .done(function (rta_txt) {
-    $(bloque).html(rta_txt);
+    data: $(id_form).serialize(),
+    target: bloque
 });
 }
 

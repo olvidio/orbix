@@ -17,6 +17,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/cartaspresentacion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -30,5 +31,4 @@ $campos = [
 $data = PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_lista_data', $campos);
 $html = cartaspresentacion_lista_html_from_payload(cartaspresentacion_post_data($data));
 
-echo $html['html_lista'];
-echo $html['html_errores'];
+ajax_json_html($html['html_lista'] . $html['html_errores']);

@@ -6,18 +6,13 @@ use frontend\shared\web\Desplegable;
         $('#que').val('ubi');
         $(formulario).attr('action', "frontend/ubis/controller/ubis_update.php");
         $(formulario).one("submit", function () {
-            $.ajax({
+            fnjs_ajax_json({
                 url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-            })
-                .done(function (rta_txt) {
-                    if (rta_txt !== '' && rta_txt !== '\n') {
-                        alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
-                    } else {
-                        <?= $oPosicion->js_atras(1); ?>
-                    }
-                });
+                data: $(this).serialize(),
+                onSuccess: function () {
+                    <?= $oPosicion->js_atras(1); ?>
+                }
+            });
             return false;
         });
         $(formulario).trigger("submit");
@@ -28,18 +23,13 @@ use frontend\shared\web\Desplegable;
             $('#que').val('eliminar_ubi');
             $(formulario).attr('action', 'frontend/ubis/controller/ubis_eliminar.php');
             $(formulario).one("submit", function () {
-                $.ajax({
+                fnjs_ajax_json({
                     url: $(this).attr('action'),
-                    type: 'post',
-                    data: $(this).serialize()
-                })
-                    .done(function (rta_txt) {
-                        if (rta_txt !== '' && rta_txt !== '\n') {
-                            alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
-                        } else {
-                            <?= $oPosicion->js_atras(2); ?>
-                        }
-                    });
+                    data: $(this).serialize(),
+                    onSuccess: function () {
+                        <?= $oPosicion->js_atras(2); ?>
+                    }
+                });
                 return false;
             });
             $(formulario).trigger("submit");

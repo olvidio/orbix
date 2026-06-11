@@ -1,6 +1,5 @@
 <?php
 
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
@@ -9,6 +8,7 @@ use frontend\shared\FrontBootstrap;
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -63,5 +63,4 @@ $a_campos = [
     'oLista' => $oLista,
 ];
 
-$oView = new ViewNewPhtml('frontend\inventario\controller');
-$oView->renderizar('equipajes_lista_activ_periodo.phtml', $a_campos);
+ajax_json_render_phtml('frontend\inventario\controller', 'equipajes_lista_activ_periodo.phtml', $a_campos);

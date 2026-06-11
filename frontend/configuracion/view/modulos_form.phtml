@@ -2,18 +2,13 @@
     fnjs_guardar = function (formulario) {
         $(formulario).attr('action', 'frontend/configuracion/controller/modulos_update.php');
         $(formulario).one("submit", function () {
-            $.ajax({
+            fnjs_ajax_json({
                 url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-            })
-                .done(function (rta_txt) {
-                    if (rta_txt !== '' && rta_txt !== '\\n') {
-                        alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
-                    } else {
-                        <?= $oPosicion->js_atras(1); ?>
-                    }
-                });
+                data: $(this).serialize(),
+                onSuccess: function () {
+                    <?= $oPosicion->js_atras(1); ?>
+                }
+            });
             return false;
         });
         $(formulario).trigger("submit");
@@ -22,25 +17,20 @@
     fnjs_cambio = function (formulario) {
         $(formulario).attr('action', 'frontend/configuracion/controller/modulos_update.php');
         $(formulario).one("submit", function () {
-            $.ajax({
+            fnjs_ajax_json({
                 url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-            })
-                .done(function (rta_txt) {
-                    if (rta_txt !== '' && rta_txt !== '\\n') {
-                        alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
+                data: $(this).serialize(),
+                onSuccess: function () {
+                    // si es nuevo, vuelvo a la lista.
+                    // TODO: introducir el id_mod creado en el formulario para poder actualizar
+                    var id_mod = $('#frm2 [name="id_mod"]').val();
+                    if (id_mod) {
+                        fnjs_actualizar('#frm_actualizar');
                     } else {
-                        // si es nuevo, vuelvo a la lista.
-                        // TODO: introducir el id_mod creado en el formulario para poder actualizar
-                        var id_mod = $('#frm2 [name="id_mod"]').val();
-                        if (id_mod) {
-                            fnjs_actualizar('#frm_actualizar');
-                        } else {
-                            <?= $oPosicion->js_atras(1); ?>
-                        }
+                        <?= $oPosicion->js_atras(1); ?>
                     }
-                });
+                }
+            });
             return false;
         });
         $(formulario).trigger("submit");

@@ -15,16 +15,11 @@ use frontend\shared\FrontBootstrap;
 /**
  * Planning (calendario) de actividades de un grupo de casas en un
  * periodo dado. Se invoca por AJAX desde `planning_casa_select.phtml`.
- *
- * Migrado desde `apps/planning/controller/planning_casa_ver.php`
- * (slice 2 de la migracion del modulo planning).
- *
- * Actividades y periodos por casa vía `PostRequest` → `/src/planning/planning_casa_ver_data`
- * (`PlanningCasaVerData`: `ActividadesPorCasasService` + `CasaPeriodosForPlanning`).
- * Las fechas del periodo se envían como `f_ini_iso` / `f_fin_iso` junto al POST del formulario.
  */
 require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
+
 FrontBootstrap::boot();
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
 $Qpropuesta_calendario = (string)filter_input(INPUT_POST, 'propuesta_calendario');
@@ -96,4 +91,6 @@ $a_campos = [
 ];
 
 $oView = new ViewNewPhtml('frontend\planning\controller');
+ob_start();
 $oView->renderizar('planning_casa_ver.phtml', $a_campos);
+ajax_json_html((string) ob_get_clean());

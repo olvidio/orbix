@@ -62,14 +62,14 @@ fnjs_guardar=function(enc){
 	if (!error) {
 		$(formulario).attr('action','frontend/encargossacd/controller/ctr_ficha_update.php');
 		$(formulario).one("submit", function() {
-			$.ajax({
+			fnjs_ajax_json({
 				url: $(this).attr('action'),
-				type: 'post',
-				data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
+				data: $(this).serialize(),
+				onSuccess: function (data) {
+					var txt = data.text || data.mensaje || '';
+					if (txt !== '' && txt !== '\n') {
+						alert(txt);
+					}
 				}
 			});
 			return false;
@@ -85,15 +85,7 @@ fnjs_ver_ficha=function(){
 	if (id_ubi) {
         var url='<?= $url_ficha ?>';
         var parametros='id_ubi='+id_ubi+'<?= $h_ficha ?>';
-		$.ajax({
-			url: url,
-			type: 'post',
-			data: parametros,
-			dataType: 'html'
-		})
-		.done(function (rta_txt) {
-			$('#ficha').html(rta_txt);
-		});
+		fnjs_ajax_json_html({ url: url, data: parametros, target: '#ficha' });
 	} else {
         $('#ficha').html(''); // limpio lo que pueda haber en la pantalla
 	}

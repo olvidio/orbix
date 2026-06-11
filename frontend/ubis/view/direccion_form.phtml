@@ -7,31 +7,35 @@ use frontend\shared\config\AppUrlConfig;
 <script>
     fnjs_guardar_dir = function (formulario) {
         $('#que').val('direccion');
-        let datos = $(formulario).serialize();
-        $.ajax({ url: "<?= $url_direccion_update ?>", type: 'post', data: datos })
-            .done(function (rta_txt) {
-                if (rta_txt !== '' && rta_txt !== '\n') { alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt); }
-                else { <?= $oPosicion->js_atras(1); ?> }
-            });
+        fnjs_ajax_json({
+            url: "<?= $url_direccion_update ?>",
+            data: $(formulario).serialize(),
+            onSuccess: function () {
+                <?= $oPosicion->js_atras(1); ?>
+            }
+        });
     }
     fnjs_quitar_dir = function (idx) {
         var formulario = '#frm2';
         $('#idx').val(idx);
-        let datos = $(formulario).serialize();
-        $.ajax({ url: "<?= $url_direcciones_quitar ?>", type: 'post', data: datos })
-            .done(function (rta_txt) {
-                if (rta_txt !== '' && rta_txt !== '\n') { alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt); }
-                else { <?= $oPosicion->js_atras(1); ?> }
-            });
+        fnjs_ajax_json({
+            url: "<?= $url_direcciones_quitar ?>",
+            data: $(formulario).serialize(),
+            onSuccess: function () {
+                <?= $oPosicion->js_atras(1); ?>
+            }
+        });
     }
     fnjs_add_dir = function () { fnjs_update_div('#ficha', '<?= $golistadir ?>'); }
     fnjs_asignar_dir = function (id_ubi, obj_dir, id_direccion) {
         var parametros = 'id_ubi=' + id_ubi + '&id_direccion=' + id_direccion + '&obj_dir=<?= $obj_dir ?><?= $h_asignar ?>';
-        $.ajax({ url: '<?= $url_direcciones_asignar ?>', type: 'post', data: parametros })
-            .done(function (rta_txt) {
-                if (rta_txt !== '' && rta_txt !== '\n') { alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt); }
-                else { <?= $oPosicion->js_atras(1); ?> }
-            });
+        fnjs_ajax_json({
+            url: '<?= $url_direcciones_asignar ?>',
+            data: parametros,
+            onSuccess: function () {
+                <?= $oPosicion->js_atras(1); ?>
+            }
+        });
     }
     fnjs_ver_dir = function () {
         nom = $('#nom_sede').val(); dir = $('#direccion').val(); dir_post = $('#a_p').val(); inv = $('#cp_dcha').prop("checked");
@@ -42,11 +46,17 @@ use frontend\shared\config\AppUrlConfig;
     fnjs_ver_documento = function (id_direccion) {
         var url = '<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/ubis/controller/plano_bytea.php';
         var parametros = 'act=comprobar&obj_dir=<?= $obj_dir ?><?= $h ?>&id_direccion=' + id_direccion;
-        $.ajax({ url: url, type: 'post', data: parametros }).done(function (rta_txt) {
-            if (rta_txt == 'si') {
-                var pagina = url + '?id_direccion=' + id_direccion + '&act=download&obj_dir=<?= $obj_dir ?><?= $h ?>';
-                top.newWin = window.open(pagina, "abrir", ""); top.newWin.focus();
-            } else { alert(<?= json_encode(_("No existe ningún plano")) ?>); }
+        fnjs_ajax_json({
+            url: url,
+            data: parametros,
+            onSuccess: function (data) {
+                if (data.exists === true || data.text === 'si') {
+                    var pagina = url + '?id_direccion=' + id_direccion + '&act=download&obj_dir=<?= $obj_dir ?><?= $h ?>';
+                    top.newWin = window.open(pagina, "abrir", ""); top.newWin.focus();
+                } else {
+                    alert(<?= json_encode(_("No existe ningún plano")) ?>);
+                }
+            }
         });
     }
     fnjs_adjuntar = function (act, id_direccion) {

@@ -60,35 +60,17 @@ fnjs_ver=function(){
             break;
     }
     var parametros=pata + '&' + hash_params;
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: parametros
-    })
-    .done(function (rta_txt) {
-        if (rta_txt) {
-            $('#exportar').html(rta_txt);
-        }
-    });
+    fnjs_ajax_json_html({ url: url, data: parametros, target: '#exportar' });
 }
 
 fnjs_guardar=function(formulario) {
-    $.ajax({
+    fnjs_ajax_json({
         url: $(formulario).attr('action'),
-        type: 'post',
         data: $(formulario).serialize(),
-        dataType: 'json'
-    })
-    .done(function (rta) {
-        if (!rta || rta.success !== true) {
-            alert((rta && rta.mensaje) ? rta.mensaje : '');
-            return;
+        onSuccess: function () {
+            fnjs_cerrar();
+            fnjs_ver();
         }
-        fnjs_cerrar();
-        fnjs_ver();
-    })
-    .fail(function () {
-        alert(<?= json_encode(_("error de comunicación con el servidor"), JSON_UNESCAPED_UNICODE) ?>);
     });
 }
 </script>

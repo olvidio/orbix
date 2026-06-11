@@ -143,16 +143,13 @@
         var url = '{{ url_ajax|raw }}';
         var parametros = 'que=lista' + '{{ h_lista|raw }}';
 
-        $.ajax({
+        fnjs_ajax_json_html({
             url: url,
-            type: 'post',
-            data: parametros
-        })
-        .done(function (rta_txt) {
-            if (rta_txt) {
-                $('#div_tabla').html(rta_txt);
+            data: parametros,
+            target: '#div_tabla',
+            onDone: function () {
+                window.fnjs_cerrar_activacion();
             }
-            window.fnjs_cerrar_activacion();
         });
     }
 

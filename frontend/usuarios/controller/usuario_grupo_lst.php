@@ -6,6 +6,8 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
+
 FrontBootstrap::boot();
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
@@ -18,4 +20,4 @@ $oTabla->setId_tabla('usuario_grupo_lst');
 $oTabla->setCabeceras($lista['cabeceras']);
 $oTabla->setBotones($lista['botones']);
 $oTabla->setDatos($lista['valores']);
-echo $oTabla->mostrar_tabla();
+ajax_json_html($oTabla->mostrar_tabla());

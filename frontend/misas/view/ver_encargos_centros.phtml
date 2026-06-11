@@ -283,14 +283,7 @@
         var id_zona = <?= (int)$id_zona ?>;
         var url = '<?= $url_ver_encargos_centros ?>';
         var parametros = 'id_zona=' + id_zona + '<?= $h_ver_encargos_centros ?>';
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: parametros,
-            dataType: 'html'
-        }).done(function (rta_txt) {
-            $('#div_encargos').html(rta_txt);
-        });
+        fnjs_ajax_json_html({ url: url, data: parametros, target: '#div_encargos' });
     }
 
     function fnjs_prepara_select_encargo() {

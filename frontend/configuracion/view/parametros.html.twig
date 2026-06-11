@@ -3,16 +3,10 @@ fnjs_guardar=function(formulario){
 	var url='{{ url }}';
     $(formulario).attr('action',url);
     $(formulario).one("submit", function() {
-		$.ajax({
+		fnjs_ajax_json_alert({
 			url: $(this).attr('action'),
-			type: 'post',
 			data: $(this).serialize()
-		})
-		.done(function (rta_txt) {
-			if (rta_txt !== '' && rta_txt !== '\n') {
-				alert (rta_txt);
-			}
-        });
+		});
         return false;
     });
     $(formulario).trigger("submit");

@@ -4,6 +4,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
@@ -17,3 +18,4 @@ $post = [
 // el payload (el AJAX de `modificar_plantilla.phtml` lanza a continuacion otra
 // peticion para repintar la cuadricula), asi que basta con disparar la llamada.
 PostRequest::getDataFromUrl('/src/misas/importar_plantilla_data', $post);
+ajax_json_response();

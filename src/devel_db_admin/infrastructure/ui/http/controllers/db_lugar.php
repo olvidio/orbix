@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 use frontend\shared\web\Desplegable;
 use src\devel_db_admin\application\DbLugarDropdown;
+
+require_once __DIR__ . '/../../../../../../frontend/shared/helpers/ajax_json_support.php';
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
 
@@ -17,7 +19,7 @@ $repoDl = DependencyResolver::get(DelegacionRepositoryInterface::class);
 
 $region = (string) filter_input(INPUT_POST, 'region');
 if ($region === '') {
-    exit;
+    ajax_json_html('');
 }
 
 $aOpciones = DbLugarDropdown::opcionesPorRegion($region, $repoDl);
@@ -25,4 +27,4 @@ $aOpciones = DbLugarDropdown::opcionesPorRegion($region, $repoDl);
 $oDesplDelegaciones = new Desplegable();
 $oDesplDelegaciones->setOpciones($aOpciones);
 $oDesplDelegaciones->setNombre('dl');
-echo $oDesplDelegaciones->desplegable();
+ajax_json_html($oDesplDelegaciones->desplegable());

@@ -11,13 +11,14 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/procesos/procesos_get', PostRequest::requestPayloadForHash());
 $aPadres = procesos_tree_padres($data['aPadres'] ?? null);
 
 if ($aPadres === []) {
-    return;
+    ajax_json_html('');
 }
 
-echo ProcesosTreeHtml::dibujarTree($aPadres);
+ajax_json_html(ProcesosTreeHtml::dibujarTree($aPadres));

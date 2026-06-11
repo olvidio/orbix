@@ -18,6 +18,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -41,15 +42,17 @@ if (!$errorInfo['ok'] && $errorInfo['error'] === 'sin_gastos_anterior') {
     $web = AppUrlConfig::getPublicAppBaseUrl();
     $pagina = HashFront::link($web . '/frontend/casas/controller/casa.php?' . http_build_query($aQuery));
     $link = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$pagina');\">{$errorInfo['any_anterior']}</span>";
+    ob_start();
     echo sprintf(_("Falta introducir la información económica (total) del año anterior: %s"), $link);
     echo "<br><br>";
-    return;
+    ajax_json_html((string) ob_get_clean());
 }
 
 if (!$errorInfo['ok']) {
-    echo $errorInfo['error'] !== '' ? $errorInfo['error'] : _("No se pueden calcular los datos solicitados.");
-    return;
+    ajax_json_html('', $errorInfo['error'] !== '' ? $errorInfo['error'] : _("No se pueden calcular los datos solicitados."));
 }
 
+ob_start();
 $oView = new ViewNewPhtml('frontend\\casas\\controller');
 $oView->renderizar('calendario_ubi_resumen_body.phtml', $data);
+ajax_json_html((string) ob_get_clean());

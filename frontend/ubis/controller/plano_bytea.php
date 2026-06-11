@@ -29,8 +29,11 @@ case "eliminar":
 case "comprobar":
     $aDatosPlano = ubis_plano_download($Qobj_dir, $Qid_direccion);
     $plano_doc = $aDatosPlano['plano_doc'];
-    echo empty($plano_doc) ? 'no' : 'si';
-    break;
+    require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
+    ajax_json_response('', [
+        'exists' => !empty($plano_doc),
+        'text' => empty($plano_doc) ? 'no' : 'si',
+    ]);
 case "upload":
     if (MultipartUploadHelper::isPostTooLarge()) {
         echo htmlspecialchars(MultipartUploadHelper::textPostMaxExceededPhp(), ENT_QUOTES, 'UTF-8');
@@ -158,13 +161,11 @@ $act = "upload";
     var url = '<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/ubis/controller/plano_bytea.php';
     var parametros = 'act=comprobar&obj_dir=<?= $Qobj_dir?><?= $h ?>&id_direccion=' + id_direccion;
 
-    $.ajax({
+    fnjs_ajax_json({
     url: url,
-    type: 'post',
-    data: parametros
-})
-    .done(function (rta_txt) {
-    if (rta_txt == 'si') {
+    data: parametros,
+    onSuccess: function (data) {
+    if (data.exists === true || data.text === 'si') {
     seguro = confirm(<?= json_encode(_("ya existe un escrito. ¿Desea reemplazarlo?")) ?>);
 } else {
     seguro = 1;
@@ -174,6 +175,7 @@ $act = "upload";
     $('#frm_doc1').trigger("submit");
 } else {
     //$(siguiente).trigger("focus");
+}
 }
 });
 }

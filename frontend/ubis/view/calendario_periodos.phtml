@@ -63,18 +63,14 @@
         var url = '<?= $url_get2 ?>';
         var parametros = 'id_ubi=' + id_ubi + '&year=' + year + '<?= $h_ver ?>';
 
-        $.ajax({
+        fnjs_ajax_json_html({
             url: url,
-            type: 'post',
-            data: parametros
-        })
-            .done(function (rta_txt) {
-                if (rta_txt) {
-                    // añadir debajo de la casa
-                    $('#ficha').html(rta_txt);
-                }
-            });
-        document.getElementById("overlay").style.display = "none";
+            data: parametros,
+            target: '#ficha',
+            onDone: function () {
+                document.getElementById("overlay").style.display = "none";
+            }
+        });
     }
 
     $(document).ready(fnjs_ver);

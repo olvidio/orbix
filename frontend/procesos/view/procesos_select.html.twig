@@ -87,18 +87,14 @@ fnjs_actualizar=function(){
 	var url="{{ url_get }}";
 	var parametros='id_tipo_proceso='+id_tipo_proceso+'{{ h_get|raw }}';
 		 
-	$.ajax({
+	fnjs_ajax_json_html({
 		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		if (rta_txt !== '' && rta_txt !== '\\n') {
-			/* añadir debajo de la actividad */
-			$('#div_proceso').html(rta_txt);
+		data: parametros,
+		target: '#div_proceso',
+		onDone: function () {
+			document.getElementById("overlay").style.display = "none";
 		}
 	});
-	document.getElementById("overlay").style.display = "none";
 }
 
 fnjs_listado=function(){
@@ -107,18 +103,14 @@ fnjs_listado=function(){
 	var url="{{ url_get_listado }}";
 	var parametros='id_tipo_proceso='+id_tipo_proceso+'{{ h_get_listado|raw }}';
 		 
-	$.ajax({
+	fnjs_ajax_json_html({
 		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		if (rta_txt !== '' && rta_txt !== '\\n') {
-			/* añadir debajo de la actividad */
-			$('#div_proceso').html(rta_txt);
+		data: parametros,
+		target: '#div_proceso',
+		onDone: function () {
+			document.getElementById("overlay").style.display = "none";
 		}
 	});
-	document.getElementById("overlay").style.display = "none";
 }
 
 fnjs_eliminar=function(id_item){

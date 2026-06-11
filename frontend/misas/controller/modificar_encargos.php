@@ -1,12 +1,12 @@
 <?php
 
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
@@ -45,5 +45,4 @@ $a_campos = [
     'h_zona' => $h_zona,
 ];
 
-$oView = new ViewNewPhtml('frontend\\misas\\controller');
-$oView->renderizar('modificar_encargos.phtml', $a_campos);
+ajax_json_render_phtml('frontend\\misas\\controller', 'modificar_encargos.phtml', $a_campos);

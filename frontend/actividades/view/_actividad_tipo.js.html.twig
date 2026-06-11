@@ -237,14 +237,7 @@
         {% if procesos_installed %}
         url = '{{ url_act }}';
         var parametros = 'refresh=1&id_tipo_activ=' + id_tipo_activ + '{{ h_act|raw }}';
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: parametros
-        })
-            .done(function (rta_txt) {
-                $('#main').html(rta_txt);
-            });
+        fnjs_ajax_json_html({ url: url, data: parametros, target: '#main' });
         {% endif %}
 
         if (que == "cambiar_tipo" && confirm("{{ "¿Quiere cambiar el nombre de la actividad?"|trans|raw }}")) {

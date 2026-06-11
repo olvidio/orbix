@@ -5,6 +5,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qid_equipaje = (string)filter_input(INPUT_POST, 'id_equipaje');
@@ -25,4 +26,4 @@ foreach ($a_valores as $a_valor) {
     $txt .= $a_valor['identificador'] . ' ' . $a_valor['etiqueta'];
     $txt .= '<br>';
 }
-echo $txt;
+ajax_json_html($txt);

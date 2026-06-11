@@ -106,17 +106,10 @@
     fnjs_docs_libres = function () {
         let formulario = '#frm_add';
         let parametros = $(formulario).serialize();
-
-        // obtener el listado de docs libres
-        $.ajax({
+        fnjs_ajax_json_html({
             url: 'frontend/inventario/controller/equipajes_docs_libres.php',
-            type: 'post',
             data: parametros,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $('#libres').html(rta_txt);
-                }
-            }
+            target: '#libres'
         });
     }
     fnjs_modificar_form_add = function (id_grupo) {
@@ -190,15 +183,10 @@
                 break;
         }
         let parametros = $(formulario).serialize(); // equipaje y hash
-        $.ajax({
+        fnjs_ajax_json_html({
             url: 'frontend/inventario/controller/equipajes_lista_docs.php',
-            type: 'post',
             data: parametros,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $(id_span).html(rta_txt);
-                }
-            }
+            target: id_span
         });
     }
 
@@ -207,45 +195,31 @@
         let id_span = '#docs_grupo_' + id_grupo;
 
         let parametros = $(formulario).serialize(); // equipaje y hash
-        $.ajax({
+        fnjs_ajax_json_html({
             url: 'frontend/inventario/controller/equipajes_ver_docs.php',
-            type: 'post',
             data: parametros,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $(id_span).html(rta_txt);
-                }
-            }
+            target: id_span
         });
     }
     fnjs_nuevo_grupo = function (formulario) {
         parametros = $(formulario).serialize();
-        $.ajax({
+        fnjs_ajax_json({
             url: 'frontend/inventario/controller/equipajes_posibles_maletas.php',
-            type: 'post',
             data: parametros,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $('#grupos').append(rta_txt);
+            onSuccess: function (data) {
+                if (data.html) {
+                    $('#grupos').append(data.html);
                 }
             }
         });
     }
     fnjs_actualizar_lista_equipaje = function () {
         parametros = $('#seleccion').serialize();
-        // obtener el listado de periodos
-        // que=lista_equipaje
-        $.ajax({
+        fnjs_ajax_json_html({
             url: 'frontend/inventario/controller/equipajes_desplegable.php',
-            type: 'post',
             data: parametros,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $('#list_eq').html(rta_txt);
-                }
-            }
+            target: '#list_eq'
         });
-
     }
     fnjs_cerrar = function () {
         $('#div_modificar').html('');
@@ -257,31 +231,17 @@
 
     //-------------------
     fnjs_ver_1 = function () {
-        parametros = $('#seleccion').serialize();
-        let url = 'frontend/inventario/controller/equipajes_doc_casa.php';
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: parametros,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $('#exportar').html(rta_txt);
-                }
-            }
+        fnjs_ajax_json_html({
+            url: 'frontend/inventario/controller/equipajes_doc_casa.php',
+            data: $('#seleccion').serialize(),
+            target: '#exportar'
         });
     }
     fnjs_ver_2 = function () {
-        parametros = $('#seleccion').serialize();
-        let url = 'frontend/inventario/controller/equipajes_imprimir.php';
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: parametros,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $('#exportar').html(rta_txt);
-                }
-            }
+        fnjs_ajax_json_html({
+            url: 'frontend/inventario/controller/equipajes_imprimir.php',
+            data: $('#seleccion').serialize(),
+            target: '#exportar'
         });
     }
 </script>

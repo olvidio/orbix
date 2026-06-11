@@ -2,14 +2,9 @@
 
 /**
  * Dialogo "buscar actividad" que abre `form_notas_de_una_persona.phtml` al pulsar
- * "añadir ca". Muestra dos desplegables (delegacion + actividades en
- * +/- 3 meses respecto a `f_acta_iso`) y recoge la seleccion.
- *
- * Sustituye al case `frm_buscar` del antiguo `apps/notas/controller/notas_ajax.php`.
- * El HTML del formulario se arma aqui, no en `src/`.
+ * "añadir ca".
  */
 
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
@@ -17,6 +12,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
@@ -50,5 +46,4 @@ $a_campos = [
     'oDesplActividades' => $oDesplActividades,
 ];
 
-$oView = new ViewNewPhtml('frontend\\notas\\controller');
-$oView->renderizar('actividad_buscar_form.phtml', $a_campos);
+ajax_json_render_phtml('frontend\\notas\\controller', 'actividad_buscar_form.phtml', $a_campos);

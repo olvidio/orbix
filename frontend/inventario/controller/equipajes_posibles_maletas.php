@@ -7,6 +7,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qid_equipaje = (string)filter_input(INPUT_POST, 'id_equipaje');
@@ -36,6 +37,7 @@ $oHash->setArrayCamposHidden([
     'nom_grupo' => $nom_grupo,
 ]);
 
+ob_start();
 echo "<span id='grupo_$new_id_grupo'>";
 echo "<form id='$nom_form'>";
 echo $oHash->getCamposHtml();
@@ -46,3 +48,4 @@ echo '</form>';
 echo "<span id='docs_grupo_$new_id_grupo'>";
 echo '</span>';
 echo '</span>';
+ajax_json_html((string) ob_get_clean());

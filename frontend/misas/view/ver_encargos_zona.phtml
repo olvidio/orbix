@@ -234,13 +234,10 @@
         let id_zona = <?= (int)$id_zona ?>;
         let orden_select = $('#orden_select').val() || 'orden';
         let parametros = 'id_zona=' + id_zona + '&orden=' + orden_select + '<?= $h_ver_encargos_zona ?>';
-        $.ajax({
+        fnjs_ajax_json_html({
             url: '<?= $url_ver_encargos_zona ?>',
-            method: 'POST',
             data: parametros,
-            dataType: 'html'
-        }).done(function (rta_txt) {
-            $('#div_encargos').html(rta_txt);
+            target: '#div_encargos'
         });
     }
 

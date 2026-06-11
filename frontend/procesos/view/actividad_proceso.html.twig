@@ -31,17 +31,7 @@ fnjs_actualizar=function(){
 	var url = "{{ url_get }}";
 	var parametros="{{ param_actualizar|raw }}";
 		 
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		if (rta_txt) {
-			/* añadir debajo de la actividad */
-			$('#div_proceso').html(rta_txt);
-		}
-	});
+	fnjs_ajax_json_html({ url: url, data: parametros, target: '#div_proceso' });
 }
 
 fnjs_guardar=function(id_item){

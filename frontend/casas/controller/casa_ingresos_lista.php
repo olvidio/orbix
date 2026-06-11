@@ -11,6 +11,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -25,14 +26,14 @@ $data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/casa_ingresos_li
 $lista = casas_ingresos_lista_from_payload($data);
 
 if (!$lista['ok']) {
-    echo $lista['error'] !== '' ? $lista['error'] : (string)_("No se pueden obtener los datos.");
-    return;
+    ajax_json_html('', $lista['error'] !== '' ? $lista['error'] : (string)_("No se pueden obtener los datos."));
 }
 
 $oLista = new Lista();
 $oLista->setGrupos($lista['grupos']);
 $oLista->setCabeceras($lista['cabeceras']);
 $oLista->setDatos($lista['valores']);
+ob_start();
 echo $oLista->listaPaginada();
 echo htmlspecialchars($lista['nota']);
 $errores = $lista['errores'];
@@ -42,3 +43,4 @@ if ($errores !== '') {
     echo "<br>";
     echo $errores;
 }
+ajax_json_html((string) ob_get_clean());

@@ -10,19 +10,20 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/procesos/actividad_proceso_get', PostRequest::requestPayloadForHash());
 
 $error = tessera_imprimir_string($data['error'] ?? '');
 if ($error !== '') {
-    echo $error;
-    return;
+    ajax_json_html($error, $error);
 }
 
 $aRows = procesos_actividad_proceso_rows($data['a_rows'] ?? null);
 $webIcons = OrbixRuntime::getWebIcons();
 
+ob_start();
 echo '<table>';
 echo '<tr><th>' . _("ok") . '</th><th>' . _("fase (tarea)") . '</th><th>' . _("responsable") . '</th><th>' . _("observaciones") . '</th><th></th></tr>';
 
@@ -64,3 +65,4 @@ foreach ($aRows as $row) {
     echo '</tr>';
 }
 echo '</table>';
+ajax_json_html((string) ob_get_clean());

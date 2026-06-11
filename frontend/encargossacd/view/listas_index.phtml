@@ -2,15 +2,7 @@
 fnjs_comprobaciones=function(){
 	var url='<?= $url ?>';
 	var parametros='que=ctr<?= $h ?>';
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros,
-		dataType: 'html'
-	})
-	.done(function (rta_txt) {
-		alert (rta_txt);
-	});
+	fnjs_ajax_json_alert({ url: url, data: parametros });
 }
 </script>
 <p><?= _("comprobaciones") ?></p>

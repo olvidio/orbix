@@ -6,6 +6,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
@@ -33,4 +34,4 @@ $oDesplUbis->setNombre('id_cdc');
 $oDesplUbis->setOpciones($a_opciones);
 $oDesplUbis->setBlanco(true);
 $oDesplUbis->setAction('fnjs_ver_actividades_casa()');
-echo $oDesplUbis->desplegable();
+ajax_json_html($oDesplUbis->desplegable());

@@ -8,12 +8,13 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 
 if ($Qid_equipaje === 0) {
-    exit(_('debe seleccionar un equipaje'));
+    ajax_json_html('', _('debe seleccionar un equipaje'));
 }
 
 $url_backend = '/src/inventario/equipajes_doc_casa';
@@ -54,6 +55,7 @@ $a_campos = [
     'oListaDocsCasa' => $oListaDocsCasa,
 ];
 
+ob_start();
 $oView = new ViewNewPhtml('frontend\inventario\controller');
 $oView->renderizar('equipajes_doc_casa.phtml', $a_campos);
 echo "<div id='grupos'>";
@@ -93,3 +95,4 @@ foreach ($a_egm as $aEgm) {
     $oView->renderizar('equipajes_doc_maleta.phtml', $a_campos);
 }
 echo '</div>';
+ajax_json_html((string) ob_get_clean());

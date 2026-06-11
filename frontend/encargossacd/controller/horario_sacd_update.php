@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../helpers/encargossacd_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
-use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
 /**
@@ -37,6 +37,4 @@ foreach ($keys as $k) {
     }
 }
 
-PostRequest::getDataFromUrl('/src/encargossacd/horario_sacd_update_data', $campos);
-header('Content-Type: text/html; charset=UTF-8');
-echo '<p class="ok">' . htmlspecialchars(_('Guardado.'), ENT_QUOTES, 'UTF-8') . '</p>';
+ajax_json_proxy_post_request('/src/encargossacd/horario_sacd_update_data', $campos);

@@ -8,15 +8,7 @@ use frontend\shared\config\OrbixRuntime;
         var filtro_region = $('#region').val();
         var url = '<?= OrbixRuntime::getWeb() . '/src/devel_db_admin/db_lugar' ?>';
         var parametros = 'region=' + encodeURIComponent(filtro_region) + '<?= $h ?>';
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: parametros,
-            dataType: 'html'
-        })
-            .done(function (rta_txt) {
-                $('#lst_dl').html(rta_txt);
-            });
+        fnjs_ajax_json_html({ url: url, data: parametros, target: '#lst_dl' });
     }
     fnjs_db_renombrar_esquema = function () {
         err = '';

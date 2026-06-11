@@ -113,25 +113,10 @@ fnjs_guardar=function(tipo='') {
             'editar': 'src/actividades/actividad_editar',
             'cambiar_tipo': 'src/actividades/actividad_cambiar_tipo'
         }[tipo];
-        $.ajax({
+        fnjs_ajax_json({
             url: urlUpdate,
-            type: 'post',
-            data: $('#modifica').serialize()
-        })
-        .done(function (rta_txt) {
-            let volver = 1;
-            if (typeof(rta_txt) === 'object') {
-                if (rta_txt.success !== true) {
-                    alert('{{ "respuesta"|trans|raw }}: ' + rta_txt.mensaje);
-                    volver = 0;
-                }
-            } else {
-                if (rta_txt !== '' && rta_txt !== '\\n') {
-                    alert('{{ "respuesta"|trans|raw }}: ' + rta_txt);
-                    volver = 0;
-                }
-            }
-            if (volver === 1) {
+            data: $('#modifica').serialize(),
+            onSuccess: function () {
                 if (tipo !== 'nuevo') { // En el caso de nuevo, me quedo en el formulario.
                     {{ oPosicion.js_atras(1)|raw }}
                 }

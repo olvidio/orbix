@@ -5,6 +5,8 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
+
 FrontBootstrap::boot();
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -55,4 +57,4 @@ foreach ($aCambios as $id_equipaje => $aGrupos) {
         $html_tot .= $html . '</table>';
     }
 }
-echo $html_tot;
+ajax_json_html($html_tot);

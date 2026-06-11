@@ -114,14 +114,10 @@
 
     fnjs_busca_docs = function () {
         var parametros = $('#seleccionados').serialize();
-        let request = $.ajax({
-            data: parametros,
+        fnjs_ajax_json_html({
             url: 'frontend/inventario/controller/traslado_doc_lista.php',
-            type: 'post',
-            dataType: 'html'
-        });
-        request.done(function (rta_txt) {
-            $('#lst_docs').html(rta_txt);
+            data: parametros,
+            target: '#lst_docs'
         });
     }
 

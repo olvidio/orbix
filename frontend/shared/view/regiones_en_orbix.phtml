@@ -60,17 +60,13 @@
     };
 
     fnjs_mostrar_modal = function (region) {
-        let request = $.ajax({
+        fnjs_ajax_json_html({
             url: 'frontend/usuarios/controller/mails_contactos_region.php',
-            type: 'post',
-            dataType: 'html',
             data: {
               <?= $hashParamsRegiones ?>,
               region: region
-            }
-        });
-        request.done(function (rta_html) {
-            $('#div_modificar5').html(rta_html);
+            },
+            target: '#div_modificar5'
         });
 
         $('#div_modal').addClass('ventana');

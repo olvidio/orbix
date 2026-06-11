@@ -6,16 +6,10 @@
         $('#overlay').addClass('sombra');
 
         let parametros = $('#frm_sel_activ').serialize();
-        let url = 'frontend/inventario/controller/equipajes_form_nuevo.php';
-        $.ajax({
-            url: url,
-            type: 'post',
+        fnjs_ajax_json_html({
+            url: 'frontend/inventario/controller/equipajes_form_nuevo.php',
             data: parametros,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $('#div_modificar').html(rta_txt);
-                }
-            }
+            target: '#div_modificar'
         });
     }
 
@@ -27,34 +21,22 @@
 
     fnjs_ver_casas = function (n) {
         let parametros = $('#seleccion').serialize();
-        let url = 'frontend/inventario/controller/equipajes_casas_posibles.php';
-        $.ajax({
-            url: url,
-            type: 'post',
+        fnjs_ajax_json_html({
+            url: 'frontend/inventario/controller/equipajes_casas_posibles.php',
             data: parametros,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $('#exportar').html(rta_txt);
-                }
-            }
+            target: '#exportar'
         });
     }
 
 
     fnjs_ver_actividades_casa = function (n) {
         let parametros = $('#seleccion').serialize();
-        let url = 'frontend/inventario/controller/equipajes_lista_activ_periodo.php';
         let id_cdc = $('#id_cdc').val();
         parametros += '&id_cdc=' + id_cdc;
-        $.ajax({
-            url: url,
-            type: 'post',
+        fnjs_ajax_json_html({
+            url: 'frontend/inventario/controller/equipajes_lista_activ_periodo.php',
             data: parametros,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $('#exportar').html(rta_txt);
-                }
-            }
+            target: '#exportar'
         });
     }
 

@@ -34,15 +34,14 @@
     };
 
     fnjs_ver = function () {
-        $.ajax({
+        fnjs_ajax_json_html({
             url: URL_LISTA,
-            type: 'post'
-        }).done(function (rta_txt) {
-            if (rta_txt) {
-                $('#ficha').html(rta_txt);
+            data: '',
+            target: '#ficha',
+            onDone: function () {
+                document.getElementById("overlay").style.display = "none";
             }
         });
-        document.getElementById("overlay").style.display = "none";
     };
 
     fnjs_modificar = function (id_item) {

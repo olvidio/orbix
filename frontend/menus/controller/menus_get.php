@@ -1,7 +1,6 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
@@ -10,6 +9,7 @@ use frontend\shared\FrontBootstrap;
 // Crea los objetos de uso global **********************************************
 require_once __DIR__ . '/../helpers/menus_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -127,8 +127,7 @@ if ($page['mode'] === 'edit') {
         'oHash6' => $oHash6,
     ];
 
-    $oView = new ViewNewPhtml('frontend\menus\controller');
-    $oView->renderizar('menus_get.phtml', $a_campos);
+    ajax_json_render_phtml('frontend\menus\controller', 'menus_get.phtml', $a_campos);
 } else {
     $menuRows = $page['menu_rows'];
 
@@ -146,6 +145,5 @@ if ($page['mode'] === 'edit') {
         'menuRows' => $menuRows,
     ];
 
-    $oView = new ViewNewPhtml('frontend\menus\controller');
-    $oView->renderizar('menus_get_lista.phtml', $a_campos);
+    ajax_json_render_phtml('frontend\menus\controller', 'menus_get_lista.phtml', $a_campos);
 }

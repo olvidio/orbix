@@ -1,15 +1,9 @@
 <script>
     fnjs_guardar = function (formulario) {
-        let datos = $(formulario).serialize();
-        let request = $.ajax({
+        fnjs_ajax_json({
             url: '<?= $url_guardar ?>',
-            type: 'post',
-            data: datos
-        });
-        request.done(function (json) {
-            if (json.success !== true) {
-                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
-            } else {
+            data: $(formulario).serialize(),
+            onSuccess: function () {
                 <?= $oPosicion->js_atras(1) ?>
             }
         });
@@ -17,8 +11,7 @@
     fnjs_actualizar_descripcion = function () {
         var id_tipo_teleco = $('#id_tipo_teleco').val();
         var parametros = 'id_tipo_teleco=' + id_tipo_teleco;
-        $.ajax({ url: '<?= $url_actualizar ?>', type: 'post', data: parametros })
-            .done(function (rta_txt) { $('#span_descripcion').html(rta_txt); });
+        fnjs_ajax_json_html({ url: '<?= $url_actualizar ?>', data: parametros, target: '#span_descripcion' });
     }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>

@@ -7,13 +7,14 @@ use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 
 $html = '';
 if ($Qid_equipaje === 0) {
-    exit(_('debe seleccionar un equipaje'));
+    ajax_json_html('', _('debe seleccionar un equipaje'));
 }
 
 $url_backend = '/src/inventario/cabecera_pie_txt';
@@ -137,4 +138,4 @@ $html .= "<p>$html_actividades_firma</p>";
 $html .= '</span>';
 
 $html .= '<script>fnjs_left_side_hide();</script>';
-echo $html;
+ajax_json_html($html);

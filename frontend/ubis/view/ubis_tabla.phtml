@@ -15,16 +15,10 @@
         seguro = confirm(<?= json_encode(_("¿Está seguro que desea borrar este ubi?")) ?>);
         if (seguro) {
             $(formulario).one("submit", function () {
-                $.ajax({
+                fnjs_ajax_json_alert({
                     url: $(this).attr('action'),
-                    type: 'post',
                     data: $(this).serialize()
-                })
-                    .done(function (rta_txt) {
-                        if (rta_txt != '' && rta_txt != '\n') {
-                            alert(rta_txt);
-                        }
-                    });
+                });
                 return false;
             });
             $(formulario).trigger("submit");

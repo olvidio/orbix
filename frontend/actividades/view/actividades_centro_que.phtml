@@ -43,19 +43,10 @@
     }
 
     fnjs_ver = function () {
-        pata = $('#seleccion').serialize();
+        var pata = $('#seleccion').serialize();
         var url = '<?= $url ?>';
         var parametros = <?= $parametros ?>;
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: parametros,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $('#exportar').html(rta_txt);
-                }
-            }
-        });
+        fnjs_ajax_json_html({ url: url, data: parametros, target: '#exportar' });
     }
 
     fnjs_guardar = function (formulario, que) {

@@ -5,15 +5,7 @@ fnjs_ver_ficha=function(id_nom){
 	if (id_nom ) {
 		var url='<?= $url_ajax ?>';
 		var parametros='que=ficha&id_nom='+id_nom+'<?= $h_ficha ?>';
-		$.ajax({
-			url: url,
-			type: 'post',
-			data: parametros,
-			dataType: 'html'
-		})
-		.done(function (rta_txt) {
-			$('#ficha').html(rta_txt);
-		});
+		fnjs_ajax_json_html({ url: url, data: parametros, target: '#ficha' });
 	} else {
         $('#ficha').html(''); // limpio lo que pueda haber en la pantalla
 	}
@@ -25,28 +17,26 @@ fnjs_lista_sacd=function(id_nom){
 
     var url='<?= $url_ajax ?>';
 	var parametros='que=get_select&filtro_sacd='+filtro_sacd+'&id_nom='+id_nom+'<?= $h_lista ?>';
-	$.ajax({
+	fnjs_ajax_json_html({
 		url: url,
-		type: 'post',
 		data: parametros,
-		dataType: 'html'
-	})
-	.done(function (rta_txt) {
-		$('#sacds').html(rta_txt);
-		$('#ficha').html(''); // limpio lo que pueda haber en la pantalla
+		target: '#sacds',
+		onDone: function () {
+			$('#ficha').html(''); // limpio lo que pueda haber en la pantalla
+		}
 	});
 }
 
 fnjs_guardar=function(formulario){
 	$(formulario).one("submit", function() {
-		$.ajax({
+		fnjs_ajax_json({
 			url: $(this).attr('action'),
-			type: 'post',
-			data: $(this).serialize()
-		})
-		.done(function (rta_txt) {
-			if (rta_txt != '' && rta_txt != '\n') {
-				alert (rta_txt);
+			data: $(this).serialize(),
+			onSuccess: function (data) {
+				var txt = data.text || data.mensaje || '';
+				if (txt !== '' && txt !== '\n') {
+					alert(txt);
+				}
 			}
 		});
 		return false;

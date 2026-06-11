@@ -38,15 +38,7 @@
             let parametros = 'id_sacd=' + encodeURIComponent(id_sacd) + '&periodo=' + encodeURIComponent(periodo)
                 + '&empiezamin=' + encodeURIComponent(empiezamin) + '&empiezamax=' + encodeURIComponent(empiezamax)
                 + '<?= $h_plan_sacd ?>';
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: parametros,
-                dataType: 'html'
-            })
-                .done(function (rta_txt) {
-                    $('#div_cuadricula').html(rta_txt);
-                });
+            fnjs_ajax_json_html({ url: url, data: parametros, target: '#div_cuadricula' });
         }
     };
     $(document).ready($('#periodo').change(function () {

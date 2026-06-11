@@ -4,8 +4,7 @@ fnjs_busca_ctrs=function(){
     if (id_zona) {
         var url='<?= $url_ajax_lista ?>';
         var parametros='id_zona='+id_zona+'<?= $h_ctr ?>';
-        $.ajax({ url: url, type: 'post', data: parametros, dataType: 'html' })
-            .done(function (rta_txt) { $('#lst_ctrs').html(rta_txt); });
+        fnjs_ajax_json_html({ url: url, data: parametros, target: '#lst_ctrs' });
     }
 }
 fnjs_guardar=function(formulario){

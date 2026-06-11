@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\PostRequest;
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
@@ -15,6 +14,7 @@ use frontend\shared\FrontBootstrap;
  */
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 $oPosicion = FrontBootstrap::boot();
 
 $Qid_ubi = encargossacd_post_int('id_ubi');
@@ -164,5 +164,4 @@ $a_campos = [
     'chk_sssc' => $chk_sssc,
 ];
 
-$oView = new ViewNewPhtml('frontend\\encargossacd\\controller');
-$oView->renderizar('ctr_get_ficha.phtml', $a_campos);
+ajax_json_render_phtml('frontend\\encargossacd\\controller', 'ctr_get_ficha.phtml', $a_campos);

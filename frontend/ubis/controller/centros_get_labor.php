@@ -8,6 +8,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/centros_get_labor'));
@@ -28,4 +29,4 @@ $oLista = new Lista();
 $oLista->setId_tabla('centros_ajax_labor');
 $oLista->setCabeceras($lista['cabeceras']);
 $oLista->setDatos($a_valores);
-echo $oLista->mostrar_tabla();
+ajax_json_html($oLista->mostrar_tabla());

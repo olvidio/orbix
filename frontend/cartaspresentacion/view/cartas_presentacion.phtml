@@ -53,14 +53,7 @@
 
     fnjs_ver_ubi = function (id_ubi) {
         var parametros = 'pau=u&id_ubi=' + id_ubi + H_CTR;
-        $.ajax({
-            url: URL_CTR,
-            type: 'post',
-            data: parametros,
-            dataType: 'html'
-        }).done(function (rta_txt) {
-            $('#ficha2').html(rta_txt);
-        });
+        fnjs_ajax_json_html({ url: URL_CTR, data: parametros, target: '#ficha2' });
     };
 
     fnjs_poblacion = function () {
@@ -114,13 +107,12 @@
 
     fnjs_ver = function () {
         var pata = $('#seleccion').serialize();
-        $.ajax({
+        fnjs_ajax_json({
             url: URL_LISTA,
-            type: 'post',
             data: pata,
-            dataType: 'html'
-        }).done(function (rta_txt) {
-            if (rta_txt) { $('#ficha2').html(rta_txt); }
+            onSuccess: function (data) {
+                if (data.html) { $('#ficha2').html(data.html); }
+            }
         });
         document.getElementById('overlay').style.display = 'none';
     };

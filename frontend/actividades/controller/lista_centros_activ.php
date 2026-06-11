@@ -19,6 +19,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
@@ -39,4 +40,4 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_centros_activ_datos'
     'empiezamax' => $Qempiezamax,
 ]);
 
-echo tessera_imprimir_string($data['html'] ?? '');
+ajax_json_html(tessera_imprimir_string($data['html'] ?? ''));

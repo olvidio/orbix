@@ -12,13 +12,13 @@
  */
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -30,8 +30,7 @@ $data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/casa_ec_gastos_f
 $form = casas_ec_gastos_from_payload($data);
 
 if (!$form['ok']) {
-    echo $form['error'] !== '' ? $form['error'] : (string)_("No se pueden obtener los datos.");
-    return;
+    ajax_json_html('', $form['error'] !== '' ? $form['error'] : (string)_("No se pueden obtener los datos."));
 }
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
@@ -50,5 +49,4 @@ $a_campos = [
     'url_guardar' => $url_guardar,
 ];
 
-$oView = new ViewNewPhtml('frontend\\casas\\controller');
-$oView->renderizar('casa_ec_gastos_lista.phtml', $a_campos);
+ajax_json_render_phtml('frontend\\casas\\controller', 'casa_ec_gastos_lista.phtml', $a_campos);

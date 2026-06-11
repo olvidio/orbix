@@ -9,6 +9,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/pasarela_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 /**
@@ -28,24 +29,21 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 switch ($Qque) {
     case 'eliminar':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-        PostRequest::getDataFromUrl('/src/pasarela/nombre_excepcion_eliminar', [
+        ajax_json_proxy_post_request('/src/pasarela/nombre_excepcion_eliminar', [
             'id_tipo_activ' => $Qid_tipo_activ,
         ]);
-        break;
     case 'update':
     case 'nuevo':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qnombre_actividad = (string)filter_input(INPUT_POST, 'nombre_actividad');
-        PostRequest::getDataFromUrl('/src/pasarela/nombre_excepcion_guardar', [
+        ajax_json_proxy_post_request('/src/pasarela/nombre_excepcion_guardar', [
             'id_tipo_activ' => $Qid_tipo_activ,
             'valor' => $Qnombre_actividad,
         ]);
-        break;
     case 'lista':
         $data = PostRequest::getDataFromUrl('/src/pasarela/nombre_lista');
         $lista = pasarela_excepcion_lista_from_payload($data);
-        echo pasarela_render_excepcion_lista_html($lista, 'fnjs_modificar');
-        break;
+        ajax_json_html(pasarela_render_excepcion_lista_html($lista, 'fnjs_modificar'));
     case 'form_modificar':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qnombre_actividad = (string)filter_input(INPUT_POST, 'nombre_actividad');
@@ -73,8 +71,9 @@ switch ($Qque) {
         ];
 
         $oView = new ViewNewTwig('frontend\\pasarela\\controller');
+        ob_start();
         $oView->renderizar('nombre_form.html.twig', $a_campos);
-        break;
+        ajax_json_html((string) ob_get_clean());
     case 'form_nuevo':
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
@@ -105,6 +104,7 @@ switch ($Qque) {
         ];
 
         $oView = new ViewNewTwig('frontend\\pasarela\\controller');
+        ob_start();
         $oView->renderizar('nombre_form_nuevo.html.twig', $a_campos);
-        break;
+        ajax_json_html((string) ob_get_clean());
 }

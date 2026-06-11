@@ -61,16 +61,15 @@ fnjs_cambiar_proceso=function(id_tipo_activ,propio){
 	} else {
         id = '#nodl_'+id_tipo_activ;
 	}
-	$.ajax({
+	fnjs_ajax_json({
 		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		var txt="<div id=div_procesos class=proceso>";
-			txt+=rta_txt;
+		data: parametros,
+		onSuccess: function (data) {
+			var txt="<div id=div_procesos class=proceso>";
+			txt+=(data.html || '');
 			txt+="</ul></div>";
-		$(id).append(txt);
+			$(id).append(txt);
+		}
 	});
 }
 
@@ -79,16 +78,13 @@ fnjs_lista=function(){
 	var url='{{ url_lista|raw }}';
 	var parametros='{{ h_lista|raw }}';
 		 
-	$.ajax({
+	fnjs_ajax_json_html({
 		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		if (rta_txt) {
-			$('#exportar').html(rta_txt);
+		data: parametros,
+		target: '#exportar',
+		onDone: function () {
+			fnjs_cerrar();
 		}
-		fnjs_cerrar();
 	});
 
     $('#exportar').on("click", function(e){

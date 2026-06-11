@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\PostRequest;
-use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\FrontBootstrap;
 
 /**
@@ -12,6 +11,7 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -75,5 +75,4 @@ $a_campos = [
     'opciones_ordinales' => $opciones_ordinales,
 ];
 
-$oView = new ViewNewPhtml('frontend\\encargossacd\\controller');
-$oView->renderizar('horario_sacd_ver.phtml', $a_campos);
+ajax_json_render_phtml('frontend\\encargossacd\\controller', 'horario_sacd_ver.phtml', $a_campos);

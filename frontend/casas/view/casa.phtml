@@ -51,17 +51,7 @@
 
     fnjs_ver = function () {
         var pata = $('#seleccion').serialize();
-        var url = '<?= $url_ajax ?>';
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: pata,
-            success: function (rta_txt) {
-                if (rta_txt) {
-                    $('#exportar').html(rta_txt);
-                }
-            }
-        });
+        fnjs_ajax_json_html({ url: '<?= $url_ajax ?>', data: pata, target: '#exportar' });
     };
 
     fnjs_guardar = function (formulario, que) {
