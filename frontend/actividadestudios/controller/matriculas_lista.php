@@ -77,7 +77,7 @@ $a_botones = [
 ];
 
 $oHash = new HashFront();
-$oHash->setCamposNo('sel!mod!pau!scroll_id');
+$oHash->setCamposNo('sel!mod!pau!scroll_id!id_sel!id_pau');
 $a_camposHidden = [
     'id_dossier' => 3005,
     'permiso' => 3,

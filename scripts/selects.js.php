@@ -39,6 +39,49 @@ function fnjs_selectAll(formulario,Name,val,aviso){
 	);
 }
 
+function fnjs_sync_grid_sel_checkboxes(formulario) {
+	var formId = $(formulario).attr('id');
+	if (!formId) {
+		return;
+	}
+	var $form = $('#' + formId);
+	$form.find('[id^="grid_"]').each(function () {
+		var tabla = this.id.substring(5);
+		var grid = window['grid_' + tabla];
+		var dataView = window['dataView_' + tabla];
+		if (!grid || !dataView) {
+			return;
+		}
+		var selectedIndices = grid.getSelectedRows();
+		if (!selectedIndices || selectedIndices.length === 0) {
+			return;
+		}
+		$form.find('input.sel').prop('checked', false);
+		selectedIndices.forEach(function (idx) {
+			var item = dataView.getItem(idx);
+			var id = (typeof fnjs_parse_slick_sel_value === 'function')
+				? fnjs_parse_slick_sel_value(item ? item.sel : '')
+				: '';
+			if (!id) {
+				return;
+			}
+			var $cb = $form.find('input.sel').filter(function () {
+				return $(this).val() === id;
+			});
+			if ($cb.length) {
+				$cb.prop('checked', true);
+			} else {
+				$('<input>', {
+					type: 'checkbox',
+					'class': 'sel',
+					name: 'sel[]',
+					value: id
+				}).prop('checked', true).appendTo($form);
+			}
+		});
+	});
+}
+
 function fnjs_solo_uno_grid(formulario) {
 	var s=0;
 	var form=$(formulario).attr('id');
@@ -56,6 +99,7 @@ function fnjs_solo_uno_grid(formulario) {
 }
 
 function fnjs_solo_uno(formulario, multiple = false) {
+	fnjs_sync_grid_sel_checkboxes(formulario);
 	var s=0;
 	var form=$(formulario).attr('id');
 	/* selecciono los elementos con class="sel" de las tablas del id=formulario */

@@ -415,4 +415,24 @@ class Posicion
         $this->goEnd();
         return empty($val) ? '' : $val;
     }
+
+    /**
+     * Sustituye los parámetros de una entrada de la pila (p. ej. dossiers_ver al volver desde un form hijo).
+     * Evita arrastrar meta-hash de formularios que invalidan {@see HashFront::add_hash}.
+     *
+     * @param array<string, mixed> $parametros
+     */
+    public function replaceStackParametros(array $parametros, int $n = 1): void
+    {
+        if ($this->notExistsSession()) {
+            return;
+        }
+        $this->go($n);
+        if (!isset($parametros['stack'])) {
+            $parametros['stack'] = $this->aParametros['stack'] ?? $this->stack;
+        }
+        $this->aParametros = $parametros;
+        $this->guardar();
+        $this->goEnd();
+    }
 }

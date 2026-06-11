@@ -136,7 +136,7 @@ class Select_habitaciones_cdc
         return [
             'hash' => [
                 'campos_form' => '',
-                'campos_no' => 'sel!mod!scroll_id!refresh',
+                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
                 'campos_hidden' => [
                     'pau' => $this->pau,
                     'id_pau' => $this->id_pau,

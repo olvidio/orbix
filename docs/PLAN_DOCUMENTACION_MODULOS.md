@@ -60,6 +60,36 @@ docs/scripts/generar_documentacion_modulo.sh <modulo> --force --skip-openapi-val
 - [ ] Fila actualizada en tabla maestra (abajo)
 ```
 
+### Procedimiento de revision profunda (metodo zonassacd, jun 2026)
+
+Para cerrar los `estado_revision: "generado"` de un modulo (o una tanda de el),
+un agente IA debe:
+
+1. **Leer codigo real, no confiar en lo autogenerado**: por cada pantalla, leer
+   `frontend/<mod>/controller/X.php` + `view/X.phtml` + los casos de uso de
+   `src/<mod>/application/` que tocan sus endpoints (y `config/routes.php`).
+2. **Completar fichas** `catalogo/<mod>/api/*.md` y `pantallas/*.md`:
+   - Descripcion funcional (que hace, semantica de cada parametro y sus valores
+     especiales tipo `'no'`), correccion de `operacion` (consulta/mutacion),
+     forma real de `data`, permisos reales (incluido "el caso de uso no valida,
+     el control esta en la UI" cuando sea el caso).
+   - Pantallas: subtipo real, tabla de acciones (funcion JS → endpoint → parametros),
+     validaciones en cliente. Enlazar al manual, no duplicarlo.
+   - Marcar `estado_revision: "revisado"` y sustituir la seccion "Revision Manual"
+     por lo verificado + lo pendiente real.
+3. **Contrastar con el original en `apps/`** (git history) cuando algo no cuadre
+   entre vista y backend: asi se detectan regresiones de migracion (ej. boton
+   `modificar` de zona_sacd perdido y restaurado en jun 2026).
+4. **Anotar hallazgos** (rutas muertas, endpoints sin consumidor, regresiones) en
+   las notas del manual y de la ficha afectada; arreglar codigo solo si el usuario
+   lo aprueba.
+5. **Actualizar** `docs/ai/<mod>/api_resumen.md` (rutas muertas, semantica corregida),
+   `docs/manual/<mod>.md` (conceptos del dominio + tareas habituales orientadas a
+   "como hago X") y la fila de la tabla maestra.
+
+Modulos grandes: trocear en tandas funcionales y ejecutar cada tanda en una sesion
+nueva; dejar anotada la tanda completada en la fila de la tabla maestra.
+
 ---
 
 ## Tabla maestra de modulos (36)
@@ -70,7 +100,7 @@ Leyenda **Doc**: `—` sin generar | `GEN` generado sin revision | `REV` revisio
 |--------|-----|----|-----------:|-----------|-----|-----|--------|-------|
 | actividadtarifas | y | y | 14 | Piloto | 0 | OK | REV | Menu documentado; 3 flujos revisados |
 | actividadcargos | y | y | 5 | Piloto | 0 | OK | REV | Widgets 3102/1302; pantallas select anadidas |
-| zonassacd | y | y | 7 | Media | 1 | REV | REV | Pipeline + manual parcial |
+| zonassacd | y | y | 7 | Media | 1 | REV | OK | API y pantallas revisadas en profundidad jun 2026 (falta flujos/capacidades); boton modificar restaurado; rutas muertas detectadas |
 | cartaspresentacion | y | y | 8 | Media | 1 | REV | REV | Manual + modulos_relacionados |
 | cambios | y | y | 12 | Media | 1 | REV | REV | Manual + huérfanos AJAX |
 | actividadplazas | y | y | 11 | Media | 1 | REV | REV | Manual + enlace actividades/asistentes |
@@ -85,7 +115,7 @@ Leyenda **Doc**: `—` sin generar | `GEN` generado sin revision | `REV` revisio
 | certificados | y | y | 20 | Media | 2 | REV | REV | Manual STGR |
 | ubiscamas | y | y | 9 | Media | 2 | REV | REV | Sin menu CSV |
 | misas | y | y | 32 | Media | 2 | REV | REV | 32 flujos catalogo |
-| actividades | y | y | 32 | **Hub** | 3 | REV | REV | Hub central |
+| actividades | y | y | 32 | **Hub** | 3 | REV | REV | Hub central. Revision profunda en 3 tandas: (1) ficha actividad `actividad_*` CRUD/fases/permisos — **completada jun 2026** (16 fichas API + pantallas `actividad_que`/`actividad_ver` revisadas; hallazgos: StatusId legacy en twig sin procesos, `tipo_horario` entrada muerta, `actividad_fase_completada_datos` sin consumidor), (2) listados `lista_*`/`calendario_listas`/`actividad_select*`/`actividades_centro_que`, (3) `tipo_activ_*`/`planning_casa_*`/`actividad_nuevo_curso`. Pendientes tandas 2-3 |
 | personas | y | y | 9 | **Hub** | 3 | REV | REV | Ficha + dossiers |
 | dossiers | y | y | 6 | **Hub** | 3 | REV | REV | Shell + tipos_dossier |
 | ubis | y | y | 40 | **Hub** | 3 | REV | REV | Centros/casas |
@@ -293,6 +323,7 @@ Anotar en `docs/legacy_mapping.md` (crear en ola 1):
 | 2026-05-21 | zonassacd … profesores | **Ola 1 pipeline** completo (7 modulos) | agente |
 | 2026-05-21 | olas 1–6 | Pipeline + manuales + repaso final | agente |
 | 2026-05-21 | repaso global | REPASSO_FINAL.md, 12 modulos_relacionados, huerfanos API, ai asignaturas/tablonanuncios | agente |
+| 2026-06-11 | actividades | **Tanda 1 revision profunda** (ficha actividad): 16 api/*.md + 2 pantallas revisados, api_resumen + manual actualizados; 3 hallazgos anotados (sin tocar codigo) | agente |
 
 *(Anadir fila por cada sesion de trabajo.)*
 

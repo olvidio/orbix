@@ -838,7 +838,7 @@ class Select_asistentes_a_una_actividad
             ],
             'hash_matriculas' => [
                 'campos_form' => '',
-                'campos_no' => 'sel!scroll_id!mod',
+                'campos_no' => 'sel!scroll_id!mod!id_sel',
                 'campos_hidden' => [
                     'queSel' => 'matriculas',
                     'pau' => 'p',

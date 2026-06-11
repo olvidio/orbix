@@ -16,12 +16,14 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/actividadestudios_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $obj = 'ActividadAsignatura';
 
 $oPosicion->recordar();
+list_nav_persist_dossier_return_to_posicion($oPosicion, 1);
 
 $Qpau = tessera_imprimir_string(filter_input(INPUT_POST, 'pau'));
 

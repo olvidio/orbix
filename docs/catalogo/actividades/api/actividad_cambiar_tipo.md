@@ -7,68 +7,66 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividades/infrastructure/ui/http/controllers/actividad_cambiar_tipo.php"
 entrada: ["post.desc_activ:string", "post.dl_org:string", "post.f_fin:string", "post.f_ini:string", "post.h_fin:string", "post.h_ini:string", "post.iactividad_val:integer", "post.iasistentes_val:integer", "post.id_activ:integer", "post.id_repeticion:integer", "post.id_tarifa:integer", "post.id_tipo_activ:integer", "post.id_ubi:integer", "post.inom_tipo_val:string", "post.isfsv_val:integer", "post.lugar_esp:string", "post.nivel_stgr:integer", "post.nom_activ:string", "post.num_asistentes:integer", "post.observ:string", "post.observ_material:string", "post.plazas:integer", "post.precio:mixed", "post.status:integer"]
-entrada_obligatoria: []
+entrada_obligatoria: ["post.id_activ"]
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "actividades_ActividadCambiarTipoData"
-respuesta_data: ["error_txt:string, tipo_error?: string"]
 requiere_hashb: false
-frontend_referencias: []
+errores: ["debe seleccionar un tipo de actividad", "actividad no encontrada", "hay un error, no se ha guardado"]
+frontend_referencias: ["frontend/actividades/view/_actividad_form.js.html.twig", "frontend/actividades/view/_calendario_form.js.html.twig"]
 casos_uso: ["src\\actividades\\application\\ActividadCambiarTipo"]
 tags: ["actividades", "actividad", "cambiar", "tipo"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Actividad Cambiar Tipo
 
-Endpoint backend AJAX: cambia el tipo de una actividad existente.
+Cambia el tipo de una actividad existente **de la propia dl** (usa
+`ActividadDlRepository`) y guarda a la vez el resto de campos del formulario.
+Si la app `procesos` esta instalada, regenera el proceso asociado con reset
+(la actividad vuelve a empezar sus fases; la UI avisa de que "pasará a proyecto").
 
-Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+Resolucion del tipo: usa `id_tipo_activ` si llega no nulo; si no, concatena
+`isfsv_val + iasistentes_val + iactividad_val + inom_tipo_val`; si el resultado
+contiene `.` (nivel sin concretar) responde error `tipo`.
+
+A diferencia de `actividad_editar`, **no** toca `publicado`/`idioma` ni propaga
+plazas a actividadplazas.
 
 ## Endpoint
 
 - URL: `/src/actividades/actividad_cambiar_tipo`
-- Metodos registrados: `GET, POST`
+- Metodos registrados: `GET, POST` (solo lee POST)
 - Operacion: `mutacion`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_cambiar_tipo.php`
 
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
 ## Entrada
 
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `desc_activ` | `string` | application | No | application |
-| `dl_org` | `string` | application | No | application |
-| `f_fin` | `string` | application | No | application |
-| `f_ini` | `string` | application | No | application |
-| `h_fin` | `string` | application | No | application |
-| `h_ini` | `string` | application | No | application |
-| `iactividad_val` | `integer` | application | No | application |
-| `iasistentes_val` | `integer` | application | No | application |
-| `id_activ` | `integer` | application | No | application |
-| `id_repeticion` | `integer` | application | No | application |
-| `id_tarifa` | `integer` | application | No | application |
-| `id_tipo_activ` | `integer` | application | No | application |
-| `id_ubi` | `integer` | application | No | application |
-| `inom_tipo_val` | `string` | application | No | application |
-| `isfsv_val` | `integer` | application | No | application |
-| `lugar_esp` | `string` | application | No | application |
-| `nivel_stgr` | `integer` | application | No | application |
-| `nom_activ` | `string` | application | No | application |
-| `num_asistentes` | `integer` | application | No | application |
-| `observ` | `string` | application | No | application |
-| `observ_material` | `string` | application | No | application |
-| `plazas` | `integer` | application | No | application |
-| `precio` | `mixed` | application | No | application |
-| `status` | `integer` | application | No | application |
-
-El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inferidos del application layer.
+| Campo | Tipo | Obligatorio | Notas |
+|-------|------|-------------|-------|
+| `id_activ` | `integer` | Si | Actividad a modificar (debe ser de la propia dl). |
+| `id_tipo_activ` o (`isfsv_val`+`iasistentes_val`+`iactividad_val`+`inom_tipo_val`) | varios | Si | Tipo nuevo completo (6 digitos sin `.`). |
+| `dl_org` | `string` | No | Se trunca en `#`; si no llega, se vacia en la entidad. |
+| `status` | `integer` | No | Llega del hidden del formulario (con procesos el status lo gobiernan las fases). |
+| resto (campos de la ficha) | varios | No | Copia directa a la entidad, como en editar. |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `actividades_ActividadCambiarTipoData`):
-  - `error_txt` (`string, tipo_error?: string`)
+- Exito: `success: true` (sin payload).
+- Error: `success: false`, `mensaje` con el texto.
+
+## Permisos
+
+- **No valida permisos en servidor**; el control esta en la UI (la accion
+  "cambiar tipo" se ofrece desde la ficha/listados segun permisos, y el JS pide
+  confirmacion al usuario).
+
+## Errores conocidos
+
+- `debe seleccionar un tipo de actividad`
+- `actividad no encontrada`
+- `hay un error, no se ha guardado` + detalle
 
 ## Casos De Uso
 
@@ -76,10 +74,12 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
+- `frontend/actividades/view/_actividad_form.js.html.twig` — `fnjs_guardar('cambiar_tipo')`
+  (confirm + aviso de vuelta a proyecto si hay procesos)
+- `frontend/actividades/view/_calendario_form.js.html.twig` — mismo mapa de URLs (planning)
 
 ## Revision Manual
 
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Revisado jun 2026 (lectura de controller + `ActividadCambiarTipo`): regeneracion de
+  proceso con reset, restriccion a la propia dl y diferencias con editar verificadas.
+- Pendiente: ejemplos reales de request/response.

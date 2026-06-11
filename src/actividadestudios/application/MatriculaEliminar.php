@@ -42,9 +42,21 @@ final class MatriculaEliminar
 
         if ($pau === 'p') {
             foreach ($a_sel as $sel) {
-                $id_activ = (int) strtok(self::selAsString($sel), '#');
-                $id_asignatura = (int) strtok('#');
-                $id_nom = (int) strtok('#');
+                $parts = explode('#', self::selAsString($sel));
+                if (count($parts) === 2) {
+                    $id_nom = (int) $parts[1];
+                    if ($id_nom <= 0 && $Qid_nom > 0) {
+                        $id_nom = $Qid_nom;
+                    }
+                    if ($id_nom > 0) {
+                        $msg_err = self::concatErr($msg_err, $this->eliminarPendientesDePersona($id_nom));
+                    }
+                    continue;
+                }
+
+                $id_activ = (int) ($parts[0] ?? 0);
+                $id_asignatura = (int) ($parts[1] ?? 0);
+                $id_nom = (int) ($parts[2] ?? 0);
                 if ($Qid_activ > 0) {
                     $id_activ = $Qid_activ;
                 }
@@ -52,29 +64,7 @@ final class MatriculaEliminar
                     $id_nom = $Qid_nom;
                 }
 
-                $oMatricula = $this->matriculaDlRepository->findById($id_activ, $id_asignatura, $id_nom);
-                if ($oMatricula === null) {
-                    continue;
-                }
-                if ($this->matriculaDlRepository->Eliminar($oMatricula) === false) {
-                    $msg_err = _("hay un error, no se ha borrado");
-                    continue;
-                }
-
-                $this->cerrarDossier('p', $id_nom, 1303);
-
-                $cActividadAsignaturas = $this->actividadAsignaturaDlRepository->getActividadAsignaturas(
-                    ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura]
-                );
-                if (count($cActividadAsignaturas) === 1) {
-                    $cMatriculas = $this->matriculaDlRepository->getMatriculas(
-                        ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura]
-                    );
-                    if (count($cMatriculas) === 0) {
-                        $oActividadAsignatura = $cActividadAsignaturas[0];
-                        $this->actividadAsignaturaDlRepository->Eliminar($oActividadAsignatura);
-                    }
-                }
+                $msg_err = self::concatErr($msg_err, $this->eliminarMatricula($id_activ, $id_asignatura, $id_nom));
             }
 
             return $msg_err;
@@ -106,6 +96,65 @@ final class MatriculaEliminar
         }
 
         return $msg_err;
+    }
+
+    private function eliminarPendientesDePersona(int $id_nom): string
+    {
+        $msg_err = '';
+        $cMatriculas = $this->matriculaDlRepository->getMatriculasPendientes($id_nom);
+        foreach ($cMatriculas as $oMatricula) {
+            $msg_err = self::concatErr(
+                $msg_err,
+                $this->eliminarMatricula(
+                    $oMatricula->getId_activ(),
+                    $oMatricula->getId_asignatura(),
+                    $oMatricula->getId_nom(),
+                ),
+            );
+        }
+        $this->cerrarDossier('p', $id_nom, 1303);
+
+        return $msg_err;
+    }
+
+    private function eliminarMatricula(int $id_activ, int $id_asignatura, int $id_nom): string
+    {
+        $oMatricula = $this->matriculaDlRepository->findById($id_activ, $id_asignatura, $id_nom);
+        if ($oMatricula === null) {
+            return '';
+        }
+        if ($this->matriculaDlRepository->Eliminar($oMatricula) === false) {
+            return _('hay un error, no se ha borrado');
+        }
+
+        $this->cerrarDossier('p', $id_nom, 1303);
+
+        $cActividadAsignaturas = $this->actividadAsignaturaDlRepository->getActividadAsignaturas(
+            ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura],
+        );
+        if (count($cActividadAsignaturas) === 1) {
+            $cMatriculas = $this->matriculaDlRepository->getMatriculas(
+                ['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura],
+            );
+            if (count($cMatriculas) === 0) {
+                $oActividadAsignatura = $cActividadAsignaturas[0];
+                $this->actividadAsignaturaDlRepository->Eliminar($oActividadAsignatura);
+            }
+        }
+
+        return '';
+    }
+
+    private static function concatErr(string $actual, string $nuevo): string
+    {
+        if ($nuevo === '') {
+            return $actual;
+        }
+        if ($actual === '') {
+            return $nuevo;
+        }
+
+        return $actual;
     }
 
     private function cerrarDossier(string $tabla, int $id_pau, int $id_tipo_dossier): void

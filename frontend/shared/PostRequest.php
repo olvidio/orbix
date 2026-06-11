@@ -258,6 +258,9 @@ class PostRequest
      * reintroducen como camposHidden y `array_merge` les da preferencia sobre
      * el hash fresco calculado aquí.
      *
+     * También quita `id_sel` (inyectado por fnjs_solo_uno): si se reenvía en la firma server-to-server
+     * pero validatePost lo excluye vía {@see HashFront::stripPostCamposUiDinamicos}, h/hh no coinciden → 302.
+     *
      * También quita `PHPSESSID`, `atras` y `hpos`:
      * - `PHPSESSID`: `fnjs_update_div` añade `&PHPSESSID=1`; si formara parte del hash hidden,
      *   el receptor lo borra antes de recalcular `hh` → firma rota → 302.
@@ -282,7 +285,7 @@ class PostRequest
             }
         }
 
-        return $campos;
+        return HashFront::stripPostCamposUiDinamicos($campos);
     }
 
     /**

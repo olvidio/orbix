@@ -98,11 +98,17 @@ final class ZonaSacdLista
         $tienePermDes = $oPerm instanceof XPermisos
             && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'));
 
+        // El botón "modificar" abre el modal de días de la semana (fnjs_modificar
+        // en zona_sacd.phtml). Sin perm_des no hay checkboxes, así que se omite.
+        $a_botones = $tienePermDes
+            ? [['txt' => _("modificar"), 'click' => 'fnjs_modificar(this.form)']]
+            : [];
+
         return [
             'tipo' => 'tabla',
             'id_tabla' => 'zona_sacd_ajax',
             'a_cabeceras' => [_("sacd"), _("zona"), _("propia"), _("L"), _("M"), _("X"), _("J"), _("V"), _("S"), _("D")],
-            'a_botones' => [],
+            'a_botones' => $a_botones,
             'con_sel' => $tienePermDes,
             'a_valores' => $a_valores,
             'error' => '',

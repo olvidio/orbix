@@ -163,3 +163,91 @@ function list_nav_persist_selection_on_list_page(Posicion $oPosicion, string|arr
     // Tras recordar(): n=0 guarda en la entrada actual; al volver con stack, en la que restauramos.
     $oPosicion->setParametros($persist, $returningViaStack ? 1 : 0);
 }
+
+/**
+ * Añade restored_id_sel/restored_scroll_id al payload de una llamada interna al volver por pila.
+ *
+ * `id_sel` viaja en el POST del navegador pero no se firma server-to-server
+ * ({@see \frontend\shared\security\HashFront::stripPostCamposUiDinamicos}); el backend del dossier
+ * restaura la fila con `restored_id_sel` cuando hay `stack`.
+ *
+ * @param array<string, mixed> $apiPayload
+ */
+/**
+ * Parámetros mínimos para recargar `dossiers_ver` al volver desde un formulario hijo (sin meta-hash).
+ *
+ * @return array<string, mixed>
+ */
+function list_nav_build_dossier_return_parametros(): array
+{
+    $parametros = [];
+    foreach (['pau', 'obj_pau', 'id_dossier', 'queSel', 'que', 'permiso', 'bloque', 'clase_info'] as $key) {
+        if (!isset($_POST[$key]) || !is_scalar($_POST[$key])) {
+            continue;
+        }
+        $s = (string) $_POST[$key];
+        if ($s !== '') {
+            $parametros[$key] = $s;
+        }
+    }
+
+    $idPauRaw = filter_input(INPUT_POST, 'id_pau', FILTER_VALIDATE_INT);
+    $idPau = is_int($idPauRaw) ? $idPauRaw : 0;
+    if ($idPau <= 0) {
+        $aSel = list_nav_sel_from_post();
+        if ($aSel !== []) {
+            $idPau = (int) strtok((string) $aSel[0], '#');
+        }
+    }
+    if ($idPau > 0) {
+        $parametros['id_pau'] = $idPau;
+    }
+    if (!isset($parametros['pau']) && $idPau > 0) {
+        $parametros['pau'] = 'a';
+    }
+
+    $idSel = list_nav_id_sel_from_post();
+    if (!list_nav_id_sel_is_empty($idSel)) {
+        $parametros['id_sel'] = $idSel;
+    }
+    $scrollId = list_nav_scroll_id_from_post();
+    if ($scrollId !== '' && $scrollId !== '0') {
+        $parametros['scroll_id'] = $scrollId;
+    }
+
+    return $parametros;
+}
+
+/**
+ * Deja en la entrada anterior de la pila un POST limpio para volver al dossier (lista de asignaturas, etc.).
+ */
+function list_nav_persist_dossier_return_to_posicion(Posicion $oPosicion, int $n = 1): void
+{
+    $parametros = list_nav_build_dossier_return_parametros();
+    if ($parametros === []) {
+        return;
+    }
+    $oPosicion->replaceStackParametros($parametros, $n);
+}
+
+function list_nav_apply_restored_selection_to_api_payload(
+    array &$apiPayload,
+    mixed $restoredIdSelFromStack = null,
+    mixed $restoredScrollIdFromStack = null,
+): void {
+    $idSel = $restoredIdSelFromStack;
+    if ($idSel === null || $idSel === '') {
+        $idSel = list_nav_id_sel_from_post();
+    }
+    if (!list_nav_id_sel_is_empty($idSel)) {
+        $apiPayload['restored_id_sel'] = $idSel;
+    }
+
+    $scroll = is_scalar($restoredScrollIdFromStack) ? (string) $restoredScrollIdFromStack : '';
+    if ($scroll === '' || $scroll === '0') {
+        $scroll = list_nav_scroll_id_from_post();
+    }
+    if ($scroll !== '' && $scroll !== '0') {
+        $apiPayload['restored_scroll_id'] = $scroll;
+    }
+}

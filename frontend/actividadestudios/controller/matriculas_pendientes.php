@@ -8,29 +8,46 @@ use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/actividadestudios_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$Qid_sel = null;
-$Qscroll_id = null;
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack);
+$stack = isset($_POST['stack']) ? (int) filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
+$returningViaStack = $stack !== 0;
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = list_nav_id_sel_from_post();
+$Qscroll_id = list_nav_scroll_id_from_post();
+
+if ($returningViaStack) {
+    $oPosicion2 = new Posicion();
+    if ($oPosicion2->goStack($stack)) {
+        $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
+        if (!list_nav_id_sel_is_empty($restoredSel)) {
+            $Qid_sel = $restoredSel;
         }
+        $restoredScroll = $oPosicion2->getParametro('scroll_id');
+        if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
+            $Qscroll_id = (string) $restoredScroll;
+        }
+        $oPosicion2->olvidar($stack);
     }
 }
+
 $oPosicion->recordar();
+
+list_nav_persist_selection_on_list_page(
+    $oPosicion,
+    $Qid_sel,
+    $Qscroll_id,
+    $returningViaStack,
+);
 
 $aviso = '';
 $pendientes = actividadestudios_matriculas_pendientes_from_payload(
     actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_pendientes_data', []))
 );
 $msg_err = $pendientes['msg_err'];
+$aviso = $pendientes['aviso'];
 $a_valores = actividadestudios_lista_valores($pendientes['a_valores'], $Qid_sel, $Qscroll_id);
 
 $titulo = _("lista de matrículas pendientes de poner nota");
@@ -42,7 +59,7 @@ $a_botones = array(
 $a_cabeceras = array(_("actividad"), _("asignatura"), _("alumno"), _("p"));
 
 $oHash = new HashFront();
-$oHash->setCamposNo('sel!mod!pau!scroll_id');
+$oHash->setCamposNo('sel!mod!pau!scroll_id!id_sel!id_pau');
 $a_camposHidden = array(
     'id_dossier' => 3005,
     'permiso' => 3,
@@ -59,6 +76,7 @@ echo $oPosicion->mostrar_left_slide(1);
 ?>
 <script>
     fnjs_ver_ca = function (formulario, n) {
+        fnjs_sync_grid_sel_checkboxes(formulario);
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
             $("#pau").val("a");
@@ -70,7 +88,7 @@ echo $oPosicion->mostrar_left_slide(1);
     fnjs_borrar = function (formulario) {
         let mensaje = "<?= _("¿Está seguro que desea borrar todas las matrículas seleccionadas?");?>";
         if (confirm(mensaje)) {
-            $(mod).val("eliminar");
+            $("#mod").val("eliminar");
             let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/actividadestudios/matricula_eliminar';
             let datos = $(formulario).serialize();
             let request = $.ajax({

@@ -13,12 +13,16 @@ requiere_hashb: false
 frontend_referencias: []
 casos_uso: []
 tags: ["zonassacd", "zona", "sacd", "ajax"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Zona Sacd Ajax
 
-Descripcion funcional pendiente de revisar.
+**Ruta muerta** (confirmado jun 2026): `routes.php` registra la ruta pero el
+controller `src/zonassacd/infrastructure/ui/http/controllers/zona_sacd_ajax.php`
+**no existe**. Era el dispatcher legacy (`que=get_lista|update|get_lista_tot`),
+sustituido por `zona_sacd_lista`, `zona_sacd_update` y `zona_sacd_lista_tot`.
+Pendiente: eliminar la ruta de `src/zonassacd/config/routes.php`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -47,6 +51,4 @@ No se han encontrado referencias exactas al endpoint en `frontend/`.
 
 ## Revision Manual
 
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Revisado jun 2026: ruta sin controller; ver descripcion.

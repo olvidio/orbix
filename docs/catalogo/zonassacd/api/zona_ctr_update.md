@@ -13,12 +13,17 @@ requiere_hashb: false
 frontend_referencias: ["frontend/zonassacd/controller/zona_ctr_update_ajax.php"]
 casos_uso: ["src\\zonassacd\\application\\ZonaCtrUpdate"]
 tags: ["zonassacd", "zona", "ctr", "update"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Zona Ctr Update
 
-Descripcion funcional pendiente de revisar.
+Reasigna los centros marcados (`sel[]`, ids de ubi) a la zona `id_zona_new`.
+
+- El primer digito del `id_ubi` decide el repositorio: `1` → centros dl
+  (`CentroDlRepository`), otro → centros sf (`CentroEllasRepository`).
+- `id_zona_new = 'no'`: deja el centro sin zona (`id_zona = NULL`).
+- Ids vacios o centros inexistentes se ignoran silenciosamente.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -43,6 +48,12 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- Errores parciales de persistencia van acumulados en `mensaje`.
+
+## Permisos
+
+- El caso de uso no valida permisos; el control de acceso está en la UI
+  (checkboxes y boton asignar solo con permiso oficina `des` o `vcsd`).
 
 ## Casos De Uso
 
@@ -54,6 +65,5 @@ El controller pasa `$_POST` completo al caso de uso; la tabla incluye campos inf
 
 ## Revision Manual
 
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Revisado jun 2026 (lectura de `ZonaCtrUpdate::execute`).
+- Pendiente: ejemplos reales de request/response.

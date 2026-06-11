@@ -25,7 +25,7 @@ $oDesplUbisNew->setAction('fnjs_busca_lugares_destino()');
 
 $oHash = new HashFront();
 $oHash->setCamposForm('id_ubi!id_ubi_new!sel');
-$oHash->setCamposNo('sel!id_lugar!id_lugar_new');
+$oHash->setCamposNo('sel!id_lugar!id_lugar_new!id_sel');
 
 $oHashLugar = new HashFront();
 $oHashLugar->setUrl(rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/src/inventario/lista_lugares_de_ubi');

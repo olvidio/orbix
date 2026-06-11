@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "zonassacd"
 flujos: 5
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - zonassacd
@@ -19,6 +19,15 @@ Gestión de **zonas geográficas** y asignación de SACD y centros a zonas. Ruta
 | **Lista sacd-zona** | Endpoint `/src/zonassacd/zona_sacd_lista_tot` (legacy menu apuntaba a ajax) | Lista total SACD |
 
 Permisos de escritura habituales: oficina **`des`** o **`vcsd`**.
+
+## Conceptos
+
+| Termino | Significado |
+|---------|-------------|
+| **zona** | Agrupacion geografica de centros; determina que SACD los atiende (se usa en `misas`). |
+| **asignacion propia** | Cada SACD tiene una zona principal (`propia = si`) y puede tener asignaciones adicionales iglesia/CGI (`propia = no`). |
+| **dias L–D** | Dias de la semana (`dw1..dw7`) en que el SACD atiende esa zona. |
+| **centro dl / sf** | `id_ubi` que empieza por `1` = centro dl; por `2` = centro sf/ellas (estos solo visibles con permiso). |
 
 ## Zona SACD
 
@@ -48,7 +57,8 @@ Consultar los **SACD asignados a una zona** (o sin zona), reasignarlos a otra zo
 
 #### Editar dias de la semana de un SACD
 
-1. Marcar **una** fila y abrir el modal (accion modificar del listado).
+1. Marcar **una** fila y pulsar el boton **modificar** del listado (abre el modal).
+   *Nota: este boton se perdio en la migracion desde `apps/` y fue restaurado en jun 2026.*
 2. Marcar/desmarcar Lunes–Domingo.
 3. Pulsar **Grabar** (llama modulo **misas**: `zona_sacd_datos_get` / `zona_sacd_datos_put`).
 
@@ -107,10 +117,12 @@ Obtener listado **global** de todos los SACD de la delegacion con sus zonas (y f
 
 ### Notas
 
-- El menu legacy apuntaba a `zona_sacd_ajax.php` con `que=get_lista_tot`; la ruta `/src/zonassacd/zona_sacd_ajax` esta registrada pero el controller HTTP puede estar pendiente de migracion — usar `zona_sacd_lista_tot` como endpoint canonico.
+- Confirmado (jun 2026): las rutas `/src/zonassacd/zona_sacd_ajax` y `zona_ctr_ajax`
+  estan registradas en `routes.php` pero sus controllers **no existen** (rutas muertas,
+  pendiente limpiarlas). Usar `zona_sacd_lista_tot` como endpoint canonico.
+- `zona_sacd_lista_tot` no tiene aun pantalla frontend que lo consuma.
 
 ## Revision Pendiente
 
-- Confirmar pantalla frontend definitiva para **lista sacd-zona** tras migracion.
-- Documentar errores concretos desde application layer en fichas API.
-- Enlazar flujos `*_ajax` tecnicos con pantallas (ver `relaciones/pantallas_api.md`).
+- Crear pantalla frontend para **lista sacd-zona** (consumidor de `zona_sacd_lista_tot`).
+- Eliminar rutas muertas `zona_sacd_ajax` / `zona_ctr_ajax` de `src/zonassacd/config/routes.php`.

@@ -92,6 +92,39 @@ final class MatriculaEliminarTest extends TestCase
         $this->assertStringContainsString('no se ha borrado', $msg);
     }
 
+    public function test_p_p_borra_todas_las_pendientes_con_sel_id_activ_id_nom(): void
+    {
+        $oMat1 = $this->createMock(Matricula::class);
+        $oMat1->method('getId_activ')->willReturn(10);
+        $oMat1->method('getId_asignatura')->willReturn(20);
+        $oMat1->method('getId_nom')->willReturn(30);
+
+        $oMat2 = $this->createMock(Matricula::class);
+        $oMat2->method('getId_activ')->willReturn(10);
+        $oMat2->method('getId_asignatura')->willReturn(21);
+        $oMat2->method('getId_nom')->willReturn(30);
+
+        $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
+        $matRepo->method('getMatriculasPendientes')->with(30)->willReturn([$oMat1, $oMat2]);
+        $matRepo->method('findById')->willReturnMap([
+            [10, 20, 30, $oMat1],
+            [10, 21, 30, $oMat2],
+        ]);
+        $matRepo->expects($this->exactly(2))->method('Eliminar')->willReturn(true);
+        $matRepo->method('getMatriculas')->willReturn([]);
+
+        $aaRepo = $this->createMock(ActividadAsignaturaDlRepositoryInterface::class);
+        $aaRepo->method('getActividadAsignaturas')->willReturn([]);
+
+        $useCase = new MatriculaEliminar($aaRepo, $matRepo, $this->createMock(DossierRepositoryInterface::class));
+
+        $msg = $useCase->execute([
+            'pau' => 'p',
+            'sel' => ['10#30'],
+        ]);
+        $this->assertSame('', $msg);
+    }
+
     public function test_p_p_borra_asignatura_impartida_si_queda_huerfana(): void
     {
         $oMat = $this->createMock(Matricula::class);

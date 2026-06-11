@@ -4,7 +4,7 @@ tipo: "endpoint"
 modulo: "zonassacd"
 url: "/src/zonassacd/zona_sacd_lista_tot"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "consulta"
 controller: "src/zonassacd/infrastructure/ui/http/controllers/zona_sacd_lista_tot.php"
 entrada: []
 entrada_obligatoria: []
@@ -13,12 +13,14 @@ requiere_hashb: false
 frontend_referencias: []
 casos_uso: ["src\\zonassacd\\application\\ZonaSacdListaTot"]
 tags: ["zonassacd", "zona", "sacd", "lista", "tot"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Zona Sacd Lista Tot
 
-Descripcion funcional pendiente de revisar.
+Listado **global** de todos los sacd de la delegacion con sus zonas asignadas
+(una fila por asignacion, zona propia primero) y el flag `propia` (si/no).
+Los sacd sin zona aparecen con zona vacia. Ordenado por apellidos.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -38,6 +40,7 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
+- `data`: `tipo: "lista"`, `a_cabeceras` (sacd, zona, propia), `a_valores`.
 
 ## Casos De Uso
 
@@ -45,10 +48,11 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
+Sin consumidor en `frontend/` (confirmado jun 2026): el menu legacy **Lista sacd-zona**
+apuntaba a `zona_sacd_ajax.php?que=get_lista_tot`. Es el endpoint canonico para ese
+listado; la pantalla frontend esta pendiente de crear.
 
 ## Revision Manual
 
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Revisado jun 2026 (lectura de `ZonaSacdListaTot::execute`).
+- Pendiente: pantalla frontend que lo consuma + ejemplos de request/response.

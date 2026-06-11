@@ -6,6 +6,27 @@ use frontend\shared\config\OrbixRuntime;
 
 class HashFront
 {
+    /**
+     * Campos que el JS puede inyectar al enviar (p. ej. fnjs_solo_uno) y no forman parte del hash del formulario origen.
+     *
+     * @var list<string>
+     */
+    private const POST_CAMPOS_UI_DINAMICOS = ['id_sel'];
+
+    /**
+     * Quita campos que el JS inyecta al enviar y no deben participar en el hash (ni al firmar ni al validar).
+     *
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    public static function stripPostCamposUiDinamicos(array $data): array
+    {
+        foreach (self::POST_CAMPOS_UI_DINAMICOS as $campoUi) {
+            unset($data[$campoUi]);
+        }
+
+        return $data;
+    }
 
     /**
      * Dirección Url
@@ -634,8 +655,12 @@ class HashFront
     } elseif (is_string($aParam)) {
         $aParam = self::string2array($aParam);
     }
-    //parece que sólo la usa web\Posicion => elimino hnov. y añado hpos
-    unset($aParam['hnov']);
+    // Pila de Posicion: recalcular firma; no reenviar meta hash de un formulario anterior.
+    self::$aValoresCamposNo = [];
+    foreach (['h', 'hh', 'hhc', 'horig', 'hhorig', 'hc', 'hchk', 'hno', 'hnov'] as $metaHashKey) {
+        unset($aParam[$metaHashKey]);
+    }
+    $aParam = self::stripPostCamposUiDinamicos($aParam);
     $aParam['hpos'] = 1;
     $aParamSorted = self::ordenarArrayParam($aParam);
     $sPath = self::FullPath($url);
@@ -1151,6 +1176,7 @@ class HashFront
                 unset($aPOST[$key]);
             }
         }
+        $aPOST = self::stripPostCamposUiDinamicos($aPOST);
         // DesplegableArray envía `name="id_cdc[n]"` → PHP usa `$_POST['id_cdc'][n]` (array) o, en
         // entornos raros, claves literales `id_cdc[n]`. El hash del formulario usa la clave
         // canónica `id_cdc` (ver ordenarQuery sobre sCamposForm). Sin normalizar, validatePost

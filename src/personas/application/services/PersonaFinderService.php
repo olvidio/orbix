@@ -11,6 +11,7 @@ use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
 use src\shared\infrastructure\GlobalPdo;
+use src\ubis\domain\RegionStgrAviso;
 
 /**
  * Servicio de aplicación para búsqueda de personas en múltiples esquemas y repositorios.
@@ -77,6 +78,33 @@ class PersonaFinderService
         }
 
         return $persona;
+    }
+
+    /**
+     * Búsqueda de persona para listados: global activa y, si falla por dl sin región stgr, pub.
+     *
+     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param-out array<string, array<string, string>> $problemasRegionStgr
+     */
+    public function findPersonaParaListado(
+        int $id_nom,
+        array &$problemasRegionStgr = [],
+        bool &$marcaRegionStgr = false,
+    ): PersonaDl|PersonaPub|null {
+        $marcaRegionStgr = false;
+        try {
+            $persona = $this->findPersonaEnGlobal($id_nom, $problemasRegionStgr);
+            if ($persona !== null) {
+                return $persona;
+            }
+        } catch (\RuntimeException $e) {
+            if (!RegionStgrAviso::esDlSinRegion($e)) {
+                throw $e;
+            }
+            RegionStgrAviso::registrar($problemasRegionStgr, $e);
+        }
+
+        return $this->personaPubRepository->findByIdParaListado($id_nom, $problemasRegionStgr, $marcaRegionStgr);
     }
 
     /**

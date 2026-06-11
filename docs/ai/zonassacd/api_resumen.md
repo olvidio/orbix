@@ -20,9 +20,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 ## `/src/zonassacd/zona_ctr_ajax`
 
 - Id: `zonassacd.zona_ctr_ajax`
-- Controller: `src/zonassacd/infrastructure/ui/http/controllers/zona_ctr_ajax.php`
-- Entrada: ninguna detectada.
-- Respuesta: `pendiente_revision`
+- **Ruta muerta**: el controller no existe; sustituido por `zona_ctr_lista` y `zona_ctr_update`.
 
 ## `/src/zonassacd/zona_ctr_lista`
 
@@ -48,9 +46,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 ## `/src/zonassacd/zona_sacd_ajax`
 
 - Id: `zonassacd.zona_sacd_ajax`
-- Controller: `src/zonassacd/infrastructure/ui/http/controllers/zona_sacd_ajax.php`
-- Entrada: ninguna detectada.
-- Respuesta: `pendiente_revision`
+- **Ruta muerta**: el controller no existe; sustituido por `zona_sacd_lista`, `zona_sacd_update` y `zona_sacd_lista_tot`.
 
 ## `/src/zonassacd/zona_sacd_lista`
 

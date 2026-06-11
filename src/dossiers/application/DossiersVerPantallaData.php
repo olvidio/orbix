@@ -65,18 +65,20 @@ class DossiersVerPantallaData
 
         $Qid_sel = '';
         $Qscroll_id = $this->scrollIdFromPost($post);
+        if (array_key_exists('restored_id_sel', $post)) {
+            $Qid_sel = $this->idSelScalar($post['restored_id_sel']);
+        }
+        if (array_key_exists('restored_scroll_id', $post)) {
+            $restoredScroll = input_int($post, 'restored_scroll_id');
+            if ($restoredScroll > 0) {
+                $Qscroll_id = $restoredScroll;
+            }
+        }
         $stack = '';
         if (isset($post['stack']) && input_string($post, 'stack') !== '') {
             $stack = (string) filter_var(input_string($post, 'stack'), FILTER_SANITIZE_NUMBER_INT);
-            if ($stack !== '' && $stack !== '0') {
-                if (array_key_exists('restored_id_sel', $post)) {
-                    $Qid_sel = $this->idSelScalar($post['restored_id_sel']);
-                }
-                if (array_key_exists('restored_scroll_id', $post)) {
-                    $Qscroll_id = input_int($post, 'restored_scroll_id');
-                }
-            }
-        } elseif ($a_sel !== []) {
+        }
+        if ($Qid_sel === '' && $a_sel !== []) {
             $first = $a_sel[0] ?? '';
             $Qid_sel = is_scalar($first) ? (string) $first : '';
         }
@@ -332,7 +334,7 @@ class DossiersVerPantallaData
                     'action_tabla_link_spec' => $actionTablaLinkSpec,
                     'hash' => [
                         'campos_form' => 'mod',
-                        'campos_no' => 'sel!mod!scroll_id!refresh',
+                        'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
                         'campos_hidden' => $a_camposHidden,
                     ],
                     'tabla' => [

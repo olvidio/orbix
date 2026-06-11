@@ -937,9 +937,29 @@ class Lista
 					grid_$id_tabla.setSelectedRows([args.row]);
 				});
 				
-				grid_$id_tabla.onSelectedRowsChanged.subscribe(function (e,args) {
-					$.when($(\"input:checkbox\").prop('checked', false));
-					$.when($(\".selected input:checkbox\").prop('checked', true));
+				grid_$id_tabla.onSelectedRowsChanged.subscribe(function (e, args) {
+					var \$form = $('#grid_$id_tabla').closest('form');
+					if (!\$form.length) {
+						\$form = $('#grid_$id_tabla').parent();
+					}
+					\$form.find('input.sel').prop('checked', false);
+					if (!args.rows || args.rows.length === 0) {
+						return;
+					}
+					args.rows.forEach(function (row) {
+						var item = dataView_$id_tabla.getItem(row);
+						if (!item || !item.sel) {
+							return;
+						}
+						var parts = item.sel.split('#');
+						var val = parts.slice(1).join('#');
+						if (!val) {
+							return;
+						}
+						\$form.find('input.sel').filter(function () {
+							return $(this).val() === val;
+						}).prop('checked', true);
+					});
 				});
 				
 				grid_$id_tabla.onCellChange.subscribe(function (e, args) {

@@ -77,7 +77,7 @@ $msg_err = $lista['msg_err'];
 $a_valores = actividadestudios_lista_valores($lista['a_valores'], $Qid_sel, $Qscroll_id);
 
 $oHash = new HashFront();
-$oHash->setCamposNo('sel!mod!pau!scroll_id');
+$oHash->setCamposNo('sel!mod!pau!scroll_id!id_sel!id_pau');
 $a_camposHidden = array(
     'id_dossier' => 3005,
     'permiso' => 3,

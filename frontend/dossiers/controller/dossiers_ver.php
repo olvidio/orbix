@@ -14,6 +14,7 @@ use frontend\notas\helpers\SelectNotasDeUnaPersonaRender;
 use frontend\actividadestudios\helpers\SelectMatriculasDeUnaActividadRender;
 use frontend\actividadestudios\helpers\SelectMatriculasDeUnaPersonaRender;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\web\Posicion;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -26,6 +27,21 @@ $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $requestPayload = PostRequest::requestPayloadForHash();
+$stackFromPost = isset($requestPayload['stack']) ? (string) filter_var($requestPayload['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
+$returningViaStack = $stackFromPost !== '' && $stackFromPost !== '0';
+
+// Leer selección ANTES de recordar(): recordar() puede reindexar la pila y el stack del POST deja de coincidir.
+$restoredIdSelFromStack = null;
+$restoredScrollIdFromStack = null;
+if ($returningViaStack) {
+    $oPosicionRestore = new Posicion();
+    if ($oPosicionRestore->goStack((int) $stackFromPost)) {
+        $restoredIdSelFromStack = $oPosicionRestore->getParametro('id_sel');
+        $restoredScrollIdFromStack = $oPosicionRestore->getParametro('scroll_id');
+        $oPosicionRestore->olvidar((int) $stackFromPost);
+    }
+}
+
 $Qrefresh = tessera_imprimir_int($requestPayload['refresh'] ?? 0);
 $oPosicion->recordar($Qrefresh);
 
@@ -38,22 +54,22 @@ if ($Qrefresh > 0) {
         list_nav_scroll_id_from_post(),
         false,
     );
+} elseif ($returningViaStack && !list_nav_id_sel_is_empty(list_nav_id_sel_for_lista($restoredIdSelFromStack))) {
+    list_nav_persist_selection_on_list_page(
+        $oPosicion,
+        list_nav_id_sel_for_lista($restoredIdSelFromStack),
+        is_scalar($restoredScrollIdFromStack) ? (string) $restoredScrollIdFromStack : '',
+        false,
+    );
 } elseif ($idDossierEarly === '' && $claseInfoEarly === '') {
     list_nav_persist_selection_to_posicion($oPosicion, 1);
 } elseif (list_nav_sel_from_post() !== [] || list_nav_scroll_id_from_post() !== '') {
-    // Entrada directa a un segmento (cargos, asistentes, …) desde un listado externo.
+    // Entrada directa a un segmento (cargos, asistentes, matrículas pendientes, …) desde un listado externo.
     list_nav_persist_selection_to_posicion($oPosicion, 1);
 }
 
 // Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
 $requestPayload['stack_actual'] = $oPosicion->getStack(0);
-
-$stackFromPost = isset($requestPayload['stack']) ? (string) filter_var($requestPayload['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
-if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
-    $requestPayload['restored_id_sel']    = $oPosicion->getParametro('id_sel');
-    $requestPayload['restored_scroll_id'] = $oPosicion->getParametro('scroll_id');
-    $oPosicion->olvidar($stackFromPost);
-}
 
 $apiPayload = PostRequest::requestPayloadForHash();
 $idDossierReq = trim(tessera_imprimir_string($apiPayload['id_dossier'] ?? ''));
@@ -69,6 +85,12 @@ if ($idDossierReq === '' && $claseInfoReq === '') {
         unset($apiPayload['sel']);
     }
 }
+
+list_nav_apply_restored_selection_to_api_payload(
+    $apiPayload,
+    $restoredIdSelFromStack,
+    $restoredScrollIdFromStack,
+);
 
 $data = PostRequest::getDataFromUrl('/src/dossiers/dossiers_ver_pantalla_data', $apiPayload, false);
 $errorMsg = tessera_imprimir_string($data['error'] ?? '');

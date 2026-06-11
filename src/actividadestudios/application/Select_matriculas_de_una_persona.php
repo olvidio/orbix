@@ -200,7 +200,7 @@ class Select_matriculas_de_una_persona
             'html_prefix' => $htmlPrefix,
             'hash' => [
                 'campos_form' => 'est_ok!observ_est',
-                'campos_no' => 'sel!mod!scroll_id!refresh',
+                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
                 'campos_hidden' => [
                     'pau' => $this->pau,
                     'id_pau' => $this->id_pau,

@@ -644,12 +644,13 @@ function actividadestudios_matriculas_lista_otras_r_from_payload(array $payload)
 
 /**
  * @param array<string, mixed> $payload
- * @return array{msg_err: string, a_valores: array<int|string, mixed>}
+ * @return array{msg_err: string, aviso: string, a_valores: array<int|string, mixed>}
  */
 function actividadestudios_matriculas_pendientes_from_payload(array $payload): array
 {
     return [
         'msg_err' => tessera_imprimir_string($payload['msg_err'] ?? ''),
+        'aviso' => tessera_imprimir_string($payload['aviso'] ?? ''),
         'a_valores' => actividades_lista_datos($payload['a_valores'] ?? []),
     ];
 }

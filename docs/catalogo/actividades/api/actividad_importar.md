@@ -7,43 +7,60 @@ metodos: ["GET", "POST"]
 operacion: "mutacion"
 controller: "src/actividades/infrastructure/ui/http/controllers/actividad_importar.php"
 entrada: ["post.sel:array"]
-entrada_obligatoria: []
+entrada_obligatoria: ["post.sel"]
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividades_ActividadImportarData"
-respuesta_data: ["error_txt:string, avisos: list<string>"]
+respuesta_data: ["avisos:list<string>"]
 requiere_hashb: false
-frontend_referencias: []
+errores: ["hay un error, no se ha importado"]
+frontend_referencias: ["frontend/actividades/view/actividades.js"]
 casos_uso: ["src\\actividades\\application\\ActividadImportar"]
 tags: ["actividades", "actividad", "importar"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Actividad Importar
 
-Endpoint backend AJAX: importa las actividades seleccionadas y regenera su proceso cuando la app `procesos` esta instalada.
+Importa a la propia dl las actividades de otras dl seleccionadas (`sel[]`):
+crea un registro `Importada` por cada id y, si la app `procesos` esta instalada,
+regenera el proceso de cada actividad (`generarProceso` con reset).
 
-Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+Los avisos que emite la regeneracion de procesos (p. ej. fases no aplicables)
+se devuelven en `data.avisos` cuando no hubo errores.
+
+Flujo de usuario: menu *Importar* → `actividad_que.php?modo=importar` →
+listado de actividades de otras dl → marcar → boton importar.
 
 ## Endpoint
 
 - URL: `/src/actividades/actividad_importar`
-- Metodos registrados: `GET, POST`
+- Metodos registrados: `GET, POST` (solo lee POST)
 - Operacion: `mutacion`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_importar.php`
 
+Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
+
 ## Entrada
 
-| Campo | Tipo | Origen | Obligatorio | Notas |
-|-------|------|--------|-------------|-------|
-| `sel` | `array` | controller+application | No | controller+application |
+| Campo | Tipo | Obligatorio | Notas |
+|-------|------|-------------|-------|
+| `sel` | `array` | Si | Ids seleccionados (`id` o `id#extra`). Vacio ⇒ exito sin hacer nada. |
 
 ## Salida
 
 - Helper: `ContestarJson::enviar`
-- Forma: `standard_envelope_string_data`
-- Exito: `success: true`, `data: "ok"`.
-- Payload en `data` (schema `actividades_ActividadImportarData`):
-  - `error_txt` (`string, avisos: list<string>`)
+- Exito sin avisos: `success: true` (sin payload).
+- Exito con avisos: `success: true`, `data: {"avisos": ["..."]}`.
+- Error: `success: false`, `mensaje` acumula un renglon por fallo.
+
+## Permisos
+
+- El caso de uso no valida permisos; el control de acceso esta en la UI
+  (la pantalla `actividad_que?modo=importar` y su listado).
+
+## Errores conocidos
+
+- `hay un error, no se ha importado` + detalle (por cada id fallido)
 
 ## Casos De Uso
 
@@ -51,10 +68,11 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Frontend Relacionado
 
-No se han encontrado referencias exactas al endpoint en `frontend/`.
+- `frontend/actividades/view/actividades.js` — `jsForm.update(form, 'importar')`
+  desde el listado de busqueda en modo importar.
 
 ## Revision Manual
 
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Revisado jun 2026 (lectura de controller + `ActividadImportar`): efecto Importada +
+  regeneracion de proceso y forma de `data.avisos` verificados.
+- Pendiente: ejemplos reales de request/response.

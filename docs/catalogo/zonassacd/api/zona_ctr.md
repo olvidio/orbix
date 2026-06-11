@@ -4,23 +4,25 @@ tipo: "endpoint"
 modulo: "zonassacd"
 url: "/src/zonassacd/zona_ctr"
 metodos: ["GET", "POST"]
-operacion: "mutacion"
+operacion: "consulta"
 controller: "src/zonassacd/infrastructure/ui/http/controllers/zona_ctr.php"
 entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "zonassacd_ZonaCtrPageData"
-respuesta_data: ["a_opciones:array"]
+respuesta_data: ["a_opciones:array", "perm_des:boolean"]
 requiere_hashb: false
 frontend_referencias: ["frontend/zonassacd/controller/zona_ctr.php", "frontend/zonassacd/controller/zona_ctr_lista_ajax.php", "frontend/zonassacd/controller/zona_ctr_update_ajax.php"]
 casos_uso: ["src\\zonassacd\\application\\ZonaCtrPage"]
 tags: ["zonassacd", "zona", "ctr"]
-estado_revision: "generado"
+estado_revision: "revisado"
 ---
 
 # Zona Ctr
 
-Descripcion funcional pendiente de revisar.
+Datos iniciales de la pantalla **Zonas-ctr**: opciones del desplegable de zonas
+(`a_opciones`) y permiso de modificacion (`perm_des`, oficina `des` o `vcsd`).
+No muta nada.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -41,12 +43,13 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 - Forma: `standard_envelope_string_data`
 - Exito: `success: true`, `data: "ok"`.
 - Payload en `data` (schema `zonassacd_ZonaCtrPageData`):
-  - `a_opciones` (`array`)
+  - `a_opciones` (`array`) — zonas para el desplegable
+  - `perm_des` (`boolean`) — permiso oficina `des` o `vcsd`
 
 ## Permisos
 
-- Permiso oficina `des`
-- Permiso oficina `vcsd`
+- Responde a cualquier usuario autenticado; `perm_des` informa a la UI de si debe
+  mostrar las acciones de modificacion y la opcion `sin asignar zona sf`.
 
 ## Casos De Uso
 
@@ -60,6 +63,5 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 
 ## Revision Manual
 
-- Confirmar permisos/autorizacion de oficina.
-- Anadir ejemplos reales de request/response.
-- Marcar `estado_revision: "revisado"` cuando este validado.
+- Revisado jun 2026 (lectura de `ZonaCtrPage::getData`).
+- Pendiente: ejemplos reales de request/response.

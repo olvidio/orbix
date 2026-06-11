@@ -45,7 +45,7 @@ $oTablaAvisos->setDatos($view['a_valores']);
 $url_usuario_ajax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/usuario_avisos_pref.php';
 $oHashAvisos = new HashFront();
 $oHashAvisos->setUrl($url_usuario_ajax);
-$oHashAvisos->setCamposNo('sel!scroll_id!salida');
+$oHashAvisos->setCamposNo('sel!scroll_id!salida!id_sel');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
     'quien' => $Qquien,

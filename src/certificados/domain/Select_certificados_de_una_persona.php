@@ -135,7 +135,7 @@ class Select_certificados_de_una_persona
         return [
             'segment_tipo' => 'select_certificados_de_una_persona',
             'hash_main' => [
-                'campos_no' => 'sel!mod!scroll_id!refresh',
+                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
                 'campos_hidden' => [
                     'pau' => $this->pau,
                     'id_pau' => $this->id_pau,

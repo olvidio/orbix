@@ -92,7 +92,7 @@ $oHash->setCamposForm('certificado');
 
 $oHash1 = new HashFront();
 $oHash1->setCamposForm('sel!mod');
-$oHash1->setCamposNo('sel!scroll_id!mod!refresh');
+$oHash1->setCamposNo('sel!scroll_id!mod!refresh!id_sel');
 
 $pdf_signed_urls = [];
 foreach ($a_valores as $idx => $row) {

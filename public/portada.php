@@ -53,7 +53,7 @@ $txt_eliminar = _("esto borrará los anuncios seleccionados");
 
 $oHash = new HashFront();
 $oHash->setCamposForm('sel!mod');
-$oHash->setCamposNo('sel!scroll_id!refresh!mod');
+$oHash->setCamposNo('sel!scroll_id!refresh!mod!id_sel');
 $oHash->setArrayCamposHidden(['id_grupmenu' => $id_grupmenu]);
 ?>
 
