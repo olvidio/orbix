@@ -135,10 +135,7 @@ class PlanningRenderer
         $periodos_sv = $this->casaPeriodosPorUbi ?? [];
         foreach ($this->a_actividades as $ww) {
             foreach ($ww as $per => $actividad) {
-                [$pau, $id_pau, $persona, $actividad] = $this->parsePersonaFila(
-                    (string)$per,
-                    is_array($actividad) ? $actividad : []
-                );
+                [$pau, $id_pau, $persona, $actividad] = $this->parsePersonaFila((string)$per, $actividad);
                 $id_ubi = 0;
 
                 if ($pau === 'u') {
@@ -456,7 +453,7 @@ class PlanningRenderer
      * Descompone la clave `pau#id#nombre` (o fila envuelta con indice numerico).
      *
      * @param array<int|string, mixed> $actividad
-     * @return array{0: string, 1: string, 2: string, 3: array<int|string, mixed>}
+     * @return array{0: string, 1: string, 2: string, 3: list<array<string, mixed>>}
      */
     private function parsePersonaFila(string $per, array $actividad): array
     {
@@ -465,18 +462,56 @@ class PlanningRenderer
             if (is_string($nestedKey) && str_contains($nestedKey, '#')) {
                 $nested = $actividad[$nestedKey];
                 $per = $nestedKey;
-                $actividad = is_array($nested) ? $nested : [];
+                $actividad = is_array($nested) ? $this->normalizeActividadList($nested) : [];
             }
         }
 
         $parts = explode('#', $per, 4);
 
         return [
-            $parts[0] ?? '',
+            $parts[0],
             $parts[1] ?? '',
             $parts[2] ?? '',
-            $actividad,
+            $this->normalizeActividadList($actividad),
         ];
+    }
+
+    /**
+     * @param array<int|string, mixed> $raw
+     * @return list<array<string, mixed>>
+     */
+    private function normalizeActividadList(array $raw): array
+    {
+        if ($raw === []) {
+            return [];
+        }
+        if (!array_is_list($raw)) {
+            return [$this->normalizeActivityRow($raw)];
+        }
+        $out = [];
+        foreach ($raw as $item) {
+            if (is_array($item)) {
+                $out[] = $this->normalizeActivityRow($item);
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param array<mixed, mixed> $raw
+     * @return array<string, mixed>
+     */
+    private function normalizeActivityRow(array $raw): array
+    {
+        $out = [];
+        foreach ($raw as $key => $value) {
+            if (is_string($key)) {
+                $out[$key] = $value;
+            }
+        }
+
+        return $out;
     }
 
     /**

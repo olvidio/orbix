@@ -118,10 +118,10 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
                 $Qscroll_id = (string) $restoredScroll;
             }
             $Qmodo = tessera_imprimir_string($oPosicion2->getParametro('modo') ?? $Qmodo);
-            $Qstatus = (int)($oPosicion2->getParametro('status') ?? $Qstatus);
+            $Qstatus = tessera_imprimir_int($oPosicion2->getParametro('status'), $Qstatus);
             $Qid_tipo_activ = tessera_imprimir_string($oPosicion2->getParametro('id_tipo_activ') ?? $Qid_tipo_activ);
             $Qfiltro_lugar = tessera_imprimir_string($oPosicion2->getParametro('filtro_lugar') ?? $Qfiltro_lugar);
-            $Qid_ubi = (int)($oPosicion2->getParametro('id_ubi') ?? $Qid_ubi);
+            $Qid_ubi = tessera_imprimir_int($oPosicion2->getParametro('id_ubi'), $Qid_ubi);
             $Qnom_activ = tessera_imprimir_string($oPosicion2->getParametro('nom_activ') ?? $Qnom_activ);
             $Qperiodo = tessera_imprimir_string($oPosicion2->getParametro('periodo') ?? $Qperiodo);
             $Qyear = tessera_imprimir_string($oPosicion2->getParametro('year') ?? $Qyear);
@@ -130,7 +130,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
             $Qempiezamax = tessera_imprimir_string($oPosicion2->getParametro('empiezamax') ?? $Qempiezamax);
             $Qfases_on = is_array($oPosicion2->getParametro('fases_on')) ? $oPosicion2->getParametro('fases_on') : $Qfases_on;
             $Qfases_off = is_array($oPosicion2->getParametro('fases_off')) ? $oPosicion2->getParametro('fases_off') : $Qfases_off;
-            $Qpublicado = (int)($oPosicion2->getParametro('publicado') ?? $Qpublicado);
+            $Qpublicado = tessera_imprimir_int($oPosicion2->getParametro('publicado'), $Qpublicado);
             $oPosicion2->olvidar($stackFromPost);
         }
     }
@@ -178,7 +178,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
 
 $selForApi = list_nav_id_sel_is_empty($Qid_sel)
     ? []
-    : (is_array($Qid_sel) ? array_values(array_map('strval', $Qid_sel)) : [(string) $Qid_sel]);
+    : (is_array($Qid_sel) ? $Qid_sel : [tessera_imprimir_string($Qid_sel)]);
 
 // Delegamos TODA la generacion del listado al caso de uso backend.
 $data = PostRequest::getDataFromUrl('/src/actividades/actividad_select_datos', [
@@ -268,7 +268,9 @@ $a_camposHiddenSel = [
 ];
 $oHashSel->setArraycamposHidden($a_camposHiddenSel);
 
-$id_sel_value = is_array($Qid_sel) ? (string) ($Qid_sel[0] ?? '') : (string) $Qid_sel;
+$id_sel_value = is_array($Qid_sel)
+    ? tessera_imprimir_string($Qid_sel[0] ?? '')
+    : tessera_imprimir_string($Qid_sel);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

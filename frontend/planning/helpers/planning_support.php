@@ -166,7 +166,25 @@ function planning_casa_periodos_por_ubi(mixed $raw): array
 }
 
 /**
+ * @param array<mixed, mixed> $raw
+ * @return array<string, mixed>
+ */
+function planning_string_key_row(array $raw): array
+{
+    $out = [];
+    foreach ($raw as $key => $value) {
+        if (is_string($key)) {
+            $out[$key] = $value;
+        }
+    }
+
+    return $out;
+}
+
+/**
  * Mapa persona/casa: claves `p#…`, `u#…`, `##`, etc.
+ *
+ * @param array<int|string, mixed> $items
  */
 function planning_is_persona_casa_map(array $items): bool
 {
@@ -194,17 +212,18 @@ function planning_parse_actividad_list(mixed $items): array
         $parsedItems = [];
         foreach ($items as $item) {
             if (is_array($item)) {
-                $parsedItems[] = $item;
+                $parsedItems[] = planning_string_key_row($item);
             }
         }
 
         return $parsedItems;
     }
 
-    return [$items];
+    return [planning_string_key_row($items)];
 }
 
 /**
+ * @param array<int|string, mixed> $items
  * @return array<int|string, list<array<string, mixed>>>
  */
 function planning_parse_persona_casa_map(array $items): array
@@ -236,11 +255,13 @@ function planning_actividades_map(mixed $raw): array
                 continue;
             }
             if (planning_is_persona_casa_map($items)) {
-                $parsedGroup[$gKey] = planning_parse_persona_casa_map($items);
+                foreach (planning_parse_persona_casa_map($items) as $pKey => $actsList) {
+                    $parsedGroup[$pKey] = $actsList;
+                }
             } elseif (array_is_list($items)) {
                 $parsedGroup[$gKey] = planning_parse_actividad_list($items);
             } else {
-                $parsedGroup[$gKey] = [$items];
+                $parsedGroup[$gKey] = [planning_string_key_row($items)];
             }
         }
         $out[$key] = $parsedGroup;

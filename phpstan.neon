@@ -11,6 +11,7 @@ parameters:
     # gettext / helpers cargados vía composer "files"
     scanFiles:
         - frontend/shared/helpers/func_tablas.php
+        - frontend/shared/helpers/list_nav_support.php
         - frontend/notas/helpers/tessera_imprimir_support.php
         - frontend/notas/helpers/acta_imprimir_support.php
         - frontend/notas/helpers/notas_support.php

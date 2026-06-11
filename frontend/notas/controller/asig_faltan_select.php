@@ -39,7 +39,7 @@ if ($stackFromPost !== 0) {
         if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
             $Qscroll_id = (string) $restoredScroll;
         }
-        $Qnumero = (int)($oPosicion2->getParametro('numero') ?? $Qnumero);
+        $Qnumero = tessera_imprimir_int($oPosicion2->getParametro('numero'), $Qnumero);
         $Qb_c = tessera_imprimir_string($oPosicion2->getParametro('b_c') ?? $Qb_c);
         $Qc1 = tessera_imprimir_string($oPosicion2->getParametro('c1') ?? $Qc1);
         $Qc2 = tessera_imprimir_string($oPosicion2->getParametro('c2') ?? $Qc2);

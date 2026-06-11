@@ -39,7 +39,7 @@ if ($stackFromPost !== 0) {
         if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
             $Qscroll_id = (string) $restoredScroll;
         }
-        $Qid_asignatura = (int)($oPosicion2->getParametro('id_asignatura') ?? $Qid_asignatura);
+        $Qid_asignatura = tessera_imprimir_int($oPosicion2->getParametro('id_asignatura'), $Qid_asignatura);
         $Qpersonas_n = tessera_imprimir_string($oPosicion2->getParametro('personas_n') ?? $Qpersonas_n);
         $Qpersonas_agd = tessera_imprimir_string($oPosicion2->getParametro('personas_agd') ?? $Qpersonas_agd);
         $Qb_c = tessera_imprimir_string($oPosicion2->getParametro('b_c') ?? $Qb_c);

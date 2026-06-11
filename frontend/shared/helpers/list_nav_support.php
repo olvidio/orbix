@@ -34,7 +34,7 @@ function list_nav_sel_from_post(): array
     if (is_array($raw)) {
         $out = [];
         foreach ($raw as $item) {
-            if (!is_scalar($item)) {
+            if ($item === false) {
                 continue;
             }
             $s = (string) $item;
