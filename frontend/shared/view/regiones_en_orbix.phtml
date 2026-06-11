@@ -66,7 +66,11 @@
               <?= $hashParamsRegiones ?>,
               region: region
             },
-            target: '#div_modificar5'
+            target: '#div_modificar5',
+            onDone: function () {
+                // la ventana es #div_modal (el target ajax es un div interior)
+                fnjs_ventana_ajustar('#div_modal');
+            }
         });
 
         $('#div_modal').addClass('ventana');

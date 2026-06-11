@@ -127,6 +127,7 @@ fnjs_nuevo=function(){
 		var data = fnjs_tipo_activ_parseRta(json);
 		if (data === null) { return; }
 		$('#div_modificar').html(data.html || '');
+		fnjs_ventana_ajustar('#div_modificar');
 	});
 }
 
@@ -147,6 +148,7 @@ fnjs_modificar=function(id_tipo_activ){
 		var data = fnjs_tipo_activ_parseRta(json);
 		if (data === null) { return; }
 		$('#div_modificar').html(data.html || '');
+		fnjs_ventana_ajustar('#div_modificar');
 	});
 }
 

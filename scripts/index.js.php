@@ -882,6 +882,7 @@ if (!isset($h)) {
             onSuccess: function (data) {
                 if (target) {
                     $(target).html(data.html || '');
+                    fnjs_ventana_ajustar(target);
                 }
                 if (typeof options.onDone === 'function') {
                     options.onDone(data);
@@ -913,6 +914,28 @@ if (!isset($h)) {
         });
     }
 
+    /*
+     * Ajusta un popup con clase .ventana al contenido recién cargado:
+     * tamaño automático, recentrado y arrastrable.
+     * Se pasa de transform (centrado CSS inicial) a left/top explícitos
+     * porque jQuery UI draggable no convive bien con translate(-50%,-50%).
+     */
+    function fnjs_ventana_ajustar(bloque) {
+        var $ventana = $(bloque);
+        if (!$ventana.hasClass('ventana')) {
+            return;
+        }
+        $ventana.css({width: 'auto', height: 'auto'});
+        $ventana.css({
+            left: Math.max(($(window).width() - $ventana.outerWidth()) / 2, 0) + 'px',
+            top: Math.max(($(window).height() - $ventana.outerHeight()) / 2, 0) + 'px',
+            transform: 'none'
+        });
+        if ($.fn.draggable) {
+            $ventana.draggable({containment: 'window', cursor: 'move'});
+        }
+    }
+
     function fnjs_mostra_resposta(respuesta, bloque) {
         if (_orbixAuthRedirectPending) {
             return;
@@ -934,6 +957,7 @@ if (!isset($h)) {
             return;
         }
         $(bloque).empty().append(myText);
+        fnjs_ventana_ajustar(bloque);
         fnjs_cambiar_link(bloque);
         // Destacar filas seleccionadas inicialmente en tablas HTML
         $(bloque).find('table input.sel:checked').closest('tr').addClass('selected_row');

@@ -406,9 +406,12 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 		overflow: auto;
 		z-index: 160; /* algo de la slickgrigd está en 90 */
 		padding: 25px;
-		left: 100px;  top: 100px; /* la posición de la ventana modal */
-		width: 800px; height: 300px; /* el tamaño de la ventana modal */
-		/* cualquier otra propeidad, colores, márgenes, fondo */
+		border-radius: 8px;
+		/* centrada y con tamaño según el contenido (fnjs_ventana_ajustar la recoloca al cargar el contenido) */
+		left: 50%; top: 50%;
+		transform: translate(-50%, -50%);
+		width: auto; height: auto;
+		max-width: 90vw; max-height: 90vh;
 	}
 	/* ## INCORPORACIONES ## */
 	table.incorporaciones { width: 85em; }
