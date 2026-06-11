@@ -28,6 +28,8 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
     use HandlesPdoErrors;
     use HandlesPgBytea;
 
+    private const ACTAS_LIST_COLUMNS = 'acta, id_asignatura, id_activ, f_acta, libro, pagina, linea, lugar, observ';
+
     public function __construct()
     {
         $oDbl = GlobalPdo::get('oDBP');
@@ -151,6 +153,10 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
+        $sinPdf = !empty($aWhere['_sin_pdf']);
+        if (isset($aWhere['_sin_pdf'])) {
+            unset($aWhere['_sin_pdf']);
+        }
         $ActaDlSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
@@ -196,7 +202,8 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $select = $sinPdf ? self::ACTAS_LIST_COLUMNS : '*';
+        $sQry = "SELECT $select FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
@@ -211,8 +218,10 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
             foreach ($aDatos as $key => $value) {
                 $normalized[(string) $key] = $value;
             }
-            // para los bytea: (resources)
-            $normalized['pdf'] = $this->normalizeBytea($this->readByteaField($normalized['pdf'] ?? null));
+            if (!$sinPdf) {
+                // para los bytea: (resources)
+                $normalized['pdf'] = $this->normalizeBytea($this->readByteaField($normalized['pdf'] ?? null));
+            }
             // para las fechas del postgres (texto iso)
             $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta']))->fromPg();
             $ActaDl = Acta::fromArray($normalized);

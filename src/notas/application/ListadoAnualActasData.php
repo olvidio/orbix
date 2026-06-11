@@ -36,6 +36,7 @@ final class ListadoAnualActasData
     {
         $aWhere = [
             'f_acta' => "'$inicioIso','$finIso'",
+            '_sin_pdf' => true,
         ];
         $aOperador = ['f_acta' => 'BETWEEN'];
 

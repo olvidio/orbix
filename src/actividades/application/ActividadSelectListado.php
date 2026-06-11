@@ -150,7 +150,7 @@ final class ActividadSelectListado
         }
 
         $oPeriodo = new Periodo();
-        $oPeriodo->setDefaultAny('next');
+        $oPeriodo->setDefaultAny('actual');
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);
         $oPeriodo->setEmpiezaMax($Qempiezamax);

@@ -243,64 +243,41 @@ class PlanningRenderer
                     $mfi[$a] = (int)$oFinActRow->format('m');
                     $afi[$a] = (int)$oFinActRow->format('Y');
 
-                    $sec_dias_del_any_ini = mktime((int)$hora_ini[$a], (int)$m_ini[$a], (int)$s_ini[$a], (int)$mini[$a], (int)$dini[$a], (int)$aini[$a]);
-                    $dias_del_any_ini = $sec_dias_del_any_ini !== false
-                        ? round(($sec_dias_del_any_ini - $num_sec_ini_0) / 86400)
-                        : 0.0;
-                    $sec_dias_del_any_fi = mktime((int)$hora_fi[$a], (int)$m_fi[$a], (int)$s_fi[$a], (int)$mfi[$a], (int)$dfi[$a], (int)$afi[$a]);
-                    $dias_del_any_fi = round(($sec_dias_del_any_fi - $num_sec_ini_0) / 86400);
-
-                    if ($this->idd > 1) {
-                        $h_ini = ((($sec_dias_del_any_ini - $num_sec_ini_0) / 86400) - $dias_del_any_ini) * 24;
-                        $h_fi = ((($sec_dias_del_any_fi - $num_sec_ini_0) / 86400) - $dias_del_any_fi) * 24;
-
-                        if ($h_ini < 0) {
-                            if ($h_ini >= (-4)) {
-                                $inc_h_ini = 0;
-                            } elseif ($h_ini >= (-14)) {
-                                $inc_h_ini = -1;
-                            } else {
-                                $inc_h_ini = -2;
-                            }
-                        } else {
-                            if ($h_ini <= 10) {
-                                $inc_h_ini = 1;
-                            } elseif ($h_ini <= 20) {
-                                $inc_h_ini = 2;
-                            } else {
-                                $inc_h_ini = 3;
-                            }
-                        }
-                        if ($h_fi < 0) {
-                            if ($h_fi >= (-4)) {
-                                $inc_h_fi = 0;
-                            } elseif ($h_fi >= (-14)) {
-                                $inc_h_fi = -1;
-                            } else {
-                                $inc_h_fi = -2;
-                            }
-                        } else {
-                            if ($h_fi <= 10) {
-                                $inc_h_fi = 1;
-                            } elseif ($h_fi <= 20) {
-                                $inc_h_fi = 2;
-                            } else {
-                                $inc_h_fi = 3;
-                            }
-                        }
-                    } else {
-                        $inc_h_ini = 1;
-                        $inc_h_fi = 1;
-                    }
-                    $n_dini[$a] = $inc_h_ini + $this->idd * $dias_del_any_ini;
-                    $n_dfi[$a] = $inc_h_fi + $this->idd * ($dias_del_any_fi);
+                    $slots = PlanningActivitySlots::indices(
+                        $this->idd,
+                        (int) $num_sec_ini_0,
+                        (int) $dini[$a],
+                        (int) $mini[$a],
+                        (int) $aini[$a],
+                        (int) $hora_ini[$a],
+                        (int) $m_ini[$a],
+                        (int) $s_ini[$a],
+                        (int) $dfi[$a],
+                        (int) $mfi[$a],
+                        (int) $afi[$a],
+                        (int) $hora_fi[$a],
+                        (int) $m_fi[$a],
+                        (int) $s_fi[$a],
+                    );
+                    $n_dini[$a] = $slots['n_dini'];
+                    $n_dfi[$a] = $slots['n_dfi'];
                 }
 
                 $max_filas = 0;
                 $fila = [];
                 $fila_dia_new = [];
                 $fila_dia = array_fill(0, 20, 'v');
-                for ($d = 1; $d < $total_dias; $d++) {
+                for ($d = 1; $d <= $total_dias; $d++) {
+                    if ($this->idd > 1 && ($d - 1) % $this->idd === 0) {
+                        for ($aLimp = 0; $aLimp < $num_a; $aLimp++) {
+                            if (!isset($fila[$aLimp]) || empty($actividad[$aLimp])) {
+                                continue;
+                            }
+                            if ($n_dfi[$aLimp] < $d) {
+                                $fila_dia[$fila[$aLimp]] = 'v';
+                            }
+                        }
+                    }
                     $n_act = 0;
                     for ($a = 0; $a < $num_a; $a++) {
                         if (empty($actividad[$a])) {
@@ -320,10 +297,18 @@ class PlanningRenderer
                             }
                             if ($d == $n_dini[$a]) {
                                 $f = 0;
-                                foreach ($fila_dia as $val) {
-                                    if ($val === 'v') {
+                                foreach ($fila_dia as $_) {
+                                    if ($this->actividadPuedeUsarFila(
+                                        $f,
+                                        $a,
+                                        $num_a,
+                                        $fila,
+                                        $n_dini,
+                                        $n_dfi,
+                                        $actividad
+                                    )) {
                                         $fila[$a] = $f;
-                                        $fila_dia[$f] = "x";
+                                        $fila_dia[$f] = 'x';
                                         break;
                                     }
                                     $f++;
@@ -438,6 +423,33 @@ class PlanningRenderer
         $html .= '</table></div>';
 
         return $html;
+    }
+
+    /**
+     * @param array<int, int> $fila
+     * @param array<int, int> $nDini
+     * @param array<int, int> $nDfi
+     * @param array<int|string, mixed> $actividades
+     */
+    private function actividadPuedeUsarFila(
+        int $f,
+        int $actividadIdx,
+        int $numActividades,
+        array $fila,
+        array $nDini,
+        array $nDfi,
+        array $actividades
+    ): bool {
+        for ($other = 0; $other < $numActividades; $other++) {
+            if ($other === $actividadIdx || empty($actividades[$other]) || !isset($fila[$other]) || $fila[$other] !== $f) {
+                continue;
+            }
+            if ($nDini[$actividadIdx] <= $nDfi[$other] && $nDfi[$actividadIdx] >= $nDini[$other]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
