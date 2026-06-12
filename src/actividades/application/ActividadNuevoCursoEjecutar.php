@@ -83,6 +83,9 @@ final class ActividadNuevoCursoEjecutar
             }
             $txt_crear .= $rta;
         }
+        if (is_true($ver_lista)) {
+            $html .= $oNuevoCurso->consumirListaHtml();
+        }
         $txt_solapes = $oNuevoCurso->comprobar_solapes($inicio_iso, $fin_iso);
 
         $html .= "<h3>" . sprintf(_("%s actividades copiadas"), $i) . "</h3>";

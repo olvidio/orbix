@@ -50,6 +50,8 @@ class ActividadNuevoCurso
     /** @var list<string> */
     private array $avisosProceso = [];
 
+    private string $listaHtml = '';
+
     /**
      * @return array<int, int>
      */
@@ -231,7 +233,7 @@ class ActividadNuevoCurso
         }
 
         if ($this->getVer_lista()) {
-            echo "$tipo=> $fechas_new :: $nom_activ_new<br>";
+            $this->listaHtml .= "$tipo=> $fechas_new :: $nom_activ_new<br>";
         }
         //cambio el status a proyecto:
         $status = StatusId::PROYECTO;
@@ -309,6 +311,13 @@ class ActividadNuevoCurso
         $avisos = $this->avisosProceso;
         $this->avisosProceso = [];
         return $avisos;
+    }
+
+    public function consumirListaHtml(): string
+    {
+        $lista = $this->listaHtml;
+        $this->listaHtml = '';
+        return $lista;
     }
 
 
