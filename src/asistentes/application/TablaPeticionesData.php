@@ -5,7 +5,7 @@ namespace src\asistentes\application;
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string;
 
-use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
+use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -13,7 +13,6 @@ use src\actividades\domain\entity\TiposActividades;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\config\ConfigGlobal;
-use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
  * Tabla de peticiones de plaza por actividad (`tabla_peticiones.php`).
@@ -24,9 +23,8 @@ final class TablaPeticionesData
     public function __construct(
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private AsistenteActividadService $asistenteActividadService,
-        private DelegacionRepositoryInterface $delegacionRepository,
         private PlazaPeticionRepositoryInterface $plazaPeticionRepository,
-        private ActividadPlazasRepositoryInterface $actividadPlazasRepository,
+        private ResumenPlazasService $resumenPlazasService,
         private PersonaDlRepositoryInterface $personaDlRepository,
     ) {
     }
@@ -93,9 +91,6 @@ final class TablaPeticionesData
         $sactividad = $oTipoActividad->getActividadText();
 
         $mi_dele = ConfigGlobal::mi_delef();
-        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $mi_dele]);
-        $oDelegacion = $cDelegaciones[0];
-        $id_dl = $oDelegacion->getIdDlVo()->value();
 
         $a_valores = [];
         $i = 0;
@@ -116,24 +111,13 @@ final class TablaPeticionesData
                     continue;
                 }
                 $nom_activ_i = $oActividadPosible->getNom_activ();
-                $dl_org = $oActividad->getDl_org();
 
                 if (ConfigGlobal::is_app_installed('actividadplazas')) {
-                    $concedidas = 0;
-                    $cActividadPlazas = $this->actividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dl, 'id_activ' => $id_activ]);
-                    foreach ($cActividadPlazas as $oActividadPlazas) {
-                        $dl_tabla = $oActividadPlazas->getDl_tabla();
-                        if ($dl_org === $dl_tabla) {
-                            $concedidas = $oActividadPlazas->getPlazas();
-                        }
-                    }
-                    $ocupadas = $this->asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
-                    if ($ocupadas < 0) {
-                        $libres = '-';
-                    } else {
-                        $libres = (int) $concedidas - $ocupadas;
-                    }
-                    if (!empty($concedidas)) {
+                    $this->resumenPlazasService->setId_activ($id_activ);
+                    $plazas = $this->resumenPlazasService->getPlazasConcedidasYLibres($mi_dele);
+                    $concedidas = $plazas['concedidas'];
+                    $libres = $plazas['libres'];
+                    if ($concedidas > 0) {
                         $nom_activ_i .= " ($libres/$concedidas)";
                     }
                 }

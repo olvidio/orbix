@@ -22,8 +22,8 @@ use function src\shared\domain\helpers\is_true;
  *
  * - `mod === 'nuevo'`: abre el dossier 1301 y guarda el asistente.
  * - `mod === 'editar'`: guarda el asistente existente (valida `perm_modificar`).
- * - `mod === 'mover'`: elimina el asistente origen (`id_activ_old`) y guarda
- *   el nuevo en `id_activ`.
+ * - `mod === 'mover'`: guarda en `id_activ` (validando plazas, etc.) y solo si
+ *   tiene éxito elimina el asistente origen (`id_activ_old`).
  */
 final class AsistenteGuardar
 {
@@ -76,15 +76,17 @@ final class AsistenteGuardar
             if ($id_activ_old === 0) {
                 return _("falta id_activ_old");
             }
-            $err = $this->asistenteEliminar->execute([
+            $err = $this->guardar($id_activ, $id_nom, $mod, $input);
+            if ($err !== '') {
+                return $err;
+            }
+
+            return $this->asistenteEliminar->execute([
                 'pau' => 'p',
                 'sel' => [],
                 'id_activ' => $id_activ_old,
                 'id_nom' => $id_nom,
             ]);
-            if ($err !== '') {
-                return $err;
-            }
         }
 
         return $this->guardar($id_activ, $id_nom, $mod, $input);

@@ -164,4 +164,78 @@ final class AsistenteGuardarTest extends TestCase
             'plaza' => 1,
         ]));
     }
+
+    public function test_mover_no_elimina_si_falla_guardar(): void
+    {
+        $o = $this->createMock(Asistente::class);
+        $o->method('setEncargo')->willReturnSelf();
+        $o->method('setObserv')->willReturnSelf();
+        $o->method('setObservEstVo')->willReturnSelf();
+        $o->method('setPropio')->willReturnSelf();
+        $o->method('setEst_ok')->willReturnSelf();
+        $o->method('setCfi')->willReturnSelf();
+        $o->method('setFalta')->willReturnSelf();
+        $o->method('setCfi_con')->willReturnSelf();
+        $o->method('setDlResponsableVo')->willReturnSelf();
+        $o->method('setPropietarioVo')->willReturnSelf();
+        $o->method('setPlazaVoComprobando')->willReturn('Ya están todas las plazas ocupadas');
+
+        $app = $this->createMock(AsistenteApplicationService::class);
+        $app->method('findById')->with(20, 10)->willReturn($o);
+        $app->expects($this->never())->method('guardar');
+
+        $eliminar = $this->createMock(AsistenteEliminar::class);
+        $eliminar->expects($this->never())->method('execute');
+
+        $sut = $this->createSut($app, null, $eliminar);
+
+        $this->assertSame(
+            'Ya están todas las plazas ocupadas',
+            $sut->execute([
+                'mod' => 'mover',
+                'id_activ' => 20,
+                'id_nom' => 10,
+                'id_activ_old' => 5,
+                'plaza' => 4,
+            ])
+        );
+    }
+
+    public function test_mover_elimina_solo_despues_de_guardar(): void
+    {
+        $o = $this->createMock(Asistente::class);
+        $o->method('setEncargo')->willReturnSelf();
+        $o->method('setObserv')->willReturnSelf();
+        $o->method('setObservEstVo')->willReturnSelf();
+        $o->method('setPropio')->willReturnSelf();
+        $o->method('setEst_ok')->willReturnSelf();
+        $o->method('setCfi')->willReturnSelf();
+        $o->method('setFalta')->willReturnSelf();
+        $o->method('setCfi_con')->willReturnSelf();
+        $o->method('setDlResponsableVo')->willReturnSelf();
+        $o->method('setPropietarioVo')->willReturnSelf();
+        $o->method('setPlazaVoComprobando')->willReturn('');
+
+        $app = $this->createMock(AsistenteApplicationService::class);
+        $app->method('findById')->with(20, 10)->willReturn($o);
+        $app->expects($this->once())->method('guardar')->with($o)->willReturn(true);
+
+        $eliminar = $this->createMock(AsistenteEliminar::class);
+        $eliminar->expects($this->once())->method('execute')->with([
+            'pau' => 'p',
+            'sel' => [],
+            'id_activ' => 5,
+            'id_nom' => 10,
+        ])->willReturn('');
+
+        $sut = $this->createSut($app, null, $eliminar);
+
+        $this->assertSame('', $sut->execute([
+            'mod' => 'mover',
+            'id_activ' => 20,
+            'id_nom' => 10,
+            'id_activ_old' => 5,
+            'plaza' => 4,
+        ]));
+    }
 }

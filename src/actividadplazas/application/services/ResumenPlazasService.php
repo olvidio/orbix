@@ -567,6 +567,51 @@ class ResumenPlazasService
     public function setId_activ(int $iid_activ): void
     {
         $this->iid_activ = $iid_activ;
+        $this->dl_org = null;
+    }
+
+    /**
+     * Plazas concedidas a $mi_dl desde la dl organizadora (propietario dl_org>$mi_dl)
+     * y libres dentro de ese cupo (mismo criterio que mover asistente / asignar plaza).
+     *
+     * @return array{concedidas: int, libres: int|string}
+     */
+    public function getPlazasConcedidasYLibres(string $mi_dl): array
+    {
+        $id_activ = $this->getId_activ();
+        $dl_hub = self::normalizarDl($this->getDl_org());
+        $mi_dl_norm = self::normalizarDl($mi_dl);
+
+        if ($dl_hub === $mi_dl_norm) {
+            $concedidasRaw = $this->getPlazasPropias();
+            $concedidas = is_numeric($concedidasRaw) ? (int) $concedidasRaw : 0;
+            $ocupadas = $this->AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $mi_dl);
+        } else {
+            $concedidas = 0;
+            $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(['id_activ' => $id_activ]);
+            foreach ($cActividadPlazas as $oActividadPlazas) {
+                $dl_otra = self::normalizarDl($this->getDlText($oActividadPlazas->getId_dl()));
+                if ($dl_otra !== $dl_hub) {
+                    continue;
+                }
+                $aCedidas = $oActividadPlazas->getArrayCedidas();
+                if (!empty($aCedidas) && isset($aCedidas[$mi_dl])) {
+                    $concedidas += (int) $aCedidas[$mi_dl];
+                }
+            }
+            $ocupadas = $this->AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $dl_hub);
+        }
+
+        if ($ocupadas < 0) {
+            return ['concedidas' => $concedidas, 'libres' => '-'];
+        }
+
+        return ['concedidas' => $concedidas, 'libres' => $concedidas - $ocupadas];
+    }
+
+    private static function normalizarDl(string $dl): string
+    {
+        return (string) preg_replace('/f$/', '', $dl);
     }
 
     protected function getId_activ(): int

@@ -13,14 +13,13 @@ use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\PosiblesCa;
-use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
+use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
-use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
  * Modal mover asistente (`asistente_mover.php`).
@@ -33,9 +32,8 @@ final class AsistenteMoverData
         private ContainerInterface $container,
         private AsistenteActividadService $asistenteActividadService,
         private ActividadAllRepositoryInterface $actividadAllRepository,
-        private DelegacionRepositoryInterface $delegacionRepository,
-        private ActividadPlazasRepositoryInterface $actividadPlazasRepository,
         private ActividadRepositoryInterface $actividadRepository,
+        private ResumenPlazasService $resumenPlazasService,
         private PlazaPeticionRepositoryInterface $plazaPeticionRepository,
         private ActividadAsignaturaDlRepositoryInterface $actividadAsignaturaDlRepository,
         private PosiblesCa $posiblesCa,
@@ -85,9 +83,6 @@ final class AsistenteMoverData
         }
 
         $mi_dele = ConfigGlobal::mi_delef();
-        $cDelegaciones = $this->delegacionRepository->getDelegaciones(['dl' => $mi_dele]);
-        $oDelegacion = $cDelegaciones[0];
-        $id_dl = $oDelegacion->getIdDlVo()->value();
 
         $oPosiblesCa = $this->posiblesCa;
         $propietario = '';
@@ -177,18 +172,12 @@ final class AsistenteMoverData
                     continue;
                 }
                 $nom_activ = $oActividadItem->getNom_activ();
-                $dl_org = $oActividadItem->getDl_org();
                 if (ConfigGlobal::is_app_installed('actividadplazas')) {
-                    $concedidas = 0;
-                    $cActividadPlazas = $this->actividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dl, 'id_activ' => $id_activ]);
-                    foreach ($cActividadPlazas as $oActividadPlazas) {
-                        if ($dl_org === $oActividadPlazas->getDl_tabla()) {
-                            $concedidas = $oActividadPlazas->getPlazas();
-                        }
-                    }
-                    $ocupadas = $this->asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
-                    $libres = $ocupadas < 0 ? '-' : ((int) $concedidas - $ocupadas);
-                    if (!empty($concedidas)) {
+                    $this->resumenPlazasService->setId_activ($id_activ);
+                    $plazas = $this->resumenPlazasService->getPlazasConcedidasYLibres($mi_dele);
+                    $concedidas = $plazas['concedidas'];
+                    $libres = $plazas['libres'];
+                    if ($concedidas > 0) {
                         $txt_plazas = sprintf(_('plazas libres/concedidas: %s/%s'), $libres, $concedidas);
                     }
                 }

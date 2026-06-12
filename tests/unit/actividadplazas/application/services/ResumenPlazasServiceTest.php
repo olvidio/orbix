@@ -122,4 +122,56 @@ final class ResumenPlazasServiceTest extends TestCase
         $this->assertFalse($svc->esPropiedadClaveDisponible('inexistente'));
         $this->assertFalse($svc->esPropiedadClaveDisponible('xxx'));
     }
+
+    public function test_getPlazasConcedidasYLibres_usa_plazas_cedidas_y_ocupadas_del_hub(): void
+    {
+        $idActiv = 99;
+        $dlOrg = 'dlorg';
+        $miDl = 'midl';
+        $idDlOrg = 3;
+
+        $actividad = $this->createMock(ActividadAll::class);
+        $actividad->method('getDl_org')->willReturn($dlOrg);
+
+        $actividadPlazas = new ActividadPlazas();
+        $actividadPlazas->setId_activ($idActiv);
+        $actividadPlazas->setId_dl($idDlOrg);
+        $actividadPlazas->setPlazasVo(20);
+        $actividadPlazas->setDlTablaVo(DelegacionTablaCode::fromNullableString($dlOrg));
+        $actividadPlazas->setCedidas([$miDl => 5]);
+
+        $actividadRepo = $this->createMock(ActividadAllRepositoryInterface::class);
+        $actividadRepo->method('findById')->with($idActiv)->willReturn($actividad);
+
+        $plazasRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
+        $plazasRepo->method('getActividadesPlazas')
+            ->with(['id_activ' => $idActiv])
+            ->willReturn([$actividadPlazas]);
+
+        $delegacion = $this->createMock(Delegacion::class);
+        $delegacion->method('getDlVo')->willReturn(new DelegacionCode($dlOrg));
+        $delegacion->method('getIdDlVo')->willReturn(new DelegacionId($idDlOrg));
+
+        $delegacionRepo = $this->createMock(DelegacionRepositoryInterface::class);
+        $delegacionRepo->method('getDelegaciones')->willReturn([$delegacion]);
+
+        $asistenteSvc = $this->createMock(AsistenteActividadService::class);
+        $asistenteSvc->expects($this->once())
+            ->method('getPlazasOcupadasPorDl')
+            ->with($idActiv, $miDl, $dlOrg)
+            ->willReturn(2);
+
+        $svc = new ResumenPlazasService(
+            $actividadRepo,
+            $plazasRepo,
+            $delegacionRepo,
+            $asistenteSvc
+        );
+        $svc->setId_activ($idActiv);
+
+        $this->assertSame(
+            ['concedidas' => 5, 'libres' => 3],
+            $svc->getPlazasConcedidasYLibres($miDl)
+        );
+    }
 }
