@@ -298,7 +298,13 @@ function planning_actividades_map(mixed $raw): array
             }
             if (planning_is_persona_casa_map($items)) {
                 foreach (planning_parse_persona_casa_map($items) as $pKey => $actsList) {
-                    $parsedGroup[$pKey] = $actsList;
+                    // planning_ctr_select: cada persona va en un índice numérico
+                    // (`[0 => ['p#…' => actividades]]`); aplanar rompe PlanningRenderer.
+                    if (is_int($gKey) || (is_string($gKey) && ctype_digit($gKey))) {
+                        $parsedGroup[] = [$pKey => $actsList];
+                    } else {
+                        $parsedGroup[$pKey] = $actsList;
+                    }
                 }
             } elseif (array_is_list($items)) {
                 $parsedGroup[$gKey] = planning_parse_actividad_list($items);

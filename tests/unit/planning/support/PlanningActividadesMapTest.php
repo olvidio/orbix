@@ -51,4 +51,21 @@ final class PlanningActividadesMapTest extends TestCase
         $this->assertSame(['p#100#A#Centro', 'p#200#B#Centro'], $keys);
         $this->assertSame([], $out[0]['p#100#A#Centro']);
     }
+
+    public function test_agrupacion_por_centro_conserva_filas_numeradas(): void
+    {
+        $raw = [
+            'Centro Unico' => [
+                0 => ['p#1#Primero#Centro Unico' => []],
+                1 => ['p#2#Segundo#Centro Unico' => [['nom_curt' => 'x']]],
+            ],
+        ];
+
+        $out = planning_actividades_map($raw);
+
+        $this->assertSame([
+            0 => ['p#1#Primero#Centro Unico' => []],
+            1 => ['p#2#Segundo#Centro Unico' => [['nom_curt' => 'x']]],
+        ], $out['Centro Unico']);
+    }
 }
