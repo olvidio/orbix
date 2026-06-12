@@ -9,6 +9,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\CasasQue;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
+use function frontend\shared\helpers\is_true;
 use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
@@ -54,6 +55,10 @@ $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $QsSeleccionados = (string)filter_input(INPUT_POST, 'sSeleccionados');
+
+if ($Qyear === 0 && is_true($Qpropuesta_calendario)) {
+    $Qyear = (int) date('Y') + 1;
+}
 
 $oHash = new HashFront();
 $oHash->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!modelo!periodo!sin_activ!year');
