@@ -2,6 +2,7 @@
 
 namespace src\shared\domain;
 
+use src\configuracion\application\ModuloInstaladoTablesService;
 use src\configuracion\domain\entity\ModuloInstalado;
 use src\profesores\domain\entity\ProfesorLatin;
 use src\shared\domain\contracts\DatosCrudRepositoryInterface;
@@ -28,8 +29,13 @@ class DatosUpdateRepo
         }
 
         $oRepository = $this->resolveRepository();
+        $idModInstalado = $ficha instanceof ModuloInstalado ? $ficha->getId_mod() : null;
         if ($oRepository->Eliminar($ficha) === false) {
             return $oRepository->getErrorTxt();
+        }
+
+        if ($idModInstalado !== null) {
+            $this->moduloInstaladoTables()->dropTables($idModInstalado);
         }
 
         return true;
@@ -115,6 +121,10 @@ class DatosUpdateRepo
             return 'Error al guardar: ' . $e->getMessage();
         }
 
+        if ($ficha instanceof ModuloInstalado && $ficha->isActive()) {
+            $this->moduloInstaladoTables()->createTables($ficha->getId_mod());
+        }
+
         return true;
     }
 
@@ -126,6 +136,8 @@ class DatosUpdateRepo
         if ($ficha === null) {
             return 'Ficha no configurada';
         }
+
+        $wasActive = $ficha instanceof ModuloInstalado ? $ficha->isActive() : null;
 
         foreach ($ficha->getDatosCampos() as $oDatosCampo) {
             $nom_camp = $oDatosCampo->getNom_camp();
@@ -170,6 +182,14 @@ class DatosUpdateRepo
         $oRepository = $this->resolveRepository();
         if ($oRepository->Guardar($ficha) === false) {
             return $oRepository->getErrorTxt();
+        }
+
+        if (
+            $ficha instanceof ModuloInstalado
+            && $wasActive === false
+            && $ficha->isActive()
+        ) {
+            $this->moduloInstaladoTables()->createTables($ficha->getId_mod());
         }
 
         return true;
@@ -220,5 +240,13 @@ class DatosUpdateRepo
         $repository = DependencyResolver::get($repositoryId);
 
         return $repository;
+    }
+
+    private function moduloInstaladoTables(): ModuloInstaladoTablesService
+    {
+        /** @var ModuloInstaladoTablesService $service */
+        $service = DependencyResolver::get(ModuloInstaladoTablesService::class);
+
+        return $service;
     }
 }

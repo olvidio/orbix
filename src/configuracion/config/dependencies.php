@@ -1,5 +1,6 @@
 <?php
 
+use src\configuracion\application\ModuloInstaladoTablesService;
 use src\configuracion\application\ModulosFormData;
 use src\configuracion\application\ModulosSelectData;
 use src\configuracion\application\ModulosUpdateAction;
@@ -28,6 +29,7 @@ return [
     InfoModsInstalled::class => autowire(InfoModsInstalled::class),
     ModulosConfig::class => autowire(ModulosConfig::class),
 
+    ModuloInstaladoTablesService::class => autowire(ModuloInstaladoTablesService::class),
     ModulosFormData::class => autowire(ModulosFormData::class),
     ModulosSelectData::class => autowire(ModulosSelectData::class),
     ModulosUpdateAction::class => autowire(ModulosUpdateAction::class),
