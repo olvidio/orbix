@@ -4,6 +4,7 @@ namespace frontend\shared;
 
 use frontend\shared\config\OrbixRuntime;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use frontend\shared\security\HashFront;
 
 class PostRequest
@@ -78,6 +79,88 @@ class PostRequest
     }
 
     /**
+     * Host sin puerto (p. ej. `10.0.0.16:80` → `10.0.0.16`).
+     */
+    private static function hostnameOnly(string $hostOrHostPort): string
+    {
+        if ($hostOrHostPort === '') {
+            return '';
+        }
+        if (str_starts_with($hostOrHostPort, '[')) {
+            $end = strpos($hostOrHostPort, ']');
+            if ($end !== false) {
+                return substr($hostOrHostPort, 0, $end + 1);
+            }
+
+            return $hostOrHostPort;
+        }
+        $pos = strrpos($hostOrHostPort, ':');
+        if ($pos !== false && substr_count($hostOrHostPort, ':') === 1) {
+            return substr($hostOrHostPort, 0, $pos);
+        }
+
+        return $hostOrHostPort;
+    }
+
+    /**
+     * En producción `web_server` suele apuntar a la IP LAN (p. ej. 10.0.0.16).
+     * Desde el propio servidor esa IP a menudo no acepta conexiones (connection refused);
+     * el vhost sí responde en 127.0.0.1. Se conserva el header Host público vía
+     * {@see withPreservedHttpHostHeader}.
+     */
+    private static function rewriteLoopbackHost(string $host): string
+    {
+        if ($host === ''
+            || $host === '127.0.0.1'
+            || $host === 'localhost'
+            || $host === '::1'
+            || $host === 'host.docker.internal') {
+            return $host;
+        }
+
+        $sameHostCandidates = [];
+        $webHost = parse_url(OrbixRuntime::getWeb(), PHP_URL_HOST);
+        if (is_string($webHost) && $webHost !== '') {
+            $sameHostCandidates[] = $webHost;
+        }
+        foreach (['HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR'] as $serverKey) {
+            $serverValue = $_SERVER[$serverKey] ?? '';
+            if (is_string($serverValue) && $serverValue !== '') {
+                $sameHostCandidates[] = self::hostnameOnly($serverValue);
+            }
+        }
+
+        foreach ($sameHostCandidates as $candidate) {
+            if ($candidate !== '' && strcasecmp($host, $candidate) === 0) {
+                return '127.0.0.1';
+            }
+        }
+
+        return $host;
+    }
+
+    private static function rewriteConnectionHost(string $host): string
+    {
+        return self::rewriteLoopbackHost(self::rewriteDockerHost($host));
+    }
+
+    private static function rewriteConnectionInUrl(string $url): string
+    {
+        $url = self::rewriteDockerInUrl($url);
+        $parts = self::parseHttpUrl($url);
+        $hostOriginal = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
+        if ($hostOriginal === '') {
+            return $url;
+        }
+        $hostRewritten = self::rewriteLoopbackHost($hostOriginal);
+        if ($hostRewritten === $hostOriginal) {
+            return $url;
+        }
+
+        return self::buildDockerInternalUrl($parts, $hostRewritten);
+    }
+
+    /**
      * @return array<string, int|string>
      */
     private static function parseHttpUrl(string $url): array
@@ -115,8 +198,8 @@ class PostRequest
         $url = self::absoluteHttpUrlFromAppRelative($url);
         $parts = self::parseHttpUrl($url);
         $host_original = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
-        $url_rewritten = self::rewriteDockerInUrl($url);
-        $host_rewritten = self::rewriteDockerHost($host_original);
+        $url_rewritten = self::rewriteConnectionInUrl($url);
+        $host_rewritten = self::rewriteConnectionHost($host_original);
 
         $cookies = self::cookiesForInternalRequest();
 
@@ -430,7 +513,9 @@ class PostRequest
         $hostOriginal = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
         $pathFinal = isset($parts['path']) && is_string($parts['path']) ? $parts['path'] : '';
 
-        $dockerHostRewrite = ($hostRewritten !== $hostOriginal && $hostOriginal !== '');
+        $dockerHostRewrite = $hostRewritten === 'host.docker.internal'
+            && $hostOriginal !== ''
+            && $hostRewritten !== $hostOriginal;
         if ($dockerHostRewrite && $pathFinal !== '') {
             $segments = explode('/', $pathFinal);
             if (isset($segments[2]) && strpos($segments[2], '-') !== false) {
@@ -510,7 +595,7 @@ class PostRequest
 
         $parts = self::parseHttpUrl($url);
         $host_original = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
-        $host_nuevo = self::rewriteDockerHost($host_original);
+        $host_nuevo = self::rewriteConnectionHost($host_original);
         $url_limpia = self::buildDockerInternalUrl($parts, $host_nuevo);
 
         $client = new Client();
@@ -524,7 +609,19 @@ class PostRequest
                 'http_errors' => false,
             ]),
         );
-        $response2 = $client->request('POST', $url_limpia, $reqOpts);
+        try {
+            $response2 = $client->request('POST', $url_limpia, $reqOpts);
+        } catch (ConnectException) {
+            $msg = sprintf(
+                _('No se pudo conectar en llamada interna a %s.'),
+                $url_limpia
+            );
+            $msg .= '<br>' . _(
+                'Comprueba que el servidor web escucha en localhost; si `web_server` usa la IP LAN del propio equipo, la conexión debe poder hacerse vía 127.0.0.1.'
+            );
+
+            return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
+        }
 
         $code = $response2->getStatusCode();
         if ($code >= 300 && $code < 400) {
@@ -556,8 +653,8 @@ class PostRequest
         $url = self::absoluteHttpUrlFromAppRelative($url);
         $parts = self::parseHttpUrl($url);
         $host_original = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
-        $url_rewritten = self::rewriteDockerInUrl($url);
-        $host_rewritten = self::rewriteDockerHost($host_original);
+        $url_rewritten = self::rewriteConnectionInUrl($url);
+        $host_rewritten = self::rewriteConnectionHost($host_original);
 
         $cookies = self::cookiesForInternalRequest();
 
@@ -586,7 +683,7 @@ class PostRequest
         $cookies = self::cookiesForInternalRequest();
         $parts = self::parseHttpUrl($url);
         $host_original = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
-        $host_nuevo = self::rewriteDockerHost($host_original);
+        $host_nuevo = self::rewriteConnectionHost($host_original);
         $url_limpia = self::buildDockerInternalUrl($parts, $host_nuevo);
 
         $client = new Client();
