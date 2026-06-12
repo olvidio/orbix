@@ -4,6 +4,7 @@ namespace src\actividades\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\entity\ActividadAll;
 use src\permisos\domain\PermisosActividades;
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string_list;
@@ -59,7 +60,10 @@ final class ActividadEliminar
             }
             $oPermSesion->setActividad($id_activ, (string) $id_tipo_activ, $dl_org);
             $oPermActiv = $oPermSesion->getPermisoActual('datos');
-            if ($oPermActiv->have_perm_activ('borrar') === true) {
+            if (
+                $oPermActiv->have_perm_activ('borrar') === true
+                || $this->esImportadaDeOtraDl($oActividad)
+            ) {
                 return $this->borrarActividad->ejecutar($id_activ);
             }
 
@@ -67,5 +71,18 @@ final class ActividadEliminar
         }
 
         return $this->borrarActividad->ejecutar($id_activ);
+    }
+
+    /**
+     * Actividad de otra dl visible solo por importación local (tabla dl).
+     * En ese caso "borrar" quita el registro Importada, no la actividad origen.
+     */
+    private function esImportadaDeOtraDl(ActividadAll $oActividad): bool
+    {
+        $dlOrg = $oActividad->getDl_org() ?? '';
+        $dlOrgNoF = (string) preg_replace('/(\.*)f$/', '\1', $dlOrg);
+        $dlPropia = ConfigGlobal::mi_dele() === $dlOrgNoF;
+
+        return !$dlPropia && $oActividad->getId_tabla() === 'dl';
     }
 }
