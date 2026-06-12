@@ -22,7 +22,8 @@ function ajax_json_response(string $error = '', string|array $data = 'ok'): neve
 
 function ajax_json_html(string $html, string $error = ''): never
 {
-    ContestarJson::enviar($error, ['html' => $html]);
+    // `data` anidado (una sola codificación JSON); el cliente usa `fnjs_extract_html_from_ajax_body`.
+    ContestarJson::enviarDataAnidado($error, ['html' => $html]);
     exit;
 }
 

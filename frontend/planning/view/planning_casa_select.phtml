@@ -39,20 +39,25 @@ use frontend\shared\config\AppUrlConfig;
         var parametros = "<?= $param_ver ?>";
 
         $('#ficha').html('');
-        fnjs_ajax_json_html({
+        $.ajax({
             url: url,
+            type: 'post',
             data: parametros,
-            target: '#ficha',
-            onDone: function () {
+            complete: function (respuesta) {
+                var html = fnjs_extract_html_from_ajax_body(respuesta.responseText || '');
+                $('#ficha').html(html);
+                document.getElementById("overlay").style.display = "none";
+            },
+            error: function () {
+                alert(<?= json_encode(_('Error de página devuelta'), JSON_UNESCAPED_UNICODE) ?>);
                 document.getElementById("overlay").style.display = "none";
             }
         });
     }
-
-    $(document).ready(fnjs_ver());
 </script>
 <?= $oPosicion->mostrar_left_slide(1) ?>
 
 <div id='ficha'></div>
 <div id='div_modificar'></div>
 <div id='overlay'></div>
+<script>fnjs_ver();</script>

@@ -40,14 +40,22 @@ class Periodo
     /**
      * Carga en BD (vía `/src/configuracion/periodo_calendario_escolar_data`) lo que antes
      * solo existía en `$_SESSION['oConfig']` para `curso` / `curso_ca` / `curso_crt`.
+     *
+     * @param bool $throwOnError Si es true, no hace `exit` en error de PostRequest (p. ej. respuestas AJAX JSON).
      */
-    public static function conCalendarioDesdeBackend(): self
+    public static function conCalendarioDesdeBackend(bool $throwOnError = false): self
     {
         $o = new self();
         $data = PostRequest::getDataFromUrl(
             '/src/configuracion/periodo_calendario_escolar_data',
             [],
+            !$throwOnError,
         );
+        if ($throwOnError && !empty($data['error'])) {
+            throw new \RuntimeException(
+                PostRequest::stripInternalCallProvenance((string) $data['error'])
+            );
+        }
         $o->setCalendarioEscolar(self::calendarioFromPostRequestData($data));
         return $o;
     }

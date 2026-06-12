@@ -802,6 +802,57 @@ if (!isset($h)) {
     }
 
     /**
+     * Decodifica HTML enviado como base64 UTF-8 desde `ajax_json_html` (PHP).
+     */
+    function fnjs_decode_html_b64(b64) {
+        if (!b64) {
+            return '';
+        }
+        try {
+            var bin = atob(String(b64));
+            if (typeof TextDecoder !== 'undefined') {
+                var bytes = new Uint8Array(bin.length);
+                for (var i = 0; i < bin.length; i++) {
+                    bytes[i] = bin.charCodeAt(i);
+                }
+                return new TextDecoder('utf-8').decode(bytes);
+            }
+            return decodeURIComponent(escape(bin));
+        } catch (e) {
+            return '';
+        }
+    }
+
+    /**
+     * Obtiene HTML de `data` del envelope (html plano o html_b64).
+     */
+    function fnjs_html_from_ajax_data(data) {
+        if (!data || typeof data !== 'object') {
+            return '';
+        }
+        if (data.html_b64) {
+            return fnjs_decode_html_b64(data.html_b64);
+        }
+        if (data.html !== undefined && data.html !== null) {
+            return String(data.html);
+        }
+        return '';
+    }
+
+    /**
+     * Normaliza `data` del envelope para que `data.html` exista tras decodificar html_b64.
+     */
+    function fnjs_normalize_ajax_html_data(data) {
+        if (!data || typeof data !== 'object') {
+            return data;
+        }
+        if (data.html_b64 && !data.html) {
+            data.html = fnjs_html_from_ajax_data(data);
+        }
+        return data;
+    }
+
+    /**
      * Extrae HTML (o texto) de una respuesta AJAX en envelope ContestarJson o HTML plano.
      */
     function fnjs_extract_html_from_ajax_body(text) {
@@ -832,6 +883,7 @@ if (!isset($h)) {
                 }
             }
             if (data && typeof data === 'object') {
+                data = fnjs_normalize_ajax_html_data(data);
                 if (data.html !== undefined && data.html !== null) {
                     return String(data.html);
                 }
@@ -856,7 +908,8 @@ if (!isset($h)) {
             return null;
         }
         try {
-            return (typeof rta.data === 'string') ? JSON.parse(rta.data) : rta.data;
+            var data = (typeof rta.data === 'string') ? JSON.parse(rta.data) : rta.data;
+            return fnjs_normalize_ajax_html_data(data);
         } catch (e) {
             return null;
         }
@@ -893,25 +946,33 @@ if (!isset($h)) {
     }
 
     /**
-     * AJAX JSON que inyecta `data.html` en un selector jQuery.
+     * AJAX que inyecta HTML en un selector (respuesta JSON ContestarJson o HTML plano).
+     * Usa `dataType: 'text'` para soportar fragmentos grandes sin límites de `atob`/doble parse.
      */
     function fnjs_ajax_json_html(options) {
         var target = options.target;
-        return fnjs_ajax_json({
+        return $.ajax({
             url: options.url,
             type: options.type || 'post',
             data: options.data,
-            errorPrefix: options.errorPrefix,
-            onSuccess: function (data) {
-                if (target) {
-                    $(target).html(data.html || '');
+            dataType: 'text'
+        }).done(function (text) {
+            var html = fnjs_extract_html_from_ajax_body(text);
+            if (target) {
+                $(target).html(html);
+                if (html) {
                     fnjs_ventana_ajustar(target);
                 }
-                if (typeof options.onDone === 'function') {
-                    options.onDone(data);
-                }
-            },
-            onFail: options.onFail
+            }
+            if (typeof options.onDone === 'function') {
+                options.onDone({ html: html });
+            }
+        }).fail(function (xhr, status, error) {
+            if (typeof options.onFail === 'function') {
+                options.onFail(xhr, status, error);
+                return;
+            }
+            alert('Error en la conexión con el servidor: ' + error);
         });
     }
 
