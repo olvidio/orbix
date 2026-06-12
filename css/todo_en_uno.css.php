@@ -799,6 +799,8 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
         flex-shrink: 0; /* Evita que se encoja */
         /*overflow-y: auto;  Permite scroll si el contenido es muy largo */
         border: none;
+        position: relative;
+        z-index: 200; /* por encima de #overlay (150) para que la flecha atrás siga clickable */
     }
 
 	.handle {

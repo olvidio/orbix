@@ -462,6 +462,26 @@ if (!isset($h)) {
         alert(<?= json_encode(_("Error de página devuelta")) ?>);
     }
 
+    /** Oculta la capa modal (#overlay) que bloquea clics en toda la ventana (p. ej. panel izquierdo). */
+    function fnjs_overlay_ocultar() {
+        var el = document.getElementById('overlay');
+        if (el) {
+            el.style.display = 'none';
+        }
+        $('#overlay').hide();
+    }
+
+    /** Cierra ventana popup (#div_modificar) y su capa oscura. */
+    function fnjs_cerrar_ventana_modal() {
+        $('#div_modificar').html('');
+        $('#div_modificar').css({width: '0', height: '0'});
+        $('#div_modificar').removeClass('ventana');
+        fnjs_overlay_ocultar();
+        if ($('#main #ir_atras, #main #ir_atras2, #main #go_atras, #main #js_atras').length) {
+            fnjs_left_side_show();
+        }
+    }
+
     function fnjs_mostrar_atras(id_div, htmlForm) {
         fnjs_borrar_posibles_atras();
         var name_div = id_div.substring(1);
@@ -492,6 +512,7 @@ if (!isset($h)) {
      * no un residuo bajo #cargando (misma id en el DOM ⇒ jQuery cogía el primero y podía cargar index / shell entero dentro de #main).
      */
     function fnjs_left_slide_atras() {
+        fnjs_cerrar_ventana_modal();
         var selectors = ['#main #ir_atras', '#main #ir_atras2', '#main #go_atras', '#main #js_atras'];
         for (var i = 0; i < selectors.length; i++) {
             if ($(selectors[i]).length) {
@@ -522,6 +543,7 @@ if (!isset($h)) {
         }
         if (is_back) {
             sessionStorage.setItem('is_back_navigation', 'true');
+            fnjs_cerrar_ventana_modal();
         }
 
         var url = $(id_div + " [name='url']").val();
@@ -607,7 +629,8 @@ if (!isset($h)) {
         if (bloque === '#main') {
             fnjs_guardar_estado();
         }
-        if (mantener_atras === 0) {
+        // Solo recargas de #main sustituyen la pila de navegación; popups (#div_modificar, etc.) no deben borrar #ir_atras.
+        if (mantener_atras === 0 && (bloque === '#main' || bloque === '#body')) {
             fnjs_borrar_posibles_atras();
         }
         var path = ref.replace(/\?.*$/, '');
@@ -690,12 +713,12 @@ if (!isset($h)) {
     }
 
     function fnjs_enviar_formulario(id_form, bloque) {
-        if (!bloque || bloque === '#main') {
-            fnjs_guardar_estado();
-        }
-        fnjs_borrar_posibles_atras();
         if (!bloque) {
             bloque = '#main';
+        }
+        if (bloque === '#main') {
+            fnjs_guardar_estado();
+            fnjs_borrar_posibles_atras();
         }
         $(id_form).one("submit", function () {
             var tgt_url = $(this).attr('action');
@@ -957,6 +980,9 @@ if (!isset($h)) {
             return;
         }
         $(bloque).empty().append(myText);
+        if (bloque === '#main') {
+            fnjs_cerrar_ventana_modal();
+        }
         fnjs_ventana_ajustar(bloque);
         fnjs_cambiar_link(bloque);
         // Destacar filas seleccionadas inicialmente en tablas HTML
