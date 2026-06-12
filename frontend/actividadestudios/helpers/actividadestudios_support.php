@@ -55,11 +55,11 @@ function actividadestudios_id_activ_asignatura_from_post(): array
     if (is_array($a_sel_raw) && $a_sel_raw !== []) {
         $sel0 = $a_sel_raw[0];
         if (is_string($sel0) && $sel0 !== '') {
-            $parts = explode('#', $sel0, 2);
+            $parts = explode('#', $sel0);
 
             return [
-                'id_activ' => is_numeric($parts[0]) ? (int) $parts[0] : 0,
-                'id_asignatura' => isset($parts[1]) && is_numeric($parts[1]) ? (int) $parts[1] : 0,
+                'id_activ' => is_numeric($parts[0] ?? '') ? (int) $parts[0] : 0,
+                'id_asignatura' => is_numeric($parts[1] ?? '') ? (int) $parts[1] : 0,
             ];
         }
     }
