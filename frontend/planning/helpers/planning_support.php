@@ -9,6 +9,8 @@ require_once __DIR__ . '/../../actividades/helpers/actividades_support.php';
 use frontend\shared\config\OrbixRuntime;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 
+use function frontend\shared\helpers\urlsafe_b64decode;
+
 function planning_o_config(): ?ConfigSnapshot
 {
     $oConfig = $_SESSION['oConfig'] ?? null;
@@ -26,6 +28,45 @@ function planning_post_int(string $name, int $default = 0): int
     $raw = filter_input(INPUT_POST, $name, FILTER_VALIDATE_INT);
 
     return is_int($raw) ? $raw : $default;
+}
+
+/**
+ * @return list<string>
+ */
+function planning_post_string_list(string $name): array
+{
+    if (!isset($_POST[$name]) || !is_array($_POST[$name])) {
+        return [];
+    }
+    $out = [];
+    foreach ($_POST[$name] as $item) {
+        if (is_string($item) && $item !== '') {
+            $out[] = $item;
+        } elseif (is_int($item) || is_float($item)) {
+            $out[] = (string) $item;
+        }
+    }
+
+    return $out;
+}
+
+/**
+ * Personas seleccionadas en listas SlickGrid (planning persona, etc.).
+ * Prioriza `sSeleccionados` (csv) porque PostRequest/HashFront pierden arrays `sel[]`.
+ *
+ * @return list<string>
+ */
+function planning_collect_sel_from_post(): array
+{
+    $csv = planning_post_string('sSeleccionados');
+    if ($csv !== '') {
+        return array_values(array_filter(
+            array_map('trim', explode(',', $csv)),
+            static fn (string $v): bool => $v !== ''
+        ));
+    }
+
+    return planning_post_string_list('sel');
 }
 
 function planning_posicion_string(mixed $value, string $default = ''): string
@@ -189,7 +230,8 @@ function planning_string_key_row(array $raw): array
 function planning_is_persona_casa_map(array $items): bool
 {
     if ($items === []) {
-        return true;
+        // Lista vacía de actividades bajo una clave `p#…` / `u#…`; no es un mapa anidado.
+        return false;
     }
     foreach (array_keys($items) as $k) {
         if (!is_string($k) || !str_contains($k, '#')) {
@@ -340,4 +382,48 @@ function planning_zones_select_from_payload(array $payload): array
 function planning_where_string(array $decoded, string $key, string $default = ''): string
 {
     return tessera_imprimir_string($decoded[$key] ?? $default);
+}
+
+/**
+ * Restaura nombre/apellidos/centro/na a partir de los filtros codificados en la pila Posicion.
+ *
+ * @return array{nombre: string, apellido1: string, apellido2: string, centro: string, na: string}
+ */
+function planning_filtros_persona_desde_sa_where_encoded(
+    string $saWhere,
+    string $saWhereCtr,
+    string $nombre = '',
+    string $apellido1 = '',
+    string $apellido2 = '',
+    string $centro = '',
+    string $na = '',
+): array {
+    if ($saWhere === '' && $saWhereCtr === '') {
+        return compact('nombre', 'apellido1', 'apellido2', 'centro', 'na');
+    }
+
+    $aWhereDecoded = json_decode(urlsafe_b64decode($saWhere), true);
+    $aWhere = is_array($aWhereDecoded) ? $aWhereDecoded : [];
+    $aWhereCtrDecoded = json_decode(urlsafe_b64decode($saWhereCtr), true);
+    $aWhereCtr = is_array($aWhereCtrDecoded) ? $aWhereCtrDecoded : [];
+
+    $apellido1 = planning_where_string($aWhere, 'apellido1', $apellido1);
+    if (str_starts_with($apellido1, '^')) {
+        $apellido1 = substr($apellido1, 1);
+    }
+    $apellido2 = planning_where_string($aWhere, 'apellido2', $apellido2);
+    if (str_starts_with($apellido2, '^')) {
+        $apellido2 = substr($apellido2, 1);
+    }
+    $nombre = planning_where_string($aWhere, 'nom', $nombre);
+    if (str_starts_with($nombre, '^')) {
+        $nombre = substr($nombre, 1);
+    }
+    $centro = planning_where_string($aWhereCtr, 'nombre_ubi', $centro);
+    $idTablaWhere = planning_where_string($aWhere, 'id_tabla');
+    if (str_starts_with($idTablaWhere, 'p')) {
+        $na = substr($idTablaWhere, 1);
+    }
+
+    return compact('nombre', 'apellido1', 'apellido2', 'centro', 'na');
 }

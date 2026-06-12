@@ -7,9 +7,11 @@ namespace Tests\unit\personas\application;
 use PHPUnit\Framework\TestCase;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 
@@ -42,6 +44,21 @@ final class PersonaRepositoryResolverTest extends TestCase
         $this->assertSame($repo, $resolver->repositorio('PersonaN'));
     }
 
+    public function test_repositorio_persona_sacd(): void
+    {
+        $repo = $this->createMock(PersonaSacdRepositoryInterface::class);
+        $resolver = $this->makeResolver([
+            PersonaSacdRepositoryInterface::class => $repo,
+        ]);
+
+        $this->assertSame($repo, $resolver->repositorio('PersonaSacd'));
+    }
+
+    public function test_idTablaFor_persona_sacd(): void
+    {
+        $this->assertSame('cp', PersonaRepositoryResolver::idTablaFor('PersonaSacd'));
+    }
+
     public function test_repositorioPorIdTabla(): void
     {
         $repo = $this->createMock(PersonaNRepositoryInterface::class);
@@ -64,6 +81,8 @@ final class PersonaRepositoryResolverTest extends TestCase
             $overrides[PersonaSRepositoryInterface::class] ?? $this->createMock(PersonaSRepositoryInterface::class),
             $overrides[PersonaSSSCRepositoryInterface::class] ?? $this->createMock(PersonaSSSCRepositoryInterface::class),
             $overrides[PersonaExRepositoryInterface::class] ?? $this->createMock(PersonaExRepositoryInterface::class),
+            $overrides[PersonaDlRepositoryInterface::class] ?? $this->createMock(PersonaDlRepositoryInterface::class),
+            $overrides[PersonaSacdRepositoryInterface::class] ?? $this->createMock(PersonaSacdRepositoryInterface::class),
         );
     }
 }

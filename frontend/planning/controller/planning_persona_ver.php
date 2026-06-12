@@ -23,8 +23,10 @@ require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
+$oPosicion->recordar();
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qna = planning_post_string('na');
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
 $Qyear = (int)filter_input(INPUT_POST, 'year');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
@@ -59,22 +61,29 @@ if ((int)$interval < 2) {
 
 $cabecera_title = ucfirst(_("persona seleccionada"));
 
-$payload = $_POST;
+$a_sel = planning_collect_sel_from_post();
+$payload = [
+    'obj_pau' => $Qobj_pau,
+    'year' => $Qyear,
+    'periodo' => $Qperiodo,
+    'empiezamin' => $Qempiezamin,
+    'empiezamax' => $Qempiezamax,
+    'sSeleccionados' => implode(',', $a_sel),
+];
 $apiData = PostRequest::getDataFromUrl('/src/planning/planning_persona_ver_data', $payload);
 $a_actividades = planning_actividades_map($apiData['a_actividades'] ?? null);
 
 $aGoBack = [
+    'obj_pau' => $Qobj_pau,
+    'na' => $Qna,
     'modelo' => $Qmodelo,
     'year' => $Qyear,
     'periodo' => $Qperiodo,
     'empiezamax' => $Qempiezamax,
     'empiezamin' => $Qempiezamin,
-    'sacd' => '',
-    'ctr' => '',
-    'todos_n' => '',
-    'todos_agd' => '',
-    'todos_s' => '',
-    'id_ubi' => '',
+    'id_sel' => planning_post_string('id_sel'),
+    'scroll_id' => planning_post_string('scroll_id'),
+    'sSeleccionados' => implode(',', $a_sel),
 ];
 $oPosicion->setParametros($aGoBack, 1);
 

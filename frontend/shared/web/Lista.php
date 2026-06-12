@@ -934,6 +934,9 @@ class Lista
 				
 				grid_$id_tabla.onClick.subscribe(function (e,args) {
 					add_scroll_id(args.row);
+					if (e.ctrlKey || e.metaKey || e.shiftKey) {
+						return;
+					}
 					grid_$id_tabla.setSelectedRows([args.row]);
 				});
 				

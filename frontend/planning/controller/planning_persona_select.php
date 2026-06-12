@@ -136,6 +136,10 @@ $cPersonas = planning_personas_from_payload($apiData['personas'] ?? null);
 $aGoBack = [
     'obj_pau' => $Qobj_pau,
     'na' => $Qna,
+    'nombre' => $Qnombre,
+    'apellido1' => $Qapellido1,
+    'apellido2' => $Qapellido2,
+    'centro' => $Qcentro,
     'periodo' => $Qperiodo,
     'year' => $Qyear,
     'empiezamin' => $Qempiezamin,
@@ -148,6 +152,8 @@ $aGoBack = [
 $oPosicion->setParametros($aGoBack, 1);
 
 $a_botones = [
+    ['txt' => _("marcar todos"), 'click' => "fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"all\",0)"],
+    ['txt' => _("desmarcar todos"), 'click' => "fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"none\",0)"],
     ['txt' => _("vista tabla"), 'click' => "fnjs_ver_planning(\"#seleccionados\",1)"],
     ['txt' => _("vista para imprimir"), 'click' => "fnjs_planning_print(\"#seleccionados\")"],
     ['txt' => _("ver actividades"), 'click' => "fnjs_actividades(\"#seleccionados\")"],
@@ -193,7 +199,7 @@ foreach ($cPersonas as $row) {
 }
 
 $oHash = new HashFront();
-$oHash->setcamposNo('sel!scroll_id!modelo!que!id_dossier');
+$oHash->setcamposNo('sel!scroll_id!modelo!que!id_dossier!sSeleccionados');
 $oHash->setArraycamposHidden([
     'obj_pau' => $Qobj_pau,
     'na' => $Qna,

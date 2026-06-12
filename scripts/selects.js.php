@@ -37,6 +37,50 @@ function fnjs_selectAll(formulario,Name,val,aviso){
 			}
 		}
 	);
+	var $form = $(formulario);
+	if (!$form.length && form) {
+		$form = $('#' + form);
+	}
+	/* En SlickGrid la selección real vive en getSelectedRows(); los checkboxes visibles no bastan. */
+	$form.find('[id^="grid_"]').each(function () {
+		var tabla = this.id.substring(5);
+		var grid = window['grid_' + tabla];
+		var dataView = window['dataView_' + tabla];
+		if (!grid || !dataView) {
+			return;
+		}
+		if (val === 'all') {
+			var rows = [];
+			for (var i = 0; i < dataView.getLength(); i++) {
+				rows.push(i);
+			}
+			grid.setSelectedRows(rows);
+		} else if (val === 'none') {
+			grid.setSelectedRows([]);
+		}
+	});
+}
+
+function fnjs_collect_sel_ids(formulario) {
+	fnjs_sync_grid_sel_checkboxes(formulario);
+	var ids = [];
+	$(formulario).find('input.sel:checked').each(function () {
+		var v = $(this).val();
+		if (v) {
+			ids.push(v);
+		}
+	});
+	return ids;
+}
+
+function fnjs_set_sSeleccionados(formulario, ids) {
+	var $form = $(formulario);
+	var hid = $form.find('input[name="sSeleccionados"]');
+	if (!hid.length) {
+		hid = $('<input>', {type: 'hidden', name: 'sSeleccionados', id: 'sSeleccionados'});
+		hid.appendTo($form);
+	}
+	hid.val(ids.join(','));
 }
 
 function fnjs_sync_grid_sel_checkboxes(formulario) {
@@ -45,6 +89,15 @@ function fnjs_sync_grid_sel_checkboxes(formulario) {
 		return;
 	}
 	var $form = $('#' + formId);
+	var idsToSync = {};
+
+	$form.find('input.sel:checked').each(function () {
+		var v = $(this).val();
+		if (v) {
+			idsToSync[v] = true;
+		}
+	});
+
 	$form.find('[id^="grid_"]').each(function () {
 		var tabla = this.id.substring(5);
 		var grid = window['grid_' + tabla];
@@ -56,29 +109,37 @@ function fnjs_sync_grid_sel_checkboxes(formulario) {
 		if (!selectedIndices || selectedIndices.length === 0) {
 			return;
 		}
-		$form.find('input.sel').prop('checked', false);
 		selectedIndices.forEach(function (idx) {
 			var item = dataView.getItem(idx);
 			var id = (typeof fnjs_parse_slick_sel_value === 'function')
 				? fnjs_parse_slick_sel_value(item ? item.sel : '')
 				: '';
-			if (!id) {
-				return;
-			}
-			var $cb = $form.find('input.sel').filter(function () {
-				return $(this).val() === id;
-			});
-			if ($cb.length) {
-				$cb.prop('checked', true);
-			} else {
-				$('<input>', {
-					type: 'checkbox',
-					'class': 'sel',
-					name: 'sel[]',
-					value: id
-				}).prop('checked', true).appendTo($form);
+			if (id) {
+				idsToSync[id] = true;
 			}
 		});
+	});
+
+	var idList = Object.keys(idsToSync);
+	if (idList.length === 0) {
+		return;
+	}
+
+	$form.find('input.sel').prop('checked', false);
+	idList.forEach(function (id) {
+		var $cb = $form.find('input.sel').filter(function () {
+			return $(this).val() === id;
+		});
+		if ($cb.length) {
+			$cb.prop('checked', true);
+		} else {
+			$('<input>', {
+				type: 'checkbox',
+				'class': 'sel',
+				name: 'sel[]',
+				value: id
+			}).prop('checked', true).appendTo($form);
+		}
 	});
 }
 

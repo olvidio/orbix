@@ -14,16 +14,14 @@ $error = '';
 $data = [];
 try {
     $input = $_POST;
-    $a_sel = input_string_list($input, 'sel');
-    $aid_nom = [];
-    if ($a_sel !== []) {
-        if (count($a_sel) > 1) {
-            foreach ($a_sel as $nom_sel) {
-                $aid_nom[] = $nom_sel;
-            }
-        } else {
-            $aid_nom[] = $a_sel[0];
-        }
+    $sSeleccionados = input_string($input, 'sSeleccionados');
+    if ($sSeleccionados !== '') {
+        $aid_nom = array_values(array_filter(
+            array_map('trim', explode(',', $sSeleccionados)),
+            static fn (string $v): bool => $v !== ''
+        ));
+    } else {
+        $aid_nom = input_string_list($input, 'sel');
     }
 
     $Qyear = input_int($input, 'year');
