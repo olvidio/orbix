@@ -8,14 +8,26 @@
 /** @var int $year1 */
 /** @var int $year2 */
 /** @var int $year3 */
+/** @var string $url_ejecutar */
 ?>
+<script>
+    fnjs_generar_nuevo_curso = function () {
+        fnjs_guardar_estado();
+        fnjs_borrar_posibles_atras();
+        fnjs_ajax_json_html({
+            url: <?= json_encode($url_ejecutar, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?>,
+            data: $('#frm_sin_nombre').serialize(),
+            target: '#main'
+        });
+    };
+</script>
 <?= $txt ?>
 <br>
 <br>
 <?= $txt_lento ?>
 <br>
 <br>
-<form id="frm_sin_nombre" name="frm_sin_nombre" action="frontend/actividades/controller/actividad_nuevo_curso.php">
+<form id="frm_sin_nombre" name="frm_sin_nombre" action="#">
     <?= $oHash->getCamposHtml(); ?>
     <?= _("año origen:") ?>
     <select name="year_ref">
@@ -32,5 +44,5 @@
     <br>
     <input type="checkbox" name="ver_lista" value="t"><?= _("Ver listado") ?>
     <br>
-    <input type="button" onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?= _("generar nuevo curso") ?>">
+    <input type="button" onclick="fnjs_generar_nuevo_curso();" value="<?= _("generar nuevo curso") ?>">
 </form>

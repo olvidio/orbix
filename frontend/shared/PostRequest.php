@@ -281,6 +281,9 @@ class PostRequest
      */
     public static function getDataFromUrl(string $url, array $campos = [], bool $exitOnError = true): array
     {
+        $url = self::absoluteHttpUrlFromAppRelative($url);
+        $url_hased = HashFront::cmdSinParametros($url);
+
         // Si el payload proviene de $_POST (PostRequest::requestPayloadForHash),
         // arrastra los meta-campos de hash del navegador (h/hh/hhc/hno/horig/…).
         // Esta función genera su propio hash para la llamada server-to-server;
@@ -288,29 +291,11 @@ class PostRequest
         // y los meta-campos del navegador sobrescribirían el hash fresco, causando
         // que `validatePost` en el endpoint rechace el POST y redirija a index.php.
         $campos = self::stripInboundHashMeta($campos);
-        if (!empty($campos)) {
-            $campos = self::normalizeCamposParaHash($campos);
-        }
-
-        $internal = PostRequestInternalDispatch::tryDispatch($url, $campos);
-        if ($internal !== null) {
-            if (!empty($internal['error'])) {
-                if ($exitOnError) {
-                    exit((string) $internal['error']);
-                }
-
-                return $internal;
-            }
-
-            return $internal;
-        }
-
-        $url = self::absoluteHttpUrlFromAppRelative($url);
-        $url_hased = HashFront::cmdSinParametros($url);
 
         $oHash = new HashFront();
         $oHash->setUrl($url_hased);
         if (!empty($campos)) {
+            $campos = self::normalizeCamposParaHash($campos);
             $oHash->setArrayCamposHidden($campos);
         }
         $hash_params = $oHash->getArrayCampos();

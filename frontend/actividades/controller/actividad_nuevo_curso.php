@@ -3,9 +3,9 @@
  * Pantalla que crea las actividades para el nuevo curso, copiando las del
  * curso de referencia.
  *
- * La ejecucion (borrado + creacion + comprobacion de solapes) se realiza en
- * `src\actividades\application\ActividadNuevoCursoEjecutar` via PostRequest.
- * Este controlador solo gestiona el formulario y muestra el resultado HTML.
+ * La ejecución (borrado + creación + comprobación de solapes) se realiza en
+ * `/src/actividades/actividad_nuevo_curso_ejecutar` (`ActividadNuevoCursoEjecutar`).
+ * Este controlador solo monta el formulario; el navegador POSTea al backend.
  *
  * Migrado desde frontend/actividades/controller/actividad_nuevo_curso.php.
  *
@@ -14,8 +14,8 @@
  */
 
 use frontend\shared\AppInstalled;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
@@ -23,30 +23,13 @@ require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$Qok = (int)filter_input(INPUT_POST, 'ok');
-$Qver_lista = (string)filter_input(INPUT_POST, 'ver_lista');
 
-if ($Qok === 1) {
-    $Qyear_ref = (int)filter_input(INPUT_POST, 'year_ref');
-    $Qyear = (int)filter_input(INPUT_POST, 'year');
-
-    $data = PostRequest::getDataFromUrl('/src/actividades/actividad_nuevo_curso_ejecutar', [
-        'year_ref' => $Qyear_ref,
-        'year' => $Qyear,
-        'ver_lista' => $Qver_lista,
-    ]);
-
-    echo tessera_imprimir_string($data['html'] ?? '');
-    return;
-}
+$url_ejecutar = AppUrlConfig::getApiBaseUrl() . '/src/actividades/actividad_nuevo_curso_ejecutar';
 
 $oHash = new HashFront();
-$a_camposHidden = [
-    'ok' => 1,
-];
+$oHash->setUrl($url_ejecutar);
 $oHash->setCamposForm('year_ref!year');
 $oHash->setCamposNo('ver_lista');
-$oHash->setArraycamposHidden($a_camposHidden);
 
 $any0 = (int)date('Y');
 $any1 = $any0 - 1;
@@ -83,6 +66,7 @@ $a_campos = [
     'year1' => $year1,
     'year2' => $year2,
     'year3' => $year3,
+    'url_ejecutar' => $url_ejecutar,
 ];
 
 $oView = new ViewNewPhtml('frontend\actividades\controller');
