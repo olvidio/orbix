@@ -14,7 +14,6 @@ require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-$oPosicion->recordar();
 
 $Qid_asignatura = (int)filter_input(INPUT_POST, 'id_asignatura');
 $Qpersonas_n = (string)filter_input(INPUT_POST, 'personas_n');
@@ -48,6 +47,17 @@ if ($stackFromPost !== 0) {
         $oPosicion2->olvidar($stackFromPost);
     }
 }
+
+$oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros([
+    'id_asignatura' => $Qid_asignatura,
+    'personas_n' => $Qpersonas_n,
+    'personas_agd' => $Qpersonas_agd,
+    'b_c' => $Qb_c,
+    'c1' => $Qc1,
+    'c2' => $Qc2,
+], $Qid_sel, isset($Qscroll_id) ? (string) $Qscroll_id : ''));
+
 
 $oPosicion->setParametros([
     'id_asignatura' => $Qid_asignatura,

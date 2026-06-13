@@ -21,12 +21,18 @@ use frontend\shared\security\HashFront;
 use frontend\shared\helpers\SignedDownloadToken;
 use function frontend\shared\helpers\urlsafe_b64encode;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\web\Posicion;
+
+$isIncluded = isset($oPosicion) && $oPosicion instanceof Posicion;
 
 require_once __DIR__ . '/../helpers/notas_support.php';
 require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once 'frontend/shared/FrontBootstrap.php';
 
-$oPosicion = FrontBootstrap::boot();
+if (!$isIncluded) {
+    require_once 'frontend/shared/FrontBootstrap.php';
+    $oPosicion = FrontBootstrap::boot();
+}
+
 $f_acta = '';
 $libro = '';
 $pagina = '';
@@ -52,7 +58,7 @@ $Qsa_actas = tessera_imprimir_string($requestPayload['sa_actas'] ?? '');
 $Qacta = tessera_imprimir_string($requestPayload['acta'] ?? '');
 $Qnotas = tessera_imprimir_string($requestPayload['notas'] ?? '');
 
-if ($notas === '' && $Qnotas === '') {
+if (!$isIncluded && $notas === '' && $Qnotas === '') {
     $oPosicion->recordar();
     list_nav_persist_selection_to_posicion($oPosicion, 1);
 }

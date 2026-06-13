@@ -8,6 +8,7 @@ use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 
@@ -17,6 +18,8 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 $str_selected_id = rawurlencode((string)json_encode($a_sel));
 
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 $url_backend = '/src/inventario/lista_docs_asignar_ctr';
 $a_campos_backend = [

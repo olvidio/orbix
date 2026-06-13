@@ -20,9 +20,9 @@ use frontend\shared\FrontBootstrap;
  */
 require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-$oPosicion->recordar();
 
 $Qid_sel = planning_post_string('id_sel');
 $Qscroll_id = planning_post_string('scroll_id');
@@ -88,6 +88,9 @@ if (isset($_POST['stack'])) {
         }
     }
 }
+$oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(($aGoBack ?? list_nav_build_return_parametros_from_post()), $Qid_sel, isset($Qscroll_id) ? (string) $Qscroll_id : ''));
+
 
 $aWhere = [
     'situacion' => 'A',

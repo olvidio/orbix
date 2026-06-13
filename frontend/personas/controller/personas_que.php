@@ -17,10 +17,9 @@ use frontend\shared\FrontBootstrap;
  * `personas_select_telf.php`) se ha eliminado por enlace muerto.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-$oPosicion->recordar();
-
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
@@ -30,6 +29,10 @@ if (isset($_POST['stack'])) {
         }
     }
 }
+$oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+
+
 
 $Qna = (string)filter_input(INPUT_POST, 'na');
 $Qque = (string)filter_input(INPUT_POST, 'que');

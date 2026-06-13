@@ -8,6 +8,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 
@@ -15,6 +16,8 @@ $Qinventario = (int)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');
 
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 $url_backend = '/src/inventario/lista_tipo_doc';
 $data = PostRequest::getDataFromUrl($url_backend);

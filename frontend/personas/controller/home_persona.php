@@ -20,10 +20,13 @@ use frontend\shared\FrontBootstrap;
  * `/src/personas/home_persona_data`. Este controlador no importa clases `src\`.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once __DIR__ . '/../helpers/personas_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 $ids = personas_id_from_sel_post();
 $id_nom = $ids['id_nom'];

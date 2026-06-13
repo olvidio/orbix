@@ -10,12 +10,10 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
-
-// Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
@@ -27,6 +25,11 @@ if (isset($_POST['stack'])) {
         }
     }
 }
+$oPosicion->recordar($Qrefresh);
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), $Qid_sel, isset($Qscroll_id) ? (string) $Qscroll_id : ''));
+
+
+// Si vengo por medio de Posicion, borro la última
 
 $data = PostRequest::getDataFromUrl('/src/procesos/procesos_select_data', []);
 $aTiposProceso = notas_desplegable_opciones($data['a_tipos_proceso'] ?? []);

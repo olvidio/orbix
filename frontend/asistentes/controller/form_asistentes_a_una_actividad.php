@@ -14,7 +14,9 @@ $oPosicion = FrontBootstrap::boot();
 $Qactualizar = (int)filter_input(INPUT_POST, 'actualizar');
 if (empty($Qactualizar)) {
     $oPosicion->recordar();
+    list_nav_persist_dossier_return_to_posicion($oPosicion, 1);
     list_nav_persist_selection_to_posicion($oPosicion, 1);
+    list_nav_persist_clean_return_to_posicion($oPosicion, list_nav_build_dossier_return_parametros(), 0);
 }
 
 $campos = array_merge($_GET, $_POST);

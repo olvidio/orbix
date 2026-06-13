@@ -23,6 +23,7 @@ use frontend\shared\FrontBootstrap;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 
 require_once __DIR__ . '/../helpers/tessera_imprimir_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 function titulo(int $id_asignatura, string $cara = ''): string
 {
@@ -126,22 +127,10 @@ $oPosicion = FrontBootstrap::boot();
 // En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
+list_nav_persist_tessera_imprimir_parent_return_to_posicion($oPosicion, 1);
 
 echo "<script>fnjs_left_side_hide()</script>";
 include_once(OrbixRuntime::dirEstilos() . '/tessera.css.php');
-
-//Si vengo por medio de Posicion, borro la última
-if (isset($_POST['stack'])) {
-    $stack2 = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack2 !== 0) {
-        $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack2);
-        }
-    }
-}
 
 $a_sel_raw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $a_sel = is_array($a_sel_raw) ? $a_sel_raw : [];

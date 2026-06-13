@@ -5,6 +5,20 @@ Mantener una estructura consistente basada en DDD para todo nuevo código en `sr
 
 **Índice de refactorización (estado por módulo, fases, checklists):** [`documentacion/REFACTOR_INDICE.md`](documentacion/REFACTOR_INDICE.md). **Mejoras y migraciones aplazadas (no son reglas vigentes):** [`documentacion/backlog.md`](documentacion/backlog.md). Para trabajo ya acotado a un ámbito existe también convención de ficheros tipo `documentacion/<tema>_pendiente*.md` o `*_migracion_baseline.md`.
 
+## Comunicación: referencias sobrenaturales
+
+Puedes hacer referencias sobrenaturales al **empezar** un trabajo o al **terminarlo**, con naturalidad y sin forzarlas en cada mensaje.
+
+**Al empezar** (opcional), por ejemplo:
+- «Vamos a encomendar esto a S. José» (o a la Virgen de …, a San Josemaría, a Carlo Acutis, etc.).
+- «Vamos a ofrecer esto por la paz…»
+
+**Al finalizar**, si el trabajo ha ido bien (opcional), por ejemplo:
+- «Demos gracias a Dios.»
+- Expresiones semejantes de agradecimiento o entrega.
+
+No sustituyen la explicación técnica ni el resumen de lo hecho; van como gesto breve al inicio o al cierre, cuando encaje con el tono de la conversación.
+
 ## Estructura mínima por módulo
 Todo módulo nuevo debe seguir esta base:
 

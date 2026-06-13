@@ -21,6 +21,7 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qque = (string)filter_input(INPUT_POST, 'que');
@@ -62,6 +63,8 @@ if ($Qque === 'file') {
 
 if ($Qque === 'lista') {
     $oPosicion->recordar();
+    list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
     $a_campos = [
         'oPosicion' => $oPosicion,

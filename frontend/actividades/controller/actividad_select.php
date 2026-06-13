@@ -41,7 +41,6 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-$oPosicion->recordar();
 
 $Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
 // Solo sirve para esta pagina: importar, publicar, duplicar
@@ -51,6 +50,9 @@ $stackFromPost = isset($_POST['stack']) ? (int)filter_input(INPUT_POST, 'stack',
 /** @var string|list<string> $Qid_sel */
 $Qid_sel = '';
 $Qscroll_id = '';
+$Qque = '';
+$Qlistar_asistentes = '';
+$Qextendida = '';
 
 // Si vengo de vuelta con el parametro 'continuar', los datos no estan en el POST,
 // sino en $Posicion. Le paso la referencia del stack donde esta la informacion.
@@ -70,6 +72,8 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qfases_on = $oPosicion->getParametro('fases_on');
     $Qfases_off = $oPosicion->getParametro('fases_off');
     $Qpublicado = $oPosicion->getParametro('publicado');
+    $Qque = tessera_imprimir_string($oPosicion->getParametro('que') ?? $Qque);
+    $Qlistar_asistentes = tessera_imprimir_string($oPosicion->getParametro('listar_asistentes') ?? $Qlistar_asistentes);
     $restoredSel = list_nav_id_sel_for_lista($oPosicion->getParametro('id_sel'));
     if (!list_nav_id_sel_is_empty($restoredSel)) {
         $Qid_sel = $restoredSel;
@@ -90,6 +94,10 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
 } else {
     $Qid_sel = list_nav_id_sel_from_post();
     $Qscroll_id = list_nav_scroll_id_from_post();
+
+    $Qque = (string)filter_input(INPUT_POST, 'que');
+    $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
+    $Qextendida = (string)filter_input(INPUT_POST, 'extendida');
 
     $Qmodo = (string)filter_input(INPUT_POST, 'modo');
     $Qstatus = (integer)filter_input(INPUT_POST, 'status');
@@ -148,6 +156,8 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
 
     $aGoBack = [
         'modo' => $Qmodo,
+        'que' => $Qque,
+        'listar_asistentes' => $Qlistar_asistentes,
         'id_tipo_activ' => $Qid_tipo_activ,
         'filtro_lugar' => $Qfiltro_lugar,
         'id_ubi' => $Qid_ubi,
@@ -161,6 +171,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
         'fases_on' => $Qfases_on,
         'fases_off' => $Qfases_off,
         'publicado' => $Qpublicado,
+        'extendida' => $Qextendida,
     ];
     $oPosicion->setParametros($aGoBack, 1);
 
@@ -171,6 +182,36 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
         $stackFromPost !== 0,
     );
 }
+
+$actividadSelectReturn = list_nav_build_actividad_select_return_parametros([
+    'modo' => $Qmodo,
+    'que' => $Qque,
+    'listar_asistentes' => $Qlistar_asistentes,
+    'status' => $Qstatus,
+    'id_tipo_activ' => $Qid_tipo_activ,
+    'filtro_lugar' => $Qfiltro_lugar,
+    'id_ubi' => $Qid_ubi,
+    'nom_activ' => $Qnom_activ,
+    'periodo' => $Qperiodo,
+    'year' => $Qyear,
+    'dl_org' => $Qdl_org,
+    'empiezamin' => $Qempiezamin,
+    'empiezamax' => $Qempiezamax,
+    'fases_on' => $Qfases_on,
+    'fases_off' => $Qfases_off,
+    'publicado' => $Qpublicado,
+    'extendida' => $Qextendida ?? '',
+    'ssfsv' => $Qssfsv ?? '',
+    'sasistentes' => $Qsasistentes ?? '',
+    'sactividad' => $Qsactividad ?? '',
+    'sactividad2' => $Qsactividad2 ?? '',
+    'id_sel' => $Qid_sel,
+    'scroll_id' => $Qscroll_id,
+]);
+
+$oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, $actividadSelectReturn);
+
 
 if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     list_nav_persist_selection_on_list_page($oPosicion, $Qid_sel, $Qscroll_id, false);

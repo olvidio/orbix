@@ -10,10 +10,10 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
@@ -42,6 +42,9 @@ if (isset($_POST['stack'])) {
         $Qid_usuario = usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
     }
 }
+$oPosicion->recordar($Qrefresh);
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), isset($Qscroll_id) ? (string) $Qscroll_id : ''));
+
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 $formData = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_form', [

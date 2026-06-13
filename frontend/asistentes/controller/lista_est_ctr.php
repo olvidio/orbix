@@ -6,10 +6,20 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/asistentes_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 /** @var \frontend\shared\web\Posicion $oPosicion */
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros([
+    'n_agd' => $Qn_agd,
+    'id_ubi' => $Qid_ubi,
+    'periodo' => $Qperiodo,
+    'year' => $Qyear,
+    'empiezamax' => $Qempiezamax,
+    'empiezamin' => $Qempiezamin,
+], list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+
 
 $Qn_agd = (string)filter_input(INPUT_POST, 'n_agd');
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');

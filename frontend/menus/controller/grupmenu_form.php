@@ -8,11 +8,11 @@ use frontend\shared\FrontBootstrap;
 // Crea los objetos de uso global **********************************************
 require_once __DIR__ . '/../helpers/menus_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
 
 $Qid_grupmenu = (integer)filter_input(INPUT_POST, 'id_grupmenu');
 
@@ -42,6 +42,9 @@ if (isset($_POST['stack'])) {
         $Qid_grupmenu = menus_id_from_sel_item(menus_sel_first_item($a_sel));
     }
 }
+$oPosicion->recordar($Qrefresh);
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), isset($Qscroll_id) ? (string) $Qscroll_id : ''));
+
 $oPosicion->setParametros(array('id_grupmenu' => $Qid_grupmenu), 1);
 
 if (!empty($Qid_grupmenu)) {

@@ -19,9 +19,12 @@ use frontend\shared\FrontBootstrap;
  * de los filtros.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(($aGoBack ?? list_nav_build_return_parametros_from_post()), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+
 
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
 $Qcdc_sel = (int)filter_input(INPUT_POST, 'cdc_sel');

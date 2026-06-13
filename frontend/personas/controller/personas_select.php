@@ -20,7 +20,6 @@ require_once __DIR__ . '/../helpers/personas_support.php';
 require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-$oPosicion->recordar();
 
 $tabla = (string)filter_input(INPUT_POST, 'tabla');
 $Qna = (string)filter_input(INPUT_POST, 'na');
@@ -64,6 +63,28 @@ if ($stack !== null && $stack !== 0) {
         $oPosicion2->olvidar($stack);
     }
 }
+
+$oPosicion->recordar();
+$personasReturn = [
+    'que' => $Qque,
+    'exacto' => $Qexacto,
+    'cmb' => $Qcmb,
+    'nombre' => $Qnombre,
+    'apellido1' => $Qapellido1,
+    'apellido2' => $Qapellido2,
+    'centro' => $Qcentro,
+    'tabla' => $tabla,
+    'na' => $Qna,
+    'tipo' => $tipo,
+    'es_sacd' => $Qes_sacd,
+];
+if (!list_nav_id_sel_is_empty($Qid_sel)) {
+    $personasReturn['id_sel'] = $Qid_sel;
+}
+if ($Qscroll_id !== '' && $Qscroll_id !== '0') {
+    $personasReturn['scroll_id'] = $Qscroll_id;
+}
+list_nav_persist_clean_return_to_posicion($oPosicion, $personasReturn, 0);
 
 $oPosicion->setParametros([
     'que' => $Qque,

@@ -24,29 +24,19 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 
-$Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
+$restored = list_nav_restore_selection_from_stack_post();
+$Qid_sel = $restored['id_sel'];
+$Qscroll_id = $restored['scroll_id'];
+
+$Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 list_nav_persist_dossier_return_to_posicion($oPosicion, 1);
-
-$notas = 1;
-
-$Qid_sel = '';
-$Qscroll_id = tessera_imprimir_string(filter_input(INPUT_POST, 'scroll_id'));
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack);
-        }
-    }
-}
 
 $ids = actividadestudios_id_activ_asignatura_from_post();
 $id_activ = $ids['id_activ'];
 $id_asignatura = $ids['id_asignatura'];
+
+list_nav_persist_acta_notas_return_to_posicion($oPosicion, 0);
 
 $d = actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/acta_notas_data', [
     'id_activ' => $id_activ,

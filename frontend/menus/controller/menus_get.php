@@ -9,12 +9,15 @@ use frontend\shared\FrontBootstrap;
 // Crea los objetos de uso global **********************************************
 require_once __DIR__ . '/../helpers/menus_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->setBloque('#ficha'); // antes del recordar
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');

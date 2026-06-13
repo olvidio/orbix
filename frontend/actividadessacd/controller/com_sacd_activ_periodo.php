@@ -35,6 +35,7 @@ use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qid_nom = (int)filter_input(INPUT_POST, 'id_nom');
@@ -56,6 +57,8 @@ if ($Qque === 'un_sacd') {
 }
 
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 $aOpciones = [
     'tot_any' => _("todo el año"),

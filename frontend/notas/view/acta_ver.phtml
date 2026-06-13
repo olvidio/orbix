@@ -58,7 +58,9 @@
             });
         }
     </script>
-    <?= $oPosicion->mostrar_left_slide(1); ?>
+    <?php if ($notas === '') { ?>
+        <?= $oPosicion->mostrar_left_slide(1); ?>
+    <?php } ?>
     <form id="frm_acta" name="frm_acta" action="" method="POST">
         <?= $oHashActa->getCamposHtml(); ?>
         <table>

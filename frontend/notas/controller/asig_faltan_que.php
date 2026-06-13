@@ -9,10 +9,9 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
-$oPosicion->recordar();
-
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
@@ -23,6 +22,10 @@ if (isset($_POST['stack'])) {
         }
     }
 }
+$oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), $Qid_sel, list_nav_scroll_id_from_post()));
+
+
 
 $Qnumero = (int)filter_input(INPUT_POST, 'numero');
 $Qb_c = (string)filter_input(INPUT_POST, 'b_c');

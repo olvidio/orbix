@@ -18,10 +18,13 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/sacd_ausencias_jefe_zona_data', []);
 $oDesplSacd = new Desplegable();

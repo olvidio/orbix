@@ -98,11 +98,11 @@ function tablaDB_lista_ver_datos(mixed $value): array
 
 // Archivos requeridos por esta url **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // Crea los objetos de uso global **********************************************
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
 
 $a_sel_raw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $a_sel = is_array($a_sel_raw) ? $a_sel_raw : [];
@@ -126,6 +126,9 @@ if (isset($_POST['stack'])) {
         }
     }
 }
+$oPosicion->recordar($Qrefresh);
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), $Qid_sel, isset($Qscroll_id) ? (string) $Qscroll_id : ''));
+
 
 // en los menus esta sin codificar, pero a partir de aquí si:
 $Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');

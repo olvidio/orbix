@@ -38,6 +38,14 @@ if (!empty($a_sel)) {
     $camposAsig['sel'] = $a_sel;
 }
 
+list_nav_persist_clean_return_to_posicion($oPosicion, list_nav_merge_dossier_return([
+    'pau' => $Qpau,
+    'id_pau' => $camposAsig['id_pau'],
+    'id_activ' => $camposAsig['id_activ'],
+    'id_asignatura' => $camposAsig['id_asignatura'],
+    ...(!empty($a_sel) ? ['sel' => $a_sel] : []),
+]), 0);
+
 $raw = actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/form_asignaturas_de_una_actividad_data', $camposAsig));
 if (!empty($raw['error'])) {
     exit(tessera_imprimir_string($raw['error']));

@@ -9,23 +9,14 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/certificados_support.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-$oPosicion->recordar();
 
-$Qid_sel = '';
-$Qscroll_id = '';
-if (isset($_POST['stack'])) {
-    $stack2 = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack2 !== 0) {
-        $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack2)) {
-            $Qid_sel = tessera_imprimir_string($oPosicion2->getParametro('id_sel'));
-            $Qscroll_id = tessera_imprimir_string($oPosicion2->getParametro('scroll_id'));
-            $oPosicion2->olvidar($stack2);
-        }
-    }
-}
+list_nav_restore_selection_from_stack_post();
+
+$oPosicion->recordar();
+list_nav_persist_certificado_imprimir_parent_return_to_posicion($oPosicion, 1);
 
 $id_nom = certificados_id_nom_from_sel_post();
 

@@ -20,11 +20,10 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/pasarela_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $web = AppUrlConfig::getPublicAppBaseUrl();
-
-$oPosicion->recordar();
 
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
@@ -37,6 +36,10 @@ if (isset($_POST['stack'])) {
         }
     }
 }
+$oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), $Qid_sel, isset($Qscroll_id) ? (string) $Qscroll_id : ''));
+
+
 
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');

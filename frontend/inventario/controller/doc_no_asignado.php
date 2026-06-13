@@ -8,6 +8,7 @@ use frontend\shared\FrontBootstrap;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -16,6 +17,8 @@ $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 // muestra los ctr que NO tienen el documento.
 $url_backend = '/src/inventario/lista_docs_no_asignados_por_tipo';

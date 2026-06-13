@@ -7,6 +7,7 @@ use frontend\shared\FrontBootstrap;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
@@ -16,6 +17,8 @@ $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qid_lugar = (integer)filter_input(INPUT_POST, 'id_lugar');
 
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 
 // muestra los ctr que tienen el documento.

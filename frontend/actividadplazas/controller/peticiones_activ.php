@@ -21,12 +21,15 @@ use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qtodos = (int)filter_input(INPUT_POST, 'todos');
 
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 $stack2 = actividadplazas_stack_from_post();
 if ($stack2 !== null) {
     $oPosicion2 = new Posicion();

@@ -30,7 +30,6 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-$oPosicion->recordar();
 
 $Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
 $QGstack = (integer)filter_input(INPUT_POST, 'Gstack');
@@ -39,7 +38,6 @@ if (isset($_POST['stack'])) {
 } else {
     $stack = '';
 }
-
 if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $oPosicion->goStack($QGstack);
     $Qque = $oPosicion->getParametro('que');
@@ -105,6 +103,10 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     ];
     $oPosicion->setParametros($aGoBack, 1);
 }
+
+$oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(($aGoBack ?? list_nav_build_return_parametros_from_post()), $Qid_sel, isset($Qscroll_id) ? (string) $Qscroll_id : ''));
+
 
 if (!empty($Qid_sel) || $Qscroll_id !== '') {
     $oPosicion->setParametros([

@@ -8,10 +8,13 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 $Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
 $Qdatos_buscar = (string)filter_input(INPUT_POST, 'datos_buscar');

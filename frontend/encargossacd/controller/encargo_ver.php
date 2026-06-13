@@ -19,11 +19,14 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qrefresh = encargossacd_post_int('refresh');
 $oPosicion->recordar($Qrefresh);
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) {

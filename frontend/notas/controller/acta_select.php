@@ -30,40 +30,19 @@ $oPosicion = FrontBootstrap::boot();
 $mi_dele = OrbixRuntime::miDelef();
 $mi_region = OrbixRuntime::miRegion();
 
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
+$stackFromPost = isset($_POST['stack']) ? (int) filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
+$restored = list_nav_restore_selection_from_stack_post();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = list_nav_id_sel_from_post();
-$Qscroll_id = list_nav_scroll_id_from_post();
+$Qid_sel = !list_nav_id_sel_is_empty($restored['id_sel']) ? $restored['id_sel'] : list_nav_id_sel_from_post();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : list_nav_scroll_id_from_post();
 
-$stackFromPost = isset($_POST['stack']) ? (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
-//Si vengo por medio de Posicion, borro la última
-if ($stackFromPost !== 0) {
-    $oPosicion2 = new frontend\shared\web\Posicion();
-    if ($oPosicion2->goStack($stackFromPost)) { // devuelve false si no puede ir
-        $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
-        if (!list_nav_id_sel_is_empty($restoredSel)) {
-            $Qid_sel = $restoredSel;
-        }
-        $restoredScroll = $oPosicion2->getParametro('scroll_id');
-        if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
-            $Qscroll_id = (string) $restoredScroll;
-        }
-        $oPosicion2->olvidar($stackFromPost);
-    }
-}
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
+list_nav_persist_acta_select_return_to_posicion($oPosicion, 0);
 
 $Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
 $Qacta = (string)filter_input(INPUT_POST, 'acta');
-
-/*
-* Defino un array con los datos actuales, para saber volver después de navegar un rato
-*/
-$aGoBack = array(
-    'titulo' => $Qtitulo,
-    'acta' => $Qacta);
-$oPosicion->setParametros($aGoBack, 1);
 
 list_nav_persist_selection_on_list_page(
     $oPosicion,

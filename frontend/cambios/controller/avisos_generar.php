@@ -13,10 +13,16 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/cambios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros([
+    'id_usuario' => $Qid_usuario,
+    'aviso_tipo' => $Qaviso_tipo,
+], list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+
 $QGstack = (int)filter_input(INPUT_POST, 'Gstack');
 
 $is_admin = cambios_is_admin();

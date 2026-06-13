@@ -19,10 +19,13 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 $Qid_ctr_num = (integer)filter_input(INPUT_POST, 'id_ctr_num');
 $Qa_id_ctr = (array)filter_input(INPUT_POST, 'id_ctr', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

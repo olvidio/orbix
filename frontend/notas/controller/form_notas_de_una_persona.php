@@ -33,6 +33,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
+list_nav_persist_dossier_return_to_posicion($oPosicion, 1);
 list_nav_persist_selection_to_posicion($oPosicion, 1);
 
 $obj = 'notas\\model\\entity\\PersonaNotaDB';
@@ -43,6 +44,17 @@ $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qpermiso = (int)filter_input(INPUT_POST, 'permiso');
 
 $selRaw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = is_array($selRaw) ? $selRaw : [];
+$formReturn = list_nav_merge_dossier_return([
+    'pau' => $Qpau,
+    'id_pau' => $Qid_pau,
+    'obj_pau' => $Qobj_pau,
+    'permiso' => $Qpermiso,
+]);
+if ($a_sel !== []) {
+    $formReturn['sel'] = $a_sel;
+}
+list_nav_persist_clean_return_to_posicion($oPosicion, $formReturn, 0);
 $sel = is_array($selRaw) ? $selRaw : [];
 
 $payload = PostRequest::getDataFromUrl('/src/notas/nota_persona_form_data', [

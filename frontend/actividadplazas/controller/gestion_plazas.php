@@ -30,6 +30,8 @@ $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $stackFromPost = actividadplazas_stack_from_post() ?? 0;
 $oPosicion->recordar($Qrefresh);
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 $campos = actividadplazas_gestion_plazas_request_campos($oPosicion, $stackFromPost);
 $Qscroll_id = list_nav_scroll_id_from_post();

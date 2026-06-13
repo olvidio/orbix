@@ -9,10 +9,10 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
 
 $Qid_role = (string)filter_input(INPUT_POST, 'id_role');
 
@@ -37,6 +37,9 @@ if (isset($_POST['stack'])) {
         $Qid_role = (string)usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
     }
 }
+$oPosicion->recordar($Qrefresh);
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), $Qid_sel, isset($Qscroll_id) ? (string) $Qscroll_id : ''));
+
 $oPosicion->setParametros(array('id_role' => $Qid_role), 1);
 
 $data = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/role_info', ['id_role' => $Qid_role]));

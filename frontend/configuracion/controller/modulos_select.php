@@ -8,12 +8,11 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/configuracion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
-$oPosicion->recordar();
 
 $aGoBack = ['mod' => ''];
-$oPosicion->setParametros($aGoBack, 1);
 
 $campos = array_merge($_GET, $_POST);
 
@@ -23,6 +22,12 @@ if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
     $campos['restored_scroll_id'] = $oPosicion->getParametro('scroll_id');
     $oPosicion->olvidar($stackFromPost);
 }
+
+$oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(($aGoBack ?? list_nav_build_return_parametros_from_post()), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+
+
+$oPosicion->setParametros($aGoBack, 1);
 
 $data = PostRequest::getDataFromUrl('/src/configuracion/modulos_select_data', $campos);
 $payload = configuracion_string_key_payload($data);

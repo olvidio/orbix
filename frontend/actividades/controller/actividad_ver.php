@@ -39,6 +39,8 @@ $oPosicion = FrontBootstrap::boot();
 // (Como tambien afecta al status de la actividad, mejor rehacer toda la pagina).
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 list_nav_persist_selection_to_posicion($oPosicion, 1);
 
 $Qid_activ = actividades_id_activ_from_post();

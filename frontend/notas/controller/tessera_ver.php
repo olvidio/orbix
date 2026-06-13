@@ -19,6 +19,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $oPosicion->recordar();
+list_nav_persist_tessera_return_to_posicion($oPosicion, 0);
 list_nav_persist_selection_to_posicion($oPosicion, 1);
 
 $a_sel_raw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

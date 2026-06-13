@@ -14,6 +14,7 @@ use frontend\shared\FrontBootstrap;
  * Ficha de una persona: edicion (o alta si `$Qnuevo === 1`).
  */
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once __DIR__ . '/../helpers/personas_support.php';
 require_once 'frontend/shared/web/func_web.php';
 $oPosicion = FrontBootstrap::boot();
@@ -25,6 +26,8 @@ $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $obj = 'src\\personas\\domain\\entity\\' . $Qobj_pau;
 
 $oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+
 
 $Qid_nom = 0;
 $Qapellido1 = '';

@@ -23,18 +23,26 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
-$oPosicion->recordar();
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = list_nav_id_sel_from_post();
+$Qscroll_id = list_nav_scroll_id_from_post();
 
-//Si vengo de vuelta y le paso la referencia del stack donde esta la informacion.
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) {
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
+            $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
+            if (!list_nav_id_sel_is_empty($restoredSel)) {
+                $Qid_sel = $restoredSel;
+            }
+            $restoredScroll = $oPosicion2->getParametro('scroll_id');
+            if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
+                $Qscroll_id = (string) $restoredScroll;
+            }
             $oPosicion2->olvidar($stack);
         }
     }
@@ -57,6 +65,30 @@ $Qfases_on = (array)filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_
 $Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
 $Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
+
+$oPosicion->recordar();
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_actividad_que_return_parametros([
+    'modo' => $Qmodo,
+    'que' => $Qque,
+    'status' => $Qstatus,
+    'id_tipo_activ' => $Qid_tipo_activ,
+    'filtro_lugar' => $Qfiltro_lugar,
+    'id_ubi' => $Qid_ubi,
+    'nom_activ' => $Qnom_activ,
+    'periodo' => $Qperiodo,
+    'year' => $Qyear,
+    'dl_org' => $Qdl_org,
+    'empiezamin' => $Qempiezamin,
+    'empiezamax' => $Qempiezamax,
+    'fases_on' => $Qfases_on,
+    'fases_off' => $Qfases_off,
+    'publicado' => $Qpublicado,
+    'listar_asistentes' => $Qlistar_asistentes,
+    'id_sel' => $Qid_sel,
+    'scroll_id' => $Qscroll_id,
+]));
+
+//Si vengo de vuelta y le paso la referencia del stack donde esta la informacion.
 
 $isfsv = OrbixRuntime::miSfsv();
 $ssfsv = '';
