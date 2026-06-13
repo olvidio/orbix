@@ -11,10 +11,8 @@ require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var \frontend\shared\web\Posicion $oPosicion */
 
-list_nav_repersist_stack_entry_from_gstack();
-list_nav_clear_inherited_stack_for_recordar($oPosicion);
-$oPosicion->recordar();
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+list_nav_boot_actividad_select_child_recordar($oPosicion);
+list_nav_persist_actividad_select_child_entry($oPosicion);
 
 
 $campos = array_merge($_GET, $_POST);

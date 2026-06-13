@@ -9,11 +9,12 @@ require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 
-$oPosicion->recordar();
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
-
-
+list_nav_boot_actividad_select_child_recordar($oPosicion);
 $id_activ = actividadestudios_id_from_sel_post();
+list_nav_persist_actividad_select_child_entry(
+    $oPosicion,
+    $id_activ > 0 ? ['id_activ' => $id_activ] : [],
+);
 
 $d = actividadestudios_plan_estudios_ca_from_payload(actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/plan_estudios_ca_data', ['id_activ' => $id_activ])));
 

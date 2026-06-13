@@ -12,11 +12,12 @@ require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
-$oPosicion->recordar();
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
-
-
+list_nav_boot_actividad_select_child_recordar($oPosicion);
 $sel = procesos_sel_tokens_from_post();
+list_nav_persist_actividad_select_child_entry(
+    $oPosicion,
+    $sel['id'] > 0 ? ['id_activ' => $sel['id']] : [],
+);
 $Qid_activ = $sel['id'];
 
 $data = PostRequest::getDataFromUrl('/src/procesos/actividad_proceso_data', [

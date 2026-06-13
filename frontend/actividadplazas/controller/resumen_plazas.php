@@ -24,11 +24,14 @@ require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 
 $oPosicion = FrontBootstrap::boot();
-$oPosicion->recordar();
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
-
-
+list_nav_boot_actividad_select_child_recordar($oPosicion);
 $selParts = actividadplazas_sel_hash_parts();
+if ($selParts !== null) {
+    list_nav_persist_actividad_select_child_entry($oPosicion, ['id_activ' => tessera_imprimir_int($selParts['first'])]);
+} else {
+    list_nav_persist_actividad_select_child_entry($oPosicion);
+}
+
 if ($selParts !== null) {
     $id_activ = tessera_imprimir_int($selParts['first']);
     $nom_activ = $selParts['second'];

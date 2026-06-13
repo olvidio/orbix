@@ -43,7 +43,13 @@ if ($returningViaStack) {
 }
 
 $Qrefresh = tessera_imprimir_int($requestPayload['refresh'] ?? 0);
-$oPosicion->recordar($Qrefresh);
+$gstackFromPost = filter_input(INPUT_POST, 'Gstack', FILTER_VALIDATE_INT);
+if (is_int($gstackFromPost) && $gstackFromPost > 0) {
+    list_nav_boot_dossiers_from_actividad_select($oPosicion, $Qrefresh);
+} else {
+    list_nav_clear_inherited_stack_for_recordar($oPosicion);
+    $oPosicion->recordar($Qrefresh);
+}
 
 $idDossierEarly = trim(tessera_imprimir_string($requestPayload['id_dossier'] ?? ''));
 $claseInfoEarly = trim(tessera_imprimir_string($requestPayload['clase_info'] ?? ''));

@@ -24,10 +24,10 @@ if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
-$oPosicion->recordar();
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros([
+list_nav_boot_actividad_select_child_recordar($oPosicion);
+list_nav_persist_actividad_select_child_entry($oPosicion, [
     'id_activ_old' => $id_activ_old,
-], list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+]);
 
 
 $oPosicion->setParametros([

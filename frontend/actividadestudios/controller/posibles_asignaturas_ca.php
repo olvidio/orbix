@@ -21,11 +21,12 @@ require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 
-$oPosicion->recordar();
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
-
-
+list_nav_boot_actividad_select_child_recordar($oPosicion);
 $sel = actividadestudios_id_activ_nom_from_sel_post();
+list_nav_persist_actividad_select_child_entry(
+    $oPosicion,
+    $sel['id_activ'] > 0 ? ['id_activ' => $sel['id_activ']] : [],
+);
 $id_activ = $sel['id_activ'];
 $nom_activ = $sel['nom_activ'];
 

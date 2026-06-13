@@ -53,6 +53,8 @@ $Qscroll_id = '';
 $Qque = '';
 $Qlistar_asistentes = '';
 $Qextendida = '';
+/** @var array<string, mixed> $aGoBack */
+$aGoBack = [];
 
 // Si vengo de vuelta con el parametro 'continuar', los datos no estan en el POST,
 // sino en $Posicion. Le paso la referencia del stack donde esta la informacion.
@@ -173,14 +175,6 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
         'publicado' => $Qpublicado,
         'extendida' => $Qextendida,
     ];
-    $oPosicion->setParametros($aGoBack, 1);
-
-    list_nav_persist_selection_on_list_page(
-        $oPosicion,
-        $Qid_sel,
-        $Qscroll_id,
-        $stackFromPost !== 0,
-    );
 }
 
 $actividadSelectReturn = list_nav_build_actividad_select_return_parametros([
@@ -209,9 +203,19 @@ $actividadSelectReturn = list_nav_build_actividad_select_return_parametros([
     'scroll_id' => $Qscroll_id,
 ]);
 
+list_nav_clear_inherited_stack_for_recordar($oPosicion);
 $oPosicion->recordar();
 list_nav_persist_recordar_entry($oPosicion, $actividadSelectReturn);
 
+list_nav_persist_selection_on_list_page(
+    $oPosicion,
+    $Qid_sel,
+    $Qscroll_id,
+    $stackFromPost !== 0,
+);
+if ($aGoBack !== []) {
+    list_nav_persist_actividad_que_parent($oPosicion, $aGoBack);
+}
 
 if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     list_nav_persist_selection_on_list_page($oPosicion, $Qid_sel, $Qscroll_id, false);

@@ -383,6 +383,7 @@ function list_nav_repersist_stack_entry_from_gstack(?int $gstackOverride = null,
     }
 
     if ($paramKeys === []) {
+        $useActividadSelectReturn = true;
         $paramKeys = [
             'modo', 'que', 'status', 'id_tipo_activ', 'filtro_lugar', 'id_ubi', 'nom_activ',
             'periodo', 'year', 'dl_org', 'empiezamin', 'empiezamax',
@@ -390,20 +391,26 @@ function list_nav_repersist_stack_entry_from_gstack(?int $gstackOverride = null,
             'ssfsv', 'sasistentes', 'sactividad', 'sactividad2', 'extendida',
             'id_sel', 'scroll_id',
         ];
+    } else {
+        $useActividadSelectReturn = false;
     }
 
-    $parametros = [];
+    $state = [];
     foreach ($paramKeys as $key) {
         $val = $oRestore->getParametro($key);
         if ($val === '' || $val === null || $val === []) {
             continue;
         }
-        $parametros[$key] = $val;
+        $state[$key] = $val;
     }
 
-    if ($parametros === []) {
+    if ($state === []) {
         return;
     }
+
+    $parametros = $useActividadSelectReturn
+        ? list_nav_build_actividad_select_return_parametros($state)
+        : $state;
 
     $parametros['stack'] = $gstack;
 
@@ -416,7 +423,174 @@ function list_nav_repersist_stack_entry_from_gstack(?int $gstackOverride = null,
         return;
     }
     $_SESSION['position'][$gstack]['parametros'] = $parametros;
+    if ($useActividadSelectReturn) {
+        list_nav_rewrite_stack_entry_url($gstack, list_nav_actividad_select_controller_suffix());
+    }
     session_write_close();
+}
+
+/**
+ * Sufijo de URL del listado de actividades en la pila de {@see Posicion}.
+ */
+function list_nav_actividad_select_controller_suffix(): string
+{
+    return 'frontend/actividades/controller/actividad_select.php';
+}
+
+/**
+ * Corrige la URL de una entrada de pila si apunta a otro controlador (p. ej. dossiers_ver).
+ */
+function list_nav_rewrite_stack_entry_url(int $gstack, string $requiredSuffix): void
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position'][$gstack]['url']) || !is_string($_SESSION['position'][$gstack]['url'])) {
+        session_write_close();
+
+        return;
+    }
+    $current = $_SESSION['position'][$gstack]['url'];
+    if (str_contains($current, $requiredSuffix)) {
+        session_write_close();
+
+        return;
+    }
+    $pos = strpos($current, 'frontend/');
+    $_SESSION['position'][$gstack]['url'] = $pos !== false
+        ? substr($current, 0, $pos) . $requiredSuffix
+        : $requiredSuffix;
+    session_write_close();
+}
+
+/**
+ * Parámetros de vuelta al formulario `actividad_que` en la entrada anterior de la pila.
+ *
+ * @param array<string, mixed> $parametros
+ */
+function list_nav_persist_actividad_que_parent(Posicion $oPosicion, array $parametros): void
+{
+    if ($parametros === []) {
+        return;
+    }
+    $parentUrl = list_nav_stack_entry_url(1);
+    if ($parentUrl === '' || !str_contains($parentUrl, 'actividad_que.php')) {
+        return;
+    }
+    $oPosicion->setParametros($parametros, 1);
+}
+
+/**
+ * URL de una entrada de la pila relativa al tope (0 = actual, 1 = anterior, …).
+ */
+function list_nav_stack_entry_url(int $n = 0): string
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position']) || $_SESSION['position'] === []) {
+        session_write_close();
+
+        return '';
+    }
+    $stack = $_SESSION['position'];
+    end($stack);
+    for ($i = 0; $i < $n; $i++) {
+        if (prev($stack) === false) {
+            reset($stack);
+            break;
+        }
+    }
+    $raw = current($stack);
+    session_write_close();
+    if (!is_array($raw) || !isset($raw['url']) || !is_string($raw['url'])) {
+        return '';
+    }
+
+    return $raw['url'];
+}
+
+/**
+ * Antes de {@see Posicion::recordar()} al abrir un hijo de `actividad_select` (POST trae `Gstack`).
+ */
+function list_nav_boot_actividad_select_child_recordar(Posicion $oPosicion, int $parar = 0): void
+{
+    list_nav_repersist_stack_entry_from_gstack();
+    list_nav_clear_inherited_stack_for_recordar($oPosicion);
+    $oPosicion->recordar($parar);
+}
+
+/**
+ * Parámetros mínimos de la pantalla hija (sin campos de dossier del formulario `seleccionados`).
+ *
+ * @param array<string, mixed> $extra
+ */
+function list_nav_persist_actividad_select_child_entry(Posicion $oPosicion, array $extra = []): void
+{
+    $parametros = $extra;
+    $aSel = list_nav_sel_from_post();
+    if ($aSel !== []) {
+        $parametros['sel'] = $aSel;
+    }
+    $parametros = list_nav_merge_selection_into_return_parametros(
+        $parametros,
+        list_nav_id_sel_from_post(),
+        list_nav_scroll_id_from_post(),
+    );
+    foreach (['pau', 'obj_pau', 'queSel', 'id_dossier', 'permiso', 'Gstack', 'stack'] as $strip) {
+        unset($parametros[$strip]);
+    }
+    list_nav_persist_recordar_entry($oPosicion, $parametros);
+}
+
+/**
+ * Parámetros para recargar `dossiers_ver` abierto desde `actividad_select`.
+ *
+ * @return array<string, mixed>
+ */
+function list_nav_build_dossiers_ver_from_actividad_select_post(): array
+{
+    $parametros = [];
+    foreach (['queSel', 'que', 'id_dossier', 'permiso', 'mod', 'pau', 'obj_pau'] as $key) {
+        $raw = filter_input(INPUT_POST, $key);
+        if (is_scalar($raw) && (string) $raw !== '') {
+            $parametros[$key] = (string) $raw;
+        }
+    }
+    if (!isset($parametros['pau'])) {
+        $parametros['pau'] = 'a';
+    }
+    if (!isset($parametros['obj_pau'])) {
+        $parametros['obj_pau'] = 'Actividad';
+    }
+    $aSel = list_nav_sel_from_post();
+    if ($aSel !== []) {
+        $parametros['sel'] = $aSel;
+        $first = $aSel[0] ?? '';
+        if (is_scalar($first)) {
+            $idPau = (int) strtok((string) $first, '#');
+            if ($idPau > 0) {
+                $parametros['id_pau'] = $idPau;
+            }
+        }
+    }
+
+    return list_nav_merge_selection_into_return_parametros(
+        $parametros,
+        list_nav_id_sel_from_post(),
+        list_nav_scroll_id_from_post(),
+    );
+}
+
+/**
+ * `recordar()` al abrir dossiers desde el listado de actividades (`Gstack` en POST).
+ */
+function list_nav_boot_dossiers_from_actividad_select(Posicion $oPosicion, int $parar = 0): void
+{
+    list_nav_repersist_stack_entry_from_gstack();
+    list_nav_clear_inherited_stack_for_recordar($oPosicion);
+    $oPosicion->recordar($parar);
+    list_nav_persist_recordar_entry($oPosicion, list_nav_build_dossiers_ver_from_actividad_select_post());
 }
 
 /**
