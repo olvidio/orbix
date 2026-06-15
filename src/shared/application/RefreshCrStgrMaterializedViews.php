@@ -73,6 +73,15 @@ final class RefreshCrStgrMaterializedViews
         }
 
         try {
+            // Comun primero: av_actividades la usan muchos listados; si el refresh
+            // interior es lento (producción), antes no llegaba a ejecutarse.
+            if ($esquema !== null && $esquema !== '') {
+                $oMatView = new DBView($esquema, null, 'comun_select');
+                foreach (self::COMUN_SELECT_VIEWS as $view) {
+                    $this->ensureMaterializedView($oMatView, $view, true);
+                }
+            }
+
             $oMatView = new DBView($schema_vf, $userSfsvInt, 'interior');
             foreach (self::INTERIOR_REGION_VIEWS as $view) {
                 $this->ensureMaterializedView($oMatView, $view, false);
@@ -81,18 +90,6 @@ final class RefreshCrStgrMaterializedViews
             $oMatView = new DBView($schema_vf, $userSfsvInt, 'exterior_select');
             foreach (self::EXTERIOR_SELECT_VIEWS as $view) {
                 $this->ensureMaterializedView($oMatView, $view, false);
-            }
-
-            if ($esquema === null || $esquema === '') {
-                $_SESSION['Refresh'] = 'ok';
-                unset($_SESSION['Refresh_error']);
-
-                return;
-            }
-
-            $oMatView = new DBView($esquema, null, 'comun_select');
-            foreach (self::COMUN_SELECT_VIEWS as $view) {
-                $this->ensureMaterializedView($oMatView, $view, true);
             }
 
             $_SESSION['Refresh'] = 'ok';
@@ -105,6 +102,18 @@ final class RefreshCrStgrMaterializedViews
     private function ensureMaterializedView(DBView $oMatView, string $view, bool $comun): void
     {
         $oMatView->setView($view);
+
+        if ($oMatView->exists() && !$oMatView->isPopulated()) {
+            if (!$oMatView->Refresh()) {
+                throw new \PDOException(sprintf(
+                    _('No puedo refrescar la vista materializada %s (sin poblar)'),
+                    $view,
+                ));
+            }
+
+            return;
+        }
+
         if ($oMatView->ExisteYEsIgual($comun)) {
             if (!$oMatView->Refresh()) {
                 throw new \PDOException(sprintf(
@@ -119,6 +128,13 @@ final class RefreshCrStgrMaterializedViews
         if (!$oMatView->create($comun)) {
             throw new \PDOException(sprintf(
                 _('No puedo crear la vista materializada %s'),
+                $view,
+            ));
+        }
+
+        if ($oMatView->exists() && !$oMatView->isPopulated() && !$oMatView->Refresh()) {
+            throw new \PDOException(sprintf(
+                _('No puedo poblar la vista materializada %s tras crearla'),
                 $view,
             ));
         }
@@ -153,7 +169,7 @@ final class RefreshCrStgrMaterializedViews
         foreach (self::COMUN_SELECT_VIEWS as $view) {
             $oMatView = new DBView($esquema, null, 'comun_select');
             $oMatView->setView($view);
-            if ($oMatView->exists() && !$oMatView->isPopulated()) {
+            if (!$oMatView->exists() || !$oMatView->isPopulated()) {
                 return true;
             }
         }

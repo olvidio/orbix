@@ -153,7 +153,9 @@ final class FrontBootstrap
 
         try {
             $connectionBootstrap = ConnectionBootstrap::buildFromSession();
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            error_log('[FrontBootstrap] ConnectionBootstrap: ' . $e->getMessage());
+
             return;
         }
 
