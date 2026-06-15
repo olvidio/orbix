@@ -123,6 +123,29 @@ class DBView
         return (string) $string;
     }
 
+    public function isPopulated(): bool
+    {
+        $oDbl = $this->getoDbl();
+        $schemaName = $this->sSchema;
+        $view = $this->sView;
+
+        $st = $oDbl->query(
+            "SELECT ispopulated FROM pg_matviews WHERE schemaname='$schemaName' AND matviewname='$view'"
+        );
+        if ($st === false) {
+            return false;
+        }
+        $row = $st->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($row) || !isset($row['ispopulated'])) {
+            return false;
+        }
+
+        return $row['ispopulated'] === true
+            || $row['ispopulated'] === 't'
+            || $row['ispopulated'] === '1'
+            || $row['ispopulated'] === 1;
+    }
+
     public function ExisteYEsIgual(bool $comun = false): bool
     {
         // definición teórica

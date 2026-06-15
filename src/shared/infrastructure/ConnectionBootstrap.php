@@ -17,6 +17,44 @@ use src\shared\infrastructure\persistence\DBConnection;
  */
 final class ConnectionBootstrap
 {
+    /**
+     * Contexto de esquema (sv/sf + base sin sufijo) sin abrir conexiones PDO.
+     * Usado por {@see RefreshCrStgrMaterializedViews} desde `FrontBootstrap`.
+     *
+     * @return array{0: int|string, 1: string, 2: string, 3: string}|null
+     */
+    public static function schemaTupleFromSession(): ?array
+    {
+        $sessionAuth = $_SESSION['session_auth'] ?? null;
+        if (!is_array($sessionAuth)) {
+            return null;
+        }
+
+        $userSfsv = $sessionAuth['sfsv'] ?? null;
+        if (!is_int($userSfsv) && !is_string($userSfsv)) {
+            return null;
+        }
+
+        $esquemaSession = $sessionAuth['esquema'] ?? '';
+        if (!is_string($esquemaSession) || $esquemaSession === '') {
+            return null;
+        }
+
+        if ($userSfsv == 1) {
+            $esquemav = $esquemaSession;
+            $esquema = substr($esquemav, 0, -1);
+            $esquemaf = $esquema . 'f';
+        } elseif ($userSfsv == 2) {
+            $esquemaf = $esquemaSession;
+            $esquema = substr($esquemaf, 0, -1);
+            $esquemav = $esquema . 'v';
+        } else {
+            return null;
+        }
+
+        return [$userSfsv, $esquema, $esquemav, $esquemaf];
+    }
+
     public static function buildFromSession(): ConnectionBootstrapResult
     {
         $sessionAuth = $_SESSION['session_auth'] ?? null;

@@ -4,12 +4,17 @@ namespace frontend\shared;
 
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
+use src\shared\application\RefreshCrStgrMaterializedViews;
+use src\shared\infrastructure\ConnectionBootstrap;
+use src\shared\infrastructure\DiContainerBootstrap;
+use src\shared\infrastructure\logging\GestorErrores;
 
 /**
  * Bootstrap de peticiones frontend (controladores AJAX y pantallas parciales).
  *
- * Secuencia: Composer + `.env`, sesión, guardia {@see login.php}, cierre de sesión,
- * validación de hash y creación de {@see Posicion}.
+ * Secuencia: Composer + `.env`, sesión, guardia {@see login.php}, refresh de vistas
+ * materializadas cr-stgr (H-Hv / M-Mv), cierre de sesión, validación de hash y
+ * creación de {@see Posicion}.
  *
  * Uso típico en un controlador:
  *
@@ -65,6 +70,7 @@ final class FrontBootstrap
 
         self::ensureSession();
         self::ensureAuthenticated();
+        self::ensureCrStgrMaterializedViews();
         session_write_close();
         self::validateRequestHash();
 
@@ -123,6 +129,30 @@ final class FrontBootstrap
     private static function ensureAuthenticated(): void
     {
         require_once __DIR__ . '/../usuarios/controller/login.php';
+    }
+
+    /**
+     * Esquemas región STGR (p. ej. H-Hv, M-Mv): crear/refrescar vistas materializadas
+     * antes de `PostRequest` a `/src/...` (antes lo hacía `global_object.inc` en apps/).
+     */
+    private static function ensureCrStgrMaterializedViews(): void
+    {
+        if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
+            return;
+        }
+
+        if (!isset($_SESSION['oGestorErrores'])) {
+            $_SESSION['oGestorErrores'] = new GestorErrores();
+        }
+
+        DiContainerBootstrap::ensureBuilt();
+
+        $schemaTuple = ConnectionBootstrap::schemaTupleFromSession();
+        if ($schemaTuple === null) {
+            return;
+        }
+
+        (new RefreshCrStgrMaterializedViews())->executeIfNeeded(...$schemaTuple);
     }
 
     private static function validateRequestHash(): void

@@ -8,7 +8,11 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\DBView;
 
 /**
- * Refresca materialized views en instalaciones cr-stgr (una vez por sesión).
+ * Refresca materialized views en instalaciones cr-stgr (H-Hv, M-Mv, …).
+ *
+ * Se ejecuta desde `global_object.inc` y desde `FrontBootstrap` (antes solo corría
+ * en el bootstrap completo; al migrar controladores frontend se perdía el refresh
+ * previo a `PostRequest` en la misma petición).
  */
 final class RefreshCrStgrMaterializedViews
 {
@@ -17,7 +21,12 @@ final class RefreshCrStgrMaterializedViews
         if (ConfigGlobal::mi_region() !== ConfigGlobal::mi_delef()) {
             return;
         }
-        if (isset($_SESSION['Refresh'])) {
+
+        $sessionRefresh = $_SESSION['Refresh'] ?? null;
+        if ($sessionRefresh === 'ok' && !$this->comunViewsNeedPopulation($esquema)) {
+            return;
+        }
+        if ($sessionRefresh === 'error') {
             return;
         }
 
@@ -55,12 +64,7 @@ final class RefreshCrStgrMaterializedViews
 
             $oMatView = new DBView($schema_vf, $userSfsvInt, 'interior');
             foreach ($views as $view) {
-                $oMatView->setView($view);
-                if ($oMatView->ExisteYEsIgual()) {
-                    $oMatView->Refresh();
-                } else {
-                    $oMatView->create();
-                }
+                $this->ensureMaterializedView($oMatView, $view, false);
             }
 
             $views = [
@@ -71,12 +75,7 @@ final class RefreshCrStgrMaterializedViews
 
             $oMatView = new DBView($schema_vf, $userSfsvInt, 'exterior_select');
             foreach ($views as $view) {
-                $oMatView->setView($view);
-                if ($oMatView->ExisteYEsIgual()) {
-                    $oMatView->Refresh();
-                } else {
-                    $oMatView->create();
-                }
+                $this->ensureMaterializedView($oMatView, $view, false);
             }
 
             if ($esquema === null || $esquema === '') {
@@ -91,12 +90,7 @@ final class RefreshCrStgrMaterializedViews
 
             $oMatView = new DBView($esquema, null, 'comun_select');
             foreach ($views as $view) {
-                $oMatView->setView($view);
-                if ($oMatView->ExisteYEsIgual(true)) {
-                    $oMatView->Refresh();
-                } else {
-                    $oMatView->create(true);
-                }
+                $this->ensureMaterializedView($oMatView, $view, true);
             }
 
             $_SESSION['Refresh'] = 'ok';
@@ -107,5 +101,32 @@ final class RefreshCrStgrMaterializedViews
             echo '*/';
             $_SESSION['Refresh'] = 'error';
         }
+    }
+
+    private function ensureMaterializedView(DBView $oMatView, string $view, bool $comun): void
+    {
+        $oMatView->setView($view);
+        if ($oMatView->ExisteYEsIgual($comun)) {
+            $oMatView->Refresh();
+        } else {
+            $oMatView->create($comun);
+        }
+    }
+
+    private function comunViewsNeedPopulation(?string $esquema): bool
+    {
+        if ($esquema === null || $esquema === '') {
+            return false;
+        }
+
+        foreach (['av_actividades', 'xa_tipo_tarifa'] as $view) {
+            $oMatView = new DBView($esquema, null, 'comun_select');
+            $oMatView->setView($view);
+            if ($oMatView->ExisteYEsIgual(true) && !$oMatView->isPopulated()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
