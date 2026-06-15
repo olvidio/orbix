@@ -11,8 +11,7 @@ require_once 'frontend/actividadcargos/helpers/actividadcargos_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 
-$oPosicion->recordar();
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+list_nav_boot_dossier_child_recordar($oPosicion);
 
 
 $raw = PostRequest::getDataFromUrl('/src/actividadcargos/form_cargos_personas_en_actividad_data', PostRequest::requestPayloadForHash());

@@ -16,7 +16,7 @@ $oPosicion = FrontBootstrap::boot();
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qid_lugar = (integer)filter_input(INPUT_POST, 'id_lugar');
 
-$oPosicion->recordar();
+list_nav_boot_recordar($oPosicion);
 list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
 
 

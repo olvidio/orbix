@@ -3,7 +3,24 @@
 use frontend\shared\web\Posicion;
 
 /**
- * Lee scroll_id enviado por {@see frontend\shared\web\Lista} (`scroll_id_<tabla>`) o `scroll_id`.
+ * Navegación con {@see Posicion} tras `FrontBootstrap::boot()`.
+ *
+ * Guía completa: `documentacion/posicion_nav_post_frontbootstrap.md`
+ *
+ * Orden canónico en un controlador con `recordar()`:
+ *   1. `FrontBootstrap::boot()` + `require list_nav_support.php`
+ *   2. Leer POST / restaurar `stack` (ANTES de `recordar()`)
+ *   3. `list_nav_clear_inherited_stack_for_recordar()` o `list_nav_boot_*_recordar()`
+ *   4. `$oPosicion->recordar($refresh)` — guarda en sesión el POST completo (`$this->aParametros`)
+ *   5. Opcional: actualizar solo `id_sel`/`scroll_id` con `setParametros` / `list_nav_persist_selection_*`
+ *   6. NO sustituir la entrada con `replaceStackParametros` salvo formularios hijos que
+ *      contaminan al padre (p. ej. volver a un dossier desde un form con otro hash de formulario)
+ *
+ * Al pulsar atrás, `Posicion::mostrar_left_slide()` llama a `HashFront::add_hash()`, que ignora
+ * meta-hash antiguo (`h`, `hh`, …) y recalcula la firma (`hpos=1`). Por eso `recordar()` debe
+ * conservar el POST de negocio completo, no un subconjunto “limpio” inventado.
+ *
+ * Audit: `php scripts/audit_posicion_nav_migration.php --strict`
  */
 function list_nav_scroll_id_from_post(): string
 {
@@ -219,11 +236,612 @@ function list_nav_build_dossier_return_parametros(): array
 }
 
 /**
- * Deja en la entrada anterior de la pila un POST limpio para volver al dossier (lista de asignaturas, etc.).
+ * Parámetros para recargar `dossiers_ver` al persistir la entrada actual de la pila (n=0).
+ *
+ * @return array<string, mixed>
+ */
+function list_nav_build_dossiers_ver_stack_parametros(): array
+{
+    $parametros = list_nav_build_dossier_return_parametros();
+    foreach (['mod', 'id_activ', 'depende', 'refresh'] as $key) {
+        $raw = filter_input(INPUT_POST, $key);
+        if (is_scalar($raw) && (string) $raw !== '') {
+            $parametros[$key] = (string) $raw;
+        }
+    }
+
+    return $parametros;
+}
+
+/**
+ * El padre inmediato de la pila (n=1) es `dossiers_ver`.
+ */
+function list_nav_stack_parent_is_dossiers_ver(int $n = 1): bool
+{
+    $url = list_nav_stack_entry_url($n);
+
+    return $url !== '' && str_contains($url, 'dossiers_ver.php');
+}
+
+/**
+ * Alguna entrada de la pila apunta a `dossiers_ver`.
+ */
+function list_nav_stack_has_dossiers_ver(): bool
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        session_write_close();
+
+        return false;
+    }
+    foreach ($_SESSION['position'] as $entry) {
+        if (!is_array($entry)) {
+            continue;
+        }
+        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
+        if (str_contains($url, 'dossiers_ver.php')) {
+            session_write_close();
+
+            return true;
+        }
+    }
+    session_write_close();
+
+    return false;
+}
+
+/**
+ * El tope actual de la pila (n=0) es `dossiers_ver`.
+ */
+function list_nav_stack_top_is_dossiers_ver(): bool
+{
+    return list_nav_stack_parent_is_dossiers_ver(0);
+}
+
+/**
+ * @return array<string, mixed>|null Entrada de pila más reciente con URL `dossiers_ver.php`
+ */
+function list_nav_find_best_dossiers_stack_entry(): ?array
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        session_write_close();
+
+        return null;
+    }
+    $best = null;
+    $bestKey = -1;
+    foreach ($_SESSION['position'] as $key => $entry) {
+        if (!is_array($entry)) {
+            continue;
+        }
+        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
+        if (!str_contains($url, 'dossiers_ver.php')) {
+            continue;
+        }
+        $intKey = is_int($key) ? $key : (int) $key;
+        if ($intKey >= $bestKey) {
+            $bestKey = $intKey;
+            $best = $entry;
+        }
+    }
+    session_write_close();
+
+    return $best;
+}
+
+/**
+ * @return int Índice de la entrada `dossiers_ver` más reciente en la pila, o -1
+ */
+function list_nav_find_best_dossiers_stack_key(): int
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        session_write_close();
+
+        return -1;
+    }
+    $bestKey = -1;
+    foreach ($_SESSION['position'] as $key => $entry) {
+        if (!is_array($entry)) {
+            continue;
+        }
+        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
+        if (!str_contains($url, 'dossiers_ver.php')) {
+            continue;
+        }
+        $intKey = is_int($key) ? $key : (int) $key;
+        if ($intKey >= $bestKey) {
+            $bestKey = $intKey;
+        }
+    }
+    session_write_close();
+
+    return $bestKey;
+}
+
+/**
+ * @return list<string>
+ */
+function list_nav_dossier_child_form_url_fragments(): array
+{
+    return [
+        'form_cargos_de_actividad',
+        'form_cargos_personas_en_actividad',
+        'form_asistentes_a_una_actividad',
+        'form_actividades_de_una_persona',
+        'form_asignaturas_de_una_actividad',
+        'form_matriculas_de_una_persona',
+        'form_matriculas_de_una_actividad',
+        'form_notas_de_una_persona',
+        'acta_notas.php',
+    ];
+}
+
+function list_nav_is_dossier_child_form_url(string $url): bool
+{
+    foreach (list_nav_dossier_child_form_url_fragments() as $fragment) {
+        if (str_contains($url, $fragment)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function list_nav_is_dossier_shell_or_child_url(string $url): bool
+{
+    return str_contains($url, 'dossiers_ver.php') || list_nav_is_dossier_child_form_url($url);
+}
+
+function list_nav_reindex_position_stack(): void
+{
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        return;
+    }
+    /** @var list<array<string, mixed>> $position */
+    $position = array_values($_SESSION['position']);
+    foreach ($position as $key => $values) {
+        if (is_array($values)) {
+            $position[$key]['stack'] = $key;
+        }
+    }
+    $_SESSION['position'] = $position;
+}
+
+/**
+ * Quita formularios hijos del dossier (cargo, asistentes, …) que no deben ser destino de la flecha lateral.
+ */
+function list_nav_purge_dossier_child_forms_from_stack(): void
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        session_write_close();
+
+        return;
+    }
+    /** @var list<array<string, mixed>> $kept */
+    $kept = [];
+    foreach ($_SESSION['position'] as $entry) {
+        if (!is_array($entry)) {
+            continue;
+        }
+        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
+        if ($url !== '' && list_nav_is_dossier_child_form_url($url)) {
+            continue;
+        }
+        $kept[] = $entry;
+    }
+    $_SESSION['position'] = $kept;
+    list_nav_reindex_position_stack();
+    session_write_close();
+}
+
+/**
+ * Quita `dossiers_ver` y formularios hijo del historial (al volver a un listado externo).
+ */
+function list_nav_purge_dossier_navigation_from_stack(): void
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        session_write_close();
+
+        return;
+    }
+    /** @var list<array<string, mixed>> $kept */
+    $kept = [];
+    foreach ($_SESSION['position'] as $entry) {
+        if (!is_array($entry)) {
+            continue;
+        }
+        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
+        if ($url !== '' && list_nav_is_dossier_shell_or_child_url($url)) {
+            continue;
+        }
+        $kept[] = $entry;
+    }
+    $_SESSION['position'] = $kept;
+    list_nav_reindex_position_stack();
+    session_write_close();
+}
+
+/**
+ * @return int Índice de la entrada cuya URL contiene `$needle`, o -1
+ */
+function list_nav_find_stack_key_by_url_contains(string $needle): int
+{
+    if ($needle === '') {
+        return -1;
+    }
+    $wasActive = session_status() === PHP_SESSION_ACTIVE;
+    if (!$wasActive) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        if (!$wasActive) {
+            session_write_close();
+        }
+
+        return -1;
+    }
+    $bestKey = -1;
+    foreach ($_SESSION['position'] as $key => $entry) {
+        if (!is_array($entry)) {
+            continue;
+        }
+        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
+        if ($url !== '' && str_contains($url, $needle)) {
+            $intKey = is_int($key) ? $key : (int) $key;
+            if ($intKey >= $bestKey) {
+                $bestKey = $intKey;
+            }
+        }
+    }
+    if (!$wasActive) {
+        session_write_close();
+    }
+
+    return $bestKey;
+}
+
+function list_nav_stack_from_post(): int
+{
+    $raw = filter_input(INPUT_POST, 'stack', FILTER_VALIDATE_INT);
+
+    return is_int($raw) ? $raw : 0;
+}
+
+function list_nav_is_returning_via_stack(): bool
+{
+    return list_nav_stack_from_post() > 0;
+}
+
+/**
+ * Actualiza la entrada `$stackIndex` con el POST actual y recorta todo lo posterior (atrás = no hay adelante).
+ */
+function list_nav_refresh_stack_entry_at_index(Posicion $oPosicion, int $stackIndex, string $bloque = '#main'): bool
+{
+    if ($stackIndex < 0) {
+        return false;
+    }
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        session_write_close();
+
+        return false;
+    }
+    /** @var list<array<string, mixed>> $position */
+    $position = array_values($_SESSION['position']);
+    if (!isset($position[$stackIndex]) || !is_array($position[$stackIndex])) {
+        session_write_close();
+
+        return false;
+    }
+    $position = array_slice($position, 0, $stackIndex + 1);
+
+    $parametros = list_nav_build_return_parametros_from_post();
+    $parametros['stack'] = $stackIndex;
+
+    $phpSelf = $_SERVER['PHP_SELF'] ?? '';
+    $url = is_string($phpSelf) && $phpSelf !== '' ? $phpSelf : (string) ($position[$stackIndex]['url'] ?? '');
+
+    $position[$stackIndex]['url'] = $url;
+    $position[$stackIndex]['bloque'] = $bloque;
+    $position[$stackIndex]['parametros'] = $parametros;
+    $position[$stackIndex]['stack'] = $stackIndex;
+    $_SESSION['position'] = $position;
+    list_nav_reindex_position_stack();
+    session_write_close();
+
+    return $oPosicion->goStack($stackIndex);
+}
+
+/**
+ * Tras `olvidar($stack)` al volver a un listado: purga dossier del historial y fija el tope sin `recordar()` append.
+ */
+function list_nav_boot_list_page_after_stack_return(Posicion $oPosicion, int $stackFromPost): void
+{
+    list_nav_purge_dossier_navigation_from_stack();
+
+    $index = $stackFromPost;
+    $phpSelf = $_SERVER['PHP_SELF'] ?? '';
+    $needle = is_string($phpSelf) && $phpSelf !== '' ? basename($phpSelf) : '';
+
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position'][$index]) || !is_array($_SESSION['position'][$index])) {
+        $found = $needle !== '' ? list_nav_find_stack_key_by_url_contains($needle) : -1;
+        if ($found >= 0) {
+            $index = $found;
+        }
+    }
+    session_write_close();
+
+    if ($index >= 0 && list_nav_refresh_stack_entry_at_index($oPosicion, $index)) {
+        return;
+    }
+
+    list_nav_boot_recordar($oPosicion);
+}
+
+/**
+ * El tope actual de la pila (n=0) es un formulario hijo de dossier (cargo, asistentes, …).
+ */
+function list_nav_stack_top_is_dossier_child_form(): bool
+{
+    $url = list_nav_stack_entry_url(0);
+
+    return $url !== '' && list_nav_is_dossier_child_form_url($url);
+}
+
+/**
+ * Recorta la pila por delante del slot `dossiers_ver` indicado (o el más reciente si falla el índice).
+ */
+function list_nav_olvidar_forward_from_dossiers_slot(int $preferredIndex): void
+{
+    $index = $preferredIndex;
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if ($index > 0 && isset($_SESSION['position'][$index]) && is_array($_SESSION['position'][$index])) {
+        $url = isset($_SESSION['position'][$index]['url']) && is_string($_SESSION['position'][$index]['url'])
+            ? $_SESSION['position'][$index]['url']
+            : '';
+        if (!str_contains($url, 'dossiers_ver.php')) {
+            $index = -1;
+        }
+    } else {
+        $index = -1;
+    }
+    if ($index < 0) {
+        $index = list_nav_find_best_dossiers_stack_key();
+    }
+    session_write_close();
+    if ($index < 0) {
+        return;
+    }
+    $oPosicion = new Posicion();
+    if ($oPosicion->goStack($index)) {
+        $oPosicion->olvidar($index);
+    }
+}
+
+/**
+ * Pasos hacia atrás desde el tope del dossier hasta un listado externo (p. ej. actividad_select),
+ * saltando dossiers duplicados y formularios hijo en sub-bloque.
+ */
+function list_nav_back_steps_to_list_parent_from_dossiers(int $max = 15): int
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position']) || $_SESSION['position'] === []) {
+        session_write_close();
+
+        return 1;
+    }
+    /** @var array<int|string, array<string, mixed>> $position */
+    $position = $_SESSION['position'];
+    $stack = $position;
+    end($stack);
+    $steps = 0;
+    while ($steps < $max) {
+        if (prev($stack) === false) {
+            break;
+        }
+        $steps++;
+        $raw = current($stack);
+        if (!is_array($raw)) {
+            continue;
+        }
+        $url = isset($raw['url']) && is_string($raw['url']) ? $raw['url'] : '';
+        if ($url !== '' && !list_nav_is_dossier_shell_or_child_url($url)) {
+            session_write_close();
+
+            return max(1, $steps);
+        }
+    }
+    session_write_close();
+
+    return 1;
+}
+
+function list_nav_mostrar_left_slide_to_list_parent_from_dossiers(Posicion $oPosicion): string
+{
+    return $oPosicion->mostrar_left_slide(list_nav_back_steps_to_list_parent_from_dossiers());
+}
+
+function list_nav_dossiers_ver_default_url(): string
+{
+    $phpSelf = $_SERVER['PHP_SELF'] ?? '';
+
+    return is_string($phpSelf) && str_contains($phpSelf, 'dossiers_ver.php')
+        ? $phpSelf
+        : 'frontend/dossiers/controller/dossiers_ver.php';
+}
+
+/**
+ * Pasos hacia atrás desde el tope hasta la entrada `dossiers_ver` más cercana (mín. 1).
+ */
+function list_nav_back_steps_to_dossiers_parent(int $max = 10): int
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position']) || $_SESSION['position'] === []) {
+        session_write_close();
+
+        return 1;
+    }
+    /** @var array<int|string, array<string, mixed>> $position */
+    $position = $_SESSION['position'];
+    $stack = $position;
+    end($stack);
+    $steps = 0;
+    while ($steps < $max) {
+        if (prev($stack) === false) {
+            break;
+        }
+        $steps++;
+        $raw = current($stack);
+        if (!is_array($raw)) {
+            continue;
+        }
+        $url = isset($raw['url']) && is_string($raw['url']) ? $raw['url'] : '';
+        if (str_contains($url, 'dossiers_ver.php')) {
+            session_write_close();
+
+            return $steps;
+        }
+    }
+    session_write_close();
+
+    return 1;
+}
+
+function list_nav_mostrar_left_slide_to_dossiers_parent(Posicion $oPosicion): string
+{
+    return $oPosicion->mostrar_left_slide(list_nav_back_steps_to_dossiers_parent());
+}
+
+function list_nav_js_atras_to_dossiers_parent(Posicion $oPosicion): string
+{
+    return $oPosicion->js_atras(list_nav_back_steps_to_dossiers_parent());
+}
+
+function list_nav_go_atras_to_dossiers_parent(Posicion $oPosicion): string
+{
+    return $oPosicion->go_atras(list_nav_back_steps_to_dossiers_parent());
+}
+
+/**
+ * Persiste id_sel/scroll_id en el dossier padre (n=1), nunca en actividad_select u otro listado.
+ */
+function list_nav_persist_dossier_parent_selection_if_dossier(Posicion $oPosicion): void
+{
+    $steps = list_nav_back_steps_to_dossiers_parent();
+    if ($steps < 1 || !list_nav_stack_parent_is_dossiers_ver($steps)) {
+        return;
+    }
+    list_nav_persist_selection_to_posicion($oPosicion, $steps);
+}
+
+/**
+ * Si el tope no es `dossiers_ver`, inserta una entrada antes del hijo (p. ej. form en sub-bloque).
+ */
+function list_nav_ensure_dossiers_on_stack_before_child(): void
+{
+    if (list_nav_stack_top_is_dossiers_ver()) {
+        return;
+    }
+    $existing = list_nav_find_best_dossiers_stack_entry();
+    if ($existing !== null) {
+        $parametros = isset($existing['parametros']) && is_array($existing['parametros'])
+            ? $existing['parametros']
+            : [];
+        foreach (array_merge(list_nav_meta_hash_post_keys(), list_nav_stack_ephemeral_post_keys()) as $key) {
+            unset($parametros[$key]);
+        }
+        $bloque = '#main';
+        $dossiersUrl = isset($existing['url']) && is_string($existing['url'])
+            ? $existing['url']
+            : list_nav_dossiers_ver_default_url();
+    } else {
+        $parametros = list_nav_build_return_parametros_from_post();
+        $idDossier = isset($parametros['id_dossier']) ? trim((string) $parametros['id_dossier']) : '';
+        if ($idDossier === '') {
+            return;
+        }
+        $bloque = '#main';
+        $dossiersUrl = list_nav_dossiers_ver_default_url();
+    }
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        $_SESSION['position'] = [];
+    }
+    /** @var array<int|string, array<string, mixed>> $position */
+    $position = &$_SESSION['position'];
+    end($position);
+    $topKey = key($position);
+    $base = ($topKey === null || $topKey === '') ? 0 : (int) $topKey;
+    $newKey = $base + 1;
+    $parametros['stack'] = $newKey;
+    $position[$newKey] = [
+        'url' => $dossiersUrl,
+        'bloque' => $bloque,
+        'parametros' => $parametros,
+        'stack' => $newKey,
+    ];
+    session_write_close();
+}
+
+function list_nav_parar_recordar_for_dossiers_refresh(int $Qrefresh): int
+{
+    if ($Qrefresh <= 0) {
+        return 0;
+    }
+
+    return list_nav_stack_top_is_dossiers_ver() ? 1 : 0;
+}
+
+/**
+ * Form o pantalla hija abierta desde un segmento de `dossiers_ver` (sub-bloque).
+ *
+ * - Asegura entrada `dossiers_ver` en la pila antes del hijo
+ * - `recordar()` con POST completo (sin sustituir por POST mínimo)
+ * - Solo actualiza selección en el padre si es `dossiers_ver`
+ */
+function list_nav_boot_dossier_child_recordar(Posicion $oPosicion, int $parar = 0): void
+{
+    list_nav_ensure_dossiers_on_stack_before_child();
+    list_nav_boot_recordar($oPosicion, $parar);
+    list_nav_persist_dossier_parent_selection_if_dossier($oPosicion);
+}
+
+/**
+ * @deprecated Usar {@see list_nav_boot_dossier_child_recordar}. No sustituye el POST del dossier padre.
  */
 function list_nav_persist_dossier_return_to_posicion(Posicion $oPosicion, int $n = 1): void
 {
-    list_nav_persist_clean_return_to_posicion($oPosicion, list_nav_build_dossier_return_parametros(), $n);
+    if (!list_nav_stack_parent_is_dossiers_ver($n)) {
+        return;
+    }
+    // recordar() en dossiers_ver ya guardó el POST completo; no reemplazar por un subconjunto.
 }
 
 /**
@@ -309,6 +927,59 @@ function list_nav_persist_recordar_entry(Posicion $oPosicion, array $parametros)
 function list_nav_clear_inherited_stack_for_recordar(Posicion $oPosicion): void
 {
     $oPosicion->setParametro('stack', 0);
+}
+
+/**
+ * `recordar()` estándar post-FrontBootstrap: evita que el `stack` del POST trunque la pila.
+ */
+function list_nav_boot_recordar(Posicion $oPosicion, int $parar = 0): void
+{
+    list_nav_clear_inherited_stack_for_recordar($oPosicion);
+    $oPosicion->recordar($parar);
+}
+
+/**
+ * Al volver por pila a una pantalla ya recordada: actualiza su entrada sin append (evita duplicar dossier/cargo).
+ */
+function list_nav_refresh_stack_entry_on_return(Posicion $oPosicion, int $stackIndex): void
+{
+    if (list_nav_refresh_stack_entry_at_index($oPosicion, $stackIndex)) {
+        return;
+    }
+    $fallback = list_nav_find_best_dossiers_stack_key();
+    if ($fallback >= 0) {
+        list_nav_refresh_stack_entry_at_index($oPosicion, $fallback);
+    }
+}
+
+/**
+ * Hijo de un listado que envía `Gstack` en el POST (p. ej. botones de `actividad_select`).
+ * Re-graba la entrada del listado padre y luego `recordar()` sin heredar `stack`.
+ */
+function list_nav_boot_child_from_list_recordar(Posicion $oPosicion, int $parar = 0): void
+{
+    $gstack = filter_input(INPUT_POST, 'Gstack', FILTER_VALIDATE_INT);
+    if (is_int($gstack) && $gstack > 0) {
+        list_nav_repersist_stack_entry_from_gstack($gstack);
+    }
+    list_nav_boot_recordar($oPosicion, $parar);
+}
+
+/**
+ * Actualiza la entrada anterior de la pila solo si su URL contiene el sufijo esperado.
+ *
+ * @param array<string, mixed> $parametros
+ */
+function list_nav_persist_parent_if_url(Posicion $oPosicion, array $parametros, string $urlMustContain): void
+{
+    if ($parametros === []) {
+        return;
+    }
+    $parentUrl = list_nav_stack_entry_url(1);
+    if ($parentUrl === '' || !str_contains($parentUrl, $urlMustContain)) {
+        return;
+    }
+    $oPosicion->setParametros($parametros, 1);
 }
 
 /**
@@ -470,14 +1141,7 @@ function list_nav_rewrite_stack_entry_url(int $gstack, string $requiredSuffix): 
  */
 function list_nav_persist_actividad_que_parent(Posicion $oPosicion, array $parametros): void
 {
-    if ($parametros === []) {
-        return;
-    }
-    $parentUrl = list_nav_stack_entry_url(1);
-    if ($parentUrl === '' || !str_contains($parentUrl, 'actividad_que.php')) {
-        return;
-    }
-    $oPosicion->setParametros($parametros, 1);
+    list_nav_persist_parent_if_url($oPosicion, $parametros, 'actividad_que.php');
 }
 
 /**
@@ -515,9 +1179,7 @@ function list_nav_stack_entry_url(int $n = 0): string
  */
 function list_nav_boot_actividad_select_child_recordar(Posicion $oPosicion, int $parar = 0): void
 {
-    list_nav_repersist_stack_entry_from_gstack();
-    list_nav_clear_inherited_stack_for_recordar($oPosicion);
-    $oPosicion->recordar($parar);
+    list_nav_boot_child_from_list_recordar($oPosicion, $parar);
 }
 
 /**
@@ -588,9 +1250,8 @@ function list_nav_build_dossiers_ver_from_actividad_select_post(): array
 function list_nav_boot_dossiers_from_actividad_select(Posicion $oPosicion, int $parar = 0): void
 {
     list_nav_repersist_stack_entry_from_gstack();
-    list_nav_clear_inherited_stack_for_recordar($oPosicion);
-    $oPosicion->recordar($parar);
-    list_nav_persist_recordar_entry($oPosicion, list_nav_build_dossiers_ver_from_actividad_select_post());
+    list_nav_boot_recordar($oPosicion, $parar);
+    // No reemplazar parametros: recordar() ya guardó el POST completo del formulario.
 }
 
 /**

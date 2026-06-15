@@ -392,6 +392,12 @@ function fnjs_ir_a(id_div) {
     var parametros = $(id_div + " [name='parametros']").val();
     var bloque = $(id_div + " [name='id_div']").val();
 
+    if (parametros && parametros.indexOf('PHPSESSID=') === -1) {
+        parametros = parametros + '&PHPSESSID=1';
+    } else if (!parametros) {
+        parametros = 'PHPSESSID=1';
+    }
+
     fnjs_left_side_hide();
 
     $(bloque).attr('refe', url);
@@ -956,6 +962,12 @@ function fnjs_ir_a(id_div) {
     var url = $(id_div + " [name='url']").val();
     var parametros = $(id_div + " [name='parametros']").val();
     var bloque = $(id_div + " [name='id_div']").val();
+
+    if (parametros && parametros.indexOf('PHPSESSID=') === -1) {
+        parametros = parametros + '&PHPSESSID=1';
+    } else if (!parametros) {
+        parametros = 'PHPSESSID=1';
+    }
 
     fnjs_left_side_hide();
 

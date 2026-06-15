@@ -43,8 +43,7 @@ if (is_int($gstackFromPost) && $gstackFromPost > 0) {
     list_nav_boot_actividad_select_child_recordar($oPosicion, $Qrefresh);
     list_nav_persist_actividad_select_child_entry($oPosicion);
 } else {
-    list_nav_clear_inherited_stack_for_recordar($oPosicion);
-    $oPosicion->recordar($Qrefresh);
+    list_nav_boot_recordar($oPosicion, $Qrefresh);
     list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
 }
 

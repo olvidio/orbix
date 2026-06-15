@@ -27,7 +27,7 @@ require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 $oPosicion = FrontBootstrap::boot();
 $Qtodos = (int)filter_input(INPUT_POST, 'todos');
 
-$oPosicion->recordar();
+list_nav_boot_recordar($oPosicion);
 list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
 
 $stack2 = actividadplazas_stack_from_post();

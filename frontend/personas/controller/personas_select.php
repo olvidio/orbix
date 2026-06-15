@@ -64,7 +64,7 @@ if ($stack !== null && $stack !== 0) {
     }
 }
 
-$oPosicion->recordar();
+list_nav_boot_recordar($oPosicion);
 $personasReturn = [
     'que' => $Qque,
     'exacto' => $Qexacto,

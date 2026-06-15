@@ -24,7 +24,7 @@ $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qrefresh = encargossacd_post_int('refresh');
-$oPosicion->recordar($Qrefresh);
+list_nav_boot_recordar($oPosicion, $Qrefresh);
 list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
 
 

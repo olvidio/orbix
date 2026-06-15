@@ -25,8 +25,7 @@ require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-$oPosicion->recordar();
-list_nav_persist_dossier_return_to_posicion($oPosicion, 1);
+list_nav_boot_dossier_child_recordar($oPosicion);
 
 $obj = 'actividadestudios\\model\\entity\\Matricula';
 
@@ -45,8 +44,6 @@ $camposMatricula = [
 if (!empty($a_sel)) {
     $camposMatricula['sel'] = $a_sel;
 }
-
-list_nav_persist_clean_return_to_posicion($oPosicion, list_nav_merge_dossier_return($camposMatricula), 0);
 
 $d = actividadestudios_form_matriculas_from_payload(
     actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/form_matriculas_de_una_persona_data', $camposMatricula))

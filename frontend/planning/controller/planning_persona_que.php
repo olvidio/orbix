@@ -81,7 +81,7 @@ if (isset($_POST['stack'])) {
     $Qcentro = $filtros['centro'];
     $Qna = $filtros['na'];
 }
-$oPosicion->recordar();
+list_nav_boot_recordar($oPosicion);
 list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
 
 

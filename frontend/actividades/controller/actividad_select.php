@@ -203,8 +203,11 @@ $actividadSelectReturn = list_nav_build_actividad_select_return_parametros([
     'scroll_id' => $Qscroll_id,
 ]);
 
-list_nav_clear_inherited_stack_for_recordar($oPosicion);
-$oPosicion->recordar();
+if ($stackFromPost !== 0) {
+    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+} else {
+    list_nav_boot_recordar($oPosicion);
+}
 list_nav_persist_recordar_entry($oPosicion, $actividadSelectReturn);
 
 list_nav_persist_selection_on_list_page(

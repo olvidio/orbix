@@ -49,7 +49,7 @@ if ($stackFromPost !== 0) {
     }
 }
 
-$oPosicion->recordar();
+list_nav_boot_recordar($oPosicion);
 list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros([
     'numero' => $Qnumero,
     'b_c' => $Qb_c,

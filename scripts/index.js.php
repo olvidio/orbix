@@ -508,28 +508,62 @@ if (!isset($h)) {
     }
 
     /**
-     * Flecha del panel izquierdo: el #ir_atras válido es el del contenido actual en #main,
-     * no un residuo bajo #cargando (misma id en el DOM ⇒ jQuery cogía el primero y podía cargar index / shell entero dentro de #main).
+     * Recargas de #main o de un segmento hijo (#ficha3101, …) sustituyen el destino de la flecha lateral.
+     * Popups (#div_modificar) y bloques fuera de #main no deben borrar #ir_atras del shell.
+     */
+    function fnjs_bloque_afecta_navegacion_atras(bloque) {
+        if (!bloque) {
+            return false;
+        }
+        if (bloque === '#main' || bloque === '#body') {
+            return true;
+        }
+        var $bloque = $(bloque);
+        return $bloque.length > 0 && $bloque.closest('#main').length > 0;
+    }
+
+    /** Quita solo el #ir_atras del shell de dossiers_ver (hijo directo de #main), no el de un sub-bloque. */
+    function fnjs_borrar_ir_atras_shell_main() {
+        $('#main').children('#ir_atras, #ir_atras2, #go_atras, #js_atras').remove();
+    }
+
+    /**
+     * Sub-bloque activo (#ficha3101, …): el #ir_atras del formulario hijo (más anidado).
+     * Sin sub-bloque: el del shell (hijo directo de #main), p. ej. dossiers → actividad_select.
+     */
+    function fnjs_ir_atras_activo_en_main(backId) {
+        var $shell = $('#main').children('#' + backId);
+        var $nested = $('#main [id="' + backId + '"]').not($shell);
+        if ($nested.length) {
+            return $nested.last();
+        }
+        return $shell;
+    }
+
+    /**
+     * Flecha lateral: shell (#main > #ir_atras) salvo que haya un formulario hijo en un segmento (#ficha*).
      */
     function fnjs_left_slide_atras() {
         fnjs_cerrar_ventana_modal();
-        var selectors = ['#main #ir_atras', '#main #ir_atras2', '#main #go_atras', '#main #js_atras'];
-        for (var i = 0; i < selectors.length; i++) {
-            if ($(selectors[i]).length) {
-                return fnjs_ir_a(selectors[i]);
+        var backIds = ['ir_atras', 'ir_atras2', 'go_atras', 'js_atras'];
+        for (var i = 0; i < backIds.length; i++) {
+            var $back = fnjs_ir_atras_activo_en_main(backIds[i]);
+            if ($back.length) {
+                return fnjs_ir_a($back);
             }
         }
-        var fallbacks = ['#ir_atras', '#ir_atras2', '#go_atras', '#js_atras'];
-        for (var j = 0; j < fallbacks.length; j++) {
-            if ($(fallbacks[j]).length) {
-                return fnjs_ir_a(fallbacks[j]);
+        for (var j = 0; j < backIds.length; j++) {
+            var $fallback = $('[id="' + backIds[j] + '"]').last();
+            if ($fallback.length) {
+                return fnjs_ir_a($fallback);
             }
         }
         return false;
     }
 
     function fnjs_ir_a(id_div) {
-        if (!id_div || $(id_div).length === 0) {
+        var $target = (id_div && id_div.jquery) ? id_div : $(id_div);
+        if (!$target.length) {
             return false;
         }
         fnjs_guardar_estado();
@@ -538,7 +572,7 @@ if (!isset($h)) {
         if (id_div && typeof id_div === 'string' && id_div.indexOf('atras') !== -1) {
             is_back = true;
         }
-        if ($(id_div).find('#go_atras, #js_atras, #ir_atras').length > 0 || $(id_div).is('#go_atras, #js_atras, #ir_atras')) {
+        if ($target.find('#go_atras, #js_atras, #ir_atras').length > 0 || $target.is('#go_atras, #js_atras, #ir_atras')) {
             is_back = true;
         }
         if (is_back) {
@@ -546,9 +580,9 @@ if (!isset($h)) {
             fnjs_cerrar_ventana_modal();
         }
 
-        var url = $(id_div + " [name='url']").val();
-        var parametros = $(id_div + " [name='parametros']").val();
-        var bloque = $(id_div + " [name='id_div']").val();
+        var url = $target.find("[name='url']").val();
+        var parametros = $target.find("[name='parametros']").val();
+        var bloque = $target.find("[name='id_div']").val();
 
         fnjs_left_side_hide();
 
@@ -629,8 +663,8 @@ if (!isset($h)) {
         if (bloque === '#main') {
             fnjs_guardar_estado();
         }
-        // Solo recargas de #main sustituyen la pila de navegación; popups (#div_modificar, etc.) no deben borrar #ir_atras.
-        if (mantener_atras === 0 && (bloque === '#main' || bloque === '#body')) {
+        // Solo recargas de #main o segmentos hijos sustituyen la flecha lateral; popups no.
+        if (mantener_atras === 0 && fnjs_bloque_afecta_navegacion_atras(bloque)) {
             fnjs_borrar_posibles_atras();
         }
         var path = ref.replace(/\?.*$/, '');
@@ -718,7 +752,11 @@ if (!isset($h)) {
         }
         if (bloque === '#main') {
             fnjs_guardar_estado();
+        }
+        if (bloque === '#main' || bloque === '#body') {
             fnjs_borrar_posibles_atras();
+        } else if (fnjs_bloque_afecta_navegacion_atras(bloque)) {
+            fnjs_borrar_ir_atras_shell_main();
         }
         $(id_form).one("submit", function () {
             var tgt_url = $(this).attr('action');

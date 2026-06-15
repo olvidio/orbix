@@ -29,7 +29,7 @@ require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $stackFromPost = actividadplazas_stack_from_post() ?? 0;
-$oPosicion->recordar($Qrefresh);
+list_nav_boot_recordar($oPosicion, $Qrefresh);
 list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
 
 

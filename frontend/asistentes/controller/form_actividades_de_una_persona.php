@@ -11,9 +11,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 /** @var \frontend\shared\web\Posicion $oPosicion */
-$oPosicion->recordar();
-list_nav_persist_dossier_return_to_posicion($oPosicion, 1);
-list_nav_persist_clean_return_to_posicion($oPosicion, list_nav_build_dossier_return_parametros(), 0);
+list_nav_boot_dossier_child_recordar($oPosicion);
 
 $campos = array_merge($_GET, $_POST);
 /** @var array<string, mixed> $payload */

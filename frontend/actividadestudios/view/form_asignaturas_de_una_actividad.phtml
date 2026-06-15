@@ -80,12 +80,12 @@
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= list_nav_js_atras_to_dossiers_parent($oPosicion); ?>
             }
         });
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= list_nav_mostrar_left_slide_to_dossiers_parent($oPosicion); ?>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
     <?= $oHash->getCamposHtml(); ?>
     <input type="Hidden" id="mod" name="mod" value="<?= $mod ?>">

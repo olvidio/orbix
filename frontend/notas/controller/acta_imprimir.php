@@ -25,7 +25,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
+list_nav_boot_recordar($oPosicion, $Qrefresh);
 list_nav_persist_acta_imprimir_parent_return_to_posicion($oPosicion, 1);
 list_nav_persist_selection_to_posicion($oPosicion, 1);
 

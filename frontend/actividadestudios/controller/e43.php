@@ -11,7 +11,7 @@ require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$oPosicion->recordar();
+list_nav_boot_recordar($oPosicion);
 list_nav_persist_e43_parent_return_to_posicion($oPosicion, 1);
 
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');

@@ -78,12 +78,12 @@
             if (json.success !== true) {
                 alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= list_nav_js_atras_to_dossiers_parent($oPosicion); ?>
             }
         });
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= list_nav_mostrar_left_slide_to_dossiers_parent($oPosicion); ?>
 <form id="f_1303" name="f_1303" action="t" method="POST">
     <?= $oHash->getCamposHtml(); ?>
     <table>

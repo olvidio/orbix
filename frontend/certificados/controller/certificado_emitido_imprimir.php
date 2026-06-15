@@ -15,7 +15,7 @@ $oPosicion = FrontBootstrap::boot();
 
 list_nav_restore_selection_from_stack_post();
 
-$oPosicion->recordar();
+list_nav_boot_recordar($oPosicion);
 list_nav_persist_certificado_imprimir_parent_return_to_posicion($oPosicion, 1);
 
 $id_nom = certificados_id_nom_from_sel_post();

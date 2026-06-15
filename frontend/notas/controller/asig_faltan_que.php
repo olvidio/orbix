@@ -22,7 +22,7 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-$oPosicion->recordar();
+list_nav_boot_recordar($oPosicion);
 list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), $Qid_sel, list_nav_scroll_id_from_post()));
 
 

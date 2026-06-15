@@ -41,7 +41,7 @@
             data: $f.serialize()
         }).done(function (rta) {
             if (rta && rta.success) {
-                <?= $oPosicion->js_atras(1); ?>
+                <?= list_nav_js_atras_to_dossiers_parent($oPosicion); ?>
             } else {
                 var msg = (rta && rta.mensaje) ? rta.mensaje : <?= json_encode(_("error desconocido")) ?>;
                 alert(<?= json_encode(_("respuesta") . ": ") ?> + msg);
@@ -51,10 +51,10 @@
         });
     };
     fnjs_cancelar = function() {
-        <?= $oPosicion->js_atras(1) ?>
+        <?= list_nav_js_atras_to_dossiers_parent($oPosicion) ?>
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= list_nav_mostrar_left_slide_to_dossiers_parent($oPosicion); ?>
 <form id="frm_cargo_de_actividad" name="frm_cargo_de_actividad" action="" method="POST">
     <?= $hash_campos_html ?>
     <table>

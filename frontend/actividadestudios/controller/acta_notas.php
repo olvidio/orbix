@@ -29,8 +29,7 @@ $Qid_sel = $restored['id_sel'];
 $Qscroll_id = $restored['scroll_id'];
 
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
-list_nav_persist_dossier_return_to_posicion($oPosicion, 1);
+list_nav_boot_dossier_child_recordar($oPosicion, $Qrefresh);
 
 $ids = actividadestudios_id_activ_asignatura_from_post();
 $id_activ = $ids['id_activ'];

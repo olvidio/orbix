@@ -56,7 +56,7 @@ if ($Qque === 'un_sacd') {
     }
 }
 
-$oPosicion->recordar();
+list_nav_boot_recordar($oPosicion);
 list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
 
 

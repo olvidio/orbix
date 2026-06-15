@@ -38,7 +38,7 @@ $Qid_sel = !list_nav_id_sel_is_empty($restored['id_sel']) ? $restored['id_sel'] 
 $Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : list_nav_scroll_id_from_post();
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
+list_nav_boot_recordar($oPosicion, $Qrefresh);
 list_nav_persist_acta_select_return_to_posicion($oPosicion, 0);
 
 $Qtitulo = (string)filter_input(INPUT_POST, 'titulo');

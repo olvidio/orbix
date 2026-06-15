@@ -234,12 +234,9 @@ class HashFront
                 // Si vengo por web\Posicion, el hash es de toda la url.
                 // Con los formularios, como en algunos casos se cambia el action, sólo compruebo los campos.
                 if ($hpos == 1) {
-                    $aParamSorted = self::ordenarArrayParam($aPOST);
-                    $sUrl = $this->realFullUrl();
-                    if (!empty($aParamSorted)) {
-                        $sUrl .= '?' . http_build_query($aParamSorted);
-                    }
-                    $rta = self::md($sUrl);
+                    $requestPath = parse_url($this->realFullUrl(), PHP_URL_PATH);
+                    $requestPath = is_string($requestPath) ? $requestPath : '';
+                    $rta = self::mdForPosicionBack($requestPath, $aPOST);
                 } else {
                     // Que los campos checkbox sean los mismos sin tener en cuenta los mismos valores.
                     // Solo para forms normales: add_hash (posicion) usa los valores reales.
@@ -263,47 +260,58 @@ class HashFront
                 }
             }
         } else {
-            unset($aPOST['PHPSESSID']);
-            unset($aPOST['atras']);
-            unset($aPOST['h']);
-            unset($aPOST['horig']);
-            unset($aPOST['hh']);
-            unset($aPOST['hhc']);
-            unset($aPOST['hhorig']);
-            // campos que se deben quitar del hash. (separados por '!').
-            $hno = self::asPostString($aPOST['hno'] ?? null);
-            if ($hno !== '') {
-                $a_campos_no = explode('!', $hno);
-                foreach ($a_campos_no as $campo) {
-                    unset($aPOST[$campo]);
+            if ($hpos == 1) {
+                // Atrás desde Posicion::mostrar_left_slide (add_hash sin meta-hash de formulario).
+                $requestPath = parse_url($this->realFullUrl(), PHP_URL_PATH);
+                $requestPath = is_string($requestPath) ? $requestPath : '';
+                $rta = self::mdForPosicionBack($requestPath, $aPOST);
+                $h2 = $rta['hash'];
+                $sUrl = $rta['orig'];
+                if ($h1 !== $h2) {
+                    $salta = 1;
+                    $salta_txt = _("url modificada");
                 }
-            }
-            unset($aPOST['hno']);
-            unset($aPOST['hchk']);
-            unset($aPOST['hnov']);
-            ksort($aPOST);
-
-            if ($hnov === '1') { // borro posibles los valores de los campos
-                foreach ($aPOST as $camp => $valor) {
-                    $aPOST[$camp] = '';
+            } else {
+                unset($aPOST['PHPSESSID']);
+                unset($aPOST['atras']);
+                unset($aPOST['h']);
+                unset($aPOST['horig']);
+                unset($aPOST['hh']);
+                unset($aPOST['hhc']);
+                unset($aPOST['hhorig']);
+                // campos que se deben quitar del hash. (separados por '!').
+                $hno = self::asPostString($aPOST['hno'] ?? null);
+                if ($hno !== '') {
+                    $a_campos_no = explode('!', $hno);
+                    foreach ($a_campos_no as $campo) {
+                        unset($aPOST[$campo]);
+                    }
                 }
-            }
+                unset($aPOST['hno']);
+                unset($aPOST['hchk']);
+                unset($aPOST['hnov']);
+                ksort($aPOST);
 
-            $sUrl = $this->realFullUrl();
-            if ($aPOST !== []) {
-                array_walk($aPOST, self::poner_empty_on_null(...));
-                $sUrl .= '?' . http_build_query($aPOST);
-            }
+                if ($hnov === '1') { // borro posibles los valores de los campos
+                    foreach ($aPOST as $camp => $valor) {
+                        $aPOST[$camp] = '';
+                    }
+                }
 
-            //echo "ccc: $sUrl<br>";
-            $rta = self::md($sUrl);
-            $h2 = $rta['hash'];
-            $sUrl = $rta['orig'];
-            //$h2orig = $rta['orig'];
+                $sUrl = $this->realFullUrl();
+                if ($aPOST !== []) {
+                    array_walk($aPOST, self::poner_empty_on_null(...));
+                    $sUrl .= '?' . http_build_query($aPOST);
+                }
 
-            if ($h1 !== $h2) {
-                $salta = 1;
-                $salta_txt = _("url modificada");
+                $rta = self::md($sUrl);
+                $h2 = $rta['hash'];
+                $sUrl = $rta['orig'];
+
+                if ($h1 !== $h2) {
+                    $salta = 1;
+                    $salta_txt = _("url modificada");
+                }
             }
         }
         if ($salta === 1) {
@@ -640,6 +648,42 @@ class HashFront
 }
 
     /**
+     * @param array<string, mixed> $aParam
+     * @return array<string, mixed>
+     */
+    private static function prepareParametrosPosicionBack(array $aParam): array
+    {
+        self::$aValoresCamposNo = [];
+        foreach (['h', 'hh', 'hhc', 'horig', 'hhorig', 'hc', 'hchk', 'hno', 'hnov'] as $metaHashKey) {
+            unset($aParam[$metaHashKey]);
+        }
+        unset($aParam['PHPSESSID'], $aParam['atras']);
+        $aParam = self::stripPostCamposUiDinamicos($aParam);
+        $aParam['hpos'] = 1;
+
+        return $aParam;
+    }
+
+    /**
+     * Hash de vuelta por pila ({@see add_hash} y {@see validatePost} con `hpos=1`).
+     *
+     * @param array<string, mixed> $aParam POST crudo o ya preparado con {@see prepareParametrosPosicionBack}
+     * @return array{orig: string, hash: string}
+     */
+    private static function mdForPosicionBack(string $scriptPath, array $aParam, bool $alreadyPrepared = false): array
+    {
+        $prepared = $alreadyPrepared ? $aParam : self::prepareParametrosPosicionBack($aParam);
+        $aParamSorted = self::ordenarArrayParam($prepared);
+        $sUrl = self::FullPath($scriptPath);
+        if ($aParamSorted !== []) {
+            array_walk($aParamSorted, self::poner_empty_on_null(...));
+            $sUrl .= '?' . http_build_query($aParamSorted);
+        }
+
+        return self::md($sUrl);
+    }
+
+    /**
      * Sólo la usa web\Posicion.
      *   => elimino hnov. (si existiera). Se cuenta todos los valores de los campos.
      *   => añado hpos (viene de web\Posicion y no un formulario normal)
@@ -655,38 +699,27 @@ class HashFront
     } elseif (is_string($aParam)) {
         $aParam = self::string2array($aParam);
     }
-    // Pila de Posicion: recalcular firma; no reenviar meta hash de un formulario anterior.
-    self::$aValoresCamposNo = [];
-    foreach (['h', 'hh', 'hhc', 'horig', 'hhorig', 'hc', 'hchk', 'hno', 'hnov'] as $metaHashKey) {
-        unset($aParam[$metaHashKey]);
-    }
-    $aParam = self::stripPostCamposUiDinamicos($aParam);
-    $aParam['hpos'] = 1;
-    $aParamSorted = self::ordenarArrayParam($aParam);
-    $sPath = self::FullPath($url);
-    $sUrl_full = $sPath;
-    if (!empty($aParamSorted)) $sUrl_full .= '?' . http_build_query($aParamSorted);
-
-    $rta = self::md($sUrl_full);
+    $prepared = self::prepareParametrosPosicionBack($aParam);
+    $rta = self::mdForPosicionBack($url, $prepared, true);
     $h2 = $rta['hash'];
     $horig = $rta['orig'];
 
-    $aParam['h'] = $h2;
+    $prepared['h'] = $h2;
     // después de calcular el hash, añado los campos que no afectan
     $hno = '';
     foreach (self::$aValoresCamposNo as $campo => $value) {
-        $aParam[$campo] = $value;
+        $prepared[$campo] = $value;
         $hno .= '!' . $campo;
     }
     if (!empty($hno)) {
-        $aParam['hno'] = $hno;
+        $prepared['hno'] = $hno;
     }
     if (OrbixRuntime::isDebug()) {
         //$query .= '&horig='.$horig;
-        $aParam['horig'] = $horig;
+        $prepared['horig'] = $horig;
     }
-    array_walk($aParam, self::poner_empty_on_null(...));
-    $query = http_build_query($aParam);
+    array_walk($prepared, self::poner_empty_on_null(...));
+    $query = http_build_query($prepared);
     return $query;
 }
 

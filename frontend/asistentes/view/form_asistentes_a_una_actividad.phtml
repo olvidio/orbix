@@ -64,7 +64,7 @@
                         $('propietario').val(0);
                         $('#actualizar').val(1);
                     } else {
-                        <?= $oPosicion->js_atras(1); ?>
+                                                <?= list_nav_js_atras_to_dossiers_parent($oPosicion); ?>
                     }
                 } else {
                     var msg = (rta && rta.mensaje) ? rta.mensaje : <?= json_encode(_("error desconocido")) ?>;
@@ -84,7 +84,7 @@
         fnjs_enviar_formulario(formulario, '#ficha3101');
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= list_nav_mostrar_left_slide_to_dossiers_parent($oPosicion); ?>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
     <?= $hash_campos_html ?? '' ?>
     <table>

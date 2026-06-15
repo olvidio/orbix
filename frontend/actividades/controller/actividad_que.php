@@ -30,21 +30,19 @@ $oPosicion = FrontBootstrap::boot();
 $Qid_sel = list_nav_id_sel_from_post();
 $Qscroll_id = list_nav_scroll_id_from_post();
 
-if (isset($_POST['stack'])) {
-    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== 0) {
-        $oPosicion2 = new Posicion();
-        if ($oPosicion2->goStack($stack)) {
-            $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
-            if (!list_nav_id_sel_is_empty($restoredSel)) {
-                $Qid_sel = $restoredSel;
-            }
-            $restoredScroll = $oPosicion2->getParametro('scroll_id');
-            if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
-                $Qscroll_id = (string) $restoredScroll;
-            }
-            $oPosicion2->olvidar($stack);
+$stackFromPost = list_nav_stack_from_post();
+if ($stackFromPost !== 0) {
+    $oPosicion2 = new Posicion();
+    if ($oPosicion2->goStack($stackFromPost)) {
+        $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
+        if (!list_nav_id_sel_is_empty($restoredSel)) {
+            $Qid_sel = $restoredSel;
         }
+        $restoredScroll = $oPosicion2->getParametro('scroll_id');
+        if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
+            $Qscroll_id = (string) $restoredScroll;
+        }
+        $oPosicion2->olvidar($stackFromPost);
     }
 }
 
@@ -66,7 +64,11 @@ $Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTE
 $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
 $Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
 
-$oPosicion->recordar();
+if ($stackFromPost !== 0) {
+    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+} else {
+    list_nav_boot_recordar($oPosicion);
+}
 list_nav_persist_recordar_entry($oPosicion, list_nav_build_actividad_que_return_parametros([
     'modo' => $Qmodo,
     'que' => $Qque,

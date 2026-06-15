@@ -39,16 +39,29 @@ if ($returningViaStack) {
         $restoredIdSelFromStack = $oPosicionRestore->getParametro('id_sel');
         $restoredScrollIdFromStack = $oPosicionRestore->getParametro('scroll_id');
         $oPosicionRestore->olvidar((int) $stackFromPost);
+    } else {
+        list_nav_olvidar_forward_from_dossiers_slot((int) $stackFromPost);
     }
 }
 
 $Qrefresh = tessera_imprimir_int($requestPayload['refresh'] ?? 0);
+$pararRecordar = list_nav_parar_recordar_for_dossiers_refresh($Qrefresh);
 $gstackFromPost = filter_input(INPUT_POST, 'Gstack', FILTER_VALIDATE_INT);
 if (is_int($gstackFromPost) && $gstackFromPost > 0) {
-    list_nav_boot_dossiers_from_actividad_select($oPosicion, $Qrefresh);
-} else {
-    list_nav_clear_inherited_stack_for_recordar($oPosicion);
-    $oPosicion->recordar($Qrefresh);
+    list_nav_boot_dossiers_from_actividad_select($oPosicion, $pararRecordar);
+} elseif ($returningViaStack || list_nav_stack_top_is_dossier_child_form()) {
+    // Vuelta por pila o recarga tras hijo (js_atras tras guardar cargo): no append con recordar().
+} elseif (!list_nav_stack_top_is_dossiers_ver() || $Qrefresh > 0) {
+    list_nav_boot_recordar($oPosicion, $pararRecordar);
+}
+
+list_nav_purge_dossier_child_forms_from_stack();
+
+if ($returningViaStack || list_nav_stack_top_is_dossiers_ver()) {
+    list_nav_refresh_stack_entry_on_return(
+        $oPosicion,
+        $returningViaStack ? (int) $stackFromPost : list_nav_find_best_dossiers_stack_key(),
+    );
 }
 
 $idDossierEarly = trim(tessera_imprimir_string($requestPayload['id_dossier'] ?? ''));
@@ -69,8 +82,11 @@ if ($Qrefresh > 0) {
     );
 } elseif ($idDossierEarly === '' && $claseInfoEarly === '') {
     list_nav_persist_selection_to_posicion($oPosicion, 1);
-} elseif (list_nav_sel_from_post() !== [] || list_nav_scroll_id_from_post() !== '') {
-    // Entrada directa a un segmento (cargos, asistentes, matrículas pendientes, …) desde un listado externo.
+} elseif (
+    (list_nav_sel_from_post() !== [] || list_nav_scroll_id_from_post() !== '')
+    && is_int($gstackFromPost) && $gstackFromPost > 0
+) {
+    // Solo desde listado externo (actividad_select, personas_select, …), no dossier → dossier.
     list_nav_persist_selection_to_posicion($oPosicion, 1);
 }
 
@@ -120,7 +136,7 @@ if (!is_array($topData)) {
 $goDossiers = HashFrontSignedLink::tryFromSpec($topData['go_dossiers_link_spec'] ?? null);
 $goHome = HashFrontSignedLink::tryFromSpec($topData['go_home_link_spec'] ?? null);
 
-echo $oPosicion->mostrar_left_slide(1);
+echo list_nav_mostrar_left_slide_to_list_parent_from_dossiers($oPosicion);
 
 $oViewTop = new ViewNewPhtml('frontend\\dossiers\\view');
 $oViewTop->renderizar('dossiers_ver_top.phtml', [
