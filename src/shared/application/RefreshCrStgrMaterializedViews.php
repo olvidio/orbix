@@ -202,6 +202,7 @@ final class RefreshCrStgrMaterializedViews
 
         header('Content-Type: text/html; charset=UTF-8');
         header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('X-Accel-Buffering: no');
 
         $titulo = htmlspecialchars(_('Orbix'), ENT_QUOTES, 'UTF-8');
         $mensaje = htmlspecialchars(_('Actualizando vistas materializadas…'), ENT_QUOTES, 'UTF-8');
@@ -231,6 +232,7 @@ final class RefreshCrStgrMaterializedViews
 
     /**
      * Tras el refresh en login, recarga la misma URL por GET (sin repetir el POST).
+     * No usa header Location: el overlay ya envió HTML al navegador.
      */
     private static function redirectAfterRefresh(): never
     {
@@ -238,7 +240,10 @@ final class RefreshCrStgrMaterializedViews
             $_SESSION['Refresh_continue_primera'] = 1;
         }
 
-        header('Location: ' . self::redirectUriAfterRefresh(), true, 303);
+        $target = self::redirectUriAfterRefresh();
+        echo '<script>window.location.replace('
+            . json_encode($target, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)
+            . ');</script></body></html>';
         exit;
     }
 
