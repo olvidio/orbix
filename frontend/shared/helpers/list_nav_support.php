@@ -896,11 +896,12 @@ function list_nav_build_return_parametros_from_post(?array $override = null): ar
 
 /**
  * @param array<string, mixed> $parametros
- * @param string|list<string> $idSel
+ * @param string|list<string>|null $idSel
  * @return array<string, mixed>
  */
-function list_nav_merge_selection_into_return_parametros(array $parametros, string|array $idSel = '', string $scrollId = ''): array
+function list_nav_merge_selection_into_return_parametros(array $parametros, string|array|null $idSel = '', string $scrollId = ''): array
 {
+    $idSel = $idSel ?? '';
     if (!list_nav_id_sel_is_empty($idSel)) {
         $parametros['id_sel'] = $idSel;
     }
