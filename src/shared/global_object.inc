@@ -62,6 +62,8 @@ DiContainerBootstrap::ensureBuilt();
     $connectionBootstrap->esquemaf
 );
 
+RefreshCrStgrMaterializedViews::emitUserAvisoIfHtmlRequest();
+
 (new HydrateSessionConfig())->execute();
 
 // func_tablas. Es necesaria para permisos\PermisosActividades->carregar()...

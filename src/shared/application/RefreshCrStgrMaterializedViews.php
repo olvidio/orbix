@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace src\shared\application;
 
+use PDOException;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\DBView;
 
 /**
  * Refresca materialized views en instalaciones cr-stgr (H-Hv, M-Mv, …).
  *
- * Se ejecuta desde `global_object.inc` y desde `FrontBootstrap` (antes solo corría
- * en el bootstrap completo; al migrar controladores frontend se perdía el refresh
- * previo a `PostRequest` en la misma petición).
+ * Se ejecuta desde `global_object.inc` y desde `FrontBootstrap`. No marca la sesión
+ * como lista hasta que **todas** las vistas existen y están pobladas.
  */
 final class RefreshCrStgrMaterializedViews
 {
@@ -68,13 +68,17 @@ final class RefreshCrStgrMaterializedViews
         $userSfsvInt = (int) $userSfsv;
 
         $sessionRefresh = $_SESSION['Refresh'] ?? null;
-        if ($sessionRefresh === 'ok' && !$this->viewsNeedRefresh($schema_vf, $esquema, $userSfsvInt)) {
+        if ($sessionRefresh === 'ok' && $this->allViewsReady($schema_vf, $esquema, $userSfsvInt)) {
             return;
         }
 
+        $previousLimit = ini_get('max_execution_time');
+        set_time_limit(0);
+
+        $_SESSION['Refresh'] = 'in_progress';
+        unset($_SESSION['Refresh_error']);
+
         try {
-            // Comun primero: av_actividades la usan muchos listados; si el refresh
-            // interior es lento (producción), antes no llegaba a ejecutarse.
             if ($esquema !== null && $esquema !== '') {
                 $oMatView = new DBView($esquema, null, 'comun_select');
                 foreach (self::COMUN_SELECT_VIEWS as $view) {
@@ -92,11 +96,69 @@ final class RefreshCrStgrMaterializedViews
                 $this->ensureMaterializedView($oMatView, $view, false);
             }
 
+            if (!$this->allViewsReady($schema_vf, $esquema, $userSfsvInt)) {
+                throw new PDOException(_('Tras el refresh siguen faltando vistas materializadas por poblar.'));
+            }
+
             $_SESSION['Refresh'] = 'ok';
             unset($_SESSION['Refresh_error']);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             $this->reportRefreshFailure($e);
+        } finally {
+            if ($previousLimit !== false && $previousLimit !== '') {
+                set_time_limit((int) $previousLimit);
+            }
         }
+    }
+
+    /**
+     * Mensaje de error pendiente para mostrar al usuario (HTML escapado en {@see formatUserAvisoHtml}).
+     */
+    public static function pendingErrorMessage(): ?string
+    {
+        $message = $_SESSION['Refresh_error'] ?? null;
+
+        return is_string($message) && $message !== '' ? $message : null;
+    }
+
+    public static function formatUserAvisoHtml(?string $message = null): string
+    {
+        $message ??= self::pendingErrorMessage();
+        if ($message === null || $message === '') {
+            return '';
+        }
+
+        $titulo = _('Actualización de datos de región');
+
+        return '<div class="refresh-mv-aviso" role="alert" style="margin:1em 0;padding:0.75em 1em;border:2px solid #c0392b;background:#fdecea;color:#922b21;">'
+            . '<strong>' . htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') . ':</strong> '
+            . htmlspecialchars($message, ENT_QUOTES, 'UTF-8')
+            . '</div>';
+    }
+
+    /**
+     * Muestra el aviso en peticiones HTML (no en `/src/…` JSON).
+     */
+    public static function emitUserAvisoIfHtmlRequest(): void
+    {
+        if (self::isSrcJsonRequest()) {
+            return;
+        }
+
+        $html = self::formatUserAvisoHtml();
+        if ($html !== '') {
+            echo $html;
+        }
+    }
+
+    public static function isSrcJsonRequest(): bool
+    {
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        if (!is_string($uri)) {
+            return false;
+        }
+
+        return str_contains($uri, '/src/');
     }
 
     private function ensureMaterializedView(DBView $oMatView, string $view, bool $comun): void
@@ -104,95 +166,88 @@ final class RefreshCrStgrMaterializedViews
         $oMatView->setView($view);
 
         if ($oMatView->exists() && !$oMatView->isPopulated()) {
-            if (!$oMatView->Refresh()) {
-                throw new \PDOException(sprintf(
-                    _('No puedo refrescar la vista materializada %s (sin poblar)'),
-                    $view,
-                ));
-            }
+            $this->refreshViewOrFail($oMatView, $view);
 
             return;
         }
 
         if ($oMatView->ExisteYEsIgual($comun)) {
-            if (!$oMatView->Refresh()) {
-                throw new \PDOException(sprintf(
-                    _('No puedo refrescar la vista materializada %s'),
-                    $view,
-                ));
-            }
+            $this->refreshViewOrFail($oMatView, $view);
 
             return;
         }
 
         if (!$oMatView->create($comun)) {
-            throw new \PDOException(sprintf(
+            throw new PDOException(sprintf(
                 _('No puedo crear la vista materializada %s'),
                 $view,
             ));
         }
 
-        if ($oMatView->exists() && !$oMatView->isPopulated() && !$oMatView->Refresh()) {
-            throw new \PDOException(sprintf(
-                _('No puedo poblar la vista materializada %s tras crearla'),
+        $this->assertViewPopulated($oMatView, $view);
+    }
+
+    private function refreshViewOrFail(DBView $oMatView, string $view): void
+    {
+        if (!$oMatView->Refresh()) {
+            throw new PDOException(sprintf(
+                _('No puedo refrescar la vista materializada %s'),
+                $view,
+            ));
+        }
+
+        $this->assertViewPopulated($oMatView, $view);
+    }
+
+    private function assertViewPopulated(DBView $oMatView, string $view): void
+    {
+        if (!$oMatView->exists() || !$oMatView->isPopulated()) {
+            throw new PDOException(sprintf(
+                _('La vista materializada %s sigue sin poblar tras REFRESH'),
                 $view,
             ));
         }
     }
 
-    private function reportRefreshFailure(\PDOException $e): void
+    private function reportRefreshFailure(PDOException $e): void
     {
         $message = _('No puedo refrescar las vistas') . ': ' . $e->getMessage();
         error_log('[RefreshCrStgrMaterializedViews] ' . $message);
         $_SESSION['Refresh_error'] = $message;
-        echo '/*';
-        echo $message . '<br>';
-        echo '*/';
         $_SESSION['Refresh'] = 'error';
+        self::emitUserAvisoIfHtmlRequest();
     }
 
-    private function viewsNeedRefresh(string $schemaVf, ?string $esquema, int $userSfsv): bool
+    private function allViewsReady(string $schemaVf, ?string $esquema, int $userSfsv): bool
     {
-        if ($this->comunViewsNeedPopulation($esquema)) {
-            return true;
-        }
-
-        return $this->interiorActividadestudiosViewsNeedRefresh($schemaVf, $userSfsv);
-    }
-
-    private function comunViewsNeedPopulation(?string $esquema): bool
-    {
-        if ($esquema === null || $esquema === '') {
-            return false;
-        }
-
-        foreach (self::COMUN_SELECT_VIEWS as $view) {
-            $oMatView = new DBView($esquema, null, 'comun_select');
-            $oMatView->setView($view);
-            if (!$oMatView->exists() || !$oMatView->isPopulated()) {
-                return true;
+        if ($esquema !== null && $esquema !== '') {
+            foreach (self::COMUN_SELECT_VIEWS as $view) {
+                if (!$this->viewIsReady($esquema, null, 'comun_select', $view)) {
+                    return false;
+                }
             }
         }
 
-        return false;
-    }
-
-    /**
-     * Matrículas/asignaturas CA agregadas por región (consulta vía `oDB` en H-Hv / M-Mv).
-     */
-    private function interiorActividadestudiosViewsNeedRefresh(string $schemaVf, int $userSfsv): bool
-    {
-        $oMatView = new DBView($schemaVf, $userSfsv, 'interior');
-        foreach (['d_matriculas_activ_dl', 'd_asignaturas_activ_dl'] as $view) {
-            $oMatView->setView($view);
-            if (!$oMatView->exists()) {
-                return true;
-            }
-            if (!$oMatView->isPopulated()) {
-                return true;
+        foreach (self::INTERIOR_REGION_VIEWS as $view) {
+            if (!$this->viewIsReady($schemaVf, $userSfsv, 'interior', $view)) {
+                return false;
             }
         }
 
-        return false;
+        foreach (self::EXTERIOR_SELECT_VIEWS as $view) {
+            if (!$this->viewIsReady($schemaVf, $userSfsv, 'exterior_select', $view)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function viewIsReady(string $schema, ?int $userSfsv, string $db, string $view): bool
+    {
+        $oMatView = new DBView($schema, $userSfsv, $db);
+        $oMatView->setView($view);
+
+        return $oMatView->exists() && $oMatView->isPopulated();
     }
 }

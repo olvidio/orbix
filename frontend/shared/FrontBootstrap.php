@@ -168,6 +168,8 @@ final class FrontBootstrap
             $connectionBootstrap->esquemav,
             $connectionBootstrap->esquemaf,
         );
+
+        RefreshCrStgrMaterializedViews::emitUserAvisoIfHtmlRequest();
     }
 
     private static function validateRequestHash(): void

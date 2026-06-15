@@ -3,6 +3,7 @@
 namespace src\shared\web;
 
 use Illuminate\Http\JsonResponse;
+use src\shared\application\RefreshCrStgrMaterializedViews;
 
 class ContestarJson
 {
@@ -68,6 +69,8 @@ class ContestarJson
      */
     public static function respuestaPhp(string $error_txt = '', string|array $data = 'ok'): array
     {
+        $error_txt = self::prependRefreshError($error_txt);
+
         if (!empty($error_txt)) {
             $jsondata['success'] = false;
             $jsondata['mensaje'] = $error_txt;
@@ -78,5 +81,19 @@ class ContestarJson
         }
 
         return $jsondata;
+    }
+
+    private static function prependRefreshError(string $error_txt): string
+    {
+        $refreshError = RefreshCrStgrMaterializedViews::pendingErrorMessage();
+        if ($refreshError === null) {
+            return $error_txt;
+        }
+
+        if ($error_txt === '') {
+            return $refreshError;
+        }
+
+        return $refreshError . '<br>' . $error_txt;
     }
 }
