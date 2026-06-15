@@ -6,11 +6,13 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
+use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\DependencyResolver;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaPub;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
 use function src\shared\domain\helpers\input_string;
 
@@ -31,6 +33,7 @@ final class MatriculasListaOtrasRData
         private AsignaturaRepositoryInterface $asignaturaRepository,
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private ActaRepositoryInterface $actaRepository,
+        private DelegacionRepositoryInterface $delegacionRepository,
     ) {
     }
 
@@ -48,7 +51,7 @@ final class MatriculasListaOtrasRData
     public function execute(array $input): array
     {
         $apellido1 = input_string($input, 'apellido1');
-        $esquemaRegionStgr = input_string($input, 'esquema_region_stgr');
+        $esquemaRegionStgr = $this->resolveEsquemaRegionStgr(input_string($input, 'esquema_region_stgr'));
         $tituloBusqueda = _('búsqueda por apellidos');
         $titulo = '';
         $msgErr = '';
@@ -240,5 +243,29 @@ final class MatriculasListaOtrasRData
     private static function alertaConRegionStgr(string $alert): string
     {
         return str_contains($alert, '⚠') ? $alert : $alert . '⚠';
+    }
+
+    /**
+     * Esquema SV/SF de la región STGR (p. ej. H-Hv). El frontend ya no envía
+     * `esquema` en POST como en apps/; se deduce de la sesión.
+     */
+    private function resolveEsquemaRegionStgr(string $esquemaInput): string
+    {
+        if ($esquemaInput !== '') {
+            return $esquemaInput;
+        }
+
+        $datosRegion = $this->delegacionRepository->mi_region_stgr();
+        $esquema = (string) ($datosRegion['esquema_region_stgr'] ?? '');
+        if ($esquema !== '') {
+            return $esquema;
+        }
+
+        $esquemaSesion = ConfigGlobal::mi_region_dl();
+        if ($esquemaSesion !== '') {
+            return $esquemaSesion;
+        }
+
+        throw new \RuntimeException(_('No se pudo determinar el esquema región STGR de la sesión.'));
     }
 }
