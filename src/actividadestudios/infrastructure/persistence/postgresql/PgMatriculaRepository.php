@@ -10,6 +10,7 @@ use PDO;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\Matricula;
 use src\actividadestudios\domain\value_objects\ActividadMatriculaPk;
+use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\shared\traits\HandlesPdoErrors;
 use function src\shared\domain\helpers\is_true;
 
@@ -65,7 +66,10 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
             foreach ($aDatos as $key => $value) {
                 $normalized[(string) $key] = $value;
             }
-            $items[] = Matricula::fromArray($normalized);
+            $oMatricula = $this->matriculaFromRow($normalized);
+            if ($oMatricula !== null) {
+                $items[] = $oMatricula;
+            }
         }
         return $items;
     }
@@ -142,9 +146,57 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
             foreach ($aDatos as $key => $value) {
                 $normalized[(string) $key] = $value;
             }
-            $items[] = Matricula::fromArray($normalized);
+            $oMatricula = $this->matriculaFromRow($normalized);
+            if ($oMatricula !== null) {
+                $items[] = $oMatricula;
+            }
         }
         return $items;
+    }
+
+    /**
+     * @param array<string, mixed> $normalized
+     */
+    protected function matriculaFromRow(array $normalized): ?Matricula
+    {
+        $idAsignatura = isset($normalized['id_asignatura']) ? (int) $normalized['id_asignatura'] : 0;
+        if (!AsignaturaId::isValidInt($idAsignatura)) {
+            error_log(sprintf(
+                '[PgMatriculaRepository] matrícula con id_asignatura inválido (%d); se elimina la fila.',
+                $idAsignatura,
+            ));
+            $this->eliminarFilaRaw($normalized);
+
+            return null;
+        }
+
+        try {
+            return Matricula::fromArray($normalized);
+        } catch (\InvalidArgumentException $e) {
+            error_log('[PgMatriculaRepository] ' . $e->getMessage());
+            $this->eliminarFilaRaw($normalized);
+
+            return null;
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $normalized
+     */
+    protected function eliminarFilaRaw(array $normalized): bool
+    {
+        if (!isset($normalized['id_activ'], $normalized['id_asignatura'], $normalized['id_nom'])) {
+            return false;
+        }
+
+        $id_activ = (int) $normalized['id_activ'];
+        $id_asignatura = (int) $normalized['id_asignatura'];
+        $id_nom = (int) $normalized['id_nom'];
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "DELETE FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
+
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

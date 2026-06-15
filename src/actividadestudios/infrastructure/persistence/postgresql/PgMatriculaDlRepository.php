@@ -71,6 +71,11 @@ class PgMatriculaDlRepository extends PgMatriculaRepository implements Matricula
             throw new RuntimeException(_('Falta id_dl para modificar la matrícula en esquema región STGR.'));
         }
 
+        return $this->schemaFromIdDl($idDl);
+    }
+
+    private function schemaFromIdDl(int $idDl): string
+    {
         if (isset($this->schemaByIdDl[$idDl])) {
             return $this->schemaByIdDl[$idDl];
         }
@@ -87,6 +92,34 @@ class PgMatriculaDlRepository extends PgMatriculaRepository implements Matricula
         $this->schemaByIdDl[$idDl] = $schema;
 
         return $schema;
+    }
+
+    /**
+     * @param array<string, mixed> $normalized
+     */
+    protected function eliminarFilaRaw(array $normalized): bool
+    {
+        if (!$this->isRegionStgrSession()) {
+            return parent::eliminarFilaRaw($normalized);
+        }
+
+        if (!isset($normalized['id_activ'], $normalized['id_asignatura'], $normalized['id_nom'], $normalized['id_dl'])) {
+            return false;
+        }
+
+        $idDl = (int) $normalized['id_dl'];
+        if ($idDl <= 0) {
+            return false;
+        }
+
+        $id_activ = (int) $normalized['id_activ'];
+        $id_asignatura = (int) $normalized['id_asignatura'];
+        $id_nom = (int) $normalized['id_nom'];
+        $schema = $this->schemaFromIdDl($idDl);
+        $oDbl = $this->writePdoForSchema($schema);
+        $sql = "DELETE FROM d_matriculas_activ_dl WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
+
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     private function writePdoForSchema(string $schema): PDO

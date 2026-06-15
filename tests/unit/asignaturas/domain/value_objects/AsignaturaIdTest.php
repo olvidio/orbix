@@ -17,7 +17,13 @@ class AsignaturaIdTest extends myTest
     public function test_invalid_length_throws_exception()
     {
         $this->expectException(\InvalidArgumentException::class);
-        new AsignaturaId(str_repeat(2, 10)); // Assuming max length validation
+        $this->expectExceptionMessage('(got: 2222222222)');
+        new AsignaturaId((int) str_repeat('2', 10));
+    }
+
+    public function test_isValidInt_rejects_zero()
+    {
+        $this->assertFalse(AsignaturaId::isValidInt(0));
     }
 
     public function test_equals_returns_true_for_same_asignaturaId()

@@ -12,18 +12,29 @@ final class AsignaturaId
         $this->value = $value;
     }
 
-    private function validate(int $value): void
+    public static function isValidInt(int $value): bool
     {
-        // Debe ser un entero positivo de 4 dígitos que empiece por 1, 2 o 3
-        // excepto que se permite explícitamente 9998 y 9999.
         $esRangoNormal = ($value >= 1000 && $value <= 3999);
         $esExcepcion = ($value === 9998 || $value === 9999);
 
-        if (!($esRangoNormal || $esExcepcion)) {
-            throw new \InvalidArgumentException(
-                'AsignaturaId must be a 4-digit integer starting with 1, 2 or 3, or be 9998/9999'
-            );
+        return $esRangoNormal || $esExcepcion;
+    }
+
+    private function validate(int $value): void
+    {
+        if (self::isValidInt($value)) {
+            return;
         }
+
+        throw new \InvalidArgumentException(self::invalidIntMessage($value));
+    }
+
+    private static function invalidIntMessage(int $value): string
+    {
+        return sprintf(
+            'AsignaturaId must be a 4-digit integer starting with 1, 2 or 3, or be 9998/9999 (got: %d)',
+            $value,
+        );
     }
 
     public function value(): int
@@ -43,14 +54,16 @@ final class AsignaturaId
 
     public static function fromString(string $value): self
     {
-        // Solo dígitos
         if (!ctype_digit($value)) {
-            throw new \InvalidArgumentException('AsignaturaId string must be digits');
+            throw new \InvalidArgumentException(
+                sprintf('AsignaturaId string must be digits (got: %s)', $value),
+            );
         }
 
-        // Debe tener exactamente 4 dígitos
         if (strlen($value) !== 4) {
-            throw new \InvalidArgumentException('AsignaturaId string must be exactly 4 digits');
+            throw new \InvalidArgumentException(
+                sprintf('AsignaturaId string must be exactly 4 digits (got: %s)', $value),
+            );
         }
 
         return new self((int)$value);
@@ -61,6 +74,7 @@ final class AsignaturaId
         if ($value === null) {
             return null;
         }
+
         return new self($value);
     }
 }
