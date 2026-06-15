@@ -11,12 +11,26 @@ Las nuevas funcionalidades y las recargas parciales de vista deben usar respuest
 
 | Función | Uso |
 |---------|-----|
-| `fnjs_parse_rta(rta, errorPrefix?)` | Extrae y parsea `data` del envelope `{success, mensaje?, data}` |
-| `fnjs_ajax_json({ url, data, onSuccess, onFail?, errorPrefix? })` | POST con `dataType: 'json'` y manejo de errores |
+| `fnjs_parse_rta(rta, errorPrefix?)` | Extrae y parsea `data` del envelope `{success, mensaje?, data}` cuando hay payload estructurado |
+| `fnjs_ajax_json({ url, data, onSuccess, onFail?, errorPrefix? })` | POST con `dataType: 'json'`; usa `fnjs_parse_rta` en `onSuccess` |
 | `fnjs_ajax_json_html({ url, data, target, onDone? })` | Inyecta `data.html` en un selector |
 | `fnjs_ajax_json_alert({ url, data, onDone? })` | Muestra `data.text` / `data.mensaje` en un alert |
 
 `fnjs_update_div` / `fnjs_mostra_resposta` también entienden el envelope JSON y extraen `data.html` si el backend devuelve JSON.
+
+#### Semántica de `data` (`fnjs_parse_rta` ↔ `PostRequest`)
+
+`fnjs_parse_rta` replica la lógica de `PostRequest::envelopeDataFieldToArray` (ver `frontend/shared/PostRequest.php` y `agents.md` raíz, sección *Endpoints JSON para PostRequest*). Tras comprobar `success === true`:
+
+| Valor de `data` en el envelope HTTP | `fnjs_parse_rta` devuelve | `PostRequest::getDataFromUrl()` devuelve |
+|-------------------------------------|---------------------------|------------------------------------------|
+| String JSON de objeto/array (`"{\"html\":...}"`) | Objeto parseado | Ese array |
+| `'ok'`, `'none'`, `''`, texto no JSON | `{}` | `[]` |
+| Objeto/array ya deserializado por jQuery | Tal cual (normalizado) | N/A (PHP decodifica el cuerpo) |
+
+**Mutaciones** (`ContestarJson::enviar($error, 'ok')`): el cliente debe basarse en `success` / `mensaje`; no hace falta leer `data`. Preferir `$.ajax` + `.done` comprobando `respuesta.success` (patrón siguiente).
+
+**Datos estructurados** (listas, `*_form_data`, HTML parcial en `data.html`): usar `fnjs_parse_rta` o `fnjs_ajax_json*` cuando el callback necesite el payload interno.
 
 ### Helpers PHP (`frontend/shared/helpers/ajax_json_support.php`)
 
@@ -54,6 +68,7 @@ fnjs_guardar = function (formulario) {
 ### Reglas:
 - Especificar siempre `dataType: 'json'` (o usar `fnjs_ajax_json*`).
 - El backend debe devolver `{ success, mensaje?, data }` vía `ContestarJson` o `ajax_json_*`.
+- **Mutaciones** (guardar, eliminar, editar): comprobar `respuesta.success`; ignorar `data` si es el ack `"ok"`. No usar `fnjs_parse_rta` salvo que el endpoint devuelva payload útil tras guardar.
 - Fragmentos HTML parciales: `ajax_json_html()` / `data.html` en cliente con `fnjs_ajax_json_html`.
 - Datos estructurados (tablas construidas en cliente): `/src/...` + `fnjs_parse_rta` (ver `activ_sacd.phtml`).
 - No usar `dataType: 'html'` ni respuestas texto plano en nuevos endpoints.

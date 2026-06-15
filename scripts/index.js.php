@@ -937,6 +937,9 @@ if (!isset($h)) {
 
     /**
      * Parsea el envelope `{success, mensaje?, data}` de ContestarJson.
+     * Semántica de `data` alineada con PostRequest::envelopeDataFieldToArray
+     * (ver frontend/shared/PostRequest.php y frontend/agents.md).
+     * Para mutaciones con ack `"ok"`, preferir comprobar solo `rta.success`.
      * @returns {object|null}
      */
     function fnjs_parse_rta(rta, errorPrefix) {
@@ -946,7 +949,16 @@ if (!isset($h)) {
             return null;
         }
         try {
-            var data = (typeof rta.data === 'string') ? JSON.parse(rta.data) : rta.data;
+            var data = rta.data;
+            if (typeof data === 'string') {
+                var trimmed = data.trim();
+                if (trimmed.charAt(0) === '{' || trimmed.charAt(0) === '[') {
+                    data = JSON.parse(data);
+                } else if (data === 'ok' || data === '') {
+                    // ContestarJson::enviar() ack sin payload JSON anidado.
+                    data = {};
+                }
+            }
             return fnjs_normalize_ajax_html_data(data);
         } catch (e) {
             return null;

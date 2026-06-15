@@ -2,6 +2,8 @@
 
 namespace src\notas\infrastructure\persistence\postgresql;
 
+use src\notas\domain\value_objects\ActaNumero;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\ConfigDB;
@@ -24,7 +26,6 @@ use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\PersonaNotaPk;
 use src\notas\domain\value_objects\TipoActa;
-use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\traits\HandlesPdoErrors;
 use stdClass;
 
@@ -46,13 +47,14 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
     protected string $esquema_region_stgr;
 
     public function __construct(
-        string $esquema_region_stgr,
-        private readonly PersonaNotaRepositoryInterface $personaNotaRepository,
-        private readonly DelegacionRepositoryInterface $delegacionRepository,
-        private readonly DbSchemaRepositoryInterface $dbSchemaRepository,
-        private readonly DossierRepositoryInterface $dossierRepository,
+        string                                            $esquema_region_stgr,
+        private readonly PersonaNotaRepositoryInterface   $personaNotaRepository,
+        private readonly DelegacionRepositoryInterface    $delegacionRepository,
+        private readonly DbSchemaRepositoryInterface      $dbSchemaRepository,
+        private readonly DossierRepositoryInterface       $dossierRepository,
         private readonly PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
-    ) {
+    )
+    {
         $this->esquema_region_stgr = $esquema_region_stgr;
         $db = (ConfigGlobal::mi_sfsv() === 1) ? 'sv' : 'sf';
         // se debe conectar con la region del stgr padre
@@ -65,12 +67,12 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         $this->setNomTabla('e_notas_otra_region_stgr');
     }
 
-    public function addCertificado(int $id_nom, string $certificado, \src\shared\domain\value_objects\DateTimeLocal|null $oF_certificado): void
+    public function addCertificado(int $id_nom, string $certificado, DateTimeLocal|null $oF_certificado): void
     {
         $cPersonaNotaOtraRegionStgr = $this->getPersonaNotas(['id_nom' => $id_nom]);
         foreach ($cPersonaNotaOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
             // miro los que hay para añadir este
-            $a_json_certificados = (array)$oPersonaNotaOtraRegionStgr->getJson_certificados();
+            $a_json_certificados = $oPersonaNotaOtraRegionStgr->getJson_certificados() ?? [];
             $oCert = new stdClass();
             $oCert->certificado = $certificado;
             $oCert->estado = 'guardado';
@@ -94,7 +96,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
                 $oPersonaNota->setId_nom($id_nom);
                 $oPersonaNota->setTipoActaVo(TipoActa::FORMATO_CERTIFICADO);
                 $oPersonaNota->setIdSituacionVo($oPersonaNotaOtraRegionStgr->getIdSituacionVo());
-                $oPersonaNota->setActaVo($oPersonaNotaOtraRegionStgr->getActaVo() ?? $certificado);
+                $oPersonaNota->setActaVo($oPersonaNotaOtraRegionStgr->getActaVo() ?? ActaNumero::fromNullableString($certificado));
                 $oPersonaNota->setDetalleVo($oPersonaNotaOtraRegionStgr->getDetalleVo());
                 $oPersonaNota->setF_acta($oF_certificado);
                 $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->isPreceptor());
@@ -205,7 +207,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             }
             $normalized = [];
             foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
+                $normalized[(string)$key] = $value;
             }
             $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta'] ?? null))->fromPg();
             $jsonCertificados = $normalized['json_certificados'] ?? null;
@@ -280,7 +282,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             unset($aWhere['_ordre']);
         }
         $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
+        if ((is_string($limitVal) || is_int($limitVal)) && (string)$limitVal !== '') {
             $sLimit = ' LIMIT ' . $limitVal;
         }
         if (isset($aWhere['_limit'])) {
@@ -299,7 +301,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             }
             $normalized = [];
             foreach ($aDatos as $key => $value) {
-                $normalized[(string) $key] = $value;
+                $normalized[(string)$key] = $value;
             }
             // para las fechas del postgres (texto iso)
             $normalized['f_acta'] = (new ConverterDate('date', $normalized['f_acta']))->fromPg();
@@ -311,7 +313,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             $normalized['json_certificados'] = (new ConverterJson($jsonCertificados, false))->fromPg();
 
             $idNivelRaw = $normalized['id_nivel'] ?? null;
-            $idNivel = is_numeric($idNivelRaw) ? (int) $idNivelRaw : null;
+            $idNivel = is_numeric($idNivelRaw) ? (int)$idNivelRaw : null;
             $a_pkey = array('id_nom' => $normalized['id_nom'],
                 'id_nivel' => NivelId::fromNullableInt($idNivel),
                 'tipo_acta' => $normalized['tipo_acta']);
@@ -440,7 +442,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
         $result = [];
         foreach ($aDatos as $key => $value) {
-            $result[(string) $key] = $value;
+            $result[(string)$key] = $value;
         }
         return $result;
     }

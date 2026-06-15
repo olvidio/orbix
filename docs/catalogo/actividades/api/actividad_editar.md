@@ -64,10 +64,29 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Salida
 
-- Helper: `ContestarJson::enviar`
-- Exito: `success: true` (sin payload).
-- Error: `success: false`, `mensaje` con el texto (el `tipo_error: 'tipo'` interno
+- Helper: `ContestarJson::enviar($error_txt)` (segundo argumento por defecto: `'ok'`)
+- Éxito: `success: true`, `data: "ok"` (ack estándar de mutación; el cliente comprueba solo `success`).
+- Error: `success: false`, `mensaje` con el texto, `data: "ok"` (el `tipo_error: 'tipo'` interno
   no cambia la forma de la respuesta).
+
+Ejemplo éxito:
+
+```json
+{
+  "success": true,
+  "data": "ok"
+}
+```
+
+Ejemplo error:
+
+```json
+{
+  "success": false,
+  "mensaje": "actividad no encontrada",
+  "data": "ok"
+}
+```
 
 ## Permisos
 
@@ -97,4 +116,5 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - Revisado jun 2026 (lectura de controller + `ActividadEditar`): recomposicion del tipo,
   efectos sobre procesos/plazas y ausencia de check `modificar` en servidor verificados.
-- Pendiente: ejemplos reales de request/response.
+- Revisado jun 2026: salida alineada con `standard_envelope_string_data` (`data: "ok"`);
+  cliente en `_actividad_form.js.html.twig` usa patron canonico `$.ajax` + `success`.
