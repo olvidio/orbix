@@ -34,7 +34,7 @@ class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
         $cPersonaNotaOtraRegionStgr = $this->getPersonaNotas(['id_nom' => $id_nom]);
         foreach ($cPersonaNotaOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
             // miro los que hay para añadir este
-            $a_json_certificados = (array)$oPersonaNotaOtraRegionStgr->getJson_certificados();
+            $a_json_certificados = $oPersonaNotaOtraRegionStgr->getJson_certificados() ?? [];
             $oCert = new stdClass();
             $oCert->certificado = $certificado;
             $oCert->estado = 'guardado';
