@@ -225,6 +225,7 @@ trait Hydratable
             $name = $property->getName();
             if ($name === 'id_auto') { continue; }
             if ($name === 'id_schema') { continue; }
+            if ($name === 'id_dl') { continue; }
             if ($name === 'domainEvents') { continue; }
             $value = null;
             $isBoolean = false; // Flag para saber si el campo es booleano

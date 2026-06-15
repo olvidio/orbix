@@ -5,6 +5,8 @@ namespace frontend\shared;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use src\shared\application\RefreshCrStgrMaterializedViews;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\BootstrapPdoGlobals;
 use src\shared\infrastructure\ConnectionBootstrap;
 use src\shared\infrastructure\DiContainerBootstrap;
 use src\shared\infrastructure\logging\GestorErrores;
@@ -141,18 +143,29 @@ final class FrontBootstrap
             return;
         }
 
+        if (ConfigGlobal::mi_region() !== ConfigGlobal::mi_delef()) {
+            return;
+        }
+
         if (!isset($_SESSION['oGestorErrores'])) {
             $_SESSION['oGestorErrores'] = new GestorErrores();
         }
 
-        DiContainerBootstrap::ensureBuilt();
-
-        $schemaTuple = ConnectionBootstrap::schemaTupleFromSession();
-        if ($schemaTuple === null) {
+        try {
+            $connectionBootstrap = ConnectionBootstrap::buildFromSession();
+        } catch (\Throwable) {
             return;
         }
 
-        (new RefreshCrStgrMaterializedViews())->executeIfNeeded(...$schemaTuple);
+        BootstrapPdoGlobals::register($connectionBootstrap->userSfsv, $connectionBootstrap->connections);
+        DiContainerBootstrap::ensureBuilt();
+
+        (new RefreshCrStgrMaterializedViews())->executeIfNeeded(
+            $connectionBootstrap->userSfsv,
+            $connectionBootstrap->esquema,
+            $connectionBootstrap->esquemav,
+            $connectionBootstrap->esquemaf,
+        );
     }
 
     private static function validateRequestHash(): void

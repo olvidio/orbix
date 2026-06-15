@@ -154,8 +154,8 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
         $id_activ = $Matricula->getId_activ();
         $id_asignatura = $Matricula->getIdAsignaturaVo()->value();
         $id_nom = $Matricula->getId_nom();
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
+        $oDbl = $this->getoDblForWrite($Matricula);
+        $nom_tabla = $this->getNomTablaForWrite($Matricula);
         $sql = "DELETE FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
@@ -169,9 +169,9 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
         $id_activ = $Matricula->getId_activ();
         $id_asignatura = $Matricula->getIdAsignaturaVo()->value();
         $id_nom = $Matricula->getId_nom();
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $bInsert = $this->isNew($id_activ, $id_asignatura, $id_nom);
+        $oDbl = $this->getoDblForWrite($Matricula);
+        $nom_tabla = $this->getNomTablaForWrite($Matricula);
+        $bInsert = $this->isNew($id_activ, $id_asignatura, $id_nom, $nom_tabla, $oDbl);
 
         $aDatos = $Matricula->toArrayForDatabase();
         if ($bInsert === false) {
@@ -202,10 +202,20 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
-    private function isNew(int $id_activ, int $id_asignatura, int $id_nom): bool
+    protected function getNomTablaForWrite(Matricula $Matricula): string
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
+        return $this->getNomTabla();
+    }
+
+    protected function getoDblForWrite(Matricula $Matricula): PDO
+    {
+        return $this->getoDbl();
+    }
+
+    protected function isNew(int $id_activ, int $id_asignatura, int $id_nom, ?string $nom_tabla = null, ?PDO $oDbl = null): bool
+    {
+        $oDbl ??= $this->getoDbl();
+        $nom_tabla ??= $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {

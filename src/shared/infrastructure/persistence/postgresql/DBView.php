@@ -125,6 +125,10 @@ class DBView
 
     public function isPopulated(): bool
     {
+        if (!$this->exists()) {
+            return false;
+        }
+
         $oDbl = $this->getoDbl();
         $schemaName = $this->sSchema;
         $view = $this->sView;
@@ -144,6 +148,22 @@ class DBView
             || $row['ispopulated'] === 't'
             || $row['ispopulated'] === '1'
             || $row['ispopulated'] === 1;
+    }
+
+    public function exists(): bool
+    {
+        $oDbl = $this->getoDbl();
+        $schemaName = $this->sSchema;
+        $view = $this->sView;
+
+        $st = $oDbl->query(
+            "SELECT 1 FROM pg_matviews WHERE schemaname='$schemaName' AND matviewname='$view' LIMIT 1"
+        );
+        if ($st === false) {
+            return false;
+        }
+
+        return $st->fetchColumn() !== false;
     }
 
     public function ExisteYEsIgual(bool $comun = false): bool
@@ -176,6 +196,9 @@ class DBView
 
         $sql = "CREATE MATERIALIZED VIEW $nameView AS ";
         $sql .= $this->getDefView($this->sView, $comun);
+        if (trim($sql) === 'CREATE MATERIALIZED VIEW ' . $nameView . ' AS') {
+            return false;
+        }
 
         if ($oDbl->exec($sql) === false) {
             $sClauError = 'Refresh';
@@ -276,15 +299,8 @@ class DBView
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
         $a_schemas = $gesDl->getArraySchemasRegionStgr($RegionStgr, $mi_sfsv);
-        // quitar H-Hv
-        if (($key = array_search("H-crHv", $a_schemas)) !== false) {
-            unset($a_schemas[$key]);
-        }
-        if (($key = array_search("M-crMv", $a_schemas)) !== false) {
-            unset($a_schemas[$key]);
-        }
 
-        return array_values($a_schemas);
+        return $this->withoutRegionStgrSchemas(array_values($a_schemas));
     }
 
     /**
@@ -297,15 +313,42 @@ class DBView
 
         $a_schemas = $gesDl->getArraySchemasRegionStgr($RegionStgr);
 
-        // quitar H-Hv
-        if (($key = array_search("H-crH", $a_schemas)) !== false) {
-            unset($a_schemas[$key]);
-        }
-        if (($key = array_search("M-crM", $a_schemas)) !== false) {
-            unset($a_schemas[$key]);
+        return $this->withoutRegionStgrSchemas(array_values($a_schemas));
+    }
+
+    /**
+     * Excluye el esquema agregado de región STGR (p. ej. H-Hv, M-Mv, H-crHv).
+     * Es destino de las materialized views, no fuente de filas por DL.
+     *
+     * @param list<string> $a_schemas
+     * @return list<string>
+     */
+    private function withoutRegionStgrSchemas(array $a_schemas): array
+    {
+        return array_values(array_filter(
+            $a_schemas,
+            fn (string $schema): bool => !$this->isRegionStgrAggregateSchema($schema),
+        ));
+    }
+
+    private function isRegionStgrAggregateSchema(string $schema): bool
+    {
+        $region = $this->sRegionStgr;
+        if ($region === '') {
+            return false;
         }
 
-        return array_values($a_schemas);
+        $parts = explode('-', $schema, 2);
+        if (count($parts) < 2) {
+            return false;
+        }
+
+        $dlPart = $parts[1];
+        if ($dlPart !== '' && in_array(substr($dlPart, -1), ['v', 'f'], true)) {
+            $dlPart = substr($dlPart, 0, -1);
+        }
+
+        return $dlPart === $region || $dlPart === 'cr' . $region;
     }
 
     private function getDefView(string $view, bool $comun = false): string
@@ -332,15 +375,24 @@ class DBView
                     $a_schemas = $this->getSchemasGrupStgr();
                 }
 
-                $schema1 = current($a_schemas);
-                if ($schema1 === false) {
+                $columns = '';
+                foreach ($a_schemas as $schema) {
+                    $candidate = $this->getNameColumns($schema, $view);
+                    if ($candidate !== '') {
+                        $columns = $candidate;
+                        break;
+                    }
+                }
+                if ($columns === '') {
                     return '';
                 }
-                $columns = $this->getNameColumns((string) $schema1, $view);
 
                 $sql_def_view = '';
                 foreach ($a_schemas as $id_dl => $schema) {
-                    $sql_def_view .= empty($sql_def_view) ? '' : " UNION ALL ";
+                    if ($this->getNameColumns($schema, $view) === '') {
+                        continue;
+                    }
+                    $sql_def_view .= $sql_def_view === '' ? '' : ' UNION ALL ';
                     $sql_def_view .= "SELECT $columns, $id_dl AS id_dl FROM \"$schema\".$view ";
                 }
         }

@@ -27,6 +27,8 @@ class Matricula
     private ?NotaMax $nota_max = null;
     private ?int $id_preceptor = null;
     private ?Acta $acta = null;
+    /** Delegación de origen en vistas agregadas región STGR (p. ej. H-Hv). */
+    private ?int $id_dl = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -261,5 +263,15 @@ class Matricula
         $this->acta = $texto instanceof Acta
             ? $texto
             : Acta::fromNullableString($texto);
+    }
+
+    public function getId_dl(): ?int
+    {
+        return $this->id_dl;
+    }
+
+    public function setId_dl(?int $id_dl = null): void
+    {
+        $this->id_dl = $id_dl;
     }
 }

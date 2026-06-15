@@ -164,6 +164,8 @@ class myTest extends TestCase
                     'personas_dl',
                     'd_teleco_personas_dl',
                     'u_centros_dl',
+                    'd_matriculas_activ_dl',
+                    'd_asignaturas_activ_dl',
                 ];
 
                 if ($user_sfsv === 1) {
