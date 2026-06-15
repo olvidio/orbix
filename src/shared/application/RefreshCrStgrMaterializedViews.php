@@ -6,6 +6,7 @@ namespace src\shared\application;
 
 use PDOException;
 use src\shared\config\ConfigGlobal;
+use src\shared\config\ReplicaSelectPolicy;
 use src\shared\infrastructure\persistence\postgresql\DBView;
 
 /**
@@ -13,6 +14,10 @@ use src\shared\infrastructure\persistence\postgresql\DBView;
  *
  * Se ejecuta desde `global_object.inc` y desde `FrontBootstrap`. No marca la sesión
  * como lista hasta que **todas** las vistas existen y están pobladas.
+ *
+ * Vistas comun (`av_actividades`, `xa_tipo_tarifa`) se leen en `comun_select` (réplica).
+ * Vistas exterior sv-e (`d_asistentes_*`, `d_cargos_activ_dl`) se leen en `sv-e_select`.
+ * Fuera de docker {@see DBView} refresca primario y réplica; en monolito docker basta una BD.
  */
 final class RefreshCrStgrMaterializedViews
 {
@@ -47,6 +52,8 @@ final class RefreshCrStgrMaterializedViews
         'xa_tipo_tarifa',
     ];
 
+    private bool $progressOverlayEmitted = false;
+
     public function executeIfNeeded(int|string $userSfsv, ?string $esquema, ?string $esquemav, ?string $esquemaf): void
     {
         if (ConfigGlobal::mi_region() !== ConfigGlobal::mi_delef()) {
@@ -78,12 +85,14 @@ final class RefreshCrStgrMaterializedViews
         $_SESSION['Refresh'] = 'in_progress';
         unset($_SESSION['Refresh_error']);
 
+        $this->progressOverlayEmitted = self::shouldEmitProgressOverlay();
+        if ($this->progressOverlayEmitted) {
+            self::emitProgressOverlayStart();
+        }
+
         try {
             if ($esquema !== null && $esquema !== '') {
-                $oMatView = new DBView($esquema, null, 'comun_select');
-                foreach (self::COMUN_SELECT_VIEWS as $view) {
-                    $this->ensureMaterializedView($oMatView, $view, true);
-                }
+                $this->refreshComunRegionViews($esquema);
             }
 
             $oMatView = new DBView($schema_vf, $userSfsvInt, 'interior');
@@ -91,10 +100,7 @@ final class RefreshCrStgrMaterializedViews
                 $this->ensureMaterializedView($oMatView, $view, false);
             }
 
-            $oMatView = new DBView($schema_vf, $userSfsvInt, 'exterior_select');
-            foreach (self::EXTERIOR_SELECT_VIEWS as $view) {
-                $this->ensureMaterializedView($oMatView, $view, false);
-            }
+            $this->refreshExteriorRegionViews($schema_vf, $userSfsvInt);
 
             if (!$this->allViewsReady($schema_vf, $esquema, $userSfsvInt)) {
                 throw new PDOException(_('Tras el refresh siguen faltando vistas materializadas por poblar.'));
@@ -102,8 +108,16 @@ final class RefreshCrStgrMaterializedViews
 
             $_SESSION['Refresh'] = 'ok';
             unset($_SESSION['Refresh_error']);
+
+            if ($this->progressOverlayEmitted) {
+                self::redirectAfterRefresh();
+            }
         } catch (PDOException $e) {
-            $this->reportRefreshFailure($e);
+            if ($this->progressOverlayEmitted) {
+                $this->reportRefreshFailureOnOverlay($e);
+            } else {
+                $this->reportRefreshFailure($e);
+            }
         } finally {
             if ($previousLimit !== false && $previousLimit !== '') {
                 set_time_limit((int) $previousLimit);
@@ -159,6 +173,150 @@ final class RefreshCrStgrMaterializedViews
         }
 
         return str_contains($uri, '/src/');
+    }
+
+    /**
+     * Pantalla de espera en login / index (petición HTML completa, no AJAX).
+     */
+    private static function shouldEmitProgressOverlay(): bool
+    {
+        if (self::isSrcJsonRequest() || self::isAjaxRequest() || headers_sent()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static function isAjaxRequest(): bool
+    {
+        $requestedWith = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
+
+        return is_string($requestedWith) && strtolower($requestedWith) === 'xmlhttprequest';
+    }
+
+    public static function emitProgressOverlayStart(): void
+    {
+        if (headers_sent()) {
+            return;
+        }
+
+        header('Content-Type: text/html; charset=UTF-8');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+
+        $titulo = htmlspecialchars(_('Orbix'), ENT_QUOTES, 'UTF-8');
+        $mensaje = htmlspecialchars(_('Actualizando vistas materializadas…'), ENT_QUOTES, 'UTF-8');
+
+        echo '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>'
+            . $titulo
+            . '</title><style>'
+            . 'html,body{height:100%;margin:0;font-family:Arial,sans-serif;background:#eceeee;}'
+            . '.refresh-mv-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(236,238,238,.92);z-index:99999;}'
+            . '.refresh-mv-panel{text-align:center;padding:2rem 2.5rem;border:1px solid #42464b;border-radius:8px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.12);max-width:28rem;}'
+            . '.refresh-mv-spinner{width:40px;height:40px;margin:0 auto 1rem;border:4px solid #d0d5d8;border-top-color:#37a69b;border-radius:50%;animation:refresh-mv-spin .9s linear infinite;}'
+            . '@keyframes refresh-mv-spin{to{transform:rotate(360deg);}}'
+            . '.refresh-mv-panel p{margin:0;color:#42464b;font-size:1.05rem;line-height:1.4;}'
+            . '.refresh-mv-error{margin-top:1rem;padding:.75em 1em;border:2px solid #c0392b;background:#fdecea;color:#922b21;text-align:left;}'
+            . '</style></head><body>'
+            . '<div id="refresh-mv-overlay" class="refresh-mv-overlay" role="status" aria-live="polite">'
+            . '<div class="refresh-mv-panel"><div class="refresh-mv-spinner" aria-hidden="true"></div>'
+            . '<p>' . $mensaje . '</p></div></div>';
+
+        echo str_repeat(' ', 2048);
+
+        while (ob_get_level() > 0) {
+            ob_end_flush();
+        }
+        flush();
+    }
+
+    /**
+     * Tras el refresh en login, recarga la misma URL por GET (sin repetir el POST).
+     */
+    private static function redirectAfterRefresh(): never
+    {
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+            $_SESSION['Refresh_continue_primera'] = 1;
+        }
+
+        header('Location: ' . self::redirectUriAfterRefresh(), true, 303);
+        exit;
+    }
+
+    private static function redirectUriAfterRefresh(): string
+    {
+        $uri = $_SERVER['REQUEST_URI'] ?? '/index.php';
+        if (!is_string($uri) || $uri === '') {
+            return '/index.php';
+        }
+
+        $path = parse_url($uri, PHP_URL_PATH);
+        if (!is_string($path) || $path === '') {
+            $path = '/index.php';
+        }
+
+        $query = parse_url($uri, PHP_URL_QUERY);
+
+        return $path . ($query !== null && $query !== '' ? '?' . $query : '');
+    }
+
+    private function reportRefreshFailureOnOverlay(PDOException $e): never
+    {
+        $message = _('No puedo refrescar las vistas') . ': ' . $e->getMessage();
+        error_log('[RefreshCrStgrMaterializedViews] ' . $message);
+        $_SESSION['Refresh_error'] = $message;
+        $_SESSION['Refresh'] = 'error';
+
+        $titulo = htmlspecialchars(_('Actualización de datos de región'), ENT_QUOTES, 'UTF-8');
+        $detalle = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+
+        echo '<script>document.querySelector(".refresh-mv-spinner")?.remove();</script>'
+            . '<div class="refresh-mv-error" role="alert"><strong>' . $titulo . ':</strong> '
+            . $detalle . '</div></body></html>';
+        exit;
+    }
+
+    private function refreshComunRegionViews(string $esquema): void
+    {
+        foreach ($this->comunRefreshTargets() as $db) {
+            $oMatView = new DBView($esquema, null, $db);
+            foreach (self::COMUN_SELECT_VIEWS as $view) {
+                $this->ensureMaterializedView($oMatView, $view, true);
+            }
+        }
+    }
+
+    private function refreshExteriorRegionViews(string $schemaVf, int $userSfsv): void
+    {
+        foreach ($this->exteriorRefreshTargets($userSfsv) as $db) {
+            $oMatView = new DBView($schemaVf, $userSfsv, $db);
+            foreach (self::EXTERIOR_SELECT_VIEWS as $view) {
+                $this->ensureMaterializedView($oMatView, $view, false);
+            }
+        }
+    }
+
+    /**
+     * @return list<'exterior'|'exterior_select'>
+     */
+    private function exteriorRefreshTargets(int $userSfsv): array
+    {
+        if ($userSfsv === 1 && ReplicaSelectPolicy::incluirSelect()) {
+            return ['exterior', 'exterior_select'];
+        }
+
+        return ['exterior_select'];
+    }
+
+    /**
+     * @return list<'comun'|'comun_select'>
+     */
+    private function comunRefreshTargets(): array
+    {
+        if (ReplicaSelectPolicy::incluirSelect()) {
+            return ['comun', 'comun_select'];
+        }
+
+        return ['comun_select'];
     }
 
     private function ensureMaterializedView(DBView $oMatView, string $view, bool $comun): void

@@ -173,4 +173,7 @@ if (!isset($_SESSION['session_auth'])) {
 if (!isset($_SESSION['session_go_to'])) {
     $_SESSION['session_go_to'] = 'a';
     $primera = 1;
+} elseif (!empty($_SESSION['Refresh_continue_primera'])) {
+    $primera = 1;
+    unset($_SESSION['Refresh_continue_primera']);
 }

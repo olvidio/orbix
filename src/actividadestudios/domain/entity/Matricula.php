@@ -272,6 +272,6 @@ class Matricula
 
     public function setId_dl(?int $id_dl = null): void
     {
-        $this->id_dl = $id_dl;
+        $this->id_dl = ($id_dl !== null && $id_dl <= 0) ? null : $id_dl;
     }
 }

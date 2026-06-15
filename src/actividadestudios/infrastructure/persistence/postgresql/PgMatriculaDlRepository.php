@@ -42,13 +42,40 @@ class PgMatriculaDlRepository extends PgMatriculaRepository implements Matricula
         $this->setNomTabla('d_matriculas_activ_dl');
     }
 
+    public function Eliminar(Matricula $Matricula): bool
+    {
+        if (!$this->isRegionStgrSession()) {
+            return parent::Eliminar($Matricula);
+        }
+
+        $schema = $this->resolveSchemaForMatricula($Matricula);
+        if ($schema === null) {
+            error_log(sprintf(
+                '[PgMatriculaDlRepository] No se borra matrícula id_activ=%d id_asignatura=%d id_nom=%d: sin esquema DL',
+                $Matricula->getId_activ(),
+                $Matricula->getIdAsignaturaVo()->value(),
+                $Matricula->getId_nom(),
+            ));
+
+            return false;
+        }
+
+        $id_activ = $Matricula->getId_activ();
+        $id_asignatura = $Matricula->getIdAsignaturaVo()->value();
+        $id_nom = $Matricula->getId_nom();
+        $oDbl = $this->writePdoForSchema($schema);
+        $sql = "DELETE FROM d_matriculas_activ_dl WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
+
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+    }
+
     protected function getNomTablaForWrite(Matricula $Matricula): string
     {
         if (!$this->isRegionStgrSession()) {
             return $this->getNomTabla();
         }
 
-        $this->resolveDlSchema($Matricula);
+        $this->requireSchemaForMatricula($Matricula);
 
         return 'd_matriculas_activ_dl';
     }
@@ -59,23 +86,37 @@ class PgMatriculaDlRepository extends PgMatriculaRepository implements Matricula
             return $this->getoDbl();
         }
 
-        $schema = $this->resolveDlSchema($Matricula);
+        $schema = $this->requireSchemaForMatricula($Matricula);
 
         return $this->writePdoForSchema($schema);
     }
 
-    private function resolveDlSchema(Matricula $Matricula): string
+    private function requireSchemaForMatricula(Matricula $Matricula): string
     {
-        $idDl = $Matricula->getId_dl();
-        if ($idDl === null) {
+        $schema = $this->resolveSchemaForMatricula($Matricula);
+        if ($schema === null) {
             throw new RuntimeException(_('Falta id_dl para modificar la matrícula en esquema región STGR.'));
         }
 
-        return $this->schemaFromIdDl($idDl);
+        return $schema;
     }
 
-    private function schemaFromIdDl(int $idDl): string
+    private function resolveSchemaForMatricula(Matricula $Matricula): ?string
     {
+        $idDl = $Matricula->getId_dl();
+        if ($idDl !== null && $idDl > 0) {
+            return $this->schemaFromIdDl($idDl);
+        }
+
+        return $this->resolveSchemaFromIdNom($Matricula->getId_nom());
+    }
+
+    private function schemaFromIdDl(int $idDl): ?string
+    {
+        if ($idDl <= 0) {
+            return null;
+        }
+
         if (isset($this->schemaByIdDl[$idDl])) {
             return $this->schemaByIdDl[$idDl];
         }
@@ -85,13 +126,54 @@ class PgMatriculaDlRepository extends PgMatriculaRepository implements Matricula
             ConfigGlobal::mi_sfsv(),
         );
         if (!isset($schemas[$idDl])) {
-            throw new RuntimeException(sprintf(_('No encuentro esquema para id_dl %s'), (string) $idDl));
+            return null;
         }
 
         $schema = (string) $schemas[$idDl];
         $this->schemaByIdDl[$idDl] = $schema;
 
         return $schema;
+    }
+
+    private function resolveSchemaFromIdNom(int $idNom): ?string
+    {
+        if ($idNom === 0) {
+            return null;
+        }
+
+        $oDbl = $this->getoDbl();
+        $sql = 'SELECT dl FROM personas_dl WHERE id_nom = :id_nom LIMIT 1';
+        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false || !$this->PdoExecute($stmt, ['id_nom' => $idNom], __METHOD__, __FILE__, __LINE__)) {
+            return null;
+        }
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($row) || !isset($row['dl'])) {
+            return null;
+        }
+
+        $dlPersona = (string) $row['dl'];
+        if ($dlPersona === '') {
+            return null;
+        }
+
+        $schemas = $this->delegacionRepository->getArraySchemasRegionStgr(
+            ConfigGlobal::mi_region(),
+            ConfigGlobal::mi_sfsv(),
+        );
+        foreach ($schemas as $schema) {
+            $schemaName = (string) $schema;
+            $parts = explode('-', $schemaName, 2);
+            if (count($parts) < 2) {
+                continue;
+            }
+            if ($parts[1] === $dlPersona) {
+                return $schemaName;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -103,19 +185,25 @@ class PgMatriculaDlRepository extends PgMatriculaRepository implements Matricula
             return parent::eliminarFilaRaw($normalized);
         }
 
-        if (!isset($normalized['id_activ'], $normalized['id_asignatura'], $normalized['id_nom'], $normalized['id_dl'])) {
+        if (!isset($normalized['id_activ'], $normalized['id_asignatura'], $normalized['id_nom'])) {
             return false;
         }
 
-        $idDl = (int) $normalized['id_dl'];
-        if ($idDl <= 0) {
+        $schema = null;
+        $idDl = isset($normalized['id_dl']) ? (int) $normalized['id_dl'] : 0;
+        if ($idDl > 0) {
+            $schema = $this->schemaFromIdDl($idDl);
+        }
+        if ($schema === null) {
+            $schema = $this->resolveSchemaFromIdNom((int) $normalized['id_nom']);
+        }
+        if ($schema === null) {
             return false;
         }
 
         $id_activ = (int) $normalized['id_activ'];
         $id_asignatura = (int) $normalized['id_asignatura'];
         $id_nom = (int) $normalized['id_nom'];
-        $schema = $this->schemaFromIdDl($idDl);
         $oDbl = $this->writePdoForSchema($schema);
         $sql = "DELETE FROM d_matriculas_activ_dl WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
 

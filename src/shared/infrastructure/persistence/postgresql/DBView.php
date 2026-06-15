@@ -4,6 +4,7 @@ namespace src\shared\infrastructure\persistence\postgresql;
 
 use PDO;
 use src\shared\config\ConfigGlobal;
+use src\shared\config\ReplicaSelectPolicy;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
@@ -30,6 +31,7 @@ class DBView
 
         $oConfigDB = new ConfigDB('importar');
         $config = null;
+        $replicaSelect = false;
         switch ($db) {
             case 'interior':
                 if ($mi_sfsv === 1) {
@@ -49,20 +51,35 @@ class DBView
                 $config = $oConfigDB->getEsquema('public');
                 break;
             case 'exterior_select':
+                // Lecturas vía oDBE_Select → sv-e_select; fuera de docker hay que refrescar la réplica.
                 if ($mi_sfsv === 1) {
-                    $config = $oConfigDB->getEsquema('publicv-e');
+                    if (ReplicaSelectPolicy::incluirSelect()) {
+                        $config = $oConfigDB->getConexionImportarReplica('publicv-e_select');
+                        $replicaSelect = true;
+                    } else {
+                        $config = $oConfigDB->getEsquema('publicv-e');
+                    }
                 } elseif ($mi_sfsv === 2) {
                     $config = $oConfigDB->getEsquema('publicf');
                 }
                 break;
             case 'comun_select':
-                $config = $oConfigDB->getEsquema('public');
+                // Lecturas vía oDBC_Select → comun_select; fuera de docker hay que refrescar la réplica.
+                if (ReplicaSelectPolicy::incluirSelect()) {
+                    $config = $oConfigDB->getConexionImportarReplica('public_select');
+                    $replicaSelect = true;
+                } else {
+                    $config = $oConfigDB->getEsquema('public');
+                }
                 break;
         }
         if ($config === null) {
             throw new \InvalidArgumentException(sprintf(_('Conexión DBView no válida: %s'), $db));
         }
         $oConexion = new DBConnection($config);
+        if ($replicaSelect) {
+            $oConexion->setEsquema($schema);
+        }
         $oDbl = $oConexion->getPDO();
 
         $this->setoDbl($oDbl);
