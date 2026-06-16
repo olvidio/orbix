@@ -41,6 +41,10 @@ final class SacdFichaAjaxHashes
      */
     public static function desplegableFiltroSacd(string $seleccionado): Desplegable
     {
+        if ($seleccionado === '') {
+            $seleccionado = 'n';
+        }
+
         $oDespl = new Desplegable();
         $oDespl->setNombre('filtro_sacd');
         $oDespl->setBlanco(false);

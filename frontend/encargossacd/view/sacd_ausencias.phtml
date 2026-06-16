@@ -25,6 +25,8 @@ fnjs_horario=function(id_enc){
 	var parametros='filtro_sacd='+filtro_sacd+'&id_enc='+id_enc+'&id_nom='+id_nom+'<?= $h_horario ?>';
     fnjs_ajax_json_html({ url: url, data: parametros, target: '#ficha' });
 }
+
+fnjs_lista_sacd();
 </script>
 
 <table>
