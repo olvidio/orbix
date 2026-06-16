@@ -25,6 +25,14 @@ require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
+
+$Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
+$Qyear = (int)filter_input(INPUT_POST, 'year');
+$Qtrimestre = (int)filter_input(INPUT_POST, 'trimestre');
+$Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
+$Qactividad = (string)filter_input(INPUT_POST, 'actividad');
+$Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
+
 list_nav_boot_recordar($oPosicion);
 list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros([
     'modelo' => $Qmodelo,
@@ -35,13 +43,6 @@ list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return
     'propuesta' => $Qpropuesta,
 ], list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
 
-
-$Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
-$Qyear = (int)filter_input(INPUT_POST, 'year');
-$Qtrimestre = (int)filter_input(INPUT_POST, 'trimestre');
-$Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
-$Qactividad = (string)filter_input(INPUT_POST, 'actividad');
-$Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
 
 $oPosicion->setParametros([
     'modelo' => $Qmodelo,

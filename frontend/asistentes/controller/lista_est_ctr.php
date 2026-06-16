@@ -10,6 +10,14 @@ require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 /** @var \frontend\shared\web\Posicion $oPosicion */
+
+$Qn_agd = (string)filter_input(INPUT_POST, 'n_agd');
+$Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+
 list_nav_boot_recordar($oPosicion);
 list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros([
     'n_agd' => $Qn_agd,
@@ -20,13 +28,6 @@ list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return
     'empiezamin' => $Qempiezamin,
 ], list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
 
-
-$Qn_agd = (string)filter_input(INPUT_POST, 'n_agd');
-$Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
-$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)filter_input(INPUT_POST, 'year');
-$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 
 $oPosicion->setParametros([
     'n_agd' => $Qn_agd,

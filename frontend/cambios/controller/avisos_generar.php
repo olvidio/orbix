@@ -17,12 +17,6 @@ require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros([
-    'id_usuario' => $Qid_usuario,
-    'aviso_tipo' => $Qaviso_tipo,
-], list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
-
 $QGstack = (int)filter_input(INPUT_POST, 'Gstack');
 
 $is_admin = cambios_is_admin();
@@ -40,6 +34,12 @@ if ($is_admin) {
     $Qid_usuario = 0;
     $Qaviso_tipo = 0;
 }
+
+list_nav_boot_recordar($oPosicion, $Qrefresh);
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros([
+    'id_usuario' => $Qid_usuario,
+    'aviso_tipo' => $Qaviso_tipo,
+], list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
 
 $data = AvisosGenerarListaRender::enrich(cambios_post_data(PostRequest::getDataFromUrl('/src/cambios/avisos_generar_lista_data', [
     'id_usuario' => $Qid_usuario,
