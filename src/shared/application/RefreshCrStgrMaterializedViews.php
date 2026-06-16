@@ -52,6 +52,44 @@ final class RefreshCrStgrMaterializedViews
         'xa_tipo_tarifa',
     ];
 
+    /**
+     * ¿Este esquema de login requiere refresh de MVs región STGR (H-Hv, M-Mv, …)?
+     *
+     * Misma regla que {@see executeIfNeeded}: `mi_region() === mi_delef()`.
+     * Esquemas DL (H-dlpv, H-dlbv, …) devuelven false.
+     *
+     * @param string $ubicacion Valor de entorno `UBICACION` (`sv` / `sf`).
+     */
+    public static function esquemaRequiereRefreshMv(string $esquema, string $ubicacion = 'sv'): bool
+    {
+        if ($esquema === '') {
+            return false;
+        }
+
+        $parts = explode('-', $esquema, 2);
+        if (count($parts) < 2 || $parts[1] === '') {
+            return false;
+        }
+
+        $region = $parts[0];
+        $seg = $parts[1];
+        $last = substr($seg, -1);
+        if ($last !== 'v' && $last !== 'f') {
+            return false;
+        }
+
+        $dl = substr($seg, 0, -1);
+        if ($dl === 'cr') {
+            $dl .= $region;
+        }
+
+        if ($ubicacion === 'sf') {
+            $dl .= 'f';
+        }
+
+        return $region === $dl;
+    }
+
     private bool $progressOverlayEmitted = false;
 
     public function executeIfNeeded(int|string $userSfsv, ?string $esquema, ?string $esquemav, ?string $esquemaf): void
