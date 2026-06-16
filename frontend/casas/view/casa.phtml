@@ -50,6 +50,11 @@
     };
 
     fnjs_ver = function () {
+        var $mas = $('#id_cdc_mas');
+        var num = parseInt($('#id_cdc_num').val() || '0', 10);
+        if ($mas.length && $mas.val() && num === 0) {
+            $mas.trigger('change');
+        }
         var pata = $('#seleccion').serialize();
         fnjs_ajax_json_html({ url: '<?= $url_ajax ?>', data: pata, target: '#exportar' });
     };

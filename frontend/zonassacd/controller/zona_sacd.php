@@ -24,8 +24,8 @@ $oHashSacd->setUrl($url_ajax_lista);
 $oHashSacd->setCamposForm('id_zona');
 $h_sacd = $oHashSacd->linkSinValParams();
 
-$url_zona_sacd_get = '/src/misas/zona_sacd_datos_get';
-$url_zona_sacd_put = '/src/misas/zona_sacd_datos_put';
+$url_zona_sacd_get = 'frontend/zonassacd/controller/zona_sacd_datos_get_ajax.php';
+$url_zona_sacd_put = 'frontend/zonassacd/controller/zona_sacd_datos_put_ajax.php';
 
 $oHashUrlGet = new HashFront();
 $oHashUrlGet->setUrl($url_zona_sacd_get);

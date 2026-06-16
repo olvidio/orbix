@@ -48,15 +48,30 @@ $i18n = [
 ?>
 <style type="text/css">
     div.orden {
-        background-attachment: scroll;
-        background-color: wheat;
-        background-image: none;
-        background-position: 0 0;
-        background-repeat: repeat;
-        display: inline;
+        display: inline-block;
         float: left;
         position: absolute;
-        z-index: 10;
+        z-index: 11;
+        min-width: 9em;
+        background-color: #e8ecf2;
+        border: 2px solid #5c6b7a;
+        border-radius: 4px;
+        box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.35);
+        padding: 0.45em 0.55em;
+    }
+    div.orden p.tres {
+        margin: 0.2em 0;
+        padding: 0.35em 0.5em;
+        cursor: pointer;
+        background-color: #f4f7fb;
+        border: 1px solid #b8c0ca;
+        border-radius: 3px;
+        white-space: nowrap;
+    }
+    div.orden p.tres:hover {
+        background-color: #5c6b7a;
+        color: #fff;
+        border-color: #5c6b7a;
     }
     div.sacd {
         display: inline;
@@ -64,21 +79,32 @@ $i18n = [
         height: 60%;
         position: absolute;
         z-index: 10;
-        overflow: scroll;
+        overflow: auto;
         width: 25em;
+        max-height: 60vh;
         bottom: 3em;
         right: 10em;
-        background-color: darkgray;
+        background-color: #e8ecf2;
+        border: 2px solid #5c6b7a;
+        border-radius: 4px;
+        box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.35);
+        padding: 0.35em;
     }
     div.sacd table {
         width: 100%;
-        background-color: wheat;
+        background-color: #f4f7fb;
+        border-collapse: collapse;
+        border: 1px solid #8a96a3;
+    }
+    div.sacd td {
+        border: 1px solid #b8c0ca;
+        padding: 0.2em 0.35em;
     }
     div.sacd td.cabecera {
         text-align: center;
-    }
-    p.tres:hover {
-        background-color: black;
+        font-weight: bold;
+        background-color: #d4dbe4;
+        border-bottom: 2px solid #5c6b7a;
     }
 </style>
 <script>

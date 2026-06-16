@@ -98,6 +98,7 @@ $web = AppUrlConfig::getPublicAppBaseUrl();
 // Solo nombres que realmente envía `#seleccion` (serialize): no hay `que`, `tipo_lista` ni radios `cdc_sel`
 // en esta vista (solo DesplegableArray `id_cdc[*]` + periodo/year/fechas + hidden del hash).
 $sCamposForm = 'id_cdc!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!year';
+$aCamposHidden = [];
 
 switch ($Qtipo_lista) {
     case 'lista_activ':
@@ -107,7 +108,11 @@ switch ($Qtipo_lista) {
     case 'ctrsEncargados':
         $Qver_ctr = (string)filter_input(INPUT_POST, 'ver_ctr');
         $url_ajax = $web . '/frontend/actividades/controller/calendario_listas.php?que=lista_cdc&ver_ctr=' . urlencode($Qver_ctr);
-        $sCamposForm .= '!periodo!ver_ctr';
+        $sCamposForm .= '!periodo';
+        $aCamposHidden = [
+            'que' => 'lista_cdc',
+            'ver_ctr' => $Qver_ctr,
+        ];
         break;
     case 'datosEcGastos':
         $url_ajax = $web . '/frontend/casas/controller/casa_ec_gastos_lista.php';
@@ -119,6 +124,11 @@ switch ($Qtipo_lista) {
 
 $oHash = new HashFront();
 $oHash->setCamposForm($sCamposForm);
+// id_cdc[n] es dinámico (DesplegableArray): no puede fijar el hash del formulario.
+$oHash->setCamposNo('id_cdc');
+if ($aCamposHidden !== []) {
+    $oHash->setArrayCamposHidden($aCamposHidden);
+}
 
 $oHashForm = new HashFront();
 $oHashForm->setUrl($web . '/frontend/casas/controller/casa_ingreso_form.php');

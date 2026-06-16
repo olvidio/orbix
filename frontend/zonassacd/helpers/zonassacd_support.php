@@ -38,3 +38,18 @@ function zonassacd_lista_from_payload(array $payload): array
         'a_valores' => actividades_lista_datos($payload['a_valores'] ?? null),
     ];
 }
+
+/**
+ * @param array<int|string, mixed> $payload
+ * @return array{
+ *     a_cabeceras: list<array<string, mixed>|string>,
+ *     a_valores: array<int|string, mixed>,
+ * }
+ */
+function zonassacd_lista_tot_from_payload(array $payload): array
+{
+    return [
+        'a_cabeceras' => actividades_lista_cabeceras($payload['a_cabeceras'] ?? null),
+        'a_valores' => actividades_lista_datos($payload['a_valores'] ?? null),
+    ];
+}
