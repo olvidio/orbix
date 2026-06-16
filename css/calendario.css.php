@@ -237,6 +237,12 @@ td.proyectof  {
      	color: var(--planning-mes-text);
     }
 
+    /* Contenedor con scroll propio: margen a la derecha y abajo para ver las barras */
+    #exportar.planning-viewport {
+     	overflow: auto;
+     	box-sizing: border-box;
+    }
+
     A.link  {
      	color : navy;
      	text-decoration : none;

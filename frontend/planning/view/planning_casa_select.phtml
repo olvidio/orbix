@@ -34,11 +34,25 @@ use frontend\shared\config\AppUrlConfig;
         document.getElementById("overlay").style.display = "none";
     }
 
+    fnjs_planning_ajustar_viewport = function () {
+        var exportar = document.getElementById('exportar');
+        if (!exportar) {
+            return;
+        }
+        var marginRight = 20;
+        var marginBottom = 20;
+        var rect = exportar.getBoundingClientRect();
+        exportar.style.overflow = 'auto';
+        exportar.style.width = Math.max(window.innerWidth - rect.left - marginRight, 200) + 'px';
+        exportar.style.height = Math.max(window.innerHeight - rect.top - marginBottom, 200) + 'px';
+    }
+
     fnjs_ver = function () {
         var url = '<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/planning/controller/planning_casa_ver.php';
         var parametros = "<?= $param_ver ?>";
 
         $('#ficha').html('');
+        $(window).off('resize.planningCasaVer');
         $.ajax({
             url: url,
             type: 'post',
@@ -46,6 +60,8 @@ use frontend\shared\config\AppUrlConfig;
             complete: function (respuesta) {
                 var html = fnjs_extract_html_from_ajax_body(respuesta.responseText || '');
                 $('#ficha').html(html);
+                fnjs_planning_ajustar_viewport();
+                $(window).on('resize.planningCasaVer', fnjs_planning_ajustar_viewport);
                 document.getElementById("overlay").style.display = "none";
             },
             error: function () {
