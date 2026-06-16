@@ -147,6 +147,8 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         $aDatos = $ActividadPlazas->toArrayForDatabase([
             'cedidas' => fn($v) => (new ConverterJson($ActividadPlazas->getArrayCedidas(), false))->toPg(false),
         ]);
+        // id_dl es columna de da_plazas/da_plazas_dl; Hydratable::toArrayForDatabase() la omite.
+        $aDatos['id_dl'] = $ActividadPlazas->getId_dl();
 
         /*
         $aDatos = [];
