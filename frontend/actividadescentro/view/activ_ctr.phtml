@@ -37,10 +37,25 @@ $i18n = [
 ];
 ?>
 <style>
-    div.orden {
+    .activ_ctr_popup_anchor {
+        position: relative;
         display: inline-block;
-        float: left;
+        vertical-align: top;
+    }
+    td.activ_ctr_popup_cell {
+        position: relative;
+        vertical-align: top;
+        overflow: visible;
+    }
+    #exportar table {
+        overflow: visible;
+    }
+    div.orden {
+        display: block;
         position: absolute;
+        top: 0;
+        left: 100%;
+        margin-left: 0.25em;
         z-index: 11;
         min-width: 9em;
         background-color: #e8ecf2;
@@ -64,14 +79,15 @@ $i18n = [
         border-color: #5c6b7a;
     }
     div.ctr {
-        display: inline;
-        float: left;
-        height: 60%;
+        display: block;
         position: absolute;
+        top: 0;
+        left: 100%;
+        margin-left: 0.35em;
         z-index: 10;
         overflow: auto;
         width: 17em;
-        max-height: 60vh;
+        max-height: 20em;
         background-color: #e8ecf2;
         border: 2px solid #5c6b7a;
         border-radius: 4px;
@@ -93,6 +109,12 @@ $i18n = [
         font-weight: bold;
         background-color: #d4dbe4;
         border-bottom: 2px solid #5c6b7a;
+    }
+    #exportar tr.activ_ctr_popup_row td {
+        background-color: #fff9d6 !important;
+    }
+    #exportar tr.activ_ctr_popup_row td:first-child {
+        box-shadow: inset 4px 0 0 #c9a800;
     }
 </style>
 <script>
@@ -166,7 +188,7 @@ $i18n = [
         html += '<tr>';
         html += '<td>' + fnjs_esc(I18N.actividad) + '</td>';
         html += '<td>' + fnjs_esc(I18N.ctr_encargados) + '</td>';
-        html += '<td id="lst_ctr"></td>';
+        html += '<td>' + fnjs_esc(I18N.nuevo) + '</td>';
         html += '<td></td>';
         html += '</tr>';
         var filas = data.filas || [];
@@ -215,10 +237,26 @@ $i18n = [
         return txt;
     };
 
+    fnjs_marcar_fila_popup = function ($row) {
+        $('#exportar tr.activ_ctr_popup_row').removeClass('activ_ctr_popup_row selected_row');
+        if ($row && $row.length) {
+            $row.addClass('activ_ctr_popup_row selected_row');
+        }
+    };
+
+    fnjs_cerrar = function () {
+        $('#div_ctr, #div_orden').remove();
+        $('#exportar tr.activ_ctr_popup_row').removeClass('activ_ctr_popup_row selected_row');
+    };
+
     // ------------------------------------------------------- NUEVO: candidatos
     fnjs_nuevo_ctr = function (evt, id_activ, f_ini, f_fin) {
         evt.preventDefault();
         evt.stopPropagation();
+        var $anchor = $(evt.currentTarget).closest('td');
+        if (!$anchor.length) {
+            $anchor = $('#' + id_activ).children('td').eq(2);
+        }
         $.ajax({
             url: URL_DISPONIBLES,
             type: 'post',
@@ -233,9 +271,11 @@ $i18n = [
         }).done(function (rta) {
             var data = fnjs_parse_rta(rta);
             if (data === null) { return; }
-            if ($('#div_ctr').length) { $('#div_ctr').remove(); }
+            fnjs_cerrar();
             var html = '<div id="div_ctr" class="ctr">' + fnjs_construir_tabla_disponibles(data) + '</div>';
-            $('#lst_ctr').append(html);
+            $anchor.addClass('activ_ctr_popup_cell');
+            $anchor.append(html);
+            fnjs_marcar_fila_popup($('#' + id_activ));
         }).fail(function () {
             alert(I18N.err_comunicacion);
         });
@@ -287,7 +327,7 @@ $i18n = [
 
     // ------------------------------------------------------- ORDEN / BORRAR
     fnjs_cambiar_ctr = function (evt, id_activ, id_ubi) {
-        if ($('#div_orden').length) { $('#div_orden').remove(); }
+        fnjs_cerrar();
         if (id_activ && id_ubi) {
             var onMas = 'fnjs_reordenar(' + id_activ + ',' + id_ubi + ",'mas')";
             var onMenos = 'fnjs_reordenar(' + id_activ + ',' + id_ubi + ",'menos')";
@@ -297,7 +337,10 @@ $i18n = [
                 + '<p class="tres" onclick="' + fnjs_esc(onMenos) + '">' + fnjs_esc(I18N.menos_prioridad) + '</p>'
                 + '<p class="tres" onclick="' + fnjs_esc(onBorrar) + '">' + fnjs_esc(I18N.borrar) + '</p>'
                 + '</div>';
-            $('#' + id_activ + '_' + id_ubi).append(html);
+            var $anchor = $('#' + id_activ + '_' + id_ubi);
+            $anchor.addClass('activ_ctr_popup_anchor');
+            $anchor.append(html);
+            fnjs_marcar_fila_popup($('#' + id_activ));
         }
         evt.preventDefault();
         evt.stopPropagation();
@@ -354,11 +397,6 @@ $i18n = [
         }).fail(function () {
             alert(I18N.err_comunicacion);
         });
-    };
-
-    fnjs_cerrar = function () {
-        if ($('#div_ctr').length) { $('#div_ctr').remove(); }
-        if ($('#div_orden').length) { $('#div_orden').remove(); }
     };
 
     $(document).ready(function () {

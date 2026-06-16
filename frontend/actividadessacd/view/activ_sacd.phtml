@@ -47,10 +47,25 @@ $i18n = [
 ];
 ?>
 <style type="text/css">
-    div.orden {
+    .activ_sacd_popup_anchor {
+        position: relative;
         display: inline-block;
-        float: left;
+        vertical-align: top;
+    }
+    td.activ_sacd_popup_cell {
+        position: relative;
+        vertical-align: top;
+        overflow: visible;
+    }
+    #exportar table {
+        overflow: visible;
+    }
+    div.orden {
+        display: block;
         position: absolute;
+        top: 0;
+        left: 100%;
+        margin-left: 0.25em;
         z-index: 11;
         min-width: 9em;
         background-color: #e8ecf2;
@@ -74,16 +89,15 @@ $i18n = [
         border-color: #5c6b7a;
     }
     div.sacd {
-        display: inline;
-        float: left;
-        height: 60%;
+        display: block;
         position: absolute;
+        top: 0;
+        left: 100%;
+        margin-left: 0.35em;
         z-index: 10;
         overflow: auto;
         width: 25em;
-        max-height: 60vh;
-        bottom: 3em;
-        right: 10em;
+        max-height: 20em;
         background-color: #e8ecf2;
         border: 2px solid #5c6b7a;
         border-radius: 4px;
@@ -105,6 +119,12 @@ $i18n = [
         font-weight: bold;
         background-color: #d4dbe4;
         border-bottom: 2px solid #5c6b7a;
+    }
+    #exportar tr.activ_sacd_popup_row td {
+        background-color: #fff9d6 !important;
+    }
+    #exportar tr.activ_sacd_popup_row td:first-child {
+        box-shadow: inset 4px 0 0 #c9a800;
     }
 </style>
 <script>
@@ -182,7 +202,7 @@ $i18n = [
         html += '<tr>';
         html += '<td>' + fnjs_esc(I18N.actividad) + '</td>';
         html += '<td>' + fnjs_esc(I18N.sacd_encargados) + '</td>';
-        html += '<td id="lst_sacd"></td>';
+        html += '<td>' + fnjs_esc(I18N.nuevo) + '</td>';
         html += '<td></td>';
         html += '</tr>';
         var filas = data.filas || [];
@@ -272,10 +292,26 @@ $i18n = [
         return txt;
     };
 
+    fnjs_marcar_fila_popup = function ($row) {
+        $('#exportar tr.activ_sacd_popup_row').removeClass('activ_sacd_popup_row selected_row');
+        if ($row && $row.length) {
+            $row.addClass('activ_sacd_popup_row selected_row');
+        }
+    };
+
+    fnjs_cerrar = function () {
+        $('#div_sacd, #div_orden').remove();
+        $('#exportar tr.activ_sacd_popup_row').removeClass('activ_sacd_popup_row selected_row');
+    };
+
     // ------------------------------------------------------- NUEVO: candidatos
     fnjs_nuevo_sacd = function (evt, id_activ, f_ini, f_fin) {
         evt.preventDefault();
         evt.stopPropagation();
+        var $anchor = $(evt.currentTarget).closest('td');
+        if (!$anchor.length) {
+            $anchor = $('#' + id_activ).children('td').eq(2);
+        }
         var na = $('#sacd_na').prop('checked');
         var p = $('#sacd_p').prop('checked');
         var sss = $('#sacd_sss').prop('checked');
@@ -294,10 +330,12 @@ $i18n = [
         }).done(function (rta) {
             var data = fnjs_parse_rta(rta);
             if (data === null) { return; }
-            if ($('#div_sacd').length) { $('#div_sacd').remove(); }
+            fnjs_cerrar();
             var html = '<div id="div_sacd" class="sacd">'
                 + fnjs_construir_tabla_disponibles(data) + '</div>';
-            $('#lst_sacd').append(html);
+            $anchor.addClass('activ_sacd_popup_cell');
+            $anchor.append(html);
+            fnjs_marcar_fila_popup($('#' + id_activ));
         }).fail(function () {
             alert(I18N.err_comunicacion);
         });
@@ -348,7 +386,7 @@ $i18n = [
 
     // ------------------------------------------------------- ORDEN / BORRAR
     fnjs_cambiar_sacd = function (evt, id_activ, id_cargo, id_nom) {
-        if ($('#div_orden').length) { $('#div_orden').remove(); }
+        fnjs_cerrar();
         if (id_activ && id_nom) {
             var onMas = "fnjs_orden('" + id_activ + "','" + id_cargo + "','" + id_nom + "','mas')";
             var onMenos = "fnjs_orden('" + id_activ + "','" + id_cargo + "','" + id_nom + "','menos')";
@@ -358,7 +396,10 @@ $i18n = [
                 + '<p class="tres" onclick="' + fnjs_esc(onMenos) + '">' + fnjs_esc(I18N.menos_prioridad) + '</p>'
                 + '<p class="tres" onclick="' + fnjs_esc(onBorrar) + '">' + fnjs_esc(I18N.borrar) + '</p>'
                 + '</div>';
-            $('#' + id_activ + '_' + id_nom).append(html);
+            var $anchor = $('#' + id_activ + '_' + id_nom);
+            $anchor.addClass('activ_sacd_popup_anchor');
+            $anchor.append(html);
+            fnjs_marcar_fila_popup($('#' + id_activ));
         }
         evt.preventDefault();
         evt.stopPropagation();
@@ -414,11 +455,6 @@ $i18n = [
         }).fail(function () {
             alert(I18N.err_comunicacion);
         });
-    };
-
-    fnjs_cerrar = function () {
-        if ($('#div_sacd').length) { $('#div_sacd').remove(); }
-        if ($('#div_orden').length) { $('#div_orden').remove(); }
     };
 
     $(document).ready(function () {
