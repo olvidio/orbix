@@ -130,14 +130,12 @@ php libs/vendor/bin/phpunit --configuration phpunit.xml tests/unit/configuracion
 | Suite | Resultado |
 |-------|-----------|
 | PHPStan `src/configuracion/` | **0** errores |
-| Unit `tests/unit/configuracion/` | **47** tests, **1** fallo preexistente (`ConfigSnapshotTest::test_formatMissingParametersMessage_lists_all_missing` — colision de claves `null` en mapa valor=>etiqueta) |
+| Unit `tests/unit/configuracion/` | **47** tests, **0** fallos (API `formatMissingParametersMessage()` corregida: mapa `etiqueta => valor`) |
 
 ---
 
 ## Deuda futura (fuera de scope DI)
 
 - Extraer `ParametrosListaData` / `ParametrosUpdateAction` desde controllers inline.
-- Revisar API `ConfigSnapshot::formatMissingParametersMessage()` (mapa valor=>etiqueta
-  no soporta multiples parametros nulos por colision de clave `""` en PHP).
 - `PeriodoCalendarioEscolarData`: clave duplicada historica `mes_fin_crt` eliminada del
   payload JSON (solo se expone una vez).

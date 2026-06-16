@@ -33,19 +33,19 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
 {
     public function test_actividad_fases_completadas_datos_id_cero_devuelve_lista_vacia(): void
     {
-        $out = (new ActividadFasesCompletadasDatos())->ejecutar(0);
+        $out = DependencyResolver::get(ActividadFasesCompletadasDatos::class)->ejecutar(0);
         $this->assertSame(['fases_completadas' => []], $out);
     }
 
     public function test_actividad_fase_completada_datos_id_invalido_devuelve_false(): void
     {
-        $out = (new ActividadFaseCompletadaDatos())->ejecutar(0, 0);
+        $out = DependencyResolver::get(ActividadFaseCompletadaDatos::class)->ejecutar(0, 0);
         $this->assertSame(['completada' => false], $out);
     }
 
     public function test_actividad_ver_datos_sin_id_devuelve_payload_esperado(): void
     {
-        $out = (new ActividadVerDatos())->ejecutar([
+        $out = DependencyResolver::get(ActividadVerDatos::class)->ejecutar([
             'id_activ' => 0,
             'isfsv' => 1,
             'Bdl' => 't',
@@ -66,7 +66,7 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
 
     public function test_lista_sr_csv_listado_devuelve_estructura(): void
     {
-        $out = (new ListaSrCsvListado())->ejecutar([
+        $out = DependencyResolver::get(ListaSrCsvListado::class)->ejecutar([
             'periodo' => 'curso_ca',
             'year' => '',
             'dl_org' => '',
@@ -98,7 +98,7 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
         $this->assertSame($procesosInstalado, ConfigGlobal::is_app_installed('procesos'));
 
         try {
-            $out = (new ListaActividadesSgListado())->ejecutar([
+            $out = DependencyResolver::get(ListaActividadesSgListado::class)->ejecutar([
                 'continuar' => '',
                 'status' => 2,
                 'tipo_activ_sg' => 'crt',
@@ -137,7 +137,7 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
         $this->assertSame($procesosInstalado, ConfigGlobal::is_app_installed('procesos'));
 
         try {
-            $out = (new ActividadSelectListado())->ejecutar([
+            $out = DependencyResolver::get(ActividadSelectListado::class)->ejecutar([
                 'modo' => '',
                 'continuar' => '',
                 'status' => 2,
@@ -180,7 +180,7 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
     {
         $this->expectException(\RuntimeException::class);
 
-        ActividadNueva::actividadNueva([
+        DependencyResolver::get(ActividadNueva::class)->actividadNueva([
             'dl_org' => ConfigGlobal::mi_delef(),
             'publicado' => false,
             'id_tipo_activ' => '111111',
@@ -217,7 +217,7 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
 
         $idActiv = 0;
         try {
-            $idActiv = (int) ActividadNueva::actividadNueva([
+            $idActiv = (int) DependencyResolver::get(ActividadNueva::class)->actividadNueva([
                 'dl_org' => $dlOrg,
                 'publicado' => false,
                 'id_tipo_activ' => $idTipo,
@@ -270,7 +270,7 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
         $idActiv = 0;
 
         try {
-            $idActiv = (int) ActividadNueva::actividadNueva([
+            $idActiv = (int) DependencyResolver::get(ActividadNueva::class)->actividadNueva([
                 'dl_org' => $dlOrg,
                 'publicado' => false,
                 'id_tipo_activ' => $idTipo,

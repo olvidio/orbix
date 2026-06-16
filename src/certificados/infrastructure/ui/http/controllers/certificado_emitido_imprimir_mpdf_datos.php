@@ -56,10 +56,10 @@ if (!$oConfig instanceof ConfigSnapshot) {
 }
 
 $error_txt .= $oConfig->formatMissingParametersMessage([
-    $oConfig->regionLatin => _('nombre región en latín'),
-    $oConfig->vstgr => _('vstgr'),
-    $oConfig->dirStgr => _('direccion stgr'),
-    $oConfig->lugarFirma => _('lugar firma'),
+    _('nombre región en latín') => $oConfig->regionLatin,
+    _('vstgr') => $oConfig->vstgr,
+    _('direccion stgr') => $oConfig->dirStgr,
+    _('lugar firma') => $oConfig->lugarFirma,
 ]);
 
 $oPersona = Persona::findPersonaEnGlobal($id_nom);

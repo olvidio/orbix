@@ -141,12 +141,9 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(object $entity): bool
+    public function Eliminar(ModuloInstalado $ModuloInstalado): bool
     {
-        if (!$entity instanceof ModuloInstalado) {
-            return false;
-        }
-        $id_mod = $entity->getIdModVo()->value();
+        $id_mod = $ModuloInstalado->getIdModVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_mod = $id_mod";
@@ -156,12 +153,8 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(object $entity): bool
+    public function Guardar(ModuloInstalado $ModuloInstalado): bool
     {
-        if (!$entity instanceof ModuloInstalado) {
-            return false;
-        }
-        $ModuloInstalado = $entity;
         $id_mod = $ModuloInstalado->getIdModVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -234,12 +227,8 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
     /**
      * Busca la clase con id_mod en la base de datos .
      */
-    public function findById(mixed $id): ?ModuloInstalado
+    public function findById(int $id_mod): ?ModuloInstalado
     {
-        if (!is_int($id) && !(is_string($id) && is_numeric($id))) {
-            return null;
-        }
-        $id_mod = (int) $id;
         $aDatos = $this->datosById($id_mod);
         if ($aDatos === false) {
             return null;

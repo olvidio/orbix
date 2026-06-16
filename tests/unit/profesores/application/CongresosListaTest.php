@@ -7,6 +7,7 @@ namespace Tests\unit\profesores\application;
 use PHPUnit\Framework\TestCase;
 use src\profesores\application\CongresosLista;
 use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\profesores\domain\services\ProfesorStgrService;
 use src\shared\domain\value_objects\DateTimeLocal;
 
@@ -99,13 +100,12 @@ final class CongresosListaTest extends TestCase
 
     private function stubOConfigAmbito(string $ambito): void
     {
-        $_SESSION['oConfig'] = new class ($ambito) {
-            public function __construct(private readonly string $ambito) {}
-
-            public function getAmbito(): string
-            {
-                return $this->ambito;
-            }
-        };
+        // ConfigGlobal::mi_ambito() sólo reconoce un ConfigSnapshot real (instanceof).
+        // Sólo se consulta getAmbito(): el resto de parámetros pueden ir a null.
+        $_SESSION['oConfig'] = new ConfigSnapshot(
+            null, null, null, null, null, null,
+            $ambito,
+            null, null, null, null, null, null, null, null,
+        );
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\unit\pasarela\application;
 
+use DI\Container;
+use DI\ContainerBuilder;
 use PHPUnit\Framework\TestCase;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\pasarela\application\NombreLista;
@@ -53,21 +55,20 @@ final class NombreListaTest extends TestCase
     }
 
     /**
+     * Construye un contenedor PHP-DI real: {@see \src\shared\infrastructure\DependencyResolver}
+     * exige una instancia de {@see Container}, no un doble cualquiera.
+     *
      * @param array<class-string, object> $services
      */
-    private function containerFromMap(array $services): object
+    private function containerFromMap(array $services): Container
     {
-        return new class ($services) {
-            public function __construct(private readonly array $services) {}
+        $builder = new ContainerBuilder();
+        $definitions = [];
+        foreach ($services as $id => $service) {
+            $definitions[$id] = static fn (): object => $service;
+        }
+        $builder->addDefinitions($definitions);
 
-            public function get(string $id): object
-            {
-                if (!array_key_exists($id, $this->services)) {
-                    throw new \RuntimeException('Unexpected DI key: ' . $id);
-                }
-
-                return $this->services[$id];
-            }
-        };
+        return $builder->build();
     }
 }

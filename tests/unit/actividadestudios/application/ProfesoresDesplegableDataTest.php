@@ -7,6 +7,7 @@ use src\actividadestudios\application\ProfesoresDesplegableData;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\entity\PersonaDl;
+use src\profesores\domain\ProfesorActividad;
 use src\profesores\domain\services\ProfesorAsignaturaService;
 use src\profesores\domain\services\ProfesorStgrService;
 
@@ -16,11 +17,13 @@ final class ProfesoresDesplegableDataTest extends TestCase
         ?ProfesorAsignaturaService $asigSvc = null,
         ?ProfesorStgrService $stgrSvc = null,
         ?PersonaDlRepositoryInterface $personaRepo = null,
+        ?ProfesorActividad $profesorActividad = null,
     ): ProfesoresDesplegableData {
         return new ProfesoresDesplegableData(
             $asigSvc ?? $this->createMock(ProfesorAsignaturaService::class),
             $stgrSvc ?? $this->createMock(ProfesorStgrService::class),
             $personaRepo ?? $this->createMock(PersonaDlRepositoryInterface::class),
+            $profesorActividad ?? $this->createMock(ProfesorActividad::class),
         );
     }
 

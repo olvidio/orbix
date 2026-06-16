@@ -75,6 +75,8 @@ final class PlanningPersonaRepositoryPickerTest extends TestCase
                 $this->createMock(PersonaSRepositoryInterface::class),
                 $this->createMock(PersonaSSSCRepositoryInterface::class),
                 $this->createMock(PersonaExRepositoryInterface::class),
+                $personaDl,
+                $personaSacd ?? $this->createMock(PersonaSacdRepositoryInterface::class),
             ),
         );
     }

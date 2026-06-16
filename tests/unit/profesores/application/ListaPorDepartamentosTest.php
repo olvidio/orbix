@@ -14,6 +14,7 @@ use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
 use src\profesores\domain\entity\ProfesorDirector;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\profesores\domain\entity\ProfesorTipo;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
@@ -118,14 +119,13 @@ final class ListaPorDepartamentosTest extends TestCase
 
     private function stubOConfigAmbito(string $ambito): void
     {
-        $_SESSION['oConfig'] = new class ($ambito) {
-            public function __construct(private readonly string $ambito) {}
-
-            public function getAmbito(): string
-            {
-                return $this->ambito;
-            }
-        };
+        // ConfigGlobal::mi_ambito() sólo reconoce un ConfigSnapshot real (instanceof).
+        // Sólo se consulta getAmbito(): el resto de parámetros pueden ir a null.
+        $_SESSION['oConfig'] = new ConfigSnapshot(
+            null, null, null, null, null, null,
+            $ambito,
+            null, null, null, null, null, null, null, null,
+        );
     }
 
 }

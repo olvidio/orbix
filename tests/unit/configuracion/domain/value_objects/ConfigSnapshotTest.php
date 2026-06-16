@@ -88,9 +88,9 @@ class ConfigSnapshotTest extends myTest
     {
         $s = $this->makeSnapshot(['vstgr' => 'San Jose']);
         $msg = $s->formatMissingParametersMessage([
-            $s->regionLatin => 'region latin',
-            $s->vstgr => 'vstgr',
-            $s->iniContadorCertificados => 'contador',
+            'region latin' => $s->regionLatin,
+            'vstgr' => $s->vstgr,
+            'contador' => $s->iniContadorCertificados,
         ]);
         $this->assertStringContainsString('region latin', $msg);
         $this->assertStringContainsString('contador', $msg);
@@ -104,8 +104,8 @@ class ConfigSnapshotTest extends myTest
             'iniContadorCertificados' => '1',
         ]);
         $this->assertSame('', $s->formatMissingParametersMessage([
-            $s->regionLatin => 'region latin',
-            $s->iniContadorCertificados => 'contador',
+            'region latin' => $s->regionLatin,
+            'contador' => $s->iniContadorCertificados,
         ]));
     }
 

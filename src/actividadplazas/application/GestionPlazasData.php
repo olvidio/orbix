@@ -132,6 +132,7 @@ final class GestionPlazasData
         } else {
             $cDelegaciones = $this->delegacionRepository->getDelegaciones([
                 'grupo_estudios' => $grupo_estudios,
+                'active' => true,
                 '_ordre' => 'region,dl',
             ]);
         }

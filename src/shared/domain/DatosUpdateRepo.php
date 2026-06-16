@@ -226,7 +226,15 @@ class DatosUpdateRepo
         $this->RepositoryInterface = $repository;
     }
 
-    private function resolveRepository(): DatosCrudRepositoryInterface
+    /**
+     * Resuelve el repositorio configurado. Igual que {@see DatosInfoRepo::getFicha()}
+     * y {@see DatosTablaRepo}, se confia en el contrato CRUD via PHPDoc (duck typing
+     * en runtime) para no obligar a cada repositorio `Info*` a relajar sus firmas
+     * tipadas por entidad a `object`/`mixed`.
+     *
+     * @return DatosCrudRepositoryInterface
+     */
+    private function resolveRepository(): object
     {
         $repositoryId = $this->RepositoryInterface;
         if ($repositoryId === null || $repositoryId === '') {

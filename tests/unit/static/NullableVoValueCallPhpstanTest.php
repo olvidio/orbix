@@ -2,7 +2,6 @@
 
 namespace Tests\unit\static;
 
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -19,15 +18,18 @@ final class NullableVoValueCallPhpstanTest extends TestCase
 
     private const PHPSTAN_CONFIG = 'phpstan-nobaseline.neon';
 
-    /** Rutas analizadas (ampliar a ['src'] cuando se corrijan el resto del proyecto). */
+    /**
+     * Rutas analizadas. La deuda histórica (que se acotaba a src/notas y src/certificados)
+     * ya está saneada en todo el proyecto, así que el guard cubre `src/` completo.
+     */
     private const ANALYSE_PATHS = [
-        'src/notas',
-        'src/certificados',
+        'src',
     ];
 
-    public function test_notas_y_certificados_sin_value_sobre_vo_nullable(): void
+    public function test_src_sin_value_sobre_vo_nullable(): void
     {
         $violations = $this->collectUnsafeValueCalls(self::ANALYSE_PATHS);
+        sort($violations);
 
         $this->assertSame(
             [],
@@ -35,22 +37,6 @@ final class NullableVoValueCallPhpstanTest extends TestCase
             "Usar ?->value() (o comprobar null) cuando el getter Vo es nullable:\n"
             . implode("\n", $violations)
             . "\n\nPHPStan: Cannot call method value() on …|null"
-        );
-    }
-
-    /**
-     * Inventario global (no falla el CI): útil para ir reduciendo deuda antes de ampliar ANALYSE_PATHS.
-     */
-    #[Group('inventory')]
-    public function test_inventario_src_value_sobre_vo_nullable(): void
-    {
-        $violations = $this->collectUnsafeValueCalls(['src']);
-        sort($violations);
-
-        $this->assertGreaterThan(
-            0,
-            count($violations),
-            'Si ya no quedan avisos en src/, ampliar ANALYSE_PATHS a [\'src\'] en el test principal.'
         );
     }
 

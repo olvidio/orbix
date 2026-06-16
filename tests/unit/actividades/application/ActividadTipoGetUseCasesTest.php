@@ -69,7 +69,7 @@ final class ActividadTipoGetUseCasesTest extends myTest
 
     public function test_actividad_tipo_get_filtro_lugar(): void
     {
-        $out = (new ActividadTipoGetFiltroLugar())->execute(['entrada' => '1']);
+        $out = $GLOBALS['container']->get(ActividadTipoGetFiltroLugar::class)->execute(['entrada' => '1']);
         $this->assertSame('filtro_lugar', $out['id']);
         $this->assertTrue($out['blanco']);
         $this->assertSame('fnjs_lugar()', $out['action']);

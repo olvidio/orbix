@@ -184,8 +184,16 @@ final class AsistenteGuardarTest extends TestCase
         $app->method('findById')->with(20, 10)->willReturn($o);
         $app->expects($this->never())->method('guardar');
 
-        $eliminar = $this->createMock(AsistenteEliminar::class);
-        $eliminar->expects($this->never())->method('execute');
+        // AsistenteEliminar es final (no mockeable): usamos uno real cuyo colaborador
+        // demuestra que execute() NO se invoca (no llega a buscar ni eliminar nada).
+        $elimApp = $this->createMock(AsistenteApplicationService::class);
+        $elimApp->expects($this->never())->method('findById');
+        $elimApp->expects($this->never())->method('eliminar');
+        $eliminar = new AsistenteEliminar(
+            $elimApp,
+            $this->createMock(MatriculaRepositoryInterface::class),
+            $this->createMock(DossierRepositoryInterface::class),
+        );
 
         $sut = $this->createSut($app, null, $eliminar);
 
@@ -220,13 +228,23 @@ final class AsistenteGuardarTest extends TestCase
         $app->method('findById')->with(20, 10)->willReturn($o);
         $app->expects($this->once())->method('guardar')->with($o)->willReturn(true);
 
-        $eliminar = $this->createMock(AsistenteEliminar::class);
-        $eliminar->expects($this->once())->method('execute')->with([
-            'pau' => 'p',
-            'sel' => [],
-            'id_activ' => 5,
-            'id_nom' => 10,
-        ])->willReturn('');
+        // AsistenteEliminar es final (no mockeable): usamos uno real y verificamos a
+        // través de sus colaboradores que se elimina el origen (id_activ_old=5, id_nom=10)
+        // sólo tras un guardado correcto.
+        $oOrigen = $this->createMock(Asistente::class);
+        $oOrigen->method('perm_modificar')->willReturn(true);
+
+        $elimApp = $this->createMock(AsistenteApplicationService::class);
+        $elimApp->method('findById')->with(5, 10)->willReturn($oOrigen);
+        $elimApp->expects($this->once())->method('eliminar')->with($oOrigen)->willReturn(true);
+
+        $elimMatRepo = $this->createMock(MatriculaRepositoryInterface::class);
+        $elimMatRepo->method('getMatriculas')->willReturn([]);
+
+        $elimDosRepo = $this->createMock(DossierRepositoryInterface::class);
+        $elimDosRepo->method('findByPk')->willReturn(null);
+
+        $eliminar = new AsistenteEliminar($elimApp, $elimMatRepo, $elimDosRepo);
 
         $sut = $this->createSut($app, null, $eliminar);
 

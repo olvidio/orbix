@@ -7,6 +7,7 @@ namespace Tests\unit\devel\application;
 use PHPUnit\Framework\TestCase;
 use src\devel_db_admin\application\RenombrarEsquema;
 use src\shared\infrastructure\persistence\postgresql\DBRol;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 /**
  * Cubre el escenario «rename a medias»: si una pasada anterior renombró ya algún esquema/rol/clave
@@ -21,7 +22,7 @@ final class RenombrarEsquemaIdempotenciaTest extends TestCase
     /** @return \Closure(SpyDBRol, SpyPdoIdem, string, string, ?string): void */
     private function makeRenombrarHelper(): \Closure
     {
-        $instance = new RenombrarEsquema(new \stdClass());
+        $instance = new RenombrarEsquema($this->createStub(DbSchemaRepositoryInterface::class));
         $method = new \ReflectionMethod($instance, 'renombrarBloqueRolEsquema');
 
         return static function (
@@ -38,7 +39,7 @@ final class RenombrarEsquemaIdempotenciaTest extends TestCase
     /** @return \Closure(SpyDBRol, SpyPdoIdem, string, string, ?string): void */
     private function makeRenombrarSoloEsquemaHelper(): \Closure
     {
-        $instance = new RenombrarEsquema(new \stdClass());
+        $instance = new RenombrarEsquema($this->createStub(DbSchemaRepositoryInterface::class));
         $method = new \ReflectionMethod($instance, 'renombrarBloqueSoloEsquema');
 
         return static function (
@@ -198,26 +199,18 @@ final class SpyDBRol extends DBRol
         $this->lastPwd = is_string($password) ? $password : null;
     }
 
-    /**
-     * @param mixed $esquema_old
-     * @return null
-     */
-    public function renombrarSchema($esquema_old)
+    public function renombrarSchema(string $esquema_old): bool
     {
-        $this->renombrarSchemaCalls[] = is_string($esquema_old) ? $esquema_old : '';
+        $this->renombrarSchemaCalls[] = $esquema_old;
 
-        return null;
+        return true;
     }
 
-    /**
-     * @param mixed $usuario_old
-     * @return null
-     */
-    public function renombrarUsuario($usuario_old)
+    public function renombrarUsuario(string $usuario_old): bool
     {
-        $this->renombrarUsuarioCalls[] = is_string($usuario_old) ? $usuario_old : '';
+        $this->renombrarUsuarioCalls[] = $usuario_old;
 
-        return null;
+        return true;
     }
 
     public function repararEsquemaPostRenombre(string $esquemaNombre): bool
@@ -227,7 +220,7 @@ final class SpyDBRol extends DBRol
         return true;
     }
 
-    public function crearUsuario()
+    public function crearUsuario(): bool
     {
         $this->crearUsuarioCalls[] = (string) $this->lastUser;
 

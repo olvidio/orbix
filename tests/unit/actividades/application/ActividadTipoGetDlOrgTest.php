@@ -9,7 +9,7 @@ final class ActividadTipoGetDlOrgTest extends myTest
 {
     public function test_devuelve_id_dl_org_y_opciones(): void
     {
-        $out = (new ActividadTipoGetDlOrg())->execute(['entrada' => '1']);
+        $out = $GLOBALS['container']->get(ActividadTipoGetDlOrg::class)->execute(['entrada' => '1']);
 
         $this->assertSame('dl_org', $out['id']);
         $this->assertTrue($out['blanco']);

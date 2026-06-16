@@ -49,6 +49,19 @@ class trasladosNotasTest extends myTest
         $this->generarNotas('H-dlb');
     }
 
+    private function nuevoEditarPersonaNota(\src\notas\domain\entity\PersonaNota $oPersonaNota): EditarPersonaNota
+    {
+        $container = $GLOBALS['container'];
+        return new EditarPersonaNota(
+            $oPersonaNota,
+            $container->get(\src\notas\domain\contracts\PersonaNotaRepositoryInterface::class),
+            $container->get(\src\ubis\domain\contracts\DelegacionRepositoryInterface::class),
+            $container->get(\src\utils_database\domain\contracts\DbSchemaRepositoryInterface::class),
+            $container->get(\src\dossiers\domain\contracts\DossierRepositoryInterface::class),
+            $container->get(\src\notas\domain\contracts\PersonaNotaDlRepositoryInterface::class),
+        );
+    }
+
     /////////// Traslado de vuelta a notas de una región a una dl de H. ///////////
     ///
     /**
@@ -362,7 +375,7 @@ class trasladosNotasTest extends myTest
 
         // 1.- guardar notas del dlA
         foreach ($this->cPersonaNotas as $oPersonaNota) {
-            $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+            $oEditarPersonaNota = $this->nuevoEditarPersonaNota($oPersonaNota);
             $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr($dlA);
             $esquema_region_stgr = $datosRegionStgr['esquema_region_stgr'];
             $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $this->id_schema_persona);
@@ -370,7 +383,7 @@ class trasladosNotasTest extends myTest
         }
 
         // 2.- trasladar
-        $oTrasladoDl = new Trasladar();
+        $oTrasladoDl = $GLOBALS['container']->get(\src\personas\domain\Trasladar::class);
         $oTrasladoDl->setId_nom($this->id_nom);
         $oTrasladoDl->setDl_persona($dlA);
         $oTrasladoDl->setReg_dl_org($reg_dl_org);
@@ -464,7 +477,7 @@ class trasladosNotasTest extends myTest
 
         // 1.- guardar notas del dlA
         foreach ($this->cPersonaNotas as $oPersonaNota) {
-            $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+            $oEditarPersonaNota = $this->nuevoEditarPersonaNota($oPersonaNota);
             $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr($dlA);
             $esquema_region_stgr = $datosRegionStgr['esquema_region_stgr']; // para usar la información más abajo
             $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $this->id_schema_persona);
@@ -472,7 +485,7 @@ class trasladosNotasTest extends myTest
         }
 
         // 2.- trasladar
-        $oTrasladoDl = new Trasladar();
+        $oTrasladoDl = $GLOBALS['container']->get(\src\personas\domain\Trasladar::class);
         $oTrasladoDl->setId_nom($this->id_nom);
         $oTrasladoDl->setDl_persona($dlA);
         $oTrasladoDl->setReg_dl_org($reg_dl_org);
@@ -559,14 +572,14 @@ class trasladosNotasTest extends myTest
 
         // 1.- guardar notas del dlA
         foreach ($this->cPersonaNotas as $oPersonaNota) {
-            $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+            $oEditarPersonaNota = $this->nuevoEditarPersonaNota($oPersonaNota);
             $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
             $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $this->id_schema_persona);
             $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         }
 
         // 2.- trasladar
-        $oTrasladoDl = new Trasladar();
+        $oTrasladoDl = $GLOBALS['container']->get(\src\personas\domain\Trasladar::class);
         $oTrasladoDl->setId_nom($this->id_nom);
         $oTrasladoDl->setDl_persona($dlA);
         $oTrasladoDl->setReg_dl_org($reg_dl_org);
@@ -627,7 +640,7 @@ class trasladosNotasTest extends myTest
 
         // 1.- guardar notas del dlA
         foreach ($this->cPersonaNotas as $oPersonaNota) {
-            $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+            $oEditarPersonaNota = $this->nuevoEditarPersonaNota($oPersonaNota);
             $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
             $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $this->id_schema_persona);
             $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
@@ -652,7 +665,7 @@ class trasladosNotasTest extends myTest
         $this->id_schema_persona = $id_esquemaA;
 
         // 2.- trasladar
-        $oTrasladoDl = new Trasladar();
+        $oTrasladoDl = $GLOBALS['container']->get(\src\personas\domain\Trasladar::class);
         $oTrasladoDl->setId_nom($this->id_nom);
         $oTrasladoDl->setDl_persona($dlA);
         $oTrasladoDl->setReg_dl_org($reg_dl_org);

@@ -38,6 +38,19 @@ class notasDuplicadosTest extends myTest
         $this->session_org = $_SESSION['session_auth']['esquema'];
     }
 
+    private function nuevoEditarPersonaNota(\src\notas\domain\entity\PersonaNota $oPersonaNota): EditarPersonaNota
+    {
+        $container = $GLOBALS['container'];
+        return new EditarPersonaNota(
+            $oPersonaNota,
+            $container->get(\src\notas\domain\contracts\PersonaNotaRepositoryInterface::class),
+            $container->get(\src\ubis\domain\contracts\DelegacionRepositoryInterface::class),
+            $container->get(\src\utils_database\domain\contracts\DbSchemaRepositoryInterface::class),
+            $container->get(\src\dossiers\domain\contracts\DossierRepositoryInterface::class),
+            $container->get(\src\notas\domain\contracts\PersonaNotaDlRepositoryInterface::class),
+        );
+    }
+
     /**
      * Dado que existe una nota (id_nom + id_nivel) en e_notas_dl)
      * Al intentar grabar una nueva: mensaje de error
@@ -62,7 +75,7 @@ class notasDuplicadosTest extends myTest
         $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
 
-        $oEditarPersonaNota = new EditarPersonaNota($personaNota);
+        $oEditarPersonaNota = $this->nuevoEditarPersonaNota($personaNota);
         $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
@@ -74,7 +87,7 @@ class notasDuplicadosTest extends myTest
         // probar de volver a crear la nota
         // cambio algo:
         $personaNota->setIdSituacionVo(NotaSituacion::DESCONOCIDO);
-        $oEditarPersonaNota2 = new EditarPersonaNota($personaNota);
+        $oEditarPersonaNota2 = $this->nuevoEditarPersonaNota($personaNota);
         $datosRegionStgr2 = $oEditarPersonaNota2->getDatosRegionStgr();
 
         $a_ObjetosPersonaNota2 = $oEditarPersonaNota2->getReposPersonaNota($datosRegionStgr2, $id_schema_persona);

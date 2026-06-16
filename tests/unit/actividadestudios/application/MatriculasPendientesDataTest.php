@@ -5,11 +5,13 @@ namespace Tests\unit\actividadestudios\application;
 use PHPUnit\Framework\TestCase;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
+use src\actividades\domain\value_objects\ActividadNomText;
 use src\actividadestudios\application\MatriculasPendientesData;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\actividadestudios\domain\entity\Matricula;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
+use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
 
@@ -42,14 +44,14 @@ final class MatriculasPendientesDataTest extends TestCase
         $oMat = $this->createMock(Matricula::class);
         $oMat->method('getId_nom')->willReturn(100);
         $oMat->method('getId_activ')->willReturn(200);
-        $oMat->method('getId_asignatura')->willReturn(300);
+        $oMat->method('getIdAsignaturaVo')->willReturn(new AsignaturaId(3000));
         $oMat->method('isPreceptor')->willReturn(false);
 
         $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
         $matRepo->method('getMatriculasPendientes')->willReturn([$oMat]);
 
         $oActiv = $this->createMock(ActividadAll::class);
-        $oActiv->method('getNom_activ')->willReturn('CA X');
+        $oActiv->method('getNomActivVo')->willReturn(new ActividadNomText('CA X'));
 
         $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
         $actRepo->method('findById')->with(200)->willReturn($oActiv);
@@ -64,7 +66,7 @@ final class MatriculasPendientesDataTest extends TestCase
         $oAsig->method('getNombre_corto')->willReturn('MAT1');
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
-        $asigRepo->method('findById')->with(300)->willReturn($oAsig);
+        $asigRepo->method('findById')->with(3000)->willReturn($oAsig);
 
         $useCase = new MatriculasPendientesData($matRepo, $asigRepo, $actRepo, $finder);
 
@@ -72,7 +74,7 @@ final class MatriculasPendientesDataTest extends TestCase
         $this->assertSame('', $out['msg_err']);
         $this->assertCount(1, $out['a_valores']);
         $row = array_values($out['a_valores'])[0];
-        $this->assertSame('200#300#100', $row['sel']);
+        $this->assertSame('200#3000#100', $row['sel']);
         $this->assertSame('CA X', $row[1]);
         $this->assertSame('MAT1', $row[2]);
         $this->assertSame('García, Ana', $row[3]);
@@ -84,20 +86,20 @@ final class MatriculasPendientesDataTest extends TestCase
         $oMat1 = $this->createMock(Matricula::class);
         $oMat1->method('getId_nom')->willReturn(100);
         $oMat1->method('getId_activ')->willReturn(200);
-        $oMat1->method('getId_asignatura')->willReturn(300);
+        $oMat1->method('getIdAsignaturaVo')->willReturn(new AsignaturaId(3000));
         $oMat1->method('isPreceptor')->willReturn(false);
 
         $oMat2 = $this->createMock(Matricula::class);
         $oMat2->method('getId_nom')->willReturn(100);
         $oMat2->method('getId_activ')->willReturn(200);
-        $oMat2->method('getId_asignatura')->willReturn(301);
+        $oMat2->method('getIdAsignaturaVo')->willReturn(new AsignaturaId(3001));
         $oMat2->method('isPreceptor')->willReturn(true);
 
         $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
         $matRepo->method('getMatriculasPendientes')->willReturn([$oMat1, $oMat2]);
 
         $oActiv = $this->createMock(ActividadAll::class);
-        $oActiv->method('getNom_activ')->willReturn('CA X');
+        $oActiv->method('getNomActivVo')->willReturn(new ActividadNomText('CA X'));
 
         $actRepo = $this->createMock(ActividadAllRepositoryInterface::class);
         $actRepo->method('findById')->with(200)->willReturn($oActiv);
@@ -115,8 +117,8 @@ final class MatriculasPendientesDataTest extends TestCase
 
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $asigRepo->method('findById')->willReturnMap([
-            [300, $oAsig1],
-            [301, $oAsig2],
+            [3000, $oAsig1],
+            [3001, $oAsig2],
         ]);
 
         $useCase = new MatriculasPendientesData($matRepo, $asigRepo, $actRepo, $finder);
@@ -125,8 +127,8 @@ final class MatriculasPendientesDataTest extends TestCase
         $this->assertCount(2, $out['a_valores']);
         $rows = array_values($out['a_valores']);
         $sels = array_column($rows, 'sel');
-        $this->assertContains('200#300#100', $sels);
-        $this->assertContains('200#301#100', $sels);
+        $this->assertContains('200#3000#100', $sels);
+        $this->assertContains('200#3001#100', $sels);
     }
 
     public function test_persona_no_encontrada_solo_un_aviso(): void
@@ -134,13 +136,13 @@ final class MatriculasPendientesDataTest extends TestCase
         $oMat1 = $this->createMock(Matricula::class);
         $oMat1->method('getId_nom')->willReturn(100);
         $oMat1->method('getId_activ')->willReturn(200);
-        $oMat1->method('getId_asignatura')->willReturn(300);
+        $oMat1->method('getIdAsignaturaVo')->willReturn(new AsignaturaId(3000));
         $oMat1->method('isPreceptor')->willReturn(false);
 
         $oMat2 = $this->createMock(Matricula::class);
         $oMat2->method('getId_nom')->willReturn(100);
         $oMat2->method('getId_activ')->willReturn(200);
-        $oMat2->method('getId_asignatura')->willReturn(301);
+        $oMat2->method('getIdAsignaturaVo')->willReturn(new AsignaturaId(3001));
         $oMat2->method('isPreceptor')->willReturn(false);
 
         $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
@@ -166,13 +168,13 @@ final class MatriculasPendientesDataTest extends TestCase
         $oMat1 = $this->createMock(Matricula::class);
         $oMat1->method('getId_nom')->willReturn(100);
         $oMat1->method('getId_activ')->willReturn(200);
-        $oMat1->method('getId_asignatura')->willReturn(300);
+        $oMat1->method('getIdAsignaturaVo')->willReturn(new AsignaturaId(3000));
         $oMat1->method('isPreceptor')->willReturn(false);
 
         $oMat2 = $this->createMock(Matricula::class);
         $oMat2->method('getId_nom')->willReturn(100);
         $oMat2->method('getId_activ')->willReturn(200);
-        $oMat2->method('getId_asignatura')->willReturn(301);
+        $oMat2->method('getIdAsignaturaVo')->willReturn(new AsignaturaId(3001));
         $oMat2->method('isPreceptor')->willReturn(false);
 
         $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);

@@ -13,11 +13,11 @@ $data = [];
 /** @var ConfigSnapshot $oConfig */
 $oConfig = $_SESSION['oConfig'];
 $error_txt .= $oConfig->formatMissingParametersMessage([
-    $oConfig->regionLatin => _('nombre región en latín'),
-    $oConfig->vstgr => _('vstgr'),
-    $oConfig->dirStgr => _('direccion stgr'),
-    $oConfig->lugarFirma => _('lugar firma'),
-    $oConfig->iniContadorCertificados => _('inicio contador certificados'),
+    _('nombre región en latín') => $oConfig->regionLatin,
+    _('vstgr') => $oConfig->vstgr,
+    _('direccion stgr') => $oConfig->dirStgr,
+    _('lugar firma') => $oConfig->lugarFirma,
+    _('inicio contador certificados') => $oConfig->iniContadorCertificados,
 ]);
 
 if ($error_txt === '') {

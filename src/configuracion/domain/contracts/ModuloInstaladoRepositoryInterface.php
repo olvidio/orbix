@@ -3,7 +3,6 @@
 namespace src\configuracion\domain\contracts;
 
 use src\configuracion\domain\entity\ModuloInstalado;
-use src\shared\domain\contracts\DatosCrudRepositoryInterface;
 
 /**
  * Interfaz de la clase ModuloInstalado y su Repositorio
@@ -14,7 +13,7 @@ use src\shared\domain\contracts\DatosCrudRepositoryInterface;
  * @version 2.0
  * @created 13/11/2025
  */
-interface ModuloInstaladoRepositoryInterface extends DatosCrudRepositoryInterface
+interface ModuloInstaladoRepositoryInterface
 {
 
     /**
@@ -36,6 +35,14 @@ interface ModuloInstaladoRepositoryInterface extends DatosCrudRepositoryInterfac
      */
     public function getModuloInstalados(array $aWhere = [], array $aOperators = []): array;
 
+    /* -------------------- ENTIDAD --------------------------------------------- */
+
+    public function Eliminar(ModuloInstalado $ModuloInstalado): bool;
+
+    public function Guardar(ModuloInstalado $ModuloInstalado): bool;
+
+    public function getErrorTxt(): string;
+
     public function getNomTabla(): string;
 
     /**
@@ -50,5 +57,5 @@ interface ModuloInstaladoRepositoryInterface extends DatosCrudRepositoryInterfac
     /**
      * Busca la clase con id_mod en el repositorio.
      */
-    public function findById(mixed $id): ?ModuloInstalado;
+    public function findById(int $id_mod): ?ModuloInstalado;
 }

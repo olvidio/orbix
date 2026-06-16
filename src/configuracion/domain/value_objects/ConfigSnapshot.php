@@ -60,25 +60,21 @@ final class ConfigSnapshot
     /**
      * Mensaje HTML con todos los parámetros faltantes (sin abortar el request).
      *
-     * @param array<int|string, string> $checks mapa valor del parámetro => etiqueta traducible
+     * @param array<string, string|null> $checks mapa etiqueta traducible => valor del parámetro
      */
     public function formatMissingParametersMessage(array $checks): string
     {
-        $labels = [];
-        foreach ($checks as $value => $label) {
-            if ((string)$value === '') {
-                $labels[] = $label;
+        $lineas = [];
+        foreach ($checks as $label => $value) {
+            if ($value === null || $value === '') {
+                $lineas[] = sprintf(_("falta el parámetro: %s"), $label);
             }
         }
-        if ($labels === []) {
+        if ($lineas === []) {
             return '';
         }
-        $msg = $this->msg . '<br><br>';
-        foreach ($labels as $label) {
-            $msg .= sprintf(_("falta el parámetro: %s"), $label) . '<br>';
-        }
 
-        return rtrim($msg, '<br>');
+        return $this->msg . '<br><br>' . implode('<br>', $lineas);
     }
 
     /**
