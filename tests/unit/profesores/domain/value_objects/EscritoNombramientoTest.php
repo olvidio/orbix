@@ -15,8 +15,14 @@ class EscritoNombramientoTest extends myTest
 
     public function test_invalid_length_throws_exception()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        new EscritoNombramiento(str_repeat('a', 1000)); // Assuming max length validation
+        $long = str_repeat('a', 1000);
+        try {
+            new EscritoNombramiento($long);
+            $this->fail('Expected InvalidArgumentException');
+        } catch (\InvalidArgumentException $e) {
+            $this->assertStringContainsString('length=1000', $e->getMessage());
+            $this->assertStringContainsString('value=', $e->getMessage());
+        }
     }
 
     public function test_to_string_returns_escritoNombramiento_value()
