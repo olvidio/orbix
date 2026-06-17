@@ -4,6 +4,8 @@ namespace Tests\unit\asistentes\application;
 
 use PHPUnit\Framework\TestCase;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\entity\ActividadAll;
 use src\asistentes\application\AsistenteEliminar;
 use src\asistentes\application\AsistenteGuardar;
 use src\asistentes\application\services\AsistenteApplicationService;
@@ -35,11 +37,13 @@ final class AsistenteGuardarTest extends TestCase
 
     private function createSut(
         ?AsistenteApplicationService $app = null,
+        ?ActividadAllRepositoryInterface $actividadRepo = null,
         ?DossierRepositoryInterface $dosRepo = null,
         ?AsistenteEliminar $asistenteEliminar = null,
         ?PlazaPropietarioAsignacionInterface $plazaPropietario = null,
     ): AsistenteGuardar {
         $app ??= $this->createMock(AsistenteApplicationService::class);
+        $actividadRepo ??= $this->createMock(ActividadAllRepositoryInterface::class);
         $dosRepo ??= $this->createMock(DossierRepositoryInterface::class);
         $asistenteEliminar ??= new AsistenteEliminar(
             $this->createMock(AsistenteApplicationService::class),
@@ -47,7 +51,7 @@ final class AsistenteGuardarTest extends TestCase
             $this->createMock(DossierRepositoryInterface::class),
         );
         $plazaPropietario ??= $this->createMock(PlazaPropietarioAsignacionInterface::class);
-        return new AsistenteGuardar($app, $dosRepo, $asistenteEliminar, $plazaPropietario);
+        return new AsistenteGuardar($app, $actividadRepo, $dosRepo, $asistenteEliminar, $plazaPropietario);
     }
 
     public function test_mod_no_soportado(): void
@@ -80,7 +84,7 @@ final class AsistenteGuardarTest extends TestCase
             return $a->getId_activ() === -2001456 && $a->getId_nom() === -1001123;
         });
 
-        $sut = $this->createSut($app, $dosRepo);
+        $sut = $this->createSut($app, null, $dosRepo);
 
         $this->assertSame('', $sut->execute([
             'mod' => 'nuevo',
@@ -117,7 +121,7 @@ final class AsistenteGuardarTest extends TestCase
             return $a->getId_activ() === 10 && $a->getId_nom() === 20;
         });
 
-        $sut = $this->createSut($app, $dosRepo);
+        $sut = $this->createSut($app, null, $dosRepo);
 
         $this->assertSame('', $sut->execute([
             'mod' => 'nuevo',
@@ -195,7 +199,7 @@ final class AsistenteGuardarTest extends TestCase
             $this->createMock(DossierRepositoryInterface::class),
         );
 
-        $sut = $this->createSut($app, null, $eliminar);
+        $sut = $this->createSut($app, null, null, $eliminar);
 
         $this->assertSame(
             'Ya están todas las plazas ocupadas',
@@ -246,7 +250,7 @@ final class AsistenteGuardarTest extends TestCase
 
         $eliminar = new AsistenteEliminar($elimApp, $elimMatRepo, $elimDosRepo);
 
-        $sut = $this->createSut($app, null, $eliminar);
+        $sut = $this->createSut($app, null, null, $eliminar);
 
         $this->assertSame('', $sut->execute([
             'mod' => 'mover',

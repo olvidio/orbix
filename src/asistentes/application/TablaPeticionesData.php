@@ -126,16 +126,24 @@ final class TablaPeticionesData
                     $parts[] = ['t' => 'p', 's' => ', '];
                 }
                 if ($id_activ !== $id_activ_old) {
+                    $moveHidden = [
+                        'mod' => 'mover',
+                        'id_nom' => $id_nom,
+                        'id_activ_old' => $id_activ_old,
+                        'id_activ' => $id_activ,
+                        'plaza' => PlazaId::ASIGNADA,
+                        'propio' => 't',
+                    ];
+                    if (ConfigGlobal::is_app_installed('actividadplazas')) {
+                        $dl = (string) preg_replace('/f$/', '', $oActividadPosible->getDl_org() ?? '');
+                        if ($dl !== '') {
+                            $moveHidden['propietario'] = "$dl>$mi_dele";
+                        }
+                    }
                     $parts[] = [
                         't' => 'm',
                         's' => $nom_activ_i,
-                        'h' => [
-                            'mod' => 'mover',
-                            'id_nom' => $id_nom,
-                            'id_activ_old' => $id_activ_old,
-                            'id_activ' => $id_activ,
-                            'plaza' => PlazaId::ASIGNADA,
-                        ],
+                        'h' => $moveHidden,
                     ];
                 } else {
                     $parts[] = ['t' => 'p', 's' => $nom_activ_i];

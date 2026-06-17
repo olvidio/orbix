@@ -7,6 +7,7 @@ use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\input_string_list;
 
 use src\shared\config\ConfigGlobal;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asistentes\application\services\AsistenteApplicationService;
 use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
@@ -29,6 +30,7 @@ final class AsistenteGuardar
 {
     public function __construct(
         private AsistenteApplicationService $asistenteApplicationService,
+        private ActividadAllRepositoryInterface $actividadAllRepository,
         private DossierRepositoryInterface $dossierRepository,
         private AsistenteEliminar $asistenteEliminar,
         private PlazaPropietarioAsignacionInterface $plazaPropietarioAsignacion,
@@ -127,6 +129,9 @@ final class AsistenteGuardar
         if ($Qpropietario === 'xxx') {
             $Qpropietario = '';
         }
+        if ($mod === 'mover' && $Qpropietario === '' && ConfigGlobal::is_app_installed('actividadplazas')) {
+            $Qpropietario = $this->resolverPropietarioMover($id_activ);
+        }
         $oAsistente->setPropietarioVo($Qpropietario);
         $err_plaza = $oAsistente->setPlazaVoComprobando(
             input_int($input, 'plaza'),
@@ -140,6 +145,21 @@ final class AsistenteGuardar
             return _("hay un error, no se ha guardado");
         }
         return '';
+    }
+
+    private function resolverPropietarioMover(int $id_activ): string
+    {
+        $oActividad = $this->actividadAllRepository->findById($id_activ);
+        if ($oActividad === null) {
+            return '';
+        }
+        $dl = (string) preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');
+        $mi_dele = ConfigGlobal::mi_delef();
+        if ($dl === '' || $mi_dele === '') {
+            return '';
+        }
+
+        return "$dl>$mi_dele";
     }
 
     private function abrirDossier1301(int $id_nom): void

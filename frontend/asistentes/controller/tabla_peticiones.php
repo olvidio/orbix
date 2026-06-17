@@ -17,14 +17,19 @@ $id_activ_old = asistentes_id_from_sel_post('id_activ_old');
 $campos = array_merge($_GET, $_POST);
 
 // Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
-$stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
-if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
+$stackFromPost = list_nav_stack_from_post();
+if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $campos['restored_id_sel']    = $oPosicion->getParametro('id_sel');
     $campos['restored_scroll_id'] = $oPosicion->getParametro('scroll_id');
     $oPosicion->olvidar($stackFromPost);
 }
 
-list_nav_boot_actividad_select_child_recordar($oPosicion);
+// Tras guardar por AJAX, js_atras(0) recarga con `stack` en POST: no volver a recordar() (duplicaría la pila).
+if ($stackFromPost !== 0) {
+    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+} else {
+    list_nav_boot_actividad_select_child_recordar($oPosicion);
+}
 list_nav_persist_actividad_select_child_entry($oPosicion, [
     'id_activ_old' => $id_activ_old,
 ]);
