@@ -11,10 +11,16 @@ require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
+$Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 
-list_nav_boot_recordar($oPosicion);
+$stackFromPost = list_nav_stack_from_post();
+if ($stackFromPost !== 0) {
+    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+} else {
+    list_nav_boot_recordar($oPosicion, $Qrefresh);
+}
 list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
 
 

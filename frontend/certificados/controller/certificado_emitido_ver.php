@@ -11,7 +11,17 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/certificados_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
+$Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
+
+$stackFromPost = list_nav_stack_from_post();
+if ($stackFromPost !== 0) {
+    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+} else {
+    list_nav_boot_recordar($oPosicion, $Qrefresh);
+}
+list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
 
 $Qid_item = certificados_id_item_from_sel_post();
 

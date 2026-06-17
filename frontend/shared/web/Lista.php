@@ -1069,6 +1069,7 @@ class Lista
         $tt .= "
             var base = $('#main').attr('refe');
             var savedState = fnjs_recuperar_estado(base, '$id_tabla');
+            var restoreSearchPanel = false;
             var backendHasSel = false;
             if (savedState) {
                 var scroll_id_input = $('#scroll_id_$id_tabla').val();
@@ -1094,6 +1095,11 @@ class Lista
                             }
                         }
                     }
+                }
+                if (savedState.search_string) {
+                    restoreSearchPanel = true;
+                    searchString = savedState.search_string;
+                    $(\"#txtSearch_$id_tabla\").val(searchString);
                 }
             }
 
@@ -1161,13 +1167,17 @@ class Lista
             ";
         }
         if ($bPanelVis) {
-            $tt .= "toggleFilterRow_$id_tabla();";
+            $tt .= "if (!restoreSearchPanel) { toggleFilterRow_$id_tabla(); }";
         }
 
 		$tt .= "
 			$('#grid_$id_tabla').css({ width: '{$grid_width}px', height: '{$grid_height}px' });
 			$('#GridContainer_$id_tabla').css('max-width', '{$grid_width}px');
 			grid_$id_tabla.resizeCanvas();
+			if (restoreSearchPanel) {
+				grid_$id_tabla.setTopPanelVisibility(true);
+				grid_$id_tabla.resizeCanvas();
+			}
 				};
 				if (typeof fnjs_ensureSlickLista === 'function') {
 					fnjs_ensureSlickLista(initGrid_$id_tabla);

@@ -12,7 +12,17 @@ require_once 'frontend/shared/FrontBootstrap.php';
 require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_actividad_select_child_recordar($oPosicion);
+
+$stackFromPost = list_nav_stack_from_post();
+if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
+    $oPosicion->olvidar($stackFromPost);
+}
+
+if ($stackFromPost !== 0) {
+    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+} else {
+    list_nav_boot_actividad_select_child_recordar($oPosicion);
+}
 $sel = procesos_sel_tokens_from_post();
 list_nav_persist_actividad_select_child_entry(
     $oPosicion,

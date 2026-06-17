@@ -35,7 +35,12 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-list_nav_boot_recordar($oPosicion, $Qrefresh);
+$stackFromPost = list_nav_stack_from_post();
+if ($stackFromPost !== 0) {
+    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+} else {
+    list_nav_boot_recordar($oPosicion, $Qrefresh);
+}
 list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(($aGoBack ?? list_nav_build_return_parametros_from_post()), $Qid_sel, isset($Qscroll_id) ? (string) $Qscroll_id : ''));
 
 

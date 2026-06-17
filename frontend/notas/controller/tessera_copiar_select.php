@@ -8,19 +8,26 @@ use frontend\shared\FrontBootstrap;
 
 require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
+require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 $oPosicion = FrontBootstrap::boot();
-if (isset($_POST['stack'])) {
-    $stack2 = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack2 !== 0) {
-        $oPosicion2 = new frontend\shared\web\Posicion();
-        if ($oPosicion2->goStack($stack2)) {
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack2);
-        }
-    }
+$Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
+
+$restored = list_nav_restore_selection_from_stack_post();
+/** @var string|list<string> $Qid_sel */
+$Qid_sel = !list_nav_id_sel_is_empty($restored['id_sel']) ? $restored['id_sel'] : list_nav_id_sel_from_post();
+
+$stackFromPost = list_nav_stack_from_post();
+if ($stackFromPost !== 0) {
+    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+} else {
+    list_nav_boot_recordar($oPosicion, $Qrefresh);
 }
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(
+    list_nav_build_return_parametros_from_post(),
+    $Qid_sel,
+    $restored['scroll_id'],
+));
 
 $persona = notas_persona_from_sel_post();
 $id_nom = $persona['id_nom'];

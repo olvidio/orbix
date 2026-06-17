@@ -42,7 +42,12 @@ if (isset($_POST['stack'])) {
         $Qid_usuario = usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
     }
 }
-list_nav_boot_recordar($oPosicion, $Qrefresh);
+$stackFromPost = list_nav_stack_from_post();
+if ($stackFromPost !== 0) {
+    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+} else {
+    list_nav_boot_recordar($oPosicion, $Qrefresh);
+}
 list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), isset($Qscroll_id) ? (string) $Qscroll_id : ''));
 
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);

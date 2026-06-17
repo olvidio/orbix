@@ -16,7 +16,6 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
-use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -24,7 +23,19 @@ require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_actividad_select_child_recordar($oPosicion);
+$Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
+
+$stackFromPost = list_nav_stack_from_post();
+if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
+    $oPosicion->olvidar($stackFromPost);
+}
+
+if ($stackFromPost !== 0) {
+    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+} else {
+    list_nav_boot_actividad_select_child_recordar($oPosicion, $Qrefresh);
+}
+
 $selParts = actividadplazas_sel_hash_parts();
 if ($selParts !== null) {
     list_nav_persist_actividad_select_child_entry($oPosicion, ['id_activ' => tessera_imprimir_int($selParts['first'])]);
@@ -38,9 +49,6 @@ if ($selParts !== null) {
 } else {
     $id_activ = (int)filter_input(INPUT_POST, 'id_activ');
     $nom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
-    $stack = $oPosicion->getStack() - 1;
-    $oPosicion2 = new Posicion();
-    $oPosicion2->olvidar($stack);
 }
 
 $campos = [
@@ -64,10 +72,15 @@ $oHash->setArraycamposHidden([
 
 $oHashActualizar = new HashFront();
 $oHashActualizar->setCamposNo('refresh');
-$oHashActualizar->setArraycamposHidden([
+$hiddenActualizar = [
     'id_activ' => $id_activ,
     'nom_activ' => $nom_activ,
-]);
+];
+$stackForRefresh = $oPosicion->getStack(0);
+if ($stackForRefresh > 0) {
+    $hiddenActualizar['stack'] = $stackForRefresh;
+}
+$oHashActualizar->setArraycamposHidden($hiddenActualizar);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $oHashCeder = new HashFront();
