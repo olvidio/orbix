@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class TipoCentroCode
 {
     private string $value;
@@ -20,7 +22,7 @@ final class TipoCentroCode
         }
         // By UI config, argument length is 5 (see DatosCampo->setArgument(5))
         if (mb_strlen($value) > 5) {
-            throw new \InvalidArgumentException('TipoCentroCode must be at most 5 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('TipoCentroCode must be at most 5 characters', $value));
         }
         // Allow letters, numbers, underscore and hyphen, and comma
         if (!preg_match('/^[A-Za-z0-9_-|,]+$/u', $value)) {

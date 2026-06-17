@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class DelegacionRegionStgr
 {
     private string $value;
@@ -19,7 +21,7 @@ final class DelegacionRegionStgr
             throw new \InvalidArgumentException('DelegacionRegionStgr cannot be empty');
         }
         if (mb_strlen($value) > 6) {
-            throw new \InvalidArgumentException('DelegacionRegionStgr must be at most 5 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DelegacionRegionStgr must be at most 5 characters', $value));
         }
         if (!preg_match('/^[A-Za-z0-9_-]+$/u', $value)) {
             throw new \InvalidArgumentException('DelegacionRegionStgr has invalid characters');

@@ -2,6 +2,8 @@
 
 namespace src\inventario\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class DocumentoObservCtr
 {
     private string $value;
@@ -17,7 +19,7 @@ final class DocumentoObservCtr
     {
         // UI sets argument 50
         if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('DocumentoObservCtr must be at most 50 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DocumentoObservCtr must be at most 50 characters', $value));
         }
     }
 

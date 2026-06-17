@@ -2,6 +2,8 @@
 
 namespace src\inventario\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class TipoDocObserv
 {
     private string $value;
@@ -17,7 +19,7 @@ final class TipoDocObserv
     {
         // UI suggests up to 90 chars for observaciones
         if (mb_strlen($value) > 90) {
-            throw new \InvalidArgumentException('TipoDocObserv must be at most 90 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('TipoDocObserv must be at most 90 characters', $value));
         }
     }
 

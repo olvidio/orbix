@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class PersonaNombreText
 {
     private string $value;
@@ -18,12 +20,10 @@ final class PersonaNombreText
         if ($value === '') {
             throw new \InvalidArgumentException('PersonaNombreText cannot be empty');
         }
-        $len = mb_strlen($value);
-        if ($len > 50) {
-            throw new \InvalidArgumentException(sprintf(
-                'PersonaNombreText must be at most 50 characters (length=%d, value=%s)',
-                $len,
-                PersonaTextoChars::safeRepr($value)
+        if (mb_strlen($value) > 50) {
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext(
+                'PersonaNombreText must be at most 50 characters',
+                $value
             ));
         }
         PersonaTextoChars::throwsIfNotMatching('PersonaNombreText', $value, PersonaTextoChars::CLASE_TEXTO_PERSONA);

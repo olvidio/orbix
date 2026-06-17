@@ -2,6 +2,8 @@
 
 namespace src\tablonanuncios\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class Idioma
 {
     private string $value;
@@ -19,7 +21,7 @@ final class Idioma
             throw new \InvalidArgumentException('Idioma cannot be empty');
         }
         if (mb_strlen($value) > 12) {
-            throw new \InvalidArgumentException('Idioma must be at most 12 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('Idioma must be at most 12 characters', $value));
         }
     }
 

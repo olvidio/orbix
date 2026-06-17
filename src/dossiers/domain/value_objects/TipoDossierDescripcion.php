@@ -2,6 +2,8 @@
 
 namespace src\dossiers\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class TipoDossierDescripcion
 {
     private string $value;
@@ -19,7 +21,7 @@ final class TipoDossierDescripcion
             throw new \InvalidArgumentException('TipoDossierDescripcion cannot be empty');
         }
         if (mb_strlen($value) > 70) {
-            throw new \InvalidArgumentException('TipoDossierDescripcion must be at most 70 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('TipoDossierDescripcion must be at most 70 characters', $value));
         }
     }
 

@@ -2,6 +2,8 @@
 
 namespace src\inventario\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class TipoDocName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class TipoDocName
             throw new \InvalidArgumentException('TipoDocName cannot be empty');
         }
         if (mb_strlen($value) > 60) {
-            throw new \InvalidArgumentException('TipoDocName must be at most 60 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('TipoDocName must be at most 60 characters', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'’\-()\/]+$/u", $value)) {
             throw new \InvalidArgumentException('TipoDocName has invalid characters');

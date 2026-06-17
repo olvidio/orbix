@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class TipoTelecoCode
 {
     private string $value;
@@ -16,7 +18,7 @@ final class TipoTelecoCode
     private function validate(string $value): void
     {
         if (mb_strlen($value) > 20) {
-            throw new \InvalidArgumentException('TipoCentroName must be at most 20 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('TipoCentroName must be at most 20 characters', $value));
         }
     }
 

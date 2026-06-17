@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class PlanoExtensionText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class PlanoExtensionText
             throw new \InvalidArgumentException('PlanoExtensionText cannot be empty');
         }
         if (mb_strlen($value) > 10) {
-            throw new \InvalidArgumentException('PlanoExtensionText must be at most 10 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('PlanoExtensionText must be at most 10 characters', $value));
         }
         if (!preg_match('/^[A-z0-9]+$/', $value)) {
             throw new \InvalidArgumentException('PlanoExtensionText has invalid characters');

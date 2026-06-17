@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace src\ubiscamas\domain\value_objects;
 
 use InvalidArgumentException;
+use src\shared\domain\value_objects\ValueObjectMessages;
 
 /**
  * Value Object para las observaciones de una habitación.
@@ -16,7 +17,10 @@ final class HabitacionObservText
     public function __construct(string $value)
     {
         if (mb_strlen($value) > 250) {
-            throw new InvalidArgumentException(sprintf('Las observaciones no pueden superar los 250 caracteres. Actual: %d', mb_strlen($value)));
+            throw new InvalidArgumentException(ValueObjectMessages::withValueContext(
+                'Las observaciones no pueden superar los 250 caracteres',
+                $value
+            ));
         }
         $this->value = $value;
     }

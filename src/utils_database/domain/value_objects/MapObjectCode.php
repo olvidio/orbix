@@ -2,6 +2,8 @@
 
 namespace src\utils_database\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class MapObjectCode
 {
     private string $value;
@@ -20,7 +22,7 @@ final class MapObjectCode
         }
         // keep it short and strict as it maps to known object names
         if (mb_strlen($value) > 32) {
-            throw new \InvalidArgumentException('MapObjectCode must be at most 32 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('MapObjectCode must be at most 32 characters', $value));
         }
         // Allow letters, numbers, underscore and hyphen (object names like Actividad, Casa, Direccion, Centro)
         if (!preg_match('/^[A-Za-z0-9_-]+$/u', $value)) {

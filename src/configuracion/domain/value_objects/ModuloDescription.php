@@ -2,6 +2,8 @@
 
 namespace src\configuracion\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ModuloDescription
 {
     private string $value;
@@ -22,7 +24,7 @@ final class ModuloDescription
         }
         // Conservative maximum length to prevent excessively large strings (tune as needed)
         if (mb_strlen($value) > 500) {
-            throw new \InvalidArgumentException('ModuloDescription must be at most 500 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ModuloDescription must be at most 500 characters', $value));
         }
     }
 

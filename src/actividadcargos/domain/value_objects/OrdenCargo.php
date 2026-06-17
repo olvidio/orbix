@@ -2,6 +2,8 @@
 
 namespace src\actividadcargos\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class OrdenCargo
 {
     private int $value;
@@ -19,7 +21,7 @@ final class OrdenCargo
         }
         // Máximo 8 dígitos según UI (DatosCampo->setArgument(8))
         if ($value > 99999999) {
-            throw new \InvalidArgumentException('OrdenCargo must be at most 8 digits');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('OrdenCargo must be at most 8 digits', $value));
         }
     }
 

@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ObservText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class ObservText
             throw new \InvalidArgumentException('ObservText cannot be empty');
         }
         if (mb_strlen($value) > 5000) {
-            throw new \InvalidArgumentException('ObservText must be at most 5000 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ObservText must be at most 5000 characters', $value));
         }
     }
 

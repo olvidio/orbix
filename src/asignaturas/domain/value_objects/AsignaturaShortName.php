@@ -2,6 +2,8 @@
 
 namespace src\asignaturas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class AsignaturaShortName
 {
     private string $value;
@@ -20,7 +22,7 @@ final class AsignaturaShortName
         }
         // UI shows max length 23 (see DatosCampo->setArgument(23))
         if (mb_strlen($value) > 23) {
-            throw new \InvalidArgumentException('AsignaturaShortName must be at most 30 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('AsignaturaShortName must be at most 30 characters', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('AsignaturaShortName has invalid characters');

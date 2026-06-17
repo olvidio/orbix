@@ -2,6 +2,8 @@
 
 namespace src\asistentes\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 /**
  * Value object para el encargo de un asistente
  */
@@ -19,7 +21,7 @@ final class AsistenteEncargo
     private function validate(string $value): void
     {
         if (mb_strlen($value) > 255) {
-            throw new \InvalidArgumentException('AsistenteEncargo must be at most 255 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('AsistenteEncargo must be at most 255 characters', $value));
         }
     }
 

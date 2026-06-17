@@ -2,6 +2,8 @@
 
 namespace src\inventario\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class DocumentoObserv
 {
     private string $value;
@@ -17,7 +19,7 @@ final class DocumentoObserv
     {
         // UI sets argument 80
         if (mb_strlen($value) > 150) {
-            throw new \InvalidArgumentException('DocumentoObserv must be at most 150 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DocumentoObserv must be at most 150 characters', $value));
         }
     }
 

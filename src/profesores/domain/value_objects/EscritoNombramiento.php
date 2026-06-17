@@ -2,6 +2,8 @@
 
 namespace src\profesores\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class EscritoNombramiento
 {
     private string $value;
@@ -18,31 +20,12 @@ final class EscritoNombramiento
         if ($value === '') {
             throw new \InvalidArgumentException('EscritoNombramiento cannot be empty');
         }
-        $len = mb_strlen($value);
-        if ($len > 30) {
-            throw new \InvalidArgumentException(sprintf(
-                'EscritoNombramiento must be at most 30 characters (length=%d, value=%s)',
-                $len,
-                self::reprForException($value)
+        if (mb_strlen($value) > 30) {
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext(
+                'EscritoNombramiento must be at most 30 characters',
+                $value
             ));
         }
-    }
-
-    private static function reprForException(string $value): string
-    {
-        $flags = JSON_UNESCAPED_UNICODE;
-        if (defined('JSON_INVALID_SUBSTITUTE')) {
-            $flags |= JSON_INVALID_SUBSTITUTE;
-        }
-        $json = json_encode($value, $flags);
-        if (!is_string($json)) {
-            return '(valor no codificable)';
-        }
-        if (strlen($json) > 160) {
-            return substr($json, 0, 157) . '...';
-        }
-
-        return $json;
     }
 
     public function value(): string

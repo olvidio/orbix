@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class DescTelecoText
 {
     private string $value;
@@ -20,7 +22,7 @@ final class DescTelecoText
         }
         // Por UI, longitud máxima 20 (DatosCampo->setArgument(20))
         if (mb_strlen($value) > 20) {
-            throw new \InvalidArgumentException('DescTelecoText must be at most 20 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DescTelecoText must be at most 20 characters', $value));
         }
         // Caracteres comunes de nombre/etiqueta, en línea con TipoTelecoName
         if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {

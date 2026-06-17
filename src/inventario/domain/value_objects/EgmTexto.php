@@ -2,6 +2,8 @@
 
 namespace src\inventario\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class EgmTexto
 {
     private string $value;
@@ -17,7 +19,7 @@ final class EgmTexto
     {
         // No max specified in UI; be conservative
         if (mb_strlen($value) > 255) {
-            throw new \InvalidArgumentException('EgmTexto must be at most 255 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('EgmTexto must be at most 255 characters', $value));
         }
     }
 

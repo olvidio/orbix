@@ -2,6 +2,8 @@
 
 namespace src\asignaturas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class AsignaturaTipoLatin
 {
     private string $value;
@@ -19,7 +21,7 @@ final class AsignaturaTipoLatin
             throw new \InvalidArgumentException('AsignaturaTipoLatin cannot be empty');
         }
         if (mb_strlen($value) > 25) {
-            throw new \InvalidArgumentException('AsignaturaTipoLatin must be at most 25 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('AsignaturaTipoLatin must be at most 25 characters', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'’_\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('AsignaturaTipoLatin has invalid characters');

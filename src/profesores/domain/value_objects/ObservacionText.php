@@ -2,6 +2,8 @@
 
 namespace src\profesores\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ObservacionText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class ObservacionText
             throw new \InvalidArgumentException('ObservacionText cannot be empty');
         }
         if (mb_strlen($value) > 100) {
-            throw new \InvalidArgumentException('ObservacionText must be at most 100 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ObservacionText must be at most 100 characters', $value));
         }
     }
 

@@ -2,6 +2,8 @@
 
 namespace src\profesores\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ColeccionName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class ColeccionName
             throw new \InvalidArgumentException('ColeccionName cannot be empty');
         }
         if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('ColeccionName must be at most 50 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ColeccionName must be at most 50 characters', $value));
         }
     }
 

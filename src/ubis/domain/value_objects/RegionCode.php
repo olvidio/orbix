@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class RegionCode
 {
     private string $value;
@@ -20,7 +22,7 @@ final class RegionCode
         }
         // By UI config, argument length is 6
         if (mb_strlen($value) > 6) {
-            throw new \InvalidArgumentException('RegionCode must be at most 6 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('RegionCode must be at most 6 characters', $value));
         }
         // Allow letters, numbers, underscore and hyphen
         if (!preg_match('/^[A-Za-z0-9_-]+$/u', $value)) {

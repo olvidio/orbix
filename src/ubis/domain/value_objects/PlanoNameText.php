@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class PlanoNameText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class PlanoNameText
             throw new \InvalidArgumentException('PlanoNameText cannot be empty');
         }
         if (mb_strlen($value) > 100) {
-            throw new \InvalidArgumentException('PlanoNameText must be at most 100 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('PlanoNameText must be at most 100 characters', $value));
         }
     }
 

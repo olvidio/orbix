@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class NumTelecoText
 {
     private string $value;
@@ -20,7 +22,7 @@ final class NumTelecoText
         }
         // Por UI, longitud máxima 50 (DatosCampo->setArgument('50'))
         if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('NumTelecoText must be at most 50 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('NumTelecoText must be at most 50 characters', $value));
         }
         // Permitir letras, números y signos comunes utilizados en números/siglas
         /*

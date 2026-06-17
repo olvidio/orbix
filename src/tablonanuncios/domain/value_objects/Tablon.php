@@ -2,6 +2,8 @@
 
 namespace src\tablonanuncios\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class Tablon
 {
     private string $value;
@@ -19,7 +21,7 @@ final class Tablon
             throw new \InvalidArgumentException('Tablon cannot be empty');
         }
         if (mb_strlen($value) > 100) {
-            throw new \InvalidArgumentException('Tablon must be at most 100 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('Tablon must be at most 100 characters', $value));
         }
     }
 

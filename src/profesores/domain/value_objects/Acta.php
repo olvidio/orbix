@@ -2,6 +2,8 @@
 
 namespace src\profesores\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class Acta
 {
     private string $value;
@@ -19,7 +21,7 @@ final class Acta
             throw new \InvalidArgumentException('Acta cannot be empty');
         }
         if (mb_strlen($value) > 30) {
-            throw new \InvalidArgumentException('Acta must be at most 30 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('Acta must be at most 30 characters', $value));
         }
     }
 

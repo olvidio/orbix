@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class LugarNacimientoText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class LugarNacimientoText
             throw new \InvalidArgumentException('LugarNacimientoText cannot be empty');
         }
         if (mb_strlen($value) > 255) {
-            throw new \InvalidArgumentException('LugarNacimientoText must be at most 255 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('LugarNacimientoText must be at most 255 characters', $value));
         }
     }
 

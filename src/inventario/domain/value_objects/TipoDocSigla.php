@@ -2,6 +2,8 @@
 
 namespace src\inventario\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class TipoDocSigla
 {
     private string $value;
@@ -19,7 +21,7 @@ final class TipoDocSigla
             throw new \InvalidArgumentException('TipoDocSigla cannot be empty');
         }
         if (mb_strlen($value) > 80) {
-            throw new \InvalidArgumentException('TipoDocSigla must be at most 80 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('TipoDocSigla must be at most 80 characters', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'\"’\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('TipoDocSigla has invalid characters');

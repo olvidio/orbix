@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class CodigoPostalText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class CodigoPostalText
             throw new \InvalidArgumentException('CodigoPostalText cannot be empty');
         }
         if (mb_strlen($value) > 25) {
-            throw new \InvalidArgumentException('CodigoPostalText must be at most 25 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('CodigoPostalText must be at most 25 characters', $value));
         }
         if (!preg_match("/^[A-Za-z0-9\-\s.]+$/", $value)) {
             throw new \InvalidArgumentException('CodigoPostalText has invalid characters');

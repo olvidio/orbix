@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class PlanoDocText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class PlanoDocText
             throw new \InvalidArgumentException('PlanoDocText cannot be empty');
         }
         if (mb_strlen($value) > 255) {
-            throw new \InvalidArgumentException('PlanoDocText must be at most 255 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('PlanoDocText must be at most 255 characters', $value));
         }
     }
 

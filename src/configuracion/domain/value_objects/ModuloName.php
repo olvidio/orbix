@@ -2,6 +2,8 @@
 
 namespace src\configuracion\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ModuloName
 {
     private string $value;
@@ -20,7 +22,7 @@ final class ModuloName
         }
         // Conservative max length (UI dependent). Adjust if needed.
         if (mb_strlen($value) > 100) {
-            throw new \InvalidArgumentException('ModuloName must be at most 100 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ModuloName must be at most 100 characters', $value));
         }
         // Allow letters (incl. accents), numbers, spaces and common punctuation
         if (!preg_match("/^[\p{L}0-9 .,'’_\-()]+$/u", $value)) {

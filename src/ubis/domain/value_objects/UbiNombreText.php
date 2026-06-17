@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class UbiNombreText
 {
     private string $value;
@@ -20,7 +22,7 @@ final class UbiNombreText
         }
         // Longitud razonable para nombres
         if (mb_strlen($value) > 100) {
-            throw new \InvalidArgumentException('UbiNombreText must be at most 100 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('UbiNombreText must be at most 100 characters', $value));
         }
         // Caracteres comunes de nombres/títulos
         if (!preg_match("/^[\p{L}0-9 .,'´’:_\-()\+\/\"]+$/u", $value)) {

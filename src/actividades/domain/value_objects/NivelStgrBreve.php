@@ -2,6 +2,8 @@
 
 namespace src\actividades\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class NivelStgrBreve
 {
     private string $value;
@@ -20,7 +22,7 @@ final class NivelStgrBreve
         }
         // UI: argument(2)
         if (mb_strlen($value) > 2) {
-            throw new \InvalidArgumentException('NivelStgrBreve debe tener como máximo 2 caracteres');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('NivelStgrBreve debe tener como máximo 2 caracteres', $value));
         }
         if (!preg_match('/^[\p{L}0-9]?[\p{L}0-9]?$/u', $value)) {
             throw new \InvalidArgumentException('NivelStgrBreve contiene caracteres no válidos');

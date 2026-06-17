@@ -2,6 +2,8 @@
 
 namespace src\asignaturas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class DepartamentoName
 {
     private string $value;
@@ -20,7 +22,7 @@ final class DepartamentoName
         }
         // UI shows max length 50 (see DatosCampo->setArgument(50))
         if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('DepartamentoName must be at most 50 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DepartamentoName must be at most 50 characters', $value));
         }
         // Allow common name characters including accents, spaces, apostrophes, hyphens, underscore, plus, parentheses
         if (!preg_match("/^[\p{L}0-9 .,'’_\-()\+]+$/u", $value)) {

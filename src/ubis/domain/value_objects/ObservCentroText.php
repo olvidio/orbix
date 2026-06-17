@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ObservCentroText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class ObservCentroText
             throw new \InvalidArgumentException('ObservCentroText cannot be empty');
         }
         if (mb_strlen($value) > 100) {
-            throw new \InvalidArgumentException('ObservCentroText must be at most 100 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ObservCentroText must be at most 100 characters', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'’;:_\-()\+#\/]*$/u", $value)) {
             throw new \InvalidArgumentException('ObservCentroText has invalid characters');

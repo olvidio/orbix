@@ -2,6 +2,8 @@
 
 namespace src\actividadcargos\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class CargoCode
 {
     private string $value;
@@ -20,7 +22,7 @@ final class CargoCode
         }
         // Por UI, longitud máxima 8 (DatosCampo->setArgument(8))
         if (mb_strlen($value) > 8) {
-            throw new \InvalidArgumentException('CargoCode must be at most 8 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('CargoCode must be at most 8 characters', $value));
         }
         // Allow common name characters including accents, spaces, apostrophes, hyphens, underscore, plus, parentheses
         if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {

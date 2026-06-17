@@ -2,6 +2,8 @@
 
 namespace src\actividades\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class NivelStgrDesc
 {
     private string $value;
@@ -20,7 +22,7 @@ final class NivelStgrDesc
         }
         // UI: argument(25)
         if (mb_strlen($value) > 25) {
-            throw new \InvalidArgumentException('NivelStgrDesc debe tener como máximo 25 caracteres');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('NivelStgrDesc debe tener como máximo 25 caracteres', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('NivelStgrDesc contiene caracteres no válidos');

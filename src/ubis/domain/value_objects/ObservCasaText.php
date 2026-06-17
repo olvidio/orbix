@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ObservCasaText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class ObservCasaText
             throw new \InvalidArgumentException('ObservCasaText cannot be empty');
         }
         if (mb_strlen($value) > 300) {
-            throw new \InvalidArgumentException('ObservCasaText must be at most 300 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ObservCasaText must be at most 300 characters', $value));
         }
         /*
         if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+#\/]*$/u", $value)) {

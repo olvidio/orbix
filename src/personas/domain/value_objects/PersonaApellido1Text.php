@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class PersonaApellido1Text
 {
     private string $value;
@@ -19,7 +21,7 @@ final class PersonaApellido1Text
             throw new \InvalidArgumentException('PersonaApellido1Text cannot be empty');
         }
         if (mb_strlen($value) > 25) {
-            throw new \InvalidArgumentException('PersonaApellido1Text must be at most 25 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('PersonaApellido1Text must be at most 25 characters', $value));
         }
         PersonaTextoChars::throwsIfNotMatching('PersonaApellido1Text', $value, PersonaTextoChars::CLASE_TEXTO_PERSONA);
     }

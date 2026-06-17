@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class DireccionText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class DireccionText
             throw new \InvalidArgumentException('DireccionText cannot be empty');
         }
         if (mb_strlen($value) > 200) {
-            throw new \InvalidArgumentException('DireccionText must be at most 200 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DireccionText must be at most 200 characters', $value));
         }
 
     }

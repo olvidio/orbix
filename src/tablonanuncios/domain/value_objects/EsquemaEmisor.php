@@ -2,6 +2,8 @@
 
 namespace src\tablonanuncios\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class EsquemaEmisor
 {
     private string $value;
@@ -19,7 +21,7 @@ final class EsquemaEmisor
             throw new \InvalidArgumentException('EsquemaEmisor cannot be empty');
         }
         if (mb_strlen($value) > 100) {
-            throw new \InvalidArgumentException('EsquemaEmisor must be at most 100 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('EsquemaEmisor must be at most 100 characters', $value));
         }
     }
 

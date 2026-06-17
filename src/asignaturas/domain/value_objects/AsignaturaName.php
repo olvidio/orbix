@@ -2,6 +2,8 @@
 
 namespace src\asignaturas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class AsignaturaName
 {
     private string $value;
@@ -20,7 +22,7 @@ final class AsignaturaName
         }
         // UI shows max length 100 (see DatosCampo->setArgument(100))
         if (mb_strlen($value) > 100) {
-            throw new \InvalidArgumentException('AsignaturaName must be at most 40 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('AsignaturaName must be at most 40 characters', $value));
         }
         // Allow common name characters including accents, spaces, apostrophes, hyphens, underscore, plus, parentheses
         if (!preg_match("/^[\p{L}0-9 .,'’\"\/:_\-()\+]+$/u", $value)) {

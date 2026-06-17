@@ -2,6 +2,8 @@
 
 namespace src\notas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 /**
  * Value object for Acta Number (sacta)
  */
@@ -22,7 +24,7 @@ final class ActaNumero
             throw new \InvalidArgumentException('El número de acta no puede estar vacío');
         }
         if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('El número de acta debe tener como máximo 50 caracteres');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('El número de acta debe tener como máximo 50 caracteres', $value));
         }
     }
 

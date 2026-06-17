@@ -2,6 +2,8 @@
 
 namespace src\utils_database\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class DbSchemaCode
 {
     private string $value;
@@ -20,7 +22,7 @@ final class DbSchemaCode
         }
         // Typical schema codes are short, allow up to 32 chars
         if (mb_strlen($value) > 32) {
-            throw new \InvalidArgumentException('DbSchemaCode must be at most 32 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DbSchemaCode must be at most 32 characters', $value));
         }
         // Allow letters, numbers, underscore and hyphen
         if (!preg_match('/^[A-Za-z0-9_-]+$/u', $value)) {

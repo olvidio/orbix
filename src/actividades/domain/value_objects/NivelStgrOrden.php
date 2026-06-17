@@ -2,6 +2,8 @@
 
 namespace src\actividades\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class NivelStgrOrden
 {
     private int $value;
@@ -19,7 +21,7 @@ final class NivelStgrOrden
         }
         // UI: argument(3) sugiere hasta 3 dígitos
         if ($value > 999) {
-            throw new \InvalidArgumentException('NivelStgrOrden must be at most 3 digits');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('NivelStgrOrden must be at most 3 digits', $value));
         }
     }
 

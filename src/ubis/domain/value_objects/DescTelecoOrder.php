@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class DescTelecoOrder
 {
     private int $value;
@@ -19,7 +21,7 @@ final class DescTelecoOrder
         }
         // UI indica argumento 2 (máx 2 dígitos)
         if ($value > 99) {
-            throw new \InvalidArgumentException('DescTelecoOrder must be at most 2 digits (0-99)');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DescTelecoOrder must be at most 2 digits (0-99)', $value));
         }
     }
 

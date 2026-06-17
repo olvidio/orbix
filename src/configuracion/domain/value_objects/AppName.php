@@ -2,6 +2,8 @@
 
 namespace src\configuracion\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class AppName
 {
     private string $value;
@@ -20,7 +22,7 @@ final class AppName
         }
         // UI shows max length 30
         if (mb_strlen($value) > 30) {
-            throw new \InvalidArgumentException('AppName must be at most 30 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('AppName must be at most 30 characters', $value));
         }
         // Allow common name characters including accents, spaces, apostrophes, hyphens
         if (!preg_match("/^[\p{L}0-9 .,'’\-()]+$/u", $value)) {

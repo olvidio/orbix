@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class DelegacionCode
 {
     private ?string $value;
@@ -23,7 +25,7 @@ final class DelegacionCode
         }
         // By UI convention for codes, cap length to 6 unless otherwise specified
         if (mb_strlen($value) > 8) {
-            throw new \InvalidArgumentException('DelegacionCode must be at most 6 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DelegacionCode must be at most 6 characters', $value));
         }
         if (!preg_match("/^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Z}]+$/u", $value)) {
             throw new \InvalidArgumentException('DelegacionCode has invalid characters');

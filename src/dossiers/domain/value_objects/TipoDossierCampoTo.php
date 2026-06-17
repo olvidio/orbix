@@ -2,6 +2,8 @@
 
 namespace src\dossiers\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class TipoDossierCampoTo
 {
     private string $value;
@@ -19,7 +21,7 @@ final class TipoDossierCampoTo
             throw new \InvalidArgumentException('TipoDossierCampoTo cannot be empty');
         }
         if (mb_strlen($value) > 20) {
-            throw new \InvalidArgumentException('TipoDossierCampoTo must be at most 20 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('TipoDossierCampoTo must be at most 20 characters', $value));
         }
         if (!preg_match("/^[A-Za-z0-9_]+$/", $value)) {
             throw new \InvalidArgumentException('TipoDossierCampoTo has invalid characters');

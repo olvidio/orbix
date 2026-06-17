@@ -2,6 +2,8 @@
 
 namespace src\pasarela\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class PasarelaParametroCode
 {
     private string $value;
@@ -20,7 +22,7 @@ final class PasarelaParametroCode
         }
         // Typical parameter keys are short (e.g., curso_crt, idioma_default)
         if (mb_strlen($value) > 64) {
-            throw new \InvalidArgumentException('ConfigParametroCode must be at most 64 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ConfigParametroCode must be at most 64 characters', $value));
         }
         // Allow letters, numbers, underscore and hyphen
         if (!preg_match('/^[A-Za-z0-9_-]+$/u', $value)) {

@@ -2,6 +2,8 @@
 
 namespace src\tablonanuncios\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class EsquemaDestino
 {
     private string $value;
@@ -19,7 +21,7 @@ final class EsquemaDestino
             throw new \InvalidArgumentException('EsquemaDestino cannot be empty');
         }
         if (mb_strlen($value) > 100) {
-            throw new \InvalidArgumentException('EsquemaDestino must be at most 100 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('EsquemaDestino must be at most 100 characters', $value));
         }
     }
 

@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class PersonaTablaCode
 {
     private string $value;
@@ -19,7 +21,7 @@ final class PersonaTablaCode
             throw new \InvalidArgumentException('PersonaTablaCode cannot be empty');
         }
         if (mb_strlen($value) > 6) {
-            throw new \InvalidArgumentException('PersonaTablaCode must be at most 6 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('PersonaTablaCode must be at most 6 characters', $value));
         }
         PersonaTextoChars::throwsIfNotMatching('PersonaTablaCode', $value, PersonaTextoChars::CLASE_TABLA_CODE);
     }

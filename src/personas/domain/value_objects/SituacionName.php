@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class SituacionName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class SituacionName
             throw new \InvalidArgumentException('SituacionName cannot be empty');
         }
         if (mb_strlen($value) > 60) {
-            throw new \InvalidArgumentException('SituacionName must be at most 60 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('SituacionName must be at most 60 characters', $value));
         }
         PersonaTextoChars::throwsIfNotMatching('SituacionName', $value, PersonaTextoChars::CLASE_SITUACION);
     }

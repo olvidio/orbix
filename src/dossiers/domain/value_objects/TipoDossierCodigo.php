@@ -2,6 +2,8 @@
 
 namespace src\dossiers\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class TipoDossierCodigo
 {
     private string $value;
@@ -16,7 +18,7 @@ final class TipoDossierCodigo
     private function validate(string $value): void
     {
         if (mb_strlen($value) > 80) {
-            throw new \InvalidArgumentException('TipoDossierCodigo must be at most 80 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('TipoDossierCodigo must be at most 80 characters', $value));
         }
     }
 

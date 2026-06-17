@@ -2,6 +2,8 @@
 
 namespace src\inventario\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class LugarName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class LugarName
             throw new \InvalidArgumentException('LugarName cannot be empty');
         }
         if (mb_strlen($value) > 60) {
-            throw new \InvalidArgumentException('LugarName must be at most 60 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('LugarName must be at most 60 characters', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'’\-()]+$/u", $value)) {
             throw new \InvalidArgumentException('LugarName has invalid characters');

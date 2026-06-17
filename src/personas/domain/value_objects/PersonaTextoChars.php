@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 /**
  * Validación y mensajes de error para textos de persona (nombre, apellidos, etc.).
  */
@@ -65,19 +67,7 @@ final class PersonaTextoChars
 
     public static function safeRepr(string $value): string
     {
-        $flags = JSON_UNESCAPED_UNICODE;
-        if (defined('JSON_INVALID_SUBSTITUTE')) {
-            $flags |= JSON_INVALID_SUBSTITUTE;
-        }
-        $json = json_encode($value, $flags);
-        if (!is_string($json)) {
-            return '(valor no codificable)';
-        }
-        if (strlen($json) > 160) {
-            return substr($json, 0, 157) . '...';
-        }
-
-        return $json;
+        return ValueObjectMessages::safeRepr($value);
     }
 
     /**

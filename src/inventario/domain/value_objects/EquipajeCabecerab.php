@@ -2,6 +2,8 @@
 
 namespace src\inventario\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class EquipajeCabecerab
 {
     private string $value;
@@ -16,7 +18,7 @@ final class EquipajeCabecerab
     private function validate(string $value): void
     {
         if (mb_strlen($value) > 255) {
-            throw new \InvalidArgumentException('EquipajeCabecerab must be at most 255 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('EquipajeCabecerab must be at most 255 characters', $value));
         }
     }
 

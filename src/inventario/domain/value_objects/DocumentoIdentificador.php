@@ -2,6 +2,8 @@
 
 namespace src\inventario\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class DocumentoIdentificador
 {
     private string $value;
@@ -17,7 +19,7 @@ final class DocumentoIdentificador
     {
         // UI argument 25
         if (mb_strlen($value) > 25) {
-            throw new \InvalidArgumentException('DocumentoIdentificador must be at most 25 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DocumentoIdentificador must be at most 25 characters', $value));
         }
     }
 

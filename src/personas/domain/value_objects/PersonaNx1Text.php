@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class PersonaNx1Text
 {
     private string $value;
@@ -19,7 +21,7 @@ final class PersonaNx1Text
             throw new \InvalidArgumentException('PersonaNx1Text cannot be empty');
         }
         if (mb_strlen($value) > 7) {
-            throw new \InvalidArgumentException('PersonaNx1Text must be at most 7 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('PersonaNx1Text must be at most 7 characters', $value));
         }
         PersonaTextoChars::throwsIfNotMatching('PersonaNx1Text', $value, PersonaTextoChars::CLASE_NX);
     }

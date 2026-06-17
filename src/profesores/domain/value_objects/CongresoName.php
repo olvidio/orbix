@@ -2,6 +2,8 @@
 
 namespace src\profesores\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class CongresoName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class CongresoName
             throw new \InvalidArgumentException('CongresoName cannot be empty');
         }
         if (mb_strlen($value) > 80) {
-            throw new \InvalidArgumentException('CongresoName must be at most 80 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('CongresoName must be at most 80 characters', $value));
         }
     }
 

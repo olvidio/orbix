@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class PaisName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class PaisName
             throw new \InvalidArgumentException('PaisName cannot be empty');
         }
         if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('PaisName must be at most 50 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('PaisName must be at most 50 characters', $value));
         }
         if (!preg_match("/^[\p{L} .,'’:_\-()]+$/u", $value)) {
             throw new \InvalidArgumentException('PaisName has invalid characters');

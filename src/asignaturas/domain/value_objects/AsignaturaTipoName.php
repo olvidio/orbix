@@ -2,6 +2,8 @@
 
 namespace src\asignaturas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class AsignaturaTipoName
 {
     private string $value;
@@ -20,7 +22,7 @@ final class AsignaturaTipoName
         }
         // Máx. longitud estimada 20
         if (mb_strlen($value) > 20) {
-            throw new \InvalidArgumentException('AsignaturaTipoName must be at most 20 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('AsignaturaTipoName must be at most 20 characters', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'’_\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('AsignaturaTipoName has invalid characters');

@@ -2,6 +2,8 @@
 
 namespace src\profesores\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class TituloName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class TituloName
             throw new \InvalidArgumentException('TituloName cannot be empty');
         }
         if (mb_strlen($value) > 25) {
-            throw new \InvalidArgumentException('TituloName must be at most 25 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('TituloName must be at most 25 characters', $value));
         }
     }
 

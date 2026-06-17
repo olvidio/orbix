@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class AsistenciaDescripcionText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class AsistenciaDescripcionText
             throw new \InvalidArgumentException('AsistenciaDescripcionText cannot be empty');
         }
         if (mb_strlen($value) > 255) {
-            throw new \InvalidArgumentException('AsistenciaDescripcionText must be at most 255 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('AsistenciaDescripcionText must be at most 255 characters', $value));
         }
     }
 

@@ -2,6 +2,8 @@
 
 namespace src\inventario\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ColeccionName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class ColeccionName
             throw new \InvalidArgumentException('ColeccionName cannot be empty');
         }
         if (mb_strlen($value) > 30) {
-            throw new \InvalidArgumentException('ColeccionName must be at most 30 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ColeccionName must be at most 30 characters', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'’\-()]+$/u", $value)) {
             throw new \InvalidArgumentException('ColeccionName has invalid characters');

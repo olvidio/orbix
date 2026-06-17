@@ -2,6 +2,8 @@
 
 namespace src\profesores\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class CentroDntName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class CentroDntName
             throw new \InvalidArgumentException('CentroDntName cannot be empty');
         }
         if (mb_strlen($value) > 25) {
-            throw new \InvalidArgumentException('CentroDntName must be at most 25 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('CentroDntName must be at most 25 characters', $value));
         }
     }
 

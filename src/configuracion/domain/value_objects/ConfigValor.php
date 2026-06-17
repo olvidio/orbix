@@ -2,6 +2,8 @@
 
 namespace src\configuracion\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ConfigValor
 {
     private string $value;
@@ -17,7 +19,7 @@ final class ConfigValor
     {
         // Allow any string (including JSON, CSV, numbers); enforce a generous max length to avoid abuse
         if (mb_strlen($value) > 4096) {
-            throw new \InvalidArgumentException('ConfigValor must be at most 4096 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ConfigValor must be at most 4096 characters', $value));
         }
     }
 

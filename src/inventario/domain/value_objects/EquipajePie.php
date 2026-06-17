@@ -2,6 +2,8 @@
 
 namespace src\inventario\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class EquipajePie
 {
     private string $value;
@@ -16,7 +18,7 @@ final class EquipajePie
     private function validate(string $value): void
     {
         if (mb_strlen($value) > 1000) {
-            throw new \InvalidArgumentException('EquipajePie must be at most 1000 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('EquipajePie must be at most 1000 characters', $value));
         }
     }
 

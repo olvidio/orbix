@@ -2,6 +2,8 @@
 
 namespace src\actividades\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class RepeticionText
 {
     private string $value;
@@ -20,7 +22,7 @@ final class RepeticionText
         }
         // UI: argument(50)
         if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('RepeticionText debe tener como máximo 50 caracteres');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('RepeticionText debe tener como máximo 50 caracteres', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('RepeticionText contiene caracteres no válidos');

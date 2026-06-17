@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ProfesionText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class ProfesionText
             throw new \InvalidArgumentException('ProfesionText cannot be empty');
         }
         if (mb_strlen($value) > 255) {
-            throw new \InvalidArgumentException('ProfesionText must be at most 255 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ProfesionText must be at most 255 characters', $value));
         }
     }
 

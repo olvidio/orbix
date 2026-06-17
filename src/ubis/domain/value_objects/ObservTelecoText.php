@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ObservTelecoText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class ObservTelecoText
             throw new \InvalidArgumentException('ObservTelecoText cannot be empty');
         }
         if (mb_strlen($value) > 300) {
-            throw new \InvalidArgumentException('ObservTelecoText must be at most 300 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ObservTelecoText must be at most 300 characters', $value));
         }
         // Permitir caracteres comunes de texto corto
         if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+#\/]*$/u", $value)) {

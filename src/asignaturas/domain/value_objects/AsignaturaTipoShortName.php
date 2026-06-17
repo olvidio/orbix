@@ -2,6 +2,8 @@
 
 namespace src\asignaturas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class AsignaturaTipoShortName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class AsignaturaTipoShortName
             throw new \InvalidArgumentException('AsignaturaTipoShortName cannot be empty');
         }
         if (mb_strlen($value) > 2) {
-            throw new \InvalidArgumentException('AsignaturaTipoShortName must be at most 2 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('AsignaturaTipoShortName must be at most 2 characters', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'’_\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('AsignaturaTipoShortName has invalid characters');

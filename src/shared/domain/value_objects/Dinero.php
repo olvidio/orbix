@@ -2,6 +2,8 @@
 
 namespace src\shared\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 /**
  * Value Object de dinero con precisión de 2 decimales (almacenado en céntimos)
  */
@@ -99,7 +101,7 @@ final class Dinero
             throw new \InvalidArgumentException('Dinero no puede ser vacío');
         }
         if (!preg_match('/^[+-]?\d+(?:\.\d{1,2})?$/', $s)) {
-            throw new \InvalidArgumentException('Dinero debe tener como máximo 2 decimales');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('Dinero debe tener como máximo 2 decimales', $value));
         }
         // usar BCMath si disponible, sino parse manual
         $parts = explode('.', $s, 2);

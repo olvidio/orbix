@@ -2,6 +2,8 @@
 
 namespace src\profesores\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class TipoPublicacionName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class TipoPublicacionName
             throw new \InvalidArgumentException('TipoPublicacionName cannot be empty');
         }
         if (mb_strlen($value) > 15) {
-            throw new \InvalidArgumentException('TipoPublicacionName must be at most 15 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('TipoPublicacionName must be at most 15 characters', $value));
         }
     }
 

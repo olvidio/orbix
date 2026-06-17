@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class RegionNameText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class RegionNameText
             throw new \InvalidArgumentException('RegionNameText cannot be empty');
         }
         if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('RegionNameText must be at most 50 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('RegionNameText must be at most 50 characters', $value));
         }
         if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('RegionNameText has invalid characters');

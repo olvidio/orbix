@@ -2,6 +2,8 @@
 
 namespace src\ubis\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class DelegacionGrupoEstudios
 {
     private string $value;
@@ -19,7 +21,7 @@ final class DelegacionGrupoEstudios
             throw new \InvalidArgumentException('DelegacionGrupoEstudios cannot be empty');
         }
         if (mb_strlen($value) > 3) {
-            throw new \InvalidArgumentException('DelegacionGrupoEstudios must be at most 3 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DelegacionGrupoEstudios must be at most 3 characters', $value));
         }
         if (!preg_match('/^[A-Za-z0-9]+$/u', $value)) {
             throw new \InvalidArgumentException('DelegacionGrupoEstudios has invalid characters');

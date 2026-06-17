@@ -2,6 +2,8 @@
 
 namespace src\asignaturas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class AsignaturaTipoYear
 {
     private string $value;
@@ -17,7 +19,7 @@ final class AsignaturaTipoYear
     {
         // Máx 3 caracteres; pensado para dígitos o números romanos (I,V,X)
         if (mb_strlen($value) > 4) {
-            throw new \InvalidArgumentException('AsignaturaTipoYear must be at most 4 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('AsignaturaTipoYear must be at most 4 characters', $value));
         }
         if ($value !== '' && !preg_match('/^[IVX0-9]+$/u', $value)) {
             throw new \InvalidArgumentException('AsignaturaTipoYear must contain only roman numerals (I,V,X) or digits');

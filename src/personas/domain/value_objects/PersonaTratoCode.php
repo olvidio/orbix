@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class PersonaTratoCode
 {
     private string $value;
@@ -19,7 +21,7 @@ final class PersonaTratoCode
             throw new \InvalidArgumentException('PersonaTratoCode cannot be empty');
         }
         if (mb_strlen($value) > 5) {
-            throw new \InvalidArgumentException('PersonaTratoCode must be at most 5 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('PersonaTratoCode must be at most 5 characters', $value));
         }
         PersonaTextoChars::throwsIfNotMatching('PersonaTratoCode', $value, PersonaTextoChars::CLASE_TRATO);
     }

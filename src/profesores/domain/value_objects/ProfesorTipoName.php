@@ -2,6 +2,8 @@
 
 namespace src\profesores\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ProfesorTipoName
 {
     private string $value;
@@ -20,7 +22,7 @@ final class ProfesorTipoName
         }
         // UI muestra longitud máxima 50 (DatosCampo->setArgument(50))
         if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('ProfesorTipoName must be at most 50 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ProfesorTipoName must be at most 50 characters', $value));
         }
         // Caracteres comunes de nombre (incluye acentos, espacios, guiones, subrayado, paréntesis y +)
         if (!preg_match("/^[\p{L}0-9 .,'’_\-()\+]+$/u", $value)) {

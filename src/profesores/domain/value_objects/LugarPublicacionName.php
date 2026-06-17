@@ -2,6 +2,8 @@
 
 namespace src\profesores\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class LugarPublicacionName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class LugarPublicacionName
             throw new \InvalidArgumentException('LugarPublicacionName cannot be empty');
         }
         if (mb_strlen($value) > 100) {
-            throw new \InvalidArgumentException('LugarPublicacionName must be at most 100 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('LugarPublicacionName must be at most 100 characters', $value));
         }
     }
 

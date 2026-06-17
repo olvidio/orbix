@@ -2,6 +2,8 @@
 
 namespace src\actividades\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ActividadDescText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class ActividadDescText
             throw new \InvalidArgumentException('ActividadDescText must be a non-empty string');
         }
         if (mb_strlen($value) > 80) {
-            throw new \InvalidArgumentException('ActividadDescText debe tener como máximo 80 caracteres');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ActividadDescText debe tener como máximo 80 caracteres', $value));
         }
         if (!preg_match("/^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Z}]*$/u", $value)) {
             throw new \InvalidArgumentException('ActividadDescText contiene caracteres no válidos');

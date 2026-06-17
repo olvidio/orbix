@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class ApelFamText
 {
     private string $value;
@@ -19,7 +21,7 @@ final class ApelFamText
             throw new \InvalidArgumentException('ApelFamText cannot be empty');
         }
         if (mb_strlen($value) > 20) {
-            throw new \InvalidArgumentException('ApelFamText must be at most 20 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('ApelFamText must be at most 20 characters', $value));
         }
         PersonaTextoChars::throwsIfNotMatching('ApelFamText', $value, PersonaTextoChars::CLASE_TEXTO_PERSONA);
     }

@@ -2,6 +2,8 @@
 
 namespace src\profesores\domain\value_objects;
 
+use src\shared\domain\value_objects\ValueObjectMessages;
+
 final class LugarName
 {
     private string $value;
@@ -19,7 +21,7 @@ final class LugarName
             throw new \InvalidArgumentException('LugarName cannot be empty');
         }
         if (mb_strlen($value) > 30) {
-            throw new \InvalidArgumentException('LugarName must be at most 30 characters');
+            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('LugarName must be at most 30 characters', $value));
         }
     }
 
