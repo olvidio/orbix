@@ -9,10 +9,14 @@ use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\entity\TiposActividades;
+use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\services\AsistenteActividadService;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use function src\shared\domain\helpers\curso_est;
 
 /**
  * Tabla de peticiones de plaza por actividad (`tabla_peticiones.php`).
@@ -116,6 +120,9 @@ final class TablaPeticionesData
                 if ($oActividadPosible === null) {
                     continue;
                 }
+                if (!$this->esActividadPeticionVigente($oActividadPosible, $sactividad)) {
+                    continue;
+                }
                 $nom_activ_i = $oActividadPosible->getNom_activ();
 
                 if (ConfigGlobal::is_app_installed('actividadplazas')) {
@@ -179,5 +186,58 @@ final class TablaPeticionesData
                 'asistente_guardar' => 'src/asistentes/asistente_guardar',
             ],
         ];
+    }
+
+    /**
+     * Mismo criterio de vigencia que {@see \src\actividadplazas\application\PeticionesActivData} al listar candidatas.
+     */
+    private function esActividadPeticionVigente(ActividadAll $oActividad, string $sactividad): bool
+    {
+        if ($oActividad->getStatus() !== StatusId::ACTUAL) {
+            return false;
+        }
+
+        $rango = $this->rangoCursoPeticiones($sactividad);
+        if ($rango === null) {
+            return true;
+        }
+
+        $fIni = $oActividad->getF_ini();
+        if ($fIni === null) {
+            return false;
+        }
+
+        $fIniStr = $fIni->format('Y-m-d');
+
+        return $fIniStr >= $rango[0] && $fIniStr <= $rango[1];
+    }
+
+    /**
+     * @return array{0: string, 1: string}|null [inicio, fin] del curso o null si no aplica filtro de fechas
+     */
+    private function rangoCursoPeticiones(string $sactividad): ?array
+    {
+        if (!isset($_SESSION['oConfig']) || !$_SESSION['oConfig'] instanceof ConfigSnapshot) {
+            return null;
+        }
+        /** @var ConfigSnapshot $oConfig */
+        $oConfig = $_SESSION['oConfig'];
+        switch ($sactividad) {
+            case 'ca':
+            case 'cv':
+                $any = $oConfig->any_final_curs('est');
+                return [
+                    curso_est('inicio', $any, 'est')->format('Y-m-d'),
+                    curso_est('fin', $any, 'est')->format('Y-m-d'),
+                ];
+            case 'crt':
+                $any = $oConfig->any_final_curs('crt');
+                return [
+                    curso_est('inicio', $any, 'crt')->format('Y-m-d'),
+                    curso_est('fin', $any, 'crt')->format('Y-m-d'),
+                ];
+            default:
+                return null;
+        }
     }
 }
