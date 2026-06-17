@@ -1096,10 +1096,15 @@ class Lista
                         }
                     }
                 }
-                if (savedState.search_string) {
-                    restoreSearchPanel = true;
-                    searchString = savedState.search_string;
-                    $(\"#txtSearch_$id_tabla\").val(searchString);
+                if (savedState.hasOwnProperty('search_string')) {
+                    if (savedState.search_string) {
+                        restoreSearchPanel = true;
+                        searchString = savedState.search_string;
+                        $(\"#txtSearch_$id_tabla\").val(searchString);
+                    } else {
+                        searchString = '';
+                        $(\"#txtSearch_$id_tabla\").val('');
+                    }
                 }
             }
 

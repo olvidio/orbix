@@ -124,14 +124,12 @@ function fnjs_guardar_estado() {
 
         var search_string = '';
         var searchInput = $('#txtSearch_' + tabla);
-        if (searchInput.length) {
+        var hasSearchInput = searchInput.length > 0;
+        if (hasSearchInput) {
             search_string = searchInput.val() || '';
         }
-        if (!search_string && existing && existing.search_string) {
-            search_string = existing.search_string;
-        }
 
-        if (scroll_id > 0 || sel.length > 0 || search_string !== '') {
+        if (scroll_id > 0 || sel.length > 0 || search_string !== '' || hasSearchInput) {
             sessionStorage.setItem(key, JSON.stringify({
                 scroll_id: scroll_id,
                 sel: sel,
