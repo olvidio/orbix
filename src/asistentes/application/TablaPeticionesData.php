@@ -95,8 +95,14 @@ final class TablaPeticionesData
         $a_valores = [];
         $i = 0;
         foreach ($cAsistentes as $oAsistente) {
-            $i++;
             $id_nom = $oAsistente->getId_nom();
+            $oPersona = $this->personaDlRepository->findById($id_nom);
+            // findByIdAlta?: findById ignora situacion; aquí solo cuenta alta (A). Generalizar si se repite.
+            if ($oPersona === null || $oPersona->getSituacion() !== 'A') {
+                continue;
+            }
+            $nom_ap = $oPersona->getApellidosNombre();
+
             $aWhere = ['id_nom' => $id_nom, 'tipo' => $sactividad, '_ordre' => 'orden'];
             $aOperador = ['tipo' => '~'];
             $cPlazasPeticion = $this->plazaPeticionRepository->getPlazasPeticion($aWhere, $aOperador);
@@ -150,9 +156,7 @@ final class TablaPeticionesData
                 }
             }
 
-            $oPersona = $this->personaDlRepository->findById($id_nom);
-            $nom_ap = $oPersona?->getApellidosNombre();
-
+            $i++;
             $a_valores[$i][1] = $nom_ap;
             $a_valores[$i][2] = $parts === [] ? '' : ['peticiones_parts' => $parts];
         }
