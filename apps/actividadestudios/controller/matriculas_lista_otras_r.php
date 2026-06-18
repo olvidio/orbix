@@ -133,15 +133,21 @@ if (!empty($Qapellido1)) {
         $id_activ = $oPersonaNotaOtraRegionDB->getId_activ();
         // comprobar si ya se ha subido el acta firmada
         $acta = $oPersonaNotaOtraRegionDB->getActa();
-        $Acta = new Acta($acta);
-        if ($Acta->hasEmptyPdf()) {
-            $alert .= '!';
+        if (!empty($acta)) {
+            $Acta = new Acta($acta);
+            if ($Acta->hasEmptyPdf()) {
+                $alert .= '!';
+            }
         }
 
         $nom_asignatura = $a_asignaturas[$id_asignatura];
-        $oActividad = new ActividadAll($id_activ);
-        $nom_activ = $oActividad->getNom_activ();
-        $dl_org = $oActividad->getDl_org();
+        $nom_activ = '';
+        $dl_org = '';
+        if (!empty($id_activ)) {
+            $oActividad = new ActividadAll($id_activ);
+            $nom_activ = $oActividad->getNom_activ();
+            $dl_org = $oActividad->getDl_org();
+        }
 
         $str_asignaturas .= empty($str_asignaturas) ? '' : ', ';
         $str_asignaturas .= trim($nom_asignatura);
