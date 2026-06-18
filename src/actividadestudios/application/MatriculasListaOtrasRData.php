@@ -112,25 +112,22 @@ final class MatriculasListaOtrasRData
                     $marcaRegionStgr = false;
                     $oPersona = $this->findPersonaEnGlobal($idNomAnterior, $problemasRegionStgr, $marcaRegionStgr);
                     if ($oPersona === null) {
-                        $msgErr .= "<br>No encuentro a nadio con id_nom $idNomAnterior en  " . __FILE__ . ': line ' . __LINE__;
-                        $idNomAnterior = $idNom;
-                        $strAsignaturas = '';
-                        $alert = '';
-                        continue;
-                    }
-                    $apellidosNombre = $oPersona->getPrefApellidosNombre();
-                    $dl = $oPersona->getDl();
-                    if ($marcaRegionStgr) {
-                        $alert = self::alertaConRegionStgr($alert);
-                    }
+                        $msgErr .= "<br>No encuentro a nadie con id_nom $idNomAnterior en  " . __FILE__ . ': line ' . __LINE__;
+                    } else {
+                        $apellidosNombre = $oPersona->getPrefApellidosNombre();
+                        $dl = $oPersona->getDl();
+                        if ($marcaRegionStgr) {
+                            $alert = self::alertaConRegionStgr($alert);
+                        }
 
-                    $aValores[$i]['sel'] = (string)$idNomAnterior;
-                    $aValores[$i][5] = $idNomAnterior;
-                    $aValores[$i][1] = $apellidosNombre;
-                    $aValores[$i][2] = $dl;
-                    $aValores[$i][3] = $alert;
-                    $aValores[$i][4] = $strAsignaturas;
-                    $aNombre[$i] = $apellidosNombre;
+                        $aValores[$i]['sel'] = (string)$idNomAnterior;
+                        $aValores[$i][5] = $idNomAnterior;
+                        $aValores[$i][1] = $apellidosNombre;
+                        $aValores[$i][2] = $dl;
+                        $aValores[$i][3] = $alert;
+                        $aValores[$i][4] = $strAsignaturas;
+                        $aNombre[$i] = $apellidosNombre;
+                    }
                     $strAsignaturas = '';
                     $alert = '';
                 }

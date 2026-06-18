@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="LaravelPint">
-    <laravel_pint_settings>
-      <LaravelPintConfiguration asDefaultInterpreter="true" />
-    </laravel_pint_settings>
-  </component>
-  <component name="MessDetector">
-    <phpmd_settings>
-      <MessDetectorConfiguration asDefaultInterpreter="true" />
-    </phpmd_settings>
-  </component>
-  <component name="PhpCSFixer">
-    <phpcsfixer_settings>
-      <PhpCSFixerConfiguration asDefaultInterpreter="true" />
-    </phpcsfixer_settings>
-  </component>
   <component name="PhpCodeSniffer">
     <phpcs_settings>
       <PhpCSConfiguration asDefaultInterpreter="true" />
@@ -122,15 +107,15 @@
       <path value="$PROJECT_DIR$/libs/vendor/dasprid/enum" />
       <path value="$PROJECT_DIR$/libs/vendor/endroid/qr-code" />
       <path value="$PROJECT_DIR$/libs/vendor/bacon/bacon-qr-code" />
-      <path value="$PROJECT_DIR$/libs/vendor/laravel/serializable-closure" />
-      <path value="$PROJECT_DIR$/libs/vendor/php-di/invoker" />
-      <path value="$PROJECT_DIR$/libs/vendor/php-di/php-di" />
+      <path value="$PROJECT_DIR$/libs/vendor/symfony/polyfill-php85" />
       <path value="$PROJECT_DIR$/libs/vendor/nikic/fast-route" />
       <path value="$PROJECT_DIR$/libs/vendor/phpoption/phpoption" />
       <path value="$PROJECT_DIR$/libs/vendor/graham-campbell/result-type" />
-      <path value="$PROJECT_DIR$/libs/vendor/vlucas/phpdotenv" />
       <path value="$PROJECT_DIR$/libs/vendor/phpstan/phpstan" />
-      <path value="$PROJECT_DIR$/libs/vendor/symfony/polyfill-php85" />
+      <path value="$PROJECT_DIR$/libs/vendor/vlucas/phpdotenv" />
+      <path value="$PROJECT_DIR$/libs/vendor/laravel/serializable-closure" />
+      <path value="$PROJECT_DIR$/libs/vendor/php-di/php-di" />
+      <path value="$PROJECT_DIR$/libs/vendor/php-di/invoker" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">
@@ -138,7 +123,7 @@
   </component>
   <component name="PhpStan">
     <PhpStan_settings>
-      <PhpStanConfiguration tool_path="$PROJECT_DIR$/libs/vendor/bin/phpstan" />
+      <PhpStanConfiguration asDefaultInterpreter="true" tool_path="$PROJECT_DIR$/libs/vendor/bin/phpstan" />
     </PhpStan_settings>
   </component>
   <component name="PhpStanOptionsConfiguration">
