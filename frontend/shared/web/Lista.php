@@ -88,6 +88,36 @@ class Lista
         return [self::scalarString($selectRaw)];
     }
 
+    /**
+     * Reordena $a_cabeceras según el array $colOrder (name_idx sin espacios).
+     * Las columnas no presentes en $colOrder se añaden al final manteniendo su orden original.
+     *
+     * @param list<array<string, mixed>|string> $a_cabeceras
+     * @param list<string> $colOrder
+     * @return list<array<string, mixed>|string>
+     */
+    private static function reorderCabeceras(array $a_cabeceras, array $colOrder): array
+    {
+        $byNameIdx = [];
+        foreach ($a_cabeceras as $cab) {
+            $name = is_array($cab) ? self::scalarString($cab['name'] ?? '') : self::scalarString($cab);
+            $name_idx = str_replace(' ', '', $name);
+            $byNameIdx[$name_idx] = $cab;
+        }
+        $ordered = [];
+        foreach ($colOrder as $name_idx) {
+            if (isset($byNameIdx[$name_idx])) {
+                $ordered[] = $byNameIdx[$name_idx];
+                unset($byNameIdx[$name_idx]);
+            }
+        }
+        foreach ($byNameIdx as $cab) {
+            $ordered[] = $cab;
+        }
+
+        return $ordered;
+    }
+
     /** @param array<string, mixed>|string $cabecera */
     private static function cabeceraFieldKey(array|string $cabecera, string $key): ?string
     {
@@ -454,6 +484,8 @@ class Lista
         $aColsVisible = null;
         /** @var array<string, mixed> $aColsWidth */
         $aColsWidth = [];
+        /** @var list<string>|null $aColOrder */
+        $aColOrder = null;
         $bPanelVis = false;
         $aPrefs = $this->fetchPreferenciaTabla($id_tabla)['slickgrid'] ?? null;
         if (is_array($aPrefs)) {
@@ -464,6 +496,9 @@ class Lista
             if (!empty($aPrefs['colWidths']) && is_array($aPrefs['colWidths'])) {
                 $aColsWidth = $aPrefs['colWidths'];
             }
+            if (!empty($aPrefs['colOrder']) && is_array($aPrefs['colOrder'])) {
+                $aColOrder = array_values(array_filter(array_map('strval', $aPrefs['colOrder'])));
+            }
             $grid_width = self::slickgridDimension($aPrefs['widthGrid'] ?? null, '900') ?? '900';
             $grid_height = self::slickgridDimension($aPrefs['heightGrid'] ?? null, '0') ?? '0';
         }
@@ -473,14 +508,29 @@ class Lista
         if (!$this->bFiltro) {
             $bPanelVis = false;
         }
-
         $c = 0;
         $cf = 0;
         $cv = 0;
         $sColumns = '[';
         $sColumnsVisible = '[';
         $sColFilters = '[';
+
+        // Build $aFields from ORIGINAL cabecera order: used for positional (numeric-key) data mapping.
+        // Must not be affected by the display reorder below.
         $aFields = [];
+        foreach ($a_cabeceras as $oCab) {
+            if (is_array($oCab)) {
+                $oCabName = self::scalarString($oCab['name'] ?? '');
+                $aFields[] = self::cabeceraFieldKey($oCab, 'field') ?? str_replace(' ', '', $oCabName);
+            } else {
+                $aFields[] = str_replace(' ', '', self::scalarString($oCab));
+            }
+        }
+
+        // Reorder cabeceras for JS column display only (does not affect $aFields)
+        if ($aColOrder !== null) {
+            $a_cabeceras = self::reorderCabeceras($a_cabeceras, $aColOrder);
+        }
         $showSelCol = ($numBotones > 0) || $this->bConSel;
         if ($showSelCol) {
             $c++;
@@ -527,7 +577,6 @@ class Lista
                     $sDefCol .= ', formatter: ' . $formatter;
                 }
                 $sDefCol = '{' . $sDefCol . '}';
-                $aFields[] = $field;
             } else {
                 $name = self::scalarString($Cabecera);
                 $name_idx = str_replace(' ', '', $name);
@@ -541,7 +590,6 @@ class Lista
                     $sDefCol .= ', width: ' . $prefWidth;
                 }
                 $sDefCol .= '}';
-                $aFields[] = $name_idx;
             }
             if (($aColsVisible !== null && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx] === 'true')) || $aColsVisible === null) {
                 if (!$visible) continue;

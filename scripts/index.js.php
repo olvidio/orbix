@@ -248,6 +248,19 @@ if (!isset($h)) {
         return heightGrid;
     }
 
+    function fnjs_slick_col_order(tabla) {
+        // orden actual de las columnas visibles
+        var colOrder = [];
+        $("#grid_" + tabla + " .slick-header-column").each(function () {
+            var name = $(this).children(".slick-column-name").text();
+            var name_idx = name.replace(/ /g, '');
+            if (name_idx !== '') {
+                colOrder.push(name_idx);
+            }
+        });
+        return colOrder;
+    }
+
     function fnjs_def_tabla(tabla) {
         // si es la tabla por defecto, no puedo guardar las preferencias.
         if (tabla === 'uno') {
@@ -258,6 +271,7 @@ if (!isset($h)) {
         var panelVis = fnjs_slick_search_panel(tabla);
         var colsVisible = fnjs_slick_col_visible();
         var colsWidth = fnjs_slick_cols_width(tabla);
+        var colsOrder = fnjs_slick_col_order(tabla);
         var widthGrid = fnjs_slick_grid_width(tabla);
         var heightGrid = fnjs_slick_grid_height(tabla);
 
@@ -265,6 +279,7 @@ if (!isset($h)) {
             "panelVis": panelVis,
             "colVisible": colsVisible,
             "colWidths": colsWidth,
+            "colOrder": colsOrder,
             "widthGrid": widthGrid,
             "heightGrid": heightGrid
         };
