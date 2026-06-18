@@ -114,6 +114,8 @@ final class MatriculasListaOtrasRData
                     if ($oPersona === null) {
                         $msgErr .= "<br>No encuentro a nadio con id_nom $idNomAnterior en  " . __FILE__ . ': line ' . __LINE__;
                         $idNomAnterior = $idNom;
+                        $strAsignaturas = '';
+                        $alert = '';
                         continue;
                     }
                     $apellidosNombre = $oPersona->getPrefApellidosNombre();
