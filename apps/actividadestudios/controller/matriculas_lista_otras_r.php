@@ -106,6 +106,9 @@ if (!empty($Qapellido1)) {
     foreach ($a_notas_otras_regiones_stgr_sin_cert as $oPersonaNotaOtraRegionDB) {
         $i++;
         $id_nom = $oPersonaNotaOtraRegionDB->getId_nom();
+        if ($id_nom === 0){
+            continue;
+        }
 
         if (!empty($id_nom_anterior) && $id_nom != $id_nom_anterior) {
             $oPersona = Persona::newPersona($id_nom_anterior);
