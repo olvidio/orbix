@@ -112,22 +112,20 @@ if (!empty($Qapellido1)) {
             if (!is_object($oPersona)) {
                 $msg_err .= "<br>$oPersona en  " . __FILE__ . ": line " . __LINE__;
                 $id_nom_anterior = $id_nom;
-                continue;
+            } else {
+                $apellidos_nombre = $oPersona->getPrefApellidosNombre();
+                $ctr = $oPersona->getCentro_o_dl();
+                $dl = $oPersona->getDl();
+
+                $a_valores[$i]['sel'] = "$id_nom_anterior";
+                $a_valores[$i][5] = $id_nom_anterior;
+                $a_valores[$i][1] = $apellidos_nombre;
+                $a_valores[$i][2] = $dl;
+                $a_valores[$i][3] = $alert;
+                $a_valores[$i][4] = $str_asignaturas;
+                // para ordenar.
+                $a_Nombre[$i] = $apellidos_nombre;
             }
-
-            $apellidos_nombre = $oPersona->getPrefApellidosNombre();
-            $ctr = $oPersona->getCentro_o_dl();
-            $dl = $oPersona->getDl();
-
-            $a_valores[$i]['sel'] = "$id_nom_anterior";
-            $a_valores[$i][5] = $id_nom_anterior;
-            $a_valores[$i][1] = $apellidos_nombre;
-            $a_valores[$i][2] = $dl;
-            $a_valores[$i][3] = $alert;
-            $a_valores[$i][4] = $str_asignaturas;
-
-            // para ordenar.
-            $a_Nombre[$i] = $apellidos_nombre;
             $str_asignaturas = '';
             $alert = '';
         }
