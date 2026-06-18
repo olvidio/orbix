@@ -134,6 +134,7 @@ class GestorPersonaNotaDB extends ClaseGestor
                 'tipo_acta' => $aDades['tipo_acta']);
             $oPersonaNota = $this->chooseNewObject($a_pkey);
             $oPersonaNota->setoDbl($oDbl);
+            $oPersonaNota->setAllAtributes($aDades);
             $oPersonaNotaSet->add($oPersonaNota);
         }
         return $oPersonaNotaSet->getTot();
