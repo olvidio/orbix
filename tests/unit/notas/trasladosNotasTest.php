@@ -341,7 +341,7 @@ class trasladosNotasTest extends myTest
         $PersonaNotaDBRepository->setoDbl($oDBdst);
         $cPersonaNotasC = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom]);
         foreach ($cPersonaNotasC as $oPersonaNotaC) {
-            $PersonaNotaDBRepository->Eliminar($oPersonaNotaB);
+            $PersonaNotaDBRepository->Eliminar($oPersonaNotaC);
         }
 
     }
@@ -358,16 +358,17 @@ class trasladosNotasTest extends myTest
      */
     public function test_traslado_de_crA_a_crB(): void
     {
-        $_SESSION['session_auth']['esquema'] = 'P-crPv';
-        $_SESSION['session_auth']['mi_id_schema'] = 1026;
-        $this->id_schema_persona = 1026;
+        $this->generarNotas('Nig-crNig');
+        $_SESSION['session_auth']['esquema'] = 'Nig-crNigv';
+        $_SESSION['session_auth']['mi_id_schema'] = 1024;
+        $this->id_schema_persona = 1024;
 
-        $dlA = 'crP'; // Doy por supuesto que estoy conectado como dlb.
+        $dlA = 'crNig';
         $dlB = 'crGalbel';
 
         $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
 
-        $reg_dl_org = 'P-' . $dlA . $sfsv_txt;
+        $reg_dl_org = 'Nig-' . $dlA . $sfsv_txt;
         $Qnew_dl = 'Galbel-' . $dlB . $sfsv_txt;
 
         $this->sreg_dl_org = $reg_dl_org;
@@ -570,10 +571,12 @@ class trasladosNotasTest extends myTest
         $this->sreg_dl_org = $reg_dl_org;
         $this->sreg_dl_dst = $Qnew_dl;
 
+        $this->borrar_antes_de_crear_notas($this->id_nom, 'H-' . $dlB);
+
         // 1.- guardar notas del dlA
         foreach ($this->cPersonaNotas as $oPersonaNota) {
             $oEditarPersonaNota = $this->nuevoEditarPersonaNota($oPersonaNota);
-            $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
+            $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr($dlA);
             $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $this->id_schema_persona);
             $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         }
@@ -585,7 +588,7 @@ class trasladosNotasTest extends myTest
         $oTrasladoDl->setReg_dl_org($reg_dl_org);
         $oTrasladoDl->setReg_dl_dst($Qnew_dl);
 
-        $oTrasladoDl->copiarNotas();
+        $this->assertTrue($oTrasladoDl->copiarNotas(), 'copiarNotas no copió las notas a H-dlpv');
 
         // 3.- Comprobar:
         // 3.1.-Existen en destino, y no existen en origen
@@ -596,6 +599,7 @@ class trasladosNotasTest extends myTest
             $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
             $PersonaNotaDBRepository->setoDbl($oDBdst);
             $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $this->assertNotEmpty($cPersonaNotasB, 'La nota no se copió al esquema destino');
             $oPersonaNotaB = $cPersonaNotasB[0];
 
 
@@ -611,9 +615,11 @@ class trasladosNotasTest extends myTest
             $PersonaNotaDBRepository->Eliminar($oPersonaNotaB);
         }
         // 3.2.- No existen en origen
+        $oDBorg = $this->setConexion($reg_dl_org);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value();
-            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
+            $PersonaNotaDBRepository->setoDbl($oDBorg);
             $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
@@ -692,18 +698,24 @@ class trasladosNotasTest extends myTest
             if ($exterior) {
                 $database = 'sv-e';
             }
-            // dlp?
-            $oDBPropiedades = new DBPropiedades();
-            $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
-            // añadir el H-Hv
-            $aEsquemas['H-Hv'] = 'H-Hv';
-
-            if (!in_array($esquema, $aEsquemas, true)) {
-                $esquema = 'restov';
+            $oConfigDB = new ConfigDB($database);
+            if (!$oConfigDB->tieneEsquema($esquema)) {
+                $oDBPropiedades = new DBPropiedades();
+                $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
+                if (is_array($aEsquemas)) {
+                    $aEsquemas['H-Hv'] = 'H-Hv';
+                    if (!in_array($esquema, $aEsquemas, true)) {
+                        $esquema = 'restov';
+                    }
+                } else {
+                    $esquema = 'restov';
+                }
             }
         }
 
-        $oConfigDB = new ConfigDB($database);
+        if (!isset($oConfigDB)) {
+            $oConfigDB = new ConfigDB($database);
+        }
         $config = $oConfigDB->getEsquema($esquema);
         $oConexion = new DBConnection($config);
 
@@ -729,6 +741,14 @@ class trasladosNotasTest extends myTest
             case 'Galbel-crGalbel':
                 $this->id_nom = 103612;
                 $this->id_schema_persona = 1036;
+                break;
+            case 'Pla-crPla':
+                $this->id_nom = 103212;
+                $this->id_schema_persona = 1032;
+                break;
+            case 'Nig-crNig':
+                $this->id_nom = 102412;
+                $this->id_schema_persona = 1024;
                 break;
         }
         $NotasFactory = new NotasFactory();

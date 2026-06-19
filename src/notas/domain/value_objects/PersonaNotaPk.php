@@ -13,8 +13,8 @@ final class PersonaNotaPk
         private int $id_nivel,
         private int $tipo_acta
     ) {
-        if ($id_nom <= 0) {
-            throw new \InvalidArgumentException('id_nom debe ser > 0');
+        if ($id_nom === 0) {
+            throw new \InvalidArgumentException('id_nom no puede ser 0');
         }
         if ($tipo_acta <= 0) {
             throw new \InvalidArgumentException('tipo_acta no puede ser vacía');

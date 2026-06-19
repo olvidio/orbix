@@ -46,4 +46,10 @@ class PersonaNotaPkTest extends myTest
         $this->assertEquals(-100, $personaNotaPk->idNivel());
     }
 
+    public function test_create_personaNotaPk_with_negative_id_nom_for_persona_de_paso()
+    {
+        $personaNotaPk = new PersonaNotaPk(-1001124, 1101, 1);
+        $this->assertEquals(-1001124, $personaNotaPk->idNom());
+    }
+
 }

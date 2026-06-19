@@ -6,6 +6,8 @@ use src\shared\config\ConfigGlobal;
 use Exception;
 use src\notas\application\EditarPersonaNota;
 use RuntimeException;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -27,6 +29,46 @@ class notasTest extends myTest
     {
         parent::setUp();
         $this->session_org = $_SESSION['session_auth']['esquema'];
+        $this->limpiarNotasDePasoEnRegionStgr([-1001124, -1001125]);
+    }
+
+    /**
+     * @param int[] $idsNom
+     */
+    private function limpiarNotasDePasoEnRegionStgr(array $idsNom): void
+    {
+        if ($idsNom === []) {
+            return;
+        }
+
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        $esquemaRegionStgr = $DelegacionRepository->mi_region_stgr()['esquema_region_stgr'] ?? '';
+        if ($esquemaRegionStgr === '') {
+            return;
+        }
+
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(
+            PersonaNotaOtraRegionStgrRepositoryInterface::class,
+            ['esquema_region_stgr' => $esquemaRegionStgr]
+        );
+
+        foreach ($idsNom as $idNom) {
+            $cPersonaNotas = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $idNom]);
+            foreach ($cPersonaNotas as $oPersonaNota) {
+                $PersonaNotaOtraRegionStgrRepository->Eliminar($oPersonaNota);
+            }
+        }
+    }
+
+    private function personaNotaDlRepositoryForSchema(string $esquema): PersonaNotaDlRepositoryInterface
+    {
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
+        $oConfigDB = new ConfigDB(ConfigGlobal::mi_sfsv() === 1 ? 'sv' : 'sf');
+        $config = $oConfigDB->getEsquema($esquema);
+        $config['schema'] = $esquema;
+        $PersonaNotaDBRepository->setoDbl((new DBConnection($config))->getPDO());
+
+        return $PersonaNotaDBRepository;
     }
 
     private function nuevoEditarPersonaNota(\src\notas\domain\entity\PersonaNota $oPersonaNota): EditarPersonaNota
@@ -227,10 +269,10 @@ class notasTest extends myTest
         $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
         $this->assertNotEquals('', $oPersonaNotaCertificadoDB);
 
-        // Estoy en H-dlbv. La nota debe estar en Galbel-crGalbelv.
-        // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
-        $PersonaNotaRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        // Estoy en H-dlbv. La nota certificado debe estar en Galbel-crGalbelv.
+        $PersonaNotaRepository = $this->personaNotaDlRepositoryForSchema('Galbel-crGalbelv');
         $cPersonaNotaDB = $PersonaNotaRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
+        $this->assertNotEmpty($cPersonaNotaDB);
         $oPersonaNotaDB = $cPersonaNotaDB[0];
 
         $this->assertEquals($oPersonaNotaCertificadoDB, $oPersonaNotaDB);
@@ -297,17 +339,12 @@ class notasTest extends myTest
         $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
         $this->assertNotEquals('', $oPersonaNotaCertificadoDB);
 
-        // Estoy en H-dlbv. La nota debe estar en Galbel-crGalbelv.
-        // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
-        $PersonaNotaRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        // Estoy en H-dlbv. La nota certificado debe estar en Galbel-crGalbelv.
+        $PersonaNotaRepository = $this->personaNotaDlRepositoryForSchema('Galbel-crGalbelv');
         $cPersonaNotaDB = $PersonaNotaRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
-        if ($cPersonaNotaDB !== null) {
-            $oPersonaNotaDB = $cPersonaNotaDB[0];
-        } else {
-            $oPersonaNotaDB = null;
-        }
+        $this->assertNotEmpty($cPersonaNotaDB);
+        $oPersonaNotaDB = $cPersonaNotaDB[0];
 
-        // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
         $this->assertEquals($oPersonaNotaCertificadoDB, $oPersonaNotaDB);
 
         $PersonaNotaRepository->Eliminar($oPersonaNotaDB);

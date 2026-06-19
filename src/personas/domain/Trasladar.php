@@ -184,19 +184,23 @@ class Trasladar
             if ($exterior) {
                 $database = 'sv-e';
             }
-            // dlp?
-            $oDBPropiedades = new DBPropiedades();
-            $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
+            $oConfigDB = new ConfigDB($database);
+            if (!$oConfigDB->tieneEsquema($esquema)) {
+                $oDBPropiedades = new DBPropiedades();
+                $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
 
-            if (!is_array($aEsquemas) || !in_array($esquema, $aEsquemas, true)) {
-                $esquema = 'restov';
+                if (!is_array($aEsquemas) || !in_array($esquema, $aEsquemas, true)) {
+                    $esquema = 'restov';
+                }
             }
         }
 
         $this->sdatabase = $database;
         $this->sresolved_esquema = $esquema;
 
-        $oConfigDB = new ConfigDB($database);
+        if (!isset($oConfigDB)) {
+            $oConfigDB = new ConfigDB($database);
+        }
         $config = $oConfigDB->getEsquema($esquema);
         $configUser = $config['user'] ?? '';
         $this->sconfig_user = is_string($configUser) ? $configUser : '';
@@ -836,7 +840,7 @@ class Trasladar
             $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($new_dl);
             $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'] ?? '';
             $esquemaRegionStgrStr = $this->mixedToString($esquema_region_stgr);
-            if (($qRs = $oDBorg->query("SELECT id FROM public.db_idschema WHERE schema = '$this->snew_esquema'")) === false) {
+            if (($qRs = $oDBdst->query("SELECT id FROM public.db_idschema WHERE schema = " . $oDBdst->quote($this->snew_esquema))) === false) {
                 $sClauError = 'Controller.Traslados';
                 if (isset($_SESSION['oGestorErrores']) && is_object($_SESSION['oGestorErrores']) && method_exists($_SESSION['oGestorErrores'], 'addErrorAppLastError')) {
                     $_SESSION['oGestorErrores']->addErrorAppLastError($qRs, $sClauError, __LINE__, __FILE__);
@@ -848,6 +852,9 @@ class Trasladar
                 return false;
             }
             $id_schema_persona = (int)$aSchema['id'];
+            $PersonaNotaDstRepository = $this->repositoryWithConnection(PersonaNotaDlRepositoryInterface::class, $oDBdst);
+            $a_region_stgr_org = $gesDelegacion->mi_region_stgr($this->sdl_persona);
+            $mismaRegionStgr = ($a_region_stgr_org['esquema_region_stgr'] ?? '') === ($a_mi_region_stgr['esquema_region_stgr'] ?? '');
             // Para saber el nuevo id_schema de la dl destino:
             foreach ($collection as $oPersonaNotaDB) {
                 /*
@@ -868,20 +875,34 @@ class Trasladar
                 $oPersonaNota->setNotaMaxVo($oPersonaNotaDB->getNotaMaxVo()->value());
                 */
 
-                $oEditarPersonaNota = new EditarPersonaNota(
-                    $oPersonaNotaDB,
-                    $this->repositoryWithConnection(PersonaNotaRepositoryInterface::class, $oDBorg),
-                    $this->delegacionRepository,
-                    $this->repositoryWithConnection(DbSchemaRepositoryInterface::class, $oDBorg),
-                    $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBorg),
-                    $PersonaNotaDBRepository,
-                );
-                $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
+                if ($mismaRegionStgr) {
+                    $oEditarPersonaNota = new EditarPersonaNota(
+                        $oPersonaNotaDB,
+                        $this->repositoryWithConnection(PersonaNotaRepositoryInterface::class, $oDBdst),
+                        $this->delegacionRepository,
+                        $this->repositoryWithConnection(DbSchemaRepositoryInterface::class, $oDBdst),
+                        $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBdst),
+                        $PersonaNotaDstRepository,
+                    );
+                    $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr($new_dl);
+                } else {
+                    $oEditarPersonaNota = new EditarPersonaNota(
+                        $oPersonaNotaDB,
+                        $this->repositoryWithConnection(PersonaNotaRepositoryInterface::class, $oDBorg),
+                        $this->delegacionRepository,
+                        $this->repositoryWithConnection(DbSchemaRepositoryInterface::class, $oDBorg),
+                        $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBorg),
+                        $PersonaNotaDBRepository,
+                    );
+                    $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr($this->sdl_persona);
+                }
                 $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
-                $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $esquemaRegionStgrStr);
+                $aNotasCreadas = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $esquemaRegionStgrStr);
 
-                //borrar la origen:
-                $PersonaNotaDBRepository->Eliminar($oPersonaNotaDB);
+                //borrar la origen solo si se copió correctamente:
+                if (!empty($aNotasCreadas['nota_real']) || !empty($aNotasCreadas['nota_certificado'])) {
+                    $PersonaNotaDBRepository->Eliminar($oPersonaNotaDB);
+                }
             }
 
         }
