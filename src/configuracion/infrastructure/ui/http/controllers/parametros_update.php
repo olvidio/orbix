@@ -8,6 +8,7 @@ use src\configuracion\domain\entity\ConfigSchema;
 use src\configuracion\domain\value_objects\ConfigParametroCode;
 use src\configuracion\domain\value_objects\ConfigValor;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\web\ContestarJson;
 
 $Qparametro = input_string($_POST, 'parametro');
 $Qvalor = input_string($_POST, 'valor');
@@ -31,4 +32,8 @@ $ConfigSchemaRepository = DependencyResolver::get(ConfigSchemaRepositoryInterfac
 $oConfigSchema = new ConfigSchema();
 $oConfigSchema->setParametroVo(ConfigParametroCode::fromString($Qparametro));
 $oConfigSchema->setValorVo(ConfigValor::fromString($Qvalor));
-$ConfigSchemaRepository->Guardar($oConfigSchema);
+$error_txt = '';
+if ($ConfigSchemaRepository->Guardar($oConfigSchema) === false) {
+    $error_txt = $ConfigSchemaRepository->getErrorTxt();
+}
+ContestarJson::enviar($error_txt, 'ok');

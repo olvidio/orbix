@@ -1,11 +1,13 @@
 <script>
+fnjs_left_side_hide();
 fnjs_guardar=function(formulario){
 	var url='{{ url }}';
     $(formulario).attr('action',url);
     $(formulario).one("submit", function() {
 		fnjs_ajax_json_alert({
 			url: $(this).attr('action'),
-			data: $(this).serialize()
+			data: $(this).serialize(),
+			successMessage: {{ "se ha guardado correctamente"|trans|json_encode|raw }}
 		});
         return false;
     });

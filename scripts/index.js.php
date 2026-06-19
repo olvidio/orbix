@@ -1051,6 +1051,7 @@ if (!isset($h)) {
 
     /**
      * AJAX JSON que muestra `data.text` o `data.mensaje` en un alert.
+     * Si no hay mensaje en la respuesta y `successMessage` está definido, lo muestra en éxito.
      */
     function fnjs_ajax_json_alert(options) {
         return fnjs_ajax_json({
@@ -1062,6 +1063,8 @@ if (!isset($h)) {
                 var txt = data.text || data.mensaje || '';
                 if (txt !== '') {
                     alert(txt);
+                } else if (options.successMessage) {
+                    alert(options.successMessage);
                 }
                 if (typeof options.onDone === 'function') {
                     options.onDone(data);
