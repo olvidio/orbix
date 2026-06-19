@@ -58,10 +58,10 @@ interface PersonaPubRepositoryInterface
      *
      * @param array<string, mixed> $aWhere
      * @param array<string, string> $aOperators
-     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
      * @param array<int, true> $sinRegionStgrPorIdNom
      * @return list<PersonaPub>
-     * @param-out array<string, array<string, string>> $problemasRegionStgr
+     * @param-out array<string, array<int|string, string>> $problemasRegionStgr
      * @param-out array<int, true> $sinRegionStgrPorIdNom id_nom marcados sin región stgr en la dl
      */
     public function getPersonasParaListado(
@@ -74,9 +74,9 @@ interface PersonaPubRepositoryInterface
     /**
      * Como findById pero tolera dl sin región stgr (id_schema=0 y aviso).
      *
-     * @param-out array<string, array<string, string>> $problemasRegionStgr
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
+     * @param-out array<string, array<int|string, string>> $problemasRegionStgr
      * @param-out bool $marcaAvisoRegionStgr true si la fila se cargó sin región stgr
-     * @param array<string, array<string, string>> $problemasRegionStgr
      */
     public function findByIdParaListado(int $id_nom, array &$problemasRegionStgr, bool &$marcaAvisoRegionStgr): ?PersonaPub;
 

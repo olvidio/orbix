@@ -58,8 +58,8 @@ class PersonaFinderService
     /**
      * Busca una persona por id_nom en el esquema global (local).
      *
-     * @param array<string, array<string, string>> $problemasRegionStgr
-     * @param-out array<string, array<string, string>> $problemasRegionStgr
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
+     * @param-out array<string, array<int|string, string>> $problemasRegionStgr
      */
     public function findPersonaEnGlobal(int $id_nom, array &$problemasRegionStgr = []): PersonaDl|PersonaPub|null
     {
@@ -83,8 +83,8 @@ class PersonaFinderService
     /**
      * Búsqueda de persona para listados: global activa y, si falla por dl sin región stgr, pub.
      *
-     * @param array<string, array<string, string>> $problemasRegionStgr
-     * @param-out array<string, array<string, string>> $problemasRegionStgr
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
+     * @param-out array<string, array<int|string, string>> $problemasRegionStgr
      */
     public function findPersonaParaListado(
         int $id_nom,

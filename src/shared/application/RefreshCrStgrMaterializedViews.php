@@ -121,7 +121,9 @@ final class RefreshCrStgrMaterializedViews
         set_time_limit(0);
 
         $_SESSION['Refresh'] = 'in_progress';
-        unset($_SESSION['Refresh_error']);
+        if (isset($_SESSION['Refresh_error'])) {
+            unset($_SESSION['Refresh_error']);
+        }
 
         $this->progressOverlayEmitted = self::shouldEmitProgressOverlay();
         if ($this->progressOverlayEmitted) {
@@ -145,7 +147,9 @@ final class RefreshCrStgrMaterializedViews
             }
 
             $_SESSION['Refresh'] = 'ok';
-            unset($_SESSION['Refresh_error']);
+            if (isset($_SESSION['Refresh_error'])) {
+                unset($_SESSION['Refresh_error']);
+            }
 
             if ($this->progressOverlayEmitted) {
                 self::redirectAfterRefresh();
@@ -157,9 +161,7 @@ final class RefreshCrStgrMaterializedViews
                 $this->reportRefreshFailure($e);
             }
         } finally {
-            if ($previousLimit !== false && $previousLimit !== '') {
-                set_time_limit((int) $previousLimit);
-            }
+            set_time_limit((int) $previousLimit);
         }
     }
 

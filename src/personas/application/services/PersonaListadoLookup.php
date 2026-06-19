@@ -24,7 +24,7 @@ final class PersonaListadoLookup
     private array $erroresAlumno = [];
 
     /**
-     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
      */
     public function resolver(
         int $idNom,
@@ -71,7 +71,7 @@ final class PersonaListadoLookup
     }
 
     /**
-     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
      */
     private function buscarPersona(int $idNom, array &$problemasRegionStgr): PersonaDl|PersonaPub|null
     {

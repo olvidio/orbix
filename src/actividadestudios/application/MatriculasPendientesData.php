@@ -36,7 +36,7 @@ final readonly class MatriculasPendientesData
         $cMatriculasPendientes = $this->matriculaDlRepository->getMatriculasPendientes();
 
         $msgErr = '';
-        /** @var array<string, array<string, string>> $problemasRegionStgr */
+        /** @var array<string, array<int|string, string>> $problemasRegionStgr */
         $problemasRegionStgr = [];
         $personaLookup = new PersonaListadoLookup($this->personaFinderService);
 
@@ -138,6 +138,9 @@ final readonly class MatriculasPendientesData
         }
 
         $nombreCorto = $oAsignatura->getNombre_corto();
+        if ($nombreCorto === null) {
+            return null;
+        }
         $asignaturasCache[$idAsignatura] = $nombreCorto;
 
         return $nombreCorto;

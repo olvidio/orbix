@@ -510,7 +510,7 @@ class PersonaNotaOtraRegionStgr
      *  o es una variable de php hay que convertirlo. En la base de datos ya es json.
      */
     /**
-     * @param string|array<string, mixed>|null $oJSON
+     * @param string|array<int|string, mixed>|null $oJSON
      */
     public function setJson_certificados(string|array|null $oJSON, bool $db = FALSE): void
     {

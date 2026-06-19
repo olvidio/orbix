@@ -116,8 +116,8 @@ final class CaPosiblesData
             $oPeriodo->setEmpiezaMin($Qempiezamin);
             $oPeriodo->setEmpiezaMax($Qempiezamax);
             $oPeriodo->setPeriodo($Qperiodo);
-            $inicioIso = $oPeriodo->getF_ini_iso();
-            $finIso = $oPeriodo->getF_fin_iso();
+            $inicioIso = $oPeriodo->getF_ini_iso() ?? '';
+            $finIso = $oPeriodo->getF_fin_iso() ?? '';
         }
 
         $miSfsv = OrbixRuntime::miSfsv();

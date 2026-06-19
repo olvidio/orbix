@@ -21,7 +21,7 @@ class Persona
      * Este método es un wrapper temporal para mantener compatibilidad.
      *
      * @param int $id_nom ID de la persona a buscar
-     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
      * @return PersonaDl|PersonaPub|null
      */
     public static function findPersonaEnGlobal(int $id_nom, array &$problemasRegionStgr = []): PersonaDl|PersonaPub|null

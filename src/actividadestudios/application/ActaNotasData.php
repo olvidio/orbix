@@ -21,7 +21,7 @@ use function src\shared\domain\helpers\input_int;
  *   permiso: int,
  *   nom_activ: string,
  *   matriculados: int,
- *   matriculas_rows: list<array{nom: string, id_nom: int, nota_num: mixed, nota_max: mixed, preceptor: bool, acta: mixed}>,
+ *   matriculas_rows: list<array{nom: string, id_nom: int, nota_num: string|null, nota_max: string|null, preceptor: bool, acta: string|null}>,
  *   notas: string,
  *   despl_actas_opciones: array<int|string, string>,
  *   acta_principal: string,
@@ -47,7 +47,7 @@ final class ActaNotasData
      *   permiso: int,
      *   nom_activ: string,
      *   matriculados: int,
-     *   matriculas_rows: list<array{nom: string, id_nom: int, nota_num: mixed, nota_max: mixed, preceptor: bool, acta: mixed}>,
+     *   matriculas_rows: list<array{nom: string, id_nom: int, nota_num: string|null, nota_max: string|null, preceptor: bool, acta: string|null}>,
      *   notas: string,
      *   despl_actas_opciones: array<int|string, string>,
      *   acta_principal: string,
@@ -143,7 +143,7 @@ final class ActaNotasData
                 'id_nom' => $oMatricula->getId_nom(),
                 'nota_num' => $oMatricula->getNota_num(),
                 'nota_max' => $oMatricula->getNota_max(),
-                'preceptor' => is_true($oMatricula->isPreceptor()),
+                'preceptor' => (bool) is_true($oMatricula->isPreceptor()),
                 'acta' => $oMatricula->getActa(),
             ];
         }

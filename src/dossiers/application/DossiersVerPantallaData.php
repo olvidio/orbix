@@ -370,7 +370,7 @@ class DossiersVerPantallaData
 
     /**
      * @param array<string, mixed> $result
-     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
      * @return array<string, mixed>
      */
     private function withAvisoRegionStgr(array $result, array $problemasRegionStgr): array
@@ -423,7 +423,7 @@ class DossiersVerPantallaData
         }
 
         foreach ($post as $key => $value) {
-            if (!is_string($key) || !str_starts_with($key, 'scroll_id_')) {
+            if (!str_starts_with($key, 'scroll_id_')) {
                 continue;
             }
             if (!is_scalar($value)) {

@@ -72,7 +72,8 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         $cPersonaNotaOtraRegionStgr = $this->getPersonaNotas(['id_nom' => $id_nom]);
         foreach ($cPersonaNotaOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
             // miro los que hay para añadir este
-            $a_json_certificados = $oPersonaNotaOtraRegionStgr->getJson_certificados() ?? [];
+            $rawCerts = $oPersonaNotaOtraRegionStgr->getJson_certificados(true);
+            $a_json_certificados = is_array($rawCerts) ? $rawCerts : [];
             $oCert = new stdClass();
             $oCert->certificado = $certificado;
             $oCert->estado = 'guardado';

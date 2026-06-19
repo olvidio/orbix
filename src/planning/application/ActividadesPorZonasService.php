@@ -2,7 +2,6 @@
 
 namespace src\planning\application;
 
-use frontend\shared\web\Desplegable;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -198,10 +197,12 @@ class ActividadesPorZonasService
 
         if ($Qid_zona === 'todo') {
             $aOpciones = $this->zonaRepository->getArrayZonas($id_nom_jefe);
-            $oDesplZonas = new Desplegable();
-            $oDesplZonas->setOpciones($aOpciones);
-            $oDesplZonas->setBlanco(false);
-            return $oDesplZonas->getOpciones()->fetchAll(\PDO::FETCH_ASSOC);
+            $aa = [];
+            foreach ($aOpciones as $id_zona => $nombre_zona) {
+                $aa[] = ['id_zona' => $id_zona, 'nombre_zona' => $nombre_zona];
+            }
+
+            return $aa;
         }
 
         $oZona = $this->zonaRepository->findById((int)$Qid_zona);

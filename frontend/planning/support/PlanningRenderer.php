@@ -135,6 +135,9 @@ class PlanningRenderer
         $periodos_sv = $this->casaPeriodosPorUbi ?? [];
         foreach ($this->a_actividades as $ww) {
             foreach ($ww as $per => $actividad) {
+                if (!is_array($actividad)) {
+                    continue;
+                }
                 [$pau, $id_pau, $persona, $actividad] = $this->parsePersonaFila((string)$per, $actividad);
                 $id_ubi = 0;
 
@@ -666,7 +669,7 @@ class PlanningRenderer
     }
 
     /**
-     * @return array<int|string, array<int|string, list<array<string, mixed>>>>
+     * @return array<int|string, array<int|string, mixed>>
      */
     public function getActividades(): array
     {

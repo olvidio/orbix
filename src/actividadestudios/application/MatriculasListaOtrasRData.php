@@ -55,7 +55,7 @@ final class MatriculasListaOtrasRData
         $tituloBusqueda = _('búsqueda por apellidos');
         $titulo = '';
         $msgErr = '';
-        /** @var array<string, array<string, string>> $problemasRegionStgr */
+        /** @var array<string, array<int|string, string>> $problemasRegionStgr */
         $problemasRegionStgr = [];
         $aValores = [];
         $aNombre = [];
@@ -191,7 +191,7 @@ final class MatriculasListaOtrasRData
     }
 
     /**
-     * @param array<string, array<string, string>> $problemasRegionStgr
+     * @param array<string, array<int|string, string>> $problemasRegionStgr
      */
     private function findPersonaEnGlobal(
         int $idNom,
@@ -219,7 +219,7 @@ final class MatriculasListaOtrasRData
 
     /**
      * @param array<string, array<int|string, string>> $problemas
-     * @return array<string, array<string, string>>
+     * @return array<string, array<int|string, string>>
      */
     private static function normalizeProblemasKeys(array $problemas): array
     {
@@ -255,7 +255,8 @@ final class MatriculasListaOtrasRData
         }
 
         $datosRegion = $this->delegacionRepository->mi_region_stgr();
-        $esquema = (string) ($datosRegion['esquema_region_stgr'] ?? '');
+        $esquemaRaw = $datosRegion['esquema_region_stgr'] ?? '';
+        $esquema = is_scalar($esquemaRaw) ? (string) $esquemaRaw : '';
         if ($esquema !== '') {
             return $esquema;
         }

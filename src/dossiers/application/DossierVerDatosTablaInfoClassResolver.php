@@ -62,6 +62,8 @@ final class DossierVerDatosTablaInfoClassResolver
             return null;
         }
 
-        return 'src\\' . $app . '\\domain\\Info' . $clase;
+        $candidate = 'src\\' . $app . '\\domain\\Info' . $clase;
+
+        return class_exists($candidate) ? $candidate : null;
     }
 }
