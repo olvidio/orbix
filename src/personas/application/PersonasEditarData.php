@@ -101,8 +101,22 @@ final class PersonasEditarData
             $out['idioma_preferido'] = ConfigGlobal::mi_Idioma();
             $out['dl'] = ConfigGlobal::mi_dele();
 
-            $newIdAuto = $repoPersona->getNewId();
-            $out['id_nom'] = $repoPersona->getNewIdNom($newIdAuto);
+            try {
+                $repoAlta = match ($Qobj_pau) {
+                    'PersonaN' => $this->personaRepositoryResolver->personaNRepository(),
+                    'PersonaAgd' => $this->personaRepositoryResolver->personaAgdRepository(),
+                    'PersonaNax' => $this->personaRepositoryResolver->personaNaxRepository(),
+                    'PersonaS' => $this->personaRepositoryResolver->personaSRepository(),
+                    'PersonaSSSC' => $this->personaRepositoryResolver->personaSSSCRepository(),
+                    'PersonaEx' => $this->personaRepositoryResolver->personaExRepository(),
+                    default => throw new \InvalidArgumentException("obj_pau '$Qobj_pau' no admite alta"),
+                };
+            } catch (\InvalidArgumentException) {
+                return ['error' => _("No existe la clase de la persona")];
+            }
+
+            $newIdAuto = $repoAlta->getNewId();
+            $out['id_nom'] = $repoAlta->getNewIdNom($newIdAuto);
             $out['nivel_stgr'] = '';
             $out['titulo'] = $out['apellido1'];
         } else {

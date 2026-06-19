@@ -73,6 +73,7 @@ class Select_cargos_de_actividad
     private array $aLinks_dl = [];
 
     /** @return array<int, array{txt: string, click: string}> */
+    /** @return list<array{txt: string, click: string}> */
     private function getBotones(): array
     {
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
@@ -84,7 +85,7 @@ class Select_cargos_de_actividad
         ];
     }
 
-    /** @return array<int, string|array{name: string, width: int}> */
+    /** @return list<string|array{name: string, width: int}> */
     private function getCabeceras(): array
     {
         return [
@@ -193,7 +194,7 @@ class Select_cargos_de_actividad
             'bloque' => $this->bloque,
             'url_form' => DossierTipoPublicUrls::relativeFormController((int) $this->id_dossier),
             'url_cargo_eliminar' => $url_cargo_eliminar,
-            'id_sel_value' => is_scalar($this->Qid_sel ?? '') ? (string) $this->Qid_sel : '',
+            'id_sel_value' => (string) ($this->Qid_sel ?? ''),
         ];
 
         return (new ViewNewPhtml('frontend\\actividadcargos\\controller'))

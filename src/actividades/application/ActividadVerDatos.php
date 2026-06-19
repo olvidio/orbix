@@ -81,13 +81,14 @@ final class ActividadVerDatos
         $isfsv = input_int($input, 'isfsv');
         $dl_org = input_string($input, 'dl_org');
         $Bdl = input_string($input, 'Bdl', 't');
-        $tarifa = $input['tarifa'] ?? '';
+        $tarifa = is_scalar($input['tarifa'] ?? '') ? (string) ($input['tarifa'] ?? '') : '';
         $idioma = input_string($input, 'idioma');
         $id_repeticion = input_int($input, 'id_repeticion');
         $id_ubi = input_int($input, 'id_ubi');
         $lugar_esp = input_string($input, 'lugar_esp');
         $id_tipo_activ = input_string($input, 'id_tipo_activ');
-        $nivel_stgr = $input['nivel_stgr'] ?? self::nivelStgrPorDefectoParaIdTipoActividad($id_tipo_activ);
+        $nivel_stgr_raw = $input['nivel_stgr'] ?? self::nivelStgrPorDefectoParaIdTipoActividad($id_tipo_activ);
+        $nivel_stgr = is_scalar($nivel_stgr_raw) ? (string) $nivel_stgr_raw : '';
         $calcTarifaInicial = !empty($input['calc_tarifa_inicial']);
 
         $entidad = null;
@@ -135,7 +136,7 @@ final class ActividadVerDatos
             $this->delegacionDropdown->delegacionesURegiones($isfsv, $bdlBool),
             'dl_org'
         );
-        $oDesplDl->setOpcion_sel($dl_org);
+        $oDesplDl->setOpcion_sel((string) $dl_org);
         $html_despl_dl_org = $oDesplDl->desplegable();
 
         $TipoTarifaRepository = $this->tipoTarifaRepository;
@@ -143,14 +144,14 @@ final class ActividadVerDatos
         $oDesplTarifa = new Desplegable();
         $oDesplTarifa->setOpciones($aOpciones);
         $oDesplTarifa->setNombre('id_tarifa');
-        $oDesplTarifa->setOpcion_sel($tarifa);
+        $oDesplTarifa->setOpcion_sel((string) $tarifa);
         $html_despl_tarifa = $oDesplTarifa->desplegable();
 
         $aOpciones = NivelStgrId::getArrayNivelStgr();
         $oDesplNivel = new Desplegable();
         $oDesplNivel->setOpciones($aOpciones);
         $oDesplNivel->setNombre('nivel_stgr');
-        $oDesplNivel->setOpcion_sel($nivel_stgr);
+        $oDesplNivel->setOpcion_sel((string) $nivel_stgr);
         $html_despl_nivel_stgr = $oDesplNivel->desplegable();
 
         $LocalRepository = $this->localRepository;
@@ -159,7 +160,7 @@ final class ActividadVerDatos
         $oDesplIdioma->setBlanco(true);
         $oDesplIdioma->setOpciones($aOpciones);
         $oDesplIdioma->setNombre('idioma');
-        $oDesplIdioma->setOpcion_sel($idioma);
+        $oDesplIdioma->setOpcion_sel((string) $idioma);
         $html_despl_idioma = $oDesplIdioma->desplegable();
 
         $RepeticionRepository = $this->repeticionRepository;
@@ -167,7 +168,7 @@ final class ActividadVerDatos
         $oDesplRepeticion = new Desplegable();
         $oDesplRepeticion->setOpciones($aOpciones);
         $oDesplRepeticion->setNombre('id_repeticion');
-        $oDesplRepeticion->setOpcion_sel($id_repeticion);
+        $oDesplRepeticion->setOpcion_sel((string) $id_repeticion);
         $html_despl_repeticion = $oDesplRepeticion->desplegable();
 
         $nombre_ubi = '';

@@ -62,8 +62,8 @@ try {
     $payloadVer['f_fin_iso'] = (string)$oPeriodo->getF_fin_iso();
 
     $d = PostRequest::getDataFromUrl('/src/planning/planning_casa_ver_data', $payloadVer, false);
-    if (!empty($d['error'])) {
-        echo PostRequest::stripInternalCallProvenance((string)$d['error']);
+    if (isset($d['error']) && is_string($d['error']) && $d['error'] !== '') {
+        echo PostRequest::stripInternalCallProvenance($d['error']);
         exit;
     }
 

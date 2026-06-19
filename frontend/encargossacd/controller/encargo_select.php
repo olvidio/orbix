@@ -35,7 +35,7 @@ if ($stackFromPost !== 0) {
 } else {
     list_nav_boot_recordar($oPosicion, $Qrefresh);
 }
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
 
 
 
@@ -64,6 +64,7 @@ $a_cabeceras = [
     _("idioma"),
 ];
 
+/** @var array<int|string, mixed> $a_valores */
 $a_valores = [];
 if (!empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
@@ -83,6 +84,7 @@ foreach ($filas as $fila) {
     array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
     $pagina = HashFront::link('frontend/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
 
+    $a_valores[$i] = [];
     if ($sf_sv === 2) {
         $a_valores[$i]['clase'] = 'tono2';
     }

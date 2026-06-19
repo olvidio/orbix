@@ -56,7 +56,7 @@ list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return
     'b_c' => $Qb_c,
     'c1' => $Qc1,
     'c2' => $Qc2,
-], $Qid_sel, isset($Qscroll_id) ? (string) $Qscroll_id : ''));
+], $Qid_sel, $Qscroll_id));
 
 
 $oPosicion->setParametros([

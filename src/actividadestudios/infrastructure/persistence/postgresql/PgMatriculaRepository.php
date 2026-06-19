@@ -159,7 +159,8 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
      */
     protected function matriculaFromRow(array $normalized): ?Matricula
     {
-        $idAsignatura = isset($normalized['id_asignatura']) ? (int) $normalized['id_asignatura'] : 0;
+        $idAsignatura = isset($normalized['id_asignatura']) && is_numeric($normalized['id_asignatura'])
+            ? (int) $normalized['id_asignatura'] : 0;
         if (!AsignaturaId::isValidInt($idAsignatura)) {
             error_log(sprintf(
                 '[PgMatriculaRepository] matrícula con id_asignatura inválido (%d); se elimina la fila.',
@@ -189,9 +190,9 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
             return false;
         }
 
-        $id_activ = (int) $normalized['id_activ'];
-        $id_asignatura = (int) $normalized['id_asignatura'];
-        $id_nom = (int) $normalized['id_nom'];
+        $id_activ = is_numeric($normalized['id_activ']) ? (int) $normalized['id_activ'] : 0;
+        $id_asignatura = is_numeric($normalized['id_asignatura']) ? (int) $normalized['id_asignatura'] : 0;
+        $id_nom = is_numeric($normalized['id_nom']) ? (int) $normalized['id_nom'] : 0;
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";

@@ -115,6 +115,49 @@ function list_nav_id_sel_is_empty(string|array $sel): bool
 }
 
 /**
+ * @return array<int|string, array<string, mixed>>|null
+ */
+function list_nav_session_position(): ?array
+{
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        return null;
+    }
+    /** @var array<int|string, array<string, mixed>> $position */
+    $position = [];
+    foreach ($_SESSION['position'] as $key => $entry) {
+        if (!is_array($entry)) {
+            return null;
+        }
+        $position[$key] = $entry;
+    }
+
+    return $position;
+}
+
+/**
+ * @return array<string, mixed>|null
+ */
+function list_nav_session_stack_entry(int|string $index): ?array
+{
+    $position = list_nav_session_position();
+    if ($position === null || !array_key_exists($index, $position)) {
+        return null;
+    }
+
+    return $position[$index];
+}
+
+/**
+ * @return string|list<string>
+ */
+function list_nav_normalize_id_sel(mixed $raw): string|array
+{
+    $normalized = list_nav_id_sel_for_lista($raw);
+
+    return list_nav_id_sel_is_empty($normalized) ? '' : $normalized;
+}
+
+/**
  * Lee id_sel del POST (`id_sel`, `id_sel[]` o `sel[]`).
  *
  * @return string|list<string>
@@ -408,9 +451,7 @@ function list_nav_reindex_position_stack(): void
     /** @var list<array<string, mixed>> $position */
     $position = array_values($_SESSION['position']);
     foreach ($position as $key => $values) {
-        if (is_array($values)) {
-            $position[$key]['stack'] = $key;
-        }
+        $position[$key]['stack'] = $key;
     }
     $_SESSION['position'] = $position;
 }
@@ -544,7 +585,7 @@ function list_nav_refresh_stack_entry_at_index(Posicion $oPosicion, int $stackIn
     }
     /** @var list<array<string, mixed>> $position */
     $position = array_values($_SESSION['position']);
-    if (!isset($position[$stackIndex]) || !is_array($position[$stackIndex])) {
+    if (!array_key_exists($stackIndex, $position)) {
         session_write_close();
 
         return false;
@@ -555,7 +596,9 @@ function list_nav_refresh_stack_entry_at_index(Posicion $oPosicion, int $stackIn
     $parametros['stack'] = $stackIndex;
 
     $phpSelf = $_SERVER['PHP_SELF'] ?? '';
-    $url = is_string($phpSelf) && $phpSelf !== '' ? $phpSelf : (string) ($position[$stackIndex]['url'] ?? '');
+    $urlFromPosition = $position[$stackIndex]['url'] ?? null;
+    $urlFallback = is_string($urlFromPosition) ? $urlFromPosition : '';
+    $url = is_string($phpSelf) && $phpSelf !== '' ? $phpSelf : $urlFallback;
 
     $position[$stackIndex]['url'] = $url;
     $position[$stackIndex]['bloque'] = $bloque;
@@ -582,7 +625,7 @@ function list_nav_boot_list_page_after_stack_return(Posicion $oPosicion, int $st
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
     }
-    if (!isset($_SESSION['position'][$index]) || !is_array($_SESSION['position'][$index])) {
+    if (list_nav_session_stack_entry($index) === null) {
         $found = $needle !== '' ? list_nav_find_stack_key_by_url_contains($needle) : -1;
         if ($found >= 0) {
             $index = $found;
@@ -616,10 +659,9 @@ function list_nav_olvidar_forward_from_dossiers_slot(int $preferredIndex): void
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
     }
-    if ($index > 0 && isset($_SESSION['position'][$index]) && is_array($_SESSION['position'][$index])) {
-        $url = isset($_SESSION['position'][$index]['url']) && is_string($_SESSION['position'][$index]['url'])
-            ? $_SESSION['position'][$index]['url']
-            : '';
+    $entry = $index > 0 ? list_nav_session_stack_entry($index) : null;
+    if ($entry !== null) {
+        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
         if (!str_contains($url, 'dossiers_ver.php')) {
             $index = -1;
         }
@@ -781,7 +823,10 @@ function list_nav_ensure_dossiers_on_stack_before_child(): void
             : list_nav_dossiers_ver_default_url();
     } else {
         $parametros = list_nav_build_return_parametros_from_post();
-        $idDossier = isset($parametros['id_dossier']) ? trim((string) $parametros['id_dossier']) : '';
+        $idDossierRaw = $parametros['id_dossier'] ?? null;
+        $idDossier = is_string($idDossierRaw)
+            ? trim($idDossierRaw)
+            : (is_scalar($idDossierRaw) ? trim((string) $idDossierRaw) : '');
         if ($idDossier === '') {
             return;
         }
@@ -913,6 +958,23 @@ function list_nav_merge_selection_into_return_parametros(array $parametros, stri
 }
 
 /**
+ * Variante para `list_nav_persist_recordar_entry`: normaliza id_sel/scroll_id del POST.
+ *
+ * @param array<string, mixed> $parametros
+ * @return array<string, mixed>
+ */
+function list_nav_merge_selection_for_recordar(array $parametros, mixed $idSel = null, mixed $scrollId = ''): array
+{
+    $normalizedIdSel = $idSel === null ? '' : list_nav_normalize_id_sel($idSel);
+
+    return list_nav_merge_selection_into_return_parametros(
+        $parametros,
+        list_nav_id_sel_is_empty($normalizedIdSel) ? null : $normalizedIdSel,
+        is_scalar($scrollId) ? (string) $scrollId : '',
+    );
+}
+
+/**
  * Normaliza la entrada de pila que acaba de crear {@see Posicion::recordar()} (n=0).
  *
  * @param array<string, mixed> $parametros
@@ -1008,10 +1070,11 @@ function list_nav_build_actividad_que_return_parametros(array $state): array
         $parametros[$key] = $val;
     }
 
-    $idSel = $state['id_sel'] ?? '';
-    $scrollId = isset($state['scroll_id']) ? (string) $state['scroll_id'] : '';
+    $idSel = list_nav_normalize_id_sel($state['id_sel'] ?? null);
+    $scrollIdRaw = $state['scroll_id'] ?? null;
+    $scrollId = is_scalar($scrollIdRaw) ? (string) $scrollIdRaw : '';
 
-    return list_nav_merge_selection_into_return_parametros($parametros, $idSel, $scrollId);
+    return list_nav_merge_selection_into_return_parametros($parametros, $idSel === '' ? null : $idSel, $scrollId);
 }
 
 /**
@@ -1089,12 +1152,24 @@ function list_nav_repersist_stack_entry_from_gstack(?int $gstackOverride = null,
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
     }
-    if (!isset($_SESSION['position'][$gstack]) || !is_array($_SESSION['position'][$gstack])) {
+    if (list_nav_session_stack_entry($gstack) === null) {
         session_write_close();
 
         return;
     }
-    $_SESSION['position'][$gstack]['parametros'] = $parametros;
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        session_write_close();
+
+        return;
+    }
+    /** @var array<int|string, array<string, mixed>> $position */
+    $position = &$_SESSION['position'];
+    if (!array_key_exists($gstack, $position)) {
+        session_write_close();
+
+        return;
+    }
+    $position[$gstack]['parametros'] = $parametros;
     if ($useActividadSelectReturn) {
         list_nav_rewrite_stack_entry_url($gstack, list_nav_actividad_select_controller_suffix());
     }
@@ -1117,21 +1192,35 @@ function list_nav_rewrite_stack_entry_url(int $gstack, string $requiredSuffix): 
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
     }
-    if (!isset($_SESSION['position'][$gstack]['url']) || !is_string($_SESSION['position'][$gstack]['url'])) {
+    $entry = list_nav_session_stack_entry($gstack);
+    if ($entry === null || !isset($entry['url']) || !is_string($entry['url'])) {
         session_write_close();
 
         return;
     }
-    $current = $_SESSION['position'][$gstack]['url'];
+    $current = $entry['url'];
     if (str_contains($current, $requiredSuffix)) {
         session_write_close();
 
         return;
     }
     $pos = strpos($current, 'frontend/');
-    $_SESSION['position'][$gstack]['url'] = $pos !== false
+    $newUrl = $pos !== false
         ? substr($current, 0, $pos) . $requiredSuffix
         : $requiredSuffix;
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        session_write_close();
+
+        return;
+    }
+    /** @var array<int|string, array<string, mixed>> $position */
+    $position = &$_SESSION['position'];
+    if (!array_key_exists($gstack, $position)) {
+        session_write_close();
+
+        return;
+    }
+    $position[$gstack]['url'] = $newUrl;
     session_write_close();
 }
 
@@ -1229,12 +1318,10 @@ function list_nav_build_dossiers_ver_from_actividad_select_post(): array
     $aSel = list_nav_sel_from_post();
     if ($aSel !== []) {
         $parametros['sel'] = $aSel;
-        $first = $aSel[0] ?? '';
-        if (is_scalar($first)) {
-            $idPau = (int) strtok((string) $first, '#');
-            if ($idPau > 0) {
-                $parametros['id_pau'] = $idPau;
-            }
+        $first = $aSel[0];
+        $idPau = (int) strtok((string) $first, '#');
+        if ($idPau > 0) {
+            $parametros['id_pau'] = $idPau;
         }
     }
 
@@ -1573,6 +1660,9 @@ function list_nav_persist_personas_select_return_to_posicion(Posicion $oPosicion
     );
 }
 
+/**
+ * @param array<string, mixed> $apiPayload
+ */
 function list_nav_apply_restored_selection_to_api_payload(
     array &$apiPayload,
     mixed $restoredIdSelFromStack = null,
@@ -1581,6 +1671,8 @@ function list_nav_apply_restored_selection_to_api_payload(
     $idSel = $restoredIdSelFromStack;
     if ($idSel === null || $idSel === '') {
         $idSel = list_nav_id_sel_from_post();
+    } else {
+        $idSel = list_nav_normalize_id_sel($idSel);
     }
     if (!list_nav_id_sel_is_empty($idSel)) {
         $apiPayload['restored_id_sel'] = $idSel;

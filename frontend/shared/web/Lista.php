@@ -497,7 +497,10 @@ class Lista
                 $aColsWidth = $aPrefs['colWidths'];
             }
             if (!empty($aPrefs['colOrder']) && is_array($aPrefs['colOrder'])) {
-                $aColOrder = array_values(array_filter(array_map('strval', $aPrefs['colOrder'])));
+                $aColOrder = array_values(array_filter(array_map(
+                    static fn (mixed $v): string => is_scalar($v) ? (string) $v : '',
+                    $aPrefs['colOrder'],
+                ), static fn (string $v): bool => $v !== ''));
             }
             $grid_width = self::slickgridDimension($aPrefs['widthGrid'] ?? null, '900') ?? '900';
             $grid_height = self::slickgridDimension($aPrefs['heightGrid'] ?? null, '0') ?? '0';

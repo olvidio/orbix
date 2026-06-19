@@ -58,12 +58,12 @@ final class TrasladoUpdate
 
         try {
             $repoPersona = match ($obj_pau) {
-                'PersonaN' => $this->personaRepositoryResolver->repositorio('PersonaN'),
-                'PersonaAgd' => $this->personaRepositoryResolver->repositorio('PersonaAgd'),
-                'PersonaNax' => $this->personaRepositoryResolver->repositorio('PersonaNax'),
-                'PersonaS' => $this->personaRepositoryResolver->repositorio('PersonaS'),
-                'PersonaSSSC' => $this->personaRepositoryResolver->repositorio('PersonaSSSC'),
-                'PersonaEx' => $this->personaRepositoryResolver->repositorio('PersonaEx'),
+                'PersonaN' => $this->personaRepositoryResolver->personaNRepository(),
+                'PersonaAgd' => $this->personaRepositoryResolver->personaAgdRepository(),
+                'PersonaNax' => $this->personaRepositoryResolver->personaNaxRepository(),
+                'PersonaS' => $this->personaRepositoryResolver->personaSRepository(),
+                'PersonaSSSC' => $this->personaRepositoryResolver->personaSSSCRepository(),
+                'PersonaEx' => $this->personaRepositoryResolver->personaExRepository(),
                 default => throw new \InvalidArgumentException("obj_pau '$obj_pau' no reconocido"),
             };
         } catch (\InvalidArgumentException) {

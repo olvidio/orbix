@@ -7,6 +7,10 @@ use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\dbextern\domain\entity\IdMatchPersona;
 use src\dbextern\application\support\SincroDBFactory;
 use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\PersonaAgd;
 use src\personas\domain\entity\PersonaN;
 use src\personas\domain\entity\PersonaS;
@@ -67,24 +71,19 @@ class CrearPersonaDesdeListasUseCase
 
         $oHoy = new DateTimeLocal();
         try {
-            $repo = $this->personaRepositoryResolver->repositorio($obj_pau);
+            [$repo, $oPersona] = match ($obj_pau) {
+                'PersonaN' => [$this->personaRepositoryResolver->personaNRepository(), new PersonaN()],
+                'PersonaAgd' => [$this->personaRepositoryResolver->personaAgdRepository(), new PersonaAgd()],
+                'PersonaS' => [$this->personaRepositoryResolver->personaSRepository(), new PersonaS()],
+                'PersonaSSSC' => [$this->personaRepositoryResolver->personaSSSCRepository(), new PersonaSSSC()],
+                default => throw new \InvalidArgumentException("obj_pau '$obj_pau' no reconocido"),
+            };
         } catch (\InvalidArgumentException) {
             return _("No existe la clase de la persona");
         }
 
         $newIdAuto = $repo->getNewId();
         $id_orbix = $repo->getNewIdNom($newIdAuto);
-
-        $oPersona = match ($obj_pau) {
-            'PersonaN' => new PersonaN(),
-            'PersonaAgd' => new PersonaAgd(),
-            'PersonaS' => new PersonaS(),
-            'PersonaSSSC' => new PersonaSSSC(),
-            default => null,
-        };
-        if ($oPersona === null) {
-            return _("No existe la clase de la persona");
-        }
 
         $oPersona->setId_nom($id_orbix);
         $oPersona->setId_tabla($tipo_persona);
@@ -100,7 +99,7 @@ class CrearPersonaDesdeListasUseCase
         $oPersona->setLugar_nacimiento($lugar_nacimiento);
         $oPersona->setDl($dl_orbix);
 
-        if ($repo->Guardar($oPersona) === false) {
+        if ($this->guardarPersona($repo, $obj_pau, $oPersona) === false) {
             return _("hay un error, no se ha guardado");
         }
 
@@ -124,6 +123,27 @@ class CrearPersonaDesdeListasUseCase
             '3' => 'PersonaS',
             '4' => 'PersonaSSSC',
             default => null,
+        };
+    }
+
+    /**
+     * @param PersonaNRepositoryInterface|PersonaAgdRepositoryInterface|PersonaSRepositoryInterface|PersonaSSSCRepositoryInterface $repo
+     */
+    private function guardarPersona(
+        PersonaNRepositoryInterface|PersonaAgdRepositoryInterface|PersonaSRepositoryInterface|PersonaSSSCRepositoryInterface $repo,
+        string $obj_pau,
+        object $persona,
+    ): bool {
+        return match ($obj_pau) {
+            'PersonaN' => $repo instanceof PersonaNRepositoryInterface && $persona instanceof PersonaN
+                ? $repo->Guardar($persona) : false,
+            'PersonaAgd' => $repo instanceof PersonaAgdRepositoryInterface && $persona instanceof PersonaAgd
+                ? $repo->Guardar($persona) : false,
+            'PersonaS' => $repo instanceof PersonaSRepositoryInterface && $persona instanceof PersonaS
+                ? $repo->Guardar($persona) : false,
+            'PersonaSSSC' => $repo instanceof PersonaSSSCRepositoryInterface && $persona instanceof PersonaSSSC
+                ? $repo->Guardar($persona) : false,
+            default => false,
         };
     }
 }

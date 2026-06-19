@@ -28,7 +28,11 @@ $isIncluded = isset($oPosicion) && $oPosicion instanceof Posicion;
 require_once __DIR__ . '/../helpers/notas_support.php';
 require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
-if (!$isIncluded) {
+if (isset($oPosicion) && $oPosicion instanceof Posicion) {
+    // Incluido desde otro controlador con posición válida.
+} elseif (isset($oPosicion)) {
+    throw new \RuntimeException('acta_ver.php requiere $oPosicion cuando se incluye.');
+} else {
     require_once 'frontend/shared/FrontBootstrap.php';
     $oPosicion = FrontBootstrap::boot();
 }

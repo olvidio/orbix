@@ -17,12 +17,15 @@ $oPosicion = FrontBootstrap::boot();
 $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros($aGoBack, list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
-
-$aGoBack = array(
+/** @var array<string, mixed> $aGoBack */
+$aGoBack = [
     'inventario' => $Qinventario,
-    'id_tipo_doc' => $Qid_tipo_doc);
+    'id_tipo_doc' => $Qid_tipo_doc,
+];
+
+list_nav_boot_recordar($oPosicion);
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar($aGoBack, list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+
 $oPosicion->setParametros($aGoBack, 1);
 
 // muestra los ctr que tienen el documento.

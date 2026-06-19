@@ -43,7 +43,7 @@ final class ActividadQueFiltrosBloque
 
         $oDesplFiltroLugar = Desplegable::desdeOpciones($this->delegacionDropdown->dlURegionesFiltro($sfsv), 'filtro_lugar');
         $oDesplFiltroLugar->setAction('fnjs_lugar()');
-        $oDesplFiltroLugar->setOpcion_sel($filtro_lugar);
+        $oDesplFiltroLugar->setOpcion_sel((string) $filtro_lugar);
 
         $oDesplegableCasasHtml = '';
         if (!empty($filtro_lugar)) {
@@ -51,13 +51,13 @@ final class ActividadQueFiltrosBloque
             $oDesplegableCasas = Desplegable::desdeOpciones($aOpcionesCasas, 'id_ubi');
             $oDesplegableCasas->setBlanco(true);
             if (!empty($id_ubi)) {
-                $oDesplegableCasas->setOpcion_sel($id_ubi);
+                $oDesplegableCasas->setOpcion_sel((string) $id_ubi);
             }
             $oDesplegableCasasHtml = $oDesplegableCasas->desplegable();
         }
 
         $oDesplDelegacionesOrg = Desplegable::desdeOpciones($this->delegacionDropdown->delegacionesURegiones($sfsv, true), 'dl_org');
-        $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
+        $oDesplDelegacionesOrg->setOpcion_sel((string) $dl_org);
         if ($modo === 'importar') {
             $oDesplDelegacionesOrg->setOpcion_no([$mi_dele]);
         }

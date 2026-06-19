@@ -10,8 +10,12 @@ use src\dbextern\domain\entity\IdMatchPersona;
 use src\dbextern\domain\entity\PersonaBDU;
 use src\dbextern\infrastructure\persistence\postgresql\OdbcDlListasRepository;
 use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\entity\PersonaAgd;
 use src\personas\domain\entity\PersonaDl;
@@ -19,6 +23,7 @@ use src\personas\domain\entity\PersonaGlobal;
 use src\personas\domain\entity\PersonaN;
 use src\personas\domain\entity\PersonaNax;
 use src\personas\domain\entity\PersonaS;
+use src\personas\domain\entity\PersonaSSSC;
 use src\personas\domain\entity\TelecoPersona;
 use src\permisos\domain\XPermisos;
 use src\personas\domain\Trasladar;
@@ -427,19 +432,14 @@ class SincroDB
         $profesion = $oPersonaListas->getProfesion_cargo();
 
         $id_tipo_persona = substr((string)$id_nom_listas, 0, 1);
-        $obj_pau = match ($id_tipo_persona) {
-            '4' => 'PersonaSSSC',
-            '3' => 'PersonaS',
-            '1' => 'PersonaN',
-            '2' => 'PersonaAgd',
-            default => '',
-        };
-        if ($obj_pau === '') {
-            return ['error' => _("No existe la clase de la persona")];
-        }
-
         try {
-            $repoPersona = $this->personaRepositoryResolver->repositorio($obj_pau);
+            [$obj_pau, $repoPersona] = match ($id_tipo_persona) {
+                '4' => ['PersonaSSSC', $this->personaRepositoryResolver->personaSSSCRepository()],
+                '3' => ['PersonaS', $this->personaRepositoryResolver->personaSRepository()],
+                '1' => ['PersonaN', $this->personaRepositoryResolver->personaNRepository()],
+                '2' => ['PersonaAgd', $this->personaRepositoryResolver->personaAgdRepository()],
+                default => throw new \InvalidArgumentException("id_tipo_persona '$id_tipo_persona' no reconocido"),
+            };
         } catch (\InvalidArgumentException) {
             return ['error' => _("No existe la clase de la persona")];
         }
@@ -476,11 +476,9 @@ class SincroDB
             $oPersona->setDl($dl_orbix);
         }
 
-        if ($oPersona instanceof PersonaN || $oPersona instanceof PersonaAgd || $oPersona instanceof PersonaS || $oPersona instanceof PersonaNax) {
-            $oPersona->setId_ctr($id_ubi);
-        }
+        $oPersona->setId_ctr($id_ubi);
 
-        if ($repoPersona->Guardar($oPersona) === false) {
+        if ($this->guardarPersona($repoPersona, $obj_pau, $oPersona) === false) {
             exit(_("hay un error, no se ha guardado"));
         }
 
@@ -599,5 +597,26 @@ class SincroDB
         }
 
         return (int)$value;
+    }
+
+    /**
+     * @param PersonaNRepositoryInterface|PersonaAgdRepositoryInterface|PersonaSRepositoryInterface|PersonaSSSCRepositoryInterface $repo
+     */
+    private function guardarPersona(
+        PersonaNRepositoryInterface|PersonaAgdRepositoryInterface|PersonaSRepositoryInterface|PersonaSSSCRepositoryInterface $repo,
+        string $obj_pau,
+        PersonaGlobal $persona,
+    ): bool {
+        return match ($obj_pau) {
+            'PersonaN' => $repo instanceof PersonaNRepositoryInterface && $persona instanceof PersonaN
+                ? $repo->Guardar($persona) : false,
+            'PersonaAgd' => $repo instanceof PersonaAgdRepositoryInterface && $persona instanceof PersonaAgd
+                ? $repo->Guardar($persona) : false,
+            'PersonaS' => $repo instanceof PersonaSRepositoryInterface && $persona instanceof PersonaS
+                ? $repo->Guardar($persona) : false,
+            'PersonaSSSC' => $repo instanceof PersonaSSSCRepositoryInterface && $persona instanceof PersonaSSSC
+                ? $repo->Guardar($persona) : false,
+            default => false,
+        };
     }
 }

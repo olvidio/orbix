@@ -123,7 +123,7 @@ final class FormCargosPersonasEnActividadData
         $oDesplegableCargos->setNombre('id_cargo');
         $oDesplegableCargos->setBlanco(false);
         $oDesplegableCargos->setOpciones($this->cargoRepository->getArrayCargos());
-        $oDesplegableCargos->setOpcion_sel($id_cargo);
+        $oDesplegableCargos->setOpcion_sel((string) $id_cargo);
 
         $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
 

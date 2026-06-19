@@ -823,7 +823,7 @@ class Select_asistentes_a_una_actividad
                 'url_eliminar_path' => 'src/asistentes/asistente_eliminar',
                 'url_cargo_eliminar_path' => 'src/actividadcargos/cargo_eliminar',
             ],
-            'id_sel_value' => is_scalar($this->Qid_sel ?? '') ? (string) $this->Qid_sel : '',
+            'id_sel_value' => (string) ($this->Qid_sel ?? ''),
             'hash_main' => [
                 'campos_form' => '',
                 'campos_no' => 'sel!scroll_id!mod!que!refresh!id_sel',

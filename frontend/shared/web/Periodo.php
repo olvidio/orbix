@@ -51,9 +51,9 @@ class Periodo
             [],
             !$throwOnError,
         );
-        if ($throwOnError && !empty($data['error'])) {
+        if ($throwOnError && isset($data['error']) && is_string($data['error']) && $data['error'] !== '') {
             throw new \RuntimeException(
-                PostRequest::stripInternalCallProvenance((string) $data['error'])
+                PostRequest::stripInternalCallProvenance($data['error'])
             );
         }
         $o->setCalendarioEscolar(self::calendarioFromPostRequestData($data));

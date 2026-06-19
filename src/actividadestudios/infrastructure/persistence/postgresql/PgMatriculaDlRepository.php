@@ -153,7 +153,7 @@ class PgMatriculaDlRepository extends PgMatriculaRepository implements Matricula
             return null;
         }
 
-        $dlPersona = (string) $row['dl'];
+        $dlPersona = is_scalar($row['dl']) ? (string) $row['dl'] : '';
         if ($dlPersona === '') {
             return null;
         }
@@ -190,20 +190,20 @@ class PgMatriculaDlRepository extends PgMatriculaRepository implements Matricula
         }
 
         $schema = null;
-        $idDl = isset($normalized['id_dl']) ? (int) $normalized['id_dl'] : 0;
+        $idDl = isset($normalized['id_dl']) && is_numeric($normalized['id_dl']) ? (int) $normalized['id_dl'] : 0;
         if ($idDl > 0) {
             $schema = $this->schemaFromIdDl($idDl);
         }
         if ($schema === null) {
-            $schema = $this->resolveSchemaFromIdNom((int) $normalized['id_nom']);
+            $schema = $this->resolveSchemaFromIdNom(is_numeric($normalized['id_nom']) ? (int) $normalized['id_nom'] : 0);
         }
         if ($schema === null) {
             return false;
         }
 
-        $id_activ = (int) $normalized['id_activ'];
-        $id_asignatura = (int) $normalized['id_asignatura'];
-        $id_nom = (int) $normalized['id_nom'];
+        $id_activ = is_numeric($normalized['id_activ']) ? (int) $normalized['id_activ'] : 0;
+        $id_asignatura = is_numeric($normalized['id_asignatura']) ? (int) $normalized['id_asignatura'] : 0;
+        $id_nom = is_numeric($normalized['id_nom']) ? (int) $normalized['id_nom'] : 0;
         $oDbl = $this->writePdoForSchema($schema);
         $sql = "DELETE FROM d_matriculas_activ_dl WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
 

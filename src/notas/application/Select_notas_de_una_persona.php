@@ -128,7 +128,7 @@ class Select_notas_de_una_persona
             'paths' => [
                 'persona_nota_eliminar' => 'src/notas/persona_nota_eliminar',
             ],
-            'id_sel_value' => is_scalar($this->Qid_sel ?? '') ? (string) $this->Qid_sel : '',
+            'id_sel_value' => (string) ($this->Qid_sel ?? ''),
         ];
     }
 

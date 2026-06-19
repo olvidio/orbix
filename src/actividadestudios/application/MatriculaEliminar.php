@@ -54,9 +54,13 @@ final class MatriculaEliminar
                     continue;
                 }
 
-                $id_activ = (int) ($parts[0] ?? 0);
-                $id_asignatura = (int) ($parts[1] ?? 0);
-                $id_nom = (int) ($parts[2] ?? 0);
+                if (count($parts) < 3) {
+                    continue;
+                }
+
+                $id_activ = (int) $parts[0];
+                $id_asignatura = (int) $parts[1];
+                $id_nom = (int) $parts[2];
                 if ($Qid_activ > 0) {
                     $id_activ = $Qid_activ;
                 }

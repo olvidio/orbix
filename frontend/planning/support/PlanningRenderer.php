@@ -38,7 +38,7 @@ class PlanningRenderer
     private string $scabecera = '';
     private ?\DateTimeInterface $oInicio = null;
     private ?\DateTimeInterface $oFin = null;
-    /** @var array<int|string, array<int|string, list<array<string, mixed>>>> */
+    /** @var array<int|string, array<int|string, mixed>> */
     private array $a_actividades = [];
     private int $imod = 0;
     private int $inueva = 0;
@@ -674,7 +674,7 @@ class PlanningRenderer
     }
 
     /**
-     * @param array<int|string, array<int|string, list<array<string, mixed>>>> $a_actividades
+     * @param array<int|string, array<int|string, mixed>> $a_actividades
      */
     public function setActividades(array $a_actividades): self
     {

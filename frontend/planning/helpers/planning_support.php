@@ -279,7 +279,7 @@ function planning_parse_persona_casa_map(array $items): array
 }
 
 /**
- * @return array<int|string, array<int|string, list<array<string, mixed>>>>
+ * @return array<int|string, array<int|string, mixed>>
  */
 function planning_actividades_map(mixed $raw): array
 {
@@ -300,7 +300,7 @@ function planning_actividades_map(mixed $raw): array
                 foreach (planning_parse_persona_casa_map($items) as $pKey => $actsList) {
                     // planning_ctr_select: cada persona va en un índice numérico
                     // (`[0 => ['p#…' => actividades]]`); aplanar rompe PlanningRenderer.
-                    if (is_int($gKey) || (is_string($gKey) && ctype_digit($gKey))) {
+                    if (is_int($gKey) || ctype_digit((string) $gKey)) {
                         $parsedGroup[] = [$pKey => $actsList];
                     } else {
                         $parsedGroup[$pKey] = $actsList;
@@ -348,7 +348,7 @@ function planning_casa_que_from_payload(array $payload): array
 
 /**
  * @param array<int|string, mixed> $payload
- * @return array{msg_txt: string, cabecera_title: string, a_actividades2: array<int|string, array<int|string, list<array<string, mixed>>>>}
+ * @return array{msg_txt: string, cabecera_title: string, a_actividades2: array<int|string, array<int|string, mixed>>}
  */
 function planning_ctr_select_from_payload(array $payload): array
 {

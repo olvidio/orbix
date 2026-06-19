@@ -48,7 +48,7 @@ if ($stackFromPost !== 0) {
 } else {
     list_nav_boot_recordar($oPosicion, $Qrefresh);
 }
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), isset($Qscroll_id) ? (string) $Qscroll_id : ''));
+list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), $Qscroll_id));
 
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 

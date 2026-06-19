@@ -76,6 +76,7 @@ class Select_cargos_personas_en_actividad
     private array $aLinks_otros = [];
 
     /** @return array<int, array{txt: string, click: string}> */
+    /** @return list<array{txt: string, click: string}> */
     private function getBotones(): array
     {
         return [
@@ -84,7 +85,7 @@ class Select_cargos_personas_en_actividad
         ];
     }
 
-    /** @return array<int, string|array{name: string, width: int}> */
+    /** @return list<string|array{name: string, width: int}> */
     private function getCabeceras(): array
     {
         return [
