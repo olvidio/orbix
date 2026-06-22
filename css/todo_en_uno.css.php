@@ -553,12 +553,13 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 		text-align: left;
 	}
 	/* ### menu ### */
-	#menu li {
-		font-size : 11pt;
-	}
+	#menu,
 	#submenu {
 		position: relative;
-		z-index: 95;
+		z-index: 1000; /* misma capa que burger/pills: desplegables UDM por encima de #main y #left_slide */
+	}
+	#menu li {
+		font-size : 11pt;
 	}
 	A:hover  {
 		text-decoration : none;
