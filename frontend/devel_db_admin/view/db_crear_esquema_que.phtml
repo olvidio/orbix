@@ -1,15 +1,8 @@
 <?php
 
-use frontend\shared\config\OrbixRuntime;
-
+require __DIR__ . '/_db_dl_desplegable_ajax.phtml';
 ?>
 <script>
-    fnjs_dl = function () {
-        var filtro_region = $('#region').val();
-        var url = '<?= OrbixRuntime::getWeb() . '/src/devel_db_admin/db_lugar' ?>';
-        var parametros = 'region=' + encodeURIComponent(filtro_region) + '<?= $h ?>';
-        fnjs_ajax_json_html({ url: url, data: parametros, target: '#lst_dl' });
-    }
     fnjs_db_crear_usuarios = function () {
         dl = $('#dl').val();
         if (!dl) {

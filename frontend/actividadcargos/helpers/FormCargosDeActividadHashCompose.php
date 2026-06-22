@@ -94,7 +94,7 @@ final class FormCargosDeActividadHashCompose
         $cargos = actividadcargos_desplegable_select($data['cargos_select'] ?? null);
         unset($data['cargos_select']);
         if ($cargos !== null) {
-            $d = Desplegable::desdeOpciones($cargos['opciones'], 'id_cargo', true);
+            $d = Desplegable::desdeOpciones($cargos['opciones'], 'id_cargo', false);
             if ($cargos['opcion_sel'] !== '') {
                 $d->setOpcion_sel($cargos['opcion_sel']);
             }

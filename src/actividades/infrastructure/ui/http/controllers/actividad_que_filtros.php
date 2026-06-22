@@ -1,11 +1,12 @@
 <?php
 /*
- * Endpoint backend que devuelve el HTML del bloque "filtros extra"
+ * Endpoint backend que devuelve los datos del bloque "filtros extra"
  * (filtro_lugar + lugar + organiza + publicada) de la pantalla
  * `actividad_que`. Incluye la comprobacion de permiso `perm_ctr`:
- * si el usuario no tiene el permiso, devuelve cadena vacia.
+ * si el usuario no tiene el permiso, devuelve `visible: false`.
  *
- * Responde JSON via src\shared\web\ContestarJson::enviar con la clave `html`.
+ * Responde JSON via src\shared\web\ContestarJson::enviar.
+ * El frontend monta el HTML a partir de los payloads de desplegable.
  */
 
 use src\shared\config\ConfigGlobal;
@@ -30,6 +31,6 @@ $proceso_installed = ConfigGlobal::is_app_installed('procesos');
 
 /** @var ActividadQueFiltrosBloque $useCase */
 $useCase = DependencyResolver::get(ActividadQueFiltrosBloque::class);
-$html = $useCase->ejecutar($sfsv, $modo, $dl_org, $filtro_lugar, $id_ubi, $publicado, $proceso_installed);
+$data = $useCase->ejecutar($sfsv, $modo, $dl_org, $filtro_lugar, $id_ubi, $publicado, $proceso_installed);
 
-ContestarJson::enviar('', ['html' => $html]);
+ContestarJson::enviar('', $data);

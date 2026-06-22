@@ -129,23 +129,57 @@
     fnjs_enviar_formulario('#modifica');
 }
 }
-    // Construye un <select> a partir del payload {id, opciones, selected, blanco}
-    fnjs_construir_desplegable_lugar = function (data) {
+    // Construye un <select> a partir del payload estándar {id, opciones, selected, blanco, action, opcion_no}
+    fnjs_construir_desplegable = function (data) {
         if (!data) { return ''; }
         var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
+        if (data.action) { $sel.attr('onchange', data.action); }
         if (data.blanco !== false) {
-            $sel.append($('<option></option>').val('').text(''));
+            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+            $sel.append($('<option></option>').val(vb).text(''));
         }
-        var opciones = data.opciones || {};
-        $.each(opciones, function (value, label) {
+        var opcionNo = {};
+        if (data.opcion_no && data.opcion_no.length) {
+            data.opcion_no.forEach(function (v) { opcionNo[String(v)] = true; });
+        }
+        $.each(data.opciones || {}, function (value, label) {
+            if (opcionNo[String(value)]) { return; }
             var $opt = $('<option></option>').val(value).text(label);
-            if (data.selected && String(data.selected) === String(value)) {
+            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
                 $opt.prop('selected', true);
             }
             $sel.append($opt);
         });
         return $sel.prop('outerHTML');
-    }
+    };
+
+    fnjs_construir_filtros_extra = function (data) {
+        if (!data || !data.visible) { return ''; }
+        var labels = data.labels || {};
+        var esc = function (s) { return $('<div/>').text(s || '').html(); };
+        var html = '<tr>';
+        html += '<td class="etiqueta">' + esc(labels.lugar_pais_dl) + ':</td>';
+        html += '<td colspan="3">' + fnjs_construir_desplegable(data.filtro_lugar) + '</td>';
+        html += '<td class="etiqueta">' + esc(labels.lugar) + '</td>';
+        html += '<td id="lst_lugar" colspan="1">' + (data.lugar ? fnjs_construir_desplegable(data.lugar) : '') + '</td>';
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td class="etiqueta">' + esc(labels.organiza) + ':</td>';
+        html += '<td colspan="3">' + fnjs_construir_desplegable(data.dl_org) + '</td>';
+        var pub = data.publicado || {};
+        if (pub.show) {
+            var chk1 = pub.value === 1 ? "checked='true'" : '';
+            var chk2 = pub.value === 2 ? "checked='true'" : '';
+            var chk3 = (pub.value !== 1 && pub.value !== 2) ? "checked='true'" : '';
+            html += '<td>' + esc(labels.publicada) + ':';
+            html += '<input type="radio" name="publicado" value="1" ' + chk1 + ' />' + esc(labels.si);
+            html += '<input type="radio" name="publicado" value="2" ' + chk2 + ' />' + esc(labels.no);
+            html += '<input type="radio" name="publicado" value="3" ' + chk3 + ' />' + esc(labels.todas);
+            html += '</td>';
+        }
+        html += '</tr>';
+        return html;
+    };
 
     fnjs_lugar=function(){
     var opcion_sel='{{ Qid_ubi }}';
@@ -164,7 +198,7 @@
     if (!json || json.success !== true) { return; }
     try {
         var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
-        $('#lst_lugar').html(fnjs_construir_desplegable_lugar(data));
+        $('#lst_lugar').html(fnjs_construir_desplegable(data));
     } catch (e) {}
 });
 }
@@ -181,7 +215,7 @@
                 if (!json || json.success !== true) { return; }
                 try {
                     var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
-                    $('#filtros_extra').html(data.html || '');
+                    $('#filtros_extra').html(fnjs_construir_filtros_extra(data));
                 } catch (e) {}
             });
 }

@@ -12,7 +12,6 @@ use src\asistentes\domain\entity\Asistente;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\traits\HandlesPdoErrors;
-use frontend\shared\web\Desplegable;
 use function src\shared\domain\helpers\is_true;
 
 

@@ -95,7 +95,7 @@ final class FormCargosPersonasEnActividadDataTest extends TestCase
         $this->assertNotNull($capture->where);
         $this->assertSame('^1', $capture->where['id_tipo_activ']);
         $this->assertSame('~', $capture->op['id_tipo_activ']);
-        $this->assertStringContainsString('select', $data['desplegable_cargos_html']);
+        $this->assertSame([1 => 'C1'], $data['cargos_select']['opciones']);
     }
 
     public function test_build_con_item_carga_actividad_y_hash_con_id_activ(): void
@@ -182,7 +182,7 @@ final class FormCargosPersonasEnActividadDataTest extends TestCase
             'id_activ_real',
             'nom_activ',
             'aActividades',
-            'desplegable_cargos_html',
+            'cargos_select',
             'hash_form_config',
             'chk',
             'observ',

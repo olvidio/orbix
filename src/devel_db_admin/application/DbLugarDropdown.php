@@ -7,12 +7,27 @@ namespace src\devel_db_admin\application;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
- * Opciones del desplegable de delegación (dl) filtradas por región, para pantallas de administración de BD.
+ * Datos del desplegable de delegación (dl) filtradas por región, para pantallas de administración de BD.
  */
 final class DbLugarDropdown
 {
     /**
-     * @return array<string, string> valor => etiqueta para {@see \frontend\shared\web\Desplegable}
+     * Payload JSON estándar de desplegable (contrato refactor.md).
+     *
+     * @return array{id: string, opciones: array<string, string>, selected: string, blanco: bool}
+     */
+    public static function getData(string $region, DelegacionRepositoryInterface $repoDl): array
+    {
+        return [
+            'id' => 'dl',
+            'opciones' => $region === '' ? [] : self::opcionesPorRegion($region, $repoDl),
+            'selected' => '',
+            'blanco' => false,
+        ];
+    }
+
+    /**
+     * @return array<string, string> valor => etiqueta
      */
     public static function opcionesPorRegion(string $region, DelegacionRepositoryInterface $repoDl): array
     {

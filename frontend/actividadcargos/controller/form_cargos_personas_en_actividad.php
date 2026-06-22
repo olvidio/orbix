@@ -20,7 +20,9 @@ if (!empty($raw['error'])) {
 }
 unset($raw['error']);
 
-$data = FormCargosDeActividadHashCompose::withHashCamposHtml(actividadcargos_string_key_payload($raw));
+$data = FormCargosDeActividadHashCompose::withDesplegablesHtml(
+    FormCargosDeActividadHashCompose::withHashCamposHtml(actividadcargos_string_key_payload($raw))
+);
 
 $data['oPosicion'] = $oPosicion;
 

@@ -11,7 +11,7 @@ use function src\shared\domain\helpers\input_string;
  * lugar para una actividad" (frontend/actividades/controller/actividad_select_ubi).
  *
  * Devuelve arrays value => label listos para que la vista los monte con
- * frontend\shared\web\Desplegable::desdeOpciones(...).
+ * El frontend construye los desplegables con {@see \frontend\shared\web\Desplegable}.
  */
 class ActividadSelectUbiData
 {

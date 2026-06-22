@@ -10,21 +10,22 @@ use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
-use frontend\shared\web\Desplegable;
 use src\actividades\domain\entity\TiposActividades;
 
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string;
 
 /**
- * Devuelve todos los datos y fragmentos HTML que el formulario
- * "ver/editar actividad" necesita para renderizarse, sin que la capa
- * frontend acceda a repositorios o entidades del dominio.
+ * Devuelve los datos que el formulario "ver/editar actividad" necesita para
+ * renderizarse, sin que la capa frontend acceda a repositorios o entidades del dominio.
+ *
+ * Los desplegables se devuelven como payloads JSON estándar (`select_*`);
+ * el frontend construye el HTML con {@see \frontend\shared\web\Desplegable}.
  *
  * Si se recibe `id_activ` > 0, carga la actividad y usa sus valores
  * (dl_org, tarifa, nivel_stgr, idioma, id_repeticion, id_ubi, lugar_esp,
- * isfsv) para construir los desplegables; en caso contrario (modo 'nuevo'
- * o 'cambiar_tipo'), usa los valores pasados por el controlador frontend.
+ * isfsv); en caso contrario (modo 'nuevo' o 'cambiar_tipo'), usa los valores
+ * pasados por el controlador frontend.
  *
  * El controlador HTTP serializa el array devuelto con ContestarJson.
  */
@@ -116,7 +117,6 @@ final class ActividadVerDatos
                     'plazas' => $oActividad->getPlazas(),
                     'idioma' => $oActividad->getIdiomaVo()?->value() ?? '',
                 ];
-                // Para los desplegables usamos los valores reales de la actividad.
                 $dl_org = (string)$entidad['dl_org'];
                 $tarifa = $entidad['tarifa'];
                 $nivel_stgr = $entidad['nivel_stgr'] ?? self::nivelStgrPorDefectoParaIdTipoActividad((string)$entidad['id_tipo_activ']);
@@ -124,52 +124,12 @@ final class ActividadVerDatos
                 $id_repeticion = (int)$entidad['id_repeticion'];
                 $id_ubi = (int)$entidad['id_ubi'];
                 $lugar_esp = (string)$entidad['lugar_esp'];
-                // isfsv derivado del id_tipo_activ.
                 $id_tipo_activ = (string)$entidad['id_tipo_activ'];
                 $isfsv = (int)$id_tipo_activ[0];
             }
         }
 
         $bdlBool = ($Bdl === 't');
-
-        $oDesplDl = Desplegable::desdeOpciones(
-            $this->delegacionDropdown->delegacionesURegiones($isfsv, $bdlBool),
-            'dl_org'
-        );
-        $oDesplDl->setOpcion_sel((string) $dl_org);
-        $html_despl_dl_org = $oDesplDl->desplegable();
-
-        $TipoTarifaRepository = $this->tipoTarifaRepository;
-        $aOpciones = $TipoTarifaRepository->getArrayTipoTarifas($isfsv);
-        $oDesplTarifa = new Desplegable();
-        $oDesplTarifa->setOpciones($aOpciones);
-        $oDesplTarifa->setNombre('id_tarifa');
-        $oDesplTarifa->setOpcion_sel((string) $tarifa);
-        $html_despl_tarifa = $oDesplTarifa->desplegable();
-
-        $aOpciones = NivelStgrId::getArrayNivelStgr();
-        $oDesplNivel = new Desplegable();
-        $oDesplNivel->setOpciones($aOpciones);
-        $oDesplNivel->setNombre('nivel_stgr');
-        $oDesplNivel->setOpcion_sel((string) $nivel_stgr);
-        $html_despl_nivel_stgr = $oDesplNivel->desplegable();
-
-        $LocalRepository = $this->localRepository;
-        $aOpciones = $LocalRepository->getArrayLocales();
-        $oDesplIdioma = new Desplegable();
-        $oDesplIdioma->setBlanco(true);
-        $oDesplIdioma->setOpciones($aOpciones);
-        $oDesplIdioma->setNombre('idioma');
-        $oDesplIdioma->setOpcion_sel((string) $idioma);
-        $html_despl_idioma = $oDesplIdioma->desplegable();
-
-        $RepeticionRepository = $this->repeticionRepository;
-        $aOpciones = $RepeticionRepository->getArrayRepeticion();
-        $oDesplRepeticion = new Desplegable();
-        $oDesplRepeticion->setOpciones($aOpciones);
-        $oDesplRepeticion->setNombre('id_repeticion');
-        $oDesplRepeticion->setOpcion_sel((string) $id_repeticion);
-        $html_despl_repeticion = $oDesplRepeticion->desplegable();
 
         $nombre_ubi = '';
         if (!empty($id_ubi) && $id_ubi !== 1) {
@@ -192,11 +152,36 @@ final class ActividadVerDatos
         $payload = [
             'entidad' => $entidad,
             'isfsv' => $isfsv,
-            'html_despl_dl_org' => $html_despl_dl_org,
-            'html_despl_tarifa' => $html_despl_tarifa,
-            'html_despl_nivel_stgr' => $html_despl_nivel_stgr,
-            'html_despl_idioma' => $html_despl_idioma,
-            'html_despl_repeticion' => $html_despl_repeticion,
+            'select_dl_org' => [
+                'id' => 'dl_org',
+                'opciones' => $this->delegacionDropdown->delegacionesURegiones($isfsv, $bdlBool),
+                'selected' => (string) $dl_org,
+                'blanco' => true,
+            ],
+            'select_tarifa' => [
+                'id' => 'id_tarifa',
+                'opciones' => $this->tipoTarifaRepository->getArrayTipoTarifas($isfsv),
+                'selected' => (string) $tarifa,
+                'blanco' => false,
+            ],
+            'select_nivel_stgr' => [
+                'id' => 'nivel_stgr',
+                'opciones' => NivelStgrId::getArrayNivelStgr(),
+                'selected' => (string) $nivel_stgr,
+                'blanco' => false,
+            ],
+            'select_idioma' => [
+                'id' => 'idioma',
+                'opciones' => $this->localRepository->getArrayLocales(),
+                'selected' => (string) $idioma,
+                'blanco' => true,
+            ],
+            'select_repeticion' => [
+                'id' => 'id_repeticion',
+                'opciones' => $this->repeticionRepository->getArrayRepeticion(),
+                'selected' => (string) $id_repeticion,
+                'blanco' => false,
+            ],
             'nombre_ubi' => $nombre_ubi,
         ];
 
@@ -209,12 +194,11 @@ final class ActividadVerDatos
         }
 
         if ($calcTarifaInicial && $id_tipo_activ !== '') {
-            $RelacionTarifaTipoActividadRepository = $this->relacionTarifaTipoActividadRepository;
             $aWhereT = [
                 'id_tipo_activ' => $id_tipo_activ,
                 '_ordre' => 'id_serie',
             ];
-            $cActiTipoTarifa = $RelacionTarifaTipoActividadRepository->getTipoActivTarifas($aWhereT);
+            $cActiTipoTarifa = $this->relacionTarifaTipoActividadRepository->getTipoActivTarifas($aWhereT);
             if ($cActiTipoTarifa !== []) {
                 $payload['tarifa_inicial'] = $cActiTipoTarifa[0]->getId_tarifa();
             } else {

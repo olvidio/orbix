@@ -55,13 +55,14 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
 
         $this->assertArrayHasKey('entidad', $out);
         $this->assertNull($out['entidad']);
-        $this->assertArrayHasKey('html_despl_dl_org', $out);
-        $this->assertArrayHasKey('html_despl_tarifa', $out);
-        $this->assertArrayHasKey('html_despl_nivel_stgr', $out);
-        $this->assertArrayHasKey('html_despl_idioma', $out);
-        $this->assertArrayHasKey('html_despl_repeticion', $out);
+        $this->assertArrayHasKey('select_dl_org', $out);
+        $this->assertArrayHasKey('select_tarifa', $out);
+        $this->assertArrayHasKey('select_nivel_stgr', $out);
+        $this->assertArrayHasKey('select_idioma', $out);
+        $this->assertArrayHasKey('select_repeticion', $out);
         $this->assertArrayHasKey('nombre_ubi', $out);
-        $this->assertIsString($out['html_despl_dl_org']);
+        $this->assertIsArray($out['select_dl_org']);
+        $this->assertArrayHasKey('opciones', $out['select_dl_org']);
     }
 
     public function test_lista_sr_csv_listado_devuelve_estructura(): void

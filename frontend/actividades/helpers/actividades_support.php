@@ -7,6 +7,7 @@
 require_once __DIR__ . '/../../notas/helpers/tessera_imprimir_support.php';
 require_once __DIR__ . '/../../notas/helpers/notas_support.php';
 
+use frontend\shared\web\Desplegable;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\XPermisos;
@@ -142,6 +143,47 @@ function actividades_entidad_from_ver_datos(array $dataEntidad): array
 }
 
 /**
+ * Convierte payload estándar de desplegable (contrato refactor.md) en HTML `<select>`.
+ *
+ * @param array<string, mixed>|null $raw
+ */
+function actividades_desplegable_html(?array $raw): string
+{
+    if ($raw === null || $raw === []) {
+        return '';
+    }
+    $id = tessera_imprimir_string($raw['id'] ?? '');
+    if ($id === '') {
+        return '';
+    }
+    $opciones = notas_desplegable_opciones($raw['opciones'] ?? []);
+    $blanco = !array_key_exists('blanco', $raw) || (bool) $raw['blanco'];
+    $d = Desplegable::desdeOpciones($opciones, $id, $blanco);
+    $selected = tessera_imprimir_string($raw['selected'] ?? '');
+    if ($selected !== '') {
+        $d->setOpcion_sel($selected);
+    }
+    $action = tessera_imprimir_string($raw['action'] ?? '');
+    if ($action !== '') {
+        $d->setAction($action);
+    }
+    if (array_key_exists('val_blanco', $raw)) {
+        $d->setBlanco(true);
+        $d->setValBlanco(tessera_imprimir_string($raw['val_blanco']));
+    }
+    $opcionNo = $raw['opcion_no'] ?? null;
+    if (is_array($opcionNo) && $opcionNo !== []) {
+        $normalized = [];
+        foreach ($opcionNo as $item) {
+            $normalized[] = tessera_imprimir_string($item);
+        }
+        $d->setOpcion_no($normalized);
+    }
+
+    return $d->desplegable();
+}
+
+/**
  * @param array<int|string, mixed> $data
  * @return array{
  *     html_despl_dl_org: string,
@@ -161,11 +203,11 @@ function actividades_entidad_from_ver_datos(array $dataEntidad): array
 function actividades_ver_render_from_payload(array $data): array
 {
     return [
-        'html_despl_dl_org' => tessera_imprimir_string($data['html_despl_dl_org'] ?? ''),
-        'html_despl_tarifa' => tessera_imprimir_string($data['html_despl_tarifa'] ?? ''),
-        'html_despl_nivel_stgr' => tessera_imprimir_string($data['html_despl_nivel_stgr'] ?? ''),
-        'html_despl_idioma' => tessera_imprimir_string($data['html_despl_idioma'] ?? ''),
-        'html_despl_repeticion' => tessera_imprimir_string($data['html_despl_repeticion'] ?? ''),
+        'html_despl_dl_org' => actividades_desplegable_html(is_array($data['select_dl_org'] ?? null) ? $data['select_dl_org'] : null),
+        'html_despl_tarifa' => actividades_desplegable_html(is_array($data['select_tarifa'] ?? null) ? $data['select_tarifa'] : null),
+        'html_despl_nivel_stgr' => actividades_desplegable_html(is_array($data['select_nivel_stgr'] ?? null) ? $data['select_nivel_stgr'] : null),
+        'html_despl_idioma' => actividades_desplegable_html(is_array($data['select_idioma'] ?? null) ? $data['select_idioma'] : null),
+        'html_despl_repeticion' => actividades_desplegable_html(is_array($data['select_repeticion'] ?? null) ? $data['select_repeticion'] : null),
         'nombre_ubi' => tessera_imprimir_string($data['nombre_ubi'] ?? ''),
         'ssfsv' => tessera_imprimir_string($data['ssfsv'] ?? ''),
         'sasistentes' => tessera_imprimir_string($data['sasistentes'] ?? ''),

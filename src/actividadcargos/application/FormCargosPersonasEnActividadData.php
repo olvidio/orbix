@@ -7,7 +7,6 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\value_objects\StatusId;
-use frontend\shared\web\Desplegable;
 use src\shared\config\ConfigGlobal;
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string;
@@ -119,12 +118,6 @@ final class FormCargosPersonasEnActividadData
             );
         }
 
-        $oDesplegableCargos = new Desplegable();
-        $oDesplegableCargos->setNombre('id_cargo');
-        $oDesplegableCargos->setBlanco(false);
-        $oDesplegableCargos->setOpciones($this->cargoRepository->getArrayCargos());
-        $oDesplegableCargos->setOpcion_sel((string) $id_cargo);
-
         $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
 
         $camposForm = 'id_cargo!observ';
@@ -152,7 +145,10 @@ final class FormCargosPersonasEnActividadData
             'id_activ_real' => $id_activ_real,
             'nom_activ' => $nom_activ,
             'aActividades' => $aActividadesRows,
-            'desplegable_cargos_html' => $oDesplegableCargos->desplegable(),
+            'cargos_select' => [
+                'opciones' => $this->cargoRepository->getArrayCargos(),
+                'opcion_sel' => (string) $id_cargo,
+            ],
             'hash_form_config' => [
                 'campos_form' => $camposForm,
                 'campos_no' => $camposNo,

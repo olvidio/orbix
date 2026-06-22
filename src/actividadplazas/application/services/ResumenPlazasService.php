@@ -8,7 +8,6 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use frontend\shared\web\Desplegable;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -67,9 +66,8 @@ class ResumenPlazasService
     /**
      * Devuelve el array de opciones para el desplegable de posibles
      * propietarios de la plaza (propias + cedidas) en la actividad
-     * `id_activ`. Es datos puros; la UI se construye en
-     * {@see getPosiblesPropietarios()} (legacy) o en el frontend
-     * (con el payload de {@see \src\actividadplazas\application\PosiblesPropietariosData}).
+     * `id_activ`. Es datos puros; la UI se construye en el frontend
+     * con el payload de {@see \src\actividadplazas\application\PosiblesPropietariosData}.
      *
      * @param false|string $dl_de_paso
      * @return array<string,string> clave "dl_org>dl_destino" => label
@@ -163,21 +161,6 @@ class ResumenPlazasService
         }
 
         return null;
-    }
-
-    /**
-     * Wrapper legacy que devuelve un `frontend\shared\web\Desplegable` envolviendo las
-     * opciones de {@see getPosiblesPropietariosOpciones()}. Se mantiene
-     * para compatibilidad con callers que aun renderizan el `<select>`
-     * en servidor (ver `apps/asistentes/controller/form_{1301,3101}.php`).
-     * El resto debe consumir las opciones directamente.
-     *
-     * @param false|string $dl_de_paso
-     */
-    public function getPosiblesPropietarios(string|false $dl_de_paso = false): Desplegable
-    {
-        $a_dl = $this->getPosiblesPropietariosOpciones($dl_de_paso);
-        return new Desplegable('', $a_dl, '', true);
     }
 
     /**
