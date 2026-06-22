@@ -72,35 +72,35 @@ class PermisosActividades
     ];
 
     /** @var array<string, XResto> */
-    private array $aPermDl = [];
+    protected array $aPermDl = [];
 
     /** @var array<string, XResto> */
-    private array $aPermOtras = [];
+    protected array $aPermOtras = [];
     /**
      * Per saber a quina activitat fa referència.
      */
-    private string $sid_tipo_activ = '';
+    protected string $sid_tipo_activ = '';
 
     /**
      * Id_activ de PermisoActividad
      */
-    private int $iid_activ = 0;
+    protected int $iid_activ = 0;
     /**
      * Id_tipo_proceso de PermisoActividad
      */
-    private int $iid_tipo_proceso = 0;
+    protected int $iid_tipo_proceso = 0;
     /**
      * propia de PermisoActividad
      */
-    private bool $bpropia = false;
+    protected bool $bpropia = false;
     /**
      * número de orden de la fase actual
      */
-    private int $iid_fase = 0;
+    protected int $iid_fase = 0;
     /**
      * si ha llegado al final.
      */
-    private bool $btop = false;
+    protected bool $btop = false;
 
     /** @var list<int> */
     private array $aFasesCompletadas = [];
@@ -113,7 +113,7 @@ class PermisosActividades
 
     private ?string $setActividadContextDlOrg = null;
 
-    private int $idUsuario = 0;
+    protected int $idUsuario = 0;
 
     /** Repositorios no serializables (PDO); se reinyectan tras deserializar sesión. */
     private ?UsuarioGrupoRepositoryInterface $usuarioGrupoRepository = null;
@@ -439,6 +439,9 @@ class PermisosActividades
      */
     public function getPermisoCrear(bool $dl_propia): array|false
     {
+        if (!ConfigGlobal::is_app_installed('procesos')) {
+            return ['of_responsable_txt' => '', 'status' => 0];
+        }
         $this->bpropia = $dl_propia;
         $id_tipo_activ = $this->sid_tipo_activ;
         $aTiposDeProcesos = $this->getTipoDeActividadRepository()->getTiposDeProcesos($id_tipo_activ, $dl_propia);
@@ -452,7 +455,11 @@ class PermisosActividades
         $status = 0;
         foreach ($aTiposDeProcesos as $id_tipo_proceso) {
             // Buscar la primera fase (no depende de fases previas)
-            $aTareaProceso = $this->getTareaProcesoRepository()->getFaseIndependiente($id_tipo_proceso);
+            try {
+                $aTareaProceso = $this->getTareaProcesoRepository()->getFaseIndependiente($id_tipo_proceso);
+            } catch (\RuntimeException) {
+                continue;
+            }
             $oTareaProceso = $aTareaProceso[0];
             $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
             $status = $oTareaProceso->getStatus();

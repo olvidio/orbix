@@ -3,179 +3,75 @@
 namespace src\permisos\domain;
 
 use src\procesos\domain\PermAccion;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Stub de permisos totales cuando el módulo procesos no está instalado.
+ *
+ * Extiende {@see PermisosActividades} para que `instanceof PermisosActividades`
+ * sea verdadero y los callers no necesiten lógica especial.
  */
-class PermisosActividadesTrue
+class PermisosActividadesTrue extends PermisosActividades
 {
-    /** @var array<string, mixed> */
-    protected array $aPermDl = [];
-
-    /** @var array<string, mixed> */
-    protected array $aPermOtras = [];
-
-    protected string $sid_tipo_activ = '';
-
-    private int $iid_activ = 0;
-
-    private int $iid_tipo_proceso = 0;
-
-    private bool $bpropia = true;
-
-    private int $iid_fase = 0;
-
-    private bool $btop = false;
-
-    private int $idUsuario;
-
-    public function __construct(int $iid_usuario)
+    /**
+     * Constructor ligero: solo guarda el id de usuario, sin repositorios ni SQL.
+     */
+    public function __construct(int $idUsuario)
     {
-        $this->idUsuario = $iid_usuario;
+        $this->idUsuario = $idUsuario;
     }
 
-    public function getIdUsuario(): int
+    /**
+     * Serialización mínima: solo el id de usuario.
+     * Evita depender de la serialización del padre (propiedades privadas, repos, etc.).
+     */
+    public function __serialize(): array
     {
-        return $this->idUsuario;
+        return ['idUsuario' => $this->idUsuario];
     }
 
-    public function carregarTrue(string $sCondicion_usuario, string $dl_propia): void
+    /**
+     * Restaura solo el id de usuario; acepta tanto el formato propio como
+     * el del padre (sesión creada antes de que True extendiera PermisosActividades).
+     */
+    public function __unserialize(array $data): void
     {
+        // Formato propio (nuevo) o heredado del padre.
+        $this->idUsuario = (int) ($data['idUsuario'] ?? 0);
     }
 
-    public function setActividad(int $id_activ, string $id_tipo_activ = '', string $dl_org = ''): void
+    public function setActividad(int $id_activ, ?string $id_tipo_activ = null, ?string $dl_org = null): void
     {
-    }
-
-    public function setId_fase(int $iid_fase): void
-    {
-        $this->iid_fase = $iid_fase;
-    }
-
-    public function getId_fase(): int
-    {
-        if ($this->iid_fase === 0) {
-            echo 'No hay fase!!';
+        if ($id_tipo_activ !== null && $id_tipo_activ !== '' && $dl_org !== null && $dl_org !== '') {
+            parent::setActividad($id_activ, $id_tipo_activ, $dl_org);
         }
-
-        return $this->iid_fase;
     }
 
     public function getPermisoActual(string $sAfecta): PermAccion
     {
+        return new PermAccion($this->bpropia ? 15 : 3);
+    }
+
+    public function getPermisoOn(int|string $iAfecta): PermAccion
+    {
         return new PermAccion(15);
     }
 
-    public function getPermisoActualPrev(string $sAfecta): PermAccion
+    /**
+     * Sin módulo procesos se permite crear cualquier actividad.
+     *
+     * @return array{of_responsable_txt: string, status: int}
+     */
+    public function getPermisoCrear(bool $dl_propia): array
     {
-        if ($this->getIdTipoPrev() === false) {
-            return new PermAccion(0);
-        }
-
-        return $this->getPermisoActual($sAfecta);
-    }
-
-    public function getPermisos(string $id_tipo_activ_txt = ''): mixed
-    {
-        if ($this->btop) {
-            return false;
-        }
-        if ($id_tipo_activ_txt === '') {
-            $id_tipo_activ_txt = $this->sid_tipo_activ;
-        }
-        if ($this->bpropia) {
-            if (array_key_exists($id_tipo_activ_txt, $this->aPermDl)) {
-                return $this->aPermDl[$id_tipo_activ_txt];
-            }
-
-            return $this->getPermisosPrev($id_tipo_activ_txt);
-        }
-        if (array_key_exists($id_tipo_activ_txt, $this->aPermOtras)) {
-            return $this->aPermOtras[$id_tipo_activ_txt];
-        }
-
-        return $this->getPermisosPrev($id_tipo_activ_txt);
-    }
-
-    public function getPermisosPrev(string $id_tipo_activ_txt = ''): mixed
-    {
-        if ($id_tipo_activ_txt === '') {
-            $id_tipo_activ_txt = $this->sid_tipo_activ;
-        }
-        $prev_id_tipo = $this->getIdTipoPrev($id_tipo_activ_txt);
-        if ($prev_id_tipo === false) {
-            return false;
-        }
-
-        return $this->getPermisos($prev_id_tipo);
-    }
-
-    public function setId_tipo_activ(string $id_tipo_activ): void
-    {
-        $this->btop = ($id_tipo_activ === '......');
-        $this->sid_tipo_activ = $id_tipo_activ;
-    }
-
-    public function setId_activ(int $id_activ): void
-    {
-        $this->iid_activ = $id_activ;
-    }
-
-    public function getId_activ(): int
-    {
-        return $this->iid_activ;
-    }
-
-    public function setId_tipo_proceso(int $id_tipo_proceso): void
-    {
-        $this->iid_tipo_proceso = $id_tipo_proceso;
-    }
-
-    public function getId_tipo_proceso(): int
-    {
-        return $this->iid_tipo_proceso;
-    }
-
-    public function setPropia(bool|string $bpropia): void
-    {
-        $this->bpropia = is_true($bpropia) ?? false;
+        return ['of_responsable_txt' => '', 'status' => 0];
     }
 
     /**
-     * Compatibilidad con {@see PermisosActividades::setFasesCompletadas}.
-     * Sin módulo procesos los permisos son siempre totales; no se usan las fases.
+     * Sin módulo procesos no hay fases que precargar.
      *
      * @param list<int> $aFases
      */
     public function setFasesCompletadas(array $aFases = []): void
     {
-    }
-
-    /**
-     * @return string|false
-     */
-    public function getIdTipoPrev(string $id_tipo_activ_txt = ''): string|false
-    {
-        if ($id_tipo_activ_txt === '') {
-            $id_tipo_activ_txt = $this->sid_tipo_activ;
-        }
-        $match = [];
-        $rta = preg_match('/(\d+)(\d)(\.*)/', $id_tipo_activ_txt, $match);
-        if (empty($rta)) {
-            if ($id_tipo_activ_txt === '1.....' || $id_tipo_activ_txt === '2.....' || $id_tipo_activ_txt === '3.....') {
-                return '......';
-            }
-            $this->btop = true;
-
-            return false;
-        }
-
-        $num_prev = $match[1];
-        $pto = $match[3];
-        $prev_id_tipo = $num_prev . '.' . $pto;
-        $this->sid_tipo_activ = $prev_id_tipo;
-
-        return $prev_id_tipo;
     }
 }

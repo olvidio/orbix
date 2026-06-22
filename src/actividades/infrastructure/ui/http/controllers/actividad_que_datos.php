@@ -5,8 +5,15 @@
  */
 
 use src\actividades\application\ActividadQueDatos;
+use src\actividades\application\TipoActivMetadata;
+use frontend\actividades\helpers\TipoActivMetadataLoader;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+
+// Pre-cargar el cache de metadatos de tipo de actividad directamente desde el dominio,
+// para que ActividadTipo/TiposDeActividades (instanciados dentro de ActividadQueDatos)
+// no generen una segunda llamada HTTP anidada a /src/actividades/tipo_activ_metadata.
+TipoActivMetadataLoader::preload(DependencyResolver::get(TipoActivMetadata::class)->execute());
 
 $perm_jefe = filter_input(INPUT_POST, 'perm_jefe') === 't';
 $id_tipo_activ = filter_input(INPUT_POST, 'id_tipo_activ');
