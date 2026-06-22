@@ -3,17 +3,17 @@
 <tr>
 	<td class=etiqueta>{{ "estado"|trans|capitalize }}:</td>
 	{% if not procesos_installed %}
-	<td><input type="Radio" id="status_1" name="status" value="{{ constant('actividades\\helpers\\ActividadStatusId::PROYECTO') }}"
-		{% if status == constant('actividades\\helpers\\ActividadStatusId::PROYECTO') %} checked {% endif %}>
+	<td><input type="Radio" id="status_1" name="status" value="{{ constant('frontend\\actividades\\helpers\\ActividadStatusId::PROYECTO') }}"
+		{% if status == constant('frontend\\actividades\\helpers\\ActividadStatusId::PROYECTO') %} checked {% endif %}>
 		{{ "proyecto"|trans|raw }}</td>
-	<td><input type="Radio" id="status_2" name="status" value="{{ constant('actividades\\helpers\\ActividadStatusId::ACTUAL') }}"
-		{% if status == constant('actividades\\helpers\\ActividadStatusId::ACTUAL') %} checked {% endif %}>
+	<td><input type="Radio" id="status_2" name="status" value="{{ constant('frontend\\actividades\\helpers\\ActividadStatusId::ACTUAL') }}"
+		{% if status == constant('frontend\\actividades\\helpers\\ActividadStatusId::ACTUAL') %} checked {% endif %}>
 		{{ "actual"|trans|raw }}</td>
-	<td><input type="Radio" id="status_3" name="status" value="{{ constant('actividades\\helpers\\ActividadStatusId::TERMINADA') }}"
-		{% if status == constant('actividades\\helpers\\ActividadStatusId::TERMINADA') %} checked {% endif %}>
+	<td><input type="Radio" id="status_3" name="status" value="{{ constant('frontend\\actividades\\helpers\\ActividadStatusId::TERMINADA') }}"
+		{% if status == constant('frontend\\actividades\\helpers\\ActividadStatusId::TERMINADA') %} checked {% endif %}>
 		{{ "terminada"|trans|raw }}</td>
-	<td><input type="Radio" id="status_4" name="status" value="{{ constant('actividades\\helpers\\ActividadStatusId::BORRABLE') }}"
-		{% if status == constant('actividades\\helpers\\ActividadStatusId::BORRABLE') %} checked {% endif %}>
+	<td><input type="Radio" id="status_4" name="status" value="{{ constant('frontend\\actividades\\helpers\\ActividadStatusId::BORRABLE') }}"
+		{% if status == constant('frontend\\actividades\\helpers\\ActividadStatusId::BORRABLE') %} checked {% endif %}>
 		{{ "borrable"|trans|raw }}</td>
 	{% else %}
 		<!-- Ara faig que no es pugui canviar. S'ha d'anar per les fases.  -->
