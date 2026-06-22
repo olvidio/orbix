@@ -16,7 +16,7 @@ class PlanningStyle
 {
     public static function clase(int|string|null $id_tipo_activ, bool|string|null $propio, int|string|null $plaza, int|string|null $status): string
     {
-        $svsf = (integer)substr((string)$id_tipo_activ, 0, 1);
+        $svsf = (int) substr((string) $id_tipo_activ, 0, 1);
         switch ($svsf) {
             case 1:
                 $clase = "actsv";

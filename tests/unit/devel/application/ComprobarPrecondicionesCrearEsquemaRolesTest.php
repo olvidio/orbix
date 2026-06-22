@@ -13,7 +13,6 @@ final class ComprobarPrecondicionesCrearEsquemaRolesTest extends TestCase
     {
         $ref = new \ReflectionClass(ComprobarPrecondicionesCrearEsquema::class);
         $m = $ref->getMethod('mensajeFaltanRoles');
-        $m->setAccessible(true);
         /** @var string $msg */
         $msg = $m->invoke(new ComprobarPrecondicionesCrearEsquema(), 'B-crB', ['• comun: rol «B-crB»']);
 

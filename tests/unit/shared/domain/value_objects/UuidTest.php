@@ -32,7 +32,7 @@ final class UuidTest extends myTest
         $this->assertTrue($a->equals($b));
 
         $rand = RamseyUuid::uuid4()->toString();
-        $this->assertNotSame(new Uuid($rand)->value(), self::VALID);
+        $this->assertNotSame((new Uuid($rand))->value(), self::VALID);
         $randomVo = Uuid::random();
         $this->assertMatchesRegularExpression(
             '/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/',

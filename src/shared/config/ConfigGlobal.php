@@ -145,10 +145,21 @@ class ConfigGlobal extends ServerConf
     public static function getDIR_PWD(): string
     {
         if (self::is_test_mode()) {
-            return  self::DIR_PWD_TEST;
+            // Dentro del contenedor PHP: tests/config apunta a localhost:5444 (host);
+            // Postgres está en el servicio `db` vía /var/www/conf/*.conn.inc.
+            if (is_readable('/.dockerenv') && is_dir(self::DIR_PWD)) {
+                return self::DIR_PWD;
+            }
+
+            $desdeDirProyecto = self::DIR . '/tests/config';
+            if (is_dir($desdeDirProyecto)) {
+                return $desdeDirProyecto;
+            }
+
+            return self::DIR_PWD_TEST;
         }
 
-        return  self::DIR_PWD;
+        return self::DIR_PWD;
     }
 
     /**

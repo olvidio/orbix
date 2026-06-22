@@ -6,6 +6,7 @@ use frontend\shared\config\OrbixRuntime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use frontend\shared\security\HashFront;
+use src\shared\config\ConfigGlobal;
 
 class PostRequest
 {
@@ -61,9 +62,129 @@ class PostRequest
         return [self::INNER_SCALAR_ENVELOPE_KEY => $decoded];
     }
 
+    /**
+     * Destino TCP al sustituir hostnames `*.docker` en llamadas server-to-server.
+     * En contenedor: puerto publicado del nginx en el host (host-gateway).
+     * En PHPUnit CLI local: localhost del portátil (mismo publish 8003).
+     * El header HTTP Host público se conserva en {@see withPreservedHttpHostHeader}.
+     */
+    private static function isRunningInsideDocker(): bool
+    {
+        return is_readable('/.dockerenv');
+    }
+
+    private static function dockerBridgeHost(): string
+    {
+        return self::isRunningInsideDocker() ? 'host.docker.internal' : '127.0.0.1';
+    }
+
+    /**
+     * En PHPUnit local el CLI tiene $_SESSION en memoria pero php-fpm en Docker usa
+     * otro almacén de sesión: un POST HTTP con PHPSESSID devuelve auth_required.
+     * En modo test fuera del contenedor ejecutamos el controlador /src/... en proceso.
+     */
+    private static function shouldDispatchInProcess(): bool
+    {
+        return ConfigGlobal::is_test_mode() && !self::isRunningInsideDocker();
+    }
+
+    private static function projectRoot(): string
+    {
+        if (is_dir(ConfigGlobal::DIR)) {
+            return ConfigGlobal::DIR;
+        }
+
+        return dirname(__DIR__, 2);
+    }
+
+    private static function normalizeSrcRoutePath(string $url): ?string
+    {
+        $path = parse_url($url, PHP_URL_PATH);
+        if (!is_string($path) || $path === '') {
+            return null;
+        }
+        $path = rawurldecode($path);
+        $srcPos = strpos($path, '/src/');
+        if ($srcPos === false) {
+            return null;
+        }
+        $normalized = rtrim(substr($path, $srcPos), '/');
+
+        return $normalized !== '' ? $normalized : null;
+    }
+
+    private static function resolveSrcControllerFile(string $srcRoute): ?string
+    {
+        if (preg_match('#^/src/([a-z0-9_]+)/([a-z0-9_]+)$#i', $srcRoute, $matches) !== 1) {
+            return null;
+        }
+        $controller = self::projectRoot()
+            . '/src/' . $matches[1]
+            . '/infrastructure/ui/http/controllers/'
+            . $matches[2]
+            . '.php';
+
+        return is_readable($controller) ? $controller : null;
+    }
+
+    /**
+     * @param array<string, mixed> $postParams
+     */
+    private static function dispatchInProcess(string $url, array $postParams): string
+    {
+        $srcRoute = self::normalizeSrcRoutePath($url);
+        if ($srcRoute === null) {
+            throw new \RuntimeException(sprintf(
+                _('No se pudo resolver ruta /src en llamada interna de test: %s'),
+                $url
+            ));
+        }
+        $controller = self::resolveSrcControllerFile($srcRoute);
+        if ($controller === null) {
+            throw new \RuntimeException(sprintf(
+                _('No existe controlador para la ruta de test %s'),
+                $srcRoute
+            ));
+        }
+
+        $previousPost = $_POST;
+        $_POST = $postParams;
+        ob_start();
+        try {
+            require $controller;
+        } catch (\Throwable $e) {
+            ob_end_clean();
+            $_POST = $previousPost;
+            throw $e;
+        }
+        $content = ob_get_clean();
+        $_POST = $previousPost;
+        if (!is_string($content)) {
+            return '';
+        }
+
+        return $content;
+    }
+
+    /**
+     * @param array<string, mixed> $hash_params
+     * @return array<int|string, mixed>
+     */
+    private static function getDataInProcess(string $url, array $hash_params): array
+    {
+        try {
+            $content = self::dispatchInProcess($url, $hash_params);
+        } catch (\Throwable $e) {
+            return ['error' => $e->getMessage() . self::sufijoDiagnosticoLlamadaInterna($url)];
+        }
+
+        return self::dataFromJsonResponseBody($content, $url, 200);
+    }
+
     private static function rewriteDockerInUrl(string $url): string
     {
-        $rewritten = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $url);
+        $target = self::dockerBridgeHost();
+        $rewritten = preg_replace('/(.*?)\.docker/', $target, $url);
 
         return is_string($rewritten) ? $rewritten : $url;
     }
@@ -73,7 +194,8 @@ class PostRequest
         if ($host === '') {
             return '';
         }
-        $rewritten = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host);
+        $target = self::dockerBridgeHost();
+        $rewritten = preg_replace('/(.*?)\.docker/', $target, $host);
 
         return is_string($rewritten) ? $rewritten : $host;
     }
@@ -196,6 +318,10 @@ class PostRequest
     public static function getDataMultipart(string $url, array $hash_params): array
     {
         $url = self::absoluteHttpUrlFromAppRelative($url);
+        if (self::shouldDispatchInProcess()) {
+            return self::getDataInProcess($url, $hash_params);
+        }
+
         $parts = self::parseHttpUrl($url);
         $host_original = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
         $url_rewritten = self::rewriteConnectionInUrl($url);
@@ -395,7 +521,7 @@ class PostRequest
     }
 
     /**
-     * Al sustituir *.docker por host.docker.internal, la conexión TCP llega al vhost correcto
+     * Al sustituir *.docker por el bridge local (host.docker.internal o 127.0.0.1), la conexión TCP llega al vhost correcto
      * pero el header Host sería el interno; PHP y la app usan HTTP_HOST del navegador
      * (sesión, esquema, validaciones). Forzar el Host público evita “perder el hilo”.
      *
@@ -468,7 +594,7 @@ class PostRequest
     /**
      * Cabecera Cookie explícita para Guzzle.
      *
-     * No usamos CookieJar: al reescribir *.docker → host.docker.internal y forzar
+     * No usamos CookieJar: al reescribir *.docker al bridge local y forzar
      * Host público (orbix.docker), el jar no envía cookies por dominio distinto.
      *
      * @param array<string, string> $cookies
@@ -513,9 +639,10 @@ class PostRequest
         $hostOriginal = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
         $pathFinal = isset($parts['path']) && is_string($parts['path']) ? $parts['path'] : '';
 
-        $dockerHostRewrite = $hostRewritten === 'host.docker.internal'
-            && $hostOriginal !== ''
-            && $hostRewritten !== $hostOriginal;
+        $dockerHostRewrite = $hostOriginal !== ''
+            && $hostRewritten !== $hostOriginal
+            && preg_match('/(.*?)\.docker/i', $hostOriginal) === 1
+            && ($hostRewritten === 'host.docker.internal' || $hostRewritten === '127.0.0.1');
         if ($dockerHostRewrite && $pathFinal !== '') {
             $segments = explode('/', $pathFinal);
             if (isset($segments[2]) && strpos($segments[2], '-') !== false) {
@@ -591,6 +718,10 @@ class PostRequest
      */
     private static function getDataInternal(string $url, array $hash_params): array
     {
+        if (self::shouldDispatchInProcess()) {
+            return self::getDataInProcess($url, $hash_params);
+        }
+
         $cookies = self::cookiesForInternalRequest();
 
         $parts = self::parseHttpUrl($url);
@@ -651,6 +782,14 @@ class PostRequest
     public static function getContent(string $url, array $hash_params): string
     {
         $url = self::absoluteHttpUrlFromAppRelative($url);
+        if (self::shouldDispatchInProcess()) {
+            try {
+                return self::dispatchInProcess($url, $hash_params);
+            } catch (\Throwable $e) {
+                return $e->getMessage();
+            }
+        }
+
         $parts = self::parseHttpUrl($url);
         $host_original = isset($parts['host']) && is_string($parts['host']) ? $parts['host'] : '';
         $url_rewritten = self::rewriteConnectionInUrl($url);
@@ -679,6 +818,13 @@ class PostRequest
     public static function sendRawPost(string $relativeUrl, array $formParams): string
     {
         $url = self::absoluteHttpUrlFromAppRelative($relativeUrl);
+        if (self::shouldDispatchInProcess()) {
+            try {
+                return self::dispatchInProcess($url, $formParams);
+            } catch (\Throwable $e) {
+                return $e->getMessage();
+            }
+        }
 
         $cookies = self::cookiesForInternalRequest();
         $parts = self::parseHttpUrl($url);

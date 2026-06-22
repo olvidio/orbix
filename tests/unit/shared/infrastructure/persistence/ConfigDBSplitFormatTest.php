@@ -193,7 +193,6 @@ final class ConfigDBSplitFormatTest extends TestCase
         $cfg->addEsquemaEnFicheroPasswords('sv-e', 'T-tTv', 'pwd-sve');
         // En pre-prod (no docker) addEsquemaEnFicheroPasswords también escribe pruebas-*; aquí lo forzamos.
         $monolito = new \ReflectionMethod(ConfigDB::class, 'addEsquemaMonolitico');
-        $monolito->setAccessible(true);
         $monolito->invoke($cfg, 'pruebas-comun', 'T-tT', 'pwd-comun');
         $monolito->invoke($cfg, 'pruebas-sv-e', 'T-tTv', 'pwd-sve');
 
@@ -232,7 +231,6 @@ final class ConfigDBSplitFormatTest extends TestCase
         $cfg = new ConfigDB('comun');
         $cfg->removeEsquemaEnFicheroPasswords('comun', 'X-xX');
         $monolito = new \ReflectionMethod(ConfigDB::class, 'removeEsquemaMonolitico');
-        $monolito->setAccessible(true);
         $monolito->invoke($cfg, 'pruebas-comun', 'X-xX');
 
         foreach (['comun.inc', 'comun_select.inc', 'pruebas-comun.inc', 'pruebas-comun_select.inc'] as $nombre) {
@@ -359,7 +357,6 @@ final class ConfigDBSplitFormatTest extends TestCase
     private function dataFromConfigDb(ConfigDB $cfg): array
     {
         $ref = new \ReflectionProperty(ConfigDB::class, 'data');
-        $ref->setAccessible(true);
         /** @var array<string, mixed> $data */
         $data = $ref->getValue($cfg);
 

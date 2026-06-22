@@ -133,7 +133,6 @@ final class PeriodoPlanningHelperTest extends TestCase
             throw new \RuntimeException("No existe propiedad $prop en " . $obj::class);
         }
         $p = $ref->getProperty($prop);
-        $p->setAccessible(true);
         return $p->getValue($obj);
     }
 }

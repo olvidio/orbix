@@ -94,7 +94,6 @@ class notasTest extends myTest
      */
     public function test_guardar_nota_sin_region_p_de_paso(): void
     {
-        $this->markTestSkipped('Skipped test');
         $this->expectException(RuntimeException::class);
 
         // dlB desde la que se ejecuta la operación de guardar nota.

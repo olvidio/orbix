@@ -14,7 +14,6 @@ final class VerificarEstadoRenombrarEsquemaTest extends TestCase
     {
         $verifier = new VerificarEstadoRenombrarEsquema();
         $method = new ReflectionMethod(VerificarEstadoRenombrarEsquema::class, 'expresionDefaultEquivale');
-        $method->setAccessible(true);
 
         $db = "idschema('V-crV'::text)";
         $expected = "public.idschema('V-crV'::text)";
@@ -26,7 +25,6 @@ final class VerificarEstadoRenombrarEsquemaTest extends TestCase
     {
         $verifier = new VerificarEstadoRenombrarEsquema();
         $method = new ReflectionMethod(VerificarEstadoRenombrarEsquema::class, 'expresionDefaultEquivale');
-        $method->setAccessible(true);
 
         $db = "idschema('B-crB'::text)";
         $expected = "public.idschema('V-crV'::text)";
