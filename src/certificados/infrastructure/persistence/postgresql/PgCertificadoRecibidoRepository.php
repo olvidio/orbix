@@ -11,10 +11,12 @@ use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
+use src\shared\traits\HandlesPgBytea;
 
 class PgCertificadoRecibidoRepository extends ClaseRepository implements CertificadoRecibidoRepositoryInterface
 {
     use HandlesPdoErrors;
+    use HandlesPgBytea;
 
     public function __construct()
     {
@@ -77,14 +79,7 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
             if (!is_array($aDatos)) {
                 continue;
             }
-            $handle = $aDatos['documento'] ?? null;
-            if (is_resource($handle)) {
-                $contents = stream_get_contents($handle);
-                if (is_resource($handle)) {
-                    fclose($handle);
-                }
-                $aDatos['documento'] = is_string($contents) ? $contents : null;
-            }
+            $aDatos['documento'] = $this->normalizeBytea($this->readByteaField($aDatos['documento'] ?? null));
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado'] ?? null))->fromPg();
             $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido'] ?? null))->fromPg();
             $normalized = [];
@@ -114,7 +109,9 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = $Certificado->toArrayForDatabase();
+        $aDatos = $Certificado->toArrayForDatabase([
+            'documento' => fn ($v) => ($v ? ('\\x' . bin2hex((string) $v)) : null),
+        ]);
         if ($bInsert === false) {
             unset($aDatos['id_item']);
             $update = '
@@ -175,14 +172,7 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
             return false;
         }
 
-        $handle = $aDatos['documento'] ?? null;
-        if (is_resource($handle)) {
-            $contents = stream_get_contents($handle);
-            if (is_resource($handle)) {
-                fclose($handle);
-            }
-            $aDatos['documento'] = is_string($contents) ? $contents : null;
-        }
+        $aDatos['documento'] = $this->normalizeBytea($this->readByteaField($aDatos['documento'] ?? null));
 
         $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado'] ?? null))->fromPg();
         $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido'] ?? null))->fromPg();

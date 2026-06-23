@@ -25,7 +25,7 @@ class CertificadoRecibido
 
     private ?string $certificado = null;
 
-    private DateTimeLocal|null $f_certificado;
+    private DateTimeLocal|null $f_certificado = null;
 
     private ?string $esquema_emisor = null;
 
@@ -33,7 +33,7 @@ class CertificadoRecibido
 
     private ?string $documento = null;
 
-    private DateTimeLocal|null $f_recibido;
+    private DateTimeLocal|null $f_recibido = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

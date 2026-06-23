@@ -24,8 +24,8 @@ class Anuncio
     private TextoAnuncio $texto_anuncio;
     private ?Idioma $idioma;
     private ?Tablon $tablon = null;
-    private DateTimeLocal|null $t_anotado;
-    private DateTimeLocal|null $t_eliminado;
+    private DateTimeLocal|null $t_anotado = null;
+    private DateTimeLocal|null $t_eliminado = null;
     private ?Categoria $categoria = null;
 
     public function getUuid_item(): AnuncioId

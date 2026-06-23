@@ -64,7 +64,7 @@ class Trasladar
     private string $sdl_dst;
     private string $sreg_dl_dst;
     private SituacionCode $ssituacion;
-    private ?DateTimeLocal $df_traslado;
+    private ?DateTimeLocal $df_traslado = null;
 
     /* para guardar el search path de la conexión a la base de datos */
     private string $snew_esquema;
@@ -1295,3 +1295,4 @@ class Trasladar
     }
 
 }
+

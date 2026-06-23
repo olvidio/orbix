@@ -126,7 +126,7 @@ class PersonaBDU
      * @var string
      */
     private string $scamb_fic = '';
-    private DateTimeLocal|null $dfecha_c_fic;
+    private DateTimeLocal|null $dfecha_c_fic = null;
 
     /**
      * compartida_con_r de Listas

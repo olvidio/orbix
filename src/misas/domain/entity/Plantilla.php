@@ -31,8 +31,8 @@ class Plantilla
 
     private ?int $semana = null;
 
-    private DateTimeLocal|null $t_start;
-    private DateTimeLocal|null $t_end;
+    private DateTimeLocal|null $t_start = null;
+    private DateTimeLocal|null $t_end = null;
 
     private ?int $id_nom = null;
 

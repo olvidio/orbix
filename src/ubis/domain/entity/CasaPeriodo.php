@@ -17,9 +17,9 @@ class CasaPeriodo
 
     private int $id_ubi;
 
-    private DateTimeLocal|null $f_ini;
+    private DateTimeLocal|null $f_ini = null;
 
-    private DateTimeLocal|null $f_fin;
+    private DateTimeLocal|null $f_fin = null;
 
     private ?SfsvOtrosId $sfsv = null;
 

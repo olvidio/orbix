@@ -25,8 +25,8 @@ class EncargoDia
     private EncargoDiaId $uuid_item;
     private ?int $id_enc = null;
 
-    private DateTimeLocal|null $tstart;
-    private DateTimeLocal|null $tend;
+    private DateTimeLocal|null $tstart = null;
+    private DateTimeLocal|null $tend = null;
 
     private ?int $id_nom = null;
     private ?string $observ = null;
