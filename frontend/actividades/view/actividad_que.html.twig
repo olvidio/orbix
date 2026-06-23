@@ -129,8 +129,9 @@
     fnjs_enviar_formulario('#modifica');
 }
 }
-    // Construye un <select> a partir del payload estándar {id, opciones, selected, blanco, action, opcion_no}
-    fnjs_construir_desplegable = function (data) {
+    // Payload ya parseado (actividad_que_filtros / actividad_tipo_get tras JSON.parse).
+    // Nombre distinto de fnjs_construir_desplegable en _actividad_tipo.js (espera el envelope JSON).
+    fnjs_construir_desplegable_payload = function (data) {
         if (!data) { return ''; }
         var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
         if (data.action) { $sel.attr('onchange', data.action); }
@@ -159,13 +160,13 @@
         var esc = function (s) { return $('<div/>').text(s || '').html(); };
         var html = '<tr>';
         html += '<td class="etiqueta">' + esc(labels.lugar_pais_dl) + ':</td>';
-        html += '<td colspan="3">' + fnjs_construir_desplegable(data.filtro_lugar) + '</td>';
+        html += '<td colspan="3">' + fnjs_construir_desplegable_payload(data.filtro_lugar) + '</td>';
         html += '<td class="etiqueta">' + esc(labels.lugar) + '</td>';
-        html += '<td id="lst_lugar" colspan="1">' + (data.lugar ? fnjs_construir_desplegable(data.lugar) : '') + '</td>';
+        html += '<td id="lst_lugar" colspan="1">' + (data.lugar ? fnjs_construir_desplegable_payload(data.lugar) : '') + '</td>';
         html += '</tr>';
         html += '<tr>';
         html += '<td class="etiqueta">' + esc(labels.organiza) + ':</td>';
-        html += '<td colspan="3">' + fnjs_construir_desplegable(data.dl_org) + '</td>';
+        html += '<td colspan="3">' + fnjs_construir_desplegable_payload(data.dl_org) + '</td>';
         var pub = data.publicado || {};
         if (pub.show) {
             var chk1 = pub.value === 1 ? "checked='true'" : '';
@@ -198,7 +199,7 @@
     if (!json || json.success !== true) { return; }
     try {
         var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
-        $('#lst_lugar').html(fnjs_construir_desplegable(data));
+        $('#lst_lugar').html(fnjs_construir_desplegable_payload(data));
     } catch (e) {}
 });
 }
