@@ -200,8 +200,13 @@ class PostRequest
 
         self::$inProcessDepth++;
         InProcessSrcDispatch::begin();
+        // Se reescriben $_POST y $_GET (no `filter_input`, que lee la copia
+        // inmutable del SAPI del request exterior). Los controladores /src deben
+        // leer la entrada con filter_post()/filter_get() para verlos in-process.
         $previousPost = $_POST;
+        $previousGet = $_GET;
         $_POST = $postParams;
+        $_GET = $postParams;
         ob_start();
         try {
             self::ensureSrcBackendBootstrap();
@@ -209,6 +214,7 @@ class PostRequest
         } catch (\Throwable $e) {
             ob_end_clean();
             $_POST = $previousPost;
+            $_GET = $previousGet;
             self::$inProcessDepth--;
             InProcessSrcDispatch::end();
 
@@ -216,6 +222,7 @@ class PostRequest
         }
         $content = ob_get_clean();
         $_POST = $previousPost;
+        $_GET = $previousGet;
         self::$inProcessDepth--;
         InProcessSrcDispatch::end();
         if (!is_string($content)) {

@@ -10,19 +10,19 @@ use src\shared\infrastructure\DependencyResolver;
 use src\actividades\application\ListaActividadesSgListado;
 
 $input = [
-    'continuar' => (string)filter_input(INPUT_POST, 'continuar'),
-    'status' => (int)filter_input(INPUT_POST, 'status'),
-    'tipo_activ_sg' => (string)filter_input(INPUT_POST, 'tipo_activ_sg'),
-    'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),
-    'periodo' => (string)filter_input(INPUT_POST, 'periodo'),
-    'year' => (string)filter_input(INPUT_POST, 'year'),
-    'dl_org' => (string)filter_input(INPUT_POST, 'dl_org'),
-    'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
-    'sel' => (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'scroll_id' => (string)filter_input(INPUT_POST, 'scroll_id'),
+    'continuar' => (string)filter_post('continuar'),
+    'status' => (int)filter_post('status'),
+    'tipo_activ_sg' => (string)filter_post('tipo_activ_sg'),
+    'id_ubi' => (int)filter_post('id_ubi'),
+    'periodo' => (string)filter_post('periodo'),
+    'year' => (string)filter_post('year'),
+    'dl_org' => (string)filter_post('dl_org'),
+    'empiezamin' => (string)filter_post('empiezamin'),
+    'empiezamax' => (string)filter_post('empiezamax'),
+    'sel' => (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'scroll_id' => (string)filter_post('scroll_id'),
 ];
-$stackGo = (int)filter_input(INPUT_POST, 'stack_go');
+$stackGo = (int)filter_post('stack_go');
 
 /** @var ListaActividadesSgListado $useCase */
 $useCase = DependencyResolver::get(ListaActividadesSgListado::class);

@@ -10,8 +10,8 @@ use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\CrearUsuarios;
 
 
-$Qregion = (string) filter_input(INPUT_POST, 'region');
-$Qdl = (string) filter_input(INPUT_POST, 'dl');
+$Qregion = (string) filter_post('region');
+$Qdl = (string) filter_post('dl');
 
 $sessionEsSf = isset($_SESSION['sfsv']) && $_SESSION['sfsv'] === 'sf';
 

@@ -1,4 +1,4 @@
-{{ oPosicion.mostrar_left_slide()|raw }}
+{{ oPosicion.mostrar_left_slide(1)|raw }}
 {% if aviso|default('') %}
 <div class="certificado-aviso-config" role="alert" style="max-width: 42rem; padding: 1rem 1.25rem; margin: 1rem 0; border: 1px solid #c9a227; background: #fffbea; color: #3d3500; line-height: 1.5;">
     <p style="margin: 0 0 0.75rem; font-weight: bold;">{{ 'No se puede mostrar el certificado'|trans|raw }}</p>
@@ -84,7 +84,7 @@
             if (json.success !== true) {
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
-                {{ oPosicion.js_atras(0)|raw }}
+                {{ oPosicion.js_atras(1)|raw }}
             }
         });
     }

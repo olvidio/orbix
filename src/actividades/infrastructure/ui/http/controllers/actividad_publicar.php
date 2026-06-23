@@ -13,7 +13,7 @@ use src\actividades\application\ActividadPublicar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 /** @var ActividadPublicar $useCase */
 $useCase = DependencyResolver::get(ActividadPublicar::class);

@@ -8,7 +8,7 @@ use src\shared\web\ContestarJson;
 $useCase = DependencyResolver::get(ListasExigenciaCtrData::class);
 
 
-$sf = (int)(filter_input(INPUT_POST, 'sf') ?? filter_input(INPUT_GET, 'sf') ?? 0);
-$ctr_igl = (string)(filter_input(INPUT_POST, 'ctr_igl') ?? filter_input(INPUT_GET, 'ctr_igl') ?? '');
+$sf = (int)(filter_post('sf') ?? filter_get('sf') ?? 0);
+$ctr_igl = (string)(filter_post('ctr_igl') ?? filter_get('ctr_igl') ?? '');
 
 ContestarJson::enviar('', $useCase->execute($sf, $ctr_igl));

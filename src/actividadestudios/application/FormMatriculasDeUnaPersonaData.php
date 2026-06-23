@@ -57,6 +57,9 @@ final class FormMatriculasDeUnaPersonaData
     public function execute(array $input): array
     {
         $idNom = input_int($input, 'id_nom');
+        if ($idNom <= 0) {
+            $idNom = input_int($input, 'id_pau');
+        }
         $idActiv = input_int($input, 'id_activ');
         $idAsignaturaPost = input_int($input, 'id_asignatura');
         $sel = isset($input['sel']) && is_array($input['sel']) ? $input['sel'] : null;

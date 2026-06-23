@@ -39,6 +39,7 @@ $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!f_certi
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado!stack');
 $oHashCertificadoPdf->setArrayCamposHidden([
     'id_nom' => $id_nom,
+    'nuevo' => 1,
     'refresh' => 1,
 ]);
 

@@ -6,13 +6,13 @@ use src\misas\application\support\MisasBuildInput;
 use src\shared\web\ContestarJson;
 
 $in = [
-    'id_zona' => filter_input(INPUT_POST, 'id_zona'),
-    'tipo_plantilla' => filter_input(INPUT_POST, 'tipo_plantilla'),
-    'seleccion' => filter_input(INPUT_POST, 'seleccion'),
-    'periodo' => filter_input(INPUT_POST, 'periodo'),
-    'empiezamin' => filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => filter_input(INPUT_POST, 'empiezamax'),
-    'orden' => filter_input(INPUT_POST, 'orden'),
+    'id_zona' => filter_post('id_zona'),
+    'tipo_plantilla' => filter_post('tipo_plantilla'),
+    'seleccion' => filter_post('seleccion'),
+    'periodo' => filter_post('periodo'),
+    'empiezamin' => filter_post('empiezamin'),
+    'empiezamax' => filter_post('empiezamax'),
+    'orden' => filter_post('orden'),
 ];
 
 /** @var CrearNuevoPeriodoData $useCase */

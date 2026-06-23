@@ -11,20 +11,20 @@ use function src\shared\domain\helpers\is_true;
 
 $error_txt = '';
 
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
-$Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
-$Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
-$Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
-$QaFase_ref = (array)filter_input(INPUT_POST, 'fase_ref', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$QaPerm_on = (array)filter_input(INPUT_POST, 'perm_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$QaPerm_off = (array)filter_input(INPUT_POST, 'perm_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$QaAfecta_a = (array)filter_input(INPUT_POST, 'afecta_a', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_usuario = (integer)filter_post('id_usuario');
+$Qid_tipo_activ = (integer)filter_post('id_tipo_activ');
+$Qid_item = (integer)filter_post('id_item');
+$Qdl_propia = (string)filter_post('dl_propia');
+$QaFase_ref = (array)filter_post('fase_ref', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$QaPerm_on = (array)filter_post('perm_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$QaPerm_off = (array)filter_post('perm_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$QaAfecta_a = (array)filter_post('afecta_a', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 if (empty($Qid_tipo_activ)) {
-    $Qisfsv_val = (string)filter_input(INPUT_POST, 'isfsv_val');
-    $Qiasistentes_val = (string)filter_input(INPUT_POST, 'iasistentes_val');
-    $Qiactividad_val = (string)filter_input(INPUT_POST, 'iactividad_val');
-    $Qinom_tipo_val = (string)filter_input(INPUT_POST, 'inom_tipo_val');
+    $Qisfsv_val = (string)filter_post('isfsv_val');
+    $Qiasistentes_val = (string)filter_post('iasistentes_val');
+    $Qiactividad_val = (string)filter_post('iactividad_val');
+    $Qinom_tipo_val = (string)filter_post('inom_tipo_val');
 
     $sfsv_val = empty($Qisfsv_val) ? '.' : $Qisfsv_val;
     $asistentes_val = empty($Qiasistentes_val) ? '.' : $Qiasistentes_val;

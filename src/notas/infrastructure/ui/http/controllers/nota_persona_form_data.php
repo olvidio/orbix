@@ -25,11 +25,11 @@ use src\shared\web\ContestarJson;
  * NotaSituacion/TipoActa/NotaEpoca desde el dominio).
  */
 $input = [
-    'id_pau' => (int)filter_input(INPUT_POST, 'id_pau'),
-    'id_asignatura_real' => (string)filter_input(INPUT_POST, 'id_asignatura_real'),
-    'sel' => (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'pau' => (string)filter_input(INPUT_POST, 'pau'),
-    'mod' => (string)filter_input(INPUT_POST, 'mod'),
+    'id_pau' => (int)filter_post('id_pau'),
+    'id_asignatura_real' => (string)filter_post('id_asignatura_real'),
+    'sel' => (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'pau' => (string)filter_post('pau'),
+    'mod' => (string)filter_post('mod'),
 ];
 
 $data = (DependencyResolver::get(NotaPersonaFormData::class))->execute($input);

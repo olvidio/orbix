@@ -5,7 +5,7 @@ use src\permisos\domain\MenuDlPermissionBits;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
+$Qid_usuario = (string)filter_post('id_usuario');
 
 $PermMenuRepository = DependencyResolver::get(PermMenuRepositoryInterface::class);
 $oGrupoGrupoPermMenu = $PermMenuRepository->getPermMenus(array('id_usuario' => $Qid_usuario));

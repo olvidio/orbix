@@ -7,7 +7,7 @@ use src\shared\web\ContestarJson;
 /** @var QuitarHorarioPlantilla $useCase */
 $useCase = DependencyResolver::get(QuitarHorarioPlantilla::class);
 $result = $useCase->execute([
-    'id_item' => filter_input(INPUT_POST, 'id_item'),
+    'id_item' => filter_post('id_item'),
 ]);
 
 ContestarJson::enviar($result['error']);

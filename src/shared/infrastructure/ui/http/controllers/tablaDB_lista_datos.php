@@ -6,11 +6,11 @@ use src\shared\domain\DatosTablaRepo;
 use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
 
-$Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
-$Qk_buscar = (string)filter_input(INPUT_POST, 'k_buscar');
-$Qpau = (string)filter_input(INPUT_POST, 'pau');
-$Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
-$Qobj_pau = (integer)filter_input(INPUT_POST, 'obj_pau');
+$Qclase_info_encoded = (string)filter_post('clase_info');
+$Qk_buscar = (string)filter_post('k_buscar');
+$Qpau = (string)filter_post('pau');
+$Qid_pau = (integer)filter_post('id_pau');
+$Qobj_pau = (integer)filter_post('obj_pau');
 
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info_encoded);

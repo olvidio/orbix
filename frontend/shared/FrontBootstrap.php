@@ -29,6 +29,8 @@ final class FrontBootstrap
 
     private static bool $infrastructureReady = false;
 
+    private static bool $backendBootstrapReady = false;
+
     /**
      * Arranque completo de la petición frontend.
      *
@@ -72,6 +74,7 @@ final class FrontBootstrap
 
         self::ensureSession();
         self::ensureAuthenticated();
+        self::ensureBackendBootstrap();
         self::ensureCrStgrMaterializedViews();
         session_write_close();
         self::validateRequestHash();
@@ -134,16 +137,16 @@ final class FrontBootstrap
     }
 
     /**
-     * Esquemas región STGR (p. ej. H-Hv, M-Mv): crear/refrescar vistas materializadas
-     * antes de `PostRequest` a `/src/...` (antes lo hacía `global_object.inc` en apps/).
+     * PDO global y contenedor PHP-DI para controladores que usan {@see DependencyResolver}
+     * sin pasar por {@see PostRequest} (p. ej. subida multipart directa).
      */
-    private static function ensureCrStgrMaterializedViews(): void
+    private static function ensureBackendBootstrap(): void
     {
-        if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
+        if (self::$backendBootstrapReady) {
             return;
         }
 
-        if (ConfigGlobal::mi_region() !== ConfigGlobal::mi_delef()) {
+        if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
             return;
         }
 
@@ -161,6 +164,35 @@ final class FrontBootstrap
 
         BootstrapPdoGlobals::register($connectionBootstrap->userSfsv, $connectionBootstrap->connections);
         DiContainerBootstrap::ensureBuilt();
+        self::$backendBootstrapReady = true;
+    }
+
+    /**
+     * Esquemas región STGR (p. ej. H-Hv, M-Mv): crear/refrescar vistas materializadas
+     * antes de `PostRequest` a `/src/...` (antes lo hacía `global_object.inc` en apps/).
+     */
+    private static function ensureCrStgrMaterializedViews(): void
+    {
+        if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
+            return;
+        }
+
+        if (ConfigGlobal::mi_region() !== ConfigGlobal::mi_delef()) {
+            return;
+        }
+
+        self::ensureBackendBootstrap();
+        if (!self::$backendBootstrapReady) {
+            return;
+        }
+
+        try {
+            $connectionBootstrap = ConnectionBootstrap::buildFromSession();
+        } catch (\Throwable $e) {
+            error_log('[FrontBootstrap] ConnectionBootstrap: ' . $e->getMessage());
+
+            return;
+        }
 
         (new RefreshCrStgrMaterializedViews())->executeIfNeeded(
             $connectionBootstrap->userSfsv,

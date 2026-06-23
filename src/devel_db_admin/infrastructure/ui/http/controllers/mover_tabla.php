@@ -12,7 +12,7 @@ use src\devel_db_admin\application\MoverTabla;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 
 
-$tablaRaw = filter_input(INPUT_POST, 'tabla');
+$tablaRaw = filter_post('tabla');
 $tabla = is_scalar($tablaRaw) ? (string) $tablaRaw : '';
 
 $dbp = new DBPropiedades();

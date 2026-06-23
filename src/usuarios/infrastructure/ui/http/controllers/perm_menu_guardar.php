@@ -7,9 +7,9 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
-$Qmenu_perm = (array)filter_input(INPUT_POST, 'menu_perm', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_item = (integer)filter_post('id_item');
+$Qid_usuario = (integer)filter_post('id_usuario');
+$Qmenu_perm = (array)filter_post('menu_perm', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $PermMenuRepository = DependencyResolver::get(PermMenuRepositoryInterface::class);
 if (empty($Qid_item)) {

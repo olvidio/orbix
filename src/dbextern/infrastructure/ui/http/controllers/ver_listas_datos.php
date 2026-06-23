@@ -9,7 +9,7 @@ use function src\shared\domain\helpers\input_string;
 $region = input_string($_POST, 'region');
 $dl = input_string($_POST, 'dl');
 $tipo_persona = input_string($_POST, 'tipo_persona');
-$first_load = (bool)filter_input(INPUT_POST, 'first_load');
+$first_load = (bool)filter_post('first_load');
 $id_nom_bdu = input_int($_POST, 'id_nom_bdu');
 
 $useCase = DependencyResolver::get(VerListasData::class);

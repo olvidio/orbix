@@ -16,7 +16,7 @@ use src\shared\web\ContestarJson;
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string;
 
-$ctxRaw = (string)filter_input(INPUT_POST, 'ctx');
+$ctxRaw = (string)filter_post('ctx');
 try {
     $opened = HashB::open($ctxRaw, 'usuario_guardar');
 } catch (HashBInvalidException $e) {
@@ -39,7 +39,7 @@ if ($que_user === 'guardar' && $id_usuario_ctx <= 0) {
     return;
 }
 
-$Qusuario = (string)filter_input(INPUT_POST, 'usuario');
+$Qusuario = (string)filter_post('usuario');
 
 $error_txt = '';
 if (empty($Qusuario)) {
@@ -47,19 +47,19 @@ if (empty($Qusuario)) {
 }
 
 $Qid_usuario = ($que_user === 'nuevo') ? 0 : $id_usuario_ctx;
-$Qperm_activ = (array)filter_input(INPUT_POST, 'perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qid_role = (integer)filter_input(INPUT_POST, 'id_role');
-$Qemail = (string)filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+$Qperm_activ = (array)filter_post('perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_role = (integer)filter_post('id_role');
+$Qemail = (string)filter_post('email', FILTER_VALIDATE_EMAIL);
 
-$Qnom_usuario = (string)filter_input(INPUT_POST, 'nom_usuario');
-$Qpassword = (string)filter_input(INPUT_POST, 'password');
-$Qpass = (string)filter_input(INPUT_POST, 'pass');
-$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-$Qid_ctr = (integer)filter_input(INPUT_POST, 'id_ctr');
-$Qcasas = (array)filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qnom_usuario = (string)filter_post('nom_usuario');
+$Qpassword = (string)filter_post('password');
+$Qpass = (string)filter_post('pass');
+$Qid_nom = (integer)filter_post('id_nom');
+$Qid_ctr = (integer)filter_post('id_ctr');
+$Qcasas = (array)filter_post('casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-$Qcambio_password = (bool)filter_input(INPUT_POST, 'cambio_password');
-$Qhas_2fa = (bool)filter_input(INPUT_POST, 'has_2fa');
+$Qcambio_password = (bool)filter_post('cambio_password');
+$Qhas_2fa = (bool)filter_post('has_2fa');
 
 $RoleRepository = DependencyResolver::get(RoleRepositoryInterface::class);
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);

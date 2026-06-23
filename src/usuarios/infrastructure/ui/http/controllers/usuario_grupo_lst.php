@@ -10,7 +10,7 @@ use src\shared\security\HashB;
 
 $sfsv = ConfigGlobal::mi_sfsv();
 
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+$Qid_usuario = (integer)filter_post('id_usuario');
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);

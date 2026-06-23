@@ -7,9 +7,9 @@ use src\actividades\application\ActividadFasesCompletadasDatos;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_activ = (int)filter_input(INPUT_POST, 'id_activ');
+$Qid_activ = (int)filter_post('id_activ');
 if ($Qid_activ === 0) {
-    $Qid_activ = (int)filter_input(INPUT_GET, 'id_activ');
+    $Qid_activ = (int)filter_get('id_activ');
 }
 
 $data = DependencyResolver::get(ActividadFasesCompletadasDatos::class)->ejecutar($Qid_activ);

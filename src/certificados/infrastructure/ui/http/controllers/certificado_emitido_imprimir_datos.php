@@ -5,7 +5,7 @@ use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\web\ContestarJson;
 
-$id_nom = (int)filter_input(INPUT_POST, 'id_nom', FILTER_VALIDATE_INT);
+$id_nom = (int)filter_post('id_nom', FILTER_VALIDATE_INT);
 
 $error_txt = '';
 $data = [];

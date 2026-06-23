@@ -4,8 +4,8 @@ use src\usuarios\domain\Verify2fa;
 use src\shared\web\ContestarJson;
 
 // Obtener los parámetros
-$verification_code = filter_input(INPUT_POST, 'verification_code');
-$secret_2fa = filter_input(INPUT_POST, 'secret_2fa');
+$verification_code = filter_post('verification_code');
+$secret_2fa = filter_post('secret_2fa');
 
 $error_txt = '';
 $data = [];

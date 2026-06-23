@@ -6,13 +6,13 @@ use src\usuarios\domain\entity\Grupo;
 use src\usuarios\domain\value_objects\Username;
 use src\shared\web\ContestarJson;
 
-$Qusuario = (string)filter_input(INPUT_POST, 'usuario');
+$Qusuario = (string)filter_post('usuario');
 
 $error_txt = '';
 if (empty($Qusuario)) {
     $error_txt .= _("debe poner un nombre");
 }
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+$Qid_usuario = (integer)filter_post('id_usuario');
 
 $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 if (empty($Qid_usuario)) {

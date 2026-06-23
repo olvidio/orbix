@@ -6,9 +6,9 @@ use src\misas\application\support\MisasBuildInput;
 use src\shared\web\ContestarJson;
 
 $in = [
-    'id_zona' => filter_input(INPUT_POST, 'id_zona'),
-    'tipo_plantilla_origen' => filter_input(INPUT_POST, 'tipo_plantilla_origen'),
-    'tipo_plantilla_destino' => filter_input(INPUT_POST, 'tipo_plantilla_destino'),
+    'id_zona' => filter_post('id_zona'),
+    'tipo_plantilla_origen' => filter_post('tipo_plantilla_origen'),
+    'tipo_plantilla_destino' => filter_post('tipo_plantilla_destino'),
 ];
 
 /** @var ImportarPlantillaData $useCase */

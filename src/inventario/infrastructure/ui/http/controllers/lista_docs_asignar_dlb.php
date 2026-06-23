@@ -11,7 +11,7 @@ use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
 $Qid_tipo_doc = input_int($_POST, 'id_tipo_doc');
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $error_txt = '';
 
 /** @var TipoDocRepositoryInterface $TipoDocRepository */

@@ -4,8 +4,8 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ContribucionNoDuermeExcepcionGuardar;
 
-$id_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-$valor = (string)filter_input(INPUT_POST, 'valor');
+$id_tipo_activ = (string)filter_post('id_tipo_activ');
+$valor = (string)filter_post('valor');
 
 /** @var ContribucionNoDuermeExcepcionGuardar $useCase */
 $useCase = DependencyResolver::get(ContribucionNoDuermeExcepcionGuardar::class);

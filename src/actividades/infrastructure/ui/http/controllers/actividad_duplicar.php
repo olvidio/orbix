@@ -14,7 +14,7 @@ use src\actividades\application\ActividadDuplicar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 /** @var ActividadDuplicar $useCase */
 $useCase = DependencyResolver::get(ActividadDuplicar::class);

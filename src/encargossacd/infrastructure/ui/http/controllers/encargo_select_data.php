@@ -8,7 +8,7 @@ use src\shared\web\ContestarJson;
 $useCase = DependencyResolver::get(EncargoSelectData::class);
 
 
-$desc_enc = (string)(filter_input(INPUT_POST, 'desc_enc') ?? filter_input(INPUT_GET, 'desc_enc') ?? '');
-$id_tipo_enc = (int)(filter_input(INPUT_POST, 'id_tipo_enc') ?? filter_input(INPUT_GET, 'id_tipo_enc') ?? 0);
+$desc_enc = (string)(filter_post('desc_enc') ?? filter_get('desc_enc') ?? '');
+$id_tipo_enc = (int)(filter_post('id_tipo_enc') ?? filter_get('id_tipo_enc') ?? 0);
 
 ContestarJson::enviar('', $useCase->execute($desc_enc, $id_tipo_enc));

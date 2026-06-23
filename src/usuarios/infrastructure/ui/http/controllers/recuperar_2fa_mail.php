@@ -10,11 +10,11 @@ use src\shared\domain\value_objects\Uuid;
 use src\usuarios\domain\entity\Usuario;
 use src\shared\web\ContestarJson;
 
-$Qusername = (string)filter_input(INPUT_POST, 'username');
-$Qubicacion = (string)filter_input(INPUT_POST, 'ubicacion');
-$Qesquema = (string)filter_input(INPUT_POST, 'esquema');
-$Qesquema_web = (string)filter_input(INPUT_POST, 'esquema_web');
-$Qurl_base = (string)filter_input(INPUT_POST, 'url_base');
+$Qusername = (string)filter_post('username');
+$Qubicacion = (string)filter_post('ubicacion');
+$Qesquema = (string)filter_post('esquema');
+$Qesquema_web = (string)filter_post('esquema_web');
+$Qurl_base = (string)filter_post('url_base');
 
 $aWhere = array('usuario' => $Qusername);
 $esquema = empty($Qesquema) ? $Qesquema_web : $Qesquema;

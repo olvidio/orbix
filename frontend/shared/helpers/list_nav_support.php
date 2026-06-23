@@ -307,6 +307,218 @@ function list_nav_stack_parent_is_dossiers_ver(int $n = 1): bool
 }
 
 /**
+ * @return array<string, mixed>
+ */
+function list_nav_stack_top_parametros(): array
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position']) || $_SESSION['position'] === []) {
+        session_write_close();
+
+        return [];
+    }
+    $stack = $_SESSION['position'];
+    end($stack);
+    $raw = current($stack);
+    session_write_close();
+    if (!is_array($raw) || !isset($raw['parametros']) || !is_array($raw['parametros'])) {
+        return [];
+    }
+
+    return $raw['parametros'];
+}
+
+/**
+ * Clave estable del segmento visible en `dossiers_ver` (asis, matrículas, …).
+ *
+ * @param array<string, mixed> $parametros
+ */
+function list_nav_dossiers_segment_key_from_parametros(array $parametros): string
+{
+    $parts = [];
+    foreach (['queSel', 'id_dossier', 'pau', 'obj_pau', 'id_pau', 'clase_info'] as $key) {
+        if (!array_key_exists($key, $parametros)) {
+            continue;
+        }
+        $val = $parametros[$key];
+        if (is_scalar($val) && (string) $val !== '') {
+            $parts[] = $key . '=' . (string) $val;
+        }
+    }
+    $mod = isset($parametros['mod']) && is_scalar($parametros['mod']) ? (string) $parametros['mod'] : '';
+    if ($mod !== '' && $mod !== 'refresh') {
+        $parts[] = 'mod=' . $mod;
+    }
+
+    return implode('|', $parts);
+}
+
+function list_nav_dossiers_segment_changed_vs_stack_top(): bool
+{
+    if (!list_nav_stack_top_is_dossiers_ver()) {
+        return false;
+    }
+    $stored = list_nav_stack_top_parametros();
+    if ($stored === []) {
+        return false;
+    }
+    $current = list_nav_build_return_parametros_from_post();
+
+    return list_nav_dossiers_segment_key_from_parametros($current)
+        !== list_nav_dossiers_segment_key_from_parametros($stored);
+}
+
+/**
+ * @param array<string, mixed> $parametros
+ */
+function list_nav_dossiers_parametros_is_asistentes_segment(array $parametros): bool
+{
+    $queSel = isset($parametros['queSel']) && is_scalar($parametros['queSel']) ? (string) $parametros['queSel'] : '';
+    $idDossier = isset($parametros['id_dossier']) ? (int) $parametros['id_dossier'] : 0;
+
+    return $queSel === 'asis' || $idDossier === 3101;
+}
+
+function list_nav_dossiers_current_is_asistentes_segment(): bool
+{
+    if (list_nav_dossiers_parametros_is_asistentes_segment(list_nav_build_return_parametros_from_post())) {
+        return true;
+    }
+
+    return list_nav_dossiers_parametros_is_asistentes_segment(list_nav_stack_top_parametros());
+}
+
+function list_nav_mostrar_left_slide_from_dossiers(Posicion $oPosicion): string
+{
+    // Desde la lista de asistentes el destino es siempre actividad_select (u otro listado
+    // externo), aunque en la pila quede matrículas / plan de estudios como padre inmediato.
+    if (list_nav_dossiers_current_is_asistentes_segment()) {
+        return list_nav_mostrar_left_slide_to_list_parent_from_dossiers($oPosicion);
+    }
+
+    if (list_nav_stack_parent_is_dossiers_ver(1)) {
+        return $oPosicion->mostrar_left_slide(1);
+    }
+
+    return list_nav_mostrar_left_slide_to_list_parent_from_dossiers($oPosicion);
+}
+
+/**
+ * Guarda el dossier de asistentes (3101) abierto desde `actividad_select` para restaurarlo
+ * al abrir `plan_estudios_ca` sin perder el paso intermedio en la pila.
+ */
+function list_nav_persist_asistentes_dossier_snapshot(Posicion $oPosicion): void
+{
+    unset($oPosicion);
+    $parametros = list_nav_stack_top_parametros();
+    if ($parametros === []) {
+        return;
+    }
+    $queSel = isset($parametros['queSel']) && is_scalar($parametros['queSel']) ? (string) $parametros['queSel'] : '';
+    $idDossier = isset($parametros['id_dossier']) ? (int) $parametros['id_dossier'] : 0;
+    if ($queSel !== 'asis' && $idDossier !== 3101) {
+        return;
+    }
+    foreach (array_merge(list_nav_meta_hash_post_keys(), list_nav_stack_ephemeral_post_keys()) as $key) {
+        unset($parametros[$key]);
+    }
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    $_SESSION['list_nav_asistentes_dossier_snapshot'] = $parametros;
+    session_write_close();
+}
+
+/**
+ * Reinserta el dossier de asistentes en la pila antes de un hijo de `actividad_select`
+ * (p. ej. `plan_estudios_ca`) si el usuario lo visitó antes en la misma actividad.
+ */
+function list_nav_stack_has_asistentes_dossier_for_activ(int $idActiv): bool
+{
+    if ($idActiv <= 0) {
+        return false;
+    }
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        session_write_close();
+
+        return false;
+    }
+    foreach ($_SESSION['position'] as $entry) {
+        if (!is_array($entry)) {
+            continue;
+        }
+        $url = isset($entry['url']) && is_string($entry['url']) ? $entry['url'] : '';
+        if (!str_contains($url, 'dossiers_ver.php')) {
+            continue;
+        }
+        $parametros = isset($entry['parametros']) && is_array($entry['parametros']) ? $entry['parametros'] : [];
+        $queSel = isset($parametros['queSel']) && is_scalar($parametros['queSel']) ? (string) $parametros['queSel'] : '';
+        $idDossier = isset($parametros['id_dossier']) ? (int) $parametros['id_dossier'] : 0;
+        $idPau = isset($parametros['id_pau']) ? (int) $parametros['id_pau'] : 0;
+        if (($queSel === 'asis' || $idDossier === 3101) && $idPau === $idActiv) {
+            session_write_close();
+
+            return true;
+        }
+    }
+    session_write_close();
+
+    return false;
+}
+
+function list_nav_ensure_asistentes_dossier_before_actividad_select_child(Posicion $oPosicion, int $idActiv): void
+{
+    unset($oPosicion);
+    if ($idActiv <= 0 || list_nav_stack_parent_is_dossiers_ver(1)) {
+        return;
+    }
+    if (list_nav_stack_has_asistentes_dossier_for_activ($idActiv)) {
+        return;
+    }
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    $snapshot = $_SESSION['list_nav_asistentes_dossier_snapshot'] ?? null;
+    if (!is_array($snapshot)) {
+        session_write_close();
+
+        return;
+    }
+    $snapIdPau = isset($snapshot['id_pau']) ? (int) $snapshot['id_pau'] : 0;
+    if ($snapIdPau !== $idActiv) {
+        session_write_close();
+
+        return;
+    }
+    $parametros = $snapshot;
+    foreach (array_merge(list_nav_meta_hash_post_keys(), list_nav_stack_ephemeral_post_keys()) as $key) {
+        unset($parametros[$key]);
+    }
+    if (!isset($_SESSION['position']) || !is_array($_SESSION['position'])) {
+        $_SESSION['position'] = [];
+    }
+    /** @var array<int|string, array<string, mixed>> $position */
+    $position = &$_SESSION['position'];
+    end($position);
+    $topKey = key($position);
+    $base = ($topKey === null || $topKey === '') ? 0 : (int) $topKey;
+    $newKey = $base + 1;
+    $parametros['stack'] = $newKey;
+    $position[$newKey] = [
+        'url' => list_nav_dossiers_ver_default_url(),
+        'bloque' => '#main',
+        'parametros' => $parametros,
+        'stack' => $newKey,
+    ];
+    session_write_close();
+}
+
+/**
  * Alguna entrada de la pila apunta a `dossiers_ver`.
  */
 function list_nav_stack_has_dossiers_ver(): bool
@@ -441,6 +653,46 @@ function list_nav_is_dossier_child_form_url(string $url): bool
 function list_nav_is_dossier_shell_or_child_url(string $url): bool
 {
     return str_contains($url, 'dossiers_ver.php') || list_nav_is_dossier_child_form_url($url);
+}
+
+/**
+ * Pantallas hijas abiertas desde `actividad_select` (no son dossier pero tampoco el listado padre).
+ *
+ * @return list<string>
+ */
+function list_nav_actividad_select_child_url_fragments(): array
+{
+    return [
+        'plan_estudios_ca.php',
+        'lista_clases_ca.php',
+        'posibles_asignaturas_ca.php',
+        'lista_asistentes.php',
+        'tabla_peticiones.php',
+        'lista_habitaciones.php',
+        'resumen_plazas.php',
+        'actividad_proceso.php',
+        'actividad_ver.php',
+    ];
+}
+
+function list_nav_is_actividad_select_child_url(string $url): bool
+{
+    foreach (list_nav_actividad_select_child_url_fragments() as $fragment) {
+        if (str_contains($url, $fragment)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Entradas intermedias entre `actividad_select` y la pantalla actual (dossiers u otros hijos del listado).
+ */
+function list_nav_is_skippable_between_actividad_select_and_child(string $url): bool
+{
+    return list_nav_is_dossier_shell_or_child_url($url)
+        || list_nav_is_actividad_select_child_url($url);
 }
 
 function list_nav_reindex_position_stack(): void
@@ -710,7 +962,7 @@ function list_nav_back_steps_to_list_parent_from_dossiers(int $max = 15): int
             continue;
         }
         $url = isset($raw['url']) && is_string($raw['url']) ? $raw['url'] : '';
-        if ($url !== '' && !list_nav_is_dossier_shell_or_child_url($url)) {
+        if ($url !== '' && !list_nav_is_skippable_between_actividad_select_and_child($url)) {
             session_write_close();
 
             return max(1, $steps);

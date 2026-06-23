@@ -15,12 +15,14 @@ if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
+$id_activ = actividadestudios_id_from_sel_post();
+
 if ($stackFromPost !== 0) {
     list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
 } else {
+    list_nav_ensure_asistentes_dossier_before_actividad_select_child($oPosicion, $id_activ);
     list_nav_boot_actividad_select_child_recordar($oPosicion, $Qrefresh);
 }
-$id_activ = actividadestudios_id_from_sel_post();
 list_nav_persist_actividad_select_child_entry(
     $oPosicion,
     $id_activ > 0 ? ['id_activ' => $id_activ] : [],

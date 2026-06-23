@@ -8,8 +8,8 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
-$Qpassword = (string)filter_input(INPUT_POST, 'password');
+$Qid_usuario = (integer)filter_post('id_usuario');
+$Qpassword = (string)filter_post('password');
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);

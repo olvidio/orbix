@@ -4,10 +4,10 @@ use src\shared\domain\DatosFormRepo;
 use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
 
-$Qclase_info_encoded = filter_input(INPUT_POST, 'clase_info');
-$a_pkey = filter_input(INPUT_POST, 'a_pkey');
-$Qobj_pau = filter_input(INPUT_POST, 'obj_pau');
-$Qmod = filter_input(INPUT_POST, 'mod');
+$Qclase_info_encoded = filter_post('clase_info');
+$a_pkey = filter_post('a_pkey');
+$Qobj_pau = filter_post('obj_pau');
+$Qmod = filter_post('mod');
 $mod = is_string($Qmod) ? $Qmod : '';
 
 // Tiene que ser en dos pasos.

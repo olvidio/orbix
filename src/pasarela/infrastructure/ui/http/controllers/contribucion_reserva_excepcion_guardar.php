@@ -4,8 +4,8 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ContribucionReservaExcepcionGuardar;
 
-$id_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-$valor = (string)filter_input(INPUT_POST, 'valor');
+$id_tipo_activ = (string)filter_post('id_tipo_activ');
+$valor = (string)filter_post('valor');
 
 /** @var ContribucionReservaExcepcionGuardar $useCase */
 $useCase = DependencyResolver::get(ContribucionReservaExcepcionGuardar::class);

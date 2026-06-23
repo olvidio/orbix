@@ -8,9 +8,9 @@ use src\shared\web\ContestarJson;
 $useCase = DependencyResolver::get(EncargoZonasSelectData::class);
 
 
-$id_zona = filter_input(INPUT_POST, 'id_zona');
+$id_zona = filter_post('id_zona');
 if ($id_zona === null) {
-    $id_zona = filter_input(INPUT_GET, 'id_zona');
+    $id_zona = filter_get('id_zona');
 }
 
 ContestarJson::enviar('', $useCase->execute(

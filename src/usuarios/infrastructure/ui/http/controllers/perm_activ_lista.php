@@ -11,7 +11,7 @@ use src\shared\web\ContestarJson;
 use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\is_true;
 
-$Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
+$Qid_usuario = (string)filter_post('id_usuario');
 
 $PermUsuarioActividadRepository = DependencyResolver::get(PermUsuarioActividadRepositoryInterface::class);
 $aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt, afecta_a'];

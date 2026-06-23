@@ -7,6 +7,7 @@ parameters:
     level: 9
     tmpDir: .phpstan/cache
     scanFiles:
+        - src/shared/domain/helpers/func_input.php
         - frontend/shared/helpers/func_tablas.php
         - frontend/shared/helpers/list_nav_support.php
         - frontend/shared/helpers/ajax_json_support.php
@@ -29,3 +30,9 @@ parameters:
         - frontend/encargossacd/helpers/encargossacd_support.php
         - frontend/dossiers/controller/lista_dossiers.php
         - src/shared/domain/helpers/func_tablas.php
+
+services:
+    -
+        class: Orbix\PHPStan\FilterPostGetReturnTypeExtension
+        tags:
+            - phpstan.broker.dynamicFunctionReturnTypeExtension

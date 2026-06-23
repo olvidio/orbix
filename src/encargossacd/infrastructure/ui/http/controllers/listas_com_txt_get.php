@@ -8,7 +8,7 @@ use src\shared\web\ContestarJson;
 $useCase = DependencyResolver::get(ListasComTxtGet::class);
 
 
-$clave = (string)(filter_input(INPUT_POST, 'clave') ?? filter_input(INPUT_GET, 'clave') ?? '');
-$idioma = (string)(filter_input(INPUT_POST, 'idioma') ?? filter_input(INPUT_GET, 'idioma') ?? '');
+$clave = (string)(filter_post('clave') ?? filter_get('clave') ?? '');
+$idioma = (string)(filter_post('idioma') ?? filter_get('idioma') ?? '');
 
 ContestarJson::enviar('', $useCase->execute($clave, $idioma));

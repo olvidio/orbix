@@ -8,10 +8,10 @@ use src\shared\web\ContestarJson;
 $useCase = DependencyResolver::get(EncargoLstTipoEncData::class);
 
 
-$grupo = (string)(filter_input(INPUT_POST, 'grupo') ?? filter_input(INPUT_GET, 'grupo') ?? '');
-$id_tipo_enc = filter_input(INPUT_POST, 'id_tipo_enc');
+$grupo = (string)(filter_post('grupo') ?? filter_get('grupo') ?? '');
+$id_tipo_enc = filter_post('id_tipo_enc');
 if ($id_tipo_enc === null) {
-    $id_tipo_enc = filter_input(INPUT_GET, 'id_tipo_enc');
+    $id_tipo_enc = filter_get('id_tipo_enc');
 }
 
 ContestarJson::enviar('', $useCase->execute($grupo, $id_tipo_enc !== null && $id_tipo_enc !== false ? (string)$id_tipo_enc : null));

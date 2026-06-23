@@ -47,17 +47,25 @@ if ($returningViaStack) {
 $Qrefresh = tessera_imprimir_int($requestPayload['refresh'] ?? 0);
 $pararRecordar = list_nav_parar_recordar_for_dossiers_refresh($Qrefresh);
 $gstackFromPost = filter_input(INPUT_POST, 'Gstack', FILTER_VALIDATE_INT);
+$segmentChanged = list_nav_dossiers_segment_changed_vs_stack_top();
 if (is_int($gstackFromPost) && $gstackFromPost > 0) {
     list_nav_boot_dossiers_from_actividad_select($oPosicion, $pararRecordar);
+    list_nav_persist_asistentes_dossier_snapshot($oPosicion);
 } elseif ($returningViaStack || list_nav_stack_top_is_dossier_child_form()) {
     // Vuelta por pila o recarga tras hijo (js_atras tras guardar cargo): no append con recordar().
-} elseif (!list_nav_stack_top_is_dossiers_ver() || $Qrefresh > 0) {
+} elseif (!list_nav_stack_top_is_dossiers_ver()) {
+    list_nav_boot_recordar($oPosicion, $pararRecordar);
+} elseif ($Qrefresh > 0 || $segmentChanged) {
     list_nav_boot_recordar($oPosicion, $pararRecordar);
 }
 
 list_nav_purge_dossier_child_forms_from_stack();
 
-if ($returningViaStack || list_nav_stack_top_is_dossiers_ver()) {
+$shouldRefreshDossiersEntry = ($returningViaStack || list_nav_stack_top_is_dossiers_ver())
+    && !$segmentChanged
+    && $Qrefresh <= 0
+    && !(is_int($gstackFromPost) && $gstackFromPost > 0);
+if ($shouldRefreshDossiersEntry) {
     list_nav_refresh_stack_entry_on_return(
         $oPosicion,
         $returningViaStack ? (int) $stackFromPost : list_nav_find_best_dossiers_stack_key(),
@@ -136,7 +144,7 @@ if (!is_array($topData)) {
 $goDossiers = HashFrontSignedLink::tryFromSpec($topData['go_dossiers_link_spec'] ?? null);
 $goHome = HashFrontSignedLink::tryFromSpec($topData['go_home_link_spec'] ?? null);
 
-echo list_nav_mostrar_left_slide_to_list_parent_from_dossiers($oPosicion);
+echo list_nav_mostrar_left_slide_from_dossiers($oPosicion);
 
 $oViewTop = new ViewNewPhtml('frontend\\dossiers\\view');
 $oViewTop->renderizar('dossiers_ver_top.phtml', [

@@ -6,7 +6,7 @@
 use src\shared\web\ContestarJson;
 use src\actividades\application\ActividadVerDatos;
 
-$idTipo = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+$idTipo = (string)filter_post('id_tipo_activ');
 
 $nivel = ActividadVerDatos::nivelStgrPorDefectoParaIdTipoActividad($idTipo);
 

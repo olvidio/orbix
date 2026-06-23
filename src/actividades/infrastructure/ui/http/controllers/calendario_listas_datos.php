@@ -10,14 +10,14 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'que' => (string)filter_input(INPUT_POST, 'que'),
-    'ver_ctr' => (string)filter_input(INPUT_POST, 'ver_ctr'),
-    'periodo' => (string)filter_input(INPUT_POST, 'periodo'),
-    'year' => (string)filter_input(INPUT_POST, 'year'),
-    'yeardefault' => (string)filter_input(INPUT_POST, 'yeardefault'),
-    'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
-    'id_cdc' => (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'que' => (string)filter_post('que'),
+    'ver_ctr' => (string)filter_post('ver_ctr'),
+    'periodo' => (string)filter_post('periodo'),
+    'year' => (string)filter_post('year'),
+    'yeardefault' => (string)filter_post('yeardefault'),
+    'empiezamin' => (string)filter_post('empiezamin'),
+    'empiezamax' => (string)filter_post('empiezamax'),
+    'id_cdc' => (array)filter_post('id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
 ];
 
 /** @var CalendarioListasDatos $useCase */

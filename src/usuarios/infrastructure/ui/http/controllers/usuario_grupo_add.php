@@ -12,7 +12,7 @@ use function src\shared\domain\helpers\input_int;
 $sfsv = ConfigGlobal::mi_sfsv();
 $error_txt = '';
 
-$ctxRaw = (string)filter_input(INPUT_POST, 'ctx');
+$ctxRaw = (string)filter_post('ctx');
 try {
     $opened = HashB::open($ctxRaw, 'usuario_grupo_add');
 } catch (HashBInvalidException $e) {

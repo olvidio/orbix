@@ -17,8 +17,8 @@ use src\usuarios\domain\value_objects\PauType;
 use src\shared\security\HashB;
 use function src\shared\domain\helpers\is_true;
 
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
-$Qquien = (string)filter_input(INPUT_POST, 'quien');
+$Qid_usuario = (integer)filter_post('id_usuario');
+$Qquien = (string)filter_post('quien');
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());

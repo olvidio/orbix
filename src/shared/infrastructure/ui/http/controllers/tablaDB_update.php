@@ -4,16 +4,16 @@ use src\shared\domain\DatosUpdateRepo;
 use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
 
-$Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
-$Qs_pkey = (string)filter_input(INPUT_POST, 's_pkey');
-$Qid_pau = (string)filter_input(INPUT_POST, 'id_pau');
-$Qmod = (string)filter_input(INPUT_POST, 'mod');
-$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
-$Qgo_to = (string)filter_input(INPUT_POST, 'go_to');
+$Qclase_info_encoded = (string)filter_post('clase_info');
+$Qs_pkey = (string)filter_post('s_pkey');
+$Qid_pau = (string)filter_post('id_pau');
+$Qmod = (string)filter_post('mod');
+$Qobj_pau = (string)filter_post('obj_pau');
+$Qgo_to = (string)filter_post('go_to');
 
 // Cuando es eliminar, viene directamente de la tabla (mod_tabla_sql)
 // Como es borrar, no hace falta mantener el scroll
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $stack = '';
 if (!empty($a_sel)) { //vengo de un checkbox
     $sel0 = $a_sel[0] ?? '';

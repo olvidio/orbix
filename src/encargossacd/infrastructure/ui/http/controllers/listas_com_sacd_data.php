@@ -8,6 +8,6 @@ use src\shared\web\ContestarJson;
 $useCase = DependencyResolver::get(ListasComSacdData::class);
 
 
-$sel = (string)(filter_input(INPUT_POST, 'sel') ?? filter_input(INPUT_GET, 'sel') ?? '');
+$sel = (string)(filter_post('sel') ?? filter_get('sel') ?? '');
 
 ContestarJson::enviar('', $useCase->execute($sel));

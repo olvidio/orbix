@@ -1,9 +1,5 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
-
 use src\certificados\application\CertificadoEmitidoGuardarMessages;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
@@ -14,11 +10,14 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\LocaleCode;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use function src\shared\domain\helpers\input_int;
+use function src\shared\domain\helpers\input_string;
+use function src\shared\domain\helpers\is_true;
 
 /** @var CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository */
 $certificadoEmitidoRepository = DependencyResolver::get(CertificadoEmitidoRepositoryInterface::class);
 
-$Qnuevo = input_int($_POST, 'nuevo');
+$Qnuevo = (bool)input_int($_POST, 'nuevo');
 $Qid_item = input_int($_POST, 'id_item');
 $Qid_nom = input_int($_POST, 'id_nom');
 $Qnom = input_string($_POST, 'nom');
@@ -36,7 +35,7 @@ $oF_enviado = DateTimeLocal::createFromLocal($Qf_enviado);
 $error_txt = '';
 
 if (is_true($Qnuevo)) {
-    $Qid_item = (int) $certificadoEmitidoRepository->getNewId_item();
+    $Qid_item = (int)$certificadoEmitidoRepository->getNewId_item();
     $oCertificadoEmitido = new CertificadoEmitido();
     $oCertificadoEmitido->setId_item($Qid_item);
 } else {
@@ -67,6 +66,8 @@ $oCertificadoEmitido->setEsquema_emisor(ConfigGlobal::mi_region_dl());
 $oCertificadoEmitido->setF_certificado($oF_certificado instanceof DateTimeLocal ? $oF_certificado : null);
 if ($oF_enviado instanceof DateTimeLocal) {
     $oCertificadoEmitido->setF_enviado($oF_enviado);
+} else {
+    $oCertificadoEmitido->setF_enviado(null);
 }
 
 $guardado = false;

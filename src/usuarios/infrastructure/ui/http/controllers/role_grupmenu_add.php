@@ -5,7 +5,7 @@ use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\entity\GrupMenuRole;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $error_txt = '';
 

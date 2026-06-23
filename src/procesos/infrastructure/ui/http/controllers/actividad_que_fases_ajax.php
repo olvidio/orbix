@@ -6,9 +6,9 @@ use src\procesos\application\ActividadQueFasesCuadro;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-$Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
-$QselectedCsv = (string)filter_input(INPUT_POST, 'selected');
+$Qid_tipo_activ = (string)filter_post('id_tipo_activ');
+$Qdl_propia = (string)filter_post('dl_propia');
+$QselectedCsv = (string)filter_post('selected');
 
 $dl_propia = (bool)is_true($Qdl_propia);
 $selected = $QselectedCsv === ''

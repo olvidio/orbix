@@ -10,9 +10,9 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'year_ref' => (int)filter_input(INPUT_POST, 'year_ref'),
-    'year' => (int)filter_input(INPUT_POST, 'year'),
-    'ver_lista' => (string)filter_input(INPUT_POST, 'ver_lista'),
+    'year_ref' => (int)filter_post('year_ref'),
+    'year' => (int)filter_post('year'),
+    'ver_lista' => (string)filter_post('ver_lista'),
 ];
 
 /** @var ActividadNuevoCursoEjecutar $useCase */

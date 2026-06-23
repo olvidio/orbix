@@ -8,10 +8,10 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
-$Qsecret_2fa = (string)filter_input(INPUT_POST, 'secret_2fa');
-$Qenable_2fa = (bool)filter_input(INPUT_POST, 'enable_2fa');
-$Qverification_code = (string)filter_input(INPUT_POST, 'verification_code');
+$Qid_usuario = (integer)filter_post('id_usuario');
+$Qsecret_2fa = (string)filter_post('secret_2fa');
+$Qenable_2fa = (bool)filter_post('enable_2fa');
+$Qverification_code = (string)filter_post('verification_code');
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);

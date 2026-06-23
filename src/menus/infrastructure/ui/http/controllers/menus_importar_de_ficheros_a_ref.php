@@ -12,13 +12,13 @@ use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 $oDBPC = GlobalPdo::get('oDBPC');
 $gestorErrores = $_SESSION['oGestorErrores'] ?? null;
 
-$Qseguro = filter_input(INPUT_POST, 'seguro', FILTER_VALIDATE_INT);
+$Qseguro = filter_post('seguro', FILTER_VALIDATE_INT);
 if ($Qseguro === false || $Qseguro === null) {
-    $Qseguro = filter_input(INPUT_GET, 'seguro', FILTER_VALIDATE_INT);
+    $Qseguro = filter_get('seguro', FILTER_VALIDATE_INT);
 }
-$Qtodos = filter_input(INPUT_POST, 'todos', FILTER_VALIDATE_INT);
+$Qtodos = filter_post('todos', FILTER_VALIDATE_INT);
 if ($Qtodos === false || $Qtodos === null) {
-    $Qtodos = filter_input(INPUT_GET, 'todos', FILTER_VALIDATE_INT);
+    $Qtodos = filter_get('todos', FILTER_VALIDATE_INT);
 }
 
 $Qseguro = ($Qseguro === false || $Qseguro === null || $Qseguro === 0) ? 2 : $Qseguro;

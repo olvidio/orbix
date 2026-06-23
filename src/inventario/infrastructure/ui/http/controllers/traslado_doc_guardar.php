@@ -7,7 +7,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qid_ubi_new = input_int($_POST, 'id_ubi_new');
 $Qid_lugar_new = input_int($_POST, 'id_lugar_new');
 

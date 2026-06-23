@@ -10,14 +10,14 @@ use src\shared\web\ContestarJson;
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
 
-$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_post('que');
 
 $PreferenciaRepository = DependencyResolver::get(PreferenciaRepositoryInterface::class);
 
 $error_txt = '';
 if ($Qque === "slickGrid") {
-    $Qtabla = (string)filter_input(INPUT_POST, 'tabla');
-    $QsPrefs = (string)filter_input(INPUT_POST, 'sPrefs');
+    $Qtabla = (string)filter_post('tabla');
+    $QsPrefs = (string)filter_post('sPrefs');
     $idioma = ConfigGlobal::mi_Idioma();
     $tipo = 'slickGrid_' . $Qtabla . '_' . $idioma;
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
@@ -49,7 +49,7 @@ if ($Qque === "slickGrid") {
     ContestarJson::enviar($error_txt, 'ok');
 } else {
     // Guardar Layout:
-    $Qlayout = (string)filter_input(INPUT_POST, 'layout');
+    $Qlayout = (string)filter_post('layout');
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'layout');
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
@@ -62,8 +62,8 @@ if ($Qque === "slickGrid") {
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
 
-    $Qoficina = (string)filter_input(INPUT_POST, 'oficina');
-    $Qinicio = (string)filter_input(INPUT_POST, 'inicio');
+    $Qoficina = (string)filter_post('oficina');
+    $Qinicio = (string)filter_post('inicio');
 
     $Qoficina = empty($Qoficina) ? 'exterior' : $Qoficina;
     $Qinicio = empty($Qinicio) ? 'exterior' : $Qinicio;
@@ -83,8 +83,8 @@ if ($Qque === "slickGrid") {
     }
 
     // Guardar estilo:
-    $Qestilo_color = (string)filter_input(INPUT_POST, 'estilo_color');
-    $Qtipo_menu = (string)filter_input(INPUT_POST, 'tipo_menu');
+    $Qestilo_color = (string)filter_post('estilo_color');
+    $Qtipo_menu = (string)filter_post('tipo_menu');
     $estilo = $Qestilo_color . "#" . $Qtipo_menu;
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'estilo');
     if ($oPreferencia === null) {
@@ -99,7 +99,7 @@ if ($Qque === "slickGrid") {
     }
 
     // Guardar presentación tablas:
-    $Qtipo_tabla = (string)filter_input(INPUT_POST, 'tipo_tabla');
+    $Qtipo_tabla = (string)filter_post('tipo_tabla');
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'tabla_presentacion');
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
@@ -113,7 +113,7 @@ if ($Qque === "slickGrid") {
     }
 
     // Guardar presentación nombre Apellidos:
-    $QordenApellidos = (string)filter_input(INPUT_POST, 'ordenApellidos');
+    $QordenApellidos = (string)filter_post('ordenApellidos');
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'ordenApellidos');
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
@@ -130,7 +130,7 @@ if ($Qque === "slickGrid") {
     }
 
     // Guardar idioma:
-    $Qidioma_nou = (string)filter_input(INPUT_POST, 'idioma_nou');
+    $Qidioma_nou = (string)filter_post('idioma_nou');
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'idioma');
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
@@ -144,7 +144,7 @@ if ($Qque === "slickGrid") {
     }
 
     // Guardar zona_horaria:
-    $Qzona_horaria_nou = (string)filter_input(INPUT_POST, 'zona_horaria_nou');
+    $Qzona_horaria_nou = (string)filter_post('zona_horaria_nou');
     // mejor guardar la zona en text, porque el identificador cambia según la versión de php
     $a_zonas_horarias = DateTimeZone::listIdentifiers();
     $zona_horaria_txt = is_numeric($Qzona_horaria_nou) && isset($a_zonas_horarias[(int)$Qzona_horaria_nou])

@@ -14,7 +14,7 @@ $Qorden = input_string($_POST, 'orden');
 $Qtxt_menu = input_string($_POST, 'txt_menu');
 $Qparametros = input_string($_POST, 'parametros');
 $Qid_metamenu = input_int($_POST, 'id_metamenu');
-$rawPermMenu = filter_input(INPUT_POST, 'perm_menu', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$rawPermMenu = filter_post('perm_menu', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qperm_menu = [];
 if (is_array($rawPermMenu)) {
     foreach ($rawPermMenu as $perm) {

@@ -14,18 +14,18 @@ use src\shared\infrastructure\DependencyResolver;
 use src\actividades\application\ActividadQueFiltrosBloque;
 use src\shared\web\ContestarJson;
 
-$sfsv = (int)filter_input(INPUT_POST, 'sfsv');
+$sfsv = (int)filter_post('sfsv');
 if ($sfsv === 0) {
     $sfsv = (int)ConfigGlobal::mi_sfsv();
 }
-$modo = (string)filter_input(INPUT_POST, 'modo');
+$modo = (string)filter_post('modo');
 if ($modo === '') {
     $modo = 'buscar';
 }
-$dl_org = (string)filter_input(INPUT_POST, 'dl_org');
-$filtro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
-$id_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
-$publicado = (int)filter_input(INPUT_POST, 'publicado');
+$dl_org = (string)filter_post('dl_org');
+$filtro_lugar = (string)filter_post('filtro_lugar');
+$id_ubi = (int)filter_post('id_ubi');
+$publicado = (int)filter_post('publicado');
 
 $proceso_installed = ConfigGlobal::is_app_installed('procesos');
 

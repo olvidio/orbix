@@ -15,12 +15,12 @@ use src\shared\infrastructure\DependencyResolver;
 /** @var CrearEsquema $useCase */
 $useCase = DependencyResolver::get(CrearEsquema::class);
 
-$QEsquemaRef = (string) filter_input(INPUT_POST, 'esquema');
-$Qregion = (string) filter_input(INPUT_POST, 'region');
-$Qdl = (string) filter_input(INPUT_POST, 'dl');
-$Qcomun = (int) filter_input(INPUT_POST, 'comun');
-$Qsv = (int) filter_input(INPUT_POST, 'sv');
-$Qsf = (int) filter_input(INPUT_POST, 'sf');
+$QEsquemaRef = (string) filter_post('esquema');
+$Qregion = (string) filter_post('region');
+$Qdl = (string) filter_post('dl');
+$Qcomun = (int) filter_post('comun');
+$Qsv = (int) filter_post('sv');
+$Qsf = (int) filter_post('sf');
 
 try {
     $avisos = $useCase->ejecutar(

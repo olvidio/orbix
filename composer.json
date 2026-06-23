@@ -40,11 +40,15 @@
         },
         "files": [
           "frontend/shared/helpers/func_tablas.php",
-          "src/shared/domain/helpers/func_tablas.php"
+          "src/shared/domain/helpers/func_tablas.php",
+          "src/shared/domain/helpers/func_input.php"
         ]
    },
   "autoload-dev": {
-       "psr-4": { "Tests\\": "tests/" }
+       "psr-4": {
+         "Tests\\": "tests/",
+         "Orbix\\PHPStan\\": "build/phpstan/"
+       }
    },
   "scripts": {
     "test": "php libs/vendor/bin/phpunit --configuration phpunit.xml",

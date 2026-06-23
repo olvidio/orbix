@@ -2,11 +2,11 @@
 use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
 
-$Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
-$QpKeyRepository = (string)filter_input(INPUT_POST, 'pKeyRepository');
-$Qvalor_depende = (string)filter_input(INPUT_POST, 'valor_depende');
+$Qclase_info_encoded = (string)filter_post('clase_info');
+$QpKeyRepository = (string)filter_post('pKeyRepository');
+$Qvalor_depende = (string)filter_post('valor_depende');
 
-$opcion_sel = (string)filter_input(INPUT_POST, 'opcion_sel');
+$opcion_sel = (string)filter_post('opcion_sel');
 /***************  datos  **********************************/
 
 // Tiene que ser en dos pasos.

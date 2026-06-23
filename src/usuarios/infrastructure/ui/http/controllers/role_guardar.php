@@ -7,12 +7,12 @@ use src\usuarios\domain\value_objects\PauType;
 use src\usuarios\domain\value_objects\RoleName;
 use src\shared\web\ContestarJson;
 
-$Qrole = (string)filter_input(INPUT_POST, 'role');
-$Qid_role = (integer)filter_input(INPUT_POST, 'id_role');
-$Qsf = (integer)filter_input(INPUT_POST, 'sf');
-$Qsv = (integer)filter_input(INPUT_POST, 'sv');
-$Qpau = (string)filter_input(INPUT_POST, 'pau');
-$Qdmz = (integer)filter_input(INPUT_POST, 'dmz');
+$Qrole = (string)filter_post('role');
+$Qid_role = (integer)filter_post('id_role');
+$Qsf = (integer)filter_post('sf');
+$Qsv = (integer)filter_post('sv');
+$Qpau = (string)filter_post('pau');
+$Qdmz = (integer)filter_post('dmz');
 
 $error_txt = '';
 

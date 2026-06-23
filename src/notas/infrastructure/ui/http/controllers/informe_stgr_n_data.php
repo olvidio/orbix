@@ -9,7 +9,7 @@ $error = '';
 $data = [];
 
 try {
-    $QdlRaw = filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $QdlRaw = filter_post('dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     /** @var array<int, int|string> $Qdl */
     $Qdl = [];
     if (is_array($QdlRaw)) {
@@ -19,7 +19,7 @@ try {
             }
         }
     }
-    $Qlista = (string)filter_input(INPUT_POST, 'lista');
+    $Qlista = (string)filter_post('lista');
     $lista = !empty($Qlista);
 
     /** @var InformeStgrNumerarios $informe */

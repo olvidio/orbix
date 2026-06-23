@@ -7,10 +7,10 @@ use src\shared\web\ContestarJson;
 /** @var AnadirCtrTarea $useCase */
 $useCase = DependencyResolver::get(AnadirCtrTarea::class);
 $result = $useCase->execute([
-    'que' => filter_input(INPUT_POST, 'que'),
-    'id_ubi' => filter_input(INPUT_POST, 'id_ubi'),
-    'id_tarea' => filter_input(INPUT_POST, 'id_tarea'),
-    'id_item' => filter_input(INPUT_POST, 'id_item'),
+    'que' => filter_post('que'),
+    'id_ubi' => filter_post('id_ubi'),
+    'id_tarea' => filter_post('id_tarea'),
+    'id_item' => filter_post('id_item'),
 ]);
 
 ContestarJson::enviar($result['error']);

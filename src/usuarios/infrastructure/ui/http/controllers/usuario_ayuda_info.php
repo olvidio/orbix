@@ -6,10 +6,10 @@ use src\shared\infrastructure\persistence\DBConnection;
 use frontend\shared\OfuscarEmail;
 use src\shared\web\ContestarJson;
 
-$Qusername = (string)filter_input(INPUT_POST, 'username');
-$Qubicacion = (string)filter_input(INPUT_POST, 'ubicacion');
-$Qesquema = (string)filter_input(INPUT_POST, 'esquema');
-$Qesquema_web = (string)filter_input(INPUT_POST, 'esquema_web');
+$Qusername = (string)filter_post('username');
+$Qubicacion = (string)filter_post('ubicacion');
+$Qesquema = (string)filter_post('esquema');
+$Qesquema_web = (string)filter_post('esquema_web');
 
 $error_txt = '';
 $data = [];

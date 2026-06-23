@@ -38,6 +38,7 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
         '8fad53453774bd862429f2a16f3233f3' => __DIR__ . '/../../..' . '/frontend/shared/helpers/func_tablas.php',
         'bdd9b8a407e50bcd33960c6c3fbec910' => __DIR__ . '/../../..' . '/src/shared/domain/helpers/func_tablas.php',
+        '0e39366ecddfc531b4b60991013b4e31' => __DIR__ . '/../../..' . '/src/shared/domain/helpers/func_input.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -100,6 +101,10 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
             'Psr\\Clock\\' => 10,
             'PhpParser\\' => 10,
             'PhpOption\\' => 10,
+        ),
+        'O' =>
+        array (
+            'Orbix\\PHPStan\\' => 14,
         ),
         'M' =>
         array (
@@ -303,6 +308,10 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         'PhpOption\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
+        ),
+        'Orbix\\PHPStan\\' =>
+        array (
+            0 => __DIR__ . '/../../..' . '/build/phpstan',
         ),
         'Mpdf\\PsrLogAwareTrait\\' =>
         array (

@@ -9,7 +9,7 @@ $error = '';
 $data = [];
 
 try {
-    $Qlista = (string)filter_input(INPUT_POST, 'lista');
+    $Qlista = (string)filter_post('lista');
     $lista = !empty($Qlista);
 
     /** @var InformeStgrProfesores $informe */

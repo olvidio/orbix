@@ -13,7 +13,7 @@ use src\shared\web\ContestarJson;
 $Qid_grupo = input_int($_POST, 'id_grupo');
 $Qid_equipaje = input_int($_POST, 'id_equipaje');
 $Qid_lugar = input_int($_POST, 'id_lugar');
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $error_txt = '';
 

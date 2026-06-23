@@ -4,7 +4,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\misas\application\VerEncargosCentrosData;
 use src\shared\web\ContestarJson;
 
-$Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
+$Qid_zona = (int)filter_post('id_zona');
 
 /** @var VerEncargosCentrosData $useCase */
 $useCase = DependencyResolver::get(VerEncargosCentrosData::class);

@@ -4,7 +4,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\misas\application\PlanDeMisasPantallaData;
 use src\shared\web\ContestarJson;
 
-$pantalla = (string)filter_input(INPUT_POST, 'pantalla');
+$pantalla = (string)filter_post('pantalla');
 if ($pantalla === '') {
     $pantalla = 'preparar';
 }

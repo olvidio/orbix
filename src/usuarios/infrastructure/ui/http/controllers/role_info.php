@@ -10,7 +10,7 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use src\shared\web\ContestarJson;
 
-$Qid_role = (int)filter_input(INPUT_POST, 'id_role');
+$Qid_role = (int)filter_post('id_role');
 
 $error_txt = '';
 

@@ -9,7 +9,7 @@ $error = '';
 $data = [];
 
 try {
-    $id_nom = (int)filter_input(INPUT_POST, 'id_nom');
+    $id_nom = (int)filter_post('id_nom');
     $data = (DependencyResolver::get(TesseraVerData::class))->execute($id_nom);
 } catch (\Throwable $e) {
     $error = $e->getMessage();

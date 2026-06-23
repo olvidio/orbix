@@ -4,7 +4,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ActivacionDefaultGuardar;
 
-$default = (string)filter_input(INPUT_POST, 'default');
+$default = (string)filter_post('default');
 
 /** @var ActivacionDefaultGuardar $useCase */
 $useCase = DependencyResolver::get(ActivacionDefaultGuardar::class);

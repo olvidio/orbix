@@ -9,8 +9,12 @@ use function src\shared\domain\helpers\input_int;
 $error = '';
 $data = [];
 try {
+    $idNom = input_int($_POST, 'id_nom');
+    if ($idNom <= 0) {
+        $idNom = input_int($_POST, 'id_pau');
+    }
     $input = [
-        'id_nom' => input_int($_POST, 'id_nom'),
+        'id_nom' => $idNom,
         'id_activ' => input_int($_POST, 'id_activ'),
         'id_asignatura' => input_int($_POST, 'id_asignatura'),
         'sel' => isset($_POST['sel']) && is_array($_POST['sel']) ? $_POST['sel'] : null,

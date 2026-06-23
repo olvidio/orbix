@@ -7,7 +7,7 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_role = (int)filter_input(INPUT_POST, 'id_role');
+$Qid_role = (int)filter_post('id_role');
 
 $error_txt = '';
 

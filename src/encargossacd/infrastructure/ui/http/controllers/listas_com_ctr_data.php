@@ -8,6 +8,6 @@ use src\shared\web\ContestarJson;
 $useCase = DependencyResolver::get(ListasComCtrData::class);
 
 
-$sfsv = (string)(filter_input(INPUT_POST, 'sfsv') ?? filter_input(INPUT_GET, 'sfsv') ?? '');
+$sfsv = (string)(filter_post('sfsv') ?? filter_get('sfsv') ?? '');
 
 ContestarJson::enviar('', $useCase->execute($sfsv));

@@ -9,7 +9,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\entity\Ubi;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qid_cdc = input_int($_POST, 'id_cdc');
 
 $error_txt = '';

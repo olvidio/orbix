@@ -6,9 +6,9 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Username;
 
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
-$Qusuario = (string)filter_input(INPUT_POST, 'usuario');
-$Qpassword = (string)filter_input(INPUT_POST, 'password');
+$Qid_usuario = (integer)filter_post('id_usuario');
+$Qusuario = (string)filter_post('usuario');
+$Qpassword = (string)filter_post('password');
 
 $usuario = null;
 if (!empty($Qusuario)) { // si es nuevo no tiene id

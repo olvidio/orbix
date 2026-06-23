@@ -11,18 +11,18 @@ use src\actividades\application\ActividadVerDatos;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_activ = (int)filter_input(INPUT_POST, 'id_activ');
-$Qisfsv = (int)filter_input(INPUT_POST, 'isfsv');
-$Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
-$QBdl = (string)filter_input(INPUT_POST, 'Bdl');
-$Qtarifa = filter_input(INPUT_POST, 'tarifa');
-$Qnivel_stgr = filter_input(INPUT_POST, 'nivel_stgr');
-$Qidioma = (string)filter_input(INPUT_POST, 'idioma');
-$Qid_repeticion = (int)filter_input(INPUT_POST, 'id_repeticion');
-$Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
-$Qlugar_esp = (string)filter_input(INPUT_POST, 'lugar_esp');
-$Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-$QcalcTarifa = (int)filter_input(INPUT_POST, 'calc_tarifa_inicial');
+$Qid_activ = (int)filter_post('id_activ');
+$Qisfsv = (int)filter_post('isfsv');
+$Qdl_org = (string)filter_post('dl_org');
+$QBdl = (string)filter_post('Bdl');
+$Qtarifa = filter_post('tarifa');
+$Qnivel_stgr = filter_post('nivel_stgr');
+$Qidioma = (string)filter_post('idioma');
+$Qid_repeticion = (int)filter_post('id_repeticion');
+$Qid_ubi = (int)filter_post('id_ubi');
+$Qlugar_esp = (string)filter_post('lugar_esp');
+$Qid_tipo_activ = (string)filter_post('id_tipo_activ');
+$QcalcTarifa = (int)filter_post('calc_tarifa_inicial');
 
 /** @var ActividadVerDatos $useCase */
 $useCase = DependencyResolver::get(ActividadVerDatos::class);

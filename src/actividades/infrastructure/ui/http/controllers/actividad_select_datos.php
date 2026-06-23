@@ -10,29 +10,29 @@ use src\shared\infrastructure\DependencyResolver;
 use src\actividades\application\ActividadSelectListado;
 
 $input = [
-    'continuar' => (string)filter_input(INPUT_POST, 'continuar'),
-    'modo' => (string)filter_input(INPUT_POST, 'modo'),
-    'status' => (int)filter_input(INPUT_POST, 'status'),
-    'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),
-    'filtro_lugar' => (string)filter_input(INPUT_POST, 'filtro_lugar'),
-    'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),
-    'nom_activ' => (string)filter_input(INPUT_POST, 'nom_activ'),
-    'periodo' => (string)filter_input(INPUT_POST, 'periodo'),
-    'year' => (string)filter_input(INPUT_POST, 'year'),
-    'dl_org' => (string)filter_input(INPUT_POST, 'dl_org'),
-    'empiezamin' => (string)filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
-    'fases_on' => (array)filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'fases_off' => (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'publicado' => (int)filter_input(INPUT_POST, 'publicado'),
-    'ssfsv' => (string)filter_input(INPUT_POST, 'ssfsv'),
-    'sasistentes' => (string)filter_input(INPUT_POST, 'sasistentes'),
-    'sactividad' => (string)filter_input(INPUT_POST, 'sactividad'),
-    'sactividad2' => (string)filter_input(INPUT_POST, 'sactividad2'),
-    'sel' => (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'scroll_id' => (string)filter_input(INPUT_POST, 'scroll_id'),
+    'continuar' => (string)filter_post('continuar'),
+    'modo' => (string)filter_post('modo'),
+    'status' => (int)filter_post('status'),
+    'id_tipo_activ' => (string)filter_post('id_tipo_activ'),
+    'filtro_lugar' => (string)filter_post('filtro_lugar'),
+    'id_ubi' => (int)filter_post('id_ubi'),
+    'nom_activ' => (string)filter_post('nom_activ'),
+    'periodo' => (string)filter_post('periodo'),
+    'year' => (string)filter_post('year'),
+    'dl_org' => (string)filter_post('dl_org'),
+    'empiezamin' => (string)filter_post('empiezamin'),
+    'empiezamax' => (string)filter_post('empiezamax'),
+    'fases_on' => (array)filter_post('fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'fases_off' => (array)filter_post('fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'publicado' => (int)filter_post('publicado'),
+    'ssfsv' => (string)filter_post('ssfsv'),
+    'sasistentes' => (string)filter_post('sasistentes'),
+    'sactividad' => (string)filter_post('sactividad'),
+    'sactividad2' => (string)filter_post('sactividad2'),
+    'sel' => (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'scroll_id' => (string)filter_post('scroll_id'),
 ];
-$stackGo = (int)filter_input(INPUT_POST, 'stack_go');
+$stackGo = (int)filter_post('stack_go');
 
 /** @var ActividadSelectListado $useCase */
 $useCase = DependencyResolver::get(ActividadSelectListado::class);

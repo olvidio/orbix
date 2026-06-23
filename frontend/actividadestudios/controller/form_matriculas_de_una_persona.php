@@ -36,6 +36,7 @@ $Qid_asignatura = (int) filter_input(INPUT_POST, 'id_asignatura');
 
 $a_sel = (array) filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $camposMatricula = [
+    'id_nom' => $Qid_nom,
     'id_pau' => $Qid_nom,
     'id_activ' => $Qid_activ,
     'id_nivel' => $Qid_nivel,

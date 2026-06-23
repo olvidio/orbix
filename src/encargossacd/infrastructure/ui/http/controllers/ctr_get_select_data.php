@@ -8,17 +8,17 @@ use src\shared\web\ContestarJson;
 $useCase = DependencyResolver::get(EncargoCtrSelectData::class);
 
 
-$id_ubi = filter_input(INPUT_POST, 'id_ubi');
+$id_ubi = filter_post('id_ubi');
 if ($id_ubi === null) {
-    $id_ubi = filter_input(INPUT_GET, 'id_ubi');
+    $id_ubi = filter_get('id_ubi');
 }
-$filtro_ctr = filter_input(INPUT_POST, 'filtro_ctr');
+$filtro_ctr = filter_post('filtro_ctr');
 if ($filtro_ctr === null) {
-    $filtro_ctr = filter_input(INPUT_GET, 'filtro_ctr');
+    $filtro_ctr = filter_get('filtro_ctr');
 }
-$id_zona = filter_input(INPUT_POST, 'id_zona');
+$id_zona = filter_post('id_zona');
 if ($id_zona === null) {
-    $id_zona = filter_input(INPUT_GET, 'id_zona');
+    $id_zona = filter_get('id_zona');
 }
 
 ContestarJson::enviar('', $useCase->execute(

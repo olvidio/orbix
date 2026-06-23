@@ -4,10 +4,10 @@ use src\shared\infrastructure\DependencyResolver;
 use src\misas\application\VerPlanSacdData;
 use src\shared\web\ContestarJson;
 
-$Qid_sacd_key = (string)filter_input(INPUT_POST, 'id_sacd');
-$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
-$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qid_sacd_key = (string)filter_post('id_sacd');
+$Qperiodo = (string)filter_post('periodo');
+$Qempiezamin = (string)filter_post('empiezamin');
+$Qempiezamax = (string)filter_post('empiezamax');
 
 /** @var VerPlanSacdData $useCase */
 $useCase = DependencyResolver::get(VerPlanSacdData::class);

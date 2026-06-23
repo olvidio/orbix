@@ -4,8 +4,8 @@ use src\shared\infrastructure\DependencyResolver;
 use src\misas\application\VerEncargosZonaData;
 use src\shared\web\ContestarJson;
 
-$Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
-$Qorden = (string)filter_input(INPUT_POST, 'orden');
+$Qid_zona = (int)filter_post('id_zona');
+$Qorden = (string)filter_post('orden');
 if ($Qorden === '') {
     $Qorden = 'orden';
 }

@@ -6,10 +6,10 @@ use src\misas\application\support\MisasBuildInput;
 use src\shared\web\ContestarJson;
 
 $in = [
-    'id_zona' => filter_input(INPUT_POST, 'id_zona'),
-    'empiezamin' => filter_input(INPUT_POST, 'empiezamin'),
-    'empiezamax' => filter_input(INPUT_POST, 'empiezamax'),
-    'seleccion' => filter_input(INPUT_POST, 'seleccion'),
+    'id_zona' => filter_post('id_zona'),
+    'empiezamin' => filter_post('empiezamin'),
+    'empiezamax' => filter_post('empiezamax'),
+    'seleccion' => filter_post('seleccion'),
 ];
 
 /** @var VerMisasZonaData $useCase */
