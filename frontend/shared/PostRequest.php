@@ -7,9 +7,17 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use frontend\shared\security\HashFront;
 use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\BootstrapPdoGlobals;
+use src\shared\infrastructure\ConnectionBootstrap;
+use src\shared\infrastructure\DiContainerBootstrap;
+use src\shared\infrastructure\InProcessSrcDispatch;
+use src\shared\infrastructure\logging\GestorErrores;
 
 class PostRequest
 {
+    private const MAX_IN_PROCESS_DEPTH = 8;
+
+    private static int $inProcessDepth = 0;
     /**
      * Clave reservada cuando el JSON interno de `data` es un escalar (poco frecuente).
      * Los endpoints habituales devuelven objeto/array; los ack tipo `'ok'` se mapean a `[]`.
@@ -79,13 +87,52 @@ class PostRequest
     }
 
     /**
-     * En PHPUnit local el CLI tiene $_SESSION en memoria pero php-fpm en Docker usa
-     * otro almacén de sesión: un POST HTTP con PHPSESSID devuelve auth_required.
-     * En modo test fuera del contenedor ejecutamos el controlador /src/... en proceso.
+     * Despacho en proceso del controlador `/src/...` cuando existe en disco.
+     *
+     * Evita agotar workers PHP-FPM: una pantalla frontend suele encadenar varias
+     * llamadas (p. ej. calendario + datos) y cada HTTP anidado ocupaba otro worker
+     * hasta provocar timeout por deadlock.
+     *
+     * En PHPUnit local (fuera de Docker) siempre se usa in-process por la sesión CLI.
      */
-    private static function shouldDispatchInProcess(): bool
+    private static function shouldDispatchInProcess(string $url): bool
     {
-        return ConfigGlobal::is_test_mode() && !self::isRunningInsideDocker();
+        if (ConfigGlobal::is_test_mode() && !self::isRunningInsideDocker()) {
+            return true;
+        }
+
+        $srcRoute = self::normalizeSrcRoutePath($url);
+        if ($srcRoute === null) {
+            return false;
+        }
+
+        return self::resolveSrcControllerFile($srcRoute) !== null;
+    }
+
+    /**
+     * Bootstrap mínimo de backend para `dispatchInProcess` (sustituye `global_object.inc`).
+     */
+    private static function ensureSrcBackendBootstrap(): void
+    {
+        DiContainerBootstrap::ensureBuilt();
+
+        if (isset($GLOBALS['oDB'])) {
+            return;
+        }
+
+        if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
+            return;
+        }
+
+        if (!isset($_SESSION['oGestorErrores'])) {
+            $_SESSION['oGestorErrores'] = new GestorErrores();
+        }
+
+        $connectionBootstrap = ConnectionBootstrap::buildFromSession();
+        BootstrapPdoGlobals::register(
+            $connectionBootstrap->userSfsv,
+            $connectionBootstrap->connections,
+        );
     }
 
     private static function projectRoot(): string
@@ -132,33 +179,45 @@ class PostRequest
      */
     private static function dispatchInProcess(string $url, array $postParams): string
     {
+        if (self::$inProcessDepth >= self::MAX_IN_PROCESS_DEPTH) {
+            throw new \RuntimeException(_('Demasiadas llamadas internas anidadas a /src/'));
+        }
+
         $srcRoute = self::normalizeSrcRoutePath($url);
         if ($srcRoute === null) {
             throw new \RuntimeException(sprintf(
-                _('No se pudo resolver ruta /src en llamada interna de test: %s'),
+                _('No se pudo resolver ruta /src en llamada interna: %s'),
                 $url
             ));
         }
         $controller = self::resolveSrcControllerFile($srcRoute);
         if ($controller === null) {
             throw new \RuntimeException(sprintf(
-                _('No existe controlador para la ruta de test %s'),
+                _('No existe controlador para la ruta %s'),
                 $srcRoute
             ));
         }
 
+        self::$inProcessDepth++;
+        InProcessSrcDispatch::begin();
         $previousPost = $_POST;
         $_POST = $postParams;
         ob_start();
         try {
+            self::ensureSrcBackendBootstrap();
             require $controller;
         } catch (\Throwable $e) {
             ob_end_clean();
             $_POST = $previousPost;
+            self::$inProcessDepth--;
+            InProcessSrcDispatch::end();
+
             throw $e;
         }
         $content = ob_get_clean();
         $_POST = $previousPost;
+        self::$inProcessDepth--;
+        InProcessSrcDispatch::end();
         if (!is_string($content)) {
             return '';
         }
@@ -318,7 +377,7 @@ class PostRequest
     public static function getDataMultipart(string $url, array $hash_params): array
     {
         $url = self::absoluteHttpUrlFromAppRelative($url);
-        if (self::shouldDispatchInProcess()) {
+        if (self::shouldDispatchInProcess($url)) {
             return self::getDataInProcess($url, $hash_params);
         }
 
@@ -718,7 +777,7 @@ class PostRequest
      */
     private static function getDataInternal(string $url, array $hash_params): array
     {
-        if (self::shouldDispatchInProcess()) {
+        if (self::shouldDispatchInProcess($url)) {
             return self::getDataInProcess($url, $hash_params);
         }
 
@@ -782,7 +841,7 @@ class PostRequest
     public static function getContent(string $url, array $hash_params): string
     {
         $url = self::absoluteHttpUrlFromAppRelative($url);
-        if (self::shouldDispatchInProcess()) {
+        if (self::shouldDispatchInProcess($url)) {
             try {
                 return self::dispatchInProcess($url, $hash_params);
             } catch (\Throwable $e) {
@@ -818,7 +877,7 @@ class PostRequest
     public static function sendRawPost(string $relativeUrl, array $formParams): string
     {
         $url = self::absoluteHttpUrlFromAppRelative($relativeUrl);
-        if (self::shouldDispatchInProcess()) {
+        if (self::shouldDispatchInProcess($url)) {
             try {
                 return self::dispatchInProcess($url, $formParams);
             } catch (\Throwable $e) {

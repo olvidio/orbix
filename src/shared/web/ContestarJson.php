@@ -4,9 +4,25 @@ namespace src\shared\web;
 
 use Illuminate\Http\JsonResponse;
 use src\shared\application\RefreshCrStgrMaterializedViews;
+use src\shared\infrastructure\InProcessSrcDispatch;
 
 class ContestarJson
 {
+
+    /**
+     * @param array<string, mixed> $jsondata
+     */
+    private static function emit(array $jsondata, int $httpCode = 200): void
+    {
+        if (InProcessSrcDispatch::isActive()) {
+            $encoded = json_encode($jsondata, JSON_UNESCAPED_UNICODE);
+            echo $encoded !== false ? $encoded : '{"success":false,"mensaje":"json_encode error","data":""}';
+
+            return;
+        }
+
+        (new JsonResponse($jsondata, $httpCode))->send();
+    }
 
     /**
      * Envía JSON. Si `data` no es string, se serializa con `json_encode` (sin
@@ -21,7 +37,7 @@ class ContestarJson
         if (array_key_exists('data', $jsondata) && !is_string($jsondata['data'])) {
             $jsondata['data'] = json_encode($jsondata['data']);
         }
-        (new JsonResponse($jsondata))->send();
+        self::emit($jsondata);
     }
 
     /**
@@ -41,7 +57,7 @@ class ContestarJson
             $jsondata['data'] = json_encode($jsondata['data']);
         }
         $httpCode = $error_txt === '' ? 200 : $httpStatusOnError;
-        (new JsonResponse($jsondata, $httpCode))->send();
+        self::emit($jsondata, $httpCode);
     }
 
     /**
@@ -58,7 +74,7 @@ class ContestarJson
     public static function enviarDataAnidado(string $error_txt = '', string|array $data = 'ok'): void
     {
         $jsondata = self::respuestaPhp($error_txt, $data);
-        (new JsonResponse($jsondata))->send();
+        self::emit($jsondata);
     }
 
     /**

@@ -113,6 +113,9 @@ final class RefreshCrStgrMaterializedViews
         $userSfsvInt = (int) $userSfsv;
 
         $sessionRefresh = $_SESSION['Refresh'] ?? null;
+        if ($sessionRefresh === 'in_progress') {
+            return;
+        }
         if ($sessionRefresh === 'ok' && $this->allViewsReady($schema_vf, $esquema, $userSfsvInt)) {
             return;
         }

@@ -45,6 +45,19 @@ class Periodo
      */
     public static function conCalendarioDesdeBackend(bool $throwOnError = false): self
     {
+        if (($_SESSION['oConfig'] ?? null) instanceof ConfigSnapshot) {
+            return new self();
+        }
+
+        /** @var array<string, int>|null */
+        static $calendarioCache = null;
+        if ($calendarioCache !== null) {
+            $o = new self();
+            $o->setCalendarioEscolar($calendarioCache);
+
+            return $o;
+        }
+
         $o = new self();
         $data = PostRequest::getDataFromUrl(
             '/src/configuracion/periodo_calendario_escolar_data',
@@ -56,7 +69,9 @@ class Periodo
                 PostRequest::stripInternalCallProvenance($data['error'])
             );
         }
-        $o->setCalendarioEscolar(self::calendarioFromPostRequestData($data));
+        $calendarioCache = self::calendarioFromPostRequestData($data);
+        $o->setCalendarioEscolar($calendarioCache);
+
         return $o;
     }
 
