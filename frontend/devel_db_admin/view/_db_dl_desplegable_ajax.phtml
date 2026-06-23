@@ -1,0 +1,48 @@
+<?php
+
+use frontend\shared\config\OrbixRuntime;
+
+/** @var string $h hash de seguridad para POST a db_lugar */
+?>
+<script>
+    fnjs_construir_desplegable = function (data) {
+        if (!data) { return ''; }
+        var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
+        if (data.action) { $sel.attr('onchange', data.action); }
+        if (data.blanco) {
+            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+            $sel.append($('<option></option>').val(vb).text(''));
+        }
+        $.each(data.opciones || {}, function (value, label) {
+            var $opt = $('<option></option>').val(value).text(label);
+            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
+                $opt.prop('selected', true);
+            }
+            $sel.append($opt);
+        });
+        return $sel.prop('outerHTML');
+    };
+
+    fnjs_dl = function () {
+        var filtro_region = $('#region').val();
+        var url = '<?= OrbixRuntime::getWeb() . '/src/devel_db_admin/db_lugar' ?>';
+        var parametros = 'region=' + encodeURIComponent(filtro_region) + '<?= $h ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        }).done(function (json) {
+            if (!json || json.success !== true) {
+                $('#lst_dl').html('');
+                return;
+            }
+            try {
+                var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                $('#lst_dl').html(fnjs_construir_desplegable(data));
+            } catch (e) {
+                $('#lst_dl').html('');
+            }
+        });
+    };
+</script>
