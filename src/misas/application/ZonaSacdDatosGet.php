@@ -31,6 +31,7 @@ class ZonaSacdDatosGet
             $payload['nombre_sacd'] = ($nom === '') ? '?' : $nom;
 
             $oZonaSacd = $cZonaSacd[0];
+            $payload['propia'] = $oZonaSacd->isPropia();
             $payload['dw1'] = $oZonaSacd->isDw1();
             $payload['dw2'] = $oZonaSacd->isDw2();
             $payload['dw3'] = $oZonaSacd->isDw3();

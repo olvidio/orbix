@@ -10,6 +10,7 @@ $Qid_sacd = (int)filter_post('id_sacd', FILTER_VALIDATE_INT);
 /** @var ZonaSacdDatosPut $useCase */
 $useCase = DependencyResolver::get(ZonaSacdDatosPut::class);
 $result = $useCase->execute($Qid_zona, $Qid_sacd, [
+    'propia' => (string)filter_post('propia'),
     'dw1' => (string)filter_post('dw1'),
     'dw2' => (string)filter_post('dw2'),
     'dw3' => (string)filter_post('dw3'),

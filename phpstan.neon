@@ -6,6 +6,8 @@ parameters:
     paths:
         - src
         - frontend
+    bootstrapFiles:
+        - libs/vendor/autoload.php
     # Ampliar memoria en CI o monorepos grandes: COMPOSER_MEMORY_LIMIT=2G o --memory-limit
     tmpDir: .phpstan/cache
     # gettext / helpers cargados vía composer "files"

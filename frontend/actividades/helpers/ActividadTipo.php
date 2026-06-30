@@ -123,7 +123,7 @@ class ActividadTipo
             if ($this->status === ActividadStatusId::ACTUAL) {
                 $array_des = $oTipoActiv->getAsistentesPosibles();
             } else {
-                $array_des = [6 => 'sss+'];
+                $array_des = [6 => 'sssc'];
             }
             $array2 = array_merge($array2, $array_des);
         }

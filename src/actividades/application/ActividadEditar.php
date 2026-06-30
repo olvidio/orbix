@@ -144,7 +144,7 @@ final class ActividadEditar
             if (($dl_orig != $dl_org) && ($dl_org == ConfigGlobal::mi_delef() || $dl_orig == ConfigGlobal::mi_delef())) {
                 $this->actividadProcesoTareaRepository->generarProceso(
                     (string) $oActividad->getId_activ(),
-                    '',
+                    null,
                     false,
                     $oActividad,
                 );

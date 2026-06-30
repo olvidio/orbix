@@ -445,6 +445,8 @@ class ProcesoActividadService
      */
     public function marcarFaseEnSf(int $id_activ, int $statusProceso, int $statusActividad): void
     {
+        $nomTablaOriginal = $this->actividadProcesoTareaRepository->getNomTabla();
+
         // buscar el id_tipo_proceso para esta actividad de la otra sección
         if (ConfigGlobal::mi_sfsv() == 1) {
             $this->actividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sf');
@@ -482,6 +484,8 @@ class ProcesoActividadService
                 $this->actividadProcesoTareaRepository->Guardar($oActividadProcessorTarea);
             }
         }
+
+        $this->actividadProcesoTareaRepository->setNomTabla($nomTablaOriginal);
     }
 
     /**

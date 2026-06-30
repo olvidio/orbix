@@ -34,7 +34,7 @@ $h_url_get = $oHashUrlGet->linkSinValParams();
 
 $oHashUrlPut = new HashFront();
 $oHashUrlPut->setUrl($url_zona_sacd_put);
-$oHashUrlPut->setCamposForm('id_sacd!id_zona!dw1!dw2!dw3!dw4!dw5!dw6!dw7');
+$oHashUrlPut->setCamposForm('id_sacd!id_zona!propia!dw1!dw2!dw3!dw4!dw5!dw6!dw7');
 $h_url_put = $oHashUrlPut->linkSinValParams();
 
 $oHash = new HashFront();

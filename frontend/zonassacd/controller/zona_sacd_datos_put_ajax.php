@@ -13,6 +13,7 @@ header('Content-Type: application/json; charset=UTF-8');
 echo PostRequest::getContent('/src/misas/zona_sacd_datos_put', [
     'id_zona' => $Qid_zona,
     'id_sacd' => $Qid_sacd,
+    'propia' => (string)filter_input(INPUT_POST, 'propia'),
     'dw1' => (string)filter_input(INPUT_POST, 'dw1'),
     'dw2' => (string)filter_input(INPUT_POST, 'dw2'),
     'dw3' => (string)filter_input(INPUT_POST, 'dw3'),

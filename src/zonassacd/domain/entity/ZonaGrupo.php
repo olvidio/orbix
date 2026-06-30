@@ -2,6 +2,7 @@
 
 namespace src\zonassacd\domain\entity;
 
+use src\shared\domain\DatosCampo;
 use src\shared\domain\traits\Hydratable;
 use src\zonassacd\domain\value_objects\NombreGrupoZona;
 
@@ -73,4 +74,58 @@ class ZonaGrupo
     {
         $this->orden = $orden;
     }
+
+    /* ------------------- PARA el mod_tabla  -------------------------------*/
+    public function getPrimary_key(): string
+    {
+        return 'id_grupo';
+    }
+
+    /**
+     * @return list<DatosCampo>
+     */
+    public function getDatosCampos(): array
+    {
+        return [
+            $this->getDatosNombre_grupo(),
+            $this->getDatosOrden(),
+        ];
+    }
+
+    /**
+     * Recupera las propiedades del atributo nombre_zona de Zona
+     * en una clase del tipo DatosCampo
+     *
+     * @return DatosCampo
+     */
+    private function getDatosNombre_grupo(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('nombre_grupo');
+        $oDatosCampo->setMetodoGet('getNombre_grupo');
+        $oDatosCampo->setMetodoSet('setNombre_grupo');
+        $oDatosCampo->setEtiqueta(_("nombre grupo"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument('30');
+        return $oDatosCampo;
+    }
+
+    /**
+     * Recupera las propiedades del atributo orden de Zona
+     * en una clase del tipo DatosCampo
+     *
+     * @return DatosCampo
+     */
+    private function getDatosOrden(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('orden');
+        $oDatosCampo->setMetodoGet('getOrden');
+        $oDatosCampo->setMetodoSet('setOrden');
+        $oDatosCampo->setEtiqueta(_("orden"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument('5');
+        return $oDatosCampo;
+    }
+
 }

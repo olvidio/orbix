@@ -23,6 +23,13 @@ interface ActividadProcesoTareaRepositoryInterface
     public function borrarFaseTareaInexistente(int $id_tipo_proceso, int $id_fase, int $id_tarea): void;
 
     /**
+     * Borra el proceso para la actividad indicada.
+     * Si se le pasa el parámetro isfsv, sólo borra en la tabla correspondiente (1=sv, 2=sf).
+     * Si no, borra en las dos.
+     */
+    public function borrarProceso(int $iid_activ, ?int $isfsv = null): void;
+
+    /**
      * @return array<string, bool>
      */
     public function getListaFaseEstado(int $iid_activ): array;
@@ -91,7 +98,7 @@ interface ActividadProcesoTareaRepositoryInterface
      */
     public function generarProceso(
         string $iid_activ = '',
-        int|string $isfsv = '',
+        ?int $isfsv = null,
         bool $force = false,
         ?ActividadAll $oActividad = null,
     ): bool|int;

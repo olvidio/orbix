@@ -27,6 +27,7 @@ class ZonaSacdDatosPut
         $b = static function ($v): bool {
             return filter_var($v, FILTER_VALIDATE_BOOLEAN);
         };
+        $oZonaSacd->setPropia($b($dw['propia'] ?? false));
         $oZonaSacd->setDw1($b($dw['dw1'] ?? false));
         $oZonaSacd->setDw2($b($dw['dw2'] ?? false));
         $oZonaSacd->setDw3($b($dw['dw3'] ?? false));

@@ -174,7 +174,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
      */
     public function generarProceso(
         string $iid_activ = '',
-        int|string $isfsv = '',
+        ?int $isfsv = null,
         bool $force = FALSE,
         ?ActividadAll $oActividad = null,
     ): bool|int {
@@ -347,7 +347,29 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
     }
 
     /**
-     * Borra el procés per l'activitat.
+     * Borra el proceso para la actividad indicada.
+     * Si se le pasa el parámetro isfsv, sólo borra en la tabla correspondiente.
+     * Si no, borra en las dos (sv y sf).
+     */
+    public function borrarProceso(int $iid_activ, ?int $isfsv = null): void
+    {
+        if (empty($isfsv)) {
+            $a_sfsv = [1, 2];
+        } else {
+            $a_sfsv = [$isfsv];
+        }
+        foreach ($a_sfsv as $sfsv) {
+            if ($sfsv === 1) {
+                $this->setNomTabla('a_actividad_proceso_sv');
+            } else {
+                $this->setNomTabla('a_actividad_proceso_sf');
+            }
+            $this->borrar($iid_activ);
+        }
+    }
+
+    /**
+     * Borra el procés per l'activitat de la tabla activa.
      *
      * @param int $iid_activ
      */

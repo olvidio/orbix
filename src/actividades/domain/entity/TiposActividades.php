@@ -40,7 +40,7 @@ class TiposActividades
         "agd" => 3,
         "s" => 4,
         "sg" => 5,
-        "sss+" => 6,
+        "sssc" => 6,
         "sr" => 7,
         "sr-nax" => 8,
         "sr-agd" => 9,

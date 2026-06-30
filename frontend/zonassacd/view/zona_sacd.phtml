@@ -45,6 +45,7 @@
     <label id="titulo_modal">nom sacd</label><hr/>
     <input type="hidden" id="id_sacd" value=""/>
     <input type="hidden" id="id_zona" value=""/>
+    <div style="margin-top: 20px;"><label for="propia"><?= _("propia") ?>:</label><input id="propia" name="propia" type="checkbox"></div>
     <div style="margin-top: 20px;"><label for="dw1"><?= _("Lunes") ?>:</label><input id="dw1" name="dw1" type="checkbox"></div>
     <div style="margin-top: 20px;"><label for="dw2"><?= _("Martes") ?>:</label><input id="dw2" name="dw2" type="checkbox"></div>
     <div style="margin-top: 20px;"><label for="dw3"><?= _("Miércoles") ?>:</label><input id="dw3" name="dw3" type="checkbox"></div>
@@ -110,6 +111,7 @@
             if (!json || json.success !== true) { alert(<?= json_encode(_("respuesta") . ": ") ?> + (json ? json.mensaje : '')); return; }
             var payload = (typeof json.data === 'string') ? JSON.parse(json.data) : (json.data || {});
             $('#id_sacd').val(id_sacd); $('#id_zona').val(id_zona); $('#titulo_modal').html(payload.nombre_sacd);
+            $('#propia').prop('checked', payload.propia === true);
             $('#dw1').prop('checked', payload.dw1 === true); $('#dw2').prop('checked', payload.dw2 === true); $('#dw3').prop('checked', payload.dw3 === true);
             $('#dw4').prop('checked', payload.dw4 === true); $('#dw5').prop('checked', payload.dw5 === true); $('#dw6').prop('checked', payload.dw6 === true); $('#dw7').prop('checked', payload.dw7 === true);
             modal.show();
@@ -118,7 +120,7 @@
 
     function commitCurrentEdit() {
         let parametros = 'id_zona=' + $('#id_zona').val() + '&id_sacd=' + $('#id_sacd').val();
-        parametros += '&dw1=' + $('#dw1').is(":checked") + '&dw2=' + $('#dw2').is(":checked") + '&dw3=' + $('#dw3').is(":checked");
+        parametros += '&propia=' + $('#propia').is(":checked") + '&dw1=' + $('#dw1').is(":checked") + '&dw2=' + $('#dw2').is(":checked") + '&dw3=' + $('#dw3').is(":checked");
         parametros += '&dw4=' + $('#dw4').is(":checked") + '&dw5=' + $('#dw5').is(":checked") + '&dw6=' + $('#dw6').is(":checked") + '&dw7=' + $('#dw7').is(":checked");
         parametros += '<?= $h_url_put ?>';
         $.ajax({ url: '<?= $url_zona_sacd_put ?>', method: 'POST', data: parametros, dataType: 'json' }).done(function (json) {

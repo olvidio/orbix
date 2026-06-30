@@ -107,6 +107,11 @@ class TiposDeActividades
         $this->getFlipActividad1Digito();
         $this->getFlipActividad2Digitos();
         $this->getFlipSfsv();
+        if ($this->extendida) {
+            $this->getNom_tipoPosibles2Digitos();
+        } else {
+            $this->getNom_tipoPosibles3Digitos();
+        }
     }
 
     /**
@@ -695,7 +700,7 @@ class TiposDeActividades
             }
             $i++;
             $nom_tipo[$i] = $row['nombre'] . '#' . $idTxt;
-            $num = substr($idTxt, $char_ini - 1, $num_digitos);
+            $num = substr($idTxt, $char_ini, $num_digitos);
             $tipo_nom[$num] = $row['nombre'];
         }
 

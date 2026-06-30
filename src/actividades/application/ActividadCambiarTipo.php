@@ -104,7 +104,8 @@ final class ActividadCambiarTipo
             $error_txt .= _("hay un error, no se ha guardado");
             $error_txt .= "\n" . $this->actividadDlRepository->getErrorTxt();
         } elseif (ConfigGlobal::is_app_installed('procesos')) {
-            $this->actividadProcesoTareaRepository->generarProceso((string) $Qid_activ, ConfigGlobal::mi_sfsv(), true);
+            // parametro sfsv = '' para que regenere los dos procesos (sv y sf)
+            $this->actividadProcesoTareaRepository->generarProceso((string) $Qid_activ, null, true);
         }
 
         return ['error_txt' => $error_txt];

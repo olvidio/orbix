@@ -297,7 +297,7 @@ class ActividadNuevoCurso
     private function crear_fases(int $id_activ, ActividadAll $oActividad): void
     {
         $ActividadProcesoTareaRepository = $this->actividadProcesoTareaRepository;
-        $ActividadProcesoTareaRepository->generarProceso((string) $id_activ, '', false, $oActividad);
+        $ActividadProcesoTareaRepository->generarProceso((string) $id_activ, null, false, $oActividad);
         foreach ($ActividadProcesoTareaRepository->consumirAvisosGenerarProceso() as $aviso) {
             $this->avisosProceso[] = $aviso;
         }

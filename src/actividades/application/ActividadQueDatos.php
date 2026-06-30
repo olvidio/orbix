@@ -55,6 +55,7 @@ final class ActividadQueDatos
             $oActividadTipo->setActividad((string)($input['sactividad'] ?? ''));
         }
         $oActividadTipo->setNom_tipo((string)($input['snom_tipo'] ?? ''));
+
         $sfsvAll = array_key_exists('sfsv_all', $input) ? !empty($input['sfsv_all']) : true;
         $oActividadTipo->setSfsvAll($sfsvAll);
 
