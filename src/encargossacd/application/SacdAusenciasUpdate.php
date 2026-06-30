@@ -141,7 +141,7 @@ final class SacdAusenciasUpdate
 
     private function toDate(string $value): ?DateTimeLocal
     {
-        return $value === '' ? null : new DateTimeLocal($value);
+        return $value === '' ? null :  DateTimeLocal::createFromLocal($value);
     }
 
     /**
