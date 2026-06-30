@@ -10,6 +10,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use function frontend\shared\helpers\is_true;
 
 /**
  * Planning (calendario) por zonas sacd. Datos vía `PostRequest` → `/src/planning/planning_zones_select_data`
@@ -31,7 +32,7 @@ $Qyear = (int)filter_input(INPUT_POST, 'year');
 $Qtrimestre = (int)filter_input(INPUT_POST, 'trimestre');
 $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
 $Qactividad = (string)filter_input(INPUT_POST, 'actividad');
-$Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
+$Qpropuesta = (bool)filter_input(INPUT_POST, 'propuesta');
 
 list_nav_boot_recordar($oPosicion);
 list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros([
@@ -73,7 +74,12 @@ $oPlanning->setDd(3);
 $oPlanning->setInicio($oIniPlanning);
 $oPlanning->setFin($oFinPlanning);
 
+$msg_txt = '';
+if (is_true($Qpropuesta)) {
+    $msg_txt = _("Propuesta de calendario: actividades en cualquier estado (menos borrable)");
+}
 $a_campos = [
+    'msg_txt' => $msg_txt,
     'oPosicion' => $oPosicion,
     'oPlanning' => $oPlanning,
     'goLeyenda' => $goLeyenda,

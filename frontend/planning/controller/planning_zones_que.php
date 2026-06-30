@@ -46,7 +46,7 @@ $Qtrimestre = (int)filter_input(INPUT_POST, 'trimestre');
 
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
 $Qactividad = (string)filter_input(INPUT_POST, 'actividad');
-$Qpropuesta = true;
+$Qpropuesta = (bool)filter_input(INPUT_POST, 'propuesta');
 
 $checksTrim = [
     1 => '', 2 => '', 3 => '', 4 => '', 5 => '', 6 => '',
@@ -87,7 +87,7 @@ $oHash->setArraycamposHidden([
     'propuesta' => $Qpropuesta,
 ]);
 $oHash->setCamposForm('actividad!year!id_zona!trimestre');
-$oHash->setCamposNo('modelo');
+$oHash->setCamposNo('modelo!propuesta');
 
 $oFormAny = new PeriodoQue();
 $aOpcionesAnys = planning_periodo_anys_opciones();
