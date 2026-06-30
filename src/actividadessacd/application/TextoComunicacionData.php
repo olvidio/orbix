@@ -22,7 +22,7 @@ final class TextoComunicacionData
     public function execute(array $input): array
     {
         $clave = input_string($input, 'clave');
-        $idioma = self::normalizarIdioma(input_string($input, 'idioma'));
+        $idioma = input_string($input, 'idioma');
         if ($clave === '' || $idioma === '') {
             return ['texto' => ''];
         }
@@ -37,15 +37,4 @@ final class TextoComunicacionData
         return ['texto' => (string)$cTextos[0]->getTexto()];
     }
 
-    public static function normalizarIdioma(string $idioma): string
-    {
-        if ($idioma === '') {
-            return '';
-        }
-        $pos = strpos($idioma, '_');
-        if ($pos === false) {
-            return $idioma;
-        }
-        return substr($idioma, 0, $pos);
-    }
 }

@@ -47,13 +47,13 @@ $oDesplClaves->setAction('fnjs_get_texto()');
 
 $locData = PostRequest::getDataFromUrl('/src/actividadessacd/locales_desplegable_data', []);
 $a_locales = actividadessacd_locales_from_payload($locData);
-$oDesplIdiomas = new Desplegable('idioma', $a_locales, 'es', true);
+$oDesplIdiomas = new Desplegable('idioma', $a_locales, 'es_ES.UTF-8', true);
 $oDesplIdiomas->setAction('fnjs_get_texto()');
 
 // texto inicial (com_sacd / es).
 $initial = PostRequest::getDataFromUrl('/src/actividadessacd/texto_comunicacion_data', [
     'clave' => 'com_sacd',
-    'idioma' => 'es',
+    'idioma' => 'es_ES.UTF-8',
 ]);
 $comunicacion = actividadessacd_texto_from_payload($initial);
 

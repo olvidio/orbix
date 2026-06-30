@@ -2,6 +2,7 @@
 
 namespace src\actividadessacd\application\services;
 
+use src\personas\domain\entity\PersonaPub;
 use src\shared\config\ConfigGlobal;
 use src\actividadessacd\application\services\ActividadesSacdHelper;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
@@ -122,7 +123,7 @@ final class ComunicarActividadesSacdService
         $ActividadCargoRepository = $this->actividadCargoRepository;
 
         foreach ($this->cPersonas as $oPersona) {
-            if (!($oPersona instanceof PersonaSacd || $oPersona instanceof PersonaEx)) {
+            if (!($oPersona instanceof PersonaPub || $oPersona instanceof PersonaSacd || $oPersona instanceof PersonaEx)) {
                 continue;
             }
             $id_nom = (int)$oPersona->getId_nom();

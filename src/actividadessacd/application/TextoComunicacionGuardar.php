@@ -22,7 +22,7 @@ final class TextoComunicacionGuardar
     public function execute(array $input): string
     {
         $clave = input_string($input, 'clave');
-        $idioma = TextoComunicacionData::normalizarIdioma(input_string($input, 'idioma'));
+        $idioma = input_string($input, 'idioma');
         $texto = input_string($input, 'texto');
 
         if ($clave === '' || $idioma === '') {

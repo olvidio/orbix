@@ -22,6 +22,7 @@ $i18n = [
     'cancelar' => _("cancelar"),
     'guardar' => _("guardar"),
     'respuesta' => _("respuesta"),
+    'guardado' => _("testo guardado"),
     'err_comunicacion' => _("error de comunicación con el servidor"),
     'err_desconocido' => _("error desconocido"),
 ];
@@ -74,6 +75,9 @@ $i18n = [
             if (!rta || rta.success !== true) {
                 var msg = (rta && rta.mensaje) ? rta.mensaje : I18N_TXT.err_desconocido;
                 alert(I18N_TXT.respuesta + ': ' + msg);
+            }
+            if (rta && rta.success === true) {
+                alert(I18N_TXT.guardado);
             }
         }).fail(function () {
             alert(I18N_TXT.err_comunicacion);

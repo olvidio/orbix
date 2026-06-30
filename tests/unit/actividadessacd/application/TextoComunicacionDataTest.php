@@ -15,22 +15,6 @@ use src\actividadessacd\domain\value_objects\SacdTextoTexto;
  */
 final class TextoComunicacionDataTest extends TestCase
 {
-        public function test_normalizar_idioma_sin_underscore_devuelve_igual(): void
-    {
-        $this->assertSame('ca', TextoComunicacionData::normalizarIdioma('ca'));
-        $this->assertSame('es', TextoComunicacionData::normalizarIdioma('es'));
-    }
-
-    public function test_normalizar_idioma_con_locale_completo_corta_en_underscore(): void
-    {
-        $this->assertSame('ca', TextoComunicacionData::normalizarIdioma('ca_ES.UTF-8'));
-        $this->assertSame('es', TextoComunicacionData::normalizarIdioma('es_ES'));
-    }
-
-    public function test_normalizar_idioma_cadena_vacia_devuelve_cadena_vacia(): void
-    {
-        $this->assertSame('', TextoComunicacionData::normalizarIdioma(''));
-    }
 
     public function test_sin_clave_devuelve_texto_vacio(): void {
         $repo = $this->createMock(ActividadSacdTextoRepositoryInterface::class);
