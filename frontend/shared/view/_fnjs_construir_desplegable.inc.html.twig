@@ -1,0 +1,97 @@
+(function () {
+    if (typeof window.fnjs_desplegable_append_opciones === 'function') {
+        return;
+    }
+
+    window.fnjs_desplegable_append_opciones = function ($sel, data, opciones) {
+        var opcionNo = {};
+        if (data && data.opcion_no && data.opcion_no.length) {
+            data.opcion_no.forEach(function (v) { opcionNo[String(v)] = true; });
+        }
+        var appendOption = function (value, label) {
+            if (opcionNo[String(value)]) {
+                return;
+            }
+            var $opt = $('<option></option>').val(value).text(label);
+            if (data && data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
+                $opt.prop('selected', true);
+            }
+            $sel.append($opt);
+        };
+        if ($.isArray(opciones)) {
+            $.each(opciones, function (_, pair) {
+                if (!pair || pair.length < 2) { return; }
+                appendOption(pair[0], pair[1]);
+            });
+        } else if (opciones && typeof opciones === 'object') {
+            $.each(opciones, function (value, label) {
+                appendOption(value, label);
+            });
+        }
+    };
+
+    window.fnjs_construir_desplegable_payload = function (data) {
+        if (!data) { return ''; }
+        if (data.mensaje) {
+            return $('<span></span>').text(data.mensaje).prop('outerHTML');
+        }
+        var id = data.id || data.name || '';
+        var name = data.name || data.id || id;
+        var $sel = $('<select></select>').attr({ id: id, name: name });
+        if (data.action) {
+            $sel.attr('onchange', data.action);
+        }
+        if (data.clase) {
+            $sel.addClass(data.clase);
+        }
+        if (data.blanco) {
+            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+            $sel.append($('<option></option>').val(vb).text(''));
+        }
+        fnjs_desplegable_append_opciones($sel, data, data.opciones || []);
+        if (data.selected !== undefined && data.selected !== null && String(data.selected) !== '') {
+            $sel.val(String(data.selected));
+        }
+        return $sel.prop('outerHTML');
+    };
+
+    window.fnjs_construir_desplegable_centros_payload = function (data) {
+        if (!data) { return ''; }
+        var id = data.id || 'id_ubi';
+        var $sel = $('<select></select>').attr({ id: id, name: id });
+        if (data.action) {
+            $sel.attr('onchange', data.action);
+        }
+        if (data.blanco) {
+            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+            $sel.append($('<option></option>').val(vb).text(''));
+        }
+        fnjs_desplegable_append_opciones($sel, data, data.opciones_sf || []);
+        var sf = data.opciones_sf || [];
+        var sv = data.opciones_sv || [];
+        var sfLen = $.isArray(sf) ? sf.length : Object.keys(sf).length;
+        var svLen = $.isArray(sv) ? sv.length : Object.keys(sv).length;
+        if (sfLen > 0 && svLen > 0) {
+            $sel.append($('<option></option>').prop('disabled', true).text('────────────────'));
+        }
+        fnjs_desplegable_append_opciones($sel, data, data.opciones_sv || []);
+        if (data.selected !== undefined && data.selected !== null && String(data.selected) !== '') {
+            $sel.val(String(data.selected));
+        }
+        return $sel.prop('outerHTML');
+    };
+
+    window.fnjs_construir_desplegable = function (jsonOrData) {
+        if (!jsonOrData) { return ''; }
+        if (jsonOrData.success !== undefined) {
+            if (jsonOrData.success !== true) { return ''; }
+            try {
+                var data = (typeof jsonOrData.data === 'string') ? JSON.parse(jsonOrData.data) : jsonOrData.data;
+                return fnjs_construir_desplegable_payload(data);
+            } catch (e) {
+                return '';
+            }
+        }
+        return fnjs_construir_desplegable_payload(jsonOrData);
+    };
+})();

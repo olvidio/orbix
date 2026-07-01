@@ -27,7 +27,7 @@ final class CentrosPorFiltroOpciones
                 $query = "WHERE tipo_ctr ~ '^a|n|s[^s]|of' AND active='t'";
                 return self::normalizeStringKeys($this->centroDlRepository->getArrayCentros($query));
             case EncargoGrupo::CENTRO_SF:
-                return self::normalizeStringKeys($this->centroDlRepository->getArrayCentros());
+                return self::normalizeStringKeys($this->centroEllasRepository->getArrayCentros());
             case EncargoGrupo::CENTRO_SSSC:
                 $query = "WHERE tipo_ctr ~ '^ss' AND active='t'";
                 return self::normalizeStringKeys($this->centroDlRepository->getArrayCentros($query));

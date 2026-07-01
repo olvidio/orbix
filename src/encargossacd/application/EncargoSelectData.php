@@ -61,15 +61,11 @@ final class EncargoSelectData
                 $id_ubi = (int)$oEncargo->getId_ubi();
                 $idioma_enc = (string)$oEncargo->getIdioma_enc();
                 if ($idioma_enc === '') {
-                    $idioma_enc = 'ca_ES';
+                    $idioma_enc = 'ca_ES.UTF-8';
                 }
 
                 if (!array_key_exists($idioma_enc, $idiomaCache)) {
-                    $idiomaCache[$idioma_enc] = '';
-                    $cIdiomas = $this->localRepository->getLocales(['idioma' => $idioma_enc]);
-                    if ($cIdiomas !== []) {
-                        $idiomaCache[$idioma_enc] = (string)$cIdiomas[0]->getNomIdiomaAsString();
-                    }
+                    $idiomaCache[$idioma_enc] = $this->resolveNomIdioma($idioma_enc);
                 }
 
                 $nombre_ubi = '';
@@ -101,5 +97,20 @@ final class EncargoSelectData
         }
 
         return ['filas' => $filas];
+    }
+
+    private function resolveNomIdioma(string $idioma_enc): string
+    {
+        $oLocal = $this->localRepository->findById($idioma_enc);
+        if ($oLocal !== null) {
+            return (string)($oLocal->getNomIdiomaAsString() ?? '');
+        }
+
+        $cIdiomas = $this->localRepository->getLocales(['idioma' => $idioma_enc]);
+        if ($cIdiomas !== []) {
+            return (string)($cIdiomas[0]->getNomIdiomaAsString() ?? '');
+        }
+
+        return '';
     }
 }

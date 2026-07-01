@@ -35,6 +35,9 @@ class ViewNewTwig extends Environment
         $dir_js = $this->getJsPath();
         $loader->addPath($dir_js, 'global_js');
 
+        $dir_shared_view = OrbixRuntime::dir() . DIRECTORY_SEPARATOR . 'frontend' . DIRECTORY_SEPARATOR . 'shared' . DIRECTORY_SEPARATOR . 'view';
+        $loader->addPath($dir_shared_view, 'shared');
+
         $options = [
             'cache' => false,
             'debug' => OrbixRuntime::isDebug(),

@@ -104,7 +104,7 @@ if ($Qid_zona !== 0) {
     $oDesplZonas->setOpcion_sel(encargossacd_desplegable_opcion_sel($Qid_zona));
 }
 
-$oDesplCtrs = DesplCentros::build((int)$Qfiltro_ctr, $Qid_ubi, $Qid_zona);
+$oDesplCtrs = DesplCentros::build((int)$Qfiltro_ctr, $Qid_ubi, $Qid_zona, '');
 
 $oDesplIdiomas = new Desplegable('idioma_enc', $opciones_locales, $idioma_enc, true);
 
@@ -130,9 +130,9 @@ $h_zona = $oHashZona->linkSinValParams();
 $url_ctr = $apiBase . '/src/encargossacd/ctr_get_select_data';
 $oHashCtr = new HashFront();
 $oHashCtr->setUrl($url_ctr);
-$oHashCtr->setCamposForm('filtro_ctr');
+$oHashCtr->setCamposForm('filtro_ctr!id_ubi!action');
 $h_ctr = $oHashCtr->linkSinValParams();
-$oHashCtr->setCamposForm('id_zona');
+$oHashCtr->setCamposForm('id_zona!id_ubi!action');
 $h_ctr_zona = $oHashCtr->linkSinValParams();
 
 $url_lst_tipo_data = $apiBase . '/src/encargossacd/encargo_lst_tipo_enc_data';
@@ -144,13 +144,13 @@ $h_lst_tipo = $oHashLstTipo->linkSinValParams();
 $url_encargo_ver_nuevo = $apiBase . '/src/encargossacd/encargo_ver_nuevo';
 $oHashEncNuevo = new HashFront();
 $oHashEncNuevo->setUrl($url_encargo_ver_nuevo);
-$oHashEncNuevo->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!observ!nom_tipo!que');
+$oHashEncNuevo->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!que');
 $h_encargo_ver_nuevo = $oHashEncNuevo->linkSinValParams();
 
 $url_encargo_ver_editar = $apiBase . '/src/encargossacd/encargo_ver_editar';
 $oHashEncEditar = new HashFront();
 $oHashEncEditar->setUrl($url_encargo_ver_editar);
-$oHashEncEditar->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!observ!nom_tipo!que!id_enc');
+$oHashEncEditar->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!que!id_enc');
 $h_encargo_ver_editar = $oHashEncEditar->linkSinValParams();
 
 $txt_btn = $Qque === 'nuevo' ? _("crear encargo") : _("guardar encargo");
@@ -183,6 +183,7 @@ $a_campos = [
     'que' => $Qque,
     'txt_btn' => $txt_btn,
     'grupo' => $Qgrupo,
+    'filtro_ctr' => $Qfiltro_ctr,
 ];
 
 $oView = new ViewNewPhtml('frontend\\encargossacd\\controller');

@@ -1,27 +1,5 @@
+<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>
 <script>
-fnjs_construir_desplegable = function (data) {
-	if (!data) { return ''; }
-	var id = data.id || 'lst_ctrs';
-	var name = data.name || data.id || 'lst_ctrs';
-	var $sel = $('<select></select>').attr({ id: id, name: name });
-	if (data.action) {
-		$sel.attr('onchange', data.action);
-	}
-	if (data.blanco) {
-		var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-		$sel.append($('<option></option>').val(vb).text(''));
-	}
-	var opciones = data.opciones || {};
-	$.each(opciones, function (value, label) {
-		var $opt = $('<option></option>').val(value).text(label);
-		if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
-			$opt.prop('selected', true);
-		}
-		$sel.append($opt);
-	});
-	return $sel.prop('outerHTML');
-};
-
 fnjs_lista_ctrs=function(id_ubi){
 	var filtro_ctr=$('#filtro_ctr').val();
 
@@ -39,22 +17,23 @@ fnjs_lista_ctrs=function(id_ubi){
 		}
 		try {
 			var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+            data.blanco = true;
 			$('#centros').html(fnjs_construir_desplegable(data));
 			$('#ficha').html('');
 		} catch (e) {
 		}
 	});
-
 }
+
 fnjs_guardar=function(enc){
 	var error=0;
 	var formulario=$('#datos_ctr_'+enc);
 	//var formulario='#datos_ctr_'+enc;
 	var tipo_centro=$('#tipo_centro_'+enc).val();
-	if (tipo_centro != 'of') {
+	if (tipo_centro !== 'of') {
 		var titular=$('#id_sacd_titular_'+enc).val();
 		var suplente=$('#id_sacd_suplente_'+enc).val();
-		if (titular == suplente && titular != '') {
+		if (titular === suplente && titular !== '') {
 			alert("El sacd titular y suplente deben ser distintos");
 			error=1;
 		} 

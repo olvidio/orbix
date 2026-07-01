@@ -18,9 +18,8 @@
         var tipo_enc = $('#mas').val();
         var encargo = $('#mas :selected').text();
         if (!encargo) return;
-        var n = $('#enc_num').val();
+        var n = parseInt($('#enc_num').val(), 10) || 0;
         var dedicacion;
-        ++n;
 
         switch (tipo_enc) {
             case '1110':
@@ -36,7 +35,7 @@
 
         $('#pie').before(dedicacion);
         $('#mas').val(0);
-        $('#enc_num').val(n);
+        $('#enc_num').val(n + 1);
     }
 </script>
 <?php foreach ($avisos as $aviso): ?>

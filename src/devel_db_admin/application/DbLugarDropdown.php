@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use src\shared\domain\helpers\OpcionesDesplegable;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
@@ -14,13 +15,13 @@ final class DbLugarDropdown
     /**
      * Payload JSON estándar de desplegable (contrato refactor.md).
      *
-     * @return array{id: string, opciones: array<string, string>, selected: string, blanco: bool}
+     * @return array{id: string, opciones: list<array{0: string, 1: string}>, selected: string, blanco: bool}
      */
     public static function getData(string $region, DelegacionRepositoryInterface $repoDl): array
     {
         return [
             'id' => 'dl',
-            'opciones' => $region === '' ? [] : self::opcionesPorRegion($region, $repoDl),
+            'opciones' => $region === '' ? [] : OpcionesDesplegable::enOrden(self::opcionesPorRegion($region, $repoDl)),
             'selected' => '',
             'blanco' => false,
         ];

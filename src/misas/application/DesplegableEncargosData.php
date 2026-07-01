@@ -4,6 +4,7 @@ namespace src\misas\application;
 
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\shared\domain\helpers\OpcionesDesplegable;
 
 class DesplegableEncargosData
 {
@@ -16,20 +17,8 @@ class DesplegableEncargosData
     /**
      * Payload JSON para el desplegable dinamico de encargos de una zona.
      *
-     * Sigue el contrato de desplegables de `refactor.md`:
-     *   - `id`        : id del `<select>` que montara `fnjs_construir_desplegable`.
-     *   - `opciones`  : map id_enc => desc_enc de los encargos con
-     *                   `id_tipo_enc >= 8100` de la zona.
-     *   - `selected`  : id_enc preseleccionado (`''` si no aplica).
-     *   - `blanco`    : true si se quiere opcion en blanco.
-     *   - `val_blanco`: valor de la opcion en blanco.
-     *   - `action`    : handler `onchange` opcional (vacio por defecto).
-     *
      * @param int      $id_zona       Zona de la que sacar los encargos.
-     * @param int|null $id_enc_sel    Encargo preseleccionado (opcional). Si
-     *                                no aparece entre las opciones de la
-     *                                zona, se anade igualmente para que el
-     *                                valor se pueda mantener en la UI.
+     * @param int|null $id_enc_sel    Encargo preseleccionado (opcional).
      * @return array<string, mixed>
      */
     public function getData(int $id_zona, ?int $id_enc_sel = null): array
@@ -48,8 +37,6 @@ class DesplegableEncargosData
 
         $opciones = [];
 
-        // Si hay encargo preseleccionado lo anadimos siempre (aunque no sea
-        // de la zona), para no perder el valor al recargar el desplegable.
         if (!empty($id_enc_sel)) {
             $oEncSel = $this->encargoRepository->findById($id_enc_sel);
             if ($oEncSel !== null) {
@@ -73,7 +60,7 @@ class DesplegableEncargosData
 
         return [
             'id' => 'id_enc',
-            'opciones' => $opciones,
+            'opciones' => OpcionesDesplegable::enOrden($opciones),
             'selected' => $id_enc_sel !== null ? (string)$id_enc_sel : '',
             'blanco' => true,
             'val_blanco' => '',

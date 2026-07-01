@@ -5,6 +5,7 @@ namespace src\actividadplazas\application;
 use src\shared\config\ConfigGlobal;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\personas\domain\entity\Persona;
+use src\shared\domain\helpers\OpcionesDesplegable;
 use function src\shared\domain\helpers\input_int;
 
 /**
@@ -30,7 +31,7 @@ final class PosiblesPropietariosData
      * @param array{id_nom?: int|string, id_activ?: int|string} $input
      * @return array{
      *     id: string,
-     *     opciones: array<string,string>,
+     *     opciones: list<array{0: string, 1: string}>,
      *     selected: string,
      *     blanco: bool,
      *     val_blanco: string
@@ -66,7 +67,7 @@ final class PosiblesPropietariosData
 
         return [
             'id' => 'propietario',
-            'opciones' => $opciones,
+            'opciones' => OpcionesDesplegable::enOrden($opciones),
             'selected' => $propietario,
             'blanco' => true,
             'val_blanco' => '',

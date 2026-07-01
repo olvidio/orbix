@@ -2,6 +2,7 @@
 
 namespace src\actividades\application;
 
+use src\shared\domain\helpers\OpcionesDesplegable;
 use src\ubis\application\services\DelegacionDropdown;
 
 use function src\shared\domain\helpers\input_string;
@@ -20,7 +21,7 @@ class ActividadTipoGetFiltroLugar
 
     /**
      * @param array<string, mixed> $input
-     * @return array{id: string, opciones: array<int|string,string>, blanco: bool, action: string}
+     * @return array{id: string, opciones: list<array{0: string, 1: string}>, blanco: bool, action: string}
      */
     public function execute(array $input = []): array
     {
@@ -29,7 +30,7 @@ class ActividadTipoGetFiltroLugar
 
         return [
             'id' => 'filtro_lugar',
-            'opciones' => $this->delegacionDropdown->dlURegionesFiltro($sfsvInt),
+            'opciones' => OpcionesDesplegable::enOrden($this->delegacionDropdown->dlURegionesFiltro($sfsvInt)),
             'blanco' => true,
             'action' => 'fnjs_lugar()',
         ];

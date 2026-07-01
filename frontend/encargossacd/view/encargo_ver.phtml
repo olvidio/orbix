@@ -1,39 +1,56 @@
+<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>
 <script>
-    fnjs_construir_desplegable = function (data) {
-        if (!data) { return ''; }
-        var id = data.id || 'lst_tipo_enc_sel';
-        var name = data.name || data.id || 'id_tipo_enc';
-        var $sel = $('<select></select>').attr({ id: id, name: name });
-        if (data.action) {
-            $sel.attr('onchange', data.action);
-        }
-        if (data.blanco) {
-            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-            $sel.append($('<option></option>').val(vb).text(''));
-        }
-        var opciones = data.opciones || {};
-        $.each(opciones, function (value, label) {
-            var $opt = $('<option></option>').val(value).text(label);
-            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
-                $opt.prop('selected', true);
-            }
-            $sel.append($opt);
-        });
-        return $sel.prop('outerHTML');
-    };
-
     fnjs_strip_hash_params = function (serialized) {
         return serialized.split('&').filter(function (p) {
-            return p !== '' && !/^h=/.test(p) && !/^hnov=/.test(p);
+            return p !== '' && !/^(h|hh|hhc|horig|hhorig|hc|hchk|hno|hnov)=/.test(p);
         }).join('&');
+    };
+
+    fnjs_guardar_serialize = function (formulario, que) {
+        var allowEditar = {
+            desc_enc: 1,
+            desc_lugar: 1,
+            idioma_enc: 1,
+            filtro_ctr: 1,
+            grupo: 1,
+            id_tipo_enc: 1,
+            id_zona: 1,
+            lst_ctrs: 1,
+            que: 1,
+            id_enc: 1,
+        };
+        var allowNuevo = {
+            desc_enc: 1,
+            desc_lugar: 1,
+            idioma_enc: 1,
+            filtro_ctr: 1,
+            grupo: 1,
+            id_tipo_enc: 1,
+            id_zona: 1,
+            lst_ctrs: 1,
+            que: 1,
+        };
+        var allow = (que === 'nuevo') ? allowNuevo : allowEditar;
+        return $(formulario).serializeArray()
+            .filter(function (field) {
+                return Object.prototype.hasOwnProperty.call(allow, field.name);
+            })
+            .map(function (field) {
+                return encodeURIComponent(field.name) + '=' + encodeURIComponent(field.value == null ? '' : String(field.value));
+            })
+            .join('&');
     };
 
     fnjs_lista_ctrs_por_zona = function () {
         var id_zona_sel = $('#id_zona_sel').val();
+        var id_ubi = $('#lst_ctrs').val() || '';
         $('#id_zona').val(id_zona_sel);
 
         var url = '<?= $url_ctr ?>';
-        var parametros = 'id_zona=' + id_zona_sel + '<?= $h_ctr_zona ?>';
+        var parametros = 'id_zona=' + encodeURIComponent(id_zona_sel)
+            + '&id_ubi=' + encodeURIComponent(id_ubi)
+            + '&action='
+            + '<?= $h_ctr_zona ?>';
         $.ajax({
             url: url,
             type: 'post',
@@ -77,6 +94,7 @@
 
     fnjs_lista_ctrs = function () {
         var filtro_ctr = $('#filtro_ctr').val();
+        var id_ubi = $('#lst_ctrs').val() || '';
 
         if (filtro_ctr === '8') { // zonas
             fnjs_lista_zonas();
@@ -85,7 +103,10 @@
             $('#zonas').html('');
 
             var url = '<?= $url_ctr ?>';
-            var parametros = 'filtro_ctr=' + filtro_ctr + '<?= $h_ctr ?>';
+            var parametros = 'filtro_ctr=' + encodeURIComponent(filtro_ctr)
+                + '&id_ubi=' + encodeURIComponent(id_ubi)
+                + '&action='
+                + '<?= $h_ctr ?>';
             $.ajax({
                 url: url,
                 type: 'post',
@@ -118,7 +139,7 @@
             var que = $('input[name="que"]').val() || '';
             var url = (que === 'nuevo') ? '<?= $url_encargo_ver_nuevo ?>' : '<?= $url_encargo_ver_editar ?>';
             var hExtra = (que === 'nuevo') ? '<?= $h_encargo_ver_nuevo ?>' : '<?= $h_encargo_ver_editar ?>';
-            var parametros = fnjs_strip_hash_params($(formulario).serialize()) + hExtra;
+            var parametros = fnjs_guardar_serialize(formulario, que) + hExtra;
             $.ajax({
                 url: url,
                 type: 'post',
@@ -222,7 +243,7 @@
                     <?= $oDesplGrupoCtrs->desplegable() ?>
                 </td>
                 <td id="zonas">
-                    <?php if ($grupo == 8): ?>
+                    <?php if ((string)$filtro_ctr === '8'): ?>
                         <?= _("zona") ?> :
                         <?= $oDesplZonas->desplegable() ?>
                     <?php endif; ?>

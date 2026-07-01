@@ -4,6 +4,7 @@ namespace src\actividades\application;
 
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\OpcionesDesplegable;
 
 /**
  * Devuelve el payload (id, opciones, selected, blanco) del desplegable de
@@ -18,7 +19,7 @@ class ActividadTipoGetLugar
 
     /**
      * @param array<string, mixed> $input
-     * @return array{id: string, opciones: array<int|string,string>, selected: string, blanco: bool}
+     * @return array{id: string, opciones: list<array{0: string, 1: string}>, selected: string, blanco: bool}
      */
     public function execute(array $input = []): array
     {
@@ -36,7 +37,7 @@ class ActividadTipoGetLugar
 
         return [
             'id' => 'id_ubi',
-            'opciones' => $opciones,
+            'opciones' => OpcionesDesplegable::enOrden($opciones),
             'selected' => $Qopcion_sel,
             'blanco' => true,
         ];

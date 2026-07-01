@@ -29,6 +29,6 @@ final class ActividadTipoGetLugarTest extends TestCase
         $this->assertSame('id_ubi', $out['id']);
         $this->assertTrue($out['blanco']);
         $this->assertSame('1', $out['selected']);
-        $this->assertArrayHasKey(1, $out['opciones']);
+        $this->assertSame([['1', 'X']], $out['opciones']);
     }
 }

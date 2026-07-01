@@ -5,23 +5,7 @@ use frontend\shared\config\OrbixRuntime;
 /** @var string $h hash de seguridad para POST a db_lugar */
 ?>
 <script>
-    fnjs_construir_desplegable = function (data) {
-        if (!data) { return ''; }
-        var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
-        if (data.action) { $sel.attr('onchange', data.action); }
-        if (data.blanco) {
-            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-            $sel.append($('<option></option>').val(vb).text(''));
-        }
-        $.each(data.opciones || {}, function (value, label) {
-            var $opt = $('<option></option>').val(value).text(label);
-            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
-                $opt.prop('selected', true);
-            }
-            $sel.append($opt);
-        });
-        return $sel.prop('outerHTML');
-    };
+<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>
 
     fnjs_dl = function () {
         var filtro_region = $('#region').val();

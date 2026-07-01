@@ -1,44 +1,11 @@
 <script>
+<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>
     $(function () {
         $("#f_ini").datepicker({ numberOfMonths: 3, showButtonPanel: true });
     });
     $(function () {
         $("#f_fin").datepicker({ numberOfMonths: 3, showButtonPanel: true });
     });
-    fnjs_construir_desplegable = function (json) {
-        if (!json || json.success !== true) { return ''; }
-        try {
-            var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
-            if (!data) { return ''; }
-            var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
-            if (data.action) { $sel.attr('onchange', data.action); }
-            if (data.blanco) {
-                var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-                $sel.append($('<option></option>').val(vb).text(''));
-            }
-            var appendOption = function (value, label) {
-                var $opt = $('<option></option>').val(value).text(label);
-                if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
-                    $opt.prop('selected', true);
-                }
-                $sel.append($opt);
-            };
-            var opciones = data.opciones || [];
-            if ($.isArray(opciones)) {
-                $.each(opciones, function (_, pair) {
-                    if (!pair || pair.length < 2) { return; }
-                    appendOption(pair[0], pair[1]);
-                });
-            } else {
-                $.each(opciones, function (value, label) {
-                    appendOption(value, label);
-                });
-            }
-            return $sel.prop('outerHTML');
-        } catch (e) {
-            return '';
-        }
-    }
     fnjs_mas_profes = function (filtro) {
         var url = '<?= $url_profesores ?>';
         var sufijoProfesor = '';

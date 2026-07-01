@@ -3,6 +3,7 @@
 namespace src\actividades\application;
 
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\domain\helpers\OpcionesDesplegable;
 
 use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
@@ -16,7 +17,7 @@ class ActividadTipoGetNomTipo
 {
     /**
      * @param array<string, mixed> $input
-     * @return array{id: string, opciones: array<int|string,string>, selected: string, blanco: bool, val_blanco: string, action: string}
+     * @return array{id: string, opciones: list<array{0: string, 1: string}>, selected: string, blanco: bool, val_blanco: string, action: string}
      */
     public function execute(array $input = []): array
     {
@@ -41,7 +42,7 @@ class ActividadTipoGetNomTipo
 
         return [
             'id' => 'inom_tipo_val',
-            'opciones' => $a_nom_tipo_posibles,
+            'opciones' => OpcionesDesplegable::enOrden($a_nom_tipo_posibles),
             'selected' => $opcion_blanco,
             'blanco' => true,
             'val_blanco' => $opcion_blanco,

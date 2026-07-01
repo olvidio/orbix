@@ -3,6 +3,7 @@
 namespace src\encargossacd\application;
 
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\shared\domain\helpers\OpcionesDesplegable;
 
 /**
  * Payload JSON para el desplegable de zonas (grupo «zonas misas»).
@@ -18,21 +19,17 @@ final class EncargoZonasSelectData
     }
 
     /**
-     * @return array{label_prefix: string, id: string, name: string, opciones: array<string, string>, selected: string, blanco: bool, val_blanco: string, action: string}
+     * @return array{label_prefix: string, id: string, name: string, opciones: list<array{0: string, 1: string}>, selected: string, blanco: bool, val_blanco: string, action: string}
      */
     public function execute(int $id_zona_selected): array
     {
         $aOpciones = $this->zonaRepository->getArrayZonas();
-        $opciones = [];
-        foreach ($aOpciones as $k => $v) {
-            $opciones[(string)$k] = (string)$v;
-        }
 
         return [
             'label_prefix' => _('zona') . ': ',
             'id' => 'id_zona_sel',
             'name' => 'id_zona_sel',
-            'opciones' => $opciones,
+            'opciones' => OpcionesDesplegable::enOrden($aOpciones),
             'selected' => (string)$id_zona_selected,
             'blanco' => false,
             'val_blanco' => '',

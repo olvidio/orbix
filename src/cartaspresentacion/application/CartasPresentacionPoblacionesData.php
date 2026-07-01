@@ -6,6 +6,7 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
+use src\shared\domain\helpers\OpcionesDesplegable;
 
 /**
  * Data builder: opciones del desplegable de poblaciones del modulo
@@ -33,7 +34,7 @@ final class CartasPresentacionPoblacionesData
      * @param array{filtro?: string} $input
      * @return array{
      *   id: string,
-     *   opciones: array<string,string>,
+     *   opciones: list<array{0: string, 1: string}>,
      *   selected: string,
      *   blanco: bool,
      *   val_blanco: string,
@@ -53,11 +54,12 @@ final class CartasPresentacionPoblacionesData
 
         return [
             'id' => 'poblacion_sel',
-            'opciones' => $aOpciones,
+            'opciones' => OpcionesDesplegable::enOrden($aOpciones),
             'selected' => '',
             'blanco' => true,
             'val_blanco' => '',
             'action' => '',
+            'clase' => 'contenido',
         ];
     }
 

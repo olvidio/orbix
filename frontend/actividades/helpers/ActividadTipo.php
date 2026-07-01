@@ -190,12 +190,10 @@ class ActividadTipo
         $oDesplNomTipo->setOpcion_sel((string) $inom_tipo);
         $oDesplNomTipo->setBlanco('t');
         $oDesplNomTipo->setValBlanco($val_blanco_nom);
-        if (isset($this->que)) {
-            if ($this->que === 'buscar') {
-                $oDesplNomTipo->setAction('fnjs_id_activ()');
-            } else {
-                $oDesplNomTipo->setAction('fnjs_act_id_activ()');
-            }
+        if ($this->que === 'buscar') {
+            $oDesplNomTipo->setAction('fnjs_id_activ()');
+        } else {
+            $oDesplNomTipo->setAction('fnjs_act_id_activ()');
         }
 
         $url = rtrim(OrbixRuntime::getWeb(), '/') . '/src/actividades/actividad_tipo_get';

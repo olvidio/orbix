@@ -3,6 +3,7 @@
 namespace src\procesos\application;
 
 use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
+use src\shared\domain\helpers\OpcionesDesplegable;
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string;
 
@@ -18,7 +19,7 @@ class ProcesosDepende
 
     /**
      * @param array<string, mixed> $input
-     * @return array{opciones: array<int|string, string>, blanco: bool}
+     * @return array{opciones: list<array{0: string, 1: string}>, blanco: bool}
      */
     public function execute(array $input): array
     {
@@ -31,7 +32,7 @@ class ProcesosDepende
         $aOpciones = $this->actividadTareaRepository->getArrayActividadTareas(input_int($input, 'valor_depende'));
 
         return [
-            'opciones' => $aOpciones,
+            'opciones' => OpcionesDesplegable::enOrden($aOpciones),
             'blanco' => true,
         ];
     }

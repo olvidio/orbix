@@ -52,7 +52,7 @@ final class SacdFichaUpdate
         $oAplicacion = $this->aplicacionService;
 
         $mensajes = '';
-        for ($i = 1; $i <= $enc_num; $i++) {
+        for ($i = 0; $i < $enc_num; $i++) {
             $id_tipo_enc = $this->arrayIntAt($aId_tipo_enc, $i);
             $id_enc = $this->arrayIntAt($aId_enc, $i);
             $dedic_m = $this->arrayStringAt($aDedic_m, $i);

@@ -198,7 +198,7 @@ final class RefreshCrStgrMaterializedViews
      */
     public static function emitUserAvisoIfHtmlRequest(): void
     {
-        if (self::isSrcJsonRequest()) {
+        if (self::isSrcJsonRequest() || self::isAjaxRequest()) {
             return;
         }
 

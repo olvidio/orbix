@@ -1,0 +1,50 @@
+<?php
+/**
+ * Proxy AJAX frontend → `/src/actividades/actividad_{nuevo,editar,cambiar_tipo}`.
+ *
+ * El formulario lleva hash de {@see HashFront::getCamposHtml} pensado para la pantalla
+ * frontend (p. ej. planning_casa_modificar). Un POST directo a `/src/...` repasa
+ * `after_global_object.inc` y el hash no cuadra → 302 a index.php (el cliente ve HTML).
+ *
+ * Aquí {@see FrontBootstrap::boot()} valida el hash del formulario; {@see PostRequest}
+ * reenvía in-process al backend con firma nueva. Siempre responde JSON.
+ */
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../helpers/actividades_support.php';
+require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
+
+actividades_mutacion_ajax_sanitize_post();
+
+require_once 'frontend/shared/FrontBootstrap.php';
+
+use frontend\shared\FrontBootstrap;
+use frontend\shared\PostRequest;
+
+FrontBootstrap::boot();
+
+$mod = isset($_POST['mod']) && is_scalar($_POST['mod']) ? (string) $_POST['mod'] : '';
+$endpoints = [
+    'nuevo' => '/src/actividades/actividad_nuevo',
+    'editar' => '/src/actividades/actividad_editar',
+    'cambiar_tipo' => '/src/actividades/actividad_cambiar_tipo',
+];
+
+if (!isset($endpoints[$mod])) {
+    ajax_json_response(_('modo no válido'));
+}
+
+/** @var array<string, mixed> $campos */
+$campos = $_POST;
+
+$data = PostRequest::getDataFromUrl($endpoints[$mod], $campos, false);
+if (!empty($data['error'])) {
+    $msg = PostRequest::stripInternalCallProvenance($data['error']);
+    $msg = html_entity_decode(strip_tags($msg), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $msg = trim(preg_replace('/\s+/', ' ', $msg) ?? '');
+
+    ajax_json_response($msg !== '' ? $msg : _('Error al guardar'));
+}
+
+ajax_json_response();

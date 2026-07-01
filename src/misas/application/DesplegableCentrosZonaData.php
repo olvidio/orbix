@@ -4,6 +4,7 @@ namespace src\misas\application;
 
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
+use src\shared\domain\helpers\OpcionesDesplegable;
 use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
 
@@ -42,8 +43,8 @@ class DesplegableCentrosZonaData
 
         return [
             'id' => 'id_ubi',
-            'opciones_sf' => $opciones_sf,
-            'opciones_sv' => $opciones_sv,
+            'opciones_sf' => OpcionesDesplegable::enOrden($opciones_sf),
+            'opciones_sv' => OpcionesDesplegable::enOrden($opciones_sv),
             'selected' => $id_ubi_sel !== null && $id_ubi_sel !== 0 ? (string)$id_ubi_sel : '',
             'blanco' => true,
             'val_blanco' => '',

@@ -71,6 +71,7 @@ fnjs_guardar = function (formulario) {
 - **Mutaciones** (guardar, eliminar, editar): comprobar `respuesta.success`; ignorar `data` si es el ack `"ok"`. No usar `fnjs_parse_rta` salvo que el endpoint devuelva payload útil tras guardar.
 - Fragmentos HTML parciales: `ajax_json_html()` / `data.html` en cliente con `fnjs_ajax_json_html`.
 - Datos estructurados (tablas construidas en cliente): `/src/...` + `fnjs_parse_rta` (ver `activ_sacd.phtml`).
+- **Desplegables AJAX:** incluir `@shared/_fnjs_construir_desplegable.inc.html.twig` dentro de un `<script>` existente, o `@shared/fnjs_construir_desplegable.html.twig` si el bloque script es autónomo; en PHTML, `_fnjs_construir_desplegable.inc.phtml` (ver `agents.md` raíz). No duplicar `fnjs_construir_desplegable` inline. El backend debe enviar `opciones` como **array de pares** `[value, label]` (ver `agents.md` raíz, sección *Desplegables devueltos por endpoints AJAX*).
 - No usar `dataType: 'html'` ni respuestas texto plano en nuevos endpoints.
 - No usar el patrón antiguo de `$(formulario).one("submit", ...)`.
 

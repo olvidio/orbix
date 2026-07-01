@@ -210,12 +210,8 @@ switch ($Qque) {
         break;
 }
 
-$perm_jefe = actividades_is_jefe_calendario()
-    || ((actividades_have_perm_oficina('des') || actividades_have_perm_oficina('vcsd')) && OrbixRuntime::miSfsv() === 1)
-    || (actividades_have_perm_oficina('admin_sf') && OrbixRuntime::miSfsv() === 2);
-
 $data_que = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
-    'perm_jefe' => $perm_jefe ? 't' : 'f',
+    'perm_jefe' => actividades_perm_jefe_tipo_activ() ? 't' : 'f',
     'id_tipo_activ' => $Qid_tipo_activ,
     'sfsv' => $ssfsv,
     'sasistentes' => $Qsasistentes,

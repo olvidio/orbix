@@ -2,25 +2,8 @@
     <?php
     if (!empty($plazas_installed)) {
     ?>
-    fnjs_construir_desplegable_propietario = function (data) {
-        if (!data) { return ''; }
-        var id = data.id || 'propietario';
-        var $sel = $('<select></select>').attr({ id: id, name: id });
-        if (data.action) { $sel.attr('onchange', data.action); }
-        if (data.blanco) {
-            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-            $sel.append($('<option></option>').val(vb).text(''));
-        }
-        var opciones = data.opciones || {};
-        $.each(opciones, function (value, label) {
-            var $opt = $('<option></option>').val(value).text(label);
-            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
-                $opt.prop('selected', true);
-            }
-            $sel.append($opt);
-        });
-        return $sel.prop('outerHTML');
-    };
+    <?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>
+    fnjs_construir_desplegable_propietario = fnjs_construir_desplegable;
     fnjs_cmb_propietario = function () {
         var id_nom = $('#id_nom').val();
         var url = '<?= $url_ajax ?>';

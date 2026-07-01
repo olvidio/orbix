@@ -43,7 +43,7 @@ final class CartasPresentacionPoblacionesDataTest extends TestCase
         );
 
         $rta = $useCase->execute(['filtro' => 'get_H']);
-        $this->assertSame(['Madrid' => 'Madrid'], $rta['opciones']);
+        $this->assertSame([['Madrid', 'Madrid']], $rta['opciones']);
     }
 
     public function test_get_dl_agrupa_poblaciones(): void
@@ -71,6 +71,6 @@ final class CartasPresentacionPoblacionesDataTest extends TestCase
         );
 
         $rta = $useCase->execute(['filtro' => 'get_dl']);
-        $this->assertSame(['Salamanca' => 'Salamanca'], $rta['opciones']);
+        $this->assertSame([['Salamanca', 'Salamanca']], $rta['opciones']);
     }
 }

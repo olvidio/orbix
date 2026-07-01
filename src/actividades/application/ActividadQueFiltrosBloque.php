@@ -4,6 +4,7 @@ namespace src\actividades\application;
 
 use src\actividades\application\ActividadLugar;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\helpers\OpcionesDesplegable;
 use src\ubis\application\services\DelegacionDropdown;
 use src\usuarios\domain\entity\Role;
 
@@ -43,7 +44,7 @@ final class ActividadQueFiltrosBloque
 
         $filtroLugarSelect = [
             'id' => 'filtro_lugar',
-            'opciones' => $this->delegacionDropdown->dlURegionesFiltro($sfsv),
+            'opciones' => OpcionesDesplegable::enOrden($this->delegacionDropdown->dlURegionesFiltro($sfsv)),
             'selected' => (string) $filtro_lugar,
             'action' => 'fnjs_lugar()',
             'blanco' => true,
@@ -53,7 +54,7 @@ final class ActividadQueFiltrosBloque
         if ($filtro_lugar !== '') {
             $lugarSelect = [
                 'id' => 'id_ubi',
-                'opciones' => $this->actividadLugar->getLugaresPosibles($filtro_lugar),
+                'opciones' => OpcionesDesplegable::enOrden($this->actividadLugar->getLugaresPosibles($filtro_lugar)),
                 'selected' => $id_ubi > 0 ? (string) $id_ubi : '',
                 'blanco' => true,
             ];
@@ -62,7 +63,7 @@ final class ActividadQueFiltrosBloque
         $dlOrgOpciones = $this->delegacionDropdown->delegacionesURegiones($sfsv, true);
         $dlOrgSelect = [
             'id' => 'dl_org',
-            'opciones' => $dlOrgOpciones,
+            'opciones' => OpcionesDesplegable::enOrden($dlOrgOpciones),
             'selected' => (string) $dl_org,
             'blanco' => true,
             'action' => '',
@@ -72,7 +73,7 @@ final class ActividadQueFiltrosBloque
             $dlOrgSelect['opcion_no'] = [$mi_dele];
         }
         if ($modo === 'publicar') {
-            $dlOrgSelect['opciones'] = [$mi_dele => $mi_dele];
+            $dlOrgSelect['opciones'] = OpcionesDesplegable::enOrden([$mi_dele => $mi_dele]);
             $dlOrgSelect['blanco'] = false;
         }
         if ($proceso_installed) {

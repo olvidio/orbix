@@ -127,6 +127,7 @@ use frontend\shared\config\OrbixRuntime;
 </table>
 </form>
 <script>
+<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>
     fnjs_enviar_form = function (id_form, bloque) {
     if (!bloque) {
     bloque = '#main';
@@ -159,31 +160,6 @@ use frontend\shared\config\OrbixRuntime;
 } catch (e) {}
 });
 }
-
-    // Construye un <select> a partir del payload JSON devuelto por el endpoint
-    // /src/actividades/actividad_select_ubi_desplegable. Si el backend envia
-    // mensaje, se muestra en lugar del desplegable.
-    fnjs_construir_desplegable = function (data) {
-        if (!data) {return '';}
-        if (data.mensaje) {
-        return $('<span></span>').text(data.mensaje).prop('outerHTML');
-    }
-        var $sel = $('<select></select>').attr({id: data.id, name: data.id});
-        if (data.action) {
-        $sel.attr('onchange', data.action);
-    }
-        // opcion en blanco.
-        $sel.append($('<option></option>').val('').text(''));
-        var opciones = data.opciones || {};
-        $.each(opciones, function (value, label) {
-        var $opt = $('<option></option>').val(value).text(label);
-        if (data.selected && String(data.selected) === String(value)) {
-        $opt.prop('selected', true);
-    }
-        $sel.append($opt);
-    });
-        return $sel.prop('outerHTML');
-    }
 
     // Carga el desplegable (freq/region) via endpoint backend JSON.
     fnjs_cargar_desplegable = function (tipo, contenedor, cb) {

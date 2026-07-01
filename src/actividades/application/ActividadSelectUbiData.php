@@ -3,6 +3,7 @@
 namespace src\actividades\application;
 
 use src\shared\infrastructure\GlobalPdo;
+use src\shared\domain\helpers\OpcionesDesplegable;
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string;
 
@@ -21,8 +22,8 @@ class ActividadSelectUbiData
      *                        listan opciones frecuentes).
      *   - 'isfsv'  (int):    1 = solo sv, 2 = solo sf, otro = sin filtro.
      * @return array{
-     *     opcionesFreq: array<string,string>,
-     *     opcionesRegion: array<string,string>
+     *     opcionesFreq: list<array{0: string, 1: string}>,
+     *     opcionesRegion: list<array{0: string, 1: string}>
      * }
      */
     public function execute(array $input = []): array
@@ -86,8 +87,8 @@ class ActividadSelectUbiData
         }
 
         return [
-            'opcionesFreq' => $opcionesFreq,
-            'opcionesRegion' => $opcionesRegion,
+            'opcionesFreq' => OpcionesDesplegable::enOrden($opcionesFreq),
+            'opcionesRegion' => OpcionesDesplegable::enOrden($opcionesRegion),
         ];
     }
 }

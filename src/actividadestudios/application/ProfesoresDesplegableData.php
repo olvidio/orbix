@@ -8,6 +8,7 @@ use src\personas\domain\entity\Persona;
 use src\profesores\domain\ProfesorActividad;
 use src\profesores\domain\services\ProfesorAsignaturaService;
 use src\profesores\domain\services\ProfesorStgrService;
+use src\shared\domain\helpers\OpcionesDesplegable;
 use function src\shared\domain\helpers\input_int;
 use function src\shared\domain\helpers\input_string;
 
@@ -56,25 +57,11 @@ final class ProfesoresDesplegableData
 
         return [
             'id' => 'id_profesor',
-            'opciones' => $this->opcionesEnOrden($aOpciones),
+            'opciones' => OpcionesDesplegable::enOrden($aOpciones),
             'blanco' => true,
             'val_blanco' => '',
             'selected' => $id_profesor !== 0 ? $id_profesor : -1,
         ];
-    }
-
-    /**
-     * @param array<int|string, string> $aOpciones
-     * @return list<array{0: int|string, 1: string}>
-     */
-    private function opcionesEnOrden(array $aOpciones): array
-    {
-        $ordenadas = [];
-        foreach ($aOpciones as $id => $etiqueta) {
-            $ordenadas[] = [(string) $id, $etiqueta];
-        }
-
-        return $ordenadas;
     }
 
     /**

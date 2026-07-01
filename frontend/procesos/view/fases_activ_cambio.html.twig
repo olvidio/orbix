@@ -1,4 +1,5 @@
 <script>
+{% include "@shared/_fnjs_construir_desplegable.inc.html.twig" %}
 fnjs_ver_activ=function(formulario) {
 	var url = "frontend/procesos/controller/actividad_proceso.php";
 	rta=fnjs_solo_uno(formulario);
@@ -56,26 +57,6 @@ fnjs_lista=function(){
 	var url='{{ url_lista }}';
 	var parametros='accion='+accion+'&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&id_fase_nueva='+id_fase_nueva+'&periodo='+periodo+'&year='+year+'&empiezamax='+empiezamax+'&empiezamin='+empiezamin+'{{ h_lista|raw }}';
 	fnjs_ajax_json_html({ url: url, data: parametros, target: '#div_resultado' });
-}
-
-fnjs_construir_desplegable=function(json){
-	if (!json || json.success !== true) { return ''; }
-	var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
-	if (!data) { return ''; }
-	var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
-	if (data.action) { $sel.attr('onchange', data.action); }
-	if (data.blanco) {
-		var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-		$sel.append($('<option></option>').val(vb).text(''));
-	}
-	$.each(data.opciones || {}, function (value, label) {
-		var $opt = $('<option></option>').val(value).text(label);
-		if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
-			$opt.prop('selected', true);
-		}
-		$sel.append($opt);
-	});
-	return $sel.prop('outerHTML');
 }
 
 fnjs_actualizar_fases=function(id_fase_sel=''){

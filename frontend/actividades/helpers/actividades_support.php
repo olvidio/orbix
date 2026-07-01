@@ -7,6 +7,7 @@
 require_once __DIR__ . '/../../notas/helpers/tessera_imprimir_support.php';
 require_once __DIR__ . '/../../notas/helpers/notas_support.php';
 
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\web\Desplegable;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\PermisosActividades;
@@ -48,6 +49,97 @@ function actividades_is_jefe_calendario(): bool
     $oConfig = $_SESSION['oConfig'] ?? null;
 
     return $oConfig instanceof ConfigSnapshot && $oConfig->is_jefeCalendario();
+}
+
+/**
+ * Puede elegir sf/sv en el widget de tipo de actividad (desplegable `isfsv_val`).
+ * Misma regla que actividad_que.php.
+ */
+function actividades_perm_jefe_tipo_activ(): bool
+{
+    if (actividades_is_jefe_calendario()) {
+        return true;
+    }
+    if (OrbixRuntime::miSfsv() === 1
+        && (actividades_have_perm_oficina('des') || actividades_have_perm_oficina('vcsd'))) {
+        return true;
+    }
+
+    return OrbixRuntime::miSfsv() === 2 && actividades_have_perm_oficina('admin_sf');
+}
+
+/** Campos del formulario calendario (planning casa) incluidos en HashFront::setCamposForm. */
+function actividades_calendario_form_hash_campos_form(): string
+{
+    return 'dl_org!f_fin!f_ini!h_fin!h_ini!extendida!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!id_tarifa!idioma';
+}
+
+/**
+ * Campos de actividad_ver incluidos en HashFront (modos editar/nuevo/cambiar_tipo).
+ */
+function actividades_ver_form_hash_campos_form(): string
+{
+    return 'status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!id_tarifa!publicado!plazas!idioma'
+        . '!extendida!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val'
+        . '!sactividad!sasistentes!snom_tipo';
+}
+
+/**
+ * Claves POST permitidas en {@see actividad_mutacion_ajax.php} para pasar HashFront.
+ *
+ * HashFront compara solo los nombres de campo del formulario: cualquier campo extra
+ * (p. ej. `que`, `desc_activ`, `hpos`) provoca redirect a index.php.
+ *
+ * @return array<string, true>
+ */
+function actividades_mutacion_ajax_allowed_post_keys(): array
+{
+    static $cache = null;
+    if (is_array($cache)) {
+        return $cache;
+    }
+
+    $fields = array_merge(
+        array_filter(explode('!', actividades_calendario_form_hash_campos_form())),
+        array_filter(explode('!', actividades_ver_form_hash_campos_form())),
+        ['id_tipo_activ', 'id_activ', 'id_ubi', 'ssfsv', 'mod', 'id_tarifa'],
+        ['h', 'hh', 'hhc', 'hno', 'hchk', 'hnov', 'horig', 'hhorig', 'PHPSESSID'],
+    );
+
+    $cache = array_fill_keys(array_unique($fields), true);
+
+    return $cache;
+}
+
+/**
+ * Mapa JSON `{campo:1}` para filtrar `serialize()` en el formulario calendario (planning).
+ */
+function actividades_calendario_mutacion_serialize_allow_json(): string
+{
+    $fields = array_merge(
+        array_filter(explode('!', actividades_calendario_form_hash_campos_form())),
+        ['id_tipo_activ', 'id_activ', 'id_ubi', 'ssfsv', 'mod'],
+        ['h', 'hh', 'hhc', 'hno', 'hchk', 'hnov', 'horig', 'hhorig'],
+    );
+
+    return json_encode(array_fill_keys(array_unique($fields), 1), JSON_UNESCAPED_UNICODE);
+}
+
+/**
+ * Elimina del POST campos que no participan en el hash del formulario calendario/actividad_ver.
+ */
+function actividades_mutacion_ajax_sanitize_post(): void
+{
+    if ($_POST === []) {
+        return;
+    }
+
+    $allowed = actividades_mutacion_ajax_allowed_post_keys();
+    foreach (array_keys($_POST) as $key) {
+        if (!isset($allowed[$key]) && !str_starts_with($key, 'scroll_id_')) {
+            unset($_POST[$key]);
+        }
+    }
 }
 
 function actividades_id_activ_from_post(): int

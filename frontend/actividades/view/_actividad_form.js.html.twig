@@ -100,19 +100,31 @@ fnjs_guardar=function(tipo='') {
     }
 
     if (tipo==='cambiar_tipo') {
-       err = !confirm("{{ "continúa si has ajustado el nombre de la actividad"|trans|raw }}");
-        {% if procesos_installed %}
-           alert("{{ "La actividad pasará a proyecto, y se deberá volver a marcar las fases correspondientes"|trans|raw }}");
-        {% endif %}
+        // Ojo: mantener err numérico (0/1). `err = !confirm()` lo pondría booleano y
+        // `if (err===0)` (comparación estricta) fallaría con `false === 0` → no guardaría.
+        if (!confirm("{{ "continúa si has ajustado el nombre de la actividad"|trans|raw }}")) {
+            err = 1;
+        } else {
+            {% if procesos_installed %}
+            alert("{{ "La actividad pasará a proyecto, y se deberá volver a marcar las fases correspondientes"|trans|raw }}");
+            {% endif %}
+        }
     }
 
     if (err===0) {
+        // Solo recomponer id_tipo_activ desde el widget si éste existe (modos nuevo/cambiar_tipo).
+        // En 'datos' (editar) el tipo se muestra como texto y el hidden id_tipo_activ ya trae el valor;
+        // sobrescribirlo con '' rompería el hash de campos hidden (hh).
+        if ($('#isfsv_val').length) {
+            $('#id_tipo_activ').val(
+                String($('#isfsv_val').val() || '') +
+                String($('#iasistentes_val').val() || '') +
+                String($('#iactividad_val').val() || '') +
+                String($('#inom_tipo_val').val() || '')
+            );
+        }
         $('#mod').val(tipo);
-        var urlUpdate = {
-            'nuevo': 'src/actividades/actividad_nuevo',
-            'editar': 'src/actividades/actividad_editar',
-            'cambiar_tipo': 'src/actividades/actividad_cambiar_tipo'
-        }[tipo];
+        var urlUpdate = '{{ web }}/frontend/actividades/controller/actividad_mutacion_ajax.php';
 
         $.ajax({
             url: urlUpdate,
@@ -134,7 +146,18 @@ fnjs_guardar=function(tipo='') {
                 $('#lugar_esp').val("");
             }
         }).fail(function (xhr, status, error) {
-            alert('Error en la conexión con el servidor: ' + error);
+            let detalle = error;
+            if (xhr.responseText) {
+                try {
+                    let json = JSON.parse(xhr.responseText);
+                    if (json.mensaje) {
+                        detalle = json.mensaje;
+                    }
+                } catch (e) {
+                    detalle = xhr.responseText.trim().substring(0, 300);
+                }
+            }
+            alert('Error en la conexión con el servidor: ' + detalle);
         });
     }
 };

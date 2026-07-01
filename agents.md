@@ -102,6 +102,7 @@ Reglas:
 - [ ] ¿Se mantiene la separación estricta: nada de HTML/UI en `src/`, nada de lógica de dominio en `frontend/`?
 - [ ] Si se añaden descargas GET de binarios desde `src/` pensadas para `window.open` o enlaces directos, ¿usan **`SignedDownloadToken`** + `ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET` y no exponen id sin `tk`?
 - [ ] ¿Ningún archivo nuevo en `src/application/` o `src/domain/` importa `web\Hash` para navegación UI?
+- [ ] ¿Los endpoints AJAX de desplegables devuelven `opciones` como array de pares `[value, label]` (no mapa) y el JS usa el helper compartido `fnjs_construir_desplegable`?
 
 ## Tests: Convenciones y estructura
 
@@ -692,44 +693,59 @@ Por defecto los controladores `src/...` **no** devuelven HTML de `<select>`; `ap
 ```json
 {
   "id": "campo_select",
-  "opciones": { "value1": "Etiqueta 1" },
-  "selected": ".",
+  "name": "campo_select",
+  "opciones": [["1003", "Centro Z"], ["501", "Centro A"]],
+  "selected": "501",
   "blanco": true,
-  "val_blanco": ".",
-  "action": "fnjs_algo(false)"
+  "val_blanco": "",
+  "action": "fnjs_algo()",
+  "clase": "contenido",
+  "opcion_no": ["mad"]
 }
 ```
 
-- `opciones`: mapa value => label (como un `*Dropdown` en `services/`).
-- Inyectar: contenedor → `.html(helper)`; si el ancla es el propio `<select>`, usar `.replaceWith(...)` — **no** `$(select).html(innerSelect)` (selects anidados inválidos).
+#### Orden de `opciones`: array de pares, no mapa
 
-Helper JS típico reusable por vista:
+**Problema:** si `opciones` es un **objeto** `{ "501": "A", "1003": "Z" }`, JavaScript reordena las claves numéricas al iterar (`501`, `502`, `1003`…), **ignorando** el orden del backend (`tipo_ctr, nombre_ubi`, apellidos, etc.).
 
-```js
-fnjs_construir_desplegable = function (json) {
-    if (!json || json.success !== true) { return ''; }
-    try {
-        var data = typeof json.data === 'string' ? JSON.parse(json.data) : json.data;
-        if (!data) { return ''; }
-        var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
-        if (data.action) { $sel.attr('onchange', data.action); }
-        if (data.blanco) {
-            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-            $sel.append($('<option></option>').val(vb).text(''));
-        }
-        $.each(data.opciones || {}, function (value, label) {
-            var $opt = $('<option></option>').val(value).text(label);
-            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
-                $opt.prop('selected', true);
-            }
-            $sel.append($opt);
-        });
-        return $sel.prop('outerHTML');
-    } catch (e) { return ''; }
-};
+**Regla obligatoria en código nuevo y en migraciones:**
+- **Backend (`application` / controladores HTTP):** devolver `opciones` como **lista ordenada** de pares `[value, label]` usando `src\shared\domain\helpers\OpcionesDesplegable::enOrden($mapa)` o `OpcionesDesplegable::desdeFilas($rows)`.
+- **Frontend (JS):** usar el helper compartido (ver abajo), que itera arrays en orden y sigue aceptando mapas legacy por compatibilidad transitoria.
+- **Frontend (PHP, render inicial con `web\Desplegable`):** `notas_desplegable_opciones()` (y wrappers como `encargossacd_desplegable_opciones`) convierten arrays de pares a mapa asociativo preservando el orden de inserción.
+
+**Casos especiales:**
+- Desplegable SF + SV (misas): `opciones_sf` y `opciones_sv` también como arrays de pares; construir con `fnjs_construir_desplegable_centros_payload`.
+- Claves **no numéricas** (p. ej. `"dl|mad"`, `"mad>bcn"`): el mapa no se reordena tan agresivamente en JS, pero **usar igualmente arrays** por consistencia del contrato.
+
+**Helper PHP:**
+
+```php
+use src\shared\domain\helpers\OpcionesDesplegable;
+
+return [
+    'id' => 'id_ubi',
+    'opciones' => OpcionesDesplegable::enOrden($mapaDesdeRepositorio),
+    'selected' => (string) $id_sel,
+    'blanco' => true,
+];
 ```
 
-**Baseline al refactorizar** un use case que devolvía HTML de desplegable: localizar todos los consumidores (`rg "salida=..."`, `rg "fnjs_..."`), devolver array con este contrato, endpoint con `ContestarJson::enviar('', $payload)` sin envolturas innecesarias `{content:...}`, migrar JS al helper, y solo entonces quitar HTML del backend.
+**Helper JS compartido** (incluir en vistas, no duplicar inline):
+
+- Twig (`ViewNewTwig`):
+  - **Dentro de un `<script>` ya abierto:** `{% include "@shared/_fnjs_construir_desplegable.inc.html.twig" %}` (solo JS, sin etiquetas `<script>`).
+  - **Bloque `<script>` autónomo:** `{% include "@shared/fnjs_construir_desplegable.html.twig" %}` (envuelve el `.inc` en `<script>…</script>`).
+  - `ViewNewTwig` registra `frontend/shared/view` como namespace `@shared`. **No** usar rutas relativas tipo `../../shared/view/...`. **No** incluir el `.html.twig` completo dentro de otro `<script>` (anida `<script>` y el navegador cierra el bloque externo al primer `</script>`).
+- PHTML: `<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>` (misma regla: el `.inc.phtml` lleva `<script>` propio; incluirlo **fuera** de otro `<script>` o refactorizar a JS sin etiquetas).
+
+Funciones expuestas: `fnjs_construir_desplegable` (envelope JSON o payload directo), `fnjs_construir_desplegable_payload`, `fnjs_construir_desplegable_centros_payload`, `fnjs_desplegable_append_opciones`.
+
+- `opciones`: **preferentemente** `list<array{0: string, 1: string}>`; mapa value => label solo en legacy no migrado.
+- Inyectar: contenedor → `.html(helper)`; si el ancla es el propio `<select>`, usar `.replaceWith(...)` — **no** `$(select).html(innerSelect)` (selects anidados inválidos).
+
+**Baseline al refactorizar** un use case que devolvía HTML de desplegable o mapa en `opciones`: localizar todos los consumidores (`rg "salida=..."`, `rg "fnjs_..."`), devolver array de pares con `OpcionesDesplegable`, endpoint con `ContestarJson::enviar('', $payload)`, migrar JS al helper compartido, y solo entonces quitar HTML del backend.
+
+**Tests:** cuando el orden importa, añadir aserción explícita del array de pares (p. ej. `[['1003', 'Z'], ['501', 'A']]` — no solo comprobar claves sueltas).
 
 ### Tipos y valores procedentes de `$_POST`
 - `$_POST` / `filter_input(INPUT_POST, ...)` llegan como **string** o `null` aunque el campo sea numérico.

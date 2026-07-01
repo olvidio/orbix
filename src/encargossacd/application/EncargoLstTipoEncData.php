@@ -3,6 +3,7 @@
 namespace src\encargossacd\application;
 
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\shared\domain\helpers\OpcionesDesplegable;
 
 /**
  * Payload de desplegable de tipos de encargo filtrados por prefijo de grupo (`id_tipo_enc ~ ^grupo`).
@@ -16,7 +17,7 @@ final class EncargoLstTipoEncData
     }
 
     /**
-     * @return array{id: string, opciones: array<string, string>, selected: string, blanco: bool, val_blanco: string, action: string}
+     * @return array{id: string, opciones: list<array{0: string, 1: string}>, selected: string, blanco: bool, val_blanco: string, action: string}
      */
     public function execute(string $grupo, ?string $id_tipo_enc_selected): array
     {
@@ -33,25 +34,11 @@ final class EncargoLstTipoEncData
 
         return [
             'id' => 'id_tipo_enc',
-            'opciones' => $this->stringKeyedOpciones($opciones),
+            'opciones' => OpcionesDesplegable::enOrden($opciones),
             'selected' => $id_tipo_enc_selected ?? '',
             'blanco' => true,
             'val_blanco' => '',
             'action' => '',
         ];
-    }
-
-    /**
-     * @param array<int|string, string> $opciones
-     * @return array<string, string>
-     */
-    private function stringKeyedOpciones(array $opciones): array
-    {
-        $out = [];
-        foreach ($opciones as $k => $v) {
-            $out[(string) $k] = $v;
-        }
-
-        return $out;
     }
 }

@@ -42,6 +42,8 @@ $payload = [
     'selected' => '',
     'action' => '',
     'mensaje' => '',
+    'blanco' => true,
+    'val_blanco' => '',
 ];
 
 switch ($Qtipo) {

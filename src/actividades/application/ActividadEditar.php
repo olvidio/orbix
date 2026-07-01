@@ -92,7 +92,8 @@ final class ActividadEditar
         $plazas_old = $oActividad->getPlazas();
         $dl_orig = $oActividad->getDl_org();
 
-        if ($valor_id_tipo_activ !== 0 && ($valor_id_tipo_activ / 100000) < 1) {
+        // Comprueba que el id tiene al menos 6 dígitos (legacy actividad_update.php).
+        if ($valor_id_tipo_activ !== 0 && ($valor_id_tipo_activ / 100000) >= 1) {
             $oActividad->setId_tipo_activ($valor_id_tipo_activ);
         }
         if (isset($input['dl_org'])) {

@@ -1,8 +1,18 @@
 <script>
     fnjs_strip_hash_sel = function (serialized) {
         return serialized.split('&').filter(function (p) {
-            return p !== '' && !/^h=/.test(p) && !/^hnov=/.test(p);
+            return p !== '' && !/^(h|hh|hhc|horig|hhorig|hc|hchk|hno|hnov)=/.test(p);
         }).join('&');
+    };
+
+    fnjs_eliminar_serialize = function (formulario) {
+        var parts = [];
+        var que = $(formulario).find('[name=que]').val() || '';
+        parts.push('que=' + encodeURIComponent(que));
+        $(formulario).find('input.sel:checked').each(function () {
+            parts.push('sel[]=' + encodeURIComponent($(this).val() == null ? '' : String($(this).val())));
+        });
+        return parts.join('&');
     };
 
     fnjs_horario = function (formulario) {
@@ -32,7 +42,7 @@
                 $(formulario).one("submit", function () {
                     var url = '<?= $url_borrar ?>';
                     var hExtra = '<?= $h_borrar ?>';
-                    var parametros = fnjs_strip_hash_sel($(this).serialize()) + hExtra;
+                    var parametros = fnjs_eliminar_serialize(this) + hExtra;
                     $.ajax({
                         url: url,
                         type: 'post',

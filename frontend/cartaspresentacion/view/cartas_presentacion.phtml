@@ -22,6 +22,7 @@
  */
 ?>
 <script>
+<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>
     var URL_CTR = <?= json_encode($url_ctr) ?> + '?bloque=ficha2';
     var H_CTR = <?= json_encode($h_ctr) ?>;
     var URL_LISTA = <?= json_encode($url_lista) ?>;
@@ -32,24 +33,6 @@
     var URL_ELIMINAR = <?= json_encode($url_eliminar) ?>;
     var H_ELIMINAR = <?= json_encode($h_eliminar) ?>;
     var TXT_CONFIRMAR_ELIMINAR = <?= json_encode($txt_confirmar_eliminar) ?>;
-
-    fnjs_construir_desplegable = function (data) {
-        if (!data) { return ''; }
-        var $sel = $('<select></select>').attr({ id: data.id, name: data.id, 'class': 'contenido' });
-        if (data.action) { $sel.attr('onchange', data.action); }
-        if (data.blanco) {
-            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-            $sel.append($('<option></option>').val(vb).text(''));
-        }
-        $.each(data.opciones || {}, function (value, label) {
-            var $opt = $('<option></option>').val(value).text(label);
-            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
-                $opt.prop('selected', true);
-            }
-            $sel.append($opt);
-        });
-        return $sel.prop('outerHTML');
-    };
 
     fnjs_ver_ubi = function (id_ubi) {
         var parametros = 'pau=u&id_ubi=' + id_ubi + H_CTR;

@@ -1,5 +1,6 @@
 {% block scripts %}
 <script>
+{% include "@shared/_fnjs_construir_desplegable.inc.html.twig" %}
 
     fnjs_comprobar_fase_no_duplicadas=function() {
     var fases_on=[];
@@ -129,31 +130,6 @@
     fnjs_enviar_formulario('#modifica');
 }
 }
-    // Payload ya parseado (actividad_que_filtros / actividad_tipo_get tras JSON.parse).
-    // Nombre distinto de fnjs_construir_desplegable en _actividad_tipo.js (espera el envelope JSON).
-    fnjs_construir_desplegable_payload = function (data) {
-        if (!data) { return ''; }
-        var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
-        if (data.action) { $sel.attr('onchange', data.action); }
-        if (data.blanco !== false) {
-            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-            $sel.append($('<option></option>').val(vb).text(''));
-        }
-        var opcionNo = {};
-        if (data.opcion_no && data.opcion_no.length) {
-            data.opcion_no.forEach(function (v) { opcionNo[String(v)] = true; });
-        }
-        $.each(data.opciones || {}, function (value, label) {
-            if (opcionNo[String(value)]) { return; }
-            var $opt = $('<option></option>').val(value).text(label);
-            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
-                $opt.prop('selected', true);
-            }
-            $sel.append($opt);
-        });
-        return $sel.prop('outerHTML');
-    };
-
     fnjs_construir_filtros_extra = function (data) {
         if (!data || !data.visible) { return ''; }
         var labels = data.labels || {};

@@ -38,8 +38,20 @@ function notas_form_bool_or_string(mixed $value): bool|string
  */
 function notas_desplegable_opciones(mixed $raw): array
 {
-    if (!is_array($raw)) {
-        return [];
+    if (!is_array($raw) || $raw === []) {
+        return is_array($raw) ? [] : [];
+    }
+    if (array_is_list($raw) && is_array($raw[0])) {
+        $out = [];
+        foreach ($raw as $pair) {
+            if (!is_array($pair) || count($pair) < 2) {
+                continue;
+            }
+            $key = is_int($pair[0]) ? $pair[0] : tessera_imprimir_string($pair[0]);
+            $out[$key] = tessera_imprimir_string($pair[1]);
+        }
+
+        return $out;
     }
     $out = [];
     foreach ($raw as $key => $value) {

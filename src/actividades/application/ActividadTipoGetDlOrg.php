@@ -3,6 +3,7 @@
 namespace src\actividades\application;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\helpers\OpcionesDesplegable;
 use src\ubis\application\services\DelegacionDropdown;
 
 use function src\shared\domain\helpers\input_string;
@@ -21,7 +22,7 @@ class ActividadTipoGetDlOrg
 
     /**
      * @param array<string, mixed> $input
-     * @return array{id: string, opciones: array<int|string,string>, selected: string, blanco: bool}
+     * @return array{id: string, opciones: list<array{0: string, 1: string}>, selected: string, blanco: bool}
      */
     public function execute(array $input = []): array
     {
@@ -31,7 +32,7 @@ class ActividadTipoGetDlOrg
 
         return [
             'id' => 'dl_org',
-            'opciones' => $this->delegacionDropdown->delegacionesURegiones($sfsvInt, true),
+            'opciones' => OpcionesDesplegable::enOrden($this->delegacionDropdown->delegacionesURegiones($sfsvInt, true)),
             'selected' => $dl_default,
             'blanco' => true,
         ];

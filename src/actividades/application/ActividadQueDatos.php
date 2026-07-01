@@ -24,6 +24,7 @@ final class ActividadQueDatos
      *   que?: string,
      *   para?: string,
      *   sfsv_all?: bool,
+     *   evitar_procesos?: bool,
      * } $input
      * @return array{actividad_tipo_html: string}
      */
@@ -58,6 +59,9 @@ final class ActividadQueDatos
 
         $sfsvAll = array_key_exists('sfsv_all', $input) ? !empty($input['sfsv_all']) : true;
         $oActividadTipo->setSfsvAll($sfsvAll);
+        if (!empty($input['evitar_procesos'])) {
+            $oActividadTipo->setEvitarProcesos(true);
+        }
 
         ob_start();
         $oActividadTipo->getHtml($extendida);

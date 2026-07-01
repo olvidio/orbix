@@ -3,6 +3,7 @@
 namespace src\encargossacd\application;
 
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\shared\domain\helpers\OpcionesDesplegable;
 
 /**
  * Opciones para el desplegable de SACDs filtrados por tabla
@@ -18,7 +19,7 @@ final class SacdSelectData
 
     /**
      * @return array{
-     *     opciones: array<string, string>,
+     *     opciones: list<array{0: string, 1: string}>,
      *     selected: int,
      *     label_prefix: string
      * }
@@ -33,13 +34,8 @@ final class SacdSelectData
 
         $opciones = $this->personaDlRepository->getArraySacd($sdonde);
 
-        $out = [];
-        foreach ($opciones as $k => $v) {
-            $out[(string)$k] = (string)$v;
-        }
-
         return [
-            'opciones' => $out,
+            'opciones' => OpcionesDesplegable::enOrden($opciones),
             'selected' => $id_nom,
             'label_prefix' => ucfirst(_("sacd")) . ':&nbsp;&nbsp;&nbsp;',
         ];

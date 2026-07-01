@@ -12,34 +12,11 @@ $epoca_ca = (int)($neVo['EPOCA_CA'] ?? 0);
 $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
 
 ?>
+<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>
 <script>
     $(function () {
         $("#f_acta").datepicker();
     });
-
-    fnjs_construir_desplegable = function (json) {
-        if (!json || json.success !== true) { return ''; }
-        try {
-            var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
-            if (!data) { return ''; }
-            var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
-            if (data.action) { $sel.attr('onchange', data.action); }
-            if (data.blanco) {
-                var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-                $sel.append($('<option></option>').val(vb).text(''));
-            }
-            $.each(data.opciones || {}, function (value, label) {
-                var $opt = $('<option></option>').val(value).text(label);
-                if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
-                    $opt.prop('selected', true);
-                }
-                $sel.append($opt);
-            });
-            return $sel.prop('outerHTML');
-        } catch (e) {
-            return '';
-        }
-    }
 
     fnjs_buscar_acta = function () {
         var tipo_acta = $('input[name=tipo_acta]:checked').val();

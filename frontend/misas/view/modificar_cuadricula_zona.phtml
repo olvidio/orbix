@@ -178,6 +178,7 @@
 <script src="frontend/misas/support/item_details_form_drag.js"></script>
 
 <script>
+<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>
 
     var solo_lectura = <?= !empty($solo_lectura) ? 'true' : 'false' ?>;
     var modal = solo_lectura ? $() : $('#modal_cuadricula_sacd');
@@ -201,35 +202,6 @@
         }
     }
 
-    fnjs_construir_desplegable = function (data) {
-        if (!data) {
-            return '';
-        }
-        var $sel = $('<select></select>').attr({id: data.id, name: data.id});
-        if (data.action) {
-            $sel.attr('onchange', data.action);
-        }
-        if (data.blanco) {
-            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-            $sel.append($('<option></option>').val(vb).text(''));
-        }
-        var opciones = data.opciones || {};
-        if ($.isEmptyObject(opciones) && Array.isArray(data.rows)) {
-            for (var r = 0; r < data.rows.length; r++) {
-                var row = data.rows[r];
-                opciones[String(row.value != null ? row.value : '')] = String(row.label != null ? row.label : '');
-            }
-        }
-        $.each(opciones, function (value, label) {
-            var $opt = $('<option></option>').val(value).text(label);
-            if (data.selected && String(data.selected) === String(value)) {
-                $opt.prop('selected', true);
-            }
-            $sel.append($opt);
-        });
-        return $sel.prop('outerHTML');
-    };
-
     function sacdKeyToIdNom(key) {
         var parts = String(key || '').split('#');
         if (parts.length !== 2) {
@@ -247,6 +219,23 @@
 
     function resolveSacdSelectedKey(pre, opciones) {
         if (!pre || !opciones) {
+            return '';
+        }
+        if ($.isArray(opciones)) {
+            for (var i = 0; i < opciones.length; i++) {
+                if (opciones[i] && String(opciones[i][0]) === String(pre)) {
+                    return pre;
+                }
+            }
+            var partsArr = pre.split('#');
+            if (partsArr.length === 2) {
+                var revKey = partsArr[1] + '#' + partsArr[0];
+                for (var j = 0; j < opciones.length; j++) {
+                    if (opciones[j] && String(opciones[j][0]) === revKey) {
+                        return revKey;
+                    }
+                }
+            }
             return '';
         }
         if (Object.prototype.hasOwnProperty.call(opciones, pre)) {
@@ -443,7 +432,7 @@
                 return;
             }
             var pre = ($('#id_sacd_key_preselect').val() || '').trim();
-            var chosen = resolveSacdSelectedKey(pre, payload.opciones || {});
+            var chosen = resolveSacdSelectedKey(pre, payload.opciones || []);
             if (chosen) {
                 payload.selected = chosen;
             }

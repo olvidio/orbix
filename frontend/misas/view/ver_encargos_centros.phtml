@@ -141,6 +141,8 @@
 <script src="frontend/misas/support/item_details_form_drag.js"></script>
 
 <script>
+<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>
+    fnjs_construir_desplegable_centros = fnjs_construir_desplegable_centros_payload;
 
     var modal = $(".item-details-form");
     fnjs_initItemDetailsFormDrag(modal, 'encargosCentrosModal');
@@ -171,55 +173,6 @@
 
     function cancelCurrentEdit() {
         modal.hide();
-    }
-
-    // Helper estandar para construir un `<select>` a partir del payload JSON
-    // de un endpoint de desplegable (contrato definido en `refactor.md`).
-    fnjs_construir_desplegable = function (data) {
-        if (!data) { return ''; }
-        var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
-        if (data.action) {
-            $sel.attr('onchange', data.action);
-        }
-        if (data.blanco) {
-            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-            $sel.append($('<option></option>').val(vb).text(''));
-        }
-        var opciones = data.opciones || {};
-        $.each(opciones, function (value, label) {
-            $sel.append($('<option></option>').val(value).text(label));
-        });
-        if (data.selected !== undefined && data.selected !== null && String(data.selected) !== '') {
-            $sel.val(String(data.selected));
-        }
-        return $sel.prop('outerHTML');
-    }
-
-    fnjs_construir_desplegable_centros = function (data) {
-        if (!data) { return ''; }
-        var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
-        if (data.action) {
-            $sel.attr('onchange', data.action);
-        }
-        if (data.blanco) {
-            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
-            $sel.append($('<option></option>').val(vb).text(''));
-        }
-        var opciones_sf = data.opciones_sf || {};
-        var opciones_sv = data.opciones_sv || {};
-        $.each(opciones_sf, function (value, label) {
-            $sel.append($('<option></option>').val(value).text(label));
-        });
-        if (Object.keys(opciones_sf).length > 0 && Object.keys(opciones_sv).length > 0) {
-            $sel.append($('<option></option>').prop('disabled', true).text('────────────────'));
-        }
-        $.each(opciones_sv, function (value, label) {
-            $sel.append($('<option></option>').val(value).text(label));
-        });
-        if (data.selected !== undefined && data.selected !== null && String(data.selected) !== '') {
-            $sel.val(String(data.selected));
-        }
-        return $sel.prop('outerHTML');
     }
 
     function commitCurrentEdit() {

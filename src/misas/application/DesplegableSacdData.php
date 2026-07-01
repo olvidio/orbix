@@ -6,6 +6,7 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\misas\application\services\InicialesSacdService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\shared\domain\helpers\OpcionesDesplegable;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 /**
@@ -162,15 +163,10 @@ class DesplegableSacdData
             $rows[] = ['value' => $key, 'label' => $label];
         }
 
-        $opciones = [];
-        foreach ($rows as $row) {
-            $opciones[(string)$row['value']] = (string)$row['label'];
-        }
-
         return [
             'id' => 'id_sacd',
             'rows' => $rows,
-            'opciones' => $opciones,
+            'opciones' => OpcionesDesplegable::desdeFilas($rows),
             'selected' => $firstKey,
         ];
     }

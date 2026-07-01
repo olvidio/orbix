@@ -44,7 +44,7 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $orden = 'nombre_ubi';
+        $orden = 'tipo_ctr, nombre_ubi';
         if (empty($sCondicion))
             $sCondicion = "WHERE active = 't'";
         $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $sCondicion ORDER BY $orden";

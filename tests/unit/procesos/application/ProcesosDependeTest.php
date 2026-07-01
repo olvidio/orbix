@@ -51,7 +51,7 @@ final class ProcesosDependeTest extends TestCase
             'valor_depende' => '12',
         ]);
 
-        $this->assertSame(['1' => 'T1'], $out['opciones']);
+        $this->assertSame([['1', 'T1']], $out['opciones']);
         $this->assertTrue($out['blanco']);
     }
 
@@ -68,7 +68,7 @@ final class ProcesosDependeTest extends TestCase
             'valor_depende' => '3',
         ]);
 
-        $this->assertSame(['2' => 'Prev'], $out['opciones']);
+        $this->assertSame([['2', 'Prev']], $out['opciones']);
         $this->assertTrue($out['blanco']);
     }
 }

@@ -67,14 +67,17 @@ $sasistentes = '';
 $sactividad = '';
 $snom_tipo = '';
 
+$urlMutacionAjax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_mutacion_ajax.php';
+
 $oHash = new HashFront();
-$camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!extendida!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!id_tarifa';
+$camposForm = actividades_calendario_form_hash_campos_form();
 $camposNo = 'id_tipo_activ!mod';
 $a_camposHidden = [
     'id_tipo_activ' => $id_tipo_activ,
     'id_ubi' => $Qid_ubi,
     'ssfsv' => $ssfsv,
 ];
+$oHash->setUrl($urlMutacionAjax);
 $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposForm($camposForm);
 $oHash->setCamposNo($camposNo);
@@ -90,9 +93,10 @@ $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labe
 $a_status = actividades_status_labels_from_payload($labelsRow);
 
 $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
-    'perm_jefe' => 'f',
+    'perm_jefe' => actividades_perm_jefe_tipo_activ() ? 't' : 'f',
     'id_tipo_activ' => $id_tipo_activ,
     'que' => '',
+    'evitar_procesos' => 't',
     'sfsv' => $ssfsv,
     'sasistentes' => $sasistentes,
     'sactividad' => $sactividad,
@@ -146,6 +150,7 @@ $a_campos = [
     'web_icons' => OrbixRuntime::getWebIcons(),
     'procesos_installed' => $procesos_installed,
     'locale_us' => OrbixRuntime::isLocaleUs(),
+    'calendario_hash_allow' => actividades_calendario_mutacion_serialize_allow_json(),
 ];
 
 $oView = new ViewNewTwig('frontend/actividades/controller');

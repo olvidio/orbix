@@ -4,6 +4,7 @@ namespace src\procesos\application;
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\shared\domain\helpers\OpcionesDesplegable;
 use function src\shared\domain\helpers\input_string;
 use function src\shared\domain\helpers\is_true;
 
@@ -20,7 +21,7 @@ class FasesActivCambioGet
 
     /**
      * @param array<string, mixed> $input
-     * @return array{id: string, opciones: array<int|string, string>, selected: string, blanco: bool, action: string}
+     * @return array{id: string, opciones: list<array{0: string, 1: string}>, selected: string, blanco: bool, action: string}
      */
     public function execute(array $input): array
     {
@@ -33,7 +34,7 @@ class FasesActivCambioGet
 
         return [
             'id' => 'id_fase_nueva',
-            'opciones' => $aOpciones,
+            'opciones' => OpcionesDesplegable::enOrden($aOpciones),
             'selected' => $Qid_fase_sel,
             'blanco' => true,
             'action' => 'fnjs_lista()',
