@@ -4,6 +4,7 @@ namespace src\actividadplazas\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividadplazas\application\services\ResumenPlazasService;
+use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\helpers\OpcionesDesplegable;
 use function src\shared\domain\helpers\input_int;
@@ -51,7 +52,7 @@ final class PosiblesPropietariosData
             return ['error' => sprintf((string)_("No se encuentra persona con id_nom %d"), $id_nom)];
         }
 
-        $obj_pau = str_replace("personas\\model\\entity\\", '', get_class($oPersona));
+        $obj_pau = PersonaRepositoryResolver::objPauFromInstance($oPersona);
         $dl_de_paso = false;
         if ($obj_pau === 'PersonaEx') {
             $dl = $oPersona->getDl();

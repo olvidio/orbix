@@ -3,6 +3,7 @@
 namespace src\profesores\domain;
 
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
+use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\entity\Persona;
 use src\profesores\domain\services\ProfesorStgrService;
 use function src\shared\domain\helpers\is_true;
@@ -38,8 +39,7 @@ class ProfesorActividad
                 $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 continue;
             }
-            $obj_persona = get_class($oPersona);
-            $obj_persona = str_replace("src\\personas\\domain\\entity\\", '', $obj_persona);
+            $obj_persona = PersonaRepositoryResolver::objPauFromInstance($oPersona);
             if ($obj_persona === 'PersonaDl') {
                 continue;
             }

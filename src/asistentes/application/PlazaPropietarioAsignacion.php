@@ -6,6 +6,7 @@ use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
+use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
 
@@ -60,7 +61,7 @@ final class PlazaPropietarioAsignacion implements PlazaPropietarioAsignacionInte
             return false;
         }
 
-        $obj_pau = str_replace('personas\\model\\entity\\', '', get_class($oPersona));
+        $obj_pau = PersonaRepositoryResolver::objPauFromInstance($oPersona);
         if ($obj_pau === 'PersonaEx') {
             $dl = $oPersona->getDl();
 

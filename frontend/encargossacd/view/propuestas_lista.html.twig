@@ -1,0 +1,265 @@
+
+<table>
+<tr><th colspan=4>{{ "Propuestas"|trans|raw }}</th></tr>
+<tr><th>{{ "grupo de ctrs" }}:
+{{ oDesplGrupoCtrs.desplegable()|raw }}
+</th></tr></table>
+
+<div id="lista" >
+</div>
+
+<style>
+<!--
+td{
+	vertical-align: middle;
+}
+.nom{
+	float:left;
+	margin-right: 10px;
+	text-decoration: underline;
+}
+.x{
+	display: block;
+	float:right;
+	clear:right; 
+	color: red;
+	cursor: pointer;
+}
+#lista table {
+	overflow: visible;
+}
+td.propuestas_popup_cell {
+	position: relative;
+	vertical-align: top;
+	overflow: visible;
+}
+div.propuestas_popup {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 100%;
+	margin-left: 0.35em;
+	z-index: 10;
+	min-width: 12em;
+	max-width: 28em;
+	max-height: 20em;
+	overflow: auto;
+	border-radius: 4px;
+	padding: 0.45em 0.55em;
+	border: 2px solid #5c6b7a;
+	box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.35);
+}
+#lista tr.propuestas_popup_row td {
+	background-color: #fff9d6 !important;
+}
+#lista tr.propuestas_popup_row td:first-child {
+	box-shadow: inset 4px 0 0 #c9a800;
+}
+-->
+</style>
+<script>
+fnjs_cerrar_propuesta_popup=function() {
+	$('#div_sacd').remove();
+	$('#lista td.propuestas_popup_cell').removeClass('propuestas_popup_cell');
+	$('#lista tr.propuestas_popup_row').removeClass('propuestas_popup_row selected_row');
+}
+
+fnjs_marcar_fila_propuesta=function($row) {
+	$('#lista tr.propuestas_popup_row').removeClass('propuestas_popup_row selected_row');
+	if ($row && $row.length) {
+		$row.addClass('propuestas_popup_row selected_row');
+	}
+}
+
+fnjs_abrir_propuesta_popup=function(tipo,id_item,html) {
+	fnjs_cerrar_propuesta_popup();
+	var $td=$('#td_'+id_item);
+	var txt="<div id=\"div_sacd\" class=\"tono2 propuestas_popup\">";
+	txt+=html;
+	txt+="</div>";
+	$td.addClass('propuestas_popup_cell');
+	$td.append(txt);
+	fnjs_marcar_fila_propuesta($('#tr_'+tipo+id_item));
+}
+
+fnjs_guardar_horario=function() {
+	event.preventDefault();
+    var datos=$('#modulos').serialize();
+	var url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';
+
+    request=$.ajax({
+        url: url_ajax,
+        data: datos,
+        type: 'post',
+        dataType: 'json'
+    });
+    request.done( function (json) {
+        if (json.success != true) {
+            alert (json.mensaje);
+        } else {
+            fnjs_cerrar_propuesta_popup();
+            fnjs_lista_propuestas();
+        }
+    });
+	
+	
+}
+
+fnjs_dedicacion=function(tipo,id_item,id_enc){
+	var id='#'+tipo+'_'+id_item;
+	var id_sacd=$(id).attr("title");
+	var id_td='#td_'+id_item;
+
+	if (id_sacd == 1) {
+		alert ("{{ "Primero debe introducir un sacd"|trans|raw }}");
+	} else {
+        var url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';
+        var parametros='que=dedicacion&id_sacd='+id_sacd+'&id_item='+id_item+'&id_enc='+id_enc+'{{ h_dedicacion|raw }}';
+        request=$.ajax({
+            data: parametros,
+            url: url_ajax,
+            type: 'post',
+            dataType: 'json'
+        });
+        request.done( function (json) {
+            if (json.success != true) {
+                alert (json.mensaje);
+            } else {
+                fnjs_abrir_propuesta_popup(tipo, id_item, json.html);
+            }
+        });
+	}
+	
+}
+
+fnjs_info=function(tipo,id_item){
+	var id='#'+tipo+'_'+id_item;
+	var id_sacd=$(id).attr("title");
+	var id_td='#td_'+id_item;
+
+	if (id_sacd == 1) {
+		alert ("{{ "Primero debe introducir un sacd"|trans|raw }}");
+	} else {
+        var url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';
+        var parametros='que=info&id_sacd='+id_sacd+'{{ h_info|raw }}';
+        request=$.ajax({
+            data: parametros,
+            url: url_ajax,
+            type: 'post',
+            dataType: 'json'
+        });
+        request.done( function (json) {
+            if (json.success != true) {
+                alert (json.mensaje);
+            } else {
+                fnjs_abrir_propuesta_popup(tipo, id_item, json.html);
+            }
+        });
+	}
+	
+}
+
+fnjs_ver_sacd_posibles=function(tipo,id_item,id_enc){
+	var id='#'+tipo+'_'+id_item;
+	var id_sacd=$(id).attr("title");
+	var id_tr='#tr_'+tipo+id_item;
+	var id_td='#td_'+id_item;
+	
+	var url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';
+    var parametros='que=lista_sacd&tipo='+tipo+'&id_item='+id_item+'&id_enc='+id_enc+'&id_sacd='+id_sacd+'{{ h_cmb|raw }}';
+    request=$.ajax({
+        data: parametros,
+        url: url_ajax,
+        type: 'post',
+        dataType: 'json'
+    });
+    request.done( function (json) {
+        if (json.success != true) {
+            alert (json.mensaje);
+        } else {
+            fnjs_abrir_propuesta_popup(tipo, id_item, json.html);
+        }
+    });
+	
+}
+
+fnjs_cmb_sacd=function(tipo,id_item,id_enc){
+	var id_old='#old_'+tipo+'_'+id_item;
+	var id_tr='#tr_'+tipo+id_item;
+	var id_nom='#'+tipo+'_'+id_item;
+	var id_sacd=$('#prop_sacd').val();
+	var id_sacd_old=$(id_tr).attr("title");
+
+	var url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';
+    var parametros='que=cmb_sacd&tipo='+tipo+'&id_item='+id_item+'&id_enc='+id_enc+'&id_sacd='+id_sacd+'{{ h_cmb|raw }}';
+    request=$.ajax({
+        data: parametros,
+        url: url_ajax,
+        type: 'post',
+        dataType: 'json'
+    });
+    request.done( function (json) {
+        if (json.success != true) {
+            alert (json.mensaje);
+        } else {
+            nombre_new=json.nombre;
+            id_sacd_new=json.id_sacd;
+            html=json.html;
+            if (html) {
+                if (html == 'borrar') {
+                    $(id_tr).remove();
+                } else {
+                    if (tipo=='colaborador') {
+                    	$(id_tr).before(html);
+                    } else {
+                    	$(id_tr).html(html);
+                    }
+                }
+            } else {
+                if (id_sacd != id_sacd_old) {
+                    $(id_tr).removeClass( "sf" ).addClass( "sf" );
+                    $(id_nom).html(nombre_new);
+                    $(id_nom).attr("title",id_sacd_new);
+                } else {
+                    $(id_tr).removeClass( "sf" );
+                }
+            }
+        }
+        fnjs_cerrar_propuesta_popup();
+    });
+	
+}
+
+
+fnjs_lista_propuestas=function(){
+	filtro_ctr=$('#filtro_ctr').val();
+
+	var url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';
+    var parametros='que=get_lista&filtro_ctr='+filtro_ctr+'{{ h|raw }}';
+    request=$.ajax({
+        data: parametros,
+        url: url_ajax,
+        type: 'post',
+        dataType: 'json'
+    });
+    request.done( function (json) {
+        if (json.success != true) {
+            alert (json.mensaje);
+        } else {
+            fnjs_cerrar_propuesta_popup();
+            html = json.lista;
+            // Volver a la lista...
+            $('#lista').html(html);
+        }
+    });
+}
+
+$(document).ready(function () {
+	$('#lista').on('click', '#div_sacd, #div_sacd *', function (e) {
+		e.stopPropagation();
+	});
+	$('#lista').on('click', function () {
+		fnjs_cerrar_propuesta_popup();
+	});
+});
+</script>

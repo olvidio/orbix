@@ -1177,7 +1177,7 @@ if ($guardar_json) {
     $txt_pgRepositorio .= $guardar_json;
 }
 $txt_pgRepositorio .= '
-		array_walk($aDatos, \'core\\poner_null\');';
+		array_walk($aDatos, \'src\\shared\\domain\\helpers\\poner_null\');';
 if ($err_bool) {
     $txt_pgRepositorio .= "\n\t\t//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:";
     $txt_pgRepositorio .= $err_bool;

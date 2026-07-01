@@ -186,7 +186,7 @@
 100	5	frontend/actividadtarifas/controller/tarifa.php	\N	Tarifa definir
 165	1	public/ayuda/index.php	\N	Ayuda
 137	26	frontend/cambios/controller/avisos_generar.php	\N	lista avisos
-87	21	apps/encargossacd/controller/propuestas_menu.php	\N	propuestas encargos sacd
+87	21	frontend/encargossacd/controller/propuestas_menu.php	\N	propuestas encargos sacd
 192	2	frontend/devel_db_admin/controller/db_cambiar_nombre_que.php	\N	cambiar nombre dl
 1	7	\N	\N	Raiz stgr 2
 61	6	frontend/asistentes/controller/planning_que.php	\N	planning

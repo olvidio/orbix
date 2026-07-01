@@ -35,8 +35,7 @@
   "autoload": {
         "psr-4": {
           "frontend\\": "frontend/",
-          "src\\": "src/",
-          "": "apps/"
+          "src\\": "src/"
         },
         "files": [
           "frontend/shared/helpers/func_tablas.php",

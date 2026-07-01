@@ -13,6 +13,7 @@ use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
@@ -83,7 +84,7 @@ final class MatriculaAutomatica
             if ($oPersona === null) {
                 return sprintf(_('No se ha encontrado a la persona con id: %s'), $Qid_nom);
             }
-            $classname = str_replace('personas\\model\\entity\\', '', get_class($oPersona));
+            $classname = PersonaRepositoryResolver::objPauFromInstance($oPersona);
 
             if ($classname === 'PersonaEx') {
                 $cAlumnos = $this->personaExRepository->getPersonas($aWhere, $aOperador);

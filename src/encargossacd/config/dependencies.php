@@ -22,6 +22,14 @@ use src\encargossacd\application\ListasAData;
 use src\encargossacd\application\ListasBData;
 use src\encargossacd\application\ListasCData;
 use src\encargossacd\application\ListasClData;
+use src\encargossacd\application\PropuestasCentrosPorFiltro;
+use src\encargossacd\application\PropuestasAjaxDispatch;
+use src\encargossacd\application\PropuestasAjaxGetLista;
+use src\encargossacd\application\PropuestasAjaxMutations;
+use src\encargossacd\application\PropuestasAprobar;
+use src\encargossacd\application\PropuestasCrearTabla;
+use src\encargossacd\application\PropuestasListaEncData;
+use src\encargossacd\application\PropuestasListaSacdData;
 use src\encargossacd\application\ListasComCtrData;
 use src\encargossacd\application\ListasComSacdData;
 use src\encargossacd\application\ListasComTxtData;
@@ -35,6 +43,11 @@ use src\encargossacd\application\SacdAusenciasUpdate;
 use src\encargossacd\application\SacdFichaData;
 use src\encargossacd\application\SacdFichaUpdate;
 use src\encargossacd\application\SacdSelectData;
+use src\encargossacd\application\services\PropuestasAprobarService;
+use src\encargossacd\application\services\PropuestasEncargosUbiHtml;
+use src\encargossacd\application\services\PropuestasHorarioTexto;
+use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
+use src\encargossacd\domain\contracts\PropuestaEncargoSacdRepositoryInterface;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\application\traits\EncargoFunciones;
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
@@ -53,6 +66,8 @@ use src\encargossacd\infrastructure\persistence\postgresql\PgEncargoSacdObservRe
 use src\encargossacd\infrastructure\persistence\postgresql\PgEncargoSacdRepository;
 use src\encargossacd\infrastructure\persistence\postgresql\PgEncargoTextoRepository;
 use src\encargossacd\infrastructure\persistence\postgresql\PgEncargoTipoRepository;
+use src\encargossacd\infrastructure\persistence\postgresql\PgPropuestaEncargoSacdHorarioRepository;
+use src\encargossacd\infrastructure\persistence\postgresql\PgPropuestaEncargoSacdRepository;
 use function DI\autowire;
 
 return [
@@ -102,5 +117,20 @@ return [
     SacdAusenciasUpdate::class => autowire(SacdAusenciasUpdate::class),
     SacdFichaData::class => autowire(SacdFichaData::class),
     SacdFichaUpdate::class => autowire(SacdFichaUpdate::class),
+    PropuestaEncargoSacdRepositoryInterface::class => autowire(PgPropuestaEncargoSacdRepository::class),
+    PropuestaEncargoSacdHorarioRepositoryInterface::class => autowire(PgPropuestaEncargoSacdHorarioRepository::class),
+
+    PropuestasHorarioTexto::class => autowire(PropuestasHorarioTexto::class),
+    PropuestasEncargosUbiHtml::class => autowire(PropuestasEncargosUbiHtml::class),
+    PropuestasAprobarService::class => autowire(PropuestasAprobarService::class),
+    PropuestasCrearTabla::class => autowire(PropuestasCrearTabla::class),
+    PropuestasAprobar::class => autowire(PropuestasAprobar::class),
+    PropuestasListaEncData::class => autowire(PropuestasListaEncData::class),
+    PropuestasAjaxGetLista::class => autowire(PropuestasAjaxGetLista::class),
+    PropuestasCentrosPorFiltro::class => autowire(PropuestasCentrosPorFiltro::class),
+    PropuestasAjaxMutations::class => autowire(PropuestasAjaxMutations::class),
+    PropuestasAjaxDispatch::class => autowire(PropuestasAjaxDispatch::class),
+    PropuestasListaSacdData::class => autowire(PropuestasListaSacdData::class),
+
     SacdSelectData::class => autowire(SacdSelectData::class),
 ];

@@ -31,6 +31,14 @@ final class PersonaRepositoryResolver
     }
 
     /**
+     * Nombre corto de entidad persona (`PersonaN`, `PersonaEx`, …) desde una instancia DDD.
+     */
+    public static function objPauFromInstance(object $persona): string
+    {
+        return (new \ReflectionClass($persona))->getShortName();
+    }
+
+    /**
      * Mapa `id_tabla` -> `obj_pau`.
      *
      * Mantiene todos los alias usados historicamente por el modulo

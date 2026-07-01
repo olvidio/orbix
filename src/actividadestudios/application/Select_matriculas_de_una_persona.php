@@ -11,6 +11,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\application\DossierTipoPublicUrls;
+use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
@@ -124,7 +125,7 @@ class Select_matriculas_de_una_persona
             throw new \Exception(sprintf(_("No se ha encontrado alumno con id_nom: %s"), $this->id_pau));
         }
         $dl_alumno = $oAlumno->getDl();
-        $classname = str_replace("personas\\model\\entity\\", '', get_class($oAlumno));
+        $classname = PersonaRepositoryResolver::objPauFromInstance($oAlumno);
         $this->permiso = 3;
         if ($classname === 'PersonaEx') {
             $this->permiso = 3;

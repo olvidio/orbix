@@ -7,7 +7,7 @@ use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\DBConnection;
 
-require dirname(__DIR__) . '/apps/core/global_header.inc';
+require dirname(__DIR__) . '/src/shared/global_header.inc';
 
 final class VoDbValidatorCli
 {

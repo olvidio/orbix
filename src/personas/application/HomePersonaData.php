@@ -8,6 +8,7 @@ use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\application\support\PersonaSeleccionInput;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
+use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
@@ -80,7 +81,7 @@ final class HomePersonaData
         $observ = (string)($oPersona->getObserv() ?? '');
 
         // PersonaDl generico => subclase real segun id_tabla.
-        if (get_class($oPersona) === 'src\\personas\\domain\\entity\\PersonaDl') {
+        if ($oPersona instanceof PersonaDl) {
             $map = [
                 'n' => 'PersonaN',
                 'a' => 'PersonaAgd',

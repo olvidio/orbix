@@ -13,7 +13,7 @@ estado_revision: revisado_parcial
 
 | Texto | Controller |
 |-------|------------|
-| **Propuestas** | `propuestas_menu.php` |
+| **Propuestas** | `frontend/encargossacd/controller/propuestas_menu.php` |
 | **Ficha ctr** | `ctr_ficha.php` |
 | **Ficha sacd** | `sacd_ficha.php` |
 | **Listados** | `listas_index.php` |
