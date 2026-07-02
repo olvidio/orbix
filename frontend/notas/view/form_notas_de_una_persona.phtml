@@ -12,7 +12,9 @@ $epoca_ca = (int)($neVo['EPOCA_CA'] ?? 0);
 $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
 
 ?>
+<script>
 <?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>
+</script>
 <script>
     $(function () {
         $("#f_acta").datepicker();

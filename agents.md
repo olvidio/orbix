@@ -736,7 +736,7 @@ return [
   - **Dentro de un `<script>` ya abierto:** `{% include "@shared/_fnjs_construir_desplegable.inc.html.twig" %}` (solo JS, sin etiquetas `<script>`).
   - **Bloque `<script>` autónomo:** `{% include "@shared/fnjs_construir_desplegable.html.twig" %}` (envuelve el `.inc` en `<script>…</script>`).
   - `ViewNewTwig` registra `frontend/shared/view` como namespace `@shared`. **No** usar rutas relativas tipo `../../shared/view/...`. **No** incluir el `.html.twig` completo dentro de otro `<script>` (anida `<script>` y el navegador cierra el bloque externo al primer `</script>`).
-- PHTML: `<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>` (misma regla: el `.inc.phtml` lleva `<script>` propio; incluirlo **fuera** de otro `<script>` o refactorizar a JS sin etiquetas).
+- PHTML: `<?php require __DIR__ . '/../../shared/view/_fnjs_construir_desplegable.inc.phtml'; ?>` **dentro** de un `<script>…</script>` (el `.inc.phtml` es solo JS, sin etiquetas; igual que el `.inc.html.twig`). Para un bloque autónomo: `<script><?php require … ?></script>`.
 
 Funciones expuestas: `fnjs_construir_desplegable` (envelope JSON o payload directo), `fnjs_construir_desplegable_payload`, `fnjs_construir_desplegable_centros_payload`, `fnjs_desplegable_append_opciones`.
 
