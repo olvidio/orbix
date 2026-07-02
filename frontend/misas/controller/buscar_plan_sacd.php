@@ -33,6 +33,10 @@ $oDesplSacd->setAction('fnjs_ver_plan_sacd()');
 if ($sacd_selected !== '') {
     $oDesplSacd->setOpcion_sel($sacd_selected);
 }
+$msg = '';
+if (empty($a_sacd)) {
+    $msg = _('No hay SACD disponibles porque: Usuario sin csv_id_pau, que no es jefe de zona, ni p-sacd, ni Oficial_dl, ni jefe de calendario');
+}
 
 $url_ver_plan_sacd = 'frontend/misas/controller/ver_plan_sacd.php';
 $oHashPlanSacd = new HashFront();
@@ -45,6 +49,7 @@ $a_campos = [
     'periodo_td_html' => $periodo_td_html,
     'url_ver_plan_sacd' => $url_ver_plan_sacd,
     'h_plan_sacd' => $h_plan_sacd,
+    'msg' => $msg,
 ];
 
 ajax_json_render_phtml('frontend\\misas\\controller', 'buscar_plan_sacd.phtml', $a_campos);
