@@ -2,6 +2,7 @@
 
 namespace src\encargossacd\application\services;
 
+use src\encargossacd\db\DBPropuestas;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
@@ -53,8 +54,7 @@ final class PropuestasAprobarService
             }
         }
 
-        $this->propuestaHorarioRepository->borrarTabla();
-        $this->propuestaEncargoSacdRepository->borrarTabla();
+        (new DBPropuestas())->eliminarAll();
 
         return _('Hecho!');
     }

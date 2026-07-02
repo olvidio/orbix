@@ -17,10 +17,6 @@ interface PropuestaEncargoSacdRepositoryInterface
 
     public function existenLasTablas(): bool;
 
-    public function crearTabla(): bool;
-
-    public function borrarTabla(): bool;
-
     public function Guardar(PropuestaEncargoSacd $propuesta): bool;
 
     public function Eliminar(PropuestaEncargoSacd $propuesta): bool;
