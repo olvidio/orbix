@@ -553,10 +553,10 @@ include_once ConfigGlobal::$dir_estilos . '/colores.php';
 		text-align: left;
 	}
 	/* ### menu ### */
-	#menu,
-	#submenu {
+	body:not(.layout-legacy) #menu,
+	body:not(.layout-legacy) #submenu {
 		position: relative;
-		z-index: 1000; /* misma capa que burger/pills: desplegables UDM por encima de #main y #left_slide */
+		z-index: 1000; /* desplegables por encima de #main y #left_slide (layouts sin shell fijo) */
 	}
 	#menu li {
 		font-size : 11pt;

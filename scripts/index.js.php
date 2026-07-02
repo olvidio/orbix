@@ -1119,12 +1119,15 @@ if (!isset($h)) {
         $(bloque).empty().append(myText);
         if (bloque === '#main') {
             fnjs_cerrar_ventana_modal();
+            if (typeof legacyAfterMainNavigation === 'function') {
+                legacyAfterMainNavigation();
+            }
         }
         fnjs_ventana_ajustar(bloque);
         fnjs_cambiar_link(bloque);
         // Destacar filas seleccionadas inicialmente en tablas HTML
         $(bloque).find('table input.sel:checked').closest('tr').addClass('selected_row');
-        if (bloque === '#main') {
+        if (bloque === '#main' && typeof legacyAfterMainNavigation !== 'function') {
             // Tras AJAX en #main, UDM puede quedar con um.tr/um.n incoherentes; refrescar evita errores en consola (cck/contains).
             setTimeout(function () {
                 try {
@@ -1134,6 +1137,8 @@ if (!isset($h)) {
                 } catch (e) {
                 }
             }, 0);
+        }
+        if (bloque === '#main') {
             setTimeout(function () {
                 sessionStorage.removeItem('is_back_navigation');
             }, 1000);

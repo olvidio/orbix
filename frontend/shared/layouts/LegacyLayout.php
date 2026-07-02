@@ -121,6 +121,8 @@ class LegacyLayout implements LayoutInterface
               href="<?= OrbixRuntime::getWebScripts() ?>/udm4-php/udm-resources/udm-style.php"
               media="screen, projection"/>
         <?php
+        include_once (OrbixRuntime::dirEstilos() . '/layout_legacy.css.php');
+
         switch ($tipo_menu) {
             case 'horizontal':
                 include_once (OrbixRuntime::dirEstilos() . '/menu_horizontal.css.php');
@@ -135,7 +137,19 @@ class LegacyLayout implements LayoutInterface
 
     public function includeJs(array $params): string
     {
-        return '';
+        ob_start();
+        ?>
+        <script>
+            if (!window.__orbixLayoutLegacyJsLoaded) {
+                window.__orbixLayoutLegacyJsLoaded = true;
+            <?php
+            include_once OrbixRuntime::dirScripts() . '/layout_legacy.js.php';
+            ?>
+            }
+        </script>
+        <?php
+
+        return (string) ob_get_clean();
     }
 
     public function renderHtml(array $htmlComponents, array $params): string
@@ -145,7 +159,9 @@ class LegacyLayout implements LayoutInterface
         $gm = self::scalarInt($params['gm'] ?? 0);
 
         ob_start();
-
+        ?>
+        <div class="orbix-layout-legacy" id="orbixLegacyShell">
+        <?php
         if ($gm > 1) {
             echo $html_barra;
         }
@@ -163,6 +179,7 @@ class LegacyLayout implements LayoutInterface
             <ul id="udm" class="udm">
                 <?= $li_submenus ?>
             </ul>
+        </div>
         </div>
         <?php
 

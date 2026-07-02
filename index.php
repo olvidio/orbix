@@ -393,7 +393,7 @@ $portada_html = ob_get_clean();
     ?>
 </head>
 
-<body class="otro<?= $layout === 'pills' ? ' layout-pills' : ($layout === 'pills2' ? ' layout-pills2' : '') ?>" id="body">
+<body class="otro<?= $layout === 'pills' ? ' layout-pills' : ($layout === 'pills2' ? ' layout-pills2' : ($layout === 'legacy' ? ' layout-legacy' : '')) ?>" id="body">
 <?php
 // Render the final HTML structure
 $renderParams = [
