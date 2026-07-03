@@ -1,19 +1,19 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
-$data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/ubis_eliminar', [
+$data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/ubis_eliminar', [
     'obj_pau' => (string)filter_input(INPUT_POST, 'obj_pau'),
     'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),
 ]));
-$error = ubis_api_error($data);
+$error = UbisPayload::apiError($data);
 if ($error !== '') {
-    ajax_json_response($error);
+    AjaxJsonSupport::response($error);
 }
-ajax_json_response();
+AjaxJsonSupport::response();

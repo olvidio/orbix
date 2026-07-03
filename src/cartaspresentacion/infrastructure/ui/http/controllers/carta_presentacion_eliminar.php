@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: elimina una `CartaPresentacion`.
  */
@@ -7,11 +10,9 @@ use src\cartaspresentacion\application\CartaPresentacionEliminar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-use function src\shared\domain\helpers\input_int;
-
 $input = [
-    'id_ubi' => input_int($_POST, 'id_ubi'),
-    'id_direccion' => input_int($_POST, 'id_direccion'),
+    'id_ubi' => FuncTablasSupport::inputInt($_POST, 'id_ubi'),
+    'id_direccion' => FuncTablasSupport::inputInt($_POST, 'id_direccion'),
 ];
 
 /** @var CartaPresentacionEliminar $useCase */

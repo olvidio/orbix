@@ -20,8 +20,6 @@ use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\DispatchesDomainEvents;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla d_cargos_activ_dl a la interfaz del repositorio

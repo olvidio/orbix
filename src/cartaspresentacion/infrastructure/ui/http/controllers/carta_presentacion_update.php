@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: crea / actualiza una `CartaPresentacion`.
  */
@@ -7,17 +10,14 @@ use src\cartaspresentacion\application\CartaPresentacionUpdate;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 $input = [
-    'id_ubi' => input_int($_POST, 'id_ubi'),
-    'id_direccion' => input_int($_POST, 'id_direccion'),
-    'pres_nom' => input_string($_POST, 'pres_nom'),
-    'pres_telf' => input_string($_POST, 'pres_telf'),
-    'pres_mail' => input_string($_POST, 'pres_mail'),
-    'zona' => input_string($_POST, 'zona'),
-    'observ' => input_string($_POST, 'observ'),
+    'id_ubi' => FuncTablasSupport::inputInt($_POST, 'id_ubi'),
+    'id_direccion' => FuncTablasSupport::inputInt($_POST, 'id_direccion'),
+    'pres_nom' => FuncTablasSupport::inputString($_POST, 'pres_nom'),
+    'pres_telf' => FuncTablasSupport::inputString($_POST, 'pres_telf'),
+    'pres_mail' => FuncTablasSupport::inputString($_POST, 'pres_mail'),
+    'zona' => FuncTablasSupport::inputString($_POST, 'zona'),
+    'observ' => FuncTablasSupport::inputString($_POST, 'observ'),
 ];
 
 /** @var CartaPresentacionUpdate $useCase */

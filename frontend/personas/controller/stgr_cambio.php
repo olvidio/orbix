@@ -1,28 +1,28 @@
 <?php
-
 namespace frontend\personas\controller;
 
+use frontend\personas\helpers\PersonasPayload;
+use frontend\personas\helpers\PersonasPostInput;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Formulario para cambiar el `nivel_stgr` de una persona.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/personas_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
-list_nav_persist_selection_to_posicion($oPosicion, 1);
+ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 
-$ids = personas_id_from_sel_post();
+$ids = PersonasPostInput::idFromSelPost();
 $id_nom = $ids['id_nom'];
 $id_tabla = $ids['id_tabla'];
 
@@ -32,8 +32,8 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/personas/stgr_cambio_data', $campos);
-$payload = personas_post_payload($data);
-$view = personas_stgr_cambio_from_payload($payload);
+$payload = PersonasPayload::postPayload($data);
+$view = PersonasPayload::stgrCambioFromPayload($payload);
 
 $nom = $view['nom'];
 $stgr = $view['nivel_stgr'];

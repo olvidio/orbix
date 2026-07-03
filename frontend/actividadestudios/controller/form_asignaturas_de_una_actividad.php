@@ -1,5 +1,11 @@
 <?php
 
+use frontend\actividadestudios\helpers\ActividadestudiosDesplegableSupport;
+use frontend\actividadestudios\helpers\FormAsignaturasPayload;
+use frontend\actividadestudios\helpers\ActividadestudiosRenderSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Form de alta / edicion de una `ActividadAsignatura` desde el dossier
  * `asignaturas_de_una_actividad` (3005).
@@ -15,16 +21,14 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/actividadestudios_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $obj = 'ActividadAsignatura';
 
-list_nav_boot_dossier_child_recordar($oPosicion);
+ListNavSupport::bootDossierChildRecordar($oPosicion);
 
-$Qpau = tessera_imprimir_string(filter_input(INPUT_POST, 'pau'));
+$Qpau = PayloadCoercion::string(filter_input(INPUT_POST, 'pau'));
 
 $a_sel = (array) filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $camposAsig = [
@@ -37,11 +41,11 @@ if (!empty($a_sel)) {
     $camposAsig['sel'] = $a_sel;
 }
 
-$raw = actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/form_asignaturas_de_una_actividad_data', $camposAsig));
+$raw = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/form_asignaturas_de_una_actividad_data', $camposAsig));
 if (!empty($raw['error'])) {
-    exit(tessera_imprimir_string($raw['error']));
+    exit(PayloadCoercion::string($raw['error']));
 }
-$d = actividadestudios_form_asignaturas_from_payload($raw);
+$d = FormAsignaturasPayload::fromPayload($raw);
 
 $mod = $d['mod'];
 $Qid_activ = $d['id_activ'];
@@ -57,7 +61,7 @@ $oDesplProfesores = new Desplegable();
 $oDesplProfesores->setOpciones($d['oDesplProfesores_opciones']);
 $oDesplProfesores->setNombre('id_profesor');
 $oDesplProfesores->setBlanco('t');
-$oDesplProfesores->setOpcion_sel(actividadestudios_desplegable_opcion_sel($d['id_profesor_sel']));
+$oDesplProfesores->setOpcion_sel(ActividadestudiosDesplegableSupport::opcionSel($d['id_profesor_sel']));
 
 $oDesplAsignaturas = [];
 if ($d['oDesplAsignaturas_opciones'] !== []) {

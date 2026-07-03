@@ -2,9 +2,6 @@
 
 namespace src\asistentes\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use Psr\Container\ContainerInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -15,7 +12,7 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\shared\config\ConfigGlobal;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Dossier actividades de una persona (1301). Datos puros para el formulario;
@@ -39,10 +36,10 @@ final class FormActividadesDeUnaPersonaData
      */
     public function build(array $input): array
     {
-        $Qid_nom = input_int($input, 'id_pau', 0);
-        $obj_pau = input_string($input, 'obj_pau');
-        $id_tipo_post = input_string($input, 'id_tipo');
-        $que_dl = input_string($input, 'que_dl');
+        $Qid_nom = FuncTablasSupport::inputInt($input, 'id_pau', 0);
+        $obj_pau = FuncTablasSupport::inputString($input, 'obj_pau');
+        $id_tipo_post = FuncTablasSupport::inputString($input, 'id_tipo');
+        $que_dl = FuncTablasSupport::inputString($input, 'que_dl');
 
         $a_sel = (array)($input['sel'] ?? []);
         $id_activ_edit = 0;
@@ -122,9 +119,9 @@ final class FormActividadesDeUnaPersonaData
             $nom_activ = '';
         }
 
-        $propio_chk = (!empty($propio) && is_true($propio)) ? 'checked' : '';
-        $falta_chk = (!empty($falta) && is_true($falta)) ? 'checked' : '';
-        $est_chk = (!empty($est_ok) && is_true($est_ok)) ? 'checked' : '';
+        $propio_chk = (!empty($propio) && FuncTablasSupport::isTrue($propio)) ? 'checked' : '';
+        $falta_chk = (!empty($falta) && FuncTablasSupport::isTrue($falta)) ? 'checked' : '';
+        $est_chk = (!empty($est_ok) && FuncTablasSupport::isTrue($est_ok)) ? 'checked' : '';
 
         $plazas_installed = ConfigGlobal::is_app_installed('actividadplazas');
         $plaza_opciones = [];

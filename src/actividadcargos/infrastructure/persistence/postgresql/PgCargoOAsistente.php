@@ -9,10 +9,10 @@ use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividadcargos\domain\entity\CargoOAsistente;
 use src\actividades\domain\entity\ActividadAll;
 use src\personas\domain\entity\PersonaGlobal;
-use function src\shared\domain\helpers\is_true;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\StoresPdoErrorTxt;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * GestorCargoOAsistente — lista de objetos CargoOAsistente.
@@ -67,7 +67,7 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
             $oCargoOAsistente = new CargoOAsistente($id_activ);
             $oCargoOAsistente->setId_nom($iid_nom);
             if (isset($aDades['propio'])) {
-                $oCargoOAsistente->setPropio(is_true($aDades['propio']) ?? false);
+                $oCargoOAsistente->setPropio(FuncTablasSupport::isTrue($aDades['propio']) ?? false);
             }
             $oCargoOAsistenteSet->add($oCargoOAsistente);
             $aRepe[] = $id_activ;

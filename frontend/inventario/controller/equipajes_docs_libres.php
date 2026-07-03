@@ -1,11 +1,11 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qid_equipaje = (string)filter_input(INPUT_POST, 'id_equipaje');
@@ -17,7 +17,7 @@ $a_campos_backend = [
     'id_tipo_doc' => $Qid_tipo_doc,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$a_valores = inventario_docs_libres_rows(inventario_post_payload($data)['a_valores'] ?? []);
+$a_valores = InventarioPayload::docsLibresRows(InventarioPayload::postPayload($data)['a_valores'] ?? []);
 
 $txt = '<br>';
 foreach ($a_valores as $a_valor) {
@@ -26,4 +26,4 @@ foreach ($a_valores as $a_valor) {
     $txt .= $a_valor['identificador'] . ' ' . $a_valor['etiqueta'];
     $txt .= '<br>';
 }
-ajax_json_html($txt);
+AjaxJsonSupport::html($txt);

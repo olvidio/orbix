@@ -6,8 +6,7 @@ use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\entity\Persona;
 use src\profesores\domain\services\ProfesorStgrService;
-use function src\shared\domain\helpers\is_true;
-use function src\shared\domain\helpers\usort_profesores_por_apellidos;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * GestorProfesor — lista de profesores para actividades.
@@ -47,7 +46,7 @@ class ProfesorActividad
                 continue;
             }
             $profesor_stgr = $oPersona->isProfesor_stgr();
-            if (!is_true($profesor_stgr)) {
+            if (!FuncTablasSupport::isTrue($profesor_stgr)) {
                 continue;
             }
 
@@ -61,7 +60,7 @@ class ProfesorActividad
                 'nom' => $oPersona->getNomVo()?->value() ?? '',
             ];
         }
-        usort_profesores_por_apellidos($aProfesoresEx);
+        FuncTablasSupport::usortProfesoresPorApellidos($aProfesoresEx);
 
         $aOpciones = [];
         foreach ($aProfesoresEx as $aClave) {

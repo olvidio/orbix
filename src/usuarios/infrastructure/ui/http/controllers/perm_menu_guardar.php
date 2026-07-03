@@ -1,5 +1,6 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\entity\PermMenu;
@@ -7,9 +8,9 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qid_item = (integer)filter_post('id_item');
-$Qid_usuario = (integer)filter_post('id_usuario');
-$Qmenu_perm = (array)filter_post('menu_perm', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_item = (integer)FilterPostGet::post('id_item');
+$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
+$Qmenu_perm = (array)FilterPostGet::post('menu_perm', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $PermMenuRepository = DependencyResolver::get(PermMenuRepositoryInterface::class);
 if (empty($Qid_item)) {

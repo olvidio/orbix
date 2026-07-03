@@ -3,10 +3,9 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\usuarios\application\PreferenciaTablaData;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FuncTablasSupport;
 
-use function src\shared\domain\helpers\input_string;
-
-$id_tabla = input_string($_POST, 'id_tabla');
+$id_tabla = FuncTablasSupport::inputString($_POST, 'id_tabla');
 
 /** @var PreferenciaTablaData $useCase */
 $useCase = DependencyResolver::get(PreferenciaTablaData::class);

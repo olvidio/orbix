@@ -20,9 +20,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\usuarios\domain\value_objects\IdLocale;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 class ActividadNueva
 {
     public function __construct(
@@ -39,27 +37,27 @@ class ActividadNueva
      */
     public function actividadNueva(array $datosActividad): string
     {
-        $Qdl_org = input_string($datosActividad, 'dl_org');
+        $Qdl_org = FuncTablasSupport::inputString($datosActividad, 'dl_org');
         $Qpublicado = filter_var($datosActividad['publicado'] ?? false, FILTER_VALIDATE_BOOLEAN);
-        $Qid_tipo_activ = input_string($datosActividad, 'id_tipo_activ');
-        $Qnom_activ = input_string($datosActividad, 'nom_activ');
-        $Qf_ini = input_string($datosActividad, 'f_ini');
-        $Qf_fin = input_string($datosActividad, 'f_fin');
-        $Qstatus = input_int($datosActividad, 'status');
-        $Qid_ubi = input_int($datosActividad, 'id_ubi');
-        $Qlugar_esp = input_string($datosActividad, 'lugar_esp');
-        $Qdesc_activ = input_string($datosActividad, 'desc_activ');
+        $Qid_tipo_activ = FuncTablasSupport::inputString($datosActividad, 'id_tipo_activ');
+        $Qnom_activ = FuncTablasSupport::inputString($datosActividad, 'nom_activ');
+        $Qf_ini = FuncTablasSupport::inputString($datosActividad, 'f_ini');
+        $Qf_fin = FuncTablasSupport::inputString($datosActividad, 'f_fin');
+        $Qstatus = FuncTablasSupport::inputInt($datosActividad, 'status');
+        $Qid_ubi = FuncTablasSupport::inputInt($datosActividad, 'id_ubi');
+        $Qlugar_esp = FuncTablasSupport::inputString($datosActividad, 'lugar_esp');
+        $Qdesc_activ = FuncTablasSupport::inputString($datosActividad, 'desc_activ');
         $Qprecio = $datosActividad['precio'] ?? null;
-        $Qnum_asistentes = input_int($datosActividad, 'num_asistentes');
-        $Qobserv = input_string($datosActividad, 'observ');
-        $Qnivel_stgr = input_int($datosActividad, 'nivel_stgr');
-        $Qid_repeticion = input_int($datosActividad, 'id_repeticion');
-        $Qobserv_material = input_string($datosActividad, 'observ_material');
-        $Qtarifa = input_int($datosActividad, 'tarifa');
-        $Qh_ini = input_string($datosActividad, 'h_ini');
-        $Qh_fin = input_string($datosActividad, 'h_fin');
-        $Qplazas = input_int($datosActividad, 'plazas');
-        $Qidioma = input_string($datosActividad, 'idioma');
+        $Qnum_asistentes = FuncTablasSupport::inputInt($datosActividad, 'num_asistentes');
+        $Qobserv = FuncTablasSupport::inputString($datosActividad, 'observ');
+        $Qnivel_stgr = FuncTablasSupport::inputInt($datosActividad, 'nivel_stgr');
+        $Qid_repeticion = FuncTablasSupport::inputInt($datosActividad, 'id_repeticion');
+        $Qobserv_material = FuncTablasSupport::inputString($datosActividad, 'observ_material');
+        $Qtarifa = FuncTablasSupport::inputInt($datosActividad, 'tarifa');
+        $Qh_ini = FuncTablasSupport::inputString($datosActividad, 'h_ini');
+        $Qh_fin = FuncTablasSupport::inputString($datosActividad, 'h_fin');
+        $Qplazas = FuncTablasSupport::inputInt($datosActividad, 'plazas');
+        $Qidioma = FuncTablasSupport::inputString($datosActividad, 'idioma');
 
         if ($Qdl_org !== ConfigGlobal::mi_delef()) {
             $Qpublicado = true;

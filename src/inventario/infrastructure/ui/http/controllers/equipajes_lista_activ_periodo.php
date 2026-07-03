@@ -1,8 +1,7 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -10,13 +9,13 @@ use src\ubis\domain\entity\Ubi;
 use src\shared\web\ContestarJson;
 use frontend\shared\web\Periodo;
 
-$Qid_cdc = input_int($_POST, 'id_cdc');
-$Qperiodo = input_string($_POST, 'periodo');
-$Qyear = input_int($_POST, 'year');
-$Qempiezamin = input_string($_POST, 'empiezamin');
-$Qempiezamax = input_string($_POST, 'empiezamax');
-$Qinicio = input_string($_POST, 'inicio');
-$Qfin = input_string($_POST, 'fin');
+$Qid_cdc = FuncTablasSupport::inputInt($_POST, 'id_cdc');
+$Qperiodo = FuncTablasSupport::inputString($_POST, 'periodo');
+$Qyear = FuncTablasSupport::inputInt($_POST, 'year');
+$Qempiezamin = FuncTablasSupport::inputString($_POST, 'empiezamin');
+$Qempiezamax = FuncTablasSupport::inputString($_POST, 'empiezamax');
+$Qinicio = FuncTablasSupport::inputString($_POST, 'inicio');
+$Qfin = FuncTablasSupport::inputString($_POST, 'fin');
 
 $error_txt = '';
 $a_valores = [];

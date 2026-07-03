@@ -2,9 +2,6 @@
 
 namespace src\asistentes\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use DateInterval;
 use frontend\shared\web\Lista;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -16,6 +13,7 @@ use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Listado última actividad / seguimiento (`lista_ultima_activ.php`).
@@ -38,9 +36,9 @@ final class ListaUltimaActivData
      */
     public function build(array $input): array
     {
-        $Qque = input_string($input, 'que');
-        $Qcurso = input_string($input, 'curso');
-        $Qid_ubi = input_string($input, 'id_ubi');
+        $Qque = FuncTablasSupport::inputString($input, 'que');
+        $Qcurso = FuncTablasSupport::inputString($input, 'curso');
+        $Qid_ubi = FuncTablasSupport::inputString($input, 'id_ubi');
 
         $any = (int)date('Y');
 

@@ -2,9 +2,6 @@
 
 namespace src\asistentes\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use frontend\shared\web\Periodo;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -15,6 +12,7 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Asistentes a actividades por centro (`lista_activ_ctr.php`).
@@ -38,7 +36,7 @@ final class ListaActivCtrData
      */
     public function build(array $input): array
     {
-        $Qssfsv = input_string($input, 'ssfsv');
+        $Qssfsv = FuncTablasSupport::inputString($input, 'ssfsv');
 
         if (ConfigGlobal::mi_sfsv() === 1) {
             /** @var XPermisos $oPerm */
@@ -57,13 +55,13 @@ final class ListaActivCtrData
             $ssfsv = 'sv';
         }
 
-        $Qsasistentes = input_string($input, 'sasistentes');
-        $Qsactividad = input_string($input, 'sactividad');
-        $Qn_agd = input_string($input, 'n_agd');
-        $Qyear = input_int($input, 'year');
-        $Qperiodo = input_string($input, 'periodo');
-        $Qempiezamin = input_string($input, 'empiezamin');
-        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qsasistentes = FuncTablasSupport::inputString($input, 'sasistentes');
+        $Qsactividad = FuncTablasSupport::inputString($input, 'sactividad');
+        $Qn_agd = FuncTablasSupport::inputString($input, 'n_agd');
+        $Qyear = FuncTablasSupport::inputInt($input, 'year');
+        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
 
         if ($Qn_agd === 'sss') {
             $Qsasistentes = 'sss+';
@@ -145,7 +143,7 @@ final class ListaActivCtrData
                 break;
             case 'c':
                 $tabla = 'p_n_agd';
-                $aWhere['id_ubi'] = input_int($input, 'id_ubi');
+                $aWhere['id_ubi'] = FuncTablasSupport::inputInt($input, 'id_ubi');
                 break;
             default:
                 $tabla = 'p_n_agd';

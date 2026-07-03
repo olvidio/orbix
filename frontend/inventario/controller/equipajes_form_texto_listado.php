@@ -1,12 +1,13 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 FrontBootstrap::boot();
 
 $Qtexto = (string)filter_input(INPUT_POST, 'texto');
@@ -27,7 +28,7 @@ switch ($Qloc) {
         break;
     default:
         $titulo = _('texto a añadir en las maletas');
-        $id_grupo = inventario_grupo_id_from_loc($Qloc);
+        $id_grupo = InventarioPayload::grupoIdFromLoc($Qloc);
 
         $url_backend = '/src/inventario/texto_de_egm';
         $a_campos_backend = [
@@ -35,8 +36,8 @@ switch ($Qloc) {
             'id_grupo' => $id_grupo,
         ];
         $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-        $payload = inventario_post_payload($data);
-        $texto = tessera_imprimir_string($payload['texto'] ?? '');
+        $payload = InventarioPayload::postPayload($data);
+        $texto = PayloadCoercion::string($payload['texto'] ?? '');
         break;
 }
 

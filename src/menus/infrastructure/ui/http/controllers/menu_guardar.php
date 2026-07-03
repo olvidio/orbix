@@ -1,20 +1,19 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\menus\application\MenuGuardar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FilterPostGet;
+use src\shared\domain\helpers\FuncTablasSupport;
 
-$Qid_grupmenu = input_int($_POST, 'filtro_grupo');
-$Qid_menu = input_int($_POST, 'id_menu');
-$Qok = input_string($_POST, 'ok');
-$Qorden = input_string($_POST, 'orden');
-$Qtxt_menu = input_string($_POST, 'txt_menu');
-$Qparametros = input_string($_POST, 'parametros');
-$Qid_metamenu = input_int($_POST, 'id_metamenu');
-$rawPermMenu = filter_post('perm_menu', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_grupmenu = FuncTablasSupport::inputInt($_POST, 'filtro_grupo');
+$Qid_menu = FuncTablasSupport::inputInt($_POST, 'id_menu');
+$Qok = FuncTablasSupport::inputString($_POST, 'ok');
+$Qorden = FuncTablasSupport::inputString($_POST, 'orden');
+$Qtxt_menu = FuncTablasSupport::inputString($_POST, 'txt_menu');
+$Qparametros = FuncTablasSupport::inputString($_POST, 'parametros');
+$Qid_metamenu = FuncTablasSupport::inputInt($_POST, 'id_metamenu');
+$rawPermMenu = FilterPostGet::post('perm_menu', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qperm_menu = [];
 if (is_array($rawPermMenu)) {
     foreach ($rawPermMenu as $perm) {

@@ -1,23 +1,24 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qid_lugar = (integer)filter_input(INPUT_POST, 'id_lugar');
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 
@@ -28,8 +29,8 @@ $a_campos_backend = [
     'id_lugar' => $Qid_lugar
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$payload = inventario_post_payload($data);
-$a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
+$payload = InventarioPayload::postPayload($data);
+$a_valores = ActividadesListaSupport::datos($payload['a_valores'] ?? []);
 
 $a_cabeceras[] = ucfirst(_("documento"));
 $a_cabeceras[] = ucfirst(_("observaciones"));
@@ -44,7 +45,7 @@ $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_valores);
 $oLista->setBotones($a_botones);
 
-ajax_json_html($oLista->mostrar_tabla_html());
+AjaxJsonSupport::html($oLista->mostrar_tabla_html());
 
 
 

@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace src\planning\application;
 
+use src\shared\domain\helpers\FuncTablasSupport;
 use src\shared\domain\value_objects\DateTimeLocal;
-
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 
 /**
  * Actividades y periodos casa para `planning_casa_ver`.
@@ -29,17 +27,17 @@ final class PlanningCasaVerData
      */
     public function execute(array $input): array
     {
-        $cdc_sel = input_int($input, 'cdc_sel');
-        $sin_activ = input_int($input, 'sin_activ');
-        $f_ini_iso = input_string($input, 'f_ini_iso');
-        $f_fin_iso = input_string($input, 'f_fin_iso');
+        $cdc_sel = FuncTablasSupport::inputInt($input, 'cdc_sel');
+        $sin_activ = FuncTablasSupport::inputInt($input, 'sin_activ');
+        $f_ini_iso = FuncTablasSupport::inputString($input, 'f_ini_iso');
+        $f_fin_iso = FuncTablasSupport::inputString($input, 'f_fin_iso');
         if ($f_ini_iso === '' || $f_fin_iso === '') {
             throw new \RuntimeException(_('Faltan fechas de periodo (f_ini_iso / f_fin_iso).'));
         }
 
         $aIdCdc = null;
         if ($cdc_sel === 9) {
-            $sel = input_string($input, 'sSeleccionados');
+            $sel = FuncTablasSupport::inputString($input, 'sSeleccionados');
             if ($sel !== '') {
                 $aIdCdc = array_values(array_filter(array_map('trim', explode(',', $sel)), static fn ($v) => $v !== ''));
             }

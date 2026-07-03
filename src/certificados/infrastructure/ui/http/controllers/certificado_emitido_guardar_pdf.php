@@ -1,22 +1,20 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\certificados\application\CertificadoEmitidoGuardarMessages;
 use src\certificados\application\support\CertificadosSession;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /** @var CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository */
 $certificadoEmitidoRepository = DependencyResolver::get(CertificadoEmitidoRepositoryInterface::class);
 
-$Qid_item = input_int($_POST, 'id_item');
-$Qid_nom = input_int($_POST, 'id_nom');
-$Qcertificado = input_string($_POST, 'certificado');
-$Qpdf = input_string($_POST, 'pdf');
+$Qid_item = FuncTablasSupport::inputInt($_POST, 'id_item');
+$Qid_nom = FuncTablasSupport::inputInt($_POST, 'id_nom');
+$Qcertificado = FuncTablasSupport::inputString($_POST, 'certificado');
+$Qpdf = FuncTablasSupport::inputString($_POST, 'pdf');
 
 $pdf_content = base64_decode($Qpdf, true);
 $certificado = base64_decode($Qcertificado, true);

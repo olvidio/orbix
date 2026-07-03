@@ -1,5 +1,8 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
+
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
 
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
@@ -11,16 +14,15 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_nom = encargossacd_post_int('id_nom');
-$Qid_enc = encargossacd_post_int('id_enc');
-$Qmod = encargossacd_post_int('mod');
-$Qfiltro_sacd = encargossacd_post_string('filtro_sacd');
-$Qid_item = encargossacd_post_int('id_item');
-$Qdesc_enc = encargossacd_post_string('desc_enc');
+$Qid_nom = EncargossacdPostInput::postInt('id_nom');
+$Qid_enc = EncargossacdPostInput::postInt('id_enc');
+$Qmod = EncargossacdPostInput::postInt('mod');
+$Qfiltro_sacd = EncargossacdPostInput::postString('filtro_sacd');
+$Qid_item = EncargossacdPostInput::postInt('id_item');
+$Qdesc_enc = EncargossacdPostInput::postString('desc_enc');
 
 /** @var array<string, mixed> $d */
 $d = PostRequest::getDataFromUrl('/src/encargossacd/horario_sacd_ver_data', [
@@ -30,20 +32,20 @@ $d = PostRequest::getDataFromUrl('/src/encargossacd/horario_sacd_ver_data', [
     'desc_enc' => $Qdesc_enc,
 ]);
 
-$ap_nom = tessera_imprimir_string($d['ap_nom'] ?? '');
-$titulo = tessera_imprimir_string($d['titulo'] ?? '');
-$id_item = tessera_imprimir_int($d['id_item'] ?? 0);
-$desc_enc = tessera_imprimir_string($d['desc_enc'] ?? '');
-$f_ini_iso = tessera_imprimir_string($d['f_ini_iso'] ?? '');
-$f_fin_iso = tessera_imprimir_string($d['f_fin_iso'] ?? '');
-$dia_ref = tessera_imprimir_string($d['dia_ref'] ?? '');
-$dia_num = tessera_imprimir_string($d['dia_num'] ?? '');
-$mas_menos = tessera_imprimir_string($d['mas_menos'] ?? '');
-$dia_inc = tessera_imprimir_string($d['dia_inc'] ?? '');
-$h_ini = tessera_imprimir_string($d['h_ini'] ?? '');
-$h_fin = tessera_imprimir_string($d['h_fin'] ?? '');
+$ap_nom = PayloadCoercion::string($d['ap_nom'] ?? '');
+$titulo = PayloadCoercion::string($d['titulo'] ?? '');
+$id_item = PayloadCoercion::int($d['id_item'] ?? 0);
+$desc_enc = PayloadCoercion::string($d['desc_enc'] ?? '');
+$f_ini_iso = PayloadCoercion::string($d['f_ini_iso'] ?? '');
+$f_fin_iso = PayloadCoercion::string($d['f_fin_iso'] ?? '');
+$dia_ref = PayloadCoercion::string($d['dia_ref'] ?? '');
+$dia_num = PayloadCoercion::string($d['dia_num'] ?? '');
+$mas_menos = PayloadCoercion::string($d['mas_menos'] ?? '');
+$dia_inc = PayloadCoercion::string($d['dia_inc'] ?? '');
+$h_ini = PayloadCoercion::string($d['h_ini'] ?? '');
+$h_fin = PayloadCoercion::string($d['h_fin'] ?? '');
 $tiene_excepciones = !empty($d['tiene_excepciones']);
-$dia = tessera_imprimir_string($d['dia'] ?? '');
+$dia = PayloadCoercion::string($d['dia'] ?? '');
 $opciones_dia_semana = is_array($d['opciones_dia_semana'] ?? null) ? $d['opciones_dia_semana'] : [];
 $opciones_dia_ref = is_array($d['opciones_dia_ref'] ?? null) ? $d['opciones_dia_ref'] : [];
 $opciones_ordinales = is_array($d['opciones_ordinales'] ?? null) ? $d['opciones_ordinales'] : [];
@@ -75,4 +77,4 @@ $a_campos = [
     'opciones_ordinales' => $opciones_ordinales,
 ];
 
-ajax_json_render_phtml('frontend\\encargossacd\\controller', 'horario_sacd_ver.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\encargossacd\\controller', 'horario_sacd_ver.phtml', $a_campos);

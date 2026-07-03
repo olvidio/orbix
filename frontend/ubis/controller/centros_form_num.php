@@ -1,16 +1,16 @@
 <?php
 
+use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $Qid_ubi = (int)(filter_input(INPUT_POST, 'id_ubi') ?? filter_input(INPUT_GET, 'id_ubi'));
-$form = ubis_centro_num_form_from_payload(ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/centros_form_num', ['id_ubi' => $Qid_ubi])));
+$form = UbisPayload::centroNumFormFromPayload(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/centros_form_num', ['id_ubi' => $Qid_ubi])));
 
 $url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 

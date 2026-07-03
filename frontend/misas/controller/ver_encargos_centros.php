@@ -1,14 +1,14 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\misas\helpers\MisasDesplegableSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
@@ -24,7 +24,7 @@ $a_opciones_zona = $data['a_opciones_zona'] ?? [];
 // Desplegable de zonas para el modal: cambiar la zona recarga el desplegable
 // de encargos via `fnjs_prepara_select_encargo()`.
 $oDesplZonasCtr = new Desplegable();
-$oDesplZonasCtr->setOpciones(misas_desplegable_opciones($a_opciones_zona));
+$oDesplZonasCtr->setOpciones(MisasDesplegableSupport::opciones($a_opciones_zona));
 $oDesplZonasCtr->setBlanco(true);
 $oDesplZonasCtr->setNombre('id_zona_enc');
 $oDesplZonasCtr->setAction('fnjs_prepara_select_encargo()');
@@ -76,4 +76,4 @@ $a_campos = [
     'h_ver_encargos_centros' => $h_ver_encargos_centros,
 ];
 
-ajax_json_render_phtml('frontend\\misas\\controller', 'ver_encargos_centros.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', 'ver_encargos_centros.phtml', $a_campos);

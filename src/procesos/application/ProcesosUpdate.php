@@ -3,7 +3,7 @@
 namespace src\procesos\application;
 
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: guarda una tarea_proceso del proceso.
@@ -20,12 +20,12 @@ class ProcesosUpdate
      */
     public function execute(array $input): string
     {
-        $Qid_item = input_int($input, 'id_item');
-        $Qid_tipo_proceso = input_int($input, 'id_tipo_proceso');
-        $Qstatus = input_int($input, 'status');
-        $Qid_of_responsable = input_int($input, 'id_of_responsable');
-        $Qid_fase = input_int($input, 'id_fase');
-        $Qid_tarea = input_int($input, 'id_tarea');
+        $Qid_item = FuncTablasSupport::inputInt($input, 'id_item');
+        $Qid_tipo_proceso = FuncTablasSupport::inputInt($input, 'id_tipo_proceso');
+        $Qstatus = FuncTablasSupport::inputInt($input, 'status');
+        $Qid_of_responsable = FuncTablasSupport::inputInt($input, 'id_of_responsable');
+        $Qid_fase = FuncTablasSupport::inputInt($input, 'id_fase');
+        $Qid_tarea = FuncTablasSupport::inputInt($input, 'id_tarea');
         /** @var list<mixed> $Qid_fase_previa */
         $Qid_fase_previa = (array)($input['id_fase_previa'] ?? []);
         /** @var list<mixed> $Qid_tarea_previa */

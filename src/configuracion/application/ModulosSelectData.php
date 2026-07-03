@@ -4,9 +4,7 @@ namespace src\configuracion\application;
 
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
-
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\strtoupper_dlb;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Listado de módulos (`frontend/configuracion/controller/modulos_select.php`).
@@ -27,19 +25,17 @@ final class ModulosSelectData
      */
     public function execute(array $input): array
     {
-        require_once dirname(__DIR__, 2) . '/shared/domain/helpers/func_tablas.php';
+        $Qid_sel = FuncTablasSupport::inputString($input, 'id_sel');
+        $Qscroll_id = FuncTablasSupport::inputString($input, 'scroll_id');
 
-        $Qid_sel = input_string($input, 'id_sel');
-        $Qscroll_id = input_string($input, 'scroll_id');
-
-        if (input_string($input, 'stack') !== '') {
-            $stack = filter_var(input_string($input, 'stack'), FILTER_SANITIZE_NUMBER_INT);
+        if (FuncTablasSupport::inputString($input, 'stack') !== '') {
+            $stack = filter_var(FuncTablasSupport::inputString($input, 'stack'), FILTER_SANITIZE_NUMBER_INT);
             if ($stack !== false && $stack !== '0' && $stack !== '') {
                 if (array_key_exists('restored_id_sel', $input)) {
-                    $Qid_sel = input_string($input, 'restored_id_sel');
+                    $Qid_sel = FuncTablasSupport::inputString($input, 'restored_id_sel');
                 }
                 if (array_key_exists('restored_scroll_id', $input)) {
-                    $Qscroll_id = input_string($input, 'restored_scroll_id');
+                    $Qscroll_id = FuncTablasSupport::inputString($input, 'restored_scroll_id');
                 }
             }
         }
@@ -131,7 +127,7 @@ final class ModulosSelectData
                 'campos_no' => 'scroll_id!sel!refresh',
             ],
             'txt_eliminar' => _("¿Está seguro?"),
-            'txt_anadir_modulo' => strtoupper_dlb(_("añadir módulo")),
+            'txt_anadir_modulo' => FuncTablasSupport::strtoupperDlb(_("añadir módulo")),
         ];
     }
 }

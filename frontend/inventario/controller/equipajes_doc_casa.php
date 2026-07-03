@@ -1,20 +1,20 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 
 if ($Qid_equipaje === 0) {
-    ajax_json_html('', _('debe seleccionar un equipaje'));
+    AjaxJsonSupport::html('', _('debe seleccionar un equipaje'));
 }
 
 $url_backend = '/src/inventario/equipajes_doc_casa';
@@ -22,7 +22,7 @@ $a_campos_backend = [
     'id_equipaje' => $Qid_equipaje,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$docCasa = inventario_equipajes_doc_casa_from_payload(inventario_post_payload($data));
+$docCasa = InventarioPayload::equipajesDocCasaFromPayload(InventarioPayload::postPayload($data));
 $a_valores = $docCasa['a_valores'];
 $nombre_ubi = $docCasa['nombre_ubi'];
 
@@ -42,7 +42,7 @@ $oListaDocsCasa->setBotones($a_botones);
 
 $url_backend = '/src/inventario/equipajes_egm';
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$a_egm = inventario_egm_rows(inventario_post_payload($data)['a_egm'] ?? []);
+$a_egm = InventarioPayload::egmRows(InventarioPayload::postPayload($data)['a_egm'] ?? []);
 
 $oHash = new HashFront();
 $oHash->setCamposNo('id_grupo');
@@ -95,4 +95,4 @@ foreach ($a_egm as $aEgm) {
     $oView->renderizar('equipajes_doc_maleta.phtml', $a_campos);
 }
 echo '</div>';
-ajax_json_html((string) ob_get_clean());
+AjaxJsonSupport::html((string) ob_get_clean());

@@ -1,13 +1,11 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\menus\application\MenuEliminar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FuncTablasSupport;
 
-$Qid_menu = input_int($_POST, 'id_menu');
+$Qid_menu = FuncTablasSupport::inputInt($_POST, 'id_menu');
 
 /** @var MenuEliminar $menuEliminar */
 $menuEliminar = DependencyResolver::get(MenuEliminar::class);

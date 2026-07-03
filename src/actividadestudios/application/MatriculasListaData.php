@@ -9,8 +9,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\services\TelecoPersonaService;
 use src\shared\domain\value_objects\DateTimeLocal;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Listado de matrículas en un intervalo de fechas (actividades cuyo `f_ini`
@@ -37,8 +36,8 @@ final class MatriculasListaData
      */
     public function execute(array $input): array
     {
-        $inicioIso = input_string($input, 'inicio_iso');
-        $finIso = input_string($input, 'fin_iso');
+        $inicioIso = FuncTablasSupport::inputString($input, 'inicio_iso');
+        $finIso = FuncTablasSupport::inputString($input, 'fin_iso');
         $aWhereActividad = [
             'f_ini' => "'$inicioIso','$finIso'",
         ];
@@ -87,7 +86,7 @@ final class MatriculasListaData
                     . ($notaMax !== null ? $notaMax->value() : '') . ']';
             }
             $preceptor = $oMatricula->isPreceptor();
-            if (is_true($preceptor)) {
+            if (FuncTablasSupport::isTrue($preceptor)) {
                 $preceptor = 'x';
                 $idPreceptor = $oMatricula->getId_preceptor();
                 $mailsPreceptor = '';

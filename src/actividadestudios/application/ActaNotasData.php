@@ -12,8 +12,7 @@ use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
-use function frontend\shared\helpers\is_true;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * @return array{
@@ -57,8 +56,8 @@ final class ActaNotasData
      */
     public function execute(array $input): array
     {
-        $idActiv = input_int($input, 'id_activ');
-        $idAsignatura = input_int($input, 'id_asignatura');
+        $idActiv = FuncTablasSupport::inputInt($input, 'id_activ');
+        $idAsignatura = FuncTablasSupport::inputInt($input, 'id_asignatura');
 
         $msgErr = '';
         $miDele = OrbixRuntime::miDelef();
@@ -143,7 +142,7 @@ final class ActaNotasData
                 'id_nom' => $oMatricula->getId_nom(),
                 'nota_num' => $oMatricula->getNota_num(),
                 'nota_max' => $oMatricula->getNota_max(),
-                'preceptor' => (bool) is_true($oMatricula->isPreceptor()),
+                'preceptor' => (bool) FuncTablasSupport::isTrue($oMatricula->isPreceptor()),
                 'acta' => $oMatricula->getActa(),
             ];
         }

@@ -5,8 +5,7 @@ namespace src\actividadestudios\application;
 use Psr\Container\ContainerInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Guarda el texto `observ` de un Asistente. Sustituye al case `observ`
@@ -25,12 +24,12 @@ final class AsistenteObserv
      */
     public function execute(array $input): string
     {
-        $Qid_activ = input_int($input, 'id_activ');
-        $Qid_nom = input_int($input, 'id_pau');
+        $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $Qid_nom = FuncTablasSupport::inputInt($input, 'id_pau');
         if ($Qid_nom <= 0) {
-            $Qid_nom = input_int($input, 'id_nom');
+            $Qid_nom = FuncTablasSupport::inputInt($input, 'id_nom');
         }
-        $Qobserv = input_string($input, 'observ');
+        $Qobserv = FuncTablasSupport::inputString($input, 'observ');
 
         if ($Qid_activ <= 0 || $Qid_nom <= 0) {
             return _("falta id_activ o id_nom");

@@ -4,8 +4,8 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use frontend\shared\FrontBootstrap;
+use frontend\pasarela\helpers\PasarelaPayload;
 
-require_once __DIR__ . '/../helpers/pasarela_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -50,8 +50,8 @@ $data = PostRequest::getDataFromUrl('/src/pasarela/exportar_actividades_data', [
     'id_cdc' => $Qid_cdc,
 ]);
 
-$err = pasarela_exportar_errores_from_payload($data);
-$tabla = pasarela_exportar_lista_from_payload($data);
+$err = PasarelaPayload::exportarErroresFromPayload($data);
+$tabla = PasarelaPayload::exportarListaFromPayload($data);
 $a_cabeceras = $tabla['a_cabeceras'];
 $a_botones = $tabla['a_botones'];
 $a_valores = $tabla['a_valores'];

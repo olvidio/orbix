@@ -1,28 +1,31 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\actividadestudios\helpers\ActividadestudiosListaSupport;
+use frontend\actividadestudios\helpers\MatriculasListaPayload;
+use frontend\actividadestudios\helpers\ActividadestudiosRenderSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/actividadestudios_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
 $stack = isset($_POST['stack']) ? (int) filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
 $returningViaStack = $stack !== 0;
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = list_nav_id_sel_from_post();
-$Qscroll_id = list_nav_scroll_id_from_post();
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
 if ($returningViaStack) {
     $oPosicion2 = new Posicion();
     if ($oPosicion2->goStack($stack)) {
-        $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
-        if (!list_nav_id_sel_is_empty($restoredSel)) {
+        $restoredSel = ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
+        if (!ListNavSupport::idSelIsEmpty($restoredSel)) {
             $Qid_sel = $restoredSel;
         }
         $restoredScroll = $oPosicion2->getParametro('scroll_id');
@@ -33,11 +36,11 @@ if ($returningViaStack) {
     }
 }
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
-list_nav_persist_selection_on_list_page(
+ListNavSupport::persistSelectionOnListPage(
     $oPosicion,
     $Qid_sel,
     $Qscroll_id,
@@ -45,12 +48,12 @@ list_nav_persist_selection_on_list_page(
 );
 
 $aviso = '';
-$pendientes = actividadestudios_matriculas_pendientes_from_payload(
-    actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_pendientes_data', []))
+$pendientes = MatriculasListaPayload::fromPayloadPendientes(
+    ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_pendientes_data', []))
 );
 $msg_err = $pendientes['msg_err'];
 $aviso = $pendientes['aviso'];
-$a_valores = actividadestudios_lista_valores($pendientes['a_valores'], $Qid_sel, $Qscroll_id);
+$a_valores = ActividadestudiosListaSupport::valores($pendientes['a_valores'], $Qid_sel, $Qscroll_id);
 
 $titulo = _("lista de matrículas pendientes de poner nota");
 $a_botones = array(
@@ -71,7 +74,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 if ($msg_err !== '') {
-    actividadestudios_echo_string($msg_err);
+    echo PayloadCoercion::string($msg_err);
 }
 echo $oPosicion->mostrar_left_slide(1);
 

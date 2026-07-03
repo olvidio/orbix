@@ -4,7 +4,7 @@ namespace src\cambios\application;
 
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion: sincroniza las propiedades vigiladas (`CambioUsuarioPropiedadPref`)
@@ -86,8 +86,8 @@ final class CambioUsuarioPropiedadPrefGuardarTodas
                 if ($valor !== '') {
                     $oProp->setValor($valor);
                 }
-                $oProp->setValor_old(is_true($aCambio['bvalor_old'] ?? ''));
-                $oProp->setValor_new(is_true($aCambio['bvalor_new'] ?? ''));
+                $oProp->setValor_old(FuncTablasSupport::isTrue($aCambio['bvalor_old'] ?? ''));
+                $oProp->setValor_new(FuncTablasSupport::isTrue($aCambio['bvalor_new'] ?? ''));
             } else {
                 $nom_item = str_replace('_cond', '_item', $id_cond);
                 $existing_id = isset($input[$nom_item]) && is_numeric($input[$nom_item])

@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FilterPostGet;
+
 /**
  * Endpoint backend AJAX: elimina las actividades indicadas.
  *
@@ -19,8 +22,8 @@ use src\actividades\application\ActividadEliminar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_activ = (integer)filter_post('id_activ');
-$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_activ = (integer)FilterPostGet::post('id_activ');
+$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 /** @var ActividadEliminar $useCase */
 $useCase = DependencyResolver::get(ActividadEliminar::class);

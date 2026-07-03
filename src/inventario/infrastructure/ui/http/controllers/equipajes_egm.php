@@ -5,9 +5,8 @@ use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\ListaDocsGrupo;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_int;
-
-$Qid_equipaje = input_int($_POST, 'id_equipaje');
+use src\shared\domain\helpers\FuncTablasSupport;
+$Qid_equipaje = FuncTablasSupport::inputInt($_POST, 'id_equipaje');
 $error_txt = '';
 
 /** @var LugarRepositoryInterface $LugarRepository */

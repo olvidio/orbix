@@ -1,4 +1,10 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPermSupport;
+use frontend\actividades\helpers\ActividadesMutacionSupport;
+use frontend\actividades\helpers\ActividadesPayload;
+use frontend\shared\helpers\PayloadCoercion;
+
 /**
  * Formulario para crear una actividad nueva desde el planning de casas.
  *
@@ -21,14 +27,13 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
-$Qid_ubi = tessera_imprimir_int(filter_input(INPUT_POST, 'id_ubi'));
+$Qid_ubi = PayloadCoercion::int(filter_input(INPUT_POST, 'id_ubi'));
 
-$permiso_des = actividades_perm_des();
+$permiso_des = ActividadesPermSupport::permDes();
 
 $id_tipo_activ = '';
 $isfsv_input = OrbixRuntime::miSfsv();
@@ -43,7 +48,7 @@ $data = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
     'id_tipo_activ' => $id_tipo_activ,
 ]);
 
-$render = actividades_ver_render_from_payload($data);
+$render = ActividadesPayload::verRenderFromPayload($data);
 $html_despl_dl_org = $render['html_despl_dl_org'];
 $html_despl_tarifa = $render['html_despl_tarifa'];
 $html_despl_nivel_stgr = $render['html_despl_nivel_stgr'];
@@ -70,7 +75,7 @@ $snom_tipo = '';
 $urlMutacionAjax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_mutacion_ajax.php';
 
 $oHash = new HashFront();
-$camposForm = actividades_calendario_form_hash_campos_form();
+$camposForm = ActividadesMutacionSupport::calendarioFormHashCamposForm();
 $camposNo = 'id_tipo_activ!mod';
 $a_camposHidden = [
     'id_tipo_activ' => $id_tipo_activ,
@@ -90,10 +95,10 @@ $h = $oHash1->linkSinValParams();
 $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
     'with_all' => 'f',
 ]);
-$a_status = actividades_status_labels_from_payload($labelsRow);
+$a_status = ActividadesPayload::statusLabelsFromPayload($labelsRow);
 
 $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
-    'perm_jefe' => actividades_perm_jefe_tipo_activ() ? 't' : 'f',
+    'perm_jefe' => ActividadesPermSupport::permJefeTipoActiv() ? 't' : 'f',
     'id_tipo_activ' => $id_tipo_activ,
     'que' => '',
     'evitar_procesos' => 't',
@@ -104,7 +109,7 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'snom_tipo' => $snom_tipo,
     'extendida' => '',
 ]);
-$actividad_tipo_html = tessera_imprimir_string($dataTipoBloque['actividad_tipo_html'] ?? '');
+$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 
@@ -150,7 +155,7 @@ $a_campos = [
     'web_icons' => OrbixRuntime::getWebIcons(),
     'procesos_installed' => $procesos_installed,
     'locale_us' => OrbixRuntime::isLocaleUs(),
-    'calendario_hash_allow' => actividades_calendario_mutacion_serialize_allow_json(),
+    'calendario_hash_allow' => ActividadesMutacionSupport::calendarioMutacionSerializeAllowJson(),
 ];
 
 $oView = new ViewNewTwig('frontend/actividades/controller');

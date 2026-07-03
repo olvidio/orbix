@@ -10,17 +10,17 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\actividades\helpers\ActividadesListaSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/devel_db_admin/helpers/devel_db_admin_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/devel_db_admin/migraciones_lista_data');
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('devel_db_admin_migraciones');
-$oTabla->setCabeceras(actividades_lista_cabeceras($data['a_cabeceras'] ?? []));
-$oTabla->setDatos(actividades_lista_datos($data['a_valores'] ?? []));
+$oTabla->setCabeceras(ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []));
+$oTabla->setDatos(ActividadesListaSupport::datos($data['a_valores'] ?? []));
 $oTabla->setBotones([
     ['txt' => _('ejecutar seleccionadas'), 'click' => 'fnjs_migraciones_ejecutar_seleccion()'],
     ['txt' => _('ejecutar hasta la marcada'), 'click' => 'fnjs_migraciones_ejecutar_hasta()'],

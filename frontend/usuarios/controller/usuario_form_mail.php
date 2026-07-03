@@ -1,22 +1,24 @@
 <?php
 
+use frontend\usuarios\helpers\UsuariosPayload;
+use frontend\usuarios\helpers\UsuariosPostInput;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$id_usuario = usuarios_session_auth_int('id_usuario');
-$usuario = usuarios_session_auth_string('username');
-$email = usuarios_session_auth_string('mail');
+$id_usuario = UsuariosPostInput::sessionAuthInt('id_usuario');
+$usuario = UsuariosPostInput::sessionAuthString('username');
+$email = UsuariosPostInput::sessionAuthString('mail');
 
 if ($usuario === '' && $id_usuario > 0) {
-    $data = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_info', ['id_usuario' => $id_usuario]));
-    $usuario = tessera_imprimir_string($data['usuario'] ?? '');
-    $email = tessera_imprimir_string($data['email'] ?? '');
+    $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_info', ['id_usuario' => $id_usuario]));
+    $usuario = PayloadCoercion::string($data['usuario'] ?? '');
+    $email = PayloadCoercion::string($data['email'] ?? '');
 }
 
 $oHash = new HashFront();

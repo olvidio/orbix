@@ -3,8 +3,7 @@
 namespace src\actividadplazas\application;
 
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Elimina todas las peticiones de plaza para un {id_nom, tipo}.
@@ -24,8 +23,8 @@ final class PeticionesEliminar
      */
     public function execute(array $input): string
     {
-        $id_nom = input_int($input, 'id_nom');
-        $sactividad = input_string($input, 'sactividad');
+        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
+        $sactividad = FuncTablasSupport::inputString($input, 'sactividad');
         if ($id_nom <= 0 || $sactividad === '') {
             return (string)_("faltan parametros id_nom / sactividad");
         }

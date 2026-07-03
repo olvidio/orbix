@@ -1,8 +1,9 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
+use frontend\encargossacd\helpers\EncargossacdPayload;
 
 /**
  * Proxy AJAX: la lógica vive en {@see \src\encargossacd\application\EncargoComprobacionesCtr}
@@ -10,8 +11,7 @@ use frontend\shared\FrontBootstrap;
  */
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $data = PostRequest::getDataFromUrl('/src/encargossacd/comprobaciones_ctr');
-ajax_json_response('', ['text' => encargossacd_comprobaciones_texto($data)]);
+AjaxJsonSupport::response('', ['text' => EncargossacdPayload::comprobacionesTexto($data)]);

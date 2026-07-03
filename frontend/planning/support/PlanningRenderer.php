@@ -2,6 +2,7 @@
 
 namespace frontend\planning\support;
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\domain\value_objects\DateTimeLocal;
 
 /**
@@ -177,14 +178,14 @@ class PlanningRenderer
                 $css = [];
                 for ($a = 0; $a < $num_a; $a++) {
                     $activi = $actividad[$a];
-                    $nom_curt[$a] = \tessera_imprimir_string($activi['nom_curt'] ?? '');
-                    $nom[$a] = \tessera_imprimir_string($activi['nom_llarg'] ?? '');
-                    $ini = \tessera_imprimir_string($activi['f_ini'] ?? '');
-                    $hini = \tessera_imprimir_string($activi['h_ini'] ?? '');
-                    $fi = \tessera_imprimir_string($activi['f_fi'] ?? '');
-                    $hfi = \tessera_imprimir_string($activi['h_fi'] ?? '');
-                    $id_activ[$a] = \tessera_imprimir_int($activi['id_activ'] ?? 0);
-                    $css[$a] = \tessera_imprimir_string($activi['css'] ?? '');
+                    $nom_curt[$a] = PayloadCoercion::string($activi['nom_curt'] ?? '');
+                    $nom[$a] = PayloadCoercion::string($activi['nom_llarg'] ?? '');
+                    $ini = PayloadCoercion::string($activi['f_ini'] ?? '');
+                    $hini = PayloadCoercion::string($activi['h_ini'] ?? '');
+                    $fi = PayloadCoercion::string($activi['f_fi'] ?? '');
+                    $hfi = PayloadCoercion::string($activi['h_fi'] ?? '');
+                    $id_activ[$a] = PayloadCoercion::int($activi['id_activ'] ?? 0);
+                    $css[$a] = PayloadCoercion::string($activi['css'] ?? '');
 
                     if (empty($ini)) {
                         $html .= _("PREMIO: Ha conseguido crear una actividad sin fecha de inicio.") . '<br>';
@@ -198,10 +199,10 @@ class PlanningRenderer
                         unset($actividad[$a]);
                         continue;
                     }
-                    $id_tipo_activ[$a] = \tessera_imprimir_string($activi['id_tipo_activ'] ?? '');
-                    $lnk[$a] = \tessera_imprimir_string($activi['pagina'] ?? '');
-                    $propio[$a] = \tessera_imprimir_string($activi['propio'] ?? '');
-                    $plaza[$a] = \tessera_imprimir_string($activi['plaza'] ?? '');
+                    $id_tipo_activ[$a] = PayloadCoercion::string($activi['id_tipo_activ'] ?? '');
+                    $lnk[$a] = PayloadCoercion::string($activi['pagina'] ?? '');
+                    $propio[$a] = PayloadCoercion::string($activi['propio'] ?? '');
+                    $plaza[$a] = PayloadCoercion::string($activi['plaza'] ?? '');
 
                     $hora_ini[$a] = 0;
                     $m_ini[$a] = 0;

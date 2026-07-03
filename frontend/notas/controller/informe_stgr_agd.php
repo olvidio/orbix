@@ -2,8 +2,8 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\helpers\FuncTablasSupport;
 
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
 /**
@@ -29,7 +29,7 @@ $datos = PostRequest::getDataFromUrl('/src/notas/informe_stgr_agd_data', [
 ]);
 
 $a_campos = [
-    'titulo' => strtoupper_dlb(_("alumnos agregados")),
+    'titulo' => FuncTablasSupport::strtoupperDlb(_("alumnos agregados")),
     'curso_txt' => $datos['curso_txt'],
     'res' => $datos['res'],
     'textos' => $datos['textos'],

@@ -4,9 +4,7 @@ namespace src\shared\config;
 
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\usuarios\domain\entity\Usuario;
-
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 class ConfigGlobal extends ServerConf
 {
@@ -207,7 +205,7 @@ class ConfigGlobal extends ServerConf
 
     public static function mi_id_usuario(): int
     {
-        return input_int(self::sessionAuth(), 'id_usuario');
+        return FuncTablasSupport::inputInt(self::sessionAuth(), 'id_usuario');
     }
 
     /**
@@ -215,32 +213,32 @@ class ConfigGlobal extends ServerConf
      */
     public static function mi_sfsv(): int
     {
-        return input_int(self::sessionAuth(), 'sfsv');
+        return FuncTablasSupport::inputInt(self::sessionAuth(), 'sfsv');
     }
 
     public static function mi_id_role(): int
     {
-        return input_int(self::sessionAuth(), 'id_role');
+        return FuncTablasSupport::inputInt(self::sessionAuth(), 'id_role');
     }
 
     public static function mi_role_pau(): string
     {
-        return input_string(self::sessionAuth(), 'role_pau');
+        return FuncTablasSupport::inputString(self::sessionAuth(), 'role_pau');
     }
 
     public static function mi_usuario(): string
     {
-        return input_string(self::sessionAuth(), 'username');
+        return FuncTablasSupport::inputString(self::sessionAuth(), 'username');
     }
 
     public static function mi_pass(): string
     {
-        return input_string(self::sessionAuth(), 'password');
+        return FuncTablasSupport::inputString(self::sessionAuth(), 'password');
     }
 
     public static function mi_id_schema(): int
     {
-        return input_int(self::sessionAuth(), 'mi_id_schema');
+        return FuncTablasSupport::inputInt(self::sessionAuth(), 'mi_id_schema');
     }
 
     public static function mi_region_dl(): string
@@ -253,12 +251,12 @@ class ConfigGlobal extends ServerConf
             return is_string($envEsquema) ? $envEsquema : '';
         }
 
-        return input_string($auth, 'esquema');
+        return FuncTablasSupport::inputString($auth, 'esquema');
     }
 
     public static function mi_region(): string
     {
-        $esq = input_string(self::sessionAuth(), 'esquema');
+        $esq = FuncTablasSupport::inputString(self::sessionAuth(), 'esquema');
         if ($esq === '') {
             return '';
         }
@@ -272,7 +270,7 @@ class ConfigGlobal extends ServerConf
 
     public static function mi_dele(): string
     {
-        $esq = input_string(self::sessionAuth(), 'esquema');
+        $esq = FuncTablasSupport::inputString(self::sessionAuth(), 'esquema');
         if ($esq === '') {
             return '';
         }
@@ -334,29 +332,29 @@ class ConfigGlobal extends ServerConf
 
     public static function mi_oficina_menu(): string
     {
-        return input_string(self::sessionAuth(), 'mi_oficina_menu');
+        return FuncTablasSupport::inputString(self::sessionAuth(), 'mi_oficina_menu');
     }
 
     public static function mi_oficina(): string
     {
-        return input_string(self::sessionAuth(), 'mi_oficina');
+        return FuncTablasSupport::inputString(self::sessionAuth(), 'mi_oficina');
     }
 
     public static function mi_mail(): string
     {
-        return input_string(self::sessionAuth(), 'mail');
+        return FuncTablasSupport::inputString(self::sessionAuth(), 'mail');
     }
     // ----------- Idioma -------------------
     //es_ES.UTF-8
     public static function mi_Idioma(): string
     {
-        return input_string(self::sessionAuth(), 'idioma');
+        return FuncTablasSupport::inputString(self::sessionAuth(), 'idioma');
     }
 
     //es
     public static function mi_Idioma_short(): string
     {
-        return substr(input_string(self::sessionAuth(), 'idioma'), 0, 2);
+        return substr(FuncTablasSupport::inputString(self::sessionAuth(), 'idioma'), 0, 2);
     }
 
     public static function is_locale_us(): bool
@@ -376,6 +374,6 @@ class ConfigGlobal extends ServerConf
     // ----------- ordenApellidos -------------------
     public static function mi_ordenApellidos(): string
     {
-        return input_string(self::sessionAuth(), 'ordenApellidos');
+        return FuncTablasSupport::inputString(self::sessionAuth(), 'ordenApellidos');
     }
 }

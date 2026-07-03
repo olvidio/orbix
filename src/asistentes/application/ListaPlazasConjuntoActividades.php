@@ -16,9 +16,8 @@ use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
-use function src\shared\domain\helpers\is_true;
-use function src\shared\domain\helpers\strtoupper_dlb;
 use function DI\get;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Lista los asistentes de una relación de actividades seleccionada
@@ -129,12 +128,12 @@ class ListaPlazasConjuntoActividades
         }
 
         if (($sasistentes === "s") and ($sactividad === "cv")) {
-            $titulo = strtoupper_dlb(_("relación de cargos en las cv de s"));
+            $titulo = FuncTablasSupport::strtoupperDlb(_("relación de cargos en las cv de s"));
         } else {
             if (($sasistentes === "sss+") and ($sactividad === "cv")) {
                 $titulo = strtoupper(_("propuesta de cl en cv de sss+"));
             } else {
-                $titulo = strtoupper_dlb(_("relación de asistentes a las actividades seleccionadas"));
+                $titulo = FuncTablasSupport::strtoupperDlb(_("relación de asistentes a las actividades seleccionadas"));
             }
         }
 
@@ -223,7 +222,7 @@ class ListaPlazasConjuntoActividades
                             continue;
                         }
                         $sacd = $oPersona->isSacd();
-                        if ($this->bsacd && !is_true($sacd)) { continue; }
+                        if ($this->bsacd && !FuncTablasSupport::isTrue($sacd)) { continue; }
 
                         $cl++;
                         $num++;
@@ -257,7 +256,7 @@ class ListaPlazasConjuntoActividades
                         continue;
                     }
                     $sacd = $oPersona->isSacd();
-                    if ($this->bsacd && !is_true($sacd)) continue;
+                    if ($this->bsacd && !FuncTablasSupport::isTrue($sacd)) continue;
 
                     $id_tabla = $oPersona->getId_tabla();
                     $ap_nom = $oPersona->getPrefApellidosNombre();

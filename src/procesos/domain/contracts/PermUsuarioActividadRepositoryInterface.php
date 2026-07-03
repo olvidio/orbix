@@ -5,7 +5,6 @@ namespace src\procesos\domain\contracts;
 use src\procesos\domain\entity\PermUsuarioActividad;
 
 
-use function src\shared\domain\helpers\is_true;
 /**
  * Interfaz de la clase PermUsuarioActividad y su Repositorio
  *

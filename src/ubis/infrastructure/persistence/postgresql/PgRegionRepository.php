@@ -10,7 +10,6 @@ use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\RegionRepositoryInterface;
 use src\ubis\domain\entity\Region;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla xu_region a la interfaz del repositorio

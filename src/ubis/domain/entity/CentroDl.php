@@ -22,9 +22,6 @@ use src\ubis\domain\value_objects\{CentroId,
     TipoLaborId,
     UbiNombreText,
     ZonaId};
-use function src\shared\domain\helpers\is_true;
-
-
 class CentroDl
 {
     use Hydratable;
@@ -701,8 +698,8 @@ class CentroDl
             if ($direccion !== null) {
                 // Creamos el objeto intermedio con los booleanos de la DB
                 // Aseguramos conversión a bool explícita
-                $esPrincipal = is_true($row['principal']);
-                $esPropietario = is_true($row['propietario']);
+                $esPrincipal = \src\shared\domain\helpers\FuncTablasSupport::isTrue($row['principal']);
+                $esPropietario = \src\shared\domain\helpers\FuncTablasSupport::isTrue($row['propietario']);
 
                 $direccionDetallada = new DireccionDetalle([
                     'direccion' => $direccion,
@@ -738,8 +735,8 @@ class CentroDl
             if ($direccion !== null) {
                 // Creamos el objeto intermedio con los booleanos de la DB
                 // Aseguramos conversión a bool explícita
-                $esPrincipal = is_true($row['principal']);
-                $esPropietario = is_true($row['propietario']);
+                $esPrincipal = \src\shared\domain\helpers\FuncTablasSupport::isTrue($row['principal']);
+                $esPropietario = \src\shared\domain\helpers\FuncTablasSupport::isTrue($row['propietario']);
 
                 $direccionesDetalladas[] = new DireccionDetalle([
                     'direccion' => $direccion,

@@ -1,7 +1,6 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\FrontBootstrap;
 
 /**
@@ -37,4 +36,4 @@ foreach ($keys as $k) {
     }
 }
 
-ajax_json_proxy_post_request('/src/encargossacd/horario_sacd_update_data', $campos);
+AjaxJsonSupport::proxyPostRequest('/src/encargossacd/horario_sacd_update_data', $campos);

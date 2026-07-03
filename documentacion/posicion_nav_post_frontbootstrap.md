@@ -2,7 +2,7 @@
 
 Migración de `global_object.inc` / `global_header_front.inc` a `FrontBootstrap::boot()`.
 
-**Helpers:** `frontend/shared/helpers/list_nav_support.php`  
+**Helpers:** `frontend/shared/helpers/ListNavSupport.php`  
 **Audit:** `php scripts/audit_posicion_nav_migration.php --strict`  
 **Referencia canónica:** `frontend/dossiers/controller/dossiers_ver.php`, `frontend/personas/controller/personas_select.php`
 
@@ -51,11 +51,11 @@ Al pintar la flecha atrás, `mostrar_left_slide(1)` hace `go(1)` (lee la entrada
 
 ### Qué sí hace falta tras `FrontBootstrap`
 
-1. **`list_nav_clear_inherited_stack_for_recordar()`** antes de `recordar()` si el POST trae `stack` (evita `deleteFroward()` accidental).
-2. **No** llamar a `list_nav_persist_recordar_entry()` / `replaceStackParametros()` en `dossiers_ver` salvo actualizar solo `id_sel` tras un refresh.
-3. **No** `list_nav_persist_selection_to_posicion(..., 1)` en navegación dossier → dossier (p. ej. asistentes → matrículas persona).
+1. **`ListNavSupport::clearInheritedStackForRecordar()`** antes de `recordar()` si el POST trae `stack` (evita `deleteFroward()` accidental).
+2. **No** llamar a `ListNavSupport::persistRecordarEntry()` / `replaceStackParametros()` en `dossiers_ver` salvo actualizar solo `id_sel` tras un refresh.
+3. **No** `ListNavSupport::persistSelectionToPosicion(..., 1)` en navegación dossier → dossier (p. ej. asistentes → matrículas persona).
 
-`list_nav_persist_recordar_entry()` queda para listados cuyo POST arrastra campos de **otro** formulario (p. ej. `pau`/`obj_pau` del hash de `actividad_select` al abrir `lista_clases_ca`).
+`ListNavSupport::persistRecordarEntry()` queda para listados cuyo POST arrastra campos de **otro** formulario (p. ej. `pau`/`obj_pau` del hash de `actividad_select` al abrir `lista_clases_ca`).
 
 ---
 
@@ -63,25 +63,23 @@ Al pintar la flecha atrás, `mostrar_left_slide(1)` hace `go(1)` (lee la entrada
 
 ```php
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 
 // 1) Leer filtros / estado del POST (y restaurar stack si aplica — ver abajo)
 
 // 2) Limpiar stack heredado + recordar
-list_nav_boot_recordar($oPosicion);           // o list_nav_boot_recordar($oPosicion, $refresh)
+ListNavSupport::bootRecordar($oPosicion);           // o ListNavSupport::bootRecordar($oPosicion, $refresh)
 
 // 3) Persistir POST limpio en la entrada que acaba de crear recordar() (n=0)
-list_nav_persist_recordar_entry(
+ListNavSupport::persistRecordarEntry(
     $oPosicion,
-    list_nav_build_return_parametros_from_post(),  // o builder específico
+    ListNavSupport::buildReturnParametrosFromPost(),  // o builder específico
 );
 ```
 
-`list_nav_boot_recordar()` = `list_nav_clear_inherited_stack_for_recordar()` + `recordar()`.
+`ListNavSupport::bootRecordar()` = `ListNavSupport::clearInheritedStackForRecordar()` + `recordar()`.
 
-**Nunca** persistir `$_POST` crudo: quitar meta-hash (`h`, `hh`, `hhc`, …) y campos efímeros (`stack`, `Gstack`). Los helpers `list_nav_build_*` y `list_nav_persist_recordar_entry` ya lo hacen.
+**Nunca** persistir `$_POST` crudo: quitar meta-hash (`h`, `hh`, `hhc`, …) y campos efímeros (`stack`, `Gstack`). Los helpers `ListNavSupport::build*` y `ListNavSupport::persistRecordarEntry` ya lo hacen.
 
 ---
 
@@ -90,7 +88,7 @@ list_nav_persist_recordar_entry(
 Ejemplo: `actividad_que.php`, `personas_que.php`, `planning_persona_que.php`.
 
 - No suele haber restauración de `stack` compleja.
-- Tras leer filtros del POST → `list_nav_boot_recordar()` → persistir con builder explícito o `list_nav_build_return_parametros_from_post()`.
+- Tras leer filtros del POST → `ListNavSupport::bootRecordar()` → persistir con builder explícito o `ListNavSupport::buildReturnParametrosFromPost()`.
 
 ---
 
@@ -112,14 +110,14 @@ if ($stackFromPost !== 0) {
 // Construir $returnParametros explícitos (filtros + id_sel + scroll_id)
 $returnParametros = [ /* ... */ ];
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, $returnParametros);
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, $returnParametros);
 
-list_nav_persist_selection_on_list_page($oPosicion, $idSel, $scrollId, $stackFromPost !== 0);
+ListNavSupport::persistSelectionOnListPage($oPosicion, $idSel, $scrollId, $stackFromPost !== 0);
 
 // Actualizar padre SOLO después de recordar(), y solo si la URL padre es la esperada
-list_nav_persist_parent_if_url($oPosicion, $filtrosParaQue, 'personas_que.php');
-// actividad_select: list_nav_persist_actividad_que_parent($oPosicion, $aGoBack);
+ListNavSupport::persistParentIfUrl($oPosicion, $filtrosParaQue, 'personas_que.php');
+// actividad_select: ListNavSupport::persistActividadQueParent($oPosicion, $aGoBack);
 ```
 
 **Reglas:**
@@ -128,7 +126,7 @@ list_nav_persist_parent_if_url($oPosicion, $filtrosParaQue, 'personas_que.php');
 |--------|----------|
 | `goStack` / restaurar **antes** de `recordar()` | `goStack` **después** de `recordar()` |
 | `setParametros(..., 1)` **después** de `recordar()` | `setParametros(..., 1)` **antes** de `recordar()` |
-| Persistir lista de campos mínimos | `list_nav_build_return_parametros_from_post()` con campos de otro formulario (`pau`, `queSel`, …) |
+| Persistir lista de campos mínimos | `ListNavSupport::buildReturnParametrosFromPost()` con campos de otro formulario (`pau`, `queSel`, …) |
 
 Si el listado envía `Gstack` a pantallas hijas, incluir en el hash del formulario:
 
@@ -143,17 +141,17 @@ Si el listado envía `Gstack` a pantallas hijas, incluir en el hash del formular
 Ejemplo: `lista_clases_ca.php`, `lista_asistentes.php`, `resumen_plazas.php` desde `actividad_select`.
 
 ```php
-list_nav_boot_child_from_list_recordar($oPosicion);
-// o, para actividad_select: list_nav_boot_actividad_select_child_recordar($oPosicion);
+ListNavSupport::bootChildFromListRecordar($oPosicion);
+// o, para actividad_select: ListNavSupport::bootActividadSelectChildRecordar($oPosicion);
 
-list_nav_persist_actividad_select_child_entry($oPosicion, ['id_activ' => $idActiv]);
+ListNavSupport::persistActividadSelectChildEntry($oPosicion, ['id_activ' => $idActiv]);
 // Persistir solo lo necesario para recargar ESTA pantalla (sel, id_activ, …)
 // NO incluir pau / queSel / id_dossier del formulario padre
 ```
 
-`list_nav_boot_child_from_list_recordar()`:
+`ListNavSupport::bootChildFromListRecordar()`:
 
-1. Re-graba la entrada `Gstack` del listado padre (`list_nav_repersist_stack_entry_from_gstack`).
+1. Re-graba la entrada `Gstack` del listado padre (`ListNavSupport::repersistStackEntryFromGstack`).
 2. Limpia `stack` heredado y llama a `recordar()`.
 
 ---
@@ -174,16 +172,16 @@ if ($returningViaStack) {
 
 if ($gstackFromPost > 0) {
     // Abierto desde actividad_select (u otro listado con Gstack)
-    list_nav_boot_dossiers_from_actividad_select($oPosicion, $Qrefresh);
+    ListNavSupport::bootDossiersFromActividadSelect($oPosicion, $Qrefresh);
 } else {
-    list_nav_boot_recordar($oPosicion, $Qrefresh);
+    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
 }
 ```
 
 Formularios hijos del dossier (`form_cargos_de_actividad.php`, `form_asignaturas_de_una_actividad.php`, etc.) cargados en **sub-bloque** del segmento:
 
 ```php
-list_nav_boot_dossier_child_recordar($oPosicion);
+ListNavSupport::bootDossierChildRecordar($oPosicion);
 ```
 
 Eso hace:
@@ -192,7 +190,7 @@ Eso hace:
 2. `recordar()` con POST completo del hijo.
 3. Solo si el padre (n=1) es `dossiers_ver.php`, fusiona `id_sel` / `scroll_id`.
 
-**No** usar `list_nav_persist_dossier_return_to_posicion()` ni `list_nav_persist_clean_return_to_posicion()` en el padre dossier: sobrescribían la entrada con un POST mínimo o, peor, corrompían `actividad_select` cuando el dossier no estaba en la pila.
+**No** usar `ListNavSupport::persistDossierReturnToPosicion()` ni `ListNavSupport::persistCleanReturnToPosicion()` en el padre dossier: sobrescribían la entrada con un POST mínimo o, peor, corrompían `actividad_select` cuando el dossier no estaba en la pila.
 
 ---
 
@@ -202,8 +200,8 @@ Pantallas como `tessera_imprimir.php`, `acta_imprimir.php`, `certificado_emitido
 
 Tras `recordar()`, persistir en la entrada **padre** (n=1) con el helper de impresión correspondiente:
 
-- `list_nav_persist_tessera_imprimir_parent_return_to_posicion()`
-- `list_nav_persist_acta_imprimir_parent_return_to_posicion()`
+- `ListNavSupport::persistTesseraImprimirParentReturnToPosicion()`
+- `ListNavSupport::persistActaImprimirParentReturnToPosicion()`
 - etc.
 
 El audit marca `imprimir_sin_padre_limpio` si la vista usa `mostrar_back_arrow` y el controlador no persiste el padre.
@@ -214,14 +212,14 @@ El audit marca `imprimir_sin_padre_limpio` si la vista usa `mostrar_back_arrow` 
 
 Al migrar o corregir un `frontend/*/controller/*.php`:
 
-- [ ] `require_once` de `FrontBootstrap.php` y `list_nav_support.php`
+- [ ] `require_once` de `FrontBootstrap.php` y `ListNavSupport.php`
 - [ ] `$oPosicion = FrontBootstrap::boot();` (no `global_object` para sesión/hash)
 - [ ] Si usa `stack` en POST: restaurar estado **antes** de `recordar()`
-- [ ] `list_nav_boot_recordar()` (o variante `_child_` / `_dossiers_`)
-- [ ] `list_nav_persist_recordar_entry()` o `list_nav_persist_clean_return_to_posicion()` con parámetros **explícitos**
-- [ ] Listados: `list_nav_persist_selection_on_list_page()` si hay tabla con selección
-- [ ] `setParametros(..., 1)` solo **después** de `recordar()`, vía `list_nav_persist_parent_if_url()`
-- [ ] Hijos de listado: `Gstack` en el formulario padre + `list_nav_boot_child_from_list_recordar()`
+- [ ] `ListNavSupport::bootRecordar()` (o variante `_child_` / `_dossiers_`)
+- [ ] `ListNavSupport::persistRecordarEntry()` o `ListNavSupport::persistCleanReturnToPosicion()` con parámetros **explícitos**
+- [ ] Listados: `ListNavSupport::persistSelectionOnListPage()` si hay tabla con selección
+- [ ] `setParametros(..., 1)` solo **después** de `recordar()`, vía `ListNavSupport::persistParentIfUrl()`
+- [ ] Hijos de listado: `Gstack` en el formulario padre + `ListNavSupport::bootChildFromListRecordar()`
 
 ---
 
@@ -230,9 +228,9 @@ Al migrar o corregir un `frontend/*/controller/*.php`:
 | Comando | Uso |
 |---------|-----|
 | `php scripts/audit_posicion_nav_migration.php` | Hallazgos por categoría |
-| `php scripts/audit_posicion_nav_migration.php --only=sin_clear_stack` | Sin `list_nav_boot_recordar` / `clear_inherited` |
+| `php scripts/audit_posicion_nav_migration.php --only=sin_clear_stack` | Sin `ListNavSupport::bootRecordar` / `clear_inherited` |
 | `php scripts/audit_posicion_nav_migration.php --only=padre_antes_recordar` | `setParametros(...,1)` antes de `recordar()` |
-| `php scripts/fix_recordar_sin_post_limpio.php --apply` | Inserta `list_nav_persist_recordar_entry` (ya aplicado en bloque) |
+| `php scripts/fix_recordar_sin_post_limpio.php --apply` | Inserta `ListNavSupport::persistRecordarEntry` (ya aplicado en bloque) |
 | `php scripts/fix_stack_before_recordar_v3.php --apply` | Reordena `goStack` antes de `recordar()` |
 
 ---
@@ -241,15 +239,15 @@ Al migrar o corregir un `frontend/*/controller/*.php`:
 
 | Helper | Cuándo |
 |--------|--------|
-| `list_nav_boot_recordar()` | Casi siempre antes de `recordar()` |
-| `list_nav_boot_child_from_list_recordar()` | Hijo con `Gstack` en POST |
-| `list_nav_persist_recordar_entry()` | POST limpio en entrada actual (n=0) |
-| `list_nav_build_return_parametros_from_post()` | Formularios genéricos sin campos cruzados |
-| `list_nav_persist_parent_if_url()` | Actualizar `*_que` padre tras listado |
-| `list_nav_repersist_stack_entry_from_gstack()` | Re-grabar listado padre al abrir hijo |
-| `list_nav_build_actividad_select_return_parametros()` | Volver a `actividad_select` |
-| `list_nav_boot_dossier_child_recordar()` | Form hijo de segmento `dossiers_ver` (sub-bloque) |
-| `list_nav_persist_dossier_return_to_posicion()` | Obsoleto (no-op); usar `list_nav_boot_dossier_child_recordar()` |
+| `ListNavSupport::bootRecordar()` | Casi siempre antes de `recordar()` |
+| `ListNavSupport::bootChildFromListRecordar()` | Hijo con `Gstack` en POST |
+| `ListNavSupport::persistRecordarEntry()` | POST limpio en entrada actual (n=0) |
+| `ListNavSupport::buildReturnParametrosFromPost()` | Formularios genéricos sin campos cruzados |
+| `ListNavSupport::persistParentIfUrl()` | Actualizar `*_que` padre tras listado |
+| `ListNavSupport::repersistStackEntryFromGstack()` | Re-grabar listado padre al abrir hijo |
+| `ListNavSupport::buildActividadSelectReturnParametros()` | Volver a `actividad_select` |
+| `ListNavSupport::bootDossierChildRecordar()` | Form hijo de segmento `dossiers_ver` (sub-bloque) |
+| `ListNavSupport::persistDossierReturnToPosicion()` | Obsoleto (no-op); usar `ListNavSupport::bootDossierChildRecordar()` |
 
 ---
 

@@ -1,9 +1,13 @@
 <?php
 
+use frontend\actividadestudios\helpers\CaPosiblesPayload;
+use frontend\actividadestudios\helpers\ActividadestudiosRenderSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Periodo;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Esta página sirve para calcular los créditos cursables para cada alumno en cada ca.
@@ -16,39 +20,37 @@ use frontend\shared\FrontBootstrap;
  *
  */
 
-require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 
-$restored = list_nav_restore_selection_from_stack_post();
+$restored = ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !list_nav_id_sel_is_empty($restored['id_sel']) ? $restored['id_sel'] : list_nav_id_sel_from_post();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : list_nav_scroll_id_from_post();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(($aGoBack ?? list_nav_build_return_parametros_from_post()), $Qid_sel, $Qscroll_id));
+$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
 
 
-$obj_pau = tessera_imprimir_string(filter_input(INPUT_POST, 'obj_pau'));
-$Qgrupo_estudios = tessera_imprimir_string(filter_input(INPUT_POST, 'grupo_estudios'));
-$Qtexto = tessera_imprimir_string(filter_input(INPUT_POST, 'texto'));
-$Qref = tessera_imprimir_string(filter_input(INPUT_POST, 'ref'));
-$Qidca = tessera_imprimir_string(filter_input(INPUT_POST, 'idca'));
-$Qca_estudios = tessera_imprimir_string(filter_input(INPUT_POST, 'ca_estudios'));
-$Qca_repaso = tessera_imprimir_string(filter_input(INPUT_POST, 'ca_repaso'));
-$Qca_todos = tessera_imprimir_string(filter_input(INPUT_POST, 'ca_todos'));
+$obj_pau = PayloadCoercion::string(filter_input(INPUT_POST, 'obj_pau'));
+$Qgrupo_estudios = PayloadCoercion::string(filter_input(INPUT_POST, 'grupo_estudios'));
+$Qtexto = PayloadCoercion::string(filter_input(INPUT_POST, 'texto'));
+$Qref = PayloadCoercion::string(filter_input(INPUT_POST, 'ref'));
+$Qidca = PayloadCoercion::string(filter_input(INPUT_POST, 'idca'));
+$Qca_estudios = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_estudios'));
+$Qca_repaso = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_repaso'));
+$Qca_todos = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_todos'));
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 if (empty($a_sel)) {
     $Qid_ctr_agd = (integer)filter_input(INPUT_POST, 'id_ctr_agd');
     $Qid_ctr_n = (integer)filter_input(INPUT_POST, 'id_ctr_n');
-    $Qna = tessera_imprimir_string(filter_input(INPUT_POST, 'na'));
+    $Qna = PayloadCoercion::string(filter_input(INPUT_POST, 'na'));
     $Qyear = (integer)filter_input(INPUT_POST, 'year');
-    $Qperiodo = tessera_imprimir_string(filter_input(INPUT_POST, 'periodo'));
-    $Qempiezamin = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamin'));
-    $Qempiezamax = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamax'));
+    $Qperiodo = PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
+    $Qempiezamin = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
+    $Qempiezamax = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));
 
     if (empty($Qid_ctr_agd) && empty($Qid_ctr_n)) {
         $msg_txt = _("debe seleccionar un centro o grupo de centros");
@@ -89,10 +91,10 @@ $data = PostRequest::getDataFromUrl(
     false,
 );
 if (!empty($data['error'])) {
-    echo PostRequest::stripInternalCallProvenance(tessera_imprimir_string($data['error']));
+    echo PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error']));
     return;
 }
-$caPosibles = actividadestudios_ca_posibles_from_payload(actividadestudios_post_data($data));
+$caPosibles = CaPosiblesPayload::fromPayload(ActividadestudiosRenderSupport::stringKeyRow($data));
 
 if ($caPosibles['modo'] === 'lista') {
     if ($caPosibles['msg_txt'] !== '') {

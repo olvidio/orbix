@@ -1,14 +1,13 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_equipaje = input_int($_POST, 'id_equipaje');
+$Qid_equipaje = FuncTablasSupport::inputInt($_POST, 'id_equipaje');
 
 $error_txt = '';
 

@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: devuelve los datos del cuadro de gestion de
  * plazas (cabeceras, valores, a_grupo y metadatos de periodo/tipo)
@@ -8,17 +11,15 @@
 use src\actividadplazas\application\GestionPlazasData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_string;
-
 $input = [
-    'id_tipo_activ' => input_string($_POST, 'id_tipo_activ'),
-    'year' => input_string($_POST, 'year'),
-    'periodo' => input_string($_POST, 'periodo'),
-    'empiezamin' => input_string($_POST, 'empiezamin'),
-    'empiezamax' => input_string($_POST, 'empiezamax'),
-    'sasistentes' => input_string($_POST, 'sasistentes'),
-    'sactividad' => input_string($_POST, 'sactividad'),
-    'sactividad2' => input_string($_POST, 'sactividad2'),
+    'id_tipo_activ' => FuncTablasSupport::inputString($_POST, 'id_tipo_activ'),
+    'year' => FuncTablasSupport::inputString($_POST, 'year'),
+    'periodo' => FuncTablasSupport::inputString($_POST, 'periodo'),
+    'empiezamin' => FuncTablasSupport::inputString($_POST, 'empiezamin'),
+    'empiezamax' => FuncTablasSupport::inputString($_POST, 'empiezamax'),
+    'sasistentes' => FuncTablasSupport::inputString($_POST, 'sasistentes'),
+    'sactividad' => FuncTablasSupport::inputString($_POST, 'sactividad'),
+    'sactividad2' => FuncTablasSupport::inputString($_POST, 'sactividad2'),
 ];
 
 /** @var GestionPlazasData $useCase */

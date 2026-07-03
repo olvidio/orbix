@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -18,8 +19,6 @@ use src\personas\domain\entity\PersonaN;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 
 /**
  * Tabla de `asig_faltan_select` (asignaturas pendientes por persona).
@@ -42,13 +41,13 @@ final class AsigFaltanSelectTablaData
      */
     public function execute(array $in): array
     {
-        $Qnumero = input_int($in, 'numero');
-        $Qb_c = input_string($in, 'b_c');
-        $Qc1 = input_string($in, 'c1');
-        $Qc2 = input_string($in, 'c2');
-        $Qpersonas_n = input_string($in, 'personas_n');
-        $Qpersonas_agd = input_string($in, 'personas_agd');
-        $Qlista = input_string($in, 'lista');
+        $Qnumero = FuncTablasSupport::inputInt($in, 'numero');
+        $Qb_c = FuncTablasSupport::inputString($in, 'b_c');
+        $Qc1 = FuncTablasSupport::inputString($in, 'c1');
+        $Qc2 = FuncTablasSupport::inputString($in, 'c2');
+        $Qpersonas_n = FuncTablasSupport::inputString($in, 'personas_n');
+        $Qpersonas_agd = FuncTablasSupport::inputString($in, 'personas_agd');
+        $Qlista = FuncTablasSupport::inputString($in, 'lista');
 
         $isTrue = static function (string $v): bool {
             return $v === '1' || $v === 'true' || $v === 'on' || $v === 't';

@@ -4,8 +4,7 @@ namespace src\actividadessacd\application;
 
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Reordena un sacd en el listado de cargos sacd de una actividad.
@@ -23,9 +22,9 @@ final class SacdReordenar
      */
     public function execute(array $input): string
     {
-        $id_activ = input_int($input, 'id_activ');
-        $id_nom = input_int($input, 'id_nom');
-        $direccion = input_string($input, 'num_orden');
+        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
+        $direccion = FuncTablasSupport::inputString($input, 'num_orden');
 
         if ($id_activ <= 0 || $id_nom <= 0) {
             return _("faltan parametros id_activ / id_nom");

@@ -1,4 +1,8 @@
 <?php
+
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\casas\helpers\CasasPayload;
+
 /**
  * Controlador AJAX HTML: cuerpo del informe `calendario_ubi_resumen`.
  *
@@ -16,9 +20,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -28,8 +30,8 @@ $campos = [
     'inc_t' => (string)filter_input(INPUT_POST, 'inc_t'),
 ];
 
-$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/calendario_ubi_resumen_data', $campos));
-$errorInfo = casas_calendario_body_error_from_payload($data);
+$data = CasasPayload::postData(PostRequest::getDataFromUrl('/src/casas/calendario_ubi_resumen_data', $campos));
+$errorInfo = CasasPayload::calendarioBodyErrorFromPayload($data);
 
 if (!$errorInfo['ok'] && $errorInfo['error'] === 'sin_gastos_anterior') {
     $aQuery = [
@@ -45,14 +47,14 @@ if (!$errorInfo['ok'] && $errorInfo['error'] === 'sin_gastos_anterior') {
     ob_start();
     echo sprintf(_("Falta introducir la información económica (total) del año anterior: %s"), $link);
     echo "<br><br>";
-    ajax_json_html((string) ob_get_clean());
+    AjaxJsonSupport::html((string) ob_get_clean());
 }
 
 if (!$errorInfo['ok']) {
-    ajax_json_html('', $errorInfo['error'] !== '' ? $errorInfo['error'] : _("No se pueden calcular los datos solicitados."));
+    AjaxJsonSupport::html('', $errorInfo['error'] !== '' ? $errorInfo['error'] : _("No se pueden calcular los datos solicitados."));
 }
 
 ob_start();
 $oView = new ViewNewPhtml('frontend\\casas\\controller');
 $oView->renderizar('calendario_ubi_resumen_body.phtml', $data);
-ajax_json_html((string) ob_get_clean());
+AjaxJsonSupport::html((string) ob_get_clean());

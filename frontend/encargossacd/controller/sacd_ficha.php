@@ -1,9 +1,9 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\encargossacd\support\SacdFichaAjaxHashes;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\FrontBootstrap;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
 
 /**
  * Ficha de encargos de un sacd.
@@ -19,7 +19,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qfiltro_sacd = encargossacd_post_string('filtro_sacd');
+$Qfiltro_sacd = EncargossacdPostInput::postString('filtro_sacd');
 
 $hashes = SacdFichaAjaxHashes::hashesComunes();
 $oDesplFiltroSacd = SacdFichaAjaxHashes::desplegableFiltroSacd($Qfiltro_sacd);

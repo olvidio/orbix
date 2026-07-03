@@ -1,5 +1,8 @@
 <?php
 
+use frontend\shared\helpers\ListNavSupport;
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Pantalla unificada para la comunicacion de actividades a los sacd.
  *
@@ -35,8 +38,6 @@ use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $Qid_nom = (int)filter_input(INPUT_POST, 'id_nom');
 $Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
@@ -56,8 +57,8 @@ if ($Qque === 'un_sacd') {
     }
 }
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $aOpciones = [
@@ -72,7 +73,7 @@ $aOpciones = [
 
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('seleccion');
-$oFormP->setTitulo(src\shared\domain\helpers\strtoupper_dlb(_("seleccionar un periodo")));
+$oFormP->setTitulo(src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $sBotonBuscar = "<input type=button name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">";
 $sBotonEnviar = "<input type=button name=\"enviar\" value=\"" . _("enviar mail") . "\" onclick=\"fnjs_enviar_mails();\">";

@@ -1,4 +1,10 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPermSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
+
 /**
  * Formulario para escoger un centro (y un periodo) y lanzar un listado
  * de actividades, datos economicos, cdc, etc.
@@ -11,16 +17,12 @@ use frontend\shared\web\CentrosQue;
 use frontend\shared\web\DesplegableArray;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qtipo_ctr = (string)filter_input(INPUT_POST, 'tipo_ctr');
@@ -39,7 +41,7 @@ if ($miRolePau === 'ctr') { // PauType::PAU_CTR
     $sessionAuth = $_SESSION['session_auth'] ?? null;
     $oMiUsuario = is_array($sessionAuth) ? ($sessionAuth['MiUsuario'] ?? null) : null;
     $id_pau = is_object($oMiUsuario) && method_exists($oMiUsuario, 'getCsv_id_pau')
-        ? tessera_imprimir_string($oMiUsuario->getCsv_id_pau())
+        ? PayloadCoercion::string($oMiUsuario->getCsv_id_pau())
         : '';
     $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
     $oForm->setCentros('centro');
@@ -55,7 +57,7 @@ if ($miRolePau === 'ctr') { // PauType::PAU_CTR
             $filtro['tipo_ctr'] = 'seccion_no_s';
         }
     } else {
-        if (actividades_have_perm_oficina('des') || actividades_have_perm_oficina('vcsd')) {
+        if (ActividadesPermSupport::havePermOficina('des') || ActividadesPermSupport::havePermOficina('vcsd')) {
             $oForm->setCentros('all');
         } else {
             if (OrbixRuntime::miSfsv() === 1) {
@@ -105,7 +107,7 @@ $oSelects->setAccionConjunto('fnjs_mas_centros(event)');
 
 $oFormP = null;
 if ($Qperiodo === 'no') {
-    if ($Qtipo_lista === 'datosEc') $oForm->setTitulo(strtoupper_dlb(_("resumen económico")));
+    if ($Qtipo_lista === 'datosEc') $oForm->setTitulo(FuncTablasSupport::strtoupperDlb(_("resumen económico")));
     $oForm->setBoton("<input type=button name=\"buscar\" value=\"" . _('buscar') . "\" onclick=\"fnjs_ver();\">");
 } else {
     $aOpciones = array(
@@ -128,7 +130,7 @@ if ($Qperiodo === 'no') {
     $oFormP->setEmpiezaMin($Qempiezamin);
     $oFormP->setEmpiezaMax($Qempiezamax);
 
-    $oFormP->setTitulo(strtoupper_dlb(_("seleccionar un centro y un período")));
+    $oFormP->setTitulo(FuncTablasSupport::strtoupperDlb(_("seleccionar un centro y un período")));
     $oFormP->setAntes($oSelects->ListaSelects());
     $oFormP->setBoton("<input type=button name=\"buscar\" value=\"" . _('buscar') . "\" onclick=\"fnjs_ver();\">");
 }

@@ -1,5 +1,6 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
@@ -10,7 +11,7 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use src\shared\web\ContestarJson;
 
-$Qid_role = (int)filter_post('id_role');
+$Qid_role = (int)FilterPostGet::post('id_role');
 
 $error_txt = '';
 

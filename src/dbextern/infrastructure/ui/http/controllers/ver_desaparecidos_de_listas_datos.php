@@ -3,10 +3,9 @@
 use src\dbextern\application\VerDesaparecidosDeListasData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_string;
-
-$tipo_persona = input_string($_POST, 'tipo_persona');
-$ids_desaparecidos_de_listas = input_string($_POST, 'ids_desaparecidos_de_listas');
+use src\shared\domain\helpers\FuncTablasSupport;
+$tipo_persona = FuncTablasSupport::inputString($_POST, 'tipo_persona');
+$ids_desaparecidos_de_listas = FuncTablasSupport::inputString($_POST, 'ids_desaparecidos_de_listas');
 
 $decoded = json_decode(urldecode($ids_desaparecidos_de_listas), true);
 /** @var list<int> $a_ids */

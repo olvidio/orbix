@@ -3,13 +3,12 @@
 use src\actividadestudios\application\MatriculasListaData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_string;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 $error = '';
 $data = [];
 try {
-    $inicioIso = input_string($_POST, 'inicioIso');
-    $finIso = input_string($_POST, 'finIso');
+    $inicioIso = FuncTablasSupport::inputString($_POST, 'inicioIso');
+    $finIso = FuncTablasSupport::inputString($_POST, 'finIso');
     if ($inicioIso === '' || $finIso === '') {
         throw new \InvalidArgumentException(_('Se requieren inicioIso y finIso'));
     }

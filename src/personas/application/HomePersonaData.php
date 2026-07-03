@@ -2,8 +2,6 @@
 
 namespace src\personas\application;
 
-use function src\shared\domain\helpers\input_string;
-
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\application\support\PersonaSeleccionInput;
@@ -12,6 +10,7 @@ use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/home_persona_data`.
@@ -46,7 +45,7 @@ final class HomePersonaData
             $id_tabla = $seleccion['id_tabla'];
         }
 
-        $Qobj_pau = input_string($input, 'obj_pau');
+        $Qobj_pau = FuncTablasSupport::inputString($input, 'obj_pau');
 
         $problemasRegionStgr = [];
         try {

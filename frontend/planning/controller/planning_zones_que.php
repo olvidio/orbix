@@ -1,7 +1,8 @@
 <?php
-
 namespace frontend\planning\controller;
 
+use frontend\notas\helpers\NotasFormSupport;
+use frontend\planning\helpers\PlanningPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
@@ -9,6 +10,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Formulario de filtros para el planning por zonas (sacd). Calcula el
@@ -18,9 +20,7 @@ use frontend\shared\FrontBootstrap;
  * (slice 3 de la migracion del modulo planning). La plantilla se ha
  * reescrito como PHTML; ya no se usa Twig.
  */
-require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 if (isset($_POST['stack'])) {
@@ -32,8 +32,8 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
 
 
 
@@ -69,15 +69,15 @@ if (empty($Qtrimestre)) {
 }
 
 $zonesData = PostRequest::getDataFromUrl('/src/planning/planning_zones_que_data', []);
-$aOpciones = notas_desplegable_opciones($zonesData['opciones_zonas'] ?? []);
+$aOpciones = NotasFormSupport::desplegableOpciones($zonesData['opciones_zonas'] ?? []);
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
 $oDesplZonas->setBlanco(false);
 if ($Qid_zona !== 0) {
-    $oDesplZonas->setOpcion_sel(planning_desplegable_opcion_sel($Qid_zona));
+    $oDesplZonas->setOpcion_sel(PlanningPayload::desplegableOpcionSel($Qid_zona));
 }
 
-$is_jefeCalendario = planning_is_jefe_calendario();
+$is_jefeCalendario = PlanningPayload::isJefeCalendario();
 $url = 'frontend/planning/controller/planning_zones_select.php';
 
 $oHash = new HashFront();
@@ -90,9 +90,9 @@ $oHash->setCamposForm('actividad!year!id_zona!trimestre');
 $oHash->setCamposNo('modelo!propuesta');
 
 $oFormAny = new PeriodoQue();
-$aOpcionesAnys = planning_periodo_anys_opciones();
+$aOpcionesAnys = PlanningPayload::periodoAnysOpciones();
 $oFormAny->setPosiblesAnys($aOpcionesAnys);
-$oFormAny->setDesplAnysOpcion_sel(planning_desplegable_opcion_sel($year));
+$oFormAny->setDesplAnysOpcion_sel(PlanningPayload::desplegableOpcionSel($year));
 
 $chk_actividad_si = ($Qactividad !== '' && $Qactividad === 'no') ? '' : 'checked';
 $chk_actividad_no = ($Qactividad === 'no') ? 'checked' : '';

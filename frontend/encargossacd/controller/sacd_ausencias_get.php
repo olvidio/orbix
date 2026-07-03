@@ -1,9 +1,12 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
+use frontend\encargossacd\helpers\EncargossacdPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Muestra las ausencias de un SACD.
@@ -16,19 +19,17 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->setBloque('#ficha');
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
-$Qhistorial = encargossacd_post_int('historial');
-$Qid_nom = encargossacd_post_int('id_nom');
-$Qfiltro_sacd = encargossacd_post_int('filtro_sacd');
+$Qhistorial = EncargossacdPostInput::postInt('historial');
+$Qid_nom = EncargossacdPostInput::postInt('id_nom');
+$Qfiltro_sacd = EncargossacdPostInput::postInt('filtro_sacd');
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/sacd_ausencias_get_data', [
     'id_nom' => $Qid_nom,
@@ -45,7 +46,7 @@ $id_item = [];
 $inicio = [];
 $fin = [];
 foreach ($filas as $i => $fila) {
-    $row = encargossacd_ausencia_row($fila);
+    $row = EncargossacdPayload::ausenciaRow($fila);
     $id_enc[$i] = $row['id_enc'];
     $id_tipo_enc[$i] = $row['id_tipo_enc'];
     $desc_enc[$i] = $row['desc_enc'];
@@ -89,4 +90,4 @@ $a_campos = [
     'array_tipo_ausencias' => $array_tipo_ausencias,
 ];
 
-ajax_json_render_phtml('frontend\\encargossacd\\controller', 'sacd_ausencias_get.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\encargossacd\\controller', 'sacd_ausencias_get.phtml', $a_campos);

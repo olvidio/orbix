@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\encargossacd\support\SacdFichaAjaxHashes;
 use frontend\shared\model\ViewNewPhtml;
@@ -7,6 +6,8 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\encargossacd\helpers\EncargossacdPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Muestra la ficha de ausencias para un jefe de zona / oficial.
@@ -18,18 +19,17 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/sacd_ausencias_jefe_zona_data', []);
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setNombre('id_sacd');
-$oDesplSacd->setOpciones(encargossacd_desplegable_opciones($datos['a_sacd'] ?? []));
+$oDesplSacd->setOpciones(EncargossacdPayload::desplegableOpciones($datos['a_sacd'] ?? []));
 $oDesplSacd->setBlanco(false);
 $oDesplSacd->setAction('fnjs_ver_ficha()');
 

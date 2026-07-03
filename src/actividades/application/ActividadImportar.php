@@ -6,7 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ImportadaRepositoryInterface;
 use src\actividades\domain\entity\Importada;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
-use function src\shared\domain\helpers\input_string_list;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Importa actividades seleccionadas y regenera su proceso si aplica.
@@ -28,7 +28,7 @@ final class ActividadImportar
     {
         $error_txt = '';
         $avisos = [];
-        $a_sel = input_string_list($input, 'sel');
+        $a_sel = FuncTablasSupport::inputStringList($input, 'sel');
 
         if ($a_sel === []) {
             return ['error_txt' => $error_txt, 'avisos' => $avisos];

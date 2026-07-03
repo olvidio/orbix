@@ -4,10 +4,8 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
-$ctxRaw = input_string($_POST, 'ctx');
+use src\shared\domain\helpers\FuncTablasSupport;
+$ctxRaw = FuncTablasSupport::inputString($_POST, 'ctx');
 try {
     $opened = HashB::open($ctxRaw, 'update_solo_vip');
 } catch (HashBInvalidException $e) {
@@ -16,14 +14,14 @@ try {
     exit;
 }
 
-$Qid_activ = input_int($opened, 'id_activ');
+$Qid_activ = FuncTablasSupport::inputInt($opened, 'id_activ');
 if ($Qid_activ <= 0) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'mensaje' => _('Operación no autorizada')]);
     exit;
 }
 
-$Qsolo_vip = input_string($_POST, 'solo_vip');
+$Qsolo_vip = FuncTablasSupport::inputString($_POST, 'solo_vip');
 
 $jsondata = [];
 

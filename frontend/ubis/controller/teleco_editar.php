@@ -1,12 +1,12 @@
 <?php
 
+use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -24,7 +24,7 @@ if ($Qmod === 'nuevo') {
     $a_sel = ['xx'];
 }
 
-$data = ubis_teleco_from_payload(ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/teleco_editar', [
+$data = UbisPayload::telecoFromPayload(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/teleco_editar', [
     'obj_pau' => $Qobj_pau,
     'mod' => $Qmod,
     'id_ubi' => $Qid_ubi,

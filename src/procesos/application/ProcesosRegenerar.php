@@ -4,7 +4,7 @@ namespace src\procesos\application;
 
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: regenera las tareas del proceso a partir de tareas_proceso.
@@ -22,7 +22,7 @@ class ProcesosRegenerar
      */
     public function execute(array $input): string
     {
-        $Qid_tipo_proceso = input_int($input, 'id_tipo_proceso');
+        $Qid_tipo_proceso = FuncTablasSupport::inputInt($input, 'id_tipo_proceso');
 
         $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso]);
         $id_fase = 0;

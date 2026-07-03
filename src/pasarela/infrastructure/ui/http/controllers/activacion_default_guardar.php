@@ -1,10 +1,11 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\shared\web\ContestarJson;
 use src\pasarela\application\ActivacionDefaultGuardar;
 
-$default = (string)filter_post('default');
+$default = (string)FilterPostGet::post('default');
 
 /** @var ActivacionDefaultGuardar $useCase */
 $useCase = DependencyResolver::get(ActivacionDefaultGuardar::class);

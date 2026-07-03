@@ -1,16 +1,18 @@
 <?php
 
+use frontend\actividades\helpers\ActividadesListaSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -23,8 +25,8 @@ $aGoBack = [
     'id_tipo_doc' => $Qid_tipo_doc,
 ];
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar($aGoBack, list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar($aGoBack, ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
 
 $oPosicion->setParametros($aGoBack, 1);
 
@@ -32,10 +34,10 @@ $oPosicion->setParametros($aGoBack, 1);
 $url_backend = '/src/inventario/lista_de_ctr_con_docs';
 $a_campos_backend = ['id_tipo_doc' => $Qid_tipo_doc, 'inventario' => $Qinventario];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$payload = inventario_post_payload($data);
+$payload = InventarioPayload::postPayload($data);
 
-$a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
-$nombreDoc = tessera_imprimir_string($payload['nombreDoc'] ?? '');
+$a_valores = ActividadesListaSupport::datos($payload['a_valores'] ?? []);
+$nombreDoc = PayloadCoercion::string($payload['nombreDoc'] ?? '');
 
 //3
 $url_doc_mod = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_asignar_ctr.php?';

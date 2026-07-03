@@ -4,14 +4,13 @@ use frontend\shared\FrontBootstrap;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
+use frontend\actividadcargos\helpers\ActividadcargosPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once 'frontend/actividadcargos/helpers/actividadcargos_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 
-list_nav_boot_dossier_child_recordar($oPosicion);
+ListNavSupport::bootDossierChildRecordar($oPosicion);
 
 
 $raw = PostRequest::getDataFromUrl('/src/actividadcargos/form_cargos_personas_en_actividad_data', PostRequest::requestPayloadForHash());
@@ -21,7 +20,7 @@ if (!empty($raw['error'])) {
 unset($raw['error']);
 
 $data = FormCargosDeActividadHashCompose::withDesplegablesHtml(
-    FormCargosDeActividadHashCompose::withHashCamposHtml(actividadcargos_string_key_payload($raw))
+    FormCargosDeActividadHashCompose::withHashCamposHtml(ActividadcargosPayload::stringKeyPayload($raw))
 );
 
 $data['oPosicion'] = $oPosicion;

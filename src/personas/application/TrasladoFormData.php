@@ -2,14 +2,13 @@
 
 namespace src\personas\application;
 
-use function src\shared\domain\helpers\input_int;
-
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\entity\PersonaPub;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/traslado_form_data`.
@@ -34,7 +33,7 @@ final class TrasladoFormData
         if (!empty($a_sel)) {
             $id_pau = (int)strtok((string)$a_sel[0], '#');
         } else {
-            $id_pau = input_int($input, 'id_pau');
+            $id_pau = FuncTablasSupport::inputInt($input, 'id_pau');
         }
 
         $oPersona = $this->personaFinderService->findPersonaEnGlobal($id_pau);

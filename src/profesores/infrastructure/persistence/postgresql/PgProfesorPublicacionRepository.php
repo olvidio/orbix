@@ -11,8 +11,6 @@ use PDO;
 use src\profesores\domain\contracts\ProfesorPublicacionRepositoryInterface;
 use src\profesores\domain\entity\ProfesorPublicacion;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla d_publicaciones a la interfaz del repositorio

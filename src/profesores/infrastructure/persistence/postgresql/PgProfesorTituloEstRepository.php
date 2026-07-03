@@ -10,8 +10,6 @@ use PDO;
 use src\profesores\domain\contracts\ProfesorTituloEstRepositoryInterface;
 use src\profesores\domain\entity\ProfesorTituloEst;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla d_titulo_est a la interfaz del repositorio

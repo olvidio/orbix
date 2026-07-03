@@ -10,7 +10,6 @@ use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use src\ubis\domain\entity\TipoTeleco;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla xd_tipo_teleco a la interfaz del repositorio

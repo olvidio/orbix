@@ -5,8 +5,6 @@ namespace src\actividadessacd\application;
 use src\shared\config\ConfigGlobal;
 use src\actividadessacd\application\services\ComunicarActividadesSacdService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 
 /**
  * Mutacion: encola los mails de comunicacion de actividades a los sacd.

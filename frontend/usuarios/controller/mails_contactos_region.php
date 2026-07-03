@@ -1,13 +1,14 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\usuarios\helpers\UsuariosPayload;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qregion = (string)(filter_input(INPUT_GET, 'region') ?? '');
@@ -23,8 +24,8 @@ $oHash->setUrl($url_lista_backend);
 $oHash->setArrayCamposHidden(['region' => $Qregion]);
 $hash_params = $oHash->getArrayCampos();
 
-$resp = usuarios_post_data(PostRequest::getData($url_lista_backend, $hash_params));
-$aContactos = usuarios_contactos_from_payload($resp['contactos'] ?? null);
+$resp = UsuariosPayload::postData(PostRequest::getData($url_lista_backend, $hash_params));
+$aContactos = UsuariosPayload::contactosFromPayload($resp['contactos'] ?? null);
 
 ob_start();
 if (!empty($resp['success']) && $resp['success'] === true) {
@@ -52,7 +53,7 @@ if (!empty($resp['success']) && $resp['success'] === true) {
     }
     echo '</div>';
 } else {
-    $msg = tessera_imprimir_string($resp['mensaje'] ?? 'Error al obtener los mails');
+    $msg = PayloadCoercion::string($resp['mensaje'] ?? 'Error al obtener los mails');
     echo '<div class="mails-region-error">' . htmlspecialchars($msg) . '</div>';
 }
-ajax_json_html((string) ob_get_clean());
+AjaxJsonSupport::html((string) ob_get_clean());

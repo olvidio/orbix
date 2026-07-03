@@ -2,9 +2,6 @@
 
 namespace src\asistentes\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
@@ -13,6 +10,7 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Actividades pendientes por curso (`activ_pendientes_select.php`).
@@ -36,9 +34,9 @@ final class ActivPendientesSelectData
      */
     public function build(array $input): array
     {
-        $Qany = input_int($input, 'any', 0);
-        $Qtipo_personas = input_string($input, 'tipo_personas');
-        $Qsactividad = input_string($input, 'sactividad');
+        $Qany = FuncTablasSupport::inputInt($input, 'any', 0);
+        $Qtipo_personas = FuncTablasSupport::inputString($input, 'tipo_personas');
+        $Qsactividad = FuncTablasSupport::inputString($input, 'sactividad');
 
         if (empty($Qany)) {
             $any = (int)date('Y');
@@ -97,8 +95,8 @@ final class ActivPendientesSelectData
                     $id_tipo_activ = '(112...)|(133...)';
                 }
                 $chk_ca = 'selected';
-                $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'est')->format('Y-m-d');
-                $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'est')->format('Y-m-d');
+                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'est')->format('Y-m-d');
+                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'est')->format('Y-m-d');
                 break;
             case 'crt':
                 if ($Qtipo_personas === 'n') {
@@ -111,8 +109,8 @@ final class ActivPendientesSelectData
                     $id_tipo_activ = '1[136]1...';
                 }
                 $chk_crt = 'selected';
-                $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->format('Y-m-d');
-                $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->format('Y-m-d');
+                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'crt')->format('Y-m-d');
+                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d');
                 break;
         }
 

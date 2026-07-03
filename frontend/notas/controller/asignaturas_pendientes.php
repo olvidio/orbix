@@ -1,5 +1,7 @@
 <?php
 
+use frontend\notas\helpers\NotasPostInput;
+use frontend\notas\helpers\NotasPayload;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
@@ -18,7 +20,6 @@ use frontend\shared\FrontBootstrap;
  * @since        24/10/12.
  */
 
-require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -28,7 +29,7 @@ $Qdl = is_array($QdlRaw) ? $QdlRaw : [];
 $data = PostRequest::getDataFromUrl('/src/notas/asignaturas_pendientes_data', [
     'dl' => $Qdl,
 ]);
-$presentacion = notas_asignaturas_pendientes_from_payload($data);
+$presentacion = NotasPayload::asignaturasPendientesFromPayload($data);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('pendientes');
@@ -37,7 +38,7 @@ $oTabla->setDatos($presentacion['filas']);
 
 
 if ($presentacion['ambito_rstgr']) {
-    $aChecked = notas_checked_ids_from_post($Qdl);
+    $aChecked = NotasPostInput::checkedIdsFromPost($Qdl);
     $a_delegacionesStgr = $presentacion['delegaciones'];
 
     $oCuadros = new Desplegable();

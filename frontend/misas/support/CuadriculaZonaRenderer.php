@@ -6,8 +6,8 @@ namespace frontend\misas\support;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
-
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\AjaxJsonSupport;
 
 /**
  * Renderiza la cuadrícula de zona a partir de datos del backend.
@@ -79,8 +79,8 @@ class CuadriculaZonaRenderer
             $value = $data[$key] ?? $defaultFromPost;
 
             return match ($type) {
-                'int' => tessera_imprimir_int($value),
-                'string' => tessera_imprimir_string($value),
+                'int' => PayloadCoercion::int($value),
+                'string' => PayloadCoercion::string($value),
                 default => $value,
             };
         };
@@ -96,8 +96,8 @@ class CuadriculaZonaRenderer
             'orden' => $pick('orden', $post['orden'] ?? '', 'string'),
             'seleccion' => $pick('seleccion', $post['seleccion'] ?? 0, 'int'),
             'periodo' => $pick('periodo', $post['periodo'] ?? '', 'string'),
-            'empieza_min' => tessera_imprimir_string($data['empieza_min'] ?? $post['empiezamin'] ?? ''),
-            'empieza_max' => tessera_imprimir_string($data['empieza_max'] ?? $post['empiezamax'] ?? ''),
+            'empieza_min' => PayloadCoercion::string($data['empieza_min'] ?? $post['empiezamin'] ?? ''),
+            'empieza_max' => PayloadCoercion::string($data['empieza_max'] ?? $post['empiezamax'] ?? ''),
             'fila' => $pick('fila', $post['fila'] ?? 0, 'int'),
             'columna' => $pick('columna', $post['columna'] ?? 0, 'int'),
             'h_cuadricula_update' => '',
@@ -125,6 +125,6 @@ class CuadriculaZonaRenderer
             $a_campos['h_desplegable_sacd'] = $h_desplegable_sacd;
         }
 
-        ajax_json_render_phtml('frontend\\misas\\controller', $plantilla, $a_campos);
+        AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', $plantilla, $a_campos);
     }
 }

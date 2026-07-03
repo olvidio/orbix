@@ -2,14 +2,15 @@
 
 namespace frontend\planning\controller;
 
+use frontend\planning\helpers\PlanningPayload;
 use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
-use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\FuncTablasSupport;
 
 /**
  * Planning (calendario) de actividades de un grupo de casas en un
@@ -17,7 +18,6 @@ use frontend\shared\FrontBootstrap;
  *
  * Devuelve HTML plano (tabla grande); el cliente usa `fnjs_extract_html_from_ajax_body`.
  */
-require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -43,7 +43,7 @@ try {
     $Qdd = 3;
     $mod = 0;
     $nueva = 0;
-    if (is_true($Qpropuesta_calendario)) {
+    if (FuncTablasSupport::isTrue($Qpropuesta_calendario)) {
         $mod = 1;
         $nueva = 1;
     }
@@ -67,12 +67,12 @@ try {
         exit;
     }
 
-    $a_actividades = planning_actividades_map($d['a_actividades'] ?? null);
-    $casa_periodos_por_ubi = planning_casa_periodos_por_ubi($d['casa_periodos_por_ubi'] ?? null);
+    $a_actividades = PlanningPayload::actividadesMap($d['a_actividades'] ?? null);
+    $casa_periodos_por_ubi = PlanningPayload::casaPeriodosPorUbi($d['casa_periodos_por_ubi'] ?? null);
 
     $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
-    $estilos = planning_calendario_estilos();
+    $estilos = PlanningPayload::calendarioEstilos();
     $css = $estilos['css'];
 
     $oPlanning = new PlanningRenderer();

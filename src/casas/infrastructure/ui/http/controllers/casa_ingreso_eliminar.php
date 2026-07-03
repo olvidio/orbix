@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: eliminar el Ingreso de una actividad.
  */
@@ -7,10 +10,8 @@ use src\casas\application\CasaIngresoEliminar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-use function src\shared\domain\helpers\input_int;
-
 $input = [
-    'id_activ' => input_int($_POST, 'id_activ'),
+    'id_activ' => FuncTablasSupport::inputInt($_POST, 'id_activ'),
 ];
 
 /** @var CasaIngresoEliminar $useCase */

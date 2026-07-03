@@ -1,4 +1,10 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPermSupport;
+use frontend\casas\helpers\CasasPayload;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
+
 /**
  * Pantalla principal del módulo `casas` — filtro casa + periodo y
  * delegación a distintas vistas AJAX según `tipo_lista`:
@@ -19,16 +25,12 @@ use frontend\shared\web\CasasQue;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qtipo_lista = (string)filter_input(INPUT_POST, 'tipo_lista');
@@ -45,10 +47,10 @@ $miRolePau = OrbixRuntime::miRolePau();
 $filtro = ['active' => true];
 // PauType::PAU_CDC (literal 'cdc').
 if ($miRolePau === 'cdc') {
-    $id_pau = casas_mi_usuario_csv_id_pau();
+    $id_pau = CasasPayload::miUsuarioCsvIdPau();
     $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
     $oForm->setCasas('casa');
-} elseif (actividades_have_perm_oficina('des') || actividades_have_perm_oficina('vcsd')) {
+} elseif (ActividadesPermSupport::havePermOficina('des') || ActividadesPermSupport::havePermOficina('vcsd')) {
     $oForm->setCasas('all');
 } elseif (OrbixRuntime::miSfsv() === 1) {
     $oForm->setCasas('sv');
@@ -65,7 +67,7 @@ $oSelects = $oForm->getSelects();
 $oFormP = null;
 if ($Qperiodo === 'no') {
     if ($Qtipo_lista === 'datosEc') {
-        $oForm->setTitulo(strtoupper_dlb((string)_("resumen económico")));
+        $oForm->setTitulo(FuncTablasSupport::strtoupperDlb((string)_("resumen económico")));
     }
     $oForm->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "' onclick='fnjs_ver();'>");
 } else {
@@ -84,10 +86,10 @@ if ($Qperiodo === 'no') {
     }
     $oFormP = new PeriodoQue();
     $oFormP->setFormName('seleccion');
-    $oFormP->setTitulo(strtoupper_dlb((string)_("seleccionar una casa y un período")));
+    $oFormP->setTitulo(FuncTablasSupport::strtoupperDlb((string)_("seleccionar una casa y un período")));
     $oFormP->setPosiblesPeriodos($aOpciones);
     if ($Qyear !== 0) {
-        $oFormP->setDesplAnysOpcion_sel(casas_periodo_year_sel($Qyear));
+        $oFormP->setDesplAnysOpcion_sel(CasasPayload::periodoYearSel($Qyear));
     }
     $oFormP->setAntes($oSelects->ListaSelects());
     $oFormP->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "' onclick='fnjs_ver();'>");

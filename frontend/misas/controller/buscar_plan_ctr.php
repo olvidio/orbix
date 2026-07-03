@@ -1,14 +1,15 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\misas\support\PeriodoTdHelper;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\misas\helpers\MisasDesplegableSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $id_zona = (int)filter_input(INPUT_POST, 'id_zona');
@@ -30,14 +31,14 @@ $oDesplZonas = new Desplegable();
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
-$oDesplZonas->setOpciones(misas_desplegable_opciones($data['zonas_opciones'] ?? []));
-$oDesplZonas->setOpcion_sel(misas_string($data['zonas_selected'] ?? 0));
+$oDesplZonas->setOpciones(MisasDesplegableSupport::opciones($data['zonas_opciones'] ?? []));
+$oDesplZonas->setOpcion_sel(PayloadCoercion::string($data['zonas_selected'] ?? 0));
 
 $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
-$oDesplCentros->setOpciones(misas_desplegable_opciones($data['centros_opciones'] ?? []));
+$oDesplCentros->setOpciones(MisasDesplegableSupport::opciones($data['centros_opciones'] ?? []));
 $oDesplCentros->setAction('fnjs_ver_plan_ctr()');
-$cs = misas_string($data['centros_selected'] ?? '');
+$cs = PayloadCoercion::string($data['centros_selected'] ?? '');
 if ($cs !== '') {
     $oDesplCentros->setOpcion_sel($cs);
 }
@@ -62,8 +63,8 @@ $a_campos = [
     'url_ver_plan_ctr' => $url_ver_plan_ctr,
     'h_buscar_plan_ctr' => $h_buscar_plan_ctr,
     'h_plan_ctr' => $h_plan_ctr,
-    'id_ubi_centro' => misas_string($data['id_ubi_centro'] ?? ''),
+    'id_ubi_centro' => PayloadCoercion::string($data['id_ubi_centro'] ?? ''),
 ];
 
 $template = $view === 'centro' ? 'buscar_plan_un_ctr.phtml' : 'buscar_plan_ctr.phtml';
-ajax_json_render_phtml('frontend\\misas\\controller', $template, $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', $template, $a_campos);

@@ -1,4 +1,9 @@
 <?php
+
+use frontend\casas\helpers\CasasPayload;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
+
 /**
  * Pantalla `prevision_asistentes`: tabla editable con las plazas
  * previstas por actividad.
@@ -19,16 +24,12 @@ use frontend\shared\web\Periodo;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\TablaEditable;
 
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qmi_of = (string)filter_input(INPUT_POST, 'mi_of');
@@ -53,8 +54,8 @@ $campos = [
     'inicio_iso' => $inicioIso,
     'fin_iso' => $finIso,
 ];
-$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/prevision_asistentes_data', $campos));
-$view = casas_prevision_from_payload($data);
+$data = CasasPayload::postData(PostRequest::getDataFromUrl('/src/casas/prevision_asistentes_data', $campos));
+$view = CasasPayload::previsionFromPayload($data);
 
 if (!$view['permitido']) {
     exit((string)_("No tiene actividades asignadas a su oficina"));
@@ -71,15 +72,15 @@ $aOpciones = [
 ];
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(strtoupper_dlb(_("período del listado del año próximo")));
+$oFormP->setTitulo(FuncTablasSupport::strtoupperDlb(_("período del listado del año próximo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
-$oFormP->setDesplAnysOpcion_sel(casas_periodo_year_sel($Qyear));
+$oFormP->setDesplAnysOpcion_sel(CasasPayload::periodoYearSel($Qyear));
 $oFormP->setEmpiezaMax($Qempiezamax);
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setBoton("<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >");
 
-$oConfig = casas_o_config();
+$oConfig = CasasPayload::oConfig();
 if ($oConfig !== null && $oConfig->getGestionCalendario() === 'central') {
     $aOficinas = [
         'sm' => 'sm',

@@ -1,15 +1,18 @@
 <?php
 
+use frontend\actividades\helpers\ActividadesPostInput;
+use frontend\usuarios\helpers\UsuariosPayload;
+use frontend\usuarios\helpers\UsuariosPostInput;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
+
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
@@ -25,25 +28,25 @@ if (isset($_POST['stack'])) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
             $a_sel = $oPosicion2->getParametro('sel');
-            $Qid_role = (string)usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
-            $Qid_sel = actividades_posicion_string($oPosicion2->getParametro('id_sel'));
-            $Qscroll_id = actividades_posicion_int($oPosicion2->getParametro('scroll_id'));
+            $Qid_role = (string)UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
+            $Qid_sel = ActividadesPostInput::posicionString($oPosicion2->getParametro('id_sel'));
+            $Qscroll_id = ActividadesPostInput::posicionInt($oPosicion2->getParametro('scroll_id'));
             $oPosicion2->olvidar($stack);
         }
     }
 } elseif (!empty($a_sel)) {
     $Qque = (string)filter_input(INPUT_POST, 'que');
     if ($Qque !== 'grupmenu_del') {
-        $Qid_role = (string)usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
+        $Qid_role = (string)UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
     }
 }
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 $oPosicion->setParametros(array('id_role' => $Qid_role), 1);
 
-$data = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/role_info', ['id_role' => $Qid_role]));
-$roleForm = usuarios_role_form_from_payload($data);
+$data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/role_info', ['id_role' => $Qid_role]));
+$roleForm = UsuariosPayload::roleFormFromPayload($data);
 
 $oDesplPau = new Desplegable();
 $oDesplPau->setNombre('pau');

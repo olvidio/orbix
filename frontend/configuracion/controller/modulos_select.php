@@ -5,11 +5,10 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\configuracion\helpers\ModulosSelectRender;
 use frontend\shared\FrontBootstrap;
+use frontend\configuracion\helpers\ConfiguracionPayload;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/configuracion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 
 $aGoBack = ['mod' => ''];
@@ -23,16 +22,16 @@ if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar($aGoBack, list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar($aGoBack, ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
 
 
 $oPosicion->setParametros($aGoBack, 1);
 
 $data = PostRequest::getDataFromUrl('/src/configuracion/modulos_select_data', $campos);
-$payload = configuracion_string_key_payload($data);
+$payload = ConfiguracionPayload::stringKeyPayload($data);
 $payload = ModulosSelectRender::enrich($payload);
-$view = configuracion_modulos_select_view_from_payload($payload);
+$view = ConfiguracionPayload::modulosSelectViewFromPayload($payload);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('modulos_select');

@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace frontend\actividades\helpers;
 
-require_once __DIR__ . '/actividades_support.php';
-
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\helpers\ActividadTipoTwigHashCompose;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\Desplegable;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Widget UI del selector de tipo de actividad (sfsv / asistentes / actividad /
@@ -102,7 +101,7 @@ class ActividadTipo
             $val_blanco_nom = '...';
         }
 
-        $oPerm = actividades_o_perm();
+        $oPerm = ActividadesPermSupport::oPerm();
         $array2 = [];
         if ($oPerm !== null && $oPerm->have_perm_oficina('est')) {
             $array2 = array_merge($array2, [1 => 'n', 3 => 'agd']);
@@ -135,7 +134,7 @@ class ActividadTipo
         }
 
         // si es una búsqueda, también puedo buscar todos. (Excepto sf/sv)
-        if (actividades_is_jefe_calendario()
+        if (ActividadesPermSupport::isJefeCalendario()
             || ((isset($this->que) && $this->que === 'buscar') || $this->bperm_jefe)
         ) {
             $oTipoActivB = new TiposDeActividades('', (bool)$extendida);
@@ -274,37 +273,37 @@ class ActividadTipo
 
     public function setSfsv(mixed $ssfsv): void
     {
-        $this->ssfsv = $ssfsv === null ? null : tessera_imprimir_string($ssfsv);
+        $this->ssfsv = $ssfsv === null ? null : PayloadCoercion::string($ssfsv);
     }
 
     public function setAsistentes(mixed $sasistentes): void
     {
-        $this->sasistentes = $sasistentes === null ? null : tessera_imprimir_string($sasistentes);
+        $this->sasistentes = $sasistentes === null ? null : PayloadCoercion::string($sasistentes);
     }
 
     public function setActividad(mixed $sactividad): void
     {
-        $this->sactividad = $sactividad === null ? null : tessera_imprimir_string($sactividad);
+        $this->sactividad = $sactividad === null ? null : PayloadCoercion::string($sactividad);
     }
 
     public function setActividad2Digitos(mixed $sactividad): void
     {
-        $this->sactividad = $sactividad === null ? null : tessera_imprimir_string($sactividad);
+        $this->sactividad = $sactividad === null ? null : PayloadCoercion::string($sactividad);
     }
 
     public function setNom_tipo(mixed $snom_tipo): void
     {
-        $this->snom_tipo = $snom_tipo === null ? null : tessera_imprimir_string($snom_tipo);
+        $this->snom_tipo = $snom_tipo === null ? null : PayloadCoercion::string($snom_tipo);
     }
 
     public function setStatus(mixed $status): void
     {
-        $this->status = $status === null ? null : tessera_imprimir_int($status);
+        $this->status = $status === null ? null : PayloadCoercion::int($status);
     }
 
     public function setQue(mixed $que): void
     {
-        $this->que = $que === null ? null : tessera_imprimir_string($que);
+        $this->que = $que === null ? null : PayloadCoercion::string($que);
     }
 
     public function setId_tipo_activ(mixed $id_tipo_activ): void
@@ -314,13 +313,13 @@ class ActividadTipo
         } elseif (is_int($id_tipo_activ) || is_string($id_tipo_activ)) {
             $this->id_tipo_activ = $id_tipo_activ;
         } else {
-            $this->id_tipo_activ = tessera_imprimir_string($id_tipo_activ);
+            $this->id_tipo_activ = PayloadCoercion::string($id_tipo_activ);
         }
     }
 
     public function setPara(mixed $para = 'actividades'): void
     {
-        $this->para = $para === null ? null : tessera_imprimir_string($para);
+        $this->para = $para === null ? null : PayloadCoercion::string($para);
     }
 
     public function getEvitarProcesos(): ?bool

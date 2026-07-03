@@ -1,10 +1,11 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $error_txt = '';
 

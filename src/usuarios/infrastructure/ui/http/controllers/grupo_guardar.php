@@ -1,18 +1,19 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\entity\Grupo;
 use src\usuarios\domain\value_objects\Username;
 use src\shared\web\ContestarJson;
 
-$Qusuario = (string)filter_post('usuario');
+$Qusuario = (string)FilterPostGet::post('usuario');
 
 $error_txt = '';
 if (empty($Qusuario)) {
     $error_txt .= _("debe poner un nombre");
 }
-$Qid_usuario = (integer)filter_post('id_usuario');
+$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
 
 $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 if (empty($Qid_usuario)) {

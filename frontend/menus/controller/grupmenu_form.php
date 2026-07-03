@@ -4,11 +4,11 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\menus\helpers\MenusPostInput;
+use frontend\shared\helpers\ListNavSupport;
 
 // Crea los objetos de uso global **********************************************
-require_once __DIR__ . '/../helpers/menus_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -28,7 +28,7 @@ if (isset($_POST['stack'])) {
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $a_sel = $oPosicion2->getParametro('id_sel');
             if (!empty($a_sel)) {
-                $Qid_grupmenu = menus_id_from_sel_item(menus_sel_first_item($a_sel));
+                $Qid_grupmenu = MenusPostInput::idFromSelItem(MenusPostInput::selFirstItem($a_sel));
             } else {
                 $Qid_grupmenu = $oPosicion2->getParametro('id_grupmenu');
             }
@@ -39,11 +39,11 @@ if (isset($_POST['stack'])) {
 } elseif (!empty($a_sel)) { //vengo de un checkbox
     $Qque = (string)filter_input(INPUT_POST, 'que');
     if ($Qque !== 'del_grupmenu') { //En el caso de venir de borrar un grupmenu, no hago nada
-        $Qid_grupmenu = menus_id_from_sel_item(menus_sel_first_item($a_sel));
+        $Qid_grupmenu = MenusPostInput::idFromSelItem(MenusPostInput::selFirstItem($a_sel));
     }
 }
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), $Qscroll_id));
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), $Qscroll_id));
 
 $oPosicion->setParametros(array('id_grupmenu' => $Qid_grupmenu), 1);
 

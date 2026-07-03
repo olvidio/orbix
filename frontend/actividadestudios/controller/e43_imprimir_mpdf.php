@@ -1,10 +1,11 @@
 <?php
 
+use frontend\actividadestudios\helpers\E43Payload;
+use frontend\actividadestudios\helpers\ActividadestudiosRenderSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 include_once(OrbixRuntime::dirEstilos() . '/e43_mpdf.css.php');
@@ -12,7 +13,7 @@ include_once(OrbixRuntime::dirEstilos() . '/e43_mpdf.css.php');
 $id_nom = (int)filter_input(INPUT_GET, 'id_nom');
 $id_activ = (int)filter_input(INPUT_GET, 'id_activ');
 
-$d = actividadestudios_e43_from_payload(actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/e43_imprimir_mpdf_data', [
+$d = E43Payload::fromPayload(ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/e43_imprimir_mpdf_data', [
     'id_nom' => $id_nom,
     'id_activ' => $id_activ,
 ])));

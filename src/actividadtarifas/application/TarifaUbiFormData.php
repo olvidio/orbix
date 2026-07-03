@@ -7,8 +7,7 @@ use src\actividadtarifas\domain\value_objects\SerieId;
 use src\shared\config\ConfigGlobal;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder para el formulario de `TarifaUbi` (alta o edicion de
@@ -40,10 +39,10 @@ final class TarifaUbiFormData
      */
     public function execute(array $input): array
     {
-        $id_item = input_string($input, 'id_item');
-        $id_ubi = input_int($input, 'id_ubi');
-        $year = input_int($input, 'year');
-        $letra = input_string($input, 'letra');
+        $id_item = FuncTablasSupport::inputString($input, 'id_item');
+        $id_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
+        $year = FuncTablasSupport::inputInt($input, 'year');
+        $letra = FuncTablasSupport::inputString($input, 'letra');
 
         $es_nuevo = $id_item === '';
         $cantidad = '';

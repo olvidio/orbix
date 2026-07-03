@@ -6,20 +6,20 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $url_backend = '/src/inventario/lista_de_ctr';
 $data = PostRequest::getDataFromUrl($url_backend);
-$payload = inventario_post_payload($data);
-$a_opciones = inventario_desplegable_opciones($payload['a_opciones'] ?? []);
+$payload = InventarioPayload::postPayload($data);
+$a_opciones = InventarioPayload::desplegableOpciones($payload['a_opciones'] ?? []);
 
 $oDesplUbis = new Desplegable('id_ubi', $a_opciones, '', true);
 $oDesplUbis->setAction('fnjs_busca_lugares_origen()');

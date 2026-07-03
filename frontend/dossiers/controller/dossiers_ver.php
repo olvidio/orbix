@@ -1,5 +1,6 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
@@ -15,14 +16,15 @@ use frontend\actividadestudios\helpers\SelectMatriculasDeUnaActividadRender;
 use frontend\actividadestudios\helpers\SelectMatriculasDeUnaPersonaRender;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\web\Posicion;
+use frontend\dossiers\helpers\DossiersListaSupport;
+use frontend\dossiers\helpers\DossiersPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/dossiers/helpers/dossiers_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -40,96 +42,96 @@ if ($returningViaStack) {
         $restoredScrollIdFromStack = $oPosicionRestore->getParametro('scroll_id');
         $oPosicionRestore->olvidar((int) $stackFromPost);
     } else {
-        list_nav_olvidar_forward_from_dossiers_slot((int) $stackFromPost);
+        ListNavSupport::olvidarForwardFromDossiersSlot((int) $stackFromPost);
     }
 }
 
-$Qrefresh = tessera_imprimir_int($requestPayload['refresh'] ?? 0);
-$pararRecordar = list_nav_parar_recordar_for_dossiers_refresh($Qrefresh);
+$Qrefresh = PayloadCoercion::int($requestPayload['refresh'] ?? 0);
+$pararRecordar = ListNavSupport::pararRecordarForDossiersRefresh($Qrefresh);
 $gstackFromPost = filter_input(INPUT_POST, 'Gstack', FILTER_VALIDATE_INT);
-$segmentChanged = list_nav_dossiers_segment_changed_vs_stack_top();
+$segmentChanged = ListNavSupport::dossiersSegmentChangedVsStackTop();
 if (is_int($gstackFromPost) && $gstackFromPost > 0) {
-    list_nav_boot_dossiers_from_actividad_select($oPosicion, $pararRecordar);
-    list_nav_persist_asistentes_dossier_snapshot($oPosicion);
-} elseif ($returningViaStack || list_nav_stack_top_is_dossier_child_form()) {
+    ListNavSupport::bootDossiersFromActividadSelect($oPosicion, $pararRecordar);
+    ListNavSupport::persistAsistentesDossierSnapshot($oPosicion);
+} elseif ($returningViaStack || ListNavSupport::stackTopIsDossierChildForm()) {
     // Vuelta por pila o recarga tras hijo (js_atras tras guardar cargo): no append con recordar().
-} elseif (!list_nav_stack_top_is_dossiers_ver()) {
-    list_nav_boot_recordar($oPosicion, $pararRecordar);
+} elseif (!ListNavSupport::stackTopIsDossiersVer()) {
+    ListNavSupport::bootRecordar($oPosicion, $pararRecordar);
 } elseif ($Qrefresh > 0 || $segmentChanged) {
-    list_nav_boot_recordar($oPosicion, $pararRecordar);
+    ListNavSupport::bootRecordar($oPosicion, $pararRecordar);
 }
 
-list_nav_purge_dossier_child_forms_from_stack();
+ListNavSupport::purgeDossierChildFormsFromStack();
 
-$shouldRefreshDossiersEntry = ($returningViaStack || list_nav_stack_top_is_dossiers_ver())
+$shouldRefreshDossiersEntry = ($returningViaStack || ListNavSupport::stackTopIsDossiersVer())
     && !$segmentChanged
     && $Qrefresh <= 0
     && !(is_int($gstackFromPost) && $gstackFromPost > 0);
 if ($shouldRefreshDossiersEntry) {
-    list_nav_refresh_stack_entry_on_return(
+    ListNavSupport::refreshStackEntryOnReturn(
         $oPosicion,
-        $returningViaStack ? (int) $stackFromPost : list_nav_find_best_dossiers_stack_key(),
+        $returningViaStack ? (int) $stackFromPost : ListNavSupport::findBestDossiersStackKey(),
     );
 }
 
-$idDossierEarly = trim(tessera_imprimir_string($requestPayload['id_dossier'] ?? ''));
-$claseInfoEarly = trim(tessera_imprimir_string($requestPayload['clase_info'] ?? ''));
+$idDossierEarly = trim(PayloadCoercion::string($requestPayload['id_dossier'] ?? ''));
+$claseInfoEarly = trim(PayloadCoercion::string($requestPayload['clase_info'] ?? ''));
 if ($Qrefresh > 0) {
-    list_nav_persist_selection_on_list_page(
+    ListNavSupport::persistSelectionOnListPage(
         $oPosicion,
-        list_nav_id_sel_from_post(),
-        list_nav_scroll_id_from_post(),
+        ListNavSupport::idSelFromPost(),
+        ListNavSupport::scrollIdFromPost(),
         false,
     );
-} elseif ($returningViaStack && !list_nav_id_sel_is_empty(list_nav_id_sel_for_lista($restoredIdSelFromStack))) {
-    list_nav_persist_selection_on_list_page(
+} elseif ($returningViaStack && !ListNavSupport::idSelIsEmpty(ListNavSupport::idSelForLista($restoredIdSelFromStack))) {
+    ListNavSupport::persistSelectionOnListPage(
         $oPosicion,
-        list_nav_id_sel_for_lista($restoredIdSelFromStack),
+        ListNavSupport::idSelForLista($restoredIdSelFromStack),
         is_scalar($restoredScrollIdFromStack) ? (string) $restoredScrollIdFromStack : '',
         false,
     );
 } elseif ($idDossierEarly === '' && $claseInfoEarly === '') {
-    list_nav_persist_selection_to_posicion($oPosicion, 1);
+    ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 } elseif (
-    (list_nav_sel_from_post() !== [] || list_nav_scroll_id_from_post() !== '')
+    (ListNavSupport::selFromPost() !== [] || ListNavSupport::scrollIdFromPost() !== '')
     && is_int($gstackFromPost) && $gstackFromPost > 0
 ) {
     // Solo desde listado externo (actividad_select, personas_select, …), no dossier → dossier.
-    list_nav_persist_selection_to_posicion($oPosicion, 1);
+    ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 }
 
 // Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
 $requestPayload['stack_actual'] = $oPosicion->getStack(0);
 
 $apiPayload = PostRequest::requestPayloadForHash();
-$idDossierReq = trim(tessera_imprimir_string($apiPayload['id_dossier'] ?? ''));
-$claseInfoReq = trim(tessera_imprimir_string($apiPayload['clase_info'] ?? ''));
+$idDossierReq = trim(PayloadCoercion::string($apiPayload['id_dossier'] ?? ''));
+$claseInfoReq = trim(PayloadCoercion::string($apiPayload['clase_info'] ?? ''));
 if ($idDossierReq === '' && $claseInfoReq === '') {
     foreach (['queSel', 'que', 'mod', 'clase_info', 'bloque', 'permiso', 'depende', 'id_dossier'] as $extraKey) {
         unset($apiPayload[$extraKey]);
     }
     // Solo descartar sel si ya conocemos id_pau (p. ej. volver a la lista desde una ficha).
     // Desde listados externos (personas_select) id_pau no viaja y sel es la fuente del id.
-    $idPauReq = tessera_imprimir_int($apiPayload['id_pau'] ?? 0);
+    $idPauReq = PayloadCoercion::int($apiPayload['id_pau'] ?? 0);
     if ($idPauReq > 0) {
         unset($apiPayload['sel']);
     }
 }
 
-list_nav_apply_restored_selection_to_api_payload(
+ListNavSupport::applyRestoredSelectionToApiPayload(
     $apiPayload,
     $restoredIdSelFromStack,
     $restoredScrollIdFromStack,
 );
 
 $data = PostRequest::getDataFromUrl('/src/dossiers/dossiers_ver_pantalla_data', $apiPayload, false);
-$errorMsg = tessera_imprimir_string($data['error'] ?? '');
+$errorMsg = PayloadCoercion::string($data['error'] ?? '');
 if ($errorMsg !== '') {
     echo PostRequest::stripInternalCallProvenance($errorMsg);
     return;
 }
 
-$avisoRegionStgr = tessera_imprimir_string($data['aviso'] ?? '');
+$avisoRegionStgr = PayloadCoercion::string($data['aviso'] ?? '');
 if ($avisoRegionStgr !== '') {
     echo '<div class="certificado-aviso-config" role="alert" style="max-width: 42rem; padding: 1rem 1.25rem; margin: 1rem 0; border: 1px solid #c9a227; background: #fffbea; color: #3d3500; line-height: 1.5;">';
     echo '<div style="margin: 0;">' . $avisoRegionStgr . '</div>';
@@ -144,35 +146,35 @@ if (!is_array($topData)) {
 $goDossiers = HashFrontSignedLink::tryFromSpec($topData['go_dossiers_link_spec'] ?? null);
 $goHome = HashFrontSignedLink::tryFromSpec($topData['go_home_link_spec'] ?? null);
 
-echo list_nav_mostrar_left_slide_from_dossiers($oPosicion);
+echo ListNavSupport::mostrarLeftSlideFromDossiers($oPosicion);
 
 $oViewTop = new ViewNewPhtml('frontend\\dossiers\\view');
 $oViewTop->renderizar('dossiers_ver_top.phtml', [
-    'web_icons' => tessera_imprimir_string($topData['web_icons'] ?? ''),
-    'alt_dossiers' => tessera_imprimir_string($topData['alt_dossiers'] ?? ''),
-    'txt_dossiers' => tessera_imprimir_string($topData['txt_dossiers'] ?? ''),
-    'nom_cabecera' => tessera_imprimir_string($topData['nom_cabecera'] ?? ''),
+    'web_icons' => PayloadCoercion::string($topData['web_icons'] ?? ''),
+    'alt_dossiers' => PayloadCoercion::string($topData['alt_dossiers'] ?? ''),
+    'txt_dossiers' => PayloadCoercion::string($topData['txt_dossiers'] ?? ''),
+    'nom_cabecera' => PayloadCoercion::string($topData['nom_cabecera'] ?? ''),
     'go_dossiers' => $goDossiers,
     'go_home' => $goHome,
 ]);
 
-if (tessera_imprimir_string($data['modo'] ?? '') === 'lista') {
-    $a_filas = dossiers_sign_lista_filas($data['lista_a_filas'] ?? [], ['href_ver', 'href_abrir']);
+if (PayloadCoercion::string($data['modo'] ?? '') === 'lista') {
+    $a_filas = DossiersListaSupport::signFilas($data['lista_a_filas'] ?? [], ['href_ver', 'href_abrir']);
     echo "<div id=\"ficha\">";
     $oView = new ViewNewPhtml('frontend\\dossiers\\controller');
     $oView->renderizar('lista_dossiers.phtml', [
         'a_filas' => $a_filas,
-        'web_icons' => tessera_imprimir_string($topData['web_icons'] ?? OrbixRuntime::getWebIcons()),
+        'web_icons' => PayloadCoercion::string($topData['web_icons'] ?? OrbixRuntime::getWebIcons()),
     ]);
     echo "</div>";
 } else {
-    $segmentos = dossiers_list_rows($data['ficha_segmentos'] ?? []);
+    $segmentos = DossiersPayload::listRows($data['ficha_segmentos'] ?? []);
     foreach ($segmentos as $seg) {
-        $id = tessera_imprimir_string($seg['id'] ?? '');
-        $tipo = tessera_imprimir_string($seg['tipo'] ?? '');
+        $id = PayloadCoercion::string($seg['id'] ?? '');
+        $tipo = PayloadCoercion::string($seg['tipo'] ?? '');
         echo '<div id="' . htmlspecialchars($id, ENT_QUOTES, 'UTF-8') . '">';
         if ($tipo === 'html') {
-            echo tessera_imprimir_string($seg['html'] ?? '');
+            echo PayloadCoercion::string($seg['html'] ?? '');
         } elseif ($tipo === 'select_habitaciones_cdc') {
             echo SelectHabitacionesCdcRender::render($seg);
         } elseif ($tipo === 'select_asignaturas_de_una_actividad') {

@@ -12,6 +12,7 @@ use src\shared\infrastructure\ConnectionBootstrap;
 use src\shared\infrastructure\DiContainerBootstrap;
 use src\shared\infrastructure\InProcessSrcDispatch;
 use src\shared\infrastructure\logging\GestorErrores;
+use src\shared\domain\helpers\FilterPostGet;
 
 class PostRequest
 {
@@ -202,7 +203,7 @@ class PostRequest
         InProcessSrcDispatch::begin();
         // Se reescriben $_POST y $_GET (no `filter_input`, que lee la copia
         // inmutable del SAPI del request exterior). Los controladores /src deben
-        // leer la entrada con filter_post()/filter_get() para verlos in-process.
+        // leer la entrada con FilterPostGet::post()/FilterPostGet::get() para verlos in-process.
         $previousPost = $_POST;
         $previousGet = $_GET;
         $_POST = $postParams;

@@ -13,9 +13,6 @@ use src\dossiers\domain\value_objects\TipoDossierDescripcion;
 use src\dossiers\domain\value_objects\TipoDossierTablaFrom;
 use src\dossiers\domain\value_objects\TipoDossierTablaTo;
 use src\shared\domain\traits\Hydratable;
-use function src\shared\domain\helpers\is_true;
-
-
 class TipoDossier
 {
     use Hydratable;

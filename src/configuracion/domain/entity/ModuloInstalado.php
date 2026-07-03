@@ -7,8 +7,6 @@ use src\shared\infrastructure\persistence\postgresql\Set;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\value_objects\ModuloId;
 use src\shared\domain\traits\Hydratable;
-use function src\shared\domain\helpers\is_true;
-
 class ModuloInstalado
 {
     use Hydratable;

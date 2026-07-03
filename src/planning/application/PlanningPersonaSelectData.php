@@ -3,8 +3,7 @@
 namespace src\planning\application;
 
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Listado de personas para `planning_persona_select`.
@@ -23,12 +22,12 @@ final class PlanningPersonaSelectData
      */
     public function execute(array $input): array
     {
-        $Qobj_pau = input_string($input, 'obj_pau');
-        $Qapellido1 = input_string($input, 'apellido1');
-        $Qapellido2 = input_string($input, 'apellido2');
-        $Qnombre = input_string($input, 'nombre');
-        $Qcentro = input_string($input, 'centro');
-        $Qna = input_string($input, 'na');
+        $Qobj_pau = FuncTablasSupport::inputString($input, 'obj_pau');
+        $Qapellido1 = FuncTablasSupport::inputString($input, 'apellido1');
+        $Qapellido2 = FuncTablasSupport::inputString($input, 'apellido2');
+        $Qnombre = FuncTablasSupport::inputString($input, 'nombre');
+        $Qcentro = FuncTablasSupport::inputString($input, 'centro');
+        $Qna = FuncTablasSupport::inputString($input, 'na');
 
         $aWhere = [
             'situacion' => 'A',

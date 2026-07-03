@@ -2,6 +2,7 @@
 
 namespace src\notas\application\legacy;
 
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -15,7 +16,6 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\StoresPdoErrorTxt;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * @phpstan-type ResumenRta array{num: int|float|string, lista: string}
@@ -338,7 +338,7 @@ class Resumen
 		";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -369,7 +369,7 @@ class Resumen
 				";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -391,7 +391,7 @@ class Resumen
 		";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -413,7 +413,7 @@ class Resumen
 		";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
         } else {
             $rta['lista'] = '';
@@ -465,7 +465,7 @@ class Resumen
         if ($nf >= 1) {
             $rta['error'] = true;
             $rta['num'] = $nf;
-            if (is_true($this->blista)) {
+            if (FuncTablasSupport::isTrue($this->blista)) {
                 $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ce_lugar", 1);
             } else {
                 $rta['lista'] = '';
@@ -495,7 +495,7 @@ class Resumen
         //echo "sql: $ssql<br>";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -603,7 +603,7 @@ class Resumen
 
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista)) {
+        if (FuncTablasSupport::isTrue($this->blista)) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -634,7 +634,7 @@ class Resumen
         if ($nf >= 1) {
             $rta['error'] = true;
             $rta['num'] = $nf;
-            if (is_true($this->blista)) {
+            if (FuncTablasSupport::isTrue($this->blista)) {
                 $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
             } else {
                 $rta['lista'] = '';
@@ -664,7 +664,7 @@ class Resumen
 				";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = sprintf(_("total de asignaturas superadas en bienio %s"), $rta['num']);
             $rta['lista'] .= $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nombre_corto,acta,preceptor", 1);
         } else {
@@ -698,7 +698,7 @@ class Resumen
          if ($nf >= 1){
          $rta['error'] = true;
          $rta['num'] = $nf;
-         if (is_true($this->blista) && $rta['num'] > 0) {
+         if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
          $rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
          } else {
          $rta['lista'] = '';
@@ -721,7 +721,7 @@ class Resumen
 				";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = sprintf(_("total de asignaturas superadas en cuadrienio %s"), $rta['num']);
             $rta['lista'] .= $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nombre_corto,acta,preceptor", 1);
         } else {
@@ -751,7 +751,7 @@ class Resumen
         //echo "qry: $ssql<br>";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -778,7 +778,7 @@ class Resumen
         //echo "qry: $ssql<br>";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -807,7 +807,7 @@ class Resumen
 
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -834,7 +834,7 @@ class Resumen
 
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -859,7 +859,7 @@ class Resumen
 
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -884,7 +884,7 @@ class Resumen
 
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -909,7 +909,7 @@ class Resumen
 
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -935,7 +935,7 @@ class Resumen
 
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -976,7 +976,7 @@ class Resumen
 
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1014,7 +1014,7 @@ class Resumen
 				WHERE $where_tipo f_cese is null";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1034,7 +1034,7 @@ class Resumen
 				WHERE latin='t'";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1105,7 +1105,7 @@ class Resumen
                     $docencia_no_dep[$id_nom] = 1;
                 }
 
-                if (is_true($this->blista)) {
+                if (FuncTablasSupport::isTrue($this->blista)) {
                     $oPersonaDl = $PersonaDlRepository->findById($id_nom);
                     if ($oPersonaDl === null) {
                         continue;
@@ -1137,7 +1137,7 @@ class Resumen
             $a_docencia = $docencia_dep;
         }
 
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             //$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
             $camp = explode(',', 'nom,apellido1,apellido2,asignatura,actividad');
             $html = "<table>";
@@ -1181,7 +1181,7 @@ class Resumen
         //echo "$ssql<br>";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1203,7 +1203,7 @@ class Resumen
 				";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1225,7 +1225,7 @@ class Resumen
 				";
         $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1246,7 +1246,7 @@ class Resumen
         $PersonaDlRepository = $this->personaDlRepository;
 
         $rta['num'] = count($cDirectores);
-        if (is_true($this->blista) && $rta['num'] > 0) {
+        if (FuncTablasSupport::isTrue($this->blista) && $rta['num'] > 0) {
             $html = '<table>';
             foreach ($cDirectores as $oDirector) {
                 $id_departamento = $oDirector->getId_departamento();

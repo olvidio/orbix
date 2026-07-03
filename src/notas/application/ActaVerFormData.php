@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -13,9 +14,6 @@ use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\notas\domain\entity\Acta;
 use src\shared\config\ConfigGlobal;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\urlsafe_b64decode;
 
 /**
  * Estado del formulario `acta_ver` (sin HashFront ni vistas).
@@ -39,18 +37,18 @@ final class ActaVerFormData
      */
     public function execute(array $in): array
     {
-        $notas = input_string($in, 'scope_notas');
-        $permiso = input_int($in, 'scope_permiso', 3);
+        $notas = FuncTablasSupport::inputString($in, 'scope_notas');
+        $permiso = FuncTablasSupport::inputInt($in, 'scope_permiso', 3);
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
             $permiso = 0;
         }
 
         $a_sel = isset($in['sel']) && is_array($in['sel']) ? $in['sel'] : [];
-        $Qmod = input_string($in, 'mod');
-        $Qsa_actas = input_string($in, 'sa_actas');
-        $Qa_actas = $Qsa_actas !== '' ? json_decode(urlsafe_b64decode($Qsa_actas)) : null;
-        $Qacta = input_string($in, 'acta');
-        $Qnotas = input_string($in, 'notas');
+        $Qmod = FuncTablasSupport::inputString($in, 'mod');
+        $Qsa_actas = FuncTablasSupport::inputString($in, 'sa_actas');
+        $Qa_actas = $Qsa_actas !== '' ? json_decode(FuncTablasSupport::urlsafeB64decode($Qsa_actas)) : null;
+        $Qacta = FuncTablasSupport::inputString($in, 'acta');
+        $Qnotas = FuncTablasSupport::inputString($in, 'notas');
 
         $any = date('y');
         $mi_dele = ConfigGlobal::mi_delef();
@@ -76,7 +74,7 @@ final class ActaVerFormData
             }
             $a_actas = [$acta_actual];
         } else {
-            $actasJson = input_string($in, 'acta_notas_a_actas_json');
+            $actasJson = FuncTablasSupport::inputString($in, 'acta_notas_a_actas_json');
             if ($actasJson !== '') {
                 $decoded = json_decode($actasJson, true);
                 $a_actas = is_array($decoded) ? array_values(array_filter($decoded, 'is_string')) : [];
@@ -103,16 +101,16 @@ final class ActaVerFormData
 
         if ($notas !== 'nuevo' && $Qmod !== 'nueva' && $acta_actual !== '') {
             if ($Qacta !== '' && $notas !== '') {
-                $idAsig = input_int($in, 'id_asignatura_actual', input_int($in, 'id_asignatura'));
+                $idAsig = FuncTablasSupport::inputInt($in, 'id_asignatura_actual', FuncTablasSupport::inputInt($in, 'id_asignatura'));
                 $id_asignatura_actual = $idAsig !== 0 ? $idAsig : null;
-                $id_activ = input_int($in, 'id_activ');
-                $f_acta = input_string($in, 'f_acta');
-                $libro = input_string($in, 'libro');
-                $pagina = (string) input_int($in, 'pagina');
-                $linea = (string) input_int($in, 'linea');
-                $lugar = input_string($in, 'lugar');
-                $observ = input_string($in, 'observ');
-                $permiso = input_int($in, 'permiso', $permiso);
+                $id_activ = FuncTablasSupport::inputInt($in, 'id_activ');
+                $f_acta = FuncTablasSupport::inputString($in, 'f_acta');
+                $libro = FuncTablasSupport::inputString($in, 'libro');
+                $pagina = (string) FuncTablasSupport::inputInt($in, 'pagina');
+                $linea = (string) FuncTablasSupport::inputInt($in, 'linea');
+                $lugar = FuncTablasSupport::inputString($in, 'lugar');
+                $observ = FuncTablasSupport::inputString($in, 'observ');
+                $permiso = FuncTablasSupport::inputInt($in, 'permiso', $permiso);
             } else {
                 $oActa = $ActaRepository->findById($acta_actual);
                 if ($oActa instanceof Acta) {
@@ -134,11 +132,11 @@ final class ActaVerFormData
             $acta_new = "$dl {$num_acta}/{$any}";
 
             if ($notas === 'nuevo') {
-                $Qid_activ = input_int($in, 'id_activ');
-                $id_scope = input_int($in, 'id_activ_scope');
+                $Qid_activ = FuncTablasSupport::inputInt($in, 'id_activ');
+                $id_scope = FuncTablasSupport::inputInt($in, 'id_activ_scope');
                 $id_activ = $id_scope !== 0 ? $id_scope : $Qid_activ;
-                $Qid_asignatura = input_int($in, 'id_asignatura');
-                $id_asig_scope = input_int($in, 'id_asignatura_scope');
+                $Qid_asignatura = FuncTablasSupport::inputInt($in, 'id_asignatura');
+                $id_asig_scope = FuncTablasSupport::inputInt($in, 'id_asignatura_scope');
                 $id_asignatura_actual = $id_asig_scope !== 0 ? $id_asig_scope : ($Qid_asignatura !== 0 ? $Qid_asignatura : null);
 
                 if ($id_activ > 0 && $id_asignatura_actual !== null) {

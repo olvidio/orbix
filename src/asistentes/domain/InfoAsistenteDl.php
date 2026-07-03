@@ -8,7 +8,7 @@ use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\domain\DatosInfoRepo;
-use function src\shared\domain\helpers\curso_est;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * {@see DatosInfoRepo} para dossier persona `1301` cuando `tipo.class` es `AsistenteDl`:
@@ -57,8 +57,8 @@ class InfoAsistenteDl extends DatosInfoRepo
         $oConfig = $_SESSION['oConfig'];
         $fin_m = $oConfig->getMesFinStgr();
         $any = ($mes > $fin_m) ? ((int)date('Y') + 1) : date('Y');
-        $inicurs_ca = curso_est('inicio', $any)->format('Y-m-d');
-        $fincurs_ca = curso_est('fin', $any)->format('Y-m-d');
+        $inicurs_ca = FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
+        $fincurs_ca = FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
 
         $aWhereActividad = ['_ordre' => 'f_ini', 'status' => StatusId::ACTUAL, 'f_ini' => "'$inicurs_ca','$fincurs_ca'"];
         $aOperadorActividad = ['f_ini' => 'BETWEEN'];

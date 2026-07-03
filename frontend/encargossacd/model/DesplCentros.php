@@ -2,8 +2,10 @@
 
 namespace frontend\encargossacd\model;
 
+use frontend\encargossacd\helpers\EncargossacdPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Helper que monta un {@see Desplegable} de centros consumiendo el endpoint
@@ -36,16 +38,16 @@ final class DesplCentros
         $data = PostRequest::getDataFromUrl('/src/encargossacd/ctr_get_select_data', $campos);
 
         $oDesplCtr = new Desplegable();
-        $oDesplCtr->setNombre(\tessera_imprimir_string($data['id'] ?? 'lst_ctrs'));
-        $oDesplCtr->setOpciones(\encargossacd_desplegable_opciones($data['opciones'] ?? []));
+        $oDesplCtr->setNombre(PayloadCoercion::string($data['id'] ?? 'lst_ctrs'));
+        $oDesplCtr->setOpciones(\EncargossacdPayload::desplegableOpciones($data['opciones'] ?? []));
         if (!empty($data['blanco'])) {
             $oDesplCtr->setBlanco(true);
         }
         if (array_key_exists('val_blanco', $data)) {
-            $oDesplCtr->setValBlanco(\tessera_imprimir_string($data['val_blanco']));
+            $oDesplCtr->setValBlanco(PayloadCoercion::string($data['val_blanco']));
         }
-        $oDesplCtr->setOpcion_sel(\tessera_imprimir_string($data['selected'] ?? ''));
-        $oDesplCtr->setAction(\tessera_imprimir_string($data['action'] ?? ''));
+        $oDesplCtr->setOpcion_sel(PayloadCoercion::string($data['selected'] ?? ''));
+        $oDesplCtr->setAction(PayloadCoercion::string($data['action'] ?? ''));
 
         return $oDesplCtr;
     }

@@ -1,39 +1,40 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\misas\helpers\MisasDesplegableSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/misas/modificar_plantilla_data');
 
 $oDesplZonas = new Desplegable();
-$oDesplZonas->setOpciones(misas_desplegable_opciones($data['zonas_opciones'] ?? []));
+$oDesplZonas->setOpciones(MisasDesplegableSupport::opciones($data['zonas_opciones'] ?? []));
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_plantilla_zona()');
 
 $oDesplTipoPlantilla = new Desplegable();
-$oDesplTipoPlantilla->setOpciones(misas_desplegable_opciones($data['tipos_plantilla'] ?? []));
+$oDesplTipoPlantilla->setOpciones(MisasDesplegableSupport::opciones($data['tipos_plantilla'] ?? []));
 $oDesplTipoPlantilla->setNombre('tipo_plantilla');
-$oDesplTipoPlantilla->setOpcion_sel(misas_string($data['plantilla_selected'] ?? ''));
+$oDesplTipoPlantilla->setOpcion_sel(PayloadCoercion::string($data['plantilla_selected'] ?? ''));
 $oDesplTipoPlantilla->setAction('fnjs_ver_plantilla_zona()');
 
 $a_TiposPlantilla2 = array_merge(
     ['-' => ''],
-    misas_desplegable_opciones($data['tipos_plantilla'] ?? [])
+    MisasDesplegableSupport::opciones($data['tipos_plantilla'] ?? [])
 );
 $oDesplImportarDePlantilla = new Desplegable();
-$oDesplImportarDePlantilla->setOpciones(misas_desplegable_opciones($a_TiposPlantilla2));
+$oDesplImportarDePlantilla->setOpciones(MisasDesplegableSupport::opciones($a_TiposPlantilla2));
 $oDesplImportarDePlantilla->setNombre('importar_de_plantilla');
 
 $oDesplOrden = new Desplegable();
-$oDesplOrden->setOpciones(misas_desplegable_opciones($data['orden_opciones'] ?? []));
+$oDesplOrden->setOpciones(MisasDesplegableSupport::opciones($data['orden_opciones'] ?? []));
 $oDesplOrden->setNombre('orden');
 $oDesplOrden->setAction('fnjs_ver_plantilla_zona()');
 
@@ -65,4 +66,4 @@ $a_campos = [
     'oHash' => $oHash,
 ];
 
-ajax_json_render_phtml('frontend\\misas\\controller', 'modificar_plantilla.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', 'modificar_plantilla.phtml', $a_campos);

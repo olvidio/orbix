@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: listado de actividades por casa (`casa_actividades_lista`).
  */
@@ -7,15 +10,12 @@ use src\casas\application\CasaActividadesListaData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_string_list;
-
 $input = [
-    'id_cdc' => input_string_list($_POST, 'id_cdc'),
-    'periodo' => input_string($_POST, 'periodo'),
-    'year' => input_string($_POST, 'year'),
-    'empiezamin' => input_string($_POST, 'empiezamin'),
-    'empiezamax' => input_string($_POST, 'empiezamax'),
+    'id_cdc' => FuncTablasSupport::inputStringList($_POST, 'id_cdc'),
+    'periodo' => FuncTablasSupport::inputString($_POST, 'periodo'),
+    'year' => FuncTablasSupport::inputString($_POST, 'year'),
+    'empiezamin' => FuncTablasSupport::inputString($_POST, 'empiezamin'),
+    'empiezamax' => FuncTablasSupport::inputString($_POST, 'empiezamax'),
 ];
 
 /** @var CasaActividadesListaData $useCase */

@@ -5,29 +5,26 @@ use src\planning\application\PlanningPersonaVerData;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_string_list;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 $error = '';
 $data = [];
 try {
     $input = $_POST;
-    $sSeleccionados = input_string($input, 'sSeleccionados');
+    $sSeleccionados = FuncTablasSupport::inputString($input, 'sSeleccionados');
     if ($sSeleccionados !== '') {
         $aid_nom = array_values(array_filter(
             array_map('trim', explode(',', $sSeleccionados)),
             static fn (string $v): bool => $v !== ''
         ));
     } else {
-        $aid_nom = input_string_list($input, 'sel');
+        $aid_nom = FuncTablasSupport::inputStringList($input, 'sel');
     }
 
-    $Qyear = input_int($input, 'year');
-    $Qperiodo = input_string($input, 'periodo');
-    $Qempiezamin = input_string($input, 'empiezamin');
-    $Qempiezamax = input_string($input, 'empiezamax');
+    $Qyear = FuncTablasSupport::inputInt($input, 'year');
+    $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+    $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+    $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
 
     $oPeriodo = Periodo::conCalendarioDesdeBackend();
     $oPeriodo->setDefaultAny('next');

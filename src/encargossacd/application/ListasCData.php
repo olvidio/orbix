@@ -3,6 +3,7 @@
 namespace src\encargossacd\application;
 
 use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
@@ -14,8 +15,6 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
-
-use function src\shared\domain\helpers\strtoupper_dlb;
 
 /**
  * Genera el listado de atencion SACD "c" (cr 9/05, Anexo2, 9.4 c).
@@ -55,8 +54,8 @@ final class ListasCData
 
 
         $any = $oConfig->any_final_curs('crt');
-        $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->getFromLocal();
-        $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->getFromLocal();
+        $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'crt')->getFromLocal();
+        $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'crt')->getFromLocal();
 
         $cabecera_left = sprintf(_('Curso:  %s - %s'), $inicurs, $fincurs);
         $cabecera_right = ConfigGlobal::mi_delef();
@@ -225,7 +224,7 @@ final class ListasCData
             uksort($a_sacd, 'src\shared\domain\helpers\strsinacentocmp');
 
             $poblacion = !empty($id_grupo) ? ($array_grupos[$id_grupo] ?? _('otros')) : _('otros');
-            $titulo_2 = strtoupper_dlb($poblacion);
+            $titulo_2 = FuncTablasSupport::strtoupperDlb($poblacion);
             if ($titulo_2 !== '') {
                 $Html_all .= "<tr><td class=poblacion colspan=2>$titulo_2</td></tr>";
             }

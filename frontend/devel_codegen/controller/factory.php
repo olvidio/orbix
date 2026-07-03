@@ -2,13 +2,14 @@
 
 namespace frontend\devel_codegen\controller;
 
+use frontend\devel_codegen\helpers\DevelCodegenSupport;
 use frontend\shared\FrontBootstrap;
 use RuntimeException;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\GlobalPdo;
-use function src\shared\domain\helpers\is_true;
+use frontend\shared\helpers\FuncTablasSupport;
 
 /**
  * programa per generar les classes a partir de la taula
@@ -18,7 +19,6 @@ use function src\shared\domain\helpers\is_true;
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
-require_once __DIR__ . '/../helpers/devel_codegen_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 require_once __DIR__ . '/func_factory.php';
@@ -35,7 +35,7 @@ if (empty($Q_tabla)) {
     exit("Ha de dir quina taula");
 }
 // si la tabla tiene el schema, hay que separalo:
-$schemaParts = devel_codegen_schema_table_parts($Q_tabla);
+$schemaParts = DevelCodegenSupport::schemaTableParts($Q_tabla);
 $schema_sql = $schemaParts['schema_sql'];
 $tabla = $schemaParts['tabla'];
 $schema = $schemaParts['schema'];
@@ -142,18 +142,18 @@ $filenameOld = ServerConf::DIR . '/apps/' . $grupo . '/legacy/zz' . $Q_clase . '
 if (file_exists($filename)) {
     rename($filename, $filenameOld);
     /* rename class if exists */
-    $content = devel_codegen_file_contents($filenameOld);
+    $content = DevelCodegenSupport::fileContents($filenameOld);
     if ($content === '') {
         echo "Cannot read file ($filenameOld)";
         die();
     }
     $pattern = '/^class\s+' . $Q_clase . '/im';
     $replacement = 'class zzz' . $Q_clase . 'Old';
-    $new_content = devel_codegen_preg_replace($pattern, $replacement, $content);
+    $new_content = DevelCodegenSupport::pregReplace($pattern, $replacement, $content);
     // también el namespace:
     $pattern2 = '/^namespace\s+(.*)/im';
     $replacement2 = "namespace $grupo\\legacy;";
-    $new_content2 = devel_codegen_preg_replace($pattern2, $replacement2, $new_content);
+    $new_content2 = DevelCodegenSupport::pregReplace($pattern2, $replacement2, $new_content);
 
     if (file_put_contents($filenameOld, $new_content2) === false) {
         echo "No puedo cambiar el nombre de la clase en  ($filenameOld)";
@@ -167,18 +167,18 @@ $filenameOld = ServerConf::DIR . '/apps/' . $grupo . '/legacy/zzzGestor' . $Q_cl
 if (file_exists($filename)) {
     rename($filename, $filenameOld);
     /* rename class if exists */
-    $content = devel_codegen_file_contents($filenameOld);
+    $content = DevelCodegenSupport::fileContents($filenameOld);
     if ($content === '') {
         echo "Cannot read file ($filenameOld)";
         die();
     }
     $pattern = '/^class\s+' . $gestor . '/im';
     $replacement = 'class zzz' . $gestor . 'Old';
-    $new_content = devel_codegen_preg_replace($pattern, $replacement, $content);
+    $new_content = DevelCodegenSupport::pregReplace($pattern, $replacement, $content);
     // también el namespace:
     $pattern2 = '/^namespace\s+(.*)/im';
     $replacement2 = "namespace $grupo\\legacy;";
-    $new_content2 = devel_codegen_preg_replace($pattern2, $replacement2, $new_content);
+    $new_content2 = DevelCodegenSupport::pregReplace($pattern2, $replacement2, $new_content);
 
     if (file_put_contents($filenameOld, $new_content2) === false) {
         echo "No puedo cambiar el nombre de la clase en  ($filenameOld)";
@@ -244,7 +244,7 @@ $guardar_json = "";
 $err_bool = "";
 $a_auto = [];
 // una primera vuelta para cargar excepciones...
-foreach (devel_codegen_sql_rows($oDbl, $sql) as $row) {
+foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
     $nomcamp = $row['field'];
     if ($nomcamp === 'id_schema') {
         continue;
@@ -293,14 +293,14 @@ foreach (devel_codegen_sql_rows($oDbl, $sql) as $row) {
     }
 }
 
-foreach (devel_codegen_sql_rows($oDbl, $sql) as $row) {
+foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
     $nomcamp = $row['field'];
     if ($nomcamp === 'id_schema') {
         continue;
     }
     $NomCamp = ucwords($nomcamp);
     $tipo = $row['type'];
-    $null = (is_true($row['notnull'])) ? 'null' : '';
+    $null = (FuncTablasSupport::isTrue($row['notnull'])) ? 'null' : '';
     $tip = 's';
     $tipo_db = 'string';
     $tip_val = '';
@@ -317,7 +317,7 @@ foreach (devel_codegen_sql_rows($oDbl, $sql) as $row) {
 					and d.adnum =" . $row['attnum'];
 
     //echo "sql_def: $sql_get_default<br>";
-    $default = devel_codegen_fetch_column($oDbl, $sql_get_default);
+    $default = DevelCodegenSupport::fetchColumn($oDbl, $sql_get_default);
     $auto = 0;
     if (!empty($default)) { //nomes agafo un. li dono preferencia al id_local
         $matches = [];
@@ -349,7 +349,7 @@ foreach (devel_codegen_sql_rows($oDbl, $sql) as $row) {
             $tip = 'a_';
             $tip_val = '';
             $array_dades .= "\n\t\t\t";
-            $array_dades .= '$aDatos[\'' . $nomcamp . '\'] = array_pgInteger2php($aDatos[\'' . $nomcamp . '\']);';
+            $array_dades .= '$aDatos[\'' . $nomcamp . '\'] = FuncTablasSupport::arrayPgInteger2php($aDatos[\'' . $nomcamp . '\']);';
             break;
         case 'int8':
         case 'int4':
@@ -630,7 +630,7 @@ foreach (devel_codegen_sql_rows($oDbl, $sql) as $row) {
         case 'bool':
             $exists .= "\n\t\t" . 'if (array_key_exists(\'' . $nomcamp . '\',$aDatos))';
             $exists .= "\n\t\t{";
-            $exists .= "\n\t\t\t" . '$this->set' . $NomCamp . '(is_true($aDatos[\'' . $nomcamp . '\']));';
+            $exists .= "\n\t\t\t" . '$this->set' . $NomCamp . '(FuncTablasSupport::isTrue($aDatos[\'' . $nomcamp . '\']));';
             $exists .= "\n\t\t}";
             $ToEmpty .= "\n\t\t" . '$this->set' . $NomCamp . '(\'\');';
             break;
@@ -666,10 +666,10 @@ foreach (devel_codegen_sql_rows($oDbl, $sql) as $row) {
     if (!in_array($nomcamp, $aClaus)) {
         if ($auto != 1) { // si tiene secuencia no pongo el campo en el update.
             if ($tip === 'b') {
-                $err_bool .= "\n\t\t" . 'if ( is_true($aDatos[\'' . $nomcamp . '\']) ) { $aDatos[\'' . $nomcamp . '\']=\'true\'; } else { $aDatos[\'' . $nomcamp . '\']=\'false\'; }';
+                $err_bool .= "\n\t\t" . 'if ( FuncTablasSupport::isTrue($aDatos[\'' . $nomcamp . '\']) ) { $aDatos[\'' . $nomcamp . '\']=\'true\'; } else { $aDatos[\'' . $nomcamp . '\']=\'false\'; }';
             }
             if ($tipo_db === 'array') {
-                $guardar_array .= "\n\t\t" . '$aDatos[\'' . $nomcamp . '\'] = array_php2pg($' . $Q_clase . '->' . $metodo_get . ');';
+                $guardar_array .= "\n\t\t" . '$aDatos[\'' . $nomcamp . '\'] = FuncTablasSupport::arrayPhp2pg($' . $Q_clase . '->' . $metodo_get . ');';
             }
             if ($tipo === 'bytea') {
                 $guardar_bytea .= "\n\t\t" . '$aDatos[\'' . $nomcamp . '\'] = bin2hex($' . $Q_clase . '->' . $metodo_get . ');';
@@ -1524,7 +1524,7 @@ $useImplementation = "use src\\$grupo\\infrastructure\\repositories\\{$pg_clase}
 $mappingLine = "    {$clase_interface}::class => autowire({$pg_clase}::class),";
 
 if (file_exists($filename)) {
-    $content = devel_codegen_file_contents($filename);
+    $content = DevelCodegenSupport::fileContents($filename);
     if ($content === '') {
         die("Cannot read file ($filename)\n");
     }

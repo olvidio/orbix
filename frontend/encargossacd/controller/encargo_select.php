@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
@@ -7,6 +6,9 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
+use frontend\encargossacd\helpers\EncargossacdPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Listado de encargos. Los datos de cada fila vienen del backend
@@ -19,29 +21,28 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$restored = list_nav_restore_selection_from_stack_post();
+$restored = ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !list_nav_id_sel_is_empty($restored['id_sel']) ? $restored['id_sel'] : list_nav_id_sel_from_post();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : list_nav_scroll_id_from_post();
-$stackFromPost = list_nav_stack_from_post();
+$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
+$stackFromPost = ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
-    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    list_nav_boot_recordar($oPosicion, $Qrefresh);
+    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
 }
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 
-$Qtitulo = encargossacd_post_string('titulo');
-$Qid_tipo_enc = encargossacd_post_int('id_tipo_enc');
-$Qdesc_enc = encargossacd_post_string('desc_enc');
+$Qtitulo = EncargossacdPostInput::postString('titulo');
+$Qid_tipo_enc = EncargossacdPostInput::postInt('id_tipo_enc');
+$Qdesc_enc = EncargossacdPostInput::postString('desc_enc');
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/encargo_select_data', [
@@ -75,7 +76,7 @@ if (!empty($Qscroll_id)) {
 $i = 0;
 foreach ($filas as $fila) {
     $i++;
-    $row = encargossacd_encargo_select_row($fila);
+    $row = EncargossacdPayload::encargoSelectRow($fila);
     $id_enc = $row['id_enc'];
     $sf_sv = $row['sf_sv'];
     $desc_enc = $row['desc_enc'];

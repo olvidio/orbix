@@ -1,8 +1,10 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
 
 /**
  * Comunicacion para los centros (ficha de atencion SACD).
@@ -13,20 +15,19 @@ use frontend\shared\FrontBootstrap;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qsfsv = encargossacd_post_string('sfsv');
+$Qsfsv = EncargossacdPostInput::postString('sfsv');
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_com_ctr_data', ['sfsv' => $Qsfsv]);
 
 $a_campos = [
     'oPosicion' => $oPosicion,
     'array_atn_sacd' => is_array($datos['array_atn_sacd'] ?? null) ? $datos['array_atn_sacd'] : [],
-    'origen_txt' => tessera_imprimir_string($datos['origen_txt'] ?? ''),
-    'lugar_fecha' => tessera_imprimir_string($datos['lugar_fecha'] ?? ''),
+    'origen_txt' => PayloadCoercion::string($datos['origen_txt'] ?? ''),
+    'lugar_fecha' => PayloadCoercion::string($datos['lugar_fecha'] ?? ''),
 ];
 
 $oView = new ViewNewPhtml('frontend\\encargossacd\\controller');

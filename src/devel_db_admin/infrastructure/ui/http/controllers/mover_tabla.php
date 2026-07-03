@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use src\shared\domain\helpers\FilterPostGet;
+
+
 /**
  * Lista esquemas con la tabla y ejecuta {@see MoverTabla} (POST: `tabla`).
  * JSON `data`: `{ "a_esquemas": string[], "lines": string[] }` o error con `success: false`.
@@ -12,7 +15,7 @@ use src\devel_db_admin\application\MoverTabla;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 
 
-$tablaRaw = filter_post('tabla');
+$tablaRaw = FilterPostGet::post('tabla');
 $tabla = is_scalar($tablaRaw) ? (string) $tablaRaw : '';
 
 $dbp = new DBPropiedades();

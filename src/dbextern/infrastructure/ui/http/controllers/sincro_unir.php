@@ -3,16 +3,14 @@
 use src\dbextern\application\UnirPersonaUseCase;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
-$id_nom_listas = input_int($_POST, 'id_nom_listas');
-$id_orbix = input_int($_POST, 'id_orbix');
-$tipo_persona = input_string($_POST, 'tipo_persona');
+use src\shared\domain\helpers\FuncTablasSupport;
+$id_nom_listas = FuncTablasSupport::inputInt($_POST, 'id_nom_listas');
+$id_orbix = FuncTablasSupport::inputInt($_POST, 'id_orbix');
+$tipo_persona = FuncTablasSupport::inputString($_POST, 'tipo_persona');
 
 $error_txt = DependencyResolver::get(UnirPersonaUseCase::class)($id_nom_listas, $id_orbix, $tipo_persona);
 
-$id = input_int($_POST, 'id');
+$id = FuncTablasSupport::inputInt($_POST, 'id');
 $dbListas = $_SESSION['DBListas'] ?? null;
 if ($id > 0 && is_array($dbListas) && isset($dbListas[$id])) {
     session_start();

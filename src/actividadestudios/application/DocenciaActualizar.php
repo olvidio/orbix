@@ -12,7 +12,7 @@ use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use frontend\shared\web\Periodo;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Actualiza el dossier `d_docencia_stgr` con la informacion docente derivada
@@ -38,10 +38,10 @@ final class DocenciaActualizar
      */
     public function execute(array $input): string
     {
-        $Qyear = input_string($input, 'year');
-        $Qperiodo = input_string($input, 'periodo');
-        $Qempiezamin = input_string($input, 'empiezamin');
-        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qyear = FuncTablasSupport::inputString($input, 'year');
+        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
 
         if (empty($Qperiodo)) {
             $Qperiodo = 'curso_ca';

@@ -1,15 +1,14 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_tipo_doc = input_int($_POST, 'id_tipo_doc');
-$Qinventario = input_int($_POST, 'inventario');
+$Qid_tipo_doc = FuncTablasSupport::inputInt($_POST, 'id_tipo_doc');
+$Qinventario = FuncTablasSupport::inputInt($_POST, 'inventario');
 $error_txt = '';
 
 if (empty($Qinventario)) {

@@ -20,16 +20,17 @@ use frontend\shared\web\CasasQue;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
+use src\permisos\domain\XPermisos;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/actividadtarifas/helpers/actividadtarifas_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $miSfsv = OrbixRuntime::miSfsv();
 
 $oForm = new CasasQue();
 $filtro = ['active' => true];
-$oPerm = actividades_o_perm();
+$oPerm = $_SESSION['oPerm'] ?? null;
+$oPerm = $oPerm instanceof XPermisos ? $oPerm : null;
 if ($oPerm !== null && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))) {
     $oForm->setCasas('all');
 } elseif ($miSfsv === 1) {

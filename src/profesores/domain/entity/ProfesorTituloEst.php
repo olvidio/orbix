@@ -9,9 +9,6 @@ use src\profesores\domain\value_objects\PublicacionTitulo;
 use src\profesores\domain\value_objects\TituloName;
 use src\profesores\domain\value_objects\YearNumber;
 use src\shared\domain\traits\Hydratable;
-use function src\shared\domain\helpers\is_true;
-
-
 class ProfesorTituloEst
 {
     use Hydratable;

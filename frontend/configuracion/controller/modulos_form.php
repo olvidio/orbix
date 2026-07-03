@@ -1,14 +1,14 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\configuracion\helpers\ModulosFormRender;
 use frontend\shared\FrontBootstrap;
+use frontend\configuracion\helpers\ConfiguracionPayload;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/configuracion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 require_once 'frontend/shared/web/func_web.php';
 
@@ -16,20 +16,20 @@ $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 
 $campos = array_merge($_GET, $_POST);
 
-$Qmod = tessera_imprimir_string($campos['mod'] ?? '');
+$Qmod = PayloadCoercion::string($campos['mod'] ?? '');
 $stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
 if ($Qmod !== 'nuevo' && $stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
 
 
 $data = PostRequest::getDataFromUrl('/src/configuracion/modulos_form_data', $campos);
-$payload = configuracion_string_key_payload($data);
+$payload = ConfiguracionPayload::stringKeyPayload($data);
 $payload = ModulosFormRender::enrich($payload);
-$view = configuracion_modulos_form_view_from_payload($payload);
+$view = ConfiguracionPayload::modulosFormViewFromPayload($payload);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

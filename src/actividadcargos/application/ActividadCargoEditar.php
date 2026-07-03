@@ -13,9 +13,7 @@ use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
 use src\shared\config\ConfigGlobal;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Edicion de un `ActividadCargo` existente (o alta si `id_item` viene vacio,
@@ -46,14 +44,14 @@ final class ActividadCargoEditar
      */
     public function execute(array $input): string
     {
-        $id_item = input_int($input, 'id_item');
-        $id_activ = input_int($input, 'id_activ');
-        $id_nom = input_int($input, 'id_nom');
-        $id_cargo = input_int($input, 'id_cargo');
-        $observ = input_string($input, 'observ');
-        $puede_agd = input_string($input, 'puede_agd');
-        $asis = input_string($input, 'asis');
-        $asis_presente = input_string($input, 'asis_presente') !== '';
+        $id_item = FuncTablasSupport::inputInt($input, 'id_item');
+        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
+        $id_cargo = FuncTablasSupport::inputInt($input, 'id_cargo');
+        $observ = FuncTablasSupport::inputString($input, 'observ');
+        $puede_agd = FuncTablasSupport::inputString($input, 'puede_agd');
+        $asis = FuncTablasSupport::inputString($input, 'asis');
+        $asis_presente = FuncTablasSupport::inputString($input, 'asis_presente') !== '';
 
         if ($id_activ <= 0 || $id_nom <= 0 || $id_cargo <= 0) {
             return _("faltan parametros id_activ / id_nom / id_cargo");
@@ -73,7 +71,7 @@ final class ActividadCargoEditar
         $oActividadCargo->setId_cargo($id_cargo);
         $oActividadCargo->setId_nom($id_nom);
         $oActividadCargo->setObserv($observ !== '' ? $observ : null);
-        $oActividadCargo->setPuede_agd(is_true($puede_agd) ?? false);
+        $oActividadCargo->setPuede_agd(FuncTablasSupport::isTrue($puede_agd) ?? false);
 
         if ($this->actividadCargoRepository->Guardar($oActividadCargo) === false) {
             $error = $this->lastSessionError();

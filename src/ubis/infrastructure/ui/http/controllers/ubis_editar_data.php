@@ -3,12 +3,11 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\UbisEditarOpcionesData;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FuncTablasSupport;
 
-use function src\shared\domain\helpers\input_string;
-
-$Qobj_pau = input_string($_POST, 'obj_pau');
-$Qtipo_ubi = input_string($_POST, 'tipo_ubi');
-$Qdl = input_string($_POST, 'dl');
-$Qregion = input_string($_POST, 'region');
+$Qobj_pau = FuncTablasSupport::inputString($_POST, 'obj_pau');
+$Qtipo_ubi = FuncTablasSupport::inputString($_POST, 'tipo_ubi');
+$Qdl = FuncTablasSupport::inputString($_POST, 'dl');
+$Qregion = FuncTablasSupport::inputString($_POST, 'region');
 
 ContestarJson::enviar('', DependencyResolver::get(UbisEditarOpcionesData::class)->execute($Qobj_pau, $Qtipo_ubi, $Qdl, $Qregion));

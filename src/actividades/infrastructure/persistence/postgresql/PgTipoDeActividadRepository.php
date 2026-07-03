@@ -12,8 +12,7 @@ use src\actividades\domain\entity\TipoDeActividad;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\actividades\domain\entity\TiposActividades;
-use function src\shared\domain\helpers\is_true;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Clase que adapta la tabla a_tipos_actividad a la interfaz del repositorio
@@ -90,7 +89,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
                 $nom_tipo_proceso = "id_tipo_proceso_sf";
                 $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sf";
             }
-            if (is_true($bdl_propia)) {
+            if (FuncTablasSupport::isTrue($bdl_propia)) {
                 $sQry = "SELECT $nom_tipo_proceso as id_tipo_proceso 
                             FROM $nom_tabla 
                             WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 

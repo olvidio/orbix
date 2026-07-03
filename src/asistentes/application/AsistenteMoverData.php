@@ -2,9 +2,6 @@
 
 namespace src\asistentes\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use Psr\Container\ContainerInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -20,6 +17,7 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Modal mover asistente (`asistente_mover.php`).
@@ -52,11 +50,11 @@ final class AsistenteMoverData
             $selKey = is_string($sel0) ? $sel0 : (is_scalar($sel0) ? (string)$sel0 : '');
             $Qid_nom = (int)strtok($selKey, '#');
         } else {
-            $Qid_nom = input_int($input, 'id_nom');
+            $Qid_nom = FuncTablasSupport::inputInt($input, 'id_nom');
         }
 
-        $Qid_activ_old = input_int($input, 'id_activ');
-        $Qid_nom = input_int($input, 'id_pau', $Qid_nom);
+        $Qid_activ_old = FuncTablasSupport::inputInt($input, 'id_activ');
+        $Qid_nom = FuncTablasSupport::inputInt($input, 'id_pau', $Qid_nom);
 
         $AsistenteRepositoryInterface = $this->asistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ_old);
         /** @var AsistenteRepositoryInterface $AsistenteRepository */
@@ -113,13 +111,13 @@ final class AsistenteMoverData
                 case 'ca':
                 case 'cv':
                     $any = $oConfig->any_final_curs('est');
-                    $oInicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'est');
-                    $oFincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'est');
+                    $oInicurs = FuncTablasSupport::cursoEst('inicio', $any, 'est');
+                    $oFincurs = FuncTablasSupport::cursoEst('fin', $any, 'est');
                     break;
                 case 'crt':
                     $any = $oConfig->any_final_curs('crt');
-                    $oInicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt');
-                    $oFincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt');
+                    $oInicurs = FuncTablasSupport::cursoEst('inicio', $any, 'crt');
+                    $oFincurs = FuncTablasSupport::cursoEst('fin', $any, 'crt');
                     break;
             }
             $inicurs_iso = $oInicurs ? $oInicurs->format('Y-m-d') : '';

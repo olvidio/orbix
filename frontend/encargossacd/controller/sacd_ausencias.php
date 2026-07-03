@@ -1,10 +1,11 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\encargossacd\support\SacdFichaAjaxHashes;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Ficha de ausencias de un sacd.
@@ -17,15 +18,14 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
-$Qfiltro_sacd = encargossacd_post_string('filtro_sacd');
+$Qfiltro_sacd = EncargossacdPostInput::postString('filtro_sacd');
 
 $hashes = SacdFichaAjaxHashes::hashesComunes();
 $oDesplFiltroSacd = SacdFichaAjaxHashes::desplegableFiltroSacd($Qfiltro_sacd);

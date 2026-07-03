@@ -21,8 +21,7 @@ use src\personas\domain\entity\Persona;
 use src\actividades\domain\entity\TiposActividades;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Convierte las matriculas/notas borrador en notas definitivas (`PersonaNota`),
@@ -56,8 +55,8 @@ final class ActaNotasDefinitivasGrabar
      */
     public function execute(array $input): array
     {
-        $Qid_asignatura = input_int($input, 'id_asignatura');
-        $Qid_activ = input_int($input, 'id_activ');
+        $Qid_asignatura = FuncTablasSupport::inputInt($input, 'id_asignatura');
+        $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
 
         /** @var ConfigSnapshot $oConfig */
         $oConfig = $_SESSION['oConfig'];
@@ -172,7 +171,7 @@ final class ActaNotasDefinitivasGrabar
                         $id_nivel = $id_op;
                         break;
                     }
-                    if (is_true($oPersonaNota1->isAprobada())) {
+                    if (FuncTablasSupport::isTrue($oPersonaNota1->isAprobada())) {
                         $aOpSuperadas[$j] = $id_op;
                     }
                 }

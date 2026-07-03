@@ -1,4 +1,10 @@
 <?php
+
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\actividadplazas\helpers\ActividadplazasPostInput;
+use frontend\actividadplazas\helpers\ActividadplazasPayload;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Pantalla resumen de plazas por actividad.
  *
@@ -19,32 +25,29 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 
-$stackFromPost = list_nav_stack_from_post();
+$stackFromPost = ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
 if ($stackFromPost !== 0) {
-    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    list_nav_boot_actividad_select_child_recordar($oPosicion, $Qrefresh);
+    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
 }
 
-$selParts = actividadplazas_sel_hash_parts();
+$selParts = ActividadplazasPostInput::selHashParts();
 if ($selParts !== null) {
-    list_nav_persist_actividad_select_child_entry($oPosicion, ['id_activ' => tessera_imprimir_int($selParts['first'])]);
+    ListNavSupport::persistActividadSelectChildEntry($oPosicion, ['id_activ' => PayloadCoercion::int($selParts['first'])]);
 } else {
-    list_nav_persist_actividad_select_child_entry($oPosicion);
+    ListNavSupport::persistActividadSelectChildEntry($oPosicion);
 }
 
 if ($selParts !== null) {
-    $id_activ = tessera_imprimir_int($selParts['first']);
+    $id_activ = PayloadCoercion::int($selParts['first']);
     $nom_activ = $selParts['second'];
 } else {
     $id_activ = (int)filter_input(INPUT_POST, 'id_activ');
@@ -56,7 +59,7 @@ $campos = [
     'nom_activ' => $nom_activ,
 ];
 
-$payload = actividadplazas_gestion_plazas_from_payload(
+$payload = ActividadplazasPayload::gestionPlazasFromPayload(
     PostRequest::getDataFromUrl('/src/actividadplazas/resumen_plazas_data', $campos)
 );
 

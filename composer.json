@@ -38,9 +38,6 @@
           "src\\": "src/"
         },
         "files": [
-          "frontend/shared/helpers/func_tablas.php",
-          "src/shared/domain/helpers/func_tablas.php",
-          "src/shared/domain/helpers/func_input.php"
         ]
    },
   "autoload-dev": {

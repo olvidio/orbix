@@ -6,9 +6,8 @@ use src\shared\config\ConfigGlobal;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 use src\permisos\domain\XPermisos;
+use src\shared\domain\helpers\FuncTablasSupport;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
@@ -50,17 +49,17 @@ final class ListaActividadesSgListado
         $num_max_actividades = 200;
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-        $Qcontinuar = input_string($input, 'continuar');
-        $Qstatus = input_int($input, 'status');
-        $Qtipo_activ_sg = input_string($input, 'tipo_activ_sg');
-        $Qid_ubi = input_int($input, 'id_ubi');
-        $Qperiodo = input_string($input, 'periodo');
-        $Qyear = input_string($input, 'year');
-        $Qdl_org = input_string($input, 'dl_org');
-        $Qempiezamin = input_string($input, 'empiezamin');
-        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qcontinuar = FuncTablasSupport::inputString($input, 'continuar');
+        $Qstatus = FuncTablasSupport::inputInt($input, 'status');
+        $Qtipo_activ_sg = FuncTablasSupport::inputString($input, 'tipo_activ_sg');
+        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
+        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = FuncTablasSupport::inputString($input, 'year');
+        $Qdl_org = FuncTablasSupport::inputString($input, 'dl_org');
+        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
         $Qid_sel = is_array($input['sel'] ?? null) ? $input['sel'] : [];
-        $Qscroll_id = input_string($input, 'scroll_id');
+        $Qscroll_id = FuncTablasSupport::inputString($input, 'scroll_id');
 
         $Qstatus = empty($Qstatus) ? StatusId::ACTUAL : $Qstatus;
 

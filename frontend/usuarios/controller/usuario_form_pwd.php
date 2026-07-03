@@ -1,4 +1,6 @@
 <?php
+
+use frontend\usuarios\helpers\UsuariosPostInput;
 $_POST = (empty($_POST)) ? $_GET : $_POST;
 
 use frontend\shared\config\AppUrlConfig;
@@ -7,11 +9,10 @@ use frontend\shared\web\UrlBaseProject;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
 
-$id_usuario = usuarios_session_auth_int('id_usuario');
-$usuario = usuarios_session_auth_string('username');
-$expire = usuarios_session_auth_string('expire');
+$id_usuario = UsuariosPostInput::sessionAuthInt('id_usuario');
+$usuario = UsuariosPostInput::sessionAuthString('username');
+$expire = UsuariosPostInput::sessionAuthString('expire');
 
 if (!defined('ORBIX_INDEX_EMBED')) {
     require_once 'frontend/shared/FrontBootstrap.php';

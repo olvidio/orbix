@@ -1,5 +1,7 @@
 <?php
 
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Pantalla “comprobar notas”: el SQL y mutaciones corren en
  * {@see src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_data.php}.
@@ -16,11 +18,9 @@ use frontend\shared\FrontBootstrap;
  */
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $requestPayload = PostRequest::requestPayloadForHash();

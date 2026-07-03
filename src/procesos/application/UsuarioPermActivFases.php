@@ -4,8 +4,7 @@ namespace src\procesos\application;
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: opciones del desplegable fase_ref[] en usuario_perm_activ.
@@ -24,10 +23,10 @@ class UsuarioPermActivFases
      */
     public function execute(array $input): array
     {
-        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
-        $Qdl_propia = input_string($input, 'dl_propia');
+        $Qid_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $Qdl_propia = FuncTablasSupport::inputString($input, 'dl_propia');
 
-        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, is_true($Qdl_propia) ?? false);
+        $aTiposDeProcesos = $this->tipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, FuncTablasSupport::isTrue($Qdl_propia) ?? false);
         $aOpciones = $this->actividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
 
         return ['opciones' => $aOpciones];

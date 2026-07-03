@@ -1,5 +1,6 @@
 <?php
 
+use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\permisos\MenuPermisoMenuHtml;
 use frontend\shared\PostRequest;
@@ -7,7 +8,6 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -24,7 +24,7 @@ $loadPayload = [
     'region' => (string)filter_input(INPUT_POST, 'region'),
     'nombre_ubi' => (string)filter_input(INPUT_POST, 'nombre_ubi'),
 ];
-$load = ubis_editar_load_from_payload(ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/ubis_editar_load_data', $loadPayload)));
+$load = UbisPayload::editarLoadFromPayload(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/ubis_editar_load_data', $loadPayload)));
 
 $tipo_ubi = $load['tipo_ubi'];
 $Qobj_pau = $load['obj_pau'];
@@ -71,17 +71,17 @@ if ($tipo_ubi === 'ctrdl' || $tipo_ubi === 'ctrsf') {
     $regionOpc = empty($region) ? OrbixRuntime::miRegion() : $region;
 }
 
-$dataOpcionesRaw = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/ubis_editar_data', [
+$dataOpcionesRaw = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/ubis_editar_data', [
     'obj_pau' => $Qobj_pau,
     'tipo_ubi' => $tipo_ubi,
     'dl' => $dlOpc,
     'region' => $regionOpc,
 ]));
-$error = ubis_api_error($dataOpcionesRaw);
+$error = UbisPayload::apiError($dataOpcionesRaw);
 if ($error !== '') {
     exit($error);
 }
-$dataOpciones = ubis_editar_opciones_from_payload($dataOpcionesRaw);
+$dataOpciones = UbisPayload::editarOpcionesFromPayload($dataOpcionesRaw);
 
 $oView = new ViewNewPhtml('frontend\ubis\controller');
 

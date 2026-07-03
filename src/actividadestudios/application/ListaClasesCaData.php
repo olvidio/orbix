@@ -10,7 +10,7 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterfac
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * @return array{
@@ -43,7 +43,7 @@ final class ListaClasesCaData
      */
     public function execute(array $input): array
     {
-        $idActiv = input_int($input, 'id_activ');
+        $idActiv = FuncTablasSupport::inputInt($input, 'id_activ');
         $msgErr = '';
 
         $oActividad = $this->actividadAllRepository->findById($idActiv);

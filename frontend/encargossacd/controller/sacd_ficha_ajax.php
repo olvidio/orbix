@@ -1,5 +1,9 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
+
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
+use frontend\encargossacd\helpers\EncargossacdPayload;
 
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
@@ -19,44 +23,43 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = encargossacd_post_string('que');
-$Qid_nom = encargossacd_post_int('id_nom');
+$Qque = EncargossacdPostInput::postString('que');
+$Qid_nom = EncargossacdPostInput::postInt('id_nom');
 
 switch ($Qque) {
     case 'get_select':
-        $Qfiltro_sacd = encargossacd_post_string('filtro_sacd');
+        $Qfiltro_sacd = EncargossacdPostInput::postString('filtro_sacd');
         $data = PostRequest::getDataFromUrl('/src/encargossacd/sacd_select_data', [
             'filtro_sacd' => $Qfiltro_sacd,
             'id_nom' => $Qid_nom,
         ]);
-        $prefix = tessera_imprimir_string($data['label_prefix'] ?? '');
+        $prefix = PayloadCoercion::string($data['label_prefix'] ?? '');
 
         $oDespl = new Desplegable();
         $oDespl->setBlanco(true);
-        $oDespl->setOpciones(encargossacd_desplegable_opciones($data['opciones'] ?? []));
-        $oDespl->setOpcion_sel(encargossacd_desplegable_opcion_sel($Qid_nom));
+        $oDespl->setOpciones(EncargossacdPayload::desplegableOpciones($data['opciones'] ?? []));
+        $oDespl->setOpcion_sel(EncargossacdPayload::desplegableOpcionSel($Qid_nom));
         $oDespl->setNombre('lst_sacds');
         $oDespl->setAction('fnjs_ver_ficha()');
 
-        ajax_json_html($prefix . $oDespl->desplegable());
+        AjaxJsonSupport::html($prefix . $oDespl->desplegable());
 
     case 'ficha':
         $data = PostRequest::getDataFromUrl('/src/encargossacd/sacd_ficha_data', [
             'id_nom' => $Qid_nom,
         ]);
 
-        $permiso = tessera_imprimir_int($data['permiso'] ?? 0);
-        $observ_sacd = tessera_imprimir_string($data['observ_sacd'] ?? '');
-        $encargos = encargossacd_sacd_ficha_encargos_from_payload($data['encargos'] ?? null);
-        $opciones_mas = encargossacd_desplegable_opciones($data['opciones_mas'] ?? []);
+        $permiso = PayloadCoercion::int($data['permiso'] ?? 0);
+        $observ_sacd = PayloadCoercion::string($data['observ_sacd'] ?? '');
+        $encargos = EncargossacdPayload::sacdFichaEncargosFromPayload($data['encargos'] ?? null);
+        $opciones_mas = EncargossacdPayload::desplegableOpciones($data['opciones_mas'] ?? []);
         $avisos = is_array($data['avisos'] ?? null) ? $data['avisos'] : [];
 
         foreach ($encargos as $idx => $e) {
-            $aQuery = ['id_ubi' => encargossacd_sacd_ficha_encargo_id_ubi($e)];
+            $aQuery = ['id_ubi' => EncargossacdPayload::sacdFichaEncargoIdUbi($e)];
             array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
             $encargos[$idx]['pagina_ctr'] = HashFront::link(
                 'frontend/encargossacd/controller/ctr_ficha.php?' . http_build_query($aQuery),
@@ -66,7 +69,7 @@ switch ($Qque) {
         $oDesplEncs = new Desplegable();
         $oDesplEncs->setNombre('mas');
         $oDesplEncs->setOpciones($opciones_mas);
-        $oDesplEncs->setBlanco(encargossacd_desplegable_blanco(1));
+        $oDesplEncs->setBlanco(EncargossacdPayload::desplegableBlanco(1));
         $oDesplEncs->setAction("fnjs_mas_enc();");
 
         $oHash = new HashFront();
@@ -88,11 +91,11 @@ switch ($Qque) {
             'id_nom' => $Qid_nom,
         ];
 
-        ajax_json_render_phtml('frontend\\encargossacd\\controller', 'sacd_ficha_ajax_ficha.phtml', $a_campos);
+        AjaxJsonSupport::renderPhtml('frontend\\encargossacd\\controller', 'sacd_ficha_ajax_ficha.phtml', $a_campos);
 
     case 'update':
         PostRequest::getDataFromUrl('/src/encargossacd/sacd_ficha_update', PostRequest::requestPayloadForHash());
-        ajax_json_response();
+        AjaxJsonSupport::response();
 
     default:
         $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);

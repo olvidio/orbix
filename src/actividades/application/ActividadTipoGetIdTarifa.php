@@ -3,8 +3,7 @@
 namespace src\actividades\application;
 
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
-
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve el id_tarifa asociado a un id_tipo_activ. Portado del case
@@ -27,7 +26,7 @@ class ActividadTipoGetIdTarifa
      */
     public function execute(array $input = []): string
     {
-        $id_tipo_activ = input_string($input, 'entrada');
+        $id_tipo_activ = FuncTablasSupport::inputString($input, 'entrada');
         $aWhere = [
             'id_tipo_activ' => $id_tipo_activ,
             '_ordre' => 'id_serie',

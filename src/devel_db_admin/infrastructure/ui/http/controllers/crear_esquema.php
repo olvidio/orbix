@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use src\shared\domain\helpers\FilterPostGet;
+
+
 /**
  * Ejecuta {@see CrearEsquema} (POST: esquema, region, dl, comun, sv, sf). Respuesta JSON `data`: `"ok"`.
  */
@@ -15,12 +18,12 @@ use src\shared\infrastructure\DependencyResolver;
 /** @var CrearEsquema $useCase */
 $useCase = DependencyResolver::get(CrearEsquema::class);
 
-$QEsquemaRef = (string) filter_post('esquema');
-$Qregion = (string) filter_post('region');
-$Qdl = (string) filter_post('dl');
-$Qcomun = (int) filter_post('comun');
-$Qsv = (int) filter_post('sv');
-$Qsf = (int) filter_post('sf');
+$QEsquemaRef = (string) FilterPostGet::post('esquema');
+$Qregion = (string) FilterPostGet::post('region');
+$Qdl = (string) FilterPostGet::post('dl');
+$Qcomun = (int) FilterPostGet::post('comun');
+$Qsv = (int) FilterPostGet::post('sv');
+$Qsf = (int) FilterPostGet::post('sf');
 
 try {
     $avisos = $useCase->ejecutar(

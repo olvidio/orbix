@@ -3,11 +3,10 @@
 use src\dbextern\application\SincroPersonas;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_string;
-
-$region = input_string($_POST, 'region');
-$dl_listas = input_string($_POST, 'dl_listas');
-$tipo_persona = input_string($_POST, 'tipo_persona');
+use src\shared\domain\helpers\FuncTablasSupport;
+$region = FuncTablasSupport::inputString($_POST, 'region');
+$dl_listas = FuncTablasSupport::inputString($_POST, 'dl_listas');
+$tipo_persona = FuncTablasSupport::inputString($_POST, 'tipo_persona');
 
 $result = DependencyResolver::get(SincroPersonas::class)($region, $dl_listas, $tipo_persona);
 

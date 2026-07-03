@@ -11,7 +11,7 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use frontend\shared\web\Periodo;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: construye la tabla principal de la pantalla
@@ -48,11 +48,11 @@ final class ListaActividadesCtrData
      */
     public function execute(array $input): array
     {
-        $tipo = input_string($input, 'tipo');
-        $year = input_string($input, 'year');
-        $periodo = input_string($input, 'periodo');
-        $empiezamin = input_string($input, 'empiezamin');
-        $empiezamax = input_string($input, 'empiezamax');
+        $tipo = FuncTablasSupport::inputString($input, 'tipo');
+        $year = FuncTablasSupport::inputString($input, 'year');
+        $periodo = FuncTablasSupport::inputString($input, 'periodo');
+        $empiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $empiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
 
         if ($periodo === '') {
             $periodo = 'actual';

@@ -2,15 +2,13 @@
 
 namespace src\asistentes\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use frontend\shared\web\Periodo;
 use Psr\Container\ContainerInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\ListaPlazasConjuntoActividades;
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Listados conjuntos de plazas/actividades (`lista_asis_conjunto_activ.php`).
@@ -28,19 +26,19 @@ final class ListaAsisConjuntoActivData
      */
     public function build(array $input): array
     {
-        $Qque = input_string($input, 'que');
+        $Qque = FuncTablasSupport::inputString($input, 'que');
 
-        $Qstatus = input_int($input, 'status');
+        $Qstatus = FuncTablasSupport::inputInt($input, 'status');
         $Qstatus = $Qstatus === 0 ? StatusId::ACTUAL : $Qstatus;
-        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
-        $Qid_ubi = input_int($input, 'id_ubi');
-        $Qnom_activ = input_string($input, 'nom_activ');
-        $Qperiodo = input_string($input, 'periodo');
-        $Qyear = input_int($input, 'year');
+        $Qid_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
+        $Qnom_activ = FuncTablasSupport::inputString($input, 'nom_activ');
+        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = FuncTablasSupport::inputInt($input, 'year');
         $Qyear = $Qyear === 0 ? (int)date('Y') : $Qyear;
-        $Qdl_org = input_string($input, 'dl_org');
-        $Qempiezamin = input_string($input, 'empiezamin');
-        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qdl_org = FuncTablasSupport::inputString($input, 'dl_org');
+        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
 
         if ($Qperiodo === '') {
             $Qperiodo = 'actual';
@@ -54,10 +52,10 @@ final class ListaAsisConjuntoActivData
         }
 
         if ($Qid_tipo_activ === '') {
-            $Qsfsv = input_string($input, 'sfsv');
-            $Qsasistentes = input_string($input, 'sasistentes');
-            $Qsactividad = input_string($input, 'sactividad');
-            $Qsnom_tipo = input_string($input, 'snom_tipo');
+            $Qsfsv = FuncTablasSupport::inputString($input, 'sfsv');
+            $Qsasistentes = FuncTablasSupport::inputString($input, 'sasistentes');
+            $Qsactividad = FuncTablasSupport::inputString($input, 'sactividad');
+            $Qsnom_tipo = FuncTablasSupport::inputString($input, 'snom_tipo');
 
             $Qssfsv = $Qsfsv;
             $mi_sfsv = ConfigGlobal::mi_sfsv();
@@ -120,7 +118,7 @@ final class ListaAsisConjuntoActivData
             $aOperador['nom_activ'] = 'ILIKE';
         }
 
-        $Qmodo = input_string($input, 'modo');
+        $Qmodo = FuncTablasSupport::inputString($input, 'modo');
         if ($Qmodo !== '' && $Qmodo === 'publicar') {
             $aWhere['publicado'] = 'f';
         }

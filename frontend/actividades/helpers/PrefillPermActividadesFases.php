@@ -2,8 +2,6 @@
 
 namespace frontend\actividades\helpers;
 
-require_once __DIR__ . '/actividades_support.php';
-
 use frontend\shared\AppInstalled;
 use frontend\shared\PostRequest;
 use src\permisos\domain\PermisosActividades;
@@ -21,7 +19,7 @@ final class PrefillPermActividadesFases
         if (!AppInstalled::is('procesos')) {
             return;
         }
-        $oPermActividades = actividades_o_perm_actividades();
+        $oPermActividades = ActividadesPermSupport::oPermActividades();
         if (!$oPermActividades instanceof PermisosActividades) {
             return;
         }
@@ -45,6 +43,6 @@ final class PrefillPermActividadesFases
             return;
         }
         $fases = $row['fases_completadas'] ?? [];
-        $oPermActividades->setFasesCompletadas(actividades_fases_completadas_from_payload($fases));
+        $oPermActividades->setFasesCompletadas(ActividadesPayload::fasesCompletadasFromPayload($fases));
     }
 }

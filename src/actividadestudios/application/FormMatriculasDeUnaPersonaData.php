@@ -9,7 +9,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\profesores\domain\services\ProfesorStgrService;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * @return array{
@@ -56,12 +56,12 @@ final class FormMatriculasDeUnaPersonaData
      */
     public function execute(array $input): array
     {
-        $idNom = input_int($input, 'id_nom');
+        $idNom = FuncTablasSupport::inputInt($input, 'id_nom');
         if ($idNom <= 0) {
-            $idNom = input_int($input, 'id_pau');
+            $idNom = FuncTablasSupport::inputInt($input, 'id_pau');
         }
-        $idActiv = input_int($input, 'id_activ');
-        $idAsignaturaPost = input_int($input, 'id_asignatura');
+        $idActiv = FuncTablasSupport::inputInt($input, 'id_activ');
+        $idAsignaturaPost = FuncTablasSupport::inputInt($input, 'id_asignatura');
         $sel = isset($input['sel']) && is_array($input['sel']) ? $input['sel'] : null;
 
         $idAsignaturaReal = 0;

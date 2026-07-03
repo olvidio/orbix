@@ -6,7 +6,7 @@ use src\actividades\domain\entity\TiposActividades;
 use src\personas\domain\entity\Persona;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Classe per gestionar permisos de dossiers
@@ -58,7 +58,7 @@ class PermDossier
             $rta = 3;
         }
 
-        if (is_true($depende) && $rta == 3 && $pau === "p") {
+        if (FuncTablasSupport::isTrue($depende) && $rta == 3 && $pau === "p") {
             // busco el id_tabla para saber de quién se trata y ver si es de mi oficina.
             $oPersona = Persona::findPersonaEnGlobal($id_pau);
             if (!is_object($oPersona)) {

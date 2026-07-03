@@ -4,8 +4,7 @@ namespace src\actividadescentro\application;
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadescentro\domain\entity\CentroEncargado;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Reordena un `CentroEncargado` en el listado de centros encargados de una
@@ -30,9 +29,9 @@ final class CentroEncargadoReordenar
      */
     public function execute(array $input): string
     {
-        $id_activ = input_int($input, 'id_activ');
-        $id_ubi = input_int($input, 'id_ubi');
-        $direccion = input_string($input, 'num_orden');
+        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $id_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
+        $direccion = FuncTablasSupport::inputString($input, 'num_orden');
 
         if ($id_activ <= 0 || $id_ubi <= 0) {
             return _("faltan parametros id_activ / id_ubi");

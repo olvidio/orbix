@@ -1,5 +1,7 @@
 <?php
 
+use frontend\ubis\helpers\UbisPayload;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
@@ -8,11 +10,9 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $Qid_sel = null;
 $Qscroll_id = null;
@@ -40,29 +40,29 @@ if (empty($Qque_lista)) {
     $Qque_lista = 'ctr_n';
 }
 
-$id_sel = isset($Qid_sel) ? tessera_imprimir_string($Qid_sel) : '';
-$scroll_id = isset($Qscroll_id) ? tessera_imprimir_string($Qscroll_id) : '';
+$id_sel = isset($Qid_sel) ? PayloadCoercion::string($Qid_sel) : '';
+$scroll_id = isset($Qscroll_id) ? PayloadCoercion::string($Qscroll_id) : '';
 
-$data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/list_ctr_data', [
+$data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/list_ctr_data', [
     'que_lista' => $Qque_lista,
     'loc' => $Qloc,
     'id_sel' => $id_sel,
     'scroll_id' => $scroll_id,
 ]));
-$error = ubis_api_error($data);
+$error = UbisPayload::apiError($data);
 if ($error !== '') {
     exit($error);
 }
 
-$lista = ubis_list_ctr_from_payload($data);
+$lista = UbisPayload::listCtrFromPayload($data);
 
 $aGoBack = [
     'loc' => $Qloc,
     'que_lista' => $Qque_lista,
 ];
 $oPosicion->setParametros($aGoBack);
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar($aGoBack, $Qid_sel, $Qscroll_id));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar($aGoBack, $Qid_sel, $Qscroll_id));
 
 
 $oTabla = new Lista();

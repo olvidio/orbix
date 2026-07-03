@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: incorpora las primeras peticiones de plaza de
  * cada persona como asistencia con plaza asignada/pedida (segun si
@@ -8,11 +11,9 @@
 use src\actividadplazas\application\PeticionesIncorporar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_string;
-
 $input = [
-    'sactividad' => input_string($_POST, 'sactividad'),
-    'sasistentes' => input_string($_POST, 'sasistentes'),
+    'sactividad' => FuncTablasSupport::inputString($_POST, 'sactividad'),
+    'sasistentes' => FuncTablasSupport::inputString($_POST, 'sasistentes'),
 ];
 
 /** @var PeticionesIncorporar $useCase */

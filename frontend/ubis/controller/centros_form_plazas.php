@@ -1,19 +1,19 @@
 <?php
 
+use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\FuncTablasSupport;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $Qid_ubi = (int)(filter_input(INPUT_POST, 'id_ubi') ?? filter_input(INPUT_GET, 'id_ubi'));
-$form = ubis_centro_plazas_form_from_payload(ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/centros_form_plazas', ['id_ubi' => $Qid_ubi])));
+$form = UbisPayload::centroPlazasFormFromPayload(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/centros_form_plazas', ['id_ubi' => $Qid_ubi])));
 
-$chk_sede = is_true($form['sede']) ? 'checked' : '';
+$chk_sede = FuncTablasSupport::isTrue($form['sede']) ? 'checked' : '';
 
 $url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 

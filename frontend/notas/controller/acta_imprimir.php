@@ -1,5 +1,7 @@
 <?php
 
+use frontend\notas\helpers\ActaImprimirPayload;
+use frontend\notas\helpers\ActaImprimirPostInput;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
@@ -7,6 +9,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Esta página sirve para las actas.
@@ -19,18 +22,16 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
  *
  */
 
-require_once __DIR__ . '/../helpers/acta_imprimir_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_acta_imprimir_parent_return_to_posicion($oPosicion, 1);
-list_nav_persist_selection_to_posicion($oPosicion, 1);
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistActaImprimirParentReturnToPosicion($oPosicion, 1);
+ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 
-$acta = acta_imprimir_acta_from_post();
-$cara = acta_imprimir_cara_from_post();
+$acta = ActaImprimirPostInput::actaFromPost();
+$cara = ActaImprimirPostInput::caraFromPost();
 
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 $oConfig = $_SESSION['oConfig'] ?? null;
@@ -42,7 +43,7 @@ $payload = PostRequest::getDataFromUrl('/src/notas/acta_imprimir_presentacion_da
     'acta' => $acta,
     'mode' => 'imprimir',
 ]);
-$presentacion = acta_imprimir_presentacion_from_payload($payload);
+$presentacion = ActaImprimirPayload::presentacionFromPayload($payload);
 $errores = $presentacion['errores'];
 $aPersonasNotas = $presentacion['aPersonasNotas'];
 $num_alumnos = $presentacion['num_alumnos'];

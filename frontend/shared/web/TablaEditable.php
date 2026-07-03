@@ -4,7 +4,7 @@ namespace frontend\shared\web;
 
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use function frontend\shared\helpers\is_true;
+use frontend\shared\helpers\FuncTablasSupport;
 
 /**
  * Classe per gestionar llistes de dades tipus taula editables (SlickGrid).
@@ -194,7 +194,7 @@ class TablaEditable
                 } else {
                     if (is_array($valor)) {
                         $val = self::scalarString($valor['valor'] ?? '');
-                        if (!empty($valor['editable']) && is_true($valor['editable'])) {
+                        if (!empty($valor['editable']) && FuncTablasSupport::isTrue($valor['editable'])) {
                             $aFilas[$num_fila]['editable'] .= ($aFilas[$num_fila]['editable'] !== '') ? ',' . $col : $col;
                         }
                         if (!empty($valor['editor'])) {
@@ -730,7 +730,7 @@ class TablaEditable
                 }
                 $sDefCol .= '}';
             }
-            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && is_true($aColsVisible[$name_idx]))
+            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && FuncTablasSupport::isTrue($aColsVisible[$name_idx]))
                 || !is_array($aColsVisible)) {
                 if (!$visible) {
                     continue;

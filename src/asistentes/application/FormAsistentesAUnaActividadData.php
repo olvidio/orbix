@@ -2,9 +2,6 @@
 
 namespace src\asistentes\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -16,7 +13,7 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Dossier asistentes a una actividad (3101). Datos puros; la UI vive en
@@ -48,12 +45,12 @@ final class FormAsistentesAUnaActividadData
             $selKey = is_string($sel0) ? $sel0 : (is_scalar($sel0) ? (string)$sel0 : '');
             $Qid_nom = (int)strtok($selKey, '#');
         } else {
-            $Qid_nom = input_int($input, 'id_nom', 0);
+            $Qid_nom = FuncTablasSupport::inputInt($input, 'id_nom', 0);
         }
 
-        $Qid_activ = input_int($input, 'id_activ', 0);
-        $Qid_pau = input_int($input, 'id_pau', 0);
-        $Qobj_pau = input_string($input, 'obj_pau');
+        $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ', 0);
+        $Qid_pau = FuncTablasSupport::inputInt($input, 'id_pau', 0);
+        $Qobj_pau = FuncTablasSupport::inputString($input, 'obj_pau');
         if ($Qid_activ === 0) {
             $Qid_activ = $Qid_pau;
         }
@@ -138,7 +135,7 @@ final class FormAsistentesAUnaActividadData
         } else {
             $mod = 'nuevo';
             $obj_pau = $Qobj_pau !== '' ? urldecode($Qobj_pau) : '';
-            $Qna = input_string($input, 'na');
+            $Qna = FuncTablasSupport::inputString($input, 'na');
             $na_val = 'p' . $Qna;
 
             switch ($obj_pau) {
@@ -167,9 +164,9 @@ final class FormAsistentesAUnaActividadData
             }
         }
 
-        $propio_chk = (!empty($propio) && is_true($propio)) ? 'checked' : '';
-        $falta_chk = (!empty($falta) && is_true($falta)) ? 'checked' : '';
-        $est_chk = (!empty($est_ok) && is_true($est_ok)) ? 'checked' : '';
+        $propio_chk = (!empty($propio) && FuncTablasSupport::isTrue($propio)) ? 'checked' : '';
+        $falta_chk = (!empty($falta) && FuncTablasSupport::isTrue($falta)) ? 'checked' : '';
+        $est_chk = (!empty($est_ok) && FuncTablasSupport::isTrue($est_ok)) ? 'checked' : '';
 
         $plazas_installed = ConfigGlobal::is_app_installed('actividadplazas');
         $plaza_opciones = [];

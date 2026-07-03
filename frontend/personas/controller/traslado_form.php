@@ -1,7 +1,8 @@
 <?php
-
 namespace frontend\personas\controller;
 
+use frontend\personas\helpers\PersonasPayload;
+use frontend\personas\helpers\PersonasPostInput;
 use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
@@ -9,31 +10,30 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Formulario para trasladar una persona de centro y/o delegacion.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../helpers/personas_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qcabecera = (string)filter_input(INPUT_POST, 'cabecera');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
-$id_pau = personas_id_pau_from_sel_post()['id_pau'];
+$id_pau = PersonasPostInput::idPauFromSelPost()['id_pau'];
 
 $campos = [
     'id_pau' => $id_pau,
 ];
 
 $data = PostRequest::getDataFromUrl('/src/personas/traslado_form_data', $campos);
-$payload = personas_post_payload($data);
-$view = personas_traslado_form_from_payload($payload);
+$payload = PersonasPayload::postPayload($data);
+$view = PersonasPayload::trasladoFormFromPayload($payload);
 
 $titulo = $view['titulo'];
 $id_ctr = $view['id_ctr'];

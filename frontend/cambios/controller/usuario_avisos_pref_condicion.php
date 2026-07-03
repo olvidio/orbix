@@ -1,17 +1,19 @@
 <?php
+
+use frontend\shared\helpers\AjaxJsonSupport;
+
 /**
  * Controlador AJAX HTML: modal con el formulario para configurar una
  * condicion sobre una propiedad.
  */
 
+use frontend\cambios\helpers\CambiosPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\web\DesplegableArray;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/cambios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
@@ -23,7 +25,7 @@ $data = PostRequest::getDataFromUrl('/src/cambios/cambio_usuario_propiedad_pref_
     'propiedad' => $Qpropiedad,
     'id_item' => $Qid_item,
 ]);
-$form = cambios_usuario_avisos_pref_condicion_from_payload(cambios_post_data($data));
+$form = CambiosPayload::usuarioAvisosPrefCondicionFromPayload(CambiosPayload::postData($data));
 
 $a_operadores = [
     '=' => _("igual"),
@@ -58,4 +60,4 @@ $a_campos = [
     'oHash' => $oHash,
 ];
 
-ajax_json_render_phtml('frontend\\cambios\\controller', 'usuario_avisos_pref_condicion.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\cambios\\controller', 'usuario_avisos_pref_condicion.phtml', $a_campos);

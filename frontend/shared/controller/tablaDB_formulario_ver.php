@@ -5,15 +5,16 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
@@ -43,7 +44,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $Qs_pkey = explode('#', is_string($sel0) ? $sel0 : '');
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
-    $a_pkey = json_decode(src\shared\domain\helpers\urlsafe_b64decode($Qs_pkey));
+    $a_pkey = json_decode(src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($Qs_pkey));
     $aQuery['sel'] = $a_sel;
     // add stack:
     $stack = $oPosicion->getStack(1);

@@ -4,9 +4,7 @@ namespace src\procesos\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: asigna id_tipo_proceso al tipo de actividad (propio / no-propio).
@@ -23,15 +21,15 @@ class TipoActivProcesoAsignar
      */
     public function execute(array $input): string
     {
-        $Qid_tipo_activ = input_int($input, 'id_tipo_activ');
-        $Qpropio = input_string($input, 'propio');
-        $Qid_tipo_proceso = input_int($input, 'id_tipo_proceso');
+        $Qid_tipo_activ = FuncTablasSupport::inputInt($input, 'id_tipo_activ');
+        $Qpropio = FuncTablasSupport::inputString($input, 'propio');
+        $Qid_tipo_proceso = FuncTablasSupport::inputInt($input, 'id_tipo_proceso');
 
         $oTipoDeActividad = $this->tipoDeActividadRepository->findById($Qid_tipo_activ);
         if ($oTipoDeActividad === null) {
             return _('tipo de actividad no encontrado');
         }
-        if (is_true($Qpropio)) {
+        if (FuncTablasSupport::isTrue($Qpropio)) {
             $oTipoDeActividad->setId_tipo_proceso($Qid_tipo_proceso, ConfigGlobal::mi_sfsv());
         } else {
             $oTipoDeActividad->setId_tipo_proceso_ex($Qid_tipo_proceso, ConfigGlobal::mi_sfsv());

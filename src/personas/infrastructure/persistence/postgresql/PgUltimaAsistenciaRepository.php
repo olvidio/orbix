@@ -11,8 +11,6 @@ use src\personas\domain\contracts\UltimaAsistenciaRepositoryInterface;
 use src\personas\domain\entity\UltimaAsistencia;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla d_ultima_asistencia a la interfaz del repositorio

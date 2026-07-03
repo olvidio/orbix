@@ -9,8 +9,7 @@ use src\shared\domain\contracts\DatosCrudRepositoryInterface;
 use src\shared\domain\contracts\DatosFichaInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
-use function src\shared\domain\helpers\is_true;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 class DatosUpdateRepo
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
@@ -60,7 +59,7 @@ class DatosUpdateRepo
                 if (empty($aCampos[$nom_camp])) {
                     $aCampos[$nom_camp] = false;
                 } else {
-                    $aCampos[$nom_camp] = is_true($aCampos[$nom_camp]);
+                    $aCampos[$nom_camp] = FuncTablasSupport::isTrue($aCampos[$nom_camp]);
                 }
             }
             if ($tipo === 'fecha') {
@@ -149,7 +148,7 @@ class DatosUpdateRepo
                 if (empty($aCampos[$nom_camp])) {
                     $aCampos[$nom_camp] = false;
                 } else {
-                    $aCampos[$nom_camp] = is_true($aCampos[$nom_camp]);
+                    $aCampos[$nom_camp] = FuncTablasSupport::isTrue($aCampos[$nom_camp]);
                 }
             }
             if ($tipo === 'fecha') {

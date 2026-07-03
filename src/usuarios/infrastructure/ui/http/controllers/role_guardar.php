@@ -1,5 +1,6 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\entity\Role;
@@ -7,12 +8,12 @@ use src\usuarios\domain\value_objects\PauType;
 use src\usuarios\domain\value_objects\RoleName;
 use src\shared\web\ContestarJson;
 
-$Qrole = (string)filter_post('role');
-$Qid_role = (integer)filter_post('id_role');
-$Qsf = (integer)filter_post('sf');
-$Qsv = (integer)filter_post('sv');
-$Qpau = (string)filter_post('pau');
-$Qdmz = (integer)filter_post('dmz');
+$Qrole = (string)FilterPostGet::post('role');
+$Qid_role = (integer)FilterPostGet::post('id_role');
+$Qsf = (integer)FilterPostGet::post('sf');
+$Qsv = (integer)FilterPostGet::post('sv');
+$Qpau = (string)FilterPostGet::post('pau');
+$Qdmz = (integer)FilterPostGet::post('dmz');
 
 $error_txt = '';
 

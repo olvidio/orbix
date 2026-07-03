@@ -1,7 +1,11 @@
 <?php
+
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Pantalla: configuracion de avisos por usuario/grupo.
  */
+use frontend\cambios\helpers\CambiosPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
@@ -9,13 +13,10 @@ use frontend\shared\web\DesplegableArray;
 use frontend\cambios\helpers\UsuarioAvisosPrefFormRender;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/cambios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -30,13 +31,13 @@ if (!empty($a_sel)) {
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $Qsalida = (string)filter_input(INPUT_POST, 'salida');
 
-$payload = UsuarioAvisosPrefFormRender::enrich(cambios_post_data(PostRequest::getDataFromUrl('/src/cambios/usuario_avisos_pref_form_data', [
+$payload = UsuarioAvisosPrefFormRender::enrich(CambiosPayload::postData(PostRequest::getDataFromUrl('/src/cambios/usuario_avisos_pref_form_data', [
     'id_usuario' => $Qid_usuario,
     'id_item_usuario_objeto' => $Qid_item_usuario_objeto,
     'salida' => $Qsalida,
     'quien' => $Qquien,
 ])));
-$form = cambios_usuario_avisos_pref_form_from_payload($payload);
+$form = CambiosPayload::usuarioAvisosPrefFormFromPayload($payload);
 
 $oDesplTiposAviso = new Desplegable();
 $oDesplTiposAviso->setNombre('aviso_tipo');

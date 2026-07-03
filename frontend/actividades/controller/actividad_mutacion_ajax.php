@@ -12,15 +12,14 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
+use frontend\actividades\helpers\ActividadesMutacionSupport;
+use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\shared\PostRequest;
 
-actividades_mutacion_ajax_sanitize_post();
+ActividadesMutacionSupport::mutacionAjaxSanitizePost();
 
 require_once 'frontend/shared/FrontBootstrap.php';
-
-use frontend\shared\FrontBootstrap;
-use frontend\shared\PostRequest;
 
 FrontBootstrap::boot();
 
@@ -32,7 +31,7 @@ $endpoints = [
 ];
 
 if (!isset($endpoints[$mod])) {
-    ajax_json_response(_('modo no válido'));
+    AjaxJsonSupport::response(_('modo no válido'));
 }
 
 /** @var array<string, mixed> $campos */
@@ -44,7 +43,7 @@ if (!empty($data['error'])) {
     $msg = html_entity_decode(strip_tags($msg), ENT_QUOTES | ENT_HTML5, 'UTF-8');
     $msg = trim(preg_replace('/\s+/', ' ', $msg) ?? '');
 
-    ajax_json_response($msg !== '' ? $msg : _('Error al guardar'));
+    AjaxJsonSupport::response($msg !== '' ? $msg : _('Error al guardar'));
 }
 
-ajax_json_response();
+AjaxJsonSupport::response();

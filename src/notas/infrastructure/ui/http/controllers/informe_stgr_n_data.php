@@ -3,13 +3,14 @@
 use src\notas\application\InformeStgrNumerarios;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FilterPostGet;
 
 
 $error = '';
 $data = [];
 
 try {
-    $QdlRaw = filter_post('dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $QdlRaw = FilterPostGet::post('dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     /** @var array<int, int|string> $Qdl */
     $Qdl = [];
     if (is_array($QdlRaw)) {
@@ -19,7 +20,7 @@ try {
             }
         }
     }
-    $Qlista = (string)filter_post('lista');
+    $Qlista = (string)FilterPostGet::post('lista');
     $lista = !empty($Qlista);
 
     /** @var InformeStgrNumerarios $informe */

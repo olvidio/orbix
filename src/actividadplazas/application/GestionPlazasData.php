@@ -10,7 +10,7 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder de la pantalla principal `gestion_plazas`.
@@ -47,11 +47,11 @@ final class GestionPlazasData
      */
     public function execute(array $input): array
     {
-        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
-        $Qyear = input_string($input, 'year');
-        $Qperiodo = input_string($input, 'periodo');
-        $Qempiezamin = input_string($input, 'empiezamin');
-        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qid_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $Qyear = FuncTablasSupport::inputString($input, 'year');
+        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
         $Qsactividad = '';
         $extendida = false;
 
@@ -60,9 +60,9 @@ final class GestionPlazasData
             if (ConfigGlobal::mi_sfsv() === 2) {
                 $Qssfsv = 'sf';
             }
-            $Qsasistentes = input_string($input, 'sasistentes');
-            $Qsactividad = input_string($input, 'sactividad');
-            $Qsactividad2 = input_string($input, 'sactividad2');
+            $Qsasistentes = FuncTablasSupport::inputString($input, 'sasistentes');
+            $Qsactividad = FuncTablasSupport::inputString($input, 'sactividad');
+            $Qsactividad2 = FuncTablasSupport::inputString($input, 'sactividad2');
             if ($Qsactividad2 !== '') {
                 $extendida = true;
             }

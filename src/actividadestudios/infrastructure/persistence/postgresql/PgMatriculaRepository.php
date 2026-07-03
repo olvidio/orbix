@@ -12,8 +12,6 @@ use src\actividadestudios\domain\entity\Matricula;
 use src\actividadestudios\domain\value_objects\ActividadMatriculaPk;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla d_matriculas_activ a la interfaz del repositorio

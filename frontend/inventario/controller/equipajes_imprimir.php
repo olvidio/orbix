@@ -1,20 +1,20 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\inventario\domain\ListaAgrupar;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 
 $html = '';
 if ($Qid_equipaje === 0) {
-    ajax_json_html('', _('debe seleccionar un equipaje'));
+    AjaxJsonSupport::html('', _('debe seleccionar un equipaje'));
 }
 
 $url_backend = '/src/inventario/cabecera_pie_txt';
@@ -22,7 +22,7 @@ $a_campos_backend = [
     'id_equipaje' => $Qid_equipaje,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$cabeceraPie = inventario_cabecera_pie_from_payload(inventario_post_payload($data));
+$cabeceraPie = InventarioPayload::cabeceraPieFromPayload(InventarioPayload::postPayload($data));
 $cabecera = $cabeceraPie['cabecera'];
 $cabeceraB = $cabeceraPie['cabeceraB'];
 $firma = $cabeceraPie['firma'];
@@ -32,7 +32,7 @@ $pencil = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/images/pencil.png'
 
 $url_backend = '/src/inventario/equipajes_lista_activ_equipaje';
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$a_actividades = inventario_actividades_nombres(inventario_post_payload($data)['a_actividades'] ?? []);
+$a_actividades = InventarioPayload::actividadesNombres(InventarioPayload::postPayload($data)['a_actividades'] ?? []);
 $html_actividades = '';
 $html_actividades_firma = '';
 $a = 0;
@@ -48,8 +48,8 @@ foreach ($a_actividades as $nom_activ) {
 
 $url_backend = '/src/inventario/equipajes_doc_casa';
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$docCasa = inventario_equipajes_doc_casa_from_payload(inventario_post_payload($data));
-$a_valores = inventario_valor_agrupar_rows($docCasa['a_valores']);
+$docCasa = InventarioPayload::equipajesDocCasaFromPayload(InventarioPayload::postPayload($data));
+$a_valores = InventarioPayload::valorAgruparRows($docCasa['a_valores']);
 $nombre_ubi = $docCasa['nombre_ubi'];
 $id_ubi = $docCasa['id_ubi'];
 
@@ -57,13 +57,13 @@ $html_docs_ubi = (new ListaAgrupar())->listaAgrupar($a_valores);
 
 $url_backend = '/src/inventario/equipajes_egm';
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$a_egm = inventario_egm_rows(inventario_post_payload($data)['a_egm'] ?? []);
+$a_egm = InventarioPayload::egmRows(InventarioPayload::postPayload($data)['a_egm'] ?? []);
 $html_g = '';
 foreach ($a_egm as $aEgm) {
     $id_grupo = $aEgm['id_grupo'];
     $nom_lugar = $aEgm['nom_lugar'];
     $texto = $aEgm['texto'];
-    $docs_valores = inventario_valor_agrupar_rows($aEgm['a_valores']);
+    $docs_valores = InventarioPayload::valorAgruparRows($aEgm['a_valores']);
 
     $html_g .= "<span id='grupo_$id_grupo'>";
     $html_g .= '<h3>';
@@ -138,4 +138,4 @@ $html .= "<p>$html_actividades_firma</p>";
 $html .= '</span>';
 
 $html .= '<script>fnjs_left_side_hide();</script>';
-ajax_json_html($html);
+AjaxJsonSupport::html($html);

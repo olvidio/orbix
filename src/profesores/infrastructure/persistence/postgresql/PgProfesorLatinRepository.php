@@ -10,8 +10,6 @@ use PDO;
 use src\profesores\domain\contracts\ProfesorLatinRepositoryInterface;
 use src\profesores\domain\entity\ProfesorLatin;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla d_profesor_latin a la interfaz del repositorio

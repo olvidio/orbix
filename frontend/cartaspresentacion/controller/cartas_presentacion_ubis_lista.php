@@ -1,4 +1,7 @@
 <?php
+
+use frontend\shared\helpers\AjaxJsonSupport;
+
 /**
  * Controlador AJAX HTML: listado de centros con el estado de su carta
  * de presentacion (modal de seleccion de la pantalla principal).
@@ -8,13 +11,12 @@
  * dispatcher legacy `cartas_presentacion_ajax.php`.
  */
 
+use frontend\cartaspresentacion\helpers\CartaspresentacionPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/cartaspresentacion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -23,11 +25,11 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/cartaspresentacion/ubis_lista_data', $campos);
-$lista = cartaspresentacion_ubis_lista_from_payload(cartaspresentacion_post_data($data));
+$lista = CartaspresentacionPayload::ubisListaFromPayload(CartaspresentacionPayload::postData($data));
 
 $oLista = new Lista();
 $oLista->setId_tabla('cartas_presentacion_ubis_lista');
 $oLista->setCabeceras($lista['cabeceras']);
 $oLista->setDatos($lista['valores']);
 
-ajax_json_html($lista['explicacion'] . $oLista->mostrar_tabla());
+AjaxJsonSupport::html($lista['explicacion'] . $oLista->mostrar_tabla());

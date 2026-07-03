@@ -10,8 +10,6 @@ use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla av_cambios_usuario_propiedades_pref a la interfaz del repositorio

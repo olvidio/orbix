@@ -6,33 +6,9 @@
 parameters:
     level: 9
     tmpDir: .phpstan/cache
-    scanFiles:
-        - src/shared/domain/helpers/func_input.php
-        - frontend/shared/helpers/func_tablas.php
-        - frontend/shared/helpers/list_nav_support.php
-        - frontend/shared/helpers/ajax_json_support.php
-        - frontend/notas/helpers/tessera_imprimir_support.php
-        - frontend/notas/helpers/acta_imprimir_support.php
-        - frontend/notas/helpers/notas_support.php
-        - frontend/actividades/helpers/actividades_support.php
-        - frontend/actividadessacd/helpers/actividadessacd_support.php
-        - frontend/actividadcargos/helpers/actividadcargos_support.php
-        - frontend/zonassacd/helpers/zonassacd_support.php
-        - frontend/menus/helpers/menus_support.php
-        - frontend/profesores/helpers/profesores_support.php
-        - frontend/configuracion/helpers/configuracion_support.php
-        - frontend/dbextern/helpers/dbextern_support.php
-        - frontend/pasarela/helpers/pasarela_support.php
-        - frontend/inventario/helpers/inventario_support.php
-        - frontend/personas/helpers/personas_support.php
-        - frontend/planning/helpers/planning_support.php
-        - frontend/procesos/helpers/procesos_support.php
-        - frontend/encargossacd/helpers/encargossacd_support.php
-        - frontend/dossiers/controller/lista_dossiers.php
-        - src/shared/domain/helpers/func_tablas.php
 
 services:
     -
         class: Orbix\PHPStan\FilterPostGetReturnTypeExtension
         tags:
-            - phpstan.broker.dynamicFunctionReturnTypeExtension
+            - phpstan.broker.dynamicStaticMethodReturnTypeExtension

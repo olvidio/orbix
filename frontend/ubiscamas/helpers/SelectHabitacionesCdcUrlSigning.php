@@ -6,8 +6,8 @@ namespace frontend\ubiscamas\helpers;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
+use frontend\shared\helpers\PayloadCoercion;
 
-require_once __DIR__ . '/ubiscamas_support.php';
 
 /**
  * Firma URLs hacia habitacion_form para el widget CDC (specs desde
@@ -29,7 +29,7 @@ final class SelectHabitacionesCdcUrlSigning
         $urlNuevo = '';
         $spec = $in['url_nuevo_spec'] ?? null;
         if ($spec !== null) {
-            $path = tessera_imprimir_string($spec['path'] ?? '');
+            $path = PayloadCoercion::string($spec['path'] ?? '');
             $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
             if ($path !== '') {
                 $url = $base . '/' . ltrim($path, '/') . '?' . http_build_query($query);
@@ -38,12 +38,12 @@ final class SelectHabitacionesCdcUrlSigning
         }
         $aLinksDl = [];
         foreach ($in['a_links_dl_specs'] ?? [] as $item) {
-            $label = tessera_imprimir_string($item['label'] ?? '');
+            $label = PayloadCoercion::string($item['label'] ?? '');
             $itemSpec = $item['spec'] ?? null;
             if ($label === '' || !is_array($itemSpec)) {
                 continue;
             }
-            $path = tessera_imprimir_string($itemSpec['path'] ?? '');
+            $path = PayloadCoercion::string($itemSpec['path'] ?? '');
             $query = is_array($itemSpec['query'] ?? null) ? $itemSpec['query'] : [];
             if ($path === '') {
                 continue;

@@ -2,6 +2,7 @@
 
 namespace src\notas\application;
 
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
@@ -9,7 +10,6 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Agrega los datos de la tabla "select_notas_de_una_persona" (listado de
@@ -116,9 +116,9 @@ final class NotasDeUnaPersonaData
                 $nom_activ = $oActividad?->getNom_activ() ?? '';
             }
 
-            $preceptorText = is_true($oPersonaNota->isPreceptor()) ? _("sí") : _("no");
+            $preceptorText = FuncTablasSupport::isTrue($oPersonaNota->isPreceptor()) ? _("sí") : _("no");
             $id_preceptor = $oPersonaNota->getId_preceptor();
-            if ($id_preceptor && is_true($oPersonaNota->isPreceptor())) {
+            if ($id_preceptor && FuncTablasSupport::isTrue($oPersonaNota->isPreceptor())) {
                 $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
                 $nom = $oPersona?->getPrefApellidosNombre() ?? _("no lo encuentro");
                 $preceptorText .= ' (' . $nom . ')';

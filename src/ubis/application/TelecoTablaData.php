@@ -6,9 +6,7 @@ use src\shared\domain\DatosCampo;
 use src\ubis\application\services\UbiPermisos;
 use src\ubis\application\services\UbiRepositoryResolver;
 use src\ubis\domain\entity\TelecoUbi;
-use function src\shared\domain\helpers\is_true;
-use function src\shared\domain\helpers\urlsafe_b64encode;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 final class TelecoTablaData
 {
     public function __construct(
@@ -35,7 +33,7 @@ final class TelecoTablaData
             $v = 0;
             $pks1 = 'get' . ucfirst($oFila->getPrimary_key());
             $val_pks = $oFila->$pks1();
-            $pks = urlsafe_b64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
+            $pks = FuncTablasSupport::urlsafeB64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
             $a_valores[$c]['sel'] = $pks;
             foreach ($oFila->getDatosCampos() as $oDatosCampo) {
                 if ($c === 0) {
@@ -78,7 +76,7 @@ final class TelecoTablaData
                         }
                         break;
                     case 'check':
-                        $a_valores[$c][$v] = is_true($valor_camp) ? _("sí") : _("no");
+                        $a_valores[$c][$v] = FuncTablasSupport::isTrue($valor_camp) ? _("sí") : _("no");
                         break;
                     default:
                         $a_valores[$c][$v] = $valor_camp;

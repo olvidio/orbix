@@ -13,7 +13,6 @@ use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
 use src\utils_database\domain\GenerateIdGlobal;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla u_centros_dl a la interfaz del repositorio

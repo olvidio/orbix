@@ -1,4 +1,10 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPayload;
+use frontend\actividades\helpers\ActividadesListaSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Lista de actividades que cumplen con los filtros de actividad_que.
  *
@@ -34,8 +40,6 @@ use frontend\shared\security\HashFront;
 use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\web\Lista;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -74,10 +78,10 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qfases_on = $oPosicion->getParametro('fases_on');
     $Qfases_off = $oPosicion->getParametro('fases_off');
     $Qpublicado = $oPosicion->getParametro('publicado');
-    $Qque = tessera_imprimir_string($oPosicion->getParametro('que') ?? $Qque);
-    $Qlistar_asistentes = tessera_imprimir_string($oPosicion->getParametro('listar_asistentes') ?? $Qlistar_asistentes);
-    $restoredSel = list_nav_id_sel_for_lista($oPosicion->getParametro('id_sel'));
-    if (!list_nav_id_sel_is_empty($restoredSel)) {
+    $Qque = PayloadCoercion::string($oPosicion->getParametro('que') ?? $Qque);
+    $Qlistar_asistentes = PayloadCoercion::string($oPosicion->getParametro('listar_asistentes') ?? $Qlistar_asistentes);
+    $restoredSel = ListNavSupport::idSelForLista($oPosicion->getParametro('id_sel'));
+    if (!ListNavSupport::idSelIsEmpty($restoredSel)) {
         $Qid_sel = $restoredSel;
     }
     $restoredScroll = $oPosicion->getParametro('scroll_id');
@@ -94,8 +98,8 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qsactividad = '';
     $Qsactividad2 = '';
 } else {
-    $Qid_sel = list_nav_id_sel_from_post();
-    $Qscroll_id = list_nav_scroll_id_from_post();
+    $Qid_sel = ListNavSupport::idSelFromPost();
+    $Qscroll_id = ListNavSupport::scrollIdFromPost();
 
     $Qque = (string)filter_input(INPUT_POST, 'que');
     $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
@@ -119,28 +123,28 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     if ($stackFromPost !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stackFromPost)) {
-            $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
-            if (!list_nav_id_sel_is_empty($restoredSel)) {
+            $restoredSel = ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
+            if (!ListNavSupport::idSelIsEmpty($restoredSel)) {
                 $Qid_sel = $restoredSel;
             }
             $restoredScroll = $oPosicion2->getParametro('scroll_id');
             if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
                 $Qscroll_id = (string) $restoredScroll;
             }
-            $Qmodo = tessera_imprimir_string($oPosicion2->getParametro('modo') ?? $Qmodo);
-            $Qstatus = tessera_imprimir_int($oPosicion2->getParametro('status'), $Qstatus);
-            $Qid_tipo_activ = tessera_imprimir_string($oPosicion2->getParametro('id_tipo_activ') ?? $Qid_tipo_activ);
-            $Qfiltro_lugar = tessera_imprimir_string($oPosicion2->getParametro('filtro_lugar') ?? $Qfiltro_lugar);
-            $Qid_ubi = tessera_imprimir_int($oPosicion2->getParametro('id_ubi'), $Qid_ubi);
-            $Qnom_activ = tessera_imprimir_string($oPosicion2->getParametro('nom_activ') ?? $Qnom_activ);
-            $Qperiodo = tessera_imprimir_string($oPosicion2->getParametro('periodo') ?? $Qperiodo);
-            $Qyear = tessera_imprimir_string($oPosicion2->getParametro('year') ?? $Qyear);
-            $Qdl_org = tessera_imprimir_string($oPosicion2->getParametro('dl_org') ?? $Qdl_org);
-            $Qempiezamin = tessera_imprimir_string($oPosicion2->getParametro('empiezamin') ?? $Qempiezamin);
-            $Qempiezamax = tessera_imprimir_string($oPosicion2->getParametro('empiezamax') ?? $Qempiezamax);
+            $Qmodo = PayloadCoercion::string($oPosicion2->getParametro('modo') ?? $Qmodo);
+            $Qstatus = PayloadCoercion::int($oPosicion2->getParametro('status'), $Qstatus);
+            $Qid_tipo_activ = PayloadCoercion::string($oPosicion2->getParametro('id_tipo_activ') ?? $Qid_tipo_activ);
+            $Qfiltro_lugar = PayloadCoercion::string($oPosicion2->getParametro('filtro_lugar') ?? $Qfiltro_lugar);
+            $Qid_ubi = PayloadCoercion::int($oPosicion2->getParametro('id_ubi'), $Qid_ubi);
+            $Qnom_activ = PayloadCoercion::string($oPosicion2->getParametro('nom_activ') ?? $Qnom_activ);
+            $Qperiodo = PayloadCoercion::string($oPosicion2->getParametro('periodo') ?? $Qperiodo);
+            $Qyear = PayloadCoercion::string($oPosicion2->getParametro('year') ?? $Qyear);
+            $Qdl_org = PayloadCoercion::string($oPosicion2->getParametro('dl_org') ?? $Qdl_org);
+            $Qempiezamin = PayloadCoercion::string($oPosicion2->getParametro('empiezamin') ?? $Qempiezamin);
+            $Qempiezamax = PayloadCoercion::string($oPosicion2->getParametro('empiezamax') ?? $Qempiezamax);
             $Qfases_on = is_array($oPosicion2->getParametro('fases_on')) ? $oPosicion2->getParametro('fases_on') : $Qfases_on;
             $Qfases_off = is_array($oPosicion2->getParametro('fases_off')) ? $oPosicion2->getParametro('fases_off') : $Qfases_off;
-            $Qpublicado = tessera_imprimir_int($oPosicion2->getParametro('publicado'), $Qpublicado);
+            $Qpublicado = PayloadCoercion::int($oPosicion2->getParametro('publicado'), $Qpublicado);
             $oPosicion2->olvidar($stackFromPost);
         }
     }
@@ -177,7 +181,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     ];
 }
 
-$actividadSelectReturn = list_nav_build_actividad_select_return_parametros([
+$actividadSelectReturn = ListNavSupport::buildActividadSelectReturnParametros([
     'modo' => $Qmodo,
     'que' => $Qque,
     'listar_asistentes' => $Qlistar_asistentes,
@@ -204,29 +208,29 @@ $actividadSelectReturn = list_nav_build_actividad_select_return_parametros([
 ]);
 
 if ($stackFromPost !== 0) {
-    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    list_nav_boot_recordar($oPosicion);
+    ListNavSupport::bootRecordar($oPosicion);
 }
-list_nav_persist_recordar_entry($oPosicion, $actividadSelectReturn);
+ListNavSupport::persistRecordarEntry($oPosicion, $actividadSelectReturn);
 
-list_nav_persist_selection_on_list_page(
+ListNavSupport::persistSelectionOnListPage(
     $oPosicion,
     $Qid_sel,
     $Qscroll_id,
     $stackFromPost !== 0,
 );
 if ($aGoBack !== []) {
-    list_nav_persist_actividad_que_parent($oPosicion, $aGoBack);
+    ListNavSupport::persistActividadQueParent($oPosicion, $aGoBack);
 }
 
 if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
-    list_nav_persist_selection_on_list_page($oPosicion, $Qid_sel, $Qscroll_id, false);
+    ListNavSupport::persistSelectionOnListPage($oPosicion, $Qid_sel, $Qscroll_id, false);
 }
 
-$selForApi = list_nav_id_sel_is_empty($Qid_sel)
+$selForApi = ListNavSupport::idSelIsEmpty($Qid_sel)
     ? []
-    : (is_array($Qid_sel) ? $Qid_sel : [tessera_imprimir_string($Qid_sel)]);
+    : (is_array($Qid_sel) ? $Qid_sel : [PayloadCoercion::string($Qid_sel)]);
 
 // Delegamos TODA la generacion del listado al caso de uso backend.
 $data = PostRequest::getDataFromUrl('/src/actividades/actividad_select_datos', [
@@ -259,7 +263,7 @@ if (!empty($data['advertencia_demasiadas']) && is_array($data['advertencia_demas
     $ad = $data['advertencia_demasiadas'];
     $go_avant = HashFrontSignedLink::tryFromSpec($ad['continuar_link_spec'] ?? null);
     $go_atras = HashFrontSignedLink::tryFromSpec($ad['volver_link_spec'] ?? null);
-    $numActiv = tessera_imprimir_int($ad['num_actividades'] ?? 0);
+    $numActiv = PayloadCoercion::int($ad['num_actividades'] ?? 0);
     $html_advertencia = '<h2>' . sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."), $numActiv) . '</h2>';
     $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_avant . "') value=" . _("continuar") . ">";
     $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_atras . "') value=" . _("volver") . ">";
@@ -267,22 +271,22 @@ if (!empty($data['advertencia_demasiadas']) && is_array($data['advertencia_demas
     die();
 }
 
-$a_valores = actividades_lista_valores_from_payload($data['a_valores'] ?? []);
+$a_valores = ActividadesPayload::listaValoresFromPayload($data['a_valores'] ?? []);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('actividad_select');
-$oTabla->setCabeceras(actividades_lista_cabeceras($data['a_cabeceras'] ?? []));
-$oTabla->setBotones(actividades_lista_botones($data['a_botones'] ?? []));
+$oTabla->setCabeceras(ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []));
+$oTabla->setBotones(ActividadesListaSupport::botones($data['a_botones'] ?? []));
 $oTabla->setDatos($a_valores);
 $html_tabla = $oTabla->mostrar_tabla();
 unset($data['a_cabeceras'], $data['a_botones'], $data['a_valores']);
-$resultado = tessera_imprimir_string($data['resultado'] ?? '');
+$resultado = PayloadCoercion::string($data['resultado'] ?? '');
 $perm_nueva = (bool) ($data['perm_nueva'] ?? false);
-$mod = tessera_imprimir_string($data['mod'] ?? '');
-$obj_pau = tessera_imprimir_string($data['obj_pau'] ?? 'Actividad');
-$aTiposActiv = actividades_lista_datos($data['aTiposActiv'] ?? []);
+$mod = PayloadCoercion::string($data['mod'] ?? '');
+$obj_pau = PayloadCoercion::string($data['obj_pau'] ?? 'Actividad');
+$aTiposActiv = ActividadesListaSupport::datos($data['aTiposActiv'] ?? []);
 $extendida = (bool) ($data['extendida'] ?? false);
-$id_tipo_activ_efectivo = tessera_imprimir_string($data['id_tipo_activ_efectivo'] ?? $Qid_tipo_activ);
+$id_tipo_activ_efectivo = PayloadCoercion::string($data['id_tipo_activ_efectivo'] ?? $Qid_tipo_activ);
 
 $oHash = new HashFront();
 $oHash->setUrl('frontend/actividades/controller/actividad_que.php');
@@ -317,8 +321,8 @@ $a_camposHiddenSel = [
 $oHashSel->setArraycamposHidden($a_camposHiddenSel);
 
 $id_sel_value = is_array($Qid_sel)
-    ? tessera_imprimir_string($Qid_sel[0] ?? '')
-    : tessera_imprimir_string($Qid_sel);
+    ? PayloadCoercion::string($Qid_sel[0] ?? '')
+    : PayloadCoercion::string($Qid_sel);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

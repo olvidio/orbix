@@ -11,8 +11,6 @@ use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\dossiers\domain\entity\TipoDossier;
 use src\dossiers\domain\value_objects\TipoDossierId;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla d_tipos_dossiers a la interfaz del repositorio

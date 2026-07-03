@@ -13,19 +13,19 @@
  * con `que=get` y `poblacion/region/pais/dl` como filtros.
  */
 
+use frontend\cartaspresentacion\helpers\CartaspresentacionPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\cartaspresentacion\helpers\CartasPresentacionBuscarOpcionesRender;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/cartaspresentacion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_buscar_data');
-$payload = CartasPresentacionBuscarOpcionesRender::enrich(cartaspresentacion_post_data($data));
-$view = cartaspresentacion_buscar_view_from_payload($payload);
+$payload = CartasPresentacionBuscarOpcionesRender::enrich(CartaspresentacionPayload::postData($data));
+$view = CartaspresentacionPayload::buscarViewFromPayload($payload);
 
 $oDesplRegion = Desplegable::desdeOpciones($view['opciones_region'], 'region');
 $oDesplPais = new Desplegable();

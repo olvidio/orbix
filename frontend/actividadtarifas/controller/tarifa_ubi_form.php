@@ -1,4 +1,8 @@
 <?php
+
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\actividadtarifas\helpers\ActividadtarifasPayload;
+
 /**
  * Controlador AJAX HTML: form modificar/nuevo de `TarifaUbi`.
  *
@@ -17,7 +21,6 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/actividadtarifas/helpers/actividadtarifas_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -27,14 +30,14 @@ $campos = [
     'letra' => (string)filter_input(INPUT_POST, 'letra'),
 ];
 
-$fields = actividadtarifas_payload_fields(
+$fields = ActividadtarifasPayload::fields(
     PostRequest::getDataFromUrl('/src/actividadtarifas/tarifa_ubi_form_data', $campos)
 );
 
 $oDesplSeries = new Desplegable();
 $oDesplSeries->setNombre('id_serie');
 $oDesplSeries->setOpciones($fields['opciones_serie']);
-$oDesplSeries->setOpcion_sel(tessera_imprimir_string($fields['id_serie_sel']));
+$oDesplSeries->setOpcion_sel(PayloadCoercion::string($fields['id_serie_sel']));
 
 $oDesplTarifas = null;
 if ($fields['es_nuevo']) {

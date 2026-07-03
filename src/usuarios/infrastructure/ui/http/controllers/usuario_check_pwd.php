@@ -1,14 +1,15 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use Illuminate\Http\JsonResponse;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Username;
 
-$Qid_usuario = (integer)filter_post('id_usuario');
-$Qusuario = (string)filter_post('usuario');
-$Qpassword = (string)filter_post('password');
+$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
+$Qusuario = (string)FilterPostGet::post('usuario');
+$Qpassword = (string)FilterPostGet::post('password');
 
 $usuario = null;
 if (!empty($Qusuario)) { // si es nuevo no tiene id

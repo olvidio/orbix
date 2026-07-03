@@ -3,12 +3,11 @@
 use src\actividadestudios\application\PlanEstudiosCaData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_int;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 $error = '';
 $data = [];
 try {
-    $idActiv = input_int($_POST, 'id_activ');
+    $idActiv = FuncTablasSupport::inputInt($_POST, 'id_activ');
     /** @var PlanEstudiosCaData $useCase */
     $useCase = DependencyResolver::get(PlanEstudiosCaData::class);
     $data = $useCase->execute(['id_activ' => $idActiv]);

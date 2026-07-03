@@ -9,8 +9,7 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use frontend\shared\web\Periodo;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: datos estructurados para tabla de actividades candidatas a cambiar de fase.
@@ -38,25 +37,25 @@ class FasesActivCambioLista
             'msg' => '',
             'num_activ' => 0,
             'num_ok' => 0,
-            'accion' => input_string($input, 'accion'),
-            'id_fase_nueva' => input_string($input, 'id_fase_nueva'),
+            'accion' => FuncTablasSupport::inputString($input, 'accion'),
+            'id_fase_nueva' => FuncTablasSupport::inputString($input, 'id_fase_nueva'),
             'a_cabeceras' => [],
             'a_valores' => [],
         ];
 
-        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
-        $Qdl_propia = input_string($input, 'dl_propia');
-        $Qid_fase_nueva = input_string($input, 'id_fase_nueva');
+        $Qid_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $Qdl_propia = FuncTablasSupport::inputString($input, 'dl_propia');
+        $Qid_fase_nueva = FuncTablasSupport::inputString($input, 'id_fase_nueva');
         if ($Qid_fase_nueva === '') {
             $empty['error'] = _("Debe poner la fase nueva");
             return $empty;
         }
 
-        $Qperiodo = input_string($input, 'periodo');
-        $Qyear = input_string($input, 'year');
-        $Qempiezamin = input_string($input, 'empiezamin');
-        $Qempiezamax = input_string($input, 'empiezamax');
-        $Qaccion = input_string($input, 'accion');
+        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = FuncTablasSupport::inputString($input, 'year');
+        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
+        $Qaccion = FuncTablasSupport::inputString($input, 'accion');
 
         if ($Qperiodo === '') {
             $Qperiodo = 'actual';
@@ -70,7 +69,7 @@ class FasesActivCambioLista
             $aOperador['id_tipo_activ'] = '~';
             $isfsv = (int)$Qid_tipo_activ[0];
         }
-        if (is_true($Qdl_propia)) {
+        if (FuncTablasSupport::isTrue($Qdl_propia)) {
             $aWhere['dl_org'] = ConfigGlobal::mi_delef((string) $isfsv);
             $ActividadRepository = $this->actividadDlRepository;
         } else {

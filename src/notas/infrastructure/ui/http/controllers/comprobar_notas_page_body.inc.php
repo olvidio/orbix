@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use src\shared\domain\helpers\FuncTablasSupport;
+
+
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 use src\actividades\domain\value_objects\NivelStgrId;
@@ -10,9 +13,6 @@ use src\notas\application\ComprobarNotasConstantsData;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\shared\infrastructure\DependencyResolver;
-
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 
 /**
  * Cuerpo de la pantalla legacy “comprobar notas” (SQL + HTML).
@@ -41,8 +41,8 @@ $nota_situ_numerica = NotaSituacion::NUMERICA;
 $nota_situ_cursada = NotaSituacion::CURSADA;
 
 $requestInput = $_POST !== [] ? $_POST : $_GET;
-$Qactualizar = input_string($requestInput, 'actualizar');
-$Qid_tabla = input_string($requestInput, 'id_tabla');
+$Qactualizar = FuncTablasSupport::inputString($requestInput, 'actualizar');
+$Qid_tabla = FuncTablasSupport::inputString($requestInput, 'id_tabla');
 
 [$tabla, $tabla_txt] = match ($Qid_tabla) {
     'n' => ['p_numerarios', 'Numerarios'],
@@ -117,8 +117,8 @@ if ($Qactualizar === 'r') {
 }
 if ($Qactualizar === 'borrar_cursada') {
 
-    $Qid_nom = (string)input_int($requestInput, 'id_nom');
-    $Qid_asignatura = input_string($requestInput, 'id_asignatura');
+    $Qid_nom = (string)FuncTablasSupport::inputInt($requestInput, 'id_nom');
+    $Qid_asignatura = FuncTablasSupport::inputString($requestInput, 'id_asignatura');
 
     $ssql = "DELETE FROM e_notas_dl n 
 		WHERE n.id_situacion = " . $nota_situ_cursada . "

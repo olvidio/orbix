@@ -1,11 +1,10 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
@@ -22,7 +21,7 @@ $data = PostRequest::getDataFromUrl('/src/misas/ver_plan_ctr_data', [
     'empiezamax' => $Qempiezamax,
 ]);
 
-ajax_json_render_phtml('frontend\\misas\\controller', 'ver_plan_ctr.phtml', [
+AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', 'ver_plan_ctr.phtml', [
     'columns' => $data['columns'] ?? [],
     'rows' => $data['rows'] ?? [],
     'legend' => $data['legend'] ?? [],

@@ -18,15 +18,15 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\actividadessacd\helpers\ActividadessacdSession;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/actividadessacd/helpers/actividadessacd_support.php';
 
 $oPosicion = FrontBootstrap::boot();
-$any_final_curs = actividadessacd_any_final_curs();
+$any_final_curs = ActividadessacdSession::anyFinalCurs();
 $oF_inicurs_des = new \DateTime('@' . mktime(0, 0, 0, 9, 2, $any_final_curs));
 
-$idioma = actividadessacd_session_idioma();
+$idioma = ActividadessacdSession::sessionIdioma();
 $a_idioma = explode('.', $idioma);
 $code_lng = $a_idioma[0];
 $sep = '/';

@@ -12,8 +12,6 @@ use src\asistentes\domain\entity\Asistente;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla d_asistentes_dl a la interfaz del repositorio

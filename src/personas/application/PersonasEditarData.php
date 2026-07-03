@@ -2,9 +2,6 @@
 
 namespace src\personas\application;
 
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_int;
-
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
@@ -16,6 +13,7 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/personas_editar_data`.
@@ -51,8 +49,8 @@ final class PersonasEditarData
      */
     public function execute(array $input): array
     {
-        $Qnuevo = input_int($input, 'nuevo');
-        $Qobj_pau = input_string($input, 'obj_pau');
+        $Qnuevo = FuncTablasSupport::inputInt($input, 'nuevo');
+        $Qobj_pau = FuncTablasSupport::inputString($input, 'obj_pau');
 
         try {
             $repoPersona = $this->personaRepositoryResolver->repositorio($Qobj_pau);
@@ -85,7 +83,7 @@ final class PersonasEditarData
             'titulo' => '',
             'nom_ctr' => '',
             'id_ctr' => '',
-            'id_tabla' => input_string($input, 'tabla'),
+            'id_tabla' => FuncTablasSupport::inputString($input, 'tabla'),
             'dl' => '',
             'idioma_preferido' => '',
             'situacion' => '',
@@ -94,7 +92,7 @@ final class PersonasEditarData
         ];
 
         if (!empty($Qnuevo)) {
-            $Qapellido1 = input_string($input, 'apellido1');
+            $Qapellido1 = FuncTablasSupport::inputString($input, 'apellido1');
             $out['apellido1'] = urldecode($Qapellido1);
             $out['f_situacion'] = (new DateTimeLocal())->getFromLocal();
             $out['situacion'] = 'A';
@@ -234,7 +232,7 @@ final class PersonasEditarData
         if (!empty($a_sel)) {
             return (int)strtok((string)$a_sel[0], '#');
         }
-        return input_int($input, 'id_nom');
+        return FuncTablasSupport::inputInt($input, 'id_nom');
     }
 
     /**

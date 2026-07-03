@@ -2,10 +2,11 @@
 
 use src\usuarios\domain\Verify2fa;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FilterPostGet;
 
 // Obtener los parámetros
-$verification_code = filter_post('verification_code');
-$secret_2fa = filter_post('secret_2fa');
+$verification_code = FilterPostGet::post('verification_code');
+$secret_2fa = FilterPostGet::post('secret_2fa');
 
 $error_txt = '';
 $data = [];

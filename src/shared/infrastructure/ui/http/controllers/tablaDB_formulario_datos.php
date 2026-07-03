@@ -3,11 +3,12 @@
 use src\shared\domain\DatosFormRepo;
 use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FilterPostGet;
 
-$Qclase_info_encoded = filter_post('clase_info');
-$a_pkey = filter_post('a_pkey');
-$Qobj_pau = filter_post('obj_pau');
-$Qmod = filter_post('mod');
+$Qclase_info_encoded = FilterPostGet::post('clase_info');
+$a_pkey = FilterPostGet::post('a_pkey');
+$Qobj_pau = FilterPostGet::post('obj_pau');
+$Qmod = FilterPostGet::post('mod');
 $mod = is_string($Qmod) ? $Qmod : '';
 
 // Tiene que ser en dos pasos.

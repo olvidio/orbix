@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint JSON: lista de fases para el tipo de actividad indicado.
  */
@@ -7,13 +10,10 @@ use src\cambios\application\CambioUsuarioObjetoPrefFasesData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-use function src\shared\domain\helpers\input_string;
-
-
 $input = [
-    'objeto' => input_string($_POST, 'objeto'),
-    'id_tipo_activ' => input_string($_POST, 'id_tipo_activ'),
-    'dl_propia' => input_string($_POST, 'dl_propia'),
+    'objeto' => FuncTablasSupport::inputString($_POST, 'objeto'),
+    'id_tipo_activ' => FuncTablasSupport::inputString($_POST, 'id_tipo_activ'),
+    'dl_propia' => FuncTablasSupport::inputString($_POST, 'dl_propia'),
 ];
 
 /** @var CambioUsuarioObjetoPrefFasesData $useCase */

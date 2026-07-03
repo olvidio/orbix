@@ -1,7 +1,6 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\FrontBootstrap;
 
 /**
@@ -40,4 +39,4 @@ if (isset($_POST['sel_nom'])) {
     $campos['sel_nom'] = $_POST['sel_nom'];
 }
 
-ajax_json_proxy_post_request('/src/encargossacd/horario_update_data', $campos);
+AjaxJsonSupport::proxyPostRequest('/src/encargossacd/horario_update_data', $campos);

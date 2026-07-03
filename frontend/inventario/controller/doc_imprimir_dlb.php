@@ -1,16 +1,17 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $dl = (bool)filter_input(INPUT_POST, 'dl');
@@ -22,13 +23,13 @@ $a_campos_backend = [
     'sel' => $sel_json,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$payload = inventario_post_payload($data);
-$a_ubi_valores = inventario_ubi_valores_map($payload['a_valores'] ?? []);
+$payload = InventarioPayload::postPayload($data);
+$a_ubi_valores = InventarioPayload::ubiValoresMap($payload['a_valores'] ?? []);
 $a_ubi_lugarRaw = $payload['a_lugar'] ?? [];
 $a_ubi_lugar = [];
 if (is_array($a_ubi_lugarRaw)) {
     foreach ($a_ubi_lugarRaw as $key => $value) {
-        $a_ubi_lugar[$key] = tessera_imprimir_string($value);
+        $a_ubi_lugar[$key] = PayloadCoercion::string($value);
     }
 }
 
@@ -44,8 +45,8 @@ if ($dl) {
 $a_botones = [['txt' => _('seleccionar'), 'click' => 'fnjs_ver_equipaje()']];
 
 $data_css = PostRequest::getDataFromUrl('/src/inventario/inventario_css_inline_data', []);
-$cssPayload = inventario_post_payload($data_css);
-$css = tessera_imprimir_string($cssPayload['css'] ?? '');
+$cssPayload = InventarioPayload::postPayload($data_css);
+$css = PayloadCoercion::string($cssPayload['css'] ?? '');
 $html_total = $css;
 foreach ($a_ubi_valores as $lugar => $a_valores) {
     $html = '';

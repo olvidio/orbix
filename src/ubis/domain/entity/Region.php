@@ -7,7 +7,6 @@ use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\value_objects\RegionName;
 use src\ubis\domain\value_objects\RegionNameText;
-use function src\shared\domain\helpers\is_true;
 use src\ubis\domain\value_objects\RegionCode;
 use src\ubis\domain\value_objects\RegionId;
 

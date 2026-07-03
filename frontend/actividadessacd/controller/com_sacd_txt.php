@@ -1,5 +1,7 @@
 <?php
 
+use frontend\actividadessacd\helpers\ActividadessacdPayload;
+
 /**
  * Pantalla de edicion de textos de comunicacion a los sacd.
  *
@@ -23,7 +25,6 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/actividadessacd/helpers/actividadessacd_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $a_Claves = [
@@ -46,7 +47,7 @@ $oDesplClaves->setOpcion_sel('com_sacd');
 $oDesplClaves->setAction('fnjs_get_texto()');
 
 $locData = PostRequest::getDataFromUrl('/src/actividadessacd/locales_desplegable_data', []);
-$a_locales = actividadessacd_locales_from_payload($locData);
+$a_locales = ActividadessacdPayload::localesFromPayload($locData);
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, 'es_ES.UTF-8', true);
 $oDesplIdiomas->setAction('fnjs_get_texto()');
 
@@ -55,7 +56,7 @@ $initial = PostRequest::getDataFromUrl('/src/actividadessacd/texto_comunicacion_
     'clave' => 'com_sacd',
     'idioma' => 'es_ES.UTF-8',
 ]);
-$comunicacion = actividadessacd_texto_from_payload($initial);
+$comunicacion = ActividadessacdPayload::textoFromPayload($initial);
 
 $api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {

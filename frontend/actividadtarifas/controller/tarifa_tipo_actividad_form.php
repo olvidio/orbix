@@ -1,4 +1,8 @@
 <?php
+
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\actividadtarifas\helpers\ActividadtarifasPayload;
+
 /**
  * Controlador AJAX HTML: form modificar/nuevo de
  * `RelacionTarifaTipoActividad`.
@@ -22,13 +26,12 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/actividadtarifas/helpers/actividadtarifas_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
 
 $campos = ['id_item' => $Qid_item];
-$fields = actividadtarifas_payload_fields(
+$fields = ActividadtarifasPayload::fields(
     PostRequest::getDataFromUrl('/src/actividadtarifas/relacion_tarifa_form_data', $campos)
 );
 
@@ -43,7 +46,7 @@ $oDesplPosiblesTipoTarifas = new Desplegable();
 $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
 $oDesplPosiblesTipoTarifas->setOpciones($fields['opciones_tarifa']);
 if (!$es_nuevo) {
-    $oDesplPosiblesTipoTarifas->setOpcion_sel(tessera_imprimir_string($id_tarifa_sel));
+    $oDesplPosiblesTipoTarifas->setOpcion_sel(PayloadCoercion::string($id_tarifa_sel));
 }
 
 $api = AppUrlConfig::getApiBaseUrl();
@@ -101,7 +104,7 @@ if (!$es_nuevo) {
         'extendida' => '',
         'sfsv_all' => 'f',
     ]);
-    $actividad_tipo_html = tessera_imprimir_string($dataTipo['actividad_tipo_html'] ?? '');
+    $actividad_tipo_html = PayloadCoercion::string($dataTipo['actividad_tipo_html'] ?? '');
 
     $a_campos = [
         'oPosicion' => $oPosicion,

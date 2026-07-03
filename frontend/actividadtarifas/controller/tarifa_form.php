@@ -1,4 +1,8 @@
 <?php
+
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\actividadtarifas\helpers\ActividadtarifasPayload;
+
 /**
  * Controlador AJAX HTML: formulario modificar/nuevo de `TipoTarifa`.
  *
@@ -18,21 +22,20 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/actividadtarifas/helpers/actividadtarifas_support.php';
 
 FrontBootstrap::boot();
 $campos = [
     'id_tarifa' => (string)filter_input(INPUT_POST, 'id_tarifa'),
 ];
 
-$fields = actividadtarifas_payload_fields(
+$fields = ActividadtarifasPayload::fields(
     PostRequest::getDataFromUrl('/src/actividadtarifas/tipo_tarifa_form_data', $campos)
 );
 
 $oDesplModo = new Desplegable();
 $oDesplModo->setNombre('modo');
 $oDesplModo->setOpciones($fields['opciones_modo']);
-$oDesplModo->setOpcion_sel(tessera_imprimir_string($fields['modo']));
+$oDesplModo->setOpcion_sel(PayloadCoercion::string($fields['modo']));
 
 $a_campos = [
     'id_tarifa' => $fields['id_tarifa'],

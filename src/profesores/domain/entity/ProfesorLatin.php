@@ -5,8 +5,6 @@ namespace src\profesores\domain\entity;
 use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\domain\traits\Hydratable;
-use function src\shared\domain\helpers\is_true;
-
 class ProfesorLatin
 {
     use Hydratable;

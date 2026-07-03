@@ -5,8 +5,7 @@ namespace src\planning\application;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Personas + actividades agrupadas por centro para `planning_ctr_select`.
@@ -26,11 +25,11 @@ final class PlanningCtrSelectData
      */
     public function execute(array $input, DateTimeLocal $oIniPlanning, string $inicio_local, string $fin_iso, string $inicio_iso): array
     {
-        $Qsacd = input_string($input, 'sacd');
-        $Qctr = input_string($input, 'ctr');
-        $Qtodos_n = input_string($input, 'todos_n');
-        $Qtodos_agd = input_string($input, 'todos_agd');
-        $Qtodos_s = input_string($input, 'todos_s');
+        $Qsacd = FuncTablasSupport::inputString($input, 'sacd');
+        $Qctr = FuncTablasSupport::inputString($input, 'ctr');
+        $Qtodos_n = FuncTablasSupport::inputString($input, 'todos_n');
+        $Qtodos_agd = FuncTablasSupport::inputString($input, 'todos_agd');
+        $Qtodos_s = FuncTablasSupport::inputString($input, 'todos_s');
 
         $aWhereP = ['situacion' => 'A'];
         if ($Qsacd === '') {

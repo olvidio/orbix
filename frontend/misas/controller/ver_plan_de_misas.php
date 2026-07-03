@@ -1,14 +1,14 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\misas\support\PeriodoTdHelper;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\misas\helpers\MisasDesplegableSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/misas/plan_de_misas_pantalla_data', ['pantalla' => 'ver']);
@@ -23,13 +23,13 @@ $periodo_td_html = PeriodoTdHelper::build([
 ], 'este_mes');
 
 $oDesplZonas = new Desplegable();
-$oDesplZonas->setOpciones(misas_desplegable_opciones($data['zonas_opciones'] ?? []));
+$oDesplZonas->setOpciones(MisasDesplegableSupport::opciones($data['zonas_opciones'] ?? []));
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_cuadricula_zona()');
 
 $oDesplOrden = new Desplegable();
-$oDesplOrden->setOpciones(misas_desplegable_opciones($data['orden_opciones'] ?? []));
+$oDesplOrden->setOpciones(MisasDesplegableSupport::opciones($data['orden_opciones'] ?? []));
 $oDesplOrden->setNombre('orden');
 $oDesplOrden->setAction('fnjs_ver_cuadricula_zona()');
 
@@ -52,4 +52,4 @@ $a_campos = [
     'oHash' => $oHash,
 ];
 
-ajax_json_render_phtml('frontend\\misas\\controller', 'ver_plan_de_misas.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', 'ver_plan_de_misas.phtml', $a_campos);

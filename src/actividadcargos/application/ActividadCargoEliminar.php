@@ -13,9 +13,7 @@ use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string_list;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Elimina un `ActividadCargo` y, si `elim_asis === 2` y el tipo de actividad
@@ -42,10 +40,10 @@ final class ActividadCargoEliminar
      */
     public function execute(array $input): string
     {
-        $id_item = input_int($input, 'id_item');
-        $elim_asis = input_int($input, 'elim_asis');
+        $id_item = FuncTablasSupport::inputInt($input, 'id_item');
+        $elim_asis = FuncTablasSupport::inputInt($input, 'elim_asis');
 
-        $a_sel = input_string_list($input, 'sel');
+        $a_sel = FuncTablasSupport::inputStringList($input, 'sel');
         if ($id_item <= 0 && $a_sel !== []) {
             // formato "id_nom#id_item#elim_asis#id_schema"
             $tok = $a_sel[0];
@@ -97,7 +95,7 @@ final class ActividadCargoEliminar
         if ($oAsistente === null) {
             return '';
         }
-        if (!is_true($oAsistente->perm_modificar())) {
+        if (!FuncTablasSupport::isTrue($oAsistente->perm_modificar())) {
             return '';
         }
         if ($this->asistenteApplicationService->eliminar($oAsistente) === false) {

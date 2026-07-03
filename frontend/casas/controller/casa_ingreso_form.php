@@ -1,4 +1,7 @@
 <?php
+
+use frontend\casas\helpers\CasasPayload;
+
 /**
  * Controlador AJAX HTML: formulario modal del ingreso de una
  * actividad (edición). Delega en `/src/casas/casa_ingreso_form_data`.
@@ -8,7 +11,6 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -18,8 +20,8 @@ if ($id_activ === 0) {
 }
 
 $campos = ['id_activ' => $id_activ];
-$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/casa_ingreso_form_data', $campos));
-$form = casas_ingreso_form_from_payload($data);
+$data = CasasPayload::postData(PostRequest::getDataFromUrl('/src/casas/casa_ingreso_form_data', $campos));
+$form = CasasPayload::ingresoFormFromPayload($data);
 
 if (!$form['ok']) {
     echo $form['error'] !== '' ? $form['error'] : (string)_("No se puede cargar el formulario.");

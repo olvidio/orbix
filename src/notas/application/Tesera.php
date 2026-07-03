@@ -2,6 +2,7 @@
 
 namespace src\notas\application;
 
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
@@ -9,7 +10,6 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Servicio de "tessera studiorum": dado un `id_nom` calcula las asignaturas
@@ -318,7 +318,7 @@ final class Tesera
                 $i++;
                 $tabla[$i] = $this->filaAprobada($oAsig, $row);
 
-                if (is_true($row['bAprobada'])) {
+                if (FuncTablasSupport::isTrue($row['bAprobada'])) {
                     $numasig++;
                     $numcred += (float)$oAsig->getCreditos();
                     $oFActa = $row['fecha'];

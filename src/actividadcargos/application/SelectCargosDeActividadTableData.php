@@ -6,7 +6,7 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\ActividadCargo;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaPub;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Filas de la tabla del dossier 3102 ({@see Select_cargos_de_actividad}).
@@ -58,7 +58,7 @@ final class SelectCargosDeActividadTableData
 
             $nom = $oPersona->getPrefApellidosNombre();
             $ctr_dl = $oPersona->getCentro_o_dl();
-            $chk_puede_agd = is_true($oActividadCargo->isPuede_agd()) ? 'si' : 'no';
+            $chk_puede_agd = FuncTablasSupport::isTrue($oActividadCargo->isPuede_agd()) ? 'si' : 'no';
             $observ = (string) ($oActividadCargo->getObserv() ?? '');
 
             $permiso = 1;

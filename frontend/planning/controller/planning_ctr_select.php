@@ -1,7 +1,7 @@
 <?php
-
 namespace frontend\planning\controller;
 
+use frontend\planning\helpers\PlanningPayload;
 use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
@@ -11,6 +11,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Planning (calendario) de las personas de un centro (o grupo de
@@ -19,13 +20,11 @@ use frontend\shared\FrontBootstrap;
  * Migrado desde `apps/planning/controller/planning_ctr_select.php`
  * (slice 2 de la migracion del modulo planning).
  */
-require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(($aGoBack ?? list_nav_build_return_parametros_from_post()), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
 
 
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
@@ -77,7 +76,7 @@ $payload = [
     'todos_s' => $Qtodos_s,
 ];
 $apiData = PostRequest::getDataFromUrl('/src/planning/planning_ctr_select_data', $payload);
-$ctrSelect = planning_ctr_select_from_payload($apiData);
+$ctrSelect = PlanningPayload::ctrSelectFromPayload($apiData);
 $msg_txt = $ctrSelect['msg_txt'];
 $cabecera_title = $ctrSelect['cabecera_title'];
 $a_actividades2 = $ctrSelect['a_actividades2'];
@@ -99,7 +98,7 @@ $oPosicion->setParametros($aGoBack, 1);
 
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
-$estilos = planning_calendario_estilos();
+$estilos = PlanningPayload::calendarioEstilos();
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($estilos['colorColumnaUno']);

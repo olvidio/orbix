@@ -9,8 +9,7 @@ use src\profesores\domain\ProfesorActividad;
 use src\profesores\domain\services\ProfesorAsignaturaService;
 use src\profesores\domain\services\ProfesorStgrService;
 use src\shared\domain\helpers\OpcionesDesplegable;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve los datos (`id`, `opciones`, `selected`, `blanco`) para construir
@@ -32,10 +31,10 @@ final class ProfesoresDesplegableData
      */
     public function execute(array $input): array
     {
-        $salida = input_string($input, 'salida');
-        $id_asignatura = input_int($input, 'id_asignatura');
-        $id_activ = input_int($input, 'id_activ');
-        $id_profesor = input_int($input, 'id_profesor');
+        $salida = FuncTablasSupport::inputString($input, 'salida');
+        $id_asignatura = FuncTablasSupport::inputInt($input, 'id_asignatura');
+        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $id_profesor = FuncTablasSupport::inputInt($input, 'id_profesor');
 
         switch ($salida) {
             case 'asignatura':

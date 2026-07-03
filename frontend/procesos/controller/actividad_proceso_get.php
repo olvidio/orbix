@@ -1,4 +1,9 @@
 <?php
+
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\procesos\helpers\ProcesosPayload;
+
 /**
  * Renderer frontend de la tabla de fases del proceso de una actividad.
  * Llama a /src/procesos/actividad_proceso_get (JSON) y pinta la tabla.
@@ -8,19 +13,17 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/procesos/actividad_proceso_get', PostRequest::requestPayloadForHash());
 
-$error = tessera_imprimir_string($data['error'] ?? '');
+$error = PayloadCoercion::string($data['error'] ?? '');
 if ($error !== '') {
-    ajax_json_html($error, $error);
+    AjaxJsonSupport::html($error, $error);
 }
 
-$aRows = procesos_actividad_proceso_rows($data['a_rows'] ?? null);
+$aRows = ProcesosPayload::actividadProcesoRows($data['a_rows'] ?? null);
 $webIcons = OrbixRuntime::getWebIcons();
 
 ob_start();
@@ -65,4 +68,4 @@ foreach ($aRows as $row) {
     echo '</tr>';
 }
 echo '</table>';
-ajax_json_html((string) ob_get_clean());
+AjaxJsonSupport::html((string) ob_get_clean());

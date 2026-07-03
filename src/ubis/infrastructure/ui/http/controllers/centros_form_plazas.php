@@ -3,9 +3,8 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\CentrosFormData;
 use src\shared\web\ContestarJson;
-
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 $input = array_merge($_GET, $_POST);
-$Qid_ubi = input_int($input, 'id_ubi');
+$Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
 ContestarJson::enviar('', DependencyResolver::get(CentrosFormData::class)->execute($Qid_ubi, CentrosFormData::MODO_PLAZAS));

@@ -1,10 +1,11 @@
 <?php
 
+use frontend\usuarios\helpers\UsuariosPayload;
+use frontend\usuarios\helpers\UsuariosPostInput;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use frontend\shared\web\UrlBaseProject;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
 require __DIR__ . '/../../../libs/vendor/autoload.php';
 
 $Qtoken = (string)filter_input(INPUT_GET, 'token');
@@ -52,7 +53,7 @@ if ($oDB === null) {
 
 $query = "SELECT * FROM aux_usuarios WHERE id_usuario = $Qid_usuario AND token_recuperacion_2fa = '$hash_recibido' AND token_expiracion_2fa > NOW()";
 $oDBSt = $oDB->query($query);
-$usuario_encontrado = $oDBSt !== false ? usuarios_recovery_row_from_fetch($oDBSt->fetch()) : null;
+$usuario_encontrado = $oDBSt !== false ? UsuariosPayload::recoveryRowFromFetch($oDBSt->fetch()) : null;
 
 if ($usuario_encontrado !== null) {
     $id_usuario = $usuario_encontrado['id_usuario'];
@@ -67,7 +68,7 @@ if ($usuario_encontrado !== null) {
     $oDB->prepare($sql_reset)->execute([':id' => $id_usuario]);
 
     if (session_status() !== PHP_SESSION_ACTIVE) {
-        $sessionId = usuarios_recovery_session_id_from_cookie();
+        $sessionId = UsuariosPostInput::recoverySessionIdFromCookie();
         if ($sessionId !== null) {
             session_id($sessionId);
             session_start();

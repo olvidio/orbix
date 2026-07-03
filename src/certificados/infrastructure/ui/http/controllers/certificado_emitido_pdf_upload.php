@@ -1,13 +1,10 @@
 <?php
 
-use function frontend\shared\helpers\is_true;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\certificados\domain\CertificadoEmitidoUpload;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\ui\http\MultipartUploadGuard;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 
 header('Content-Type: application/json; charset=UTF-8');
@@ -35,23 +32,23 @@ if ($tmpFilePath === '') {
         if ($contenido_doc === false) {
             $error_txt = sprintf(_('No se puede leer el archivo %s'), $fileName);
         } else {
-            if (is_true(input_int($_POST, 'solo_pdf'))) {
-                $rta = $certificadoUpload->uploadTxtFirmado(input_int($_POST, 'id_item'), (string) $contenido_doc);
+            if (FuncTablasSupport::isTrue(FuncTablasSupport::inputInt($_POST, 'solo_pdf'))) {
+                $rta = $certificadoUpload->uploadTxtFirmado(FuncTablasSupport::inputInt($_POST, 'id_item'), (string) $contenido_doc);
                 if (!is_object($rta)) {
                     $error_txt = (string) $rta;
                 }
             } else {
-                $oF_certificado = DateTimeLocal::createFromLocal(input_string($_POST, 'f_certificado'));
-                $oF_enviado = DateTimeLocal::createFromLocal(input_string($_POST, 'f_enviado'));
+                $oF_certificado = DateTimeLocal::createFromLocal(FuncTablasSupport::inputString($_POST, 'f_certificado'));
+                $oF_enviado = DateTimeLocal::createFromLocal(FuncTablasSupport::inputString($_POST, 'f_enviado'));
                 $rta = $certificadoUpload->uploadNew(
-                    input_int($_POST, 'id_nom'),
+                    FuncTablasSupport::inputInt($_POST, 'id_nom'),
                     (string) $contenido_doc,
-                    input_string($_POST, 'idioma'),
-                    input_string($_POST, 'certificado'),
-                    is_true(input_string($_POST, 'firmado')) ?? false,
+                    FuncTablasSupport::inputString($_POST, 'idioma'),
+                    FuncTablasSupport::inputString($_POST, 'certificado'),
+                    FuncTablasSupport::isTrue(FuncTablasSupport::inputString($_POST, 'firmado')) ?? false,
                     $oF_certificado instanceof DateTimeLocal ? $oF_certificado : null,
                     $oF_enviado instanceof DateTimeLocal ? $oF_enviado : null,
-                    input_string($_POST, 'destino') ?: null,
+                    FuncTablasSupport::inputString($_POST, 'destino') ?: null,
                 );
                 if (!is_object($rta)) {
                     $error_txt = (string) $rta;

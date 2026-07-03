@@ -1,15 +1,17 @@
 <?php
 
+use frontend\actividades\helpers\ActividadesPostInput;
+use frontend\usuarios\helpers\UsuariosPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
+
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 
 
@@ -20,26 +22,26 @@ if (isset($_POST['stack'])) {
     if ($stack !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
-            $Qid_sel = actividades_posicion_string($oPosicion2->getParametro('id_sel'));
-            $Qscroll_id = actividades_posicion_string($oPosicion2->getParametro('scroll_id'));
+            $Qid_sel = ActividadesPostInput::posicionString($oPosicion2->getParametro('id_sel'));
+            $Qscroll_id = ActividadesPostInput::posicionString($oPosicion2->getParametro('scroll_id'));
             $oPosicion2->olvidar($stack);
         }
     }
 }
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 $Qusername = (string)filter_input(INPUT_POST, 'username');
 $oPosicion->setParametros(array('username' => $Qusername), 1);
 
-$data = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_lista', ['username' => $Qusername]));
+$data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_lista', ['username' => $Qusername]));
 if (!empty($data['error'])) {
    exit($data['error']);
 }
 
-$lista = usuarios_lista_from_payload($data);
-$a_valores = usuarios_lista_apply_nav($lista['valores'], $Qid_sel, $Qscroll_id);
+$lista = UsuariosPayload::listaFromPayload($data);
+$a_valores = UsuariosPayload::listaApplyNav($lista['valores'], $Qid_sel, $Qscroll_id);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('usuario_lista');

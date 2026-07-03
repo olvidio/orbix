@@ -7,8 +7,7 @@ use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: crear actividades del nuevo curso tomando como base las del
@@ -35,8 +34,8 @@ final class ActividadNuevoCursoEjecutar
      */
     public function ejecutar(array $input): array
     {
-        $Qyear_ref = input_int($input, 'year_ref');
-        $Qyear = input_int($input, 'year');
+        $Qyear_ref = FuncTablasSupport::inputInt($input, 'year_ref');
+        $Qyear = FuncTablasSupport::inputInt($input, 'year');
         $ver_lista = !empty($input['ver_lista']);
 
         $oNuevoCurso = new ActividadNuevoCurso(
@@ -70,7 +69,7 @@ final class ActividadNuevoCursoEjecutar
         $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
 
         $html = '';
-        if (is_true($ver_lista)) {
+        if (FuncTablasSupport::isTrue($ver_lista)) {
             $html .= _("tipo repetición => fechas_new :: nom_activ_new") . "<br>";
         }
 
@@ -83,7 +82,7 @@ final class ActividadNuevoCursoEjecutar
             }
             $txt_crear .= $rta;
         }
-        if (is_true($ver_lista)) {
+        if (FuncTablasSupport::isTrue($ver_lista)) {
             $html .= $oNuevoCurso->consumirListaHtml();
         }
         $txt_solapes = $oNuevoCurso->comprobar_solapes($inicio_iso, $fin_iso);

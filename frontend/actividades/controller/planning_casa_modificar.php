@@ -1,4 +1,11 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPermSupport;
+use frontend\actividades\helpers\ActividadesPostInput;
+use frontend\actividades\helpers\ActividadesMutacionSupport;
+use frontend\actividades\helpers\ActividadesPayload;
+use frontend\shared\helpers\PayloadCoercion;
+
 /**
  * Formulario para modificar una actividad desde el planning de casas.
  *
@@ -23,24 +30,23 @@ use frontend\actividades\helpers\PrefillPermActividadesFases;
 use frontend\shared\FrontBootstrap;
 use src\permisos\domain\PermisosActividades;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
-$Qid_activ = actividades_id_activ_from_post();
+$Qid_activ = ActividadesPostInput::idActivFromPost();
 if ($Qid_activ === 0) {
-    $Qid_activ = tessera_imprimir_int(filter_input(INPUT_POST, 'id_activ'));
+    $Qid_activ = PayloadCoercion::int(filter_input(INPUT_POST, 'id_activ'));
 }
 
-$permiso_des = actividades_perm_des();
+$permiso_des = ActividadesPermSupport::permDes();
 
 $data = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
     'id_activ' => $Qid_activ,
 ]);
 
-$entidad = actividades_entidad_from_ver_datos($data);
-$render = actividades_ver_render_from_payload($data);
+$entidad = ActividadesPayload::entidadFromVerDatos($data);
+$render = ActividadesPayload::verRenderFromPayload($data);
 
 $id_tipo_activ = $entidad['id_tipo_activ'];
 $dl_org = $entidad['dl_org'];
@@ -68,7 +74,7 @@ $sasistentes = $render['sasistentes'];
 $sactividad = $render['sactividad'];
 $snom_tipo = $render['snom_tipo'];
 
-$oPermActividades = actividades_o_perm_actividades();
+$oPermActividades = ActividadesPermSupport::oPermActividades();
 if (!$oPermActividades instanceof PermisosActividades) {
     die();
 }
@@ -91,10 +97,10 @@ if ($oPermActiv->have_perm_activ('ver') === true) {
 $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
     'with_all' => 'f',
 ]);
-$a_status = actividades_status_labels_from_payload($labelsRow);
+$a_status = ActividadesPayload::statusLabelsFromPayload($labelsRow);
 
 $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
-    'perm_jefe' => actividades_perm_jefe_tipo_activ() ? 't' : 'f',
+    'perm_jefe' => ActividadesPermSupport::permJefeTipoActiv() ? 't' : 'f',
     'id_tipo_activ' => $id_tipo_activ,
     'que' => '',
     'evitar_procesos' => 't',
@@ -105,12 +111,12 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'snom_tipo' => $snom_tipo,
     'extendida' => '',
 ]);
-$actividad_tipo_html = tessera_imprimir_string($dataTipoBloque['actividad_tipo_html'] ?? '');
+$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $urlMutacionAjax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_mutacion_ajax.php';
 
 $oHash = new HashFront();
-$camposForm = actividades_calendario_form_hash_campos_form();
+$camposForm = ActividadesMutacionSupport::calendarioFormHashCamposForm();
 $camposNo = 'id_tipo_activ!mod';
 $a_camposHidden = [
     'id_tipo_activ' => $id_tipo_activ,
@@ -173,7 +179,7 @@ $a_campos = [
     'web_icons' => OrbixRuntime::getWebIcons(),
     'procesos_installed' => $procesos_installed,
     'locale_us' => OrbixRuntime::isLocaleUs(),
-    'calendario_hash_allow' => actividades_calendario_mutacion_serialize_allow_json(),
+    'calendario_hash_allow' => ActividadesMutacionSupport::calendarioMutacionSerializeAllowJson(),
 ];
 
 $oView = new ViewNewTwig('frontend/actividades/controller');

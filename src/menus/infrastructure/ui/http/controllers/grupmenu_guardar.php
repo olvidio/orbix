@@ -1,16 +1,15 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\entity\GrupMenu;
 use src\shared\web\ContestarJson;
 
-$Qgrupmenu = input_string($_POST, 'grupmenu');
-$Qid_grupmenu = input_int($_POST, 'id_grupmenu');
-$Qorden = input_int($_POST, 'orden');
+$Qgrupmenu = FuncTablasSupport::inputString($_POST, 'grupmenu');
+$Qid_grupmenu = FuncTablasSupport::inputInt($_POST, 'id_grupmenu');
+$Qorden = FuncTablasSupport::inputInt($_POST, 'orden');
 
 $error_txt = '';
 

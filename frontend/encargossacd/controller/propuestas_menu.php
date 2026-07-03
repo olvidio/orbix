@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\FrontBootstrap;
 use frontend\shared\model\ViewNewTwig;

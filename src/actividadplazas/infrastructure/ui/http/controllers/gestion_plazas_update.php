@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: actualiza las plazas (totales, concedidas o
  * pedidas) desde la edicion inline de `frontend\shared\web\TablaEditable`. Responde
@@ -9,11 +12,9 @@
 use src\actividadplazas\application\GestionPlazasUpdate;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_string;
-
 $input = [
-    'data' => input_string($_POST, 'data'),
-    'colName' => input_string($_POST, 'colName'),
+    'data' => FuncTablasSupport::inputString($_POST, 'data'),
+    'colName' => FuncTablasSupport::inputString($_POST, 'colName'),
 ];
 
 /** @var GestionPlazasUpdate $useCase */

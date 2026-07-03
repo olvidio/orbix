@@ -12,6 +12,7 @@ use src\encargossacd\domain\entity\PropuestaEncargoSacd;
 use src\encargossacd\domain\value_objects\EncargoModoId;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\helpers\FilterPostGet;
 
 /**
  * Mutaciones AJAX de la pantalla de propuestas (`que` distinto de get_lista / crear_tabla).
@@ -46,10 +47,10 @@ final class PropuestasAjaxMutations
      */
     private function listaSacd(): array
     {
-        $id_sacd = (int) (filter_post('id_sacd') ?? 0);
-        $id_item = (int) (filter_post('id_item') ?? 0);
-        $id_enc = (int) (filter_post('id_enc') ?? 0);
-        $tipo = (string) (filter_post('tipo') ?? '');
+        $id_sacd = (int) (FilterPostGet::post('id_sacd') ?? 0);
+        $id_item = (int) (FilterPostGet::post('id_item') ?? 0);
+        $id_enc = (int) (FilterPostGet::post('id_enc') ?? 0);
+        $tipo = (string) (FilterPostGet::post('tipo') ?? '');
 
         $opciones = $this->personaSacdRepository->getArraySacd("AND id_tabla ~ '^(a|n|sss)$'");
         $oDesplTitular = new Desplegable('prop_sacd', $opciones, (string) $id_sacd);
@@ -66,12 +67,12 @@ final class PropuestasAjaxMutations
      */
     private function dedicacionUpdate(): array
     {
-        $id_sacd = (int) (filter_post('id_sacd') ?? 0);
-        $id_item = (int) (filter_post('id_item') ?? 0);
-        $id_enc = (int) (filter_post('id_enc') ?? 0);
-        $dedic_m = (int) (filter_post('dedic_m') ?? 0);
-        $dedic_t = (int) (filter_post('dedic_t') ?? 0);
-        $dedic_v = (int) (filter_post('dedic_v') ?? 0);
+        $id_sacd = (int) (FilterPostGet::post('id_sacd') ?? 0);
+        $id_item = (int) (FilterPostGet::post('id_item') ?? 0);
+        $id_enc = (int) (FilterPostGet::post('id_enc') ?? 0);
+        $dedic_m = (int) (FilterPostGet::post('dedic_m') ?? 0);
+        $dedic_t = (int) (FilterPostGet::post('dedic_t') ?? 0);
+        $dedic_v = (int) (FilterPostGet::post('dedic_v') ?? 0);
 
         if ($id_item === $id_enc) {
             $cEncargosSacd = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(
@@ -126,9 +127,9 @@ final class PropuestasAjaxMutations
      */
     private function dedicacion(): array
     {
-        $id_sacd = (int) (filter_post('id_sacd') ?? 0);
-        $id_item = (int) (filter_post('id_item') ?? 0);
-        $id_enc = (int) (filter_post('id_enc') ?? 0);
+        $id_sacd = (int) (FilterPostGet::post('id_sacd') ?? 0);
+        $id_item = (int) (FilterPostGet::post('id_item') ?? 0);
+        $id_enc = (int) (FilterPostGet::post('id_enc') ?? 0);
 
         $apellidos_nombre = $this->apellidosNombre($id_sacd);
         $cHorarios = $this->propuestaHorarioRepository->getEncargoSacdHorarios(
@@ -177,7 +178,7 @@ final class PropuestasAjaxMutations
      */
     private function info(): array
     {
-        $id_sacd = (int) (filter_post('id_sacd') ?? 0);
+        $id_sacd = (int) (FilterPostGet::post('id_sacd') ?? 0);
         $apellidos_nombre = $this->apellidosNombre($id_sacd);
         $cEncargosSacd = $this->propuestaEncargoSacdRepository->getPropuestasEncargoSacd(['id_nom_new' => $id_sacd]);
 
@@ -196,10 +197,10 @@ final class PropuestasAjaxMutations
      */
     private function cmbSacd(): array
     {
-        $tipo = (string) (filter_post('tipo') ?? '');
-        $id_item = (int) (filter_post('id_item') ?? 0);
-        $id_enc = (int) (filter_post('id_enc') ?? 0);
-        $id_sacd = (int) (filter_post('id_sacd') ?? 0);
+        $tipo = (string) (FilterPostGet::post('tipo') ?? '');
+        $id_item = (int) (FilterPostGet::post('id_item') ?? 0);
+        $id_enc = (int) (FilterPostGet::post('id_enc') ?? 0);
+        $id_sacd = (int) (FilterPostGet::post('id_sacd') ?? 0);
 
         $html = '';
         $id_sacd_old = 0;

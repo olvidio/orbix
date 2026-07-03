@@ -1,4 +1,7 @@
 <?php
+
+use frontend\shared\helpers\AjaxJsonSupport;
+
 /**
  * Pantalla frontend: listado agrupado de cartas de presentacion.
  *
@@ -12,12 +15,11 @@
  *  - `que=get`        (resultado de la pantalla buscar)
  */
 
+use frontend\cartaspresentacion\helpers\CartaspresentacionPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/cartaspresentacion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -29,6 +31,6 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_lista_data', $campos);
-$html = cartaspresentacion_lista_html_from_payload(cartaspresentacion_post_data($data));
+$html = CartaspresentacionPayload::listaHtmlFromPayload(CartaspresentacionPayload::postData($data));
 
-ajax_json_html($html['html_lista'] . $html['html_errores']);
+AjaxJsonSupport::html($html['html_lista'] . $html['html_errores']);

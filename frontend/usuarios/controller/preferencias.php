@@ -1,5 +1,7 @@
 <?php
 
+use frontend\usuarios\helpers\UsuariosPayload;
+use frontend\usuarios\helpers\UsuariosPostInput;
 use frontend\shared\AppInstalled;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
@@ -7,18 +9,17 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
-$prefData = usuarios_preferencias_from_payload(
-    usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_preferencias'))
+$prefData = UsuariosPayload::preferenciasFromPayload(
+    UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_preferencias'))
 );
 
 $cambios_installed = AppInstalled::is('cambios');
@@ -50,17 +51,17 @@ $oDesplOficinas->setOpciones($prefData['oficinas_posibles']);
 $oDesplOficinas->setOpcion_sel($prefData['oficina']);
 $oDesplOficinas->setBlanco(true);
 
-$localesData = usuarios_post_data(PostRequest::getDataFromUrl('/src/shared/locales_posibles'));
-$a_locales = usuarios_locales_from_payload($localesData);
+$localesData = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/shared/locales_posibles'));
+$a_locales = UsuariosPayload::localesFromPayload($localesData);
 $oDesplLocales = new Desplegable('idioma_nou', $a_locales, $prefData['idioma'], true);
 
 $opciones = DateTimeZone::listIdentifiers();
 $oDesplZonaGMT = new Desplegable();
 $oDesplZonaGMT->setNombre('zona_horaria_nou');
 $oDesplZonaGMT->setOpciones($opciones);
-$oDesplZonaGMT->setOpcion_sel(usuarios_zona_horaria_opcion_sel($prefData['zona_horaria']));
+$oDesplZonaGMT->setOpcion_sel(UsuariosPayload::zonaHorariaOpcionSel($prefData['zona_horaria']));
 
-$id_usuario = usuarios_session_auth_int('id_usuario');
+$id_usuario = UsuariosPostInput::sessionAuthInt('id_usuario');
 $url_avisos = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
 $url_avisos_lista = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => 1)));
 $url_avisos_mails = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => 2)));

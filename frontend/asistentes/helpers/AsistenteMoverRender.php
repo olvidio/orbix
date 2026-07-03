@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\asistentes\helpers;
 
-require_once __DIR__ . '/asistentes_support.php';
-
-use function frontend\shared\helpers\payload_string;
-
+use frontend\shared\helpers\FuncTablasSupport;
+use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
@@ -25,22 +23,22 @@ final class AsistenteMoverRender
     {
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $guardarRel = payload_string($paths, 'guardar');
+        $guardarRel = FuncTablasSupport::payloadString($paths, 'guardar');
         $payload['url_guardar'] = $guardarRel !== '' ? $base . '/' . ltrim($guardarRel, '/') : '';
 
         $hm = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         if ($hm !== []) {
             $oHash = new HashFront();
-            $cn = payload_string($hm, 'campos_no');
+            $cn = FuncTablasSupport::payloadString($hm, 'campos_no');
             if ($cn !== '') {
                 $oHash->setCamposNo($cn);
             }
-            $oHash->setCamposForm(payload_string($hm, 'campos_form'));
-            $hidden = asistentes_hash_campos_hidden($hm['campos_hidden'] ?? []);
+            $oHash->setCamposForm(FuncTablasSupport::payloadString($hm, 'campos_form'));
+            $hidden = AsistentesRenderSupport::hashCamposHidden($hm['campos_hidden'] ?? []);
             $oHash->setArrayCamposHidden($hidden);
             $payload['hash_campos_html'] = $oHash->getCamposHtml();
 
-            $opciones = notas_desplegable_opciones($payload['opciones_actividades'] ?? []);
+            $opciones = NotasFormSupport::desplegableOpciones($payload['opciones_actividades'] ?? []);
             $oDespl = new Desplegable();
             $oDespl->setNombre('id_activ');
             $oDespl->setOpciones($opciones);

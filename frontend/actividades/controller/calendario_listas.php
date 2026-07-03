@@ -1,4 +1,8 @@
 <?php
+
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Fragmento HTML con el calendario de actividades de casas / oficinas en un
  * periodo dado. Se invoca via AJAX y el resultado se inyecta en el DOM.
@@ -16,13 +20,10 @@
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
@@ -45,4 +46,4 @@ $data = PostRequest::getDataFromUrl('/src/actividades/calendario_listas_datos', 
     'id_cdc' => $Qaid_cdc,
 ]);
 
-echo tessera_imprimir_string($data['html'] ?? '');
+echo PayloadCoercion::string($data['html'] ?? '');

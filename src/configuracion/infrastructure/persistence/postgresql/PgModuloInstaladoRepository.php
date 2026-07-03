@@ -10,7 +10,6 @@ use PDO;
 use src\configuracion\domain\contracts\ModuloInstaladoRepositoryInterface;
 use src\configuracion\domain\entity\ModuloInstalado;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla m0_mods_installed_dl a la interfaz del repositorio

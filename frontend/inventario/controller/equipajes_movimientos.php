@@ -1,11 +1,12 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 
@@ -14,7 +15,7 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 $url_backend = '/src/inventario/equipajes_movimientos';
 $a_campos_backend = ['sel' => $a_sel];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$mov = inventario_movimientos_from_payload(inventario_post_payload($data));
+$mov = InventarioPayload::movimientosFromPayload(InventarioPayload::postPayload($data));
 
 $aCambios = $mov['aCambios'];
 $aLugaresPorEgm = $mov['aLugaresPorEgm'];
@@ -28,12 +29,12 @@ foreach ($aCambios as $id_equipaje => $aGrupos) {
         $html_out = '';
         if ($aINOUT['in'] !== []) {
             foreach ($aINOUT['in'] as $id_doc) {
-                $html_in .= '<tr><td></td><td></td><td></td><td>' . tessera_imprimir_string($id_doc) . '</td></tr>';
+                $html_in .= '<tr><td></td><td></td><td></td><td>' . PayloadCoercion::string($id_doc) . '</td></tr>';
             }
         }
         if ($aINOUT['out'] !== []) {
             foreach ($aINOUT['out'] as $id_doc) {
-                $html_out .= '<tr><td></td><td></td><td></td><td>' . tessera_imprimir_string($id_doc) . '</td></tr>';
+                $html_out .= '<tr><td></td><td></td><td></td><td>' . PayloadCoercion::string($id_doc) . '</td></tr>';
             }
         }
         $html_g = '';
@@ -57,4 +58,4 @@ foreach ($aCambios as $id_equipaje => $aGrupos) {
         $html_tot .= $html . '</table>';
     }
 }
-ajax_json_html($html_tot);
+AjaxJsonSupport::html($html_tot);

@@ -1,15 +1,15 @@
 <?php
 
+use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $Qid_item = (int)filter_input(INPUT_POST, 'id_item');
-$data = ubis_calendario_periodo_fields(ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/calendario_periodos_form_periodo_data', [
+$data = UbisPayload::calendarioPeriodoFields(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/calendario_periodos_form_periodo_data', [
     'id_item' => $Qid_item,
 ])));
 

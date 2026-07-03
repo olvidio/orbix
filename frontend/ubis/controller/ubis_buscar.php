@@ -1,18 +1,19 @@
 <?php
 
+use frontend\notas\helpers\NotasFormSupport;
+use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\FuncTablasSupport;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/ubis_buscar_data', []));
-$opciones = ubis_editar_opciones_from_payload($data);
-$opciones_pais = notas_desplegable_opciones($data['opciones_pais'] ?? []);
+$data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/ubis_buscar_data', []));
+$opciones = UbisPayload::editarOpcionesFromPayload($data);
+$opciones_pais = NotasFormSupport::desplegableOpciones($data['opciones_pais'] ?? []);
 
 $Qsimple = (int)filter_input(INPUT_POST, 'simple');
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
@@ -22,28 +23,28 @@ $simple = empty($Qsimple) ? 1 : $Qsimple;
 $tipo = empty($Qtipo) ? "tot" : $Qtipo;
 $loc = empty($Qloc) ? "tot" : $Qloc;
 
-$nomUbi = ubis_buscar_nom_ubi($tipo);
+$nomUbi = UbisPayload::buscarNomUbi($tipo);
 
 switch ($tipo) {
     case "ctrdl" :
-        $titulo = strtoupper_dlb(_("centros de la delegación"));
-        $tituloGros = strtoupper_dlb(_("¿qué centro te interesa?"));
+        $titulo = FuncTablasSupport::strtoupperDlb(_("centros de la delegación"));
+        $tituloGros = FuncTablasSupport::strtoupperDlb(_("¿qué centro te interesa?"));
         break;
     case "vu_ex" :
         $titulo = strtoupper(_("centros o casas de otras dl/r"));
-        $tituloGros = strtoupper_dlb(_("¿qué centro o casa te interesa?"));
+        $tituloGros = FuncTablasSupport::strtoupperDlb(_("¿qué centro o casa te interesa?"));
         break;
     case "ctrex" :
         $titulo = strtoupper(_("centros de otras dl/r"));
-        $tituloGros = strtoupper_dlb(_("¿qué centro te interesa?"));
+        $tituloGros = FuncTablasSupport::strtoupperDlb(_("¿qué centro te interesa?"));
         break;
     case "cdcdl" :
-        $titulo = strtoupper_dlb(_("casas de la delegación"));
-        $tituloGros = strtoupper_dlb(_("¿qué casa te interesa?"));
+        $titulo = FuncTablasSupport::strtoupperDlb(_("casas de la delegación"));
+        $tituloGros = FuncTablasSupport::strtoupperDlb(_("¿qué casa te interesa?"));
         break;
     case "cdcex" :
         $titulo = strtoupper(_("casas de otras dl/r"));
-        $tituloGros = strtoupper_dlb(_("¿qué casa te interesa?"));
+        $tituloGros = FuncTablasSupport::strtoupperDlb(_("¿qué casa te interesa?"));
         break;
     case "mail" :
         $titulo = ucfirst(_("buscar e-mails de los centros de la dl"));
@@ -51,7 +52,7 @@ switch ($tipo) {
         break;
     case "ctrsf" :
         $titulo = strtoupper(_("centros de la sf"));
-        $tituloGros = strtoupper_dlb(_("¿qué centro te interesa?"));
+        $tituloGros = FuncTablasSupport::strtoupperDlb(_("¿qué centro te interesa?"));
         break;
     default:
         $titulo = '';

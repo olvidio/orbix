@@ -1,5 +1,6 @@
 <?php
 
+use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\procesos\support\ProcesosHashes;
 use frontend\shared\PostRequest;
@@ -7,26 +8,24 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\Desplegable;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-$restored = list_nav_restore_selection_from_stack_post();
+$restored = ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !list_nav_id_sel_is_empty($restored['id_sel']) ? $restored['id_sel'] : list_nav_id_sel_from_post();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : list_nav_scroll_id_from_post();
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 // Si vengo por medio de Posicion, borro la última
 
 $data = PostRequest::getDataFromUrl('/src/procesos/procesos_select_data', []);
-$aTiposProceso = notas_desplegable_opciones($data['a_tipos_proceso'] ?? []);
+$aTiposProceso = NotasFormSupport::desplegableOpciones($data['a_tipos_proceso'] ?? []);
 
 $oDespl = new Desplegable();
 $oDespl->setOpciones($aTiposProceso);

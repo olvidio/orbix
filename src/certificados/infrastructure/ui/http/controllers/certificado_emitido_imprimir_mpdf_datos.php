@@ -1,8 +1,5 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\is_true;
-
 use frontend\shared\config\OrbixRuntime;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -20,6 +17,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /** @var CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository */
 $certificadoEmitidoRepository = DependencyResolver::get(CertificadoEmitidoRepositoryInterface::class);
@@ -30,7 +28,7 @@ $delegacionRepository = DependencyResolver::get(DelegacionRepositoryInterface::c
 /** @var PersonaNotaRepositoryInterface $personaNotaRepository */
 $personaNotaRepository = DependencyResolver::get(PersonaNotaRepositoryInterface::class);
 
-$id_item = input_int($_POST, 'id_item');
+$id_item = FuncTablasSupport::inputInt($_POST, 'id_item');
 $error_txt = '';
 $data = [];
 
@@ -47,7 +45,7 @@ $idioma = (string) ($oCertificadoEmitido->getIdiomaVo()?->value() ?? '');
 $certificado = (string) ($oCertificadoEmitido->getCertificado() ?? '');
 $f_certificado = $oCertificadoEmitido->getF_certificado()?->getFromLocal() ?? '';
 $firmado = $oCertificadoEmitido->isFirmado();
-$chk_firmado = is_true($firmado) ? 'checked' : '';
+$chk_firmado = FuncTablasSupport::isTrue($firmado) ? 'checked' : '';
 
 $oConfig = $_SESSION['oConfig'] ?? null;
 if (!$oConfig instanceof ConfigSnapshot) {

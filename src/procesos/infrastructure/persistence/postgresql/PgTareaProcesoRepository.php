@@ -13,8 +13,6 @@ use PDO;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\procesos\domain\entity\TareaProceso;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla a_tareas_proceso a la interfaz del repositorio
@@ -215,7 +213,7 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
             if (!array_key_exists($fase_tarea, $aFasesEstado)) {
                 exit (_("Hay que regenerar el proceso de la actividad"));
             } else {
-                if (is_true($aFasesEstado[$fase_tarea])) {
+                if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aFasesEstado[$fase_tarea])) {
                     $aFasesOn[$id_fase] = $status;
                 }
             }

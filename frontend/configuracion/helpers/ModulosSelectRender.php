@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\configuracion\helpers;
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\security\HashFront;
-
-require_once __DIR__ . '/configuracion_support.php';
 
 /**
  * Completa el JSON de {@see \src\configuracion\application\ModulosSelectData} para la vista.
@@ -21,12 +20,12 @@ final class ModulosSelectRender
     {
         $hm = isset($payload['hash_lista']) && is_array($payload['hash_lista']) ? $payload['hash_lista'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm(tessera_imprimir_string($hm['campos_form'] ?? ''));
-        $cn = tessera_imprimir_string($hm['campos_no'] ?? '');
+        $oHash->setCamposForm(PayloadCoercion::string($hm['campos_form'] ?? ''));
+        $cn = PayloadCoercion::string($hm['campos_no'] ?? '');
         if ($cn !== '') {
             $oHash->setCamposNo($cn);
         }
-        $hidden = configuracion_hash_campos_hidden($hm['campos_hidden'] ?? null);
+        $hidden = ConfiguracionPayload::hashCamposHidden($hm['campos_hidden'] ?? null);
         if ($hidden !== []) {
             $oHash->setArrayCamposHidden($hidden);
         }

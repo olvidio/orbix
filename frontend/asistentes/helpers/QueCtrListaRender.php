@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\asistentes\helpers;
 
-require_once __DIR__ . '/asistentes_support.php';
-
-use function frontend\shared\helpers\payload_string;
-
+use frontend\shared\helpers\FuncTablasSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
@@ -25,17 +22,17 @@ final class QueCtrListaRender
     {
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm(payload_string($hashMain, 'campos_form'));
-        $cn = payload_string($hashMain, 'campos_no');
+        $oHash->setCamposForm(FuncTablasSupport::payloadString($hashMain, 'campos_form'));
+        $cn = FuncTablasSupport::payloadString($hashMain, 'campos_no');
         if ($cn !== '') {
             $oHash->setCamposNo($cn);
         }
-        $hidden = asistentes_hash_campos_hidden($hashMain['campos_hidden'] ?? []);
+        $hidden = AsistentesRenderSupport::hashCamposHidden($hashMain['campos_hidden'] ?? []);
         $oHash->setArrayCamposHidden($hidden);
         $payload['hash_form_html'] = $oHash->getCamposHtml();
         unset($payload['hash_main']);
 
-        $pf = asistentes_periodo_form_config($payload['periodo_form'] ?? null);
+        $pf = AsistentesRenderSupport::periodoFormConfig($payload['periodo_form'] ?? null);
         if ($pf !== null) {
             $oFormP = new PeriodoQue();
             $oFormP->setFormName($pf['form_name']);
@@ -49,7 +46,7 @@ final class QueCtrListaRender
         }
         unset($payload['periodo_form']);
 
-        $action = payload_string($payload, 'action');
+        $action = FuncTablasSupport::payloadString($payload, 'action');
         if ($action !== '' && !str_starts_with($action, 'http://') && !str_starts_with($action, 'https://')) {
             $payload['action'] = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/' . ltrim($action, '/');
         }

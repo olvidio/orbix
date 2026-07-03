@@ -17,7 +17,7 @@ use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Matricula automaticamente a una o varias personas en las asignaturas
@@ -61,8 +61,8 @@ final class MatriculaAutomatica
             $sel = $a_sel[0];
             $Qid_nom = (int) strtok(is_scalar($sel) ? (string) $sel : '', '#');
         } else {
-            $Qid_nom = input_int($input, 'id_pau');
-            $Qid_activ = input_int($input, 'id_activ');
+            $Qid_nom = FuncTablasSupport::inputInt($input, 'id_pau');
+            $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
         }
 
         $mes = (int) date('m');
@@ -70,8 +70,8 @@ final class MatriculaAutomatica
         $oConfig = $_SESSION['oConfig'];
         $fin_m = $oConfig->getMesFinStgr();
         $any = ($mes > $fin_m) ? (int) date('Y') + 1 : (int) date('Y');
-        $inicurs_ca = \src\shared\domain\helpers\curso_est('inicio', $any)->format('Y-m-d');
-        $fincurs_ca = \src\shared\domain\helpers\curso_est('fin', $any)->format('Y-m-d');
+        $inicurs_ca = FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
+        $fincurs_ca = FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
 
         $aWhere = [];
         $aOperador = [];

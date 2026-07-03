@@ -1,5 +1,8 @@
 <?php
 
+use frontend\usuarios\helpers\UsuariosPayload;
+use frontend\usuarios\helpers\UsuariosPostInput;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use Endroid\QrCode\Builder\Builder;
@@ -13,15 +16,14 @@ use frontend\shared\web\UrlBaseProject;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$id_usuario = usuarios_session_auth_int('id_usuario');
-$usuario = usuarios_session_auth_string('username');
+$id_usuario = UsuariosPostInput::sessionAuthInt('id_usuario');
+$usuario = UsuariosPostInput::sessionAuthString('username');
 
-$faData = usuarios_2fa_info_from_payload(
-    usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_2fa_info', ['id_usuario' => $id_usuario]))
+$faData = UsuariosPayload::twoFaInfoFromPayload(
+    UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_2fa_info', ['id_usuario' => $id_usuario]))
 );
 $has_2fa = $faData['has_2fa'];
 $secret_2fa = $faData['secret_2fa'];
@@ -64,7 +66,7 @@ $txt_ok = _("se ha actualizado la configuraci?n de 2FA");
 $msg_2fa = '';
 $go_to = 'atras';
 if (isset($_SESSION['msg_2fa'])) {
-    $msg_2fa = tessera_imprimir_string($_SESSION['msg_2fa']);
+    $msg_2fa = PayloadCoercion::string($_SESSION['msg_2fa']);
     unset($_SESSION['msg_2fa']);
     $go_to = "fnjs_logout();";
 }

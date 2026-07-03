@@ -1,5 +1,4 @@
 <?php
-
 namespace frontend\personas\controller;
 
 use frontend\shared\config\AppUrlConfig;
@@ -7,6 +6,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Posicion;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Formulario de busqueda de personas.
@@ -17,7 +17,6 @@ use frontend\shared\FrontBootstrap;
  * `personas_select_telf.php`) se ha eliminado por enlace muerto.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 if (isset($_POST['stack'])) {
@@ -29,8 +28,8 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
 
 
 

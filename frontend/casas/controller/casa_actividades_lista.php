@@ -1,4 +1,8 @@
 <?php
+
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\casas\helpers\CasasPayload;
+
 /**
  * Controlador AJAX HTML: listado de actividades por casa y periodo
  * (`tipo_lista=lista_activ`).
@@ -8,9 +12,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -21,11 +23,11 @@ $campos = [
     'empiezamax' => (string)filter_input(INPUT_POST, 'empiezamax'),
 ];
 
-$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/casa_actividades_lista_data', $campos));
-$lista = casas_actividades_lista_from_payload($data);
+$data = CasasPayload::postData(PostRequest::getDataFromUrl('/src/casas/casa_actividades_lista_data', $campos));
+$lista = CasasPayload::actividadesListaFromPayload($data);
 
 $oLista = new Lista();
 $oLista->setGrupos($lista['grupos']);
 $oLista->setCabeceras($lista['cabeceras']);
 $oLista->setDatos($lista['valores']);
-ajax_json_html($oLista->listaPaginada());
+AjaxJsonSupport::html($oLista->listaPaginada());

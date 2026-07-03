@@ -1,18 +1,19 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\misas\application\CrearNuevoPeriodoData;
 use src\misas\application\support\MisasBuildInput;
 use src\shared\web\ContestarJson;
 
 $in = [
-    'id_zona' => filter_post('id_zona'),
-    'tipo_plantilla' => filter_post('tipo_plantilla'),
-    'seleccion' => filter_post('seleccion'),
-    'periodo' => filter_post('periodo'),
-    'empiezamin' => filter_post('empiezamin'),
-    'empiezamax' => filter_post('empiezamax'),
-    'orden' => filter_post('orden'),
+    'id_zona' => FilterPostGet::post('id_zona'),
+    'tipo_plantilla' => FilterPostGet::post('tipo_plantilla'),
+    'seleccion' => FilterPostGet::post('seleccion'),
+    'periodo' => FilterPostGet::post('periodo'),
+    'empiezamin' => FilterPostGet::post('empiezamin'),
+    'empiezamax' => FilterPostGet::post('empiezamax'),
+    'orden' => FilterPostGet::post('orden'),
 ];
 
 /** @var CrearNuevoPeriodoData $useCase */

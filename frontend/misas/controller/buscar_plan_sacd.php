@@ -1,20 +1,21 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\misas\support\PeriodoTdHelper;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\misas\helpers\MisasDesplegableSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/misas/buscar_plan_sacd_data');
 
 $a_sacd = $data['sacd_opciones'] ?? [];
-$sacd_selected = misas_string($data['sacd_selected'] ?? '');
+$sacd_selected = PayloadCoercion::string($data['sacd_selected'] ?? '');
 
 $periodo_td_html = PeriodoTdHelper::build([
     'esta_semana' => _('esta semana'),
@@ -27,7 +28,7 @@ $periodo_td_html = PeriodoTdHelper::build([
 
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setNombre('id_sacd');
-$oDesplSacd->setOpciones(misas_desplegable_opciones($a_sacd));
+$oDesplSacd->setOpciones(MisasDesplegableSupport::opciones($a_sacd));
 $oDesplSacd->setBlanco(false);
 $oDesplSacd->setAction('fnjs_ver_plan_sacd()');
 if ($sacd_selected !== '') {
@@ -52,4 +53,4 @@ $a_campos = [
     'msg' => $msg,
 ];
 
-ajax_json_render_phtml('frontend\\misas\\controller', 'buscar_plan_sacd.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', 'buscar_plan_sacd.phtml', $a_campos);

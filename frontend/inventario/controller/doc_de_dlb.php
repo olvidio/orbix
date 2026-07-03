@@ -1,22 +1,23 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 
 $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(($aGoBack ?? list_nav_build_return_parametros_from_post()), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
 
 $aGoBack = [
     'inventario' => $Qinventario,
@@ -30,12 +31,12 @@ $a_campos_backend = [
     'inventario' => $Qinventario,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$payload = inventario_post_payload($data);
-$view = inventario_doc_de_dlb_from_payload($payload);
+$payload = InventarioPayload::postPayload($data);
+$view = InventarioPayload::docDeDlbFromPayload($payload);
 
 $a_valores = $view['a_valores'];
 $a_grupos = $view['a_grupos'];
-$nombreDoc = tessera_imprimir_string($payload['nombreDoc'] ?? '');
+$nombreDoc = PayloadCoercion::string($payload['nombreDoc'] ?? '');
 
 $url_doc_mod = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_asignar_dlb.php?';
 $url_imprimir = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_imprimir_dlb.php?';

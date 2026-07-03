@@ -1,30 +1,31 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\procesos\helpers\ProcesosPostInput;
+use frontend\procesos\helpers\ProcesosPayload;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 
-$stackFromPost = list_nav_stack_from_post();
+$stackFromPost = ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
 if ($stackFromPost !== 0) {
-    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    list_nav_boot_actividad_select_child_recordar($oPosicion);
+    ListNavSupport::bootActividadSelectChildRecordar($oPosicion);
 }
-$sel = procesos_sel_tokens_from_post();
-list_nav_persist_actividad_select_child_entry(
+$sel = ProcesosPostInput::selTokensFromPost();
+ListNavSupport::persistActividadSelectChildEntry(
     $oPosicion,
     $sel['id'] > 0 ? ['id_activ' => $sel['id']] : [],
 );
@@ -33,7 +34,7 @@ $Qid_activ = $sel['id'];
 $data = PostRequest::getDataFromUrl('/src/procesos/actividad_proceso_data', [
     'id_activ' => $Qid_activ,
 ]);
-$nom_activ = tessera_imprimir_string($data['nom_activ'] ?? '');
+$nom_activ = PayloadCoercion::string($data['nom_activ'] ?? '');
 
 $aQuery = [
     'pau' => 'a',
@@ -46,7 +47,7 @@ $godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' .
 $alt = _("ver dossiers");
 $dos = _("dossiers");
 
-$permiso_calendario = procesos_have_perm_calendario();
+$permiso_calendario = ProcesosPayload::havePermCalendario();
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $url_generar = $apiBase . '/src/procesos/actividad_proceso_generar';

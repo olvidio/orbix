@@ -1,20 +1,21 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\misas\application\CuadriculaZonaGridData;
 use src\misas\application\support\MisasBuildInput;
 use src\shared\web\ContestarJson;
 
 $in = [
-    'id_zona' => filter_post('id_zona'),
-    'tipo_plantilla' => filter_post('tipo_plantilla'),
-    'periodo' => filter_post('periodo'),
-    'orden' => filter_post('orden'),
-    'empiezamin' => filter_post('empiezamin'),
-    'empiezamax' => filter_post('empiezamax'),
-    'fila' => filter_post('fila'),
-    'columna' => filter_post('columna'),
-    'seleccion' => filter_post('seleccion'),
+    'id_zona' => FilterPostGet::post('id_zona'),
+    'tipo_plantilla' => FilterPostGet::post('tipo_plantilla'),
+    'periodo' => FilterPostGet::post('periodo'),
+    'orden' => FilterPostGet::post('orden'),
+    'empiezamin' => FilterPostGet::post('empiezamin'),
+    'empiezamax' => FilterPostGet::post('empiezamax'),
+    'fila' => FilterPostGet::post('fila'),
+    'columna' => FilterPostGet::post('columna'),
+    'seleccion' => FilterPostGet::post('seleccion'),
 ];
 
 /** @var CuadriculaZonaGridData $useCase */

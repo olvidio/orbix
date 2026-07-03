@@ -1,7 +1,5 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 /**
  * JSON para {@see \src\configuracion\application\ModulosFormData}.
  * HTML de hash: {@see \frontend\configuracion\helpers\ModulosFormRender}.

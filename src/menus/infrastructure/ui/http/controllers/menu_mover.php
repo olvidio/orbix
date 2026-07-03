@@ -1,14 +1,12 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\menus\application\MenuMover;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FuncTablasSupport;
 
-$Qid_menu = input_int($_POST, 'id_menu');
-$Qgm_new = input_string($_POST, 'gm_new');
+$Qid_menu = FuncTablasSupport::inputInt($_POST, 'id_menu');
+$Qgm_new = FuncTablasSupport::inputString($_POST, 'gm_new');
 
 $error_txt = '';
 

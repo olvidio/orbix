@@ -1,23 +1,26 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\actividadestudios\helpers\E43Payload;
+use frontend\actividadestudios\helpers\ActividadestudiosPostInput;
+use frontend\actividadestudios\helpers\ActividadestudiosRenderSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/actividadestudios_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_e43_parent_return_to_posicion($oPosicion, 1);
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistE43ParentReturnToPosicion($oPosicion, 1);
 
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
-$Qid_nom = actividadestudios_id_nom_from_sel_post()['id_nom'];
+$Qid_nom = ActividadestudiosPostInput::idNom()['id_nom'];
 
-$d = actividadestudios_e43_from_payload(actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/e43_data', [
+$d = E43Payload::fromPayload(ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/e43_data', [
     'id_nom' => $Qid_nom,
     'id_activ' => $Qid_activ,
 ])));
@@ -36,7 +39,7 @@ $oHash->setCamposForm('id_nom!id_activ');
 $h = $oHash->linkSinVal();
 
 if ($msg_err !== '') {
-    actividadestudios_echo_string($msg_err . '<br><br>');
+    echo PayloadCoercion::string($msg_err . '<br><br>');
 }
 
 $a_campos = ['oPosicion' => $oPosicion,

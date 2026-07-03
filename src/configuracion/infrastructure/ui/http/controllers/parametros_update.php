@@ -1,23 +1,21 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 use src\configuracion\domain\entity\ConfigSchema;
 use src\configuracion\domain\value_objects\ConfigParametroCode;
 use src\configuracion\domain\value_objects\ConfigValor;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FuncTablasSupport;
 
-$Qparametro = input_string($_POST, 'parametro');
-$Qvalor = input_string($_POST, 'valor');
+$Qparametro = FuncTablasSupport::inputString($_POST, 'parametro');
+$Qvalor = FuncTablasSupport::inputString($_POST, 'valor');
 
 if ($Qparametro === 'curso_stgr' || $Qparametro === 'curso_crt') {
-    $Qini_dia = input_int($_POST, 'ini_dia');
-    $Qini_mes = input_int($_POST, 'ini_mes');
-    $Qfin_dia = input_int($_POST, 'fin_dia');
-    $Qfin_mes = input_int($_POST, 'fin_mes');
+    $Qini_dia = FuncTablasSupport::inputInt($_POST, 'ini_dia');
+    $Qini_mes = FuncTablasSupport::inputInt($_POST, 'ini_mes');
+    $Qfin_dia = FuncTablasSupport::inputInt($_POST, 'fin_dia');
+    $Qfin_mes = FuncTablasSupport::inputInt($_POST, 'fin_mes');
     $aCursoStgr = [
         'ini_dia' => $Qini_dia,
         'ini_mes' => $Qini_mes,

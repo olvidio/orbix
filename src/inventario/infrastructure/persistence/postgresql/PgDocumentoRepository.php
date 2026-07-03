@@ -12,7 +12,6 @@ use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\entity\Documento;
 use src\inventario\domain\value_objects\DocumentoId;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla i_documentos_dl a la interfaz del repositorio
@@ -171,17 +170,17 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         $aDatos['f_eliminado'] = (new ConverterDate('date', $Documento->getF_eliminado()))->toPg();
         array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['en_busqueda'])) {
+        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aDatos['en_busqueda'])) {
             $aDatos['en_busqueda'] = 'true';
         } else {
             $aDatos['en_busqueda'] = 'false';
         }
-        if (is_true($aDatos['perdido'])) {
+        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aDatos['perdido'])) {
             $aDatos['perdido'] = 'true';
         } else {
             $aDatos['perdido'] = 'false';
         }
-        if (is_true($aDatos['eliminado'])) {
+        if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($aDatos['eliminado'])) {
             $aDatos['eliminado'] = 'true';
         } else {
             $aDatos['eliminado'] = 'false';

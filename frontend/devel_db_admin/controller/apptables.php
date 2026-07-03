@@ -2,6 +2,7 @@
 
 namespace frontend\devel_db_admin\controller;
 
+use frontend\devel_db_admin\helpers\DevelDbAdminPayload;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
@@ -20,12 +21,11 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/devel_db_admin/helpers/devel_db_admin_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $appsPayload = PostRequest::getDataFromUrl('/src/devel_db_admin/apptables_apps_data', []);
-$a_apps = devel_db_admin_desplegable_opciones($appsPayload['a_apps'] ?? []);
+$a_apps = DevelDbAdminPayload::desplegableOpciones($appsPayload['a_apps'] ?? []);
 
 $oDeslpApps = new Desplegable([], ['_ordre' => 'id_app']);
 $oDeslpApps->setNombre('id_app');

@@ -1,10 +1,12 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
+use frontend\certificados\helpers\CertificadosMpdfRender;
+use frontend\certificados\helpers\CertificadosPayload;
 
-require_once __DIR__ . '/../helpers/certificados_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -14,18 +16,18 @@ $Qid_item = is_int($idItemRaw) ? $idItemRaw : 0;
 
 require_once __DIR__ . '/certificado_emitido_aviso_html.php';
 
-$payload = certificados_post_data(PostRequest::getDataFromUrl(
+$payload = CertificadosPayload::postData(PostRequest::getDataFromUrl(
     '/src/certificados/certificado_emitido_imprimir_mpdf_datos',
     ['id_item' => $Qid_item],
     false,
 ));
 if (!empty($payload['error'])) {
     certificado_emitido_echo_aviso_y_salir(
-        PostRequest::stripInternalCallProvenance(tessera_imprimir_string($payload['error']))
+        PostRequest::stripInternalCallProvenance(PayloadCoercion::string($payload['error']))
     );
 }
 
-$mpdf = certificados_mpdf_from_payload($payload);
+$mpdf = CertificadosMpdfRender::fromPayload($payload);
 $id_nom = $mpdf['id_nom'];
 $nom = $mpdf['nom'];
 $certificado = $mpdf['certificado'];
@@ -49,7 +51,7 @@ $mpdfLabels = [
     'pie_ects' => $mpdf['pie_ects'],
 ];
 
-$rowEmpty = certificados_mpdf_empty_aprobada_row();
+$rowEmpty = CertificadosMpdfRender::emptyAprobadaRow();
 ?>
 <head>
     <?php include_once(OrbixRuntime::dirEstilos() . '/certificado_mpdf.css.php'); ?>
@@ -83,7 +85,7 @@ $rowEmpty = certificados_mpdf_empty_aprobada_row();
         $a = 0;
         $j = 0;
         reset($aAprobadas);
-        $row = certificados_current_aprobada_row($aAprobadas, $rowEmpty);
+        $row = CertificadosMpdfRender::currentAprobadaRow($aAprobadas, $rowEmpty);
         while ($a < count($cAsignaturas)) {
             $oAsignatura = $cAsignaturas[$a++];
             while (($row['id_nivel_asig'] < $oAsignatura['id_nivel']) && ($j < $num_asig)) {
@@ -94,13 +96,13 @@ $rowEmpty = certificados_mpdf_empty_aprobada_row();
                 if (next($aAprobadas) === false) {
                     break;
                 }
-                $row = certificados_current_aprobada_row($aAprobadas, $rowEmpty);
+                $row = CertificadosMpdfRender::currentAprobadaRow($aAprobadas, $rowEmpty);
                 $j++;
             }
             while (($oAsignatura['id_nivel'] < $row['id_nivel_asig']) && ($row['id_nivel'] < 2434)) {
                 $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                 $etcs = number_format(($oAsignatura['creditos'] * 2), 0);
-                certificados_mpdf_titulo($oAsignatura['id_nivel'], $mpdfLabels);
+                CertificadosMpdfRender::titulo($oAsignatura['id_nivel'], $mpdfLabels);
                 ?>
                 <tr style="vertical-align: text-bottom">
                     <td></td>
@@ -114,7 +116,7 @@ $rowEmpty = certificados_mpdf_empty_aprobada_row();
             }
 
             if ($oAsignatura['id_nivel'] === $row['id_nivel_asig']) {
-                certificados_mpdf_titulo($oAsignatura['id_nivel'], $mpdfLabels);
+                CertificadosMpdfRender::titulo($oAsignatura['id_nivel'], $mpdfLabels);
                 if ($row['id_asignatura'] > 3000 && $row['id_asignatura'] < 9000) {
                     $nombre_asignatura = strtr($row['nombre_asignatura'], $replace);
                     $algo = $oAsignatura['nombre_asignatura'] . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $nombre_asignatura;
@@ -143,7 +145,7 @@ $rowEmpty = certificados_mpdf_empty_aprobada_row();
             } elseif ($row['id_nivel'] === 0 || ($j === $num_asig)) {
                 $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                 $etcs = number_format(($oAsignatura['creditos'] * 2), 0);
-                certificados_mpdf_titulo($oAsignatura['id_asignatura'], $mpdfLabels);
+                CertificadosMpdfRender::titulo($oAsignatura['id_asignatura'], $mpdfLabels);
                 ?>
                 <tr>
                     <td></td>

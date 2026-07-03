@@ -4,8 +4,7 @@ namespace frontend\shared\web;
 
 use frontend\actividades\helpers\ActividadStatusId;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
-use function frontend\shared\helpers\curso_est;
-
+use frontend\shared\helpers\FuncTablasSupport;
 class BotonesCurso
 {
     /** @var array<string, mixed> */
@@ -53,8 +52,8 @@ class BotonesCurso
             $finM = $oConfig->getMesFinStgr();
         }
         $any = ($mes > $finM) ? (int) date('Y') + 1 : (int) date('Y');
-        $inicurs_ca = curso_est('inicio', $any)->format('Y-m-d');
-        $fincurs_ca = curso_est('fin', $any)->format('Y-m-d');
+        $inicurs_ca = FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
+        $fincurs_ca = FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
 
         $this->aWhere = [];
         $this->aOperator = [];

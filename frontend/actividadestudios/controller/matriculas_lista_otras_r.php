@@ -1,5 +1,9 @@
 <?php
 
+use frontend\actividadestudios\helpers\ActividadestudiosListaSupport;
+use frontend\actividadestudios\helpers\MatriculasListaPayload;
+use frontend\actividadestudios\helpers\ActividadestudiosRenderSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
@@ -7,10 +11,9 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 
 $Qid_sel = null;
@@ -26,8 +29,8 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 if (!(OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r')) {
@@ -35,8 +38,8 @@ if (!(OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r'))
 }
 
 $aviso = '';
-$Qmod = tessera_imprimir_string(filter_input(INPUT_POST, 'mod'));
-$Qapellido1 = tessera_imprimir_string(filter_input(INPUT_POST, 'apellido1'));
+$Qmod = PayloadCoercion::string(filter_input(INPUT_POST, 'mod'));
+$Qapellido1 = PayloadCoercion::string(filter_input(INPUT_POST, 'apellido1'));
 
 $a_botones = array(
     array('txt' => _("imprimir certificado"), 'click' => "fnjs_imp_certificado(this.form)"),
@@ -53,11 +56,11 @@ $a_cabeceras = array(
 $titulo_busqueda_por_apellidos = _("búsqueda por apellidos");
 $titulo = '';
 
-$raw = actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_lista_otras_r_data', [
+$raw = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_lista_otras_r_data', [
     'apellido1' => $Qapellido1,
 ], false));
 if (!empty($raw['error'])) {
-    $errorHtml = PostRequest::stripInternalCallProvenance(tessera_imprimir_string($raw['error']));
+    $errorHtml = PostRequest::stripInternalCallProvenance(PayloadCoercion::string($raw['error']));
     if (str_contains($errorHtml, _('Delegaciones no dadas de alta'))
         || str_contains($errorHtml, 'Delegaciones no dadas de alta')
         || str_contains($errorHtml, _('Delegaciones sin región del stgr'))
@@ -67,9 +70,9 @@ if (!empty($raw['error'])) {
         echo $errorHtml;
         return;
     }
-    $lista = actividadestudios_matriculas_lista_otras_r_from_payload([]);
+    $lista = MatriculasListaPayload::fromPayloadOtrasR([]);
 } else {
-    $lista = actividadestudios_matriculas_lista_otras_r_from_payload($raw);
+    $lista = MatriculasListaPayload::fromPayloadOtrasR($raw);
     if ($lista['aviso'] !== '') {
         $aviso = $lista['aviso'];
     }
@@ -77,7 +80,7 @@ if (!empty($raw['error'])) {
 
 $titulo = $lista['titulo'];
 $msg_err = $lista['msg_err'];
-$a_valores = actividadestudios_lista_valores($lista['a_valores'], $Qid_sel, $Qscroll_id);
+$a_valores = ActividadestudiosListaSupport::valores($lista['a_valores'], $Qid_sel, $Qscroll_id);
 
 $oHash = new HashFront();
 $oHash->setCamposNo('sel!mod!pau!scroll_id!id_sel!id_pau');
@@ -90,7 +93,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 if ($msg_err !== '') {
-    actividadestudios_echo_string($msg_err);
+    echo PayloadCoercion::string($msg_err);
 }
 
 $oTabla = new Lista();

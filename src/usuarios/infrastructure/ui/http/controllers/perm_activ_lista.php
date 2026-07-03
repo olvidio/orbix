@@ -1,5 +1,7 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
@@ -9,9 +11,7 @@ use src\procesos\domain\PermAccionBits;
 use src\procesos\domain\PermAfectadosBits;
 use src\shared\web\ContestarJson;
 use src\actividades\domain\entity\TiposActividades;
-use function src\shared\domain\helpers\is_true;
-
-$Qid_usuario = (string)filter_post('id_usuario');
+$Qid_usuario = (string)FilterPostGet::post('id_usuario');
 
 $PermUsuarioActividadRepository = DependencyResolver::get(PermUsuarioActividadRepositoryInterface::class);
 $aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt, afecta_a'];
@@ -69,7 +69,7 @@ foreach ($cUsuarioPermArray as $aUsuarioPerm) {
     $perm_on = $aUsuarioPerm['perm_on'];
     $perm_off = $aUsuarioPerm['perm_off'];
 
-    if (is_true($dl_propia)) {
+    if (FuncTablasSupport::isTrue($dl_propia)) {
         if (str_starts_with($id_tipo_activ_txt, '1')) { //sv
             $dl_propia_txt = ConfigGlobal::mi_dele();
         } else { //sf

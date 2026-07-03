@@ -5,12 +5,12 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\zonassacd\helpers\ZonassacdPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/zonassacd/helpers/zonassacd_support.php';
 
 FrontBootstrap::boot();
-$page = zonassacd_page_from_payload(PostRequest::getDataFromUrl('/src/zonassacd/zona_sacd'));
+$page = ZonassacdPayload::pageFromPayload(PostRequest::getDataFromUrl('/src/zonassacd/zona_sacd'));
 
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($page['a_opciones']);

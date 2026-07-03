@@ -19,7 +19,7 @@ use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\Ubi;
 use src\actividades\domain\entity\TiposActividades;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Widget del dossier `3101` (codigo `asistentes_a_una_actividad`):
@@ -398,9 +398,9 @@ class Select_asistentes_a_una_actividad
                     }
                 }
 
-                $chk_propio = is_true($propio) ? _("sí") : _("no");
-                $chk_falta = is_true($falta) ? _("sí") : _("no");
-                $chk_est_ok = is_true($est_ok) ? _("sí") : _("no");
+                $chk_propio = FuncTablasSupport::isTrue($propio) ? _("sí") : _("no");
+                $chk_falta = FuncTablasSupport::isTrue($falta) ? _("sí") : _("no");
+                $chk_est_ok = FuncTablasSupport::isTrue($est_ok) ? _("sí") : _("no");
                 $asis = "t";
 
                 $oTipoActiv = new TiposActividades($this->id_tipo_activ);
@@ -533,9 +533,9 @@ class Select_asistentes_a_una_actividad
                 }
             }
 
-            $chk_propio = is_true($propio) ? _("sí") : _("no");
-            $chk_falta = is_true($falta) ? _("sí") : _("no");
-            $chk_est_ok = is_true($est_ok) ? _("sí") : _("no");
+            $chk_propio = FuncTablasSupport::isTrue($propio) ? _("sí") : _("no");
+            $chk_falta = FuncTablasSupport::isTrue($falta) ? _("sí") : _("no");
+            $chk_est_ok = FuncTablasSupport::isTrue($est_ok) ? _("sí") : _("no");
 
             $a_val = [];
             $a_val['sel'] = $this->permiso == 3 ? "$id_nom" : "";

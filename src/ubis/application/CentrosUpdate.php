@@ -2,13 +2,9 @@
 
 namespace src\ubis\application;
 
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_int;
-
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
-use function src\shared\domain\helpers\is_true;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 final class CentrosUpdate
 {
     public function __construct(
@@ -27,7 +23,7 @@ final class CentrosUpdate
      */
     public function execute(array $input): string
     {
-        $Qid_ubi = input_int($input, 'id_ubi');
+        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
         if ($Qid_ubi === 0) {
             return '';
         }
@@ -65,7 +61,7 @@ final class CentrosUpdate
      */
     private function isLaborUpdate(array $input): bool
     {
-        return input_string($input, 'labor') === 'si';
+        return FuncTablasSupport::inputString($input, 'labor') === 'si';
     }
 
     /**
@@ -93,7 +89,7 @@ final class CentrosUpdate
      */
     private function applyLabor(CentroDl $oCentro, array $input): void
     {
-        $oCentro->setTipo_ctr(input_string($input, 'tipo_ctr'));
+        $oCentro->setTipo_ctr(FuncTablasSupport::inputString($input, 'tipo_ctr'));
 
         $aTipo_labor = $input['tipo_labor'] ?? [];
         if (!is_array($aTipo_labor)) {
@@ -118,9 +114,9 @@ final class CentrosUpdate
      */
     private function applyNum(CentroDl $oCentro, array $input): void
     {
-        $oCentro->setN_buzon(input_int($input, 'n_buzon'));
-        $oCentro->setNum_pi(input_int($input, 'num_pi'));
-        $oCentro->setNum_cartas(input_int($input, 'num_cartas'));
+        $oCentro->setN_buzon(FuncTablasSupport::inputInt($input, 'n_buzon'));
+        $oCentro->setNum_pi(FuncTablasSupport::inputInt($input, 'num_pi'));
+        $oCentro->setNum_cartas(FuncTablasSupport::inputInt($input, 'num_cartas'));
     }
 
     /**
@@ -128,8 +124,8 @@ final class CentrosUpdate
      */
     private function applyPlazas(CentroDl $oCentro, array $input): void
     {
-        $oCentro->setNum_habit_indiv(input_int($input, 'num_habit_indiv'));
-        $oCentro->setPlazas(input_int($input, 'plazas'));
-        $oCentro->setSede(is_true(input_string($input, 'sede')));
+        $oCentro->setNum_habit_indiv(FuncTablasSupport::inputInt($input, 'num_habit_indiv'));
+        $oCentro->setPlazas(FuncTablasSupport::inputInt($input, 'plazas'));
+        $oCentro->setSede(FuncTablasSupport::isTrue(FuncTablasSupport::inputString($input, 'sede')));
     }
 }

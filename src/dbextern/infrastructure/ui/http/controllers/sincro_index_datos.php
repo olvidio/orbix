@@ -3,9 +3,8 @@
 use src\dbextern\application\SincroIndexData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_string;
-
-$tipo_persona = input_string($_POST, 'tipo');
+use src\shared\domain\helpers\FuncTablasSupport;
+$tipo_persona = FuncTablasSupport::inputString($_POST, 'tipo');
 
 $data = DependencyResolver::get(SincroIndexData::class)($tipo_persona);
 

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace frontend\asistentes\helpers;
 
-require_once __DIR__ . '/asistentes_support.php';
-
 use frontend\shared\web\Lista;
 
 /**
@@ -19,13 +17,13 @@ final class TablaPeticionesRender
      */
     public static function enrich(array $payload): array
     {
-        $tabla = asistentes_tabla_peticiones_from_payload($payload);
+        $tabla = AsistentesTablaPeticionesSupport::fromPayload($payload);
         $a_valores = $tabla['valores'];
         foreach ($a_valores as $k => $fila) {
             if (!is_int($k) || !is_array($fila)) {
                 continue;
             }
-            $a_valores[$k] = asistentes_tabla_peticiones_resolve_cell($fila, $tabla['api_save_url']);
+            $a_valores[$k] = AsistentesTablaPeticionesSupport::resolveCell($fila, $tabla['api_save_url']);
         }
 
         $oTabla = new Lista();

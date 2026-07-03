@@ -8,7 +8,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Servicio de aplicación para gestionar el resumen de plazas de actividades.
@@ -535,7 +535,7 @@ class ResumenPlazasService
         $publicado = $oActividad->isPublicado();
         // Si no está publicada no tiene plazas de calendario.
         // Se toman todas la de la actividad como propias.
-        if (!is_true($publicado)) {
+        if (!FuncTablasSupport::isTrue($publicado)) {
             $pl_propias = $this->getPlazasTotales();
         } else {
             // las que me corresponden por calendario - las cedidas

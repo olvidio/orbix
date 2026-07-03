@@ -36,9 +36,6 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
-        '8fad53453774bd862429f2a16f3233f3' => __DIR__ . '/../../..' . '/frontend/shared/helpers/func_tablas.php',
-        'bdd9b8a407e50bcd33960c6c3fbec910' => __DIR__ . '/../../..' . '/src/shared/domain/helpers/func_tablas.php',
-        '0e39366ecddfc531b4b60991013b4e31' => __DIR__ . '/../../..' . '/src/shared/domain/helpers/func_input.php',
     );
 
     public static $prefixLengthsPsr4 = array (

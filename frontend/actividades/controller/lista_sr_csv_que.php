@@ -1,4 +1,9 @@
 <?php
+
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Pantalla del formulario para listados particulares de SR.
  *
@@ -20,13 +25,10 @@ use frontend\shared\web\PeriodoQue;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
@@ -49,13 +51,13 @@ $aOpciones = [
 
 $data = PostRequest::getDataFromUrl('/src/actividades/lista_sr_csv_que_datos', []);
 if (empty($Qperiodo)) {
-    $Qperiodo = tessera_imprimir_string($data['periodo'] ?? 'curso_ca');
+    $Qperiodo = PayloadCoercion::string($data['periodo'] ?? 'curso_ca');
 }
-$sel_ubis = tessera_imprimir_string($data['sel_ubis'] ?? '');
-$chk_status_1 = tessera_imprimir_string($data['chk_status_1'] ?? '');
-$chk_status_2 = tessera_imprimir_string($data['chk_status_2'] ?? '');
-$chk_activ_crt = tessera_imprimir_string($data['chk_activ_crt'] ?? '');
-$chk_activ_cv = tessera_imprimir_string($data['chk_activ_cv'] ?? '');
+$sel_ubis = PayloadCoercion::string($data['sel_ubis'] ?? '');
+$chk_status_1 = PayloadCoercion::string($data['chk_status_1'] ?? '');
+$chk_status_2 = PayloadCoercion::string($data['chk_status_2'] ?? '');
+$chk_activ_crt = PayloadCoercion::string($data['chk_activ_crt'] ?? '');
+$chk_activ_cv = PayloadCoercion::string($data['chk_activ_cv'] ?? '');
 
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('modifica');
@@ -67,7 +69,7 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oForm = new CasasQue();
-$oForm->setTitulo(\src\shared\domain\helpers\strtoupper_dlb(_("ocupación de casas compartidas")));
+$oForm->setTitulo(FuncTablasSupport::strtoupperDlb(_("ocupación de casas compartidas")));
 $oForm->setCasas('casa');
 $oForm->setFiltroCasas(['active' => true]);
 $oForm->setSeleccionados($sel_ubis);

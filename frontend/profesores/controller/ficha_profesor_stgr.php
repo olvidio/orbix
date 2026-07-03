@@ -3,17 +3,19 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
+use frontend\profesores\helpers\ProfesoresPermSupport;
+use frontend\profesores\helpers\ProfesoresPostInput;
+use frontend\profesores\helpers\ProfesoresUrlSigning;
+use frontend\profesores\helpers\ProfesoresPayload;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/profesores_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
-$sel = profesores_id_from_sel_post();
+$sel = ProfesoresPostInput::idFromSelPost();
 $id_nom = $sel['id_nom'];
 $Qid_tabla = $sel['id_tabla'];
 
@@ -31,7 +33,7 @@ $Qdepende = (string)filter_input(INPUT_POST, 'depende');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qprint = (int)filter_input(INPUT_POST, 'print');
 
-$oPerm = profesores_o_perm();
+$oPerm = ProfesoresPermSupport::oPerm();
 if ($oPerm !== null && $oPerm->have_perm_oficina('est')) {
     $Qpermiso = '3';
 }
@@ -48,18 +50,18 @@ if (!empty($data['error'])) {
     exit($data['error']);
 }
 
-$goCosasLinkSpecs = profesores_go_cosas_link_specs($data['go_cosas_link_specs'] ?? null);
+$goCosasLinkSpecs = ProfesoresUrlSigning::goCosasLinkSpecs($data['go_cosas_link_specs'] ?? null);
 $fichaSelfLinkSpec = $data['ficha_self_link_spec'] ?? null;
 unset($data['go_cosas_link_specs'], $data['ficha_self_link_spec']);
 
-$data['go_cosas'] = profesores_go_cosas_from_specs($fichaSelfLinkSpec, $goCosasLinkSpecs);
+$data['go_cosas'] = ProfesoresUrlSigning::goCosasFromSpecs($fichaSelfLinkSpec, $goCosasLinkSpecs);
 
 $Qprint = !empty($data['use_print_phtml']) ? 1 : 0;
 unset($data['use_print_phtml']);
 
 echo $oPosicion->mostrar_left_slide(1);
 
-$viewVars = profesores_ficha_view_vars($data);
+$viewVars = ProfesoresPayload::fichaViewVars($data);
 
 $oView = new ViewNewPhtml('frontend\profesores\controller');
 if (!empty($Qprint)) {

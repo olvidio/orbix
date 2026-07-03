@@ -1,13 +1,13 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $Qid_item_h = (int)filter_input(INPUT_POST, 'id_item_h');
@@ -16,8 +16,8 @@ $data = PostRequest::getDataFromUrl('/src/misas/horario_tarea_data', [
     'id_item_h' => $Qid_item_h,
 ]);
 
-$t_start = misas_string($data['t_start'] ?? '');
-$t_end = misas_string($data['t_end'] ?? '');
+$t_start = PayloadCoercion::string($data['t_start'] ?? '');
+$t_end = PayloadCoercion::string($data['t_end'] ?? '');
 
 $url_guardar = AppUrlConfig::getApiBaseUrl() . '/src/misas/guardar_horario';
 $oHash = new HashFront();
@@ -40,4 +40,4 @@ $a_campos = [
     'param_quitar' => $param_quitar,
 ];
 
-ajax_json_render_phtml('frontend\\misas\\controller', 'horario_tarea.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', 'horario_tarea.phtml', $a_campos);

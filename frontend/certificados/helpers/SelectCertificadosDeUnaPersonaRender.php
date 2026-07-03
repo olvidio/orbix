@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace frontend\certificados\helpers;
 
-require_once __DIR__ . '/certificados_support.php';
-
+use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
@@ -26,18 +26,18 @@ final class SelectCertificadosDeUnaPersonaRender
     {
         $paths = isset($seg['paths']) && is_array($seg['paths']) ? $seg['paths'] : [];
         $publicBase = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $delRel = tessera_imprimir_string($paths['certificado_recibido_delete'] ?? '');
+        $delRel = PayloadCoercion::string($paths['certificado_recibido_delete'] ?? '');
         $urlCertificadoRecibidoDelete = $delRel !== '' ? $publicBase . '/' . ltrim($delRel, '/') : '';
 
         $tablaSeg = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
-        $valoresRaw = actividades_lista_datos($tablaSeg['valores'] ?? []);
+        $valoresRaw = ActividadesListaSupport::datos($tablaSeg['valores'] ?? []);
 
         $pdfSignedUrls = [];
         foreach ($valoresRaw as $idx => $row) {
             if (!is_int($idx) || !is_array($row) || !isset($row['sel'])) {
                 continue;
             }
-            $idItem = tessera_imprimir_int($row['sel']);
+            $idItem = PayloadCoercion::int($row['sel']);
             if ($idItem <= 0) {
                 continue;
             }
@@ -50,19 +50,19 @@ final class SelectCertificadosDeUnaPersonaRender
 
         $hashMain = isset($seg['hash_main']) && is_array($seg['hash_main']) ? $seg['hash_main'] : [];
         $oHashSelect = new HashFront();
-        $cf = tessera_imprimir_string($hashMain['campos_form'] ?? '');
+        $cf = PayloadCoercion::string($hashMain['campos_form'] ?? '');
         if ($cf !== '') {
             $oHashSelect->setCamposForm($cf);
         }
-        $oHashSelect->setCamposNo(tessera_imprimir_string($hashMain['campos_no'] ?? ''));
-        $oHashSelect->setArrayCamposHidden(certificados_hash_campos_hidden($hashMain['campos_hidden'] ?? []));
+        $oHashSelect->setCamposNo(PayloadCoercion::string($hashMain['campos_no'] ?? ''));
+        $oHashSelect->setArrayCamposHidden(CertificadosPayload::hashCamposHidden($hashMain['campos_hidden'] ?? []));
 
         $tabla = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
         $oTabla = new Lista();
-        $oTabla->setId_tabla(tessera_imprimir_string($tabla['id_tabla'] ?? 'select_certificados_de_una_persona'));
-        $oTabla->setCabeceras(actividades_lista_cabeceras($tabla['cabeceras'] ?? []));
-        $oTabla->setBotones(actividades_lista_botones($tabla['botones'] ?? []));
-        $oTabla->setDatos(actividades_lista_datos($tabla['valores'] ?? []));
+        $oTabla->setId_tabla(PayloadCoercion::string($tabla['id_tabla'] ?? 'select_certificados_de_una_persona'));
+        $oTabla->setCabeceras(ActividadesListaSupport::cabeceras($tabla['cabeceras'] ?? []));
+        $oTabla->setBotones(ActividadesListaSupport::botones($tabla['botones'] ?? []));
+        $oTabla->setDatos(ActividadesListaSupport::datos($tabla['valores'] ?? []));
 
         $oView = new ViewNewPhtml('frontend\certificados\view');
 

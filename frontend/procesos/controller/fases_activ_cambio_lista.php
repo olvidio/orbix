@@ -1,32 +1,34 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\actividades\helpers\ActividadesListaSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\procesos\helpers\ProcesosPayload;
 
-require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 
 $requestPayload = PostRequest::requestPayloadForHash();
 
-$oPosicion->setParametros(procesos_fases_activ_cambio_goback($requestPayload), 0);
+$oPosicion->setParametros(ProcesosPayload::fasesActivCambioGoback($requestPayload), 0);
 
 $data = PostRequest::getDataFromUrl('/src/procesos/fases_activ_cambio_lista', $requestPayload);
 
-$error = tessera_imprimir_string($data['error'] ?? '');
+$error = PayloadCoercion::string($data['error'] ?? '');
 if ($error !== '') {
-    ajax_json_html('<h2>' . $error . '</h2>', $error);
+    AjaxJsonSupport::html('<h2>' . $error . '</h2>', $error);
 }
 
-$msg = tessera_imprimir_string($data['msg'] ?? '');
-$accion = tessera_imprimir_string($data['accion'] ?? '');
-$id_fase_nueva = tessera_imprimir_string($data['id_fase_nueva'] ?? '');
-$a_cabeceras = actividades_lista_cabeceras($data['a_cabeceras'] ?? null);
-$a_valores = actividades_lista_datos($data['a_valores'] ?? null);
+$msg = PayloadCoercion::string($data['msg'] ?? '');
+$accion = PayloadCoercion::string($data['accion'] ?? '');
+$id_fase_nueva = PayloadCoercion::string($data['id_fase_nueva'] ?? '');
+$a_cabeceras = ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? null);
+$a_valores = ActividadesListaSupport::datos($data['a_valores'] ?? null);
 
 $txt_cambiar = $accion === 'desmarcar' ? _("descambiar los marcados") : _("cambiar los marcados");
 $a_botones = [
@@ -57,4 +59,4 @@ $html .= '<form id="seleccionados" name="seleccionados" action="" method="post">
 $html .= $oHash->getCamposHtml();
 $html .= $oTabla->mostrar_tabla();
 $html .= '</form>';
-ajax_json_html($html);
+AjaxJsonSupport::html($html);

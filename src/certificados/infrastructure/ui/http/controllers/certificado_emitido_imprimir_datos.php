@@ -4,8 +4,9 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FilterPostGet;
 
-$id_nom = (int)filter_post('id_nom', FILTER_VALIDATE_INT);
+$id_nom = (int)FilterPostGet::post('id_nom', FILTER_VALIDATE_INT);
 
 $error_txt = '';
 $data = [];

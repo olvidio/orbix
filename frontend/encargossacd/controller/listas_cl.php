@@ -1,5 +1,6 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
@@ -12,11 +13,10 @@ use frontend\shared\FrontBootstrap;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_cl_data', []);
 
-echo tessera_imprimir_string($datos['Html'] ?? '');
+echo PayloadCoercion::string($datos['Html'] ?? '');

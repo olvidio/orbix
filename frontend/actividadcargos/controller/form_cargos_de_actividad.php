@@ -1,5 +1,8 @@
 <?php
 
+use frontend\actividadcargos\helpers\ActividadcargosPayload;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * @param string  $_POST['pau']
  * @param integer $_POST['id_pau']
@@ -16,23 +19,20 @@ use frontend\shared\PostRequest;
 use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/actividadcargos/helpers/actividadcargos_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_dossier_child_recordar($oPosicion);
+ListNavSupport::bootDossierChildRecordar($oPosicion);
 
 $raw = PostRequest::getDataFromUrl('/src/actividadcargos/form_cargos_de_actividad_data', PostRequest::requestPayloadForHash());
 if (!empty($raw['error'])) {
     exit($raw['error']);
 }
 if (($raw['redir'] ?? '') === 'go_atras') {
-    echo list_nav_go_atras_to_dossiers_parent($oPosicion);
+    echo ListNavSupport::goAtrasToDossiersParent($oPosicion);
     return;
 }
 unset($raw['redir'], $raw['error']);
 
-$data = FormCargosDeActividadHashCompose::withHashCamposHtml(actividadcargos_string_key_payload($raw));
+$data = FormCargosDeActividadHashCompose::withHashCamposHtml(ActividadcargosPayload::stringKeyPayload($raw));
 $data = FormCargosDeActividadHashCompose::withDesplegablesHtml($data);
 
 $data['oPosicion'] = $oPosicion;

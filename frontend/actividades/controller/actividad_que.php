@@ -1,4 +1,10 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPermSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
+
 /**
  * Pantalla para escoger los filtros que determinan una busqueda de actividades.
  * Delega a actividad_select/lista_activ/lista_asis_conjunto_activ segun `que`.
@@ -18,24 +24,20 @@ use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\Posicion;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = list_nav_id_sel_from_post();
-$Qscroll_id = list_nav_scroll_id_from_post();
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
-$stackFromPost = list_nav_stack_from_post();
+$stackFromPost = ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
     $oPosicion2 = new Posicion();
     if ($oPosicion2->goStack($stackFromPost)) {
-        $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
-        if (!list_nav_id_sel_is_empty($restoredSel)) {
+        $restoredSel = ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
+        if (!ListNavSupport::idSelIsEmpty($restoredSel)) {
             $Qid_sel = $restoredSel;
         }
         $restoredScroll = $oPosicion2->getParametro('scroll_id');
@@ -50,7 +52,7 @@ $Qmodo = (string)filter_input(INPUT_POST, 'modo');
 $Qmodo = empty($Qmodo) ? 'buscar' : $Qmodo;
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qstatus = (integer)filter_input(INPUT_POST, 'status');
-$Qid_tipo_activ = tessera_imprimir_string(filter_input(INPUT_POST, 'id_tipo_activ'));
+$Qid_tipo_activ = PayloadCoercion::string(filter_input(INPUT_POST, 'id_tipo_activ'));
 $Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
@@ -65,11 +67,11 @@ $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
 $Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
 
 if ($stackFromPost !== 0) {
-    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    list_nav_boot_recordar($oPosicion);
+    ListNavSupport::bootRecordar($oPosicion);
 }
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_actividad_que_return_parametros([
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildActividadQueReturnParametros([
     'modo' => $Qmodo,
     'que' => $Qque,
     'status' => $Qstatus,
@@ -94,7 +96,7 @@ list_nav_persist_recordar_entry($oPosicion, list_nav_build_actividad_que_return_
 
 $isfsv = OrbixRuntime::miSfsv();
 $ssfsv = '';
-if (!actividades_perm_des()) {
+if (!ActividadesPermSupport::permDes()) {
     if ($isfsv === 1) {
         $ssfsv = 'sv';
     }
@@ -112,7 +114,7 @@ $Qsactividad2 = (string)filter_input(INPUT_POST, 'sactividad2');
 if (!empty($Qsactividad2)) {
     $Qextendida = TRUE;
 }
-$extendida = is_true($Qextendida) ? TRUE : FALSE;
+$extendida = FuncTablasSupport::isTrue($Qextendida) ? TRUE : FALSE;
 
 
 if (empty($Qstatus)) {
@@ -211,7 +213,7 @@ switch ($Qque) {
 }
 
 $data_que = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
-    'perm_jefe' => actividades_perm_jefe_tipo_activ() ? 't' : 'f',
+    'perm_jefe' => ActividadesPermSupport::permJefeTipoActiv() ? 't' : 'f',
     'id_tipo_activ' => $Qid_tipo_activ,
     'sfsv' => $ssfsv,
     'sasistentes' => $Qsasistentes,
@@ -221,7 +223,7 @@ $data_que = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', 
     'extendida' => $extendida ? 't' : '',
 ]);
 
-$actividad_tipo_html = tessera_imprimir_string($data_que['actividad_tipo_html'] ?? '');
+$actividad_tipo_html = PayloadCoercion::string($data_que['actividad_tipo_html'] ?? '');
 
 $chk_status_1 = ($Qstatus === ActividadStatusId::PROYECTO) ? "checked='true'" : '';
 $chk_status_2 = ($Qstatus === ActividadStatusId::ACTUAL) ? "checked='true'" : '';

@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace src\shared\infrastructure\ui\http;
 
+use src\shared\domain\helpers\FuncTablasSupport;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 
 /**
  * Comprobaciones comunes para POST multipart: límites PHP (post_max_size / upload)
@@ -155,8 +153,8 @@ final class MultipartUploadGuard
             $fileFields[(string) $key] = $value;
         }
 
-        $fileName = input_string($fileFields, 'name');
-        $uploadError = input_int($fileFields, 'error', UPLOAD_ERR_NO_FILE);
+        $fileName = FuncTablasSupport::inputString($fileFields, 'name');
+        $uploadError = FuncTablasSupport::inputInt($fileFields, 'error', UPLOAD_ERR_NO_FILE);
 
         if ($uploadError !== UPLOAD_ERR_OK) {
             if ($uploadError === UPLOAD_ERR_INI_SIZE || $uploadError === UPLOAD_ERR_FORM_SIZE) {
@@ -172,7 +170,7 @@ final class MultipartUploadGuard
 
         return [
             'name' => $fileName,
-            'tmp_name' => input_string($fileFields, 'tmp_name'),
+            'tmp_name' => FuncTablasSupport::inputString($fileFields, 'tmp_name'),
         ];
     }
 

@@ -1,20 +1,20 @@
 <?php
 
+use frontend\ubis\helpers\UbisPayload;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
@@ -24,7 +24,7 @@ $Qid_direccion = (string)filter_input(INPUT_POST, 'id_direccion');
 $Qidx = (int)filter_input(INPUT_POST, 'idx');
 $Qinc = (string)filter_input(INPUT_POST, 'inc');
 
-$data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/direcciones_editar', [
+$data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/direcciones_editar', [
     'id_ubi' => $Qid_ubi,
     'mod' => $Qmod,
     'obj_dir' => $Qobj_dir,
@@ -34,7 +34,7 @@ $data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/direcciones_editar
 ]));
 
 if (!empty($data['sin_direccion'])) {
-    echo '<table><tr><td>' . tessera_imprimir_string($data['msg_sin_direccion'] ?? '') . '</td></tr></table><br>';
+    echo '<table><tr><td>' . PayloadCoercion::string($data['msg_sin_direccion'] ?? '') . '</td></tr></table><br>';
     $golistadir = HashFront::link('frontend/ubis/controller/direcciones_que.php?' . http_build_query(['id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir]));
     echo "<span class='link' onclick=\"fnjs_update_div('#ficha','$golistadir');\">" . mb_strtoupper(_("asignar una dirección")) . "</span>";
     return;
@@ -81,14 +81,14 @@ $oHashPlano2->setUrl('frontend/ubis/controller/plano_bytea.php');
 $oHashPlano2->setCamposForm('obj_dir!act!id_direccion');
 $h = $oHashPlano2->linkSinValParams();
 
-$a_campos = ubis_view_vars($data, [
+$a_campos = UbisPayload::viewVars($data, [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'id_ubi' => $Qid_ubi,
     'obj_dir' => $Qobj_dir,
-    'chk_propietario' => is_true($data['propietario']) ? 'checked' : '',
-    'chk_principal' => is_true($data['principal']) ? 'checked' : '',
-    'chk_dcha' => is_true($data['cp_dcha']) ? 'checked' : '',
+    'chk_propietario' => FuncTablasSupport::isTrue($data['propietario']) ? 'checked' : '',
+    'chk_principal' => FuncTablasSupport::isTrue($data['principal']) ? 'checked' : '',
+    'chk_dcha' => FuncTablasSupport::isTrue($data['cp_dcha']) ? 'checked' : '',
     'golistadir' => $golistadir,
     'go_dir' => $go_dir,
     'h' => $h,

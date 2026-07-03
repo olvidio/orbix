@@ -1,14 +1,15 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -32,8 +33,8 @@ $a_campos_backend = [
     'id_cdc' => $Qid_cdc,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$payload = inventario_post_payload($data);
-$a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
+$payload = InventarioPayload::postPayload($data);
+$a_valores = ActividadesListaSupport::datos($payload['a_valores'] ?? []);
 $nombre_ubi = $data['nombre_ubi'];
 
 $a_cabeceras[] = ucfirst(_("empieza"));
@@ -63,4 +64,4 @@ $a_campos = [
     'oLista' => $oLista,
 ];
 
-ajax_json_render_phtml('frontend\inventario\controller', 'equipajes_lista_activ_periodo.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\inventario\controller', 'equipajes_lista_activ_periodo.phtml', $a_campos);

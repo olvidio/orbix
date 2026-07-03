@@ -6,7 +6,6 @@ use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\shared\domain\traits\Hydratable;
-use function src\shared\domain\helpers\is_true;
 use src\inventario\domain\value_objects\{TipoDocId, TipoDocName, TipoDocSigla, TipoDocObserv, ColeccionId, TipoDocBajoLlave, TipoDocVigente, TipoDocNumerado};
 
 

@@ -12,12 +12,7 @@ use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
 use src\ubis\domain\entity\CentroEx;
 use src\ubis\domain\entity\Direccion;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
-use function src\shared\domain\helpers\urlsafe_b64decode;
-use function src\shared\domain\helpers\urlsafe_b64encode;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 final class UbisTablaData
 {
     public function __construct(
@@ -82,10 +77,10 @@ final class UbisTablaData
         [$cUbisTot] = $this->combinarColecciones($cUbis, $cUbisD);
 
         // ----- Serializar condiciones para mantener estado -----
-        $sWhere = urlsafe_b64encode(json_encode($aWhere, JSON_THROW_ON_ERROR));
-        $sOperador = urlsafe_b64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
-        $sWhereD = urlsafe_b64encode(json_encode($aWhereD, JSON_THROW_ON_ERROR));
-        $sOperadorD = urlsafe_b64encode(json_encode($aOperadorD, JSON_THROW_ON_ERROR));
+        $sWhere = FuncTablasSupport::urlsafeB64encode(json_encode($aWhere, JSON_THROW_ON_ERROR));
+        $sOperador = FuncTablasSupport::urlsafeB64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
+        $sWhereD = FuncTablasSupport::urlsafeB64encode(json_encode($aWhereD, JSON_THROW_ON_ERROR));
+        $sOperadorD = FuncTablasSupport::urlsafeB64encode(json_encode($aOperadorD, JSON_THROW_ON_ERROR));
 
         $qtipo = is_string($in['Qtipo'] ?? null) ? $in['Qtipo'] : '';
         $qloc = is_string($in['Qloc'] ?? null) ? $in['Qloc'] : '';
@@ -158,9 +153,9 @@ final class UbisTablaData
      */
     private function parseInput(array $p): array
     {
-        $Qloc = input_string($p, 'loc');
-        $Qtipo = input_string($p, 'tipo');
-        $Qsimple = input_int($p, 'simple');
+        $Qloc = FuncTablasSupport::inputString($p, 'loc');
+        $Qtipo = FuncTablasSupport::inputString($p, 'tipo');
+        $Qsimple = FuncTablasSupport::inputInt($p, 'simple');
         if ($Qsimple === 1) {
             $Qtipo = 'tot';
             $Qloc = 'tot';
@@ -216,44 +211,44 @@ final class UbisTablaData
         $aWhereD = [];
         $aOperadorD = [];
 
-        $Qnombre_ubi = input_string($p, 'nombre_ubi');
+        $Qnombre_ubi = FuncTablasSupport::inputString($p, 'nombre_ubi');
         if ($Qnombre_ubi !== '') {
             $nom_ubi = str_replace('+', "\+", $Qnombre_ubi); // para los centros de la sss+
             $aWhere['nombre_ubi'] = $nom_ubi;
             $aOperador['nombre_ubi'] = 'sin_acentos';
             $aWhere['_ordre'] = 'tipo_ubi,nombre_ubi';
         }
-        $Qregion = input_string($p, 'region');
+        $Qregion = FuncTablasSupport::inputString($p, 'region');
         if ($Qregion !== '') {
             $aWhere['region'] = $Qregion;
             $aWhere['_ordre'] = 'nombre_ubi';
         }
-        $Qdl = input_string($p, 'dl');
+        $Qdl = FuncTablasSupport::inputString($p, 'dl');
         if ($Qdl !== '') {
             $aWhere['dl'] = $Qdl;
             $aOperador['dl'] = 'sin_acentos';
             $aWhere['_ordre'] = 'dl';
         }
-        $Qtipo_ctr = input_string($p, 'tipo_ctr');
+        $Qtipo_ctr = FuncTablasSupport::inputString($p, 'tipo_ctr');
         if ($Qtipo_ctr !== '') {
             $aWhere['tipo_ctr'] = $Qtipo_ctr;
             $aOperador['tipo_ctr'] = 'sin_acentos';
             $aWhere['_ordre'] = 'tipo_ctr';
         }
-        $Qtipo_casa = input_string($p, 'tipo_casa');
+        $Qtipo_casa = FuncTablasSupport::inputString($p, 'tipo_casa');
         if ($Qtipo_casa !== '') {
             $aWhere['tipo_casa'] = $Qtipo_casa;
             $aOperador['tipo_casa'] = 'sin_acentos';
             $aWhere['_ordre'] = 'tipo_casa';
         }
 
-        $Qciudad = input_string($p, 'ciudad');
+        $Qciudad = FuncTablasSupport::inputString($p, 'ciudad');
         if ($Qciudad !== '') {
             $aWhereD['poblacion'] = $Qciudad;
             $aOperadorD['poblacion'] = 'sin_acentos';
             $aWhereD['_ordre'] = 'poblacion';
         }
-        $Qpais = input_string($p, 'pais');
+        $Qpais = FuncTablasSupport::inputString($p, 'pais');
         if ($Qpais !== '') {
             $aWhereD['pais'] = $Qpais;
             $aOperadorD['pais'] = 'sin_acentos';
@@ -406,13 +401,13 @@ final class UbisTablaData
      */
     private function buildFiltrosDesdeHash(array $in): array
     {
-        $decodedWhere = json_decode(urlsafe_b64decode(is_string($in['sWhere'] ?? null) ? $in['sWhere'] : ''), true);
+        $decodedWhere = json_decode(FuncTablasSupport::urlsafeB64decode(is_string($in['sWhere'] ?? null) ? $in['sWhere'] : ''), true);
         $aWhere = is_array($decodedWhere) ? $decodedWhere : [];
-        $decodedOperador = json_decode(urlsafe_b64decode(is_string($in['sOperador'] ?? null) ? $in['sOperador'] : ''), true);
+        $decodedOperador = json_decode(FuncTablasSupport::urlsafeB64decode(is_string($in['sOperador'] ?? null) ? $in['sOperador'] : ''), true);
         $aOperador = is_array($decodedOperador) ? $decodedOperador : [];
-        $decodedWhereD = json_decode(urlsafe_b64decode(is_string($in['sWhereD'] ?? null) ? $in['sWhereD'] : ''), true);
+        $decodedWhereD = json_decode(FuncTablasSupport::urlsafeB64decode(is_string($in['sWhereD'] ?? null) ? $in['sWhereD'] : ''), true);
         $aWhereD = is_array($decodedWhereD) ? $decodedWhereD : [];
-        $decodedOperadorD = json_decode(urlsafe_b64decode(is_string($in['sOperadorD'] ?? null) ? $in['sOperadorD'] : ''), true);
+        $decodedOperadorD = json_decode(FuncTablasSupport::urlsafeB64decode(is_string($in['sOperadorD'] ?? null) ? $in['sOperadorD'] : ''), true);
         $aOperadorD = is_array($decodedOperadorD) ? $decodedOperadorD : [];
 
         $Qobj_pau = $in['Qobj_pau'] ?? '';
@@ -454,7 +449,7 @@ final class UbisTablaData
             return $cUbis;
         }
 
-        if (!is_true($Qcmb)) {
+        if (!FuncTablasSupport::isTrue($Qcmb)) {
             $aWhere['active'] = 't';
         }
         // Filtro sf/sv por defecto cuando se busca sólo por nombre (si no ya está
@@ -521,7 +516,7 @@ final class UbisTablaData
                     if ($oUbi === null) {
                         continue;
                     }
-                    if (!is_true($Qcmb) && !$oUbi->isActive()) {
+                    if (!FuncTablasSupport::isTrue($Qcmb) && !$oUbi->isActive()) {
                         continue;
                     }
                     $cUbisD[] = $oUbi;

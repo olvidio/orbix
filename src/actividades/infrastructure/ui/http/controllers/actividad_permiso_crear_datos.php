@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FilterPostGet;
+
 /**
  * JSON: resultado de {@see \src\permisos\domain\PermisosActividades::getPermisoCrear}
  * para crear una actividad nueva (tipo + dl_propia). Ejecutado bajo bootstrap con DI;
@@ -8,14 +11,14 @@
 use src\permisos\domain\PermisosActividades;
 use src\shared\web\ContestarJson;
 
-$Qid_tipo_activ = (string)filter_post('id_tipo_activ');
+$Qid_tipo_activ = (string)FilterPostGet::post('id_tipo_activ');
 if ($Qid_tipo_activ === '') {
-    $Qid_tipo_activ = (string)filter_get('id_tipo_activ');
+    $Qid_tipo_activ = (string)FilterPostGet::get('id_tipo_activ');
 }
 
-$Qdl = (string)filter_post('dl_propia');
+$Qdl = (string)FilterPostGet::post('dl_propia');
 if ($Qdl === '') {
-    $Qdl = (string)filter_get('dl_propia');
+    $Qdl = (string)FilterPostGet::get('dl_propia');
 }
 $dl_propia = !($Qdl === 'f' || $Qdl === '0' || strcasecmp($Qdl, 'false') === 0);
 

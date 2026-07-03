@@ -1,5 +1,6 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\shared\web\ContestarJson;
@@ -7,7 +8,7 @@ use src\shared\web\ContestarJson;
 $error_txt = '';
 $id_role = 0;
 
-$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel) && is_string($a_sel[0])) { //vengo de un checkbox
     $tok = strtok($a_sel[0], "#");
     $id_role = is_string($tok) ? (int)$tok : 0;

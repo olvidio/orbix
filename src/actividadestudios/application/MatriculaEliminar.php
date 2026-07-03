@@ -6,8 +6,7 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterf
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Elimina una o varias matriculas y reajusta los dossiers 1303 / 3103 y
@@ -29,14 +28,14 @@ final class MatriculaEliminar
      */
     public function execute(array $input): string
     {
-        $pau = input_string($input, 'pau');
+        $pau = FuncTablasSupport::inputString($input, 'pau');
         $a_sel = (array) ($input['sel'] ?? []);
-        $Qid_activ = input_int($input, 'id_activ');
-        $Qid_nom = input_int($input, 'id_nom');
+        $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $Qid_nom = FuncTablasSupport::inputInt($input, 'id_nom');
         if ($Qid_nom <= 0) {
-            $Qid_nom = input_int($input, 'id_pau');
+            $Qid_nom = FuncTablasSupport::inputInt($input, 'id_pau');
         }
-        $Qid_asignatura = input_int($input, 'id_asignatura');
+        $Qid_asignatura = FuncTablasSupport::inputInt($input, 'id_asignatura');
 
         $msg_err = '';
 

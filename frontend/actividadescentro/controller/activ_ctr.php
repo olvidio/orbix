@@ -1,4 +1,8 @@
 <?php
+
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\FuncTablasSupport;
+
 /**
  * Pantalla principal del modulo `actividadescentro`.
  *
@@ -16,10 +20,8 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../../notas/helpers/tessera_imprimir_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -32,7 +34,7 @@ $shell = PostRequest::getDataFromUrl('/src/actividadescentro/activ_ctr_shell_dat
     'year' => $Qyear,
     'periodo' => $Qperiodo,
 ]);
-$Qtipo = tessera_imprimir_string($shell['tipo'] ?? $Qtipo);
+$Qtipo = PayloadCoercion::string($shell['tipo'] ?? $Qtipo);
 
 $signShellEndpoint = static function (array $spec): string {
     $path = (string)($spec['path'] ?? '');
@@ -48,7 +50,7 @@ $signShellEndpoint = static function (array $spec): string {
     return $url . $oHashEndpoint->linkSinVal();
 };
 
-$titulo = strtoupper_dlb(_("periodo del listado del año próximo"));
+$titulo = FuncTablasSupport::strtoupperDlb(_("periodo del listado del año próximo"));
 $aOpciones = [
     'tot_any' => _("todo el año"),
     'trimestre_1' => _("primer trimestre"),

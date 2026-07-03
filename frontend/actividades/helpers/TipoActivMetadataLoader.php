@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\actividades\helpers;
 
-require_once __DIR__ . '/../../notas/helpers/tessera_imprimir_support.php';
-
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 
 /**
@@ -201,8 +200,8 @@ final class TipoActivMetadataLoader
                 continue;
             }
             $filas[] = [
-                'id_tipo_activ' => tessera_imprimir_int($row['id_tipo_activ'] ?? 0),
-                'nombre' => tessera_imprimir_string($row['nombre'] ?? ''),
+                'id_tipo_activ' => PayloadCoercion::int($row['id_tipo_activ'] ?? 0),
+                'nombre' => PayloadCoercion::string($row['nombre'] ?? ''),
             ];
         }
 
@@ -225,7 +224,7 @@ final class TipoActivMetadataLoader
             if (is_int($value) || is_string($value)) {
                 $out[$key] = $value;
             } else {
-                $out[$key] = tessera_imprimir_string($value);
+                $out[$key] = PayloadCoercion::string($value);
             }
         }
 

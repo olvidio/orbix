@@ -1,5 +1,9 @@
 <?php
 
+use frontend\actividades\helpers\ActividadesPostInput;
+use frontend\usuarios\helpers\UsuariosPayload;
+use frontend\usuarios\helpers\UsuariosPostInput;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\AppInstalled;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
@@ -7,10 +11,10 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
+
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
@@ -26,28 +30,28 @@ if (isset($_POST['stack'])) {
         if ($oPosicion2->goStack($stack)) {
             $a_sel = $oPosicion2->getParametro('id_sel');
             if (!empty($a_sel)) {
-                $Qid_usuario = usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
+                $Qid_usuario = UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
             } else {
-                $Qid_usuario = actividades_posicion_int($oPosicion2->getParametro('id_usuario'));
+                $Qid_usuario = ActividadesPostInput::posicionInt($oPosicion2->getParametro('id_usuario'));
             }
-            $Qscroll_id = actividades_posicion_int($oPosicion2->getParametro('scroll_id'));
+            $Qscroll_id = ActividadesPostInput::posicionInt($oPosicion2->getParametro('scroll_id'));
             $oPosicion2->olvidar($stack);
         }
     }
 } elseif (!empty($a_sel)) {
     $Qque = (string)filter_input(INPUT_POST, 'que');
     if ($Qque !== 'del_grupmenu') {
-        $Qid_usuario = usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
+        $Qid_usuario = UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
     }
 }
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), $Qscroll_id));
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), $Qscroll_id));
 
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 if (!empty($Qid_usuario)) {
-    $infoData = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/grupo_info', ['id_usuario' => $Qid_usuario]));
-    $usuario = tessera_imprimir_string($infoData['nombre'] ?? '');
+    $infoData = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/grupo_info', ['id_usuario' => $Qid_usuario]));
+    $usuario = PayloadCoercion::string($infoData['nombre'] ?? '');
 
     $oHashG = new HashFront();
     $oHashG->setCamposForm('que!usuario');
@@ -65,8 +69,8 @@ if (!empty($Qid_usuario)) {
     $oView = new ViewNewPhtml('frontend\usuarios\controller');
     $oView->renderizar('grupo_form.phtml', $a_camposG);
 
-    $permData = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/perm_menu_lista', ['id_usuario' => $Qid_usuario]));
-    $lista = usuarios_lista_from_payload($permData);
+    $permData = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/perm_menu_lista', ['id_usuario' => $Qid_usuario]));
+    $lista = UsuariosPayload::listaFromPayload($permData);
 
     $oTablaPermMenu = new Lista();
     $oTablaPermMenu->setId_tabla('form_perm_menu');

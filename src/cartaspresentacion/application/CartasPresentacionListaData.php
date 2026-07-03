@@ -12,9 +12,7 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
 use src\ubis\domain\entity\Centro;
-
-use function src\shared\domain\helpers\strsinacentocmp;
-use function src\shared\domain\helpers\strtoupper_dlb;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder: agrupa las cartas de presentacion por tipo de labor,
@@ -514,7 +512,7 @@ final class CartasPresentacionListaData
             }
             krsort($a_edad); // primero m, despues j
             if ($poblacion !== $poblacion_anterior || $poblacion === '') {
-                $html .= '<tr><td ' . $class . '>' . strtoupper_dlb((string)$poblacion) . '</td>';
+                $html .= '<tr><td ' . $class . '>' . FuncTablasSupport::strtoupperDlb((string)$poblacion) . '</td>';
             }
             $f = 0;
             foreach ($a_edad as $edad => $texto) {

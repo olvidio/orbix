@@ -6,20 +6,21 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\procesos\helpers\ProcesosPostInput;
+use frontend\procesos\helpers\ProcesosPayload;
 
-require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$Qmod = procesos_post_string('mod');
-$Qid_item = procesos_post_int('id_item');
-$Qid_tipo_proceso = procesos_post_int('id_tipo_proceso');
+$Qmod = ProcesosPostInput::postString('mod');
+$Qid_item = ProcesosPostInput::postInt('id_item');
+$Qid_tipo_proceso = ProcesosPostInput::postInt('id_tipo_proceso');
 
 $data = PostRequest::getDataFromUrl('/src/procesos/procesos_ver_data', [
     'mod' => $Qmod,
     'id_item' => $Qid_item,
 ]);
-$ver = procesos_ver_from_payload($data);
+$ver = ProcesosPayload::verFromPayload($data);
 
 $oDesplOficinas = new Desplegable('id_of_responsable', $ver['a_oficinas'], '', true);
 $oDesplStatus = new Desplegable('status', $ver['a_status'], $ver['status'], true);
@@ -47,7 +48,7 @@ $aDesplFasesPrevias = [];
 $aDesplTareasPrevias = [];
 $aMensajes_requisitos = [];
 foreach ($ver['a_fases_previas'] as $fila) {
-    $previa = procesos_fase_previa_row($fila);
+    $previa = ProcesosPayload::fasePreviaRow($fila);
     $oDesplFasePrevia = new Desplegable();
     $oDesplFasePrevia->setOpciones($ver['a_fases']);
     $oDesplFasePrevia->setNombre('id_fase_previa[]');

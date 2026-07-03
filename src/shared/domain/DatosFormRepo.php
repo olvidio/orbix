@@ -5,7 +5,7 @@ namespace src\shared\domain;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\contracts\DatosFichaInterface;
 use src\shared\infrastructure\DependencyResolver;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Clase que implementa la entidad d_dossiers_abiertos
@@ -120,7 +120,7 @@ class DatosFormRepo
                     $field['aOpcion_no'] = $this->aOpcion_no;
                     break;
                 case "check":
-                    $field['checked'] = is_true($valor_camp);
+                    $field['checked'] = FuncTablasSupport::isTrue($valor_camp);
                     $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
                     break;
             }

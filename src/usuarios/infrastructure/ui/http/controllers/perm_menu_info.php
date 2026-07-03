@@ -1,13 +1,14 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\permisos\domain\MenuDlPermissionBits;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_usuario = (int)filter_post('id_usuario');
-$Qid_item = (int)filter_post('id_item');
+$Qid_usuario = (int)FilterPostGet::post('id_usuario');
+$Qid_item = (int)FilterPostGet::post('id_item');
 
 $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada

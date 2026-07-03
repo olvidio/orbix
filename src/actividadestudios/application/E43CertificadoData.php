@@ -9,7 +9,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\entity\Ubi;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Datos certificado E43 (pantalla e imprimible).
@@ -39,8 +39,8 @@ final class E43CertificadoData
      */
     public function execute(array $input): array
     {
-        $idNom = input_int($input, 'id_nom');
-        $idActiv = input_int($input, 'id_activ');
+        $idNom = FuncTablasSupport::inputInt($input, 'id_nom');
+        $idActiv = FuncTablasSupport::inputInt($input, 'id_activ');
         $appendBlankFooter = !empty($input['append_blank_footer']);
 
         $msgErr = '';

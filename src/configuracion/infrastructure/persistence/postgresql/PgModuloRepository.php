@@ -11,8 +11,6 @@ use PDO;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\entity\Modulo;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\array_pgInteger2php;
-use function src\shared\domain\helpers\array_php2pg;
 
 /**
  * Clase que adapta la tabla m0_modulos a la interfaz del repositorio
@@ -123,10 +121,10 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
                 continue;
             }
             if (is_string($aDatos['mods_req'] ?? null)) {
-                $aDatos['mods_req'] = array_pgInteger2php($aDatos['mods_req']);
+                $aDatos['mods_req'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPgInteger2php($aDatos['mods_req']);
             }
             if (is_string($aDatos['apps_req'] ?? null)) {
-                $aDatos['apps_req'] = array_pgInteger2php($aDatos['apps_req']);
+                $aDatos['apps_req'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPgInteger2php($aDatos['apps_req']);
             }
             $normalized = [];
             foreach ($aDatos as $key => $value) {
@@ -159,16 +157,16 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         $bInsert = $this->isNew($id_mod);
 
         $aDatos = $Modulo->toArrayForDatabase([
-            'mods_req' => fn($v) => array_php2pg($Modulo->getModsReqVo()?->toArray() ?? []),
-            'apps_req' => fn($v) => array_php2pg($Modulo->getAppsReqVo()?->toArray() ?? []),
+            'mods_req' => fn($v) => \src\shared\domain\helpers\FuncTablasSupport::arrayPhp2pg($Modulo->getModsReqVo()?->toArray() ?? []),
+            'apps_req' => fn($v) => \src\shared\domain\helpers\FuncTablasSupport::arrayPhp2pg($Modulo->getAppsReqVo()?->toArray() ?? []),
         ]);
         /*
         $aDatos = [];
         $aDatos['nom'] = $Modulo->getNomVo()->value();
         $aDatos['descripcion'] = $Modulo->getDescripcionVo()?->value();
         // para los array
-        $aDatos['mods_req'] = array_php2pg($Modulo->getModsReqVo()?->toArray());
-        $aDatos['apps_req'] = array_php2pg($Modulo->getAppsReqVo()?->toArray());
+        $aDatos['mods_req'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPhp2pg($Modulo->getModsReqVo()?->toArray());
+        $aDatos['apps_req'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPhp2pg($Modulo->getAppsReqVo()?->toArray());
         array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
         */
 
@@ -237,10 +235,10 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         $aDatos = $result;
         // para los array del postgres
         if (is_string($aDatos['mods_req'] ?? null)) {
-            $aDatos['mods_req'] = array_pgInteger2php($aDatos['mods_req']);
+            $aDatos['mods_req'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPgInteger2php($aDatos['mods_req']);
         }
         if (is_string($aDatos['apps_req'] ?? null)) {
-            $aDatos['apps_req'] = array_pgInteger2php($aDatos['apps_req']);
+            $aDatos['apps_req'] = \src\shared\domain\helpers\FuncTablasSupport::arrayPgInteger2php($aDatos['apps_req']);
         }
         return $aDatos;
     }

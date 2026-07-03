@@ -4,14 +4,12 @@ use src\notas\application\ListadoAnualActasData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_int;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 $error = '';
 $data = [];
 try {
-    $inicioIso = input_string($_POST, 'inicioIso');
-    $finIso = input_string($_POST, 'finIso');
+    $inicioIso = FuncTablasSupport::inputString($_POST, 'inicioIso');
+    $finIso = FuncTablasSupport::inputString($_POST, 'finIso');
     if (empty($inicioIso) || empty($finIso)) {
         throw new \RuntimeException(_("Se requieren inicioIso y finIso en formato Y-m-d"));
     }

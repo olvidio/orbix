@@ -1,15 +1,16 @@
 <?php
-
 namespace frontend\planning\controller;
 
+use frontend\planning\helpers\PlanningPostInput;
+use frontend\planning\helpers\PlanningPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
-use function frontend\shared\helpers\urlsafe_b64decode;
-use function frontend\shared\helpers\urlsafe_b64encode;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
 
 /**
  * Lista de personas que cumplen los filtros del formulario anterior
@@ -18,78 +19,76 @@ use frontend\shared\FrontBootstrap;
  * Migrado desde `apps/planning/controller/planning_persona_select.php`
  * (slice 2 de la migracion del modulo planning).
  */
-require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 
-$Qid_sel = planning_post_string('id_sel');
-$Qscroll_id = planning_post_string('scroll_id');
-$Qobj_pau = planning_post_string('obj_pau');
-$Qna = planning_post_string('na');
-$Qperiodo = planning_post_string('periodo');
-$Qyear = planning_post_string('year');
-$Qempiezamin = planning_post_string('empiezamin');
-$Qempiezamax = planning_post_string('empiezamax');
-$Qapellido1 = planning_post_string('apellido1');
-$Qapellido2 = planning_post_string('apellido2');
-$Qnombre = planning_post_string('nombre');
-$Qcentro = planning_post_string('centro');
+$Qid_sel = PlanningPostInput::postString('id_sel');
+$Qscroll_id = PlanningPostInput::postString('scroll_id');
+$Qobj_pau = PlanningPostInput::postString('obj_pau');
+$Qna = PlanningPostInput::postString('na');
+$Qperiodo = PlanningPostInput::postString('periodo');
+$Qyear = PlanningPostInput::postString('year');
+$Qempiezamin = PlanningPostInput::postString('empiezamin');
+$Qempiezamax = PlanningPostInput::postString('empiezamax');
+$Qapellido1 = PlanningPostInput::postString('apellido1');
+$Qapellido2 = PlanningPostInput::postString('apellido2');
+$Qnombre = PlanningPostInput::postString('nombre');
+$Qcentro = PlanningPostInput::postString('centro');
 $QsaWhere = '';
 $QsaOperador = '';
 $QsaWhereCtr = '';
 $QsaOperadorCtr = '';
 
 if (isset($_POST['stack'])) {
-    $stack = planning_post_int('stack');
+    $stack = PlanningPostInput::postInt('stack');
     if ($stack !== 0) {
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) {
-            $Qobj_pau = planning_posicion_string($oPosicion2->getParametro('obj_pau'), $Qobj_pau);
-            $Qna = planning_posicion_string($oPosicion2->getParametro('na'), $Qna);
-            $Qperiodo = planning_posicion_string($oPosicion2->getParametro('periodo'), $Qperiodo);
-            $Qyear = planning_posicion_string($oPosicion2->getParametro('year'), $Qyear);
-            $Qempiezamin = planning_posicion_string($oPosicion2->getParametro('empiezamin'), $Qempiezamin);
-            $Qempiezamax = planning_posicion_string($oPosicion2->getParametro('empiezamax'), $Qempiezamax);
-            $Qid_sel = planning_posicion_string($oPosicion2->getParametro('id_sel'), $Qid_sel);
-            $Qscroll_id = planning_posicion_string($oPosicion2->getParametro('scroll_id'), $Qscroll_id);
-            $QsaWhere = planning_posicion_string($oPosicion2->getParametro('saWhere'));
-            $QsaOperador = planning_posicion_string($oPosicion2->getParametro('saOperador'));
-            $QsaWhereCtr = planning_posicion_string($oPosicion2->getParametro('saWhereCtr'));
-            $QsaOperadorCtr = planning_posicion_string($oPosicion2->getParametro('saOperadorCtr'));
+            $Qobj_pau = PlanningPayload::posicionString($oPosicion2->getParametro('obj_pau'), $Qobj_pau);
+            $Qna = PlanningPayload::posicionString($oPosicion2->getParametro('na'), $Qna);
+            $Qperiodo = PlanningPayload::posicionString($oPosicion2->getParametro('periodo'), $Qperiodo);
+            $Qyear = PlanningPayload::posicionString($oPosicion2->getParametro('year'), $Qyear);
+            $Qempiezamin = PlanningPayload::posicionString($oPosicion2->getParametro('empiezamin'), $Qempiezamin);
+            $Qempiezamax = PlanningPayload::posicionString($oPosicion2->getParametro('empiezamax'), $Qempiezamax);
+            $Qid_sel = PlanningPayload::posicionString($oPosicion2->getParametro('id_sel'), $Qid_sel);
+            $Qscroll_id = PlanningPayload::posicionString($oPosicion2->getParametro('scroll_id'), $Qscroll_id);
+            $QsaWhere = PlanningPayload::posicionString($oPosicion2->getParametro('saWhere'));
+            $QsaOperador = PlanningPayload::posicionString($oPosicion2->getParametro('saOperador'));
+            $QsaWhereCtr = PlanningPayload::posicionString($oPosicion2->getParametro('saWhereCtr'));
+            $QsaOperadorCtr = PlanningPayload::posicionString($oPosicion2->getParametro('saOperadorCtr'));
             $oPosicion2->olvidar($stack);
 
-            $aWhereDecoded = json_decode(urlsafe_b64decode($QsaWhere), true);
+            $aWhereDecoded = json_decode(FuncTablasSupport::urlsafeB64decode($QsaWhere), true);
             $aWhere = is_array($aWhereDecoded) ? $aWhereDecoded : [];
-            $aOperadorDecoded = json_decode(urlsafe_b64decode($QsaOperador), true);
+            $aOperadorDecoded = json_decode(FuncTablasSupport::urlsafeB64decode($QsaOperador), true);
             $aOperador = is_array($aOperadorDecoded) ? $aOperadorDecoded : [];
-            $aWhereCtrDecoded = json_decode(urlsafe_b64decode($QsaWhereCtr), true);
+            $aWhereCtrDecoded = json_decode(FuncTablasSupport::urlsafeB64decode($QsaWhereCtr), true);
             $aWhereCtr = is_array($aWhereCtrDecoded) ? $aWhereCtrDecoded : [];
-            $aOperadorCtrDecoded = json_decode(urlsafe_b64decode($QsaOperadorCtr), true);
+            $aOperadorCtrDecoded = json_decode(FuncTablasSupport::urlsafeB64decode($QsaOperadorCtr), true);
             $aOperadorCtr = is_array($aOperadorCtrDecoded) ? $aOperadorCtrDecoded : [];
-            $Qapellido1 = planning_where_string($aWhere, 'apellido1', $Qapellido1);
+            $Qapellido1 = PlanningPayload::whereString($aWhere, 'apellido1', $Qapellido1);
             if (str_starts_with($Qapellido1, '^')) {
                 $Qapellido1 = substr($Qapellido1, 1);
             }
-            $Qapellido2 = planning_where_string($aWhere, 'apellido2', $Qapellido2);
+            $Qapellido2 = PlanningPayload::whereString($aWhere, 'apellido2', $Qapellido2);
             if (str_starts_with($Qapellido2, '^')) {
                 $Qapellido2 = substr($Qapellido2, 1);
             }
-            $Qnombre = planning_where_string($aWhere, 'nom', $Qnombre);
+            $Qnombre = PlanningPayload::whereString($aWhere, 'nom', $Qnombre);
             if (str_starts_with($Qnombre, '^')) {
                 $Qnombre = substr($Qnombre, 1);
             }
-            $Qcentro = planning_where_string($aWhereCtr, 'nombre_ubi', $Qcentro);
-            $idTablaWhere = planning_where_string($aWhere, 'id_tabla');
+            $Qcentro = PlanningPayload::whereString($aWhereCtr, 'nombre_ubi', $Qcentro);
+            $idTablaWhere = PlanningPayload::whereString($aWhere, 'id_tabla');
             if (str_starts_with($idTablaWhere, 'p')) {
                 $Qna = substr($idTablaWhere, 1);
             }
         }
     }
 }
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(($aGoBack ?? list_nav_build_return_parametros_from_post()), $Qid_sel, $Qscroll_id));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
 
 
 $aWhere = [
@@ -119,10 +118,10 @@ if ($Qcentro !== '') {
 if ($Qna !== '') {
     $aWhere['id_tabla'] = 'p' . $Qna;
 }
-$QsaWhere = urlsafe_b64encode(json_encode($aWhere, JSON_THROW_ON_ERROR));
-$QsaOperador = urlsafe_b64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
-$QsaWhereCtr = urlsafe_b64encode(json_encode($aWhereCtr, JSON_THROW_ON_ERROR));
-$QsaOperadorCtr = urlsafe_b64encode(json_encode($aOperadorCtr, JSON_THROW_ON_ERROR));
+$QsaWhere = FuncTablasSupport::urlsafeB64encode(json_encode($aWhere, JSON_THROW_ON_ERROR));
+$QsaOperador = FuncTablasSupport::urlsafeB64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
+$QsaWhereCtr = FuncTablasSupport::urlsafeB64encode(json_encode($aWhereCtr, JSON_THROW_ON_ERROR));
+$QsaOperadorCtr = FuncTablasSupport::urlsafeB64encode(json_encode($aOperadorCtr, JSON_THROW_ON_ERROR));
 
 $postPayload = [
     'obj_pau' => $Qobj_pau,
@@ -134,7 +133,7 @@ $postPayload = [
 ];
 
 $apiData = PostRequest::getDataFromUrl('/src/planning/planning_persona_select_data', $postPayload);
-$cPersonas = planning_personas_from_payload($apiData['personas'] ?? null);
+$cPersonas = PlanningPayload::personasFromPayload($apiData['personas'] ?? null);
 
 $aGoBack = [
     'obj_pau' => $Qobj_pau,

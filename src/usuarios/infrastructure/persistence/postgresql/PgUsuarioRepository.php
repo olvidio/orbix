@@ -10,7 +10,6 @@ use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla aux_usuarios a la interfaz del repositorio

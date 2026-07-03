@@ -1,19 +1,19 @@
 <?php
 
+use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 $Qque = 'get';
-$data = ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/calendario_periodos_get_data', [
+$data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/calendario_periodos_get_data', [
     'id_ubi' => $Qid_ubi,
 ]));
-$rows = ubis_calendario_periodo_rows($data['rows'] ?? []);
+$rows = UbisPayload::calendarioPeriodoRows($data['rows'] ?? []);
 $oHash = new HashFront();
 $i = 0;
 $txt = '';
@@ -52,4 +52,4 @@ foreach ($rows as $row) {
     $txt .= "  <span class=link onclick=fnjs_grabar($id_ubi,$i,'update')>" . _('grabar') . "</span>";
     $txt .= "  <span class=link onclick=fnjs_grabar($id_ubi,$i,'borrar')>" . _('borrar') . "</span></form>";
 }
-ubis_json_echo(['que' => $Qque, 'txt' => $txt]);
+UbisPayload::jsonEcho(['que' => $Qque, 'txt' => $txt]);

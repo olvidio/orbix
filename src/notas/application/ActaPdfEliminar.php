@@ -2,9 +2,8 @@
 
 namespace src\notas\application;
 
-use function src\shared\domain\helpers\input_string;
-
 use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Elimina el PDF firmado asociado a un `Acta` (sin borrar el acta).
@@ -22,7 +21,7 @@ final class ActaPdfEliminar
      */
     public function execute(array $input): string
     {
-        $acta = input_string($input, 'acta_num');
+        $acta = FuncTablasSupport::inputString($input, 'acta_num');
         if (empty($acta)) {
             return _("No se encuentra el acta");
         }

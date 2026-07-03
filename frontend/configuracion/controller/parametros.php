@@ -5,10 +5,10 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
+use frontend\configuracion\helpers\ConfiguracionPayload;
 
 
 // Crea los objetos de uso global **********************************************
-require_once __DIR__ . '/../helpers/configuracion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -21,8 +21,8 @@ if (!empty($data['error'])) {
     exit($data['error']);
 }
 
-$a_campos = configuracion_parametros_view_from_payload($data);
-$idiomaDespl = configuracion_parametros_idioma_desplegable($data);
+$a_campos = ConfiguracionPayload::parametrosViewFromPayload($data);
+$idiomaDespl = ConfiguracionPayload::parametrosIdiomaDesplegable($data);
 
 // añadir url update
 $url = 'src/configuracion/parametros_update';

@@ -2,6 +2,8 @@
 
 namespace src\shared\domain\traits;
 
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Trait para automatizar la hidratación de entidades desde arrays.
  *
@@ -177,7 +179,7 @@ trait Hydratable
      * 2. Busca isXxx() para propiedades booleanas
      * 3. Busca getXxx() estándar (fallback, incluye deprecated)
      * 4. Convierte DateTimeLocal/TimeLocal a strings formato BD
-     * 5. Convierte arrays PHP a formato PostgreSQL con array_php2pg()
+     * 5. Convierte arrays PHP a formato PostgreSQL con FuncTablasSupport::arrayPhp2pg()
      * 6. Aplica conversiones especiales definidas en $converters (JSON, timestamp, etc.)
      *
      * @param array<string, callable(mixed): mixed> $converters Array opcional con conversiones especiales por campo
@@ -293,7 +295,7 @@ trait Hydratable
             }
             // Para arrays PHP, convertir a formato PostgreSQL
             elseif (is_array($value)) {
-                $value = \src\shared\domain\helpers\array_php2pg($value);
+                $value = FuncTablasSupport::arrayPhp2pg($value);
             }
             // Para booleanos que no vengan de isXxx() (detectados por tipo)
             elseif (is_bool($value)) {

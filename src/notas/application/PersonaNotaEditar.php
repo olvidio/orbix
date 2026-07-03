@@ -2,13 +2,13 @@
 
 namespace src\notas\application;
 
-use function src\shared\domain\helpers\input_int;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\notas\application\support\PersonaNotaInputParser;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Edita una `PersonaNota` existente. Ataca siempre a la tabla padre
@@ -42,7 +42,7 @@ final class PersonaNotaEditar
                 $this->dossierRepository,
                 $this->personaNotaDlRepository,
             );
-            $id_asignatura_real = input_int($input, 'id_asignatura_real');
+            $id_asignatura_real = FuncTablasSupport::inputInt($input, 'id_asignatura_real');
             $oEditar->editar($id_asignatura_real);
 
             return '';

@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use src\shared\domain\helpers\FilterPostGet;
+
+
 /**
  * JSON `{ "lines": string[] }` para la absorción de esquema (POST `esquema_matriz`, `esquema_del`).
  */
@@ -14,8 +17,8 @@ use src\shared\infrastructure\DependencyResolver;
 /** @var AbsorberEsquema $useCase */
 $useCase = DependencyResolver::get(AbsorberEsquema::class);
 
-$esquemaMatriz = (string) filter_post('esquema_matriz');
-$esquemaDel = (string) filter_post('esquema_del');
+$esquemaMatriz = (string) FilterPostGet::post('esquema_matriz');
+$esquemaDel = (string) FilterPostGet::post('esquema_del');
 
 $result = $useCase->execute($esquemaMatriz, $esquemaDel);
 

@@ -1,19 +1,19 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\misas\helpers\MisasDesplegableSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/misas/modificar_iniciales_sacd_zona_data');
 
 $oDesplZonas = new Desplegable();
-$oDesplZonas->setOpciones(misas_desplegable_opciones($data['a_opciones'] ?? []));
+$oDesplZonas->setOpciones(MisasDesplegableSupport::opciones($data['a_opciones'] ?? []));
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_iniciales_sacd_zona()');
@@ -30,4 +30,4 @@ $a_campos = [
     'h_zona' => $h_zona,
 ];
 
-ajax_json_render_phtml('frontend\\misas\\controller', 'modificar_iniciales_sacd_zona.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', 'modificar_iniciales_sacd_zona.phtml', $a_campos);

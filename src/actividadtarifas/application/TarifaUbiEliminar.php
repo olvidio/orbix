@@ -3,7 +3,7 @@
 namespace src\actividadtarifas\application;
 
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion: elimina una `TarifaUbi`.
@@ -20,7 +20,7 @@ final class TarifaUbiEliminar
      */
     public function execute(array $input): string
     {
-        $id_item = input_int($input, 'id_item');
+        $id_item = FuncTablasSupport::inputInt($input, 'id_item');
         if ($id_item === 0) {
             return (string) _("no sé cuál he de borrar");
         }

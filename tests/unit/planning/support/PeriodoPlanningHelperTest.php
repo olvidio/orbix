@@ -16,9 +16,7 @@ final class PeriodoPlanningHelperTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
-        // `PeriodoPlanningHelper::formPeriodo` usa `strtoupper_dlb` cuando el
-        // llamador no proporciona titulo; la cargamos una sola vez.
-        require_once __DIR__ . '/../../../../src/shared/domain/helpers/func_tablas.php';
+        parent::setUpBeforeClass();
     }
 
     public function test_opciones_trimestrales_contiene_todas_las_claves_esperadas(): void

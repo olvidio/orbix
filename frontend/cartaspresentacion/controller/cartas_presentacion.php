@@ -3,18 +3,18 @@
  * Pantalla principal del modulo `cartaspresentacion` — shell con filtro
  * dl/r + poblacion, listado AJAX de centros y modal de modificacion.
  */
+use frontend\cartaspresentacion\helpers\CartaspresentacionPayload;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\DesplegableArray;
 use frontend\cartaspresentacion\helpers\CartasPresentacionShellRender;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/cartaspresentacion_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-$shell = cartaspresentacion_post_data(PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_shell_data', []));
+$shell = CartaspresentacionPayload::postData(PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_shell_data', []));
 $shell = CartasPresentacionShellRender::enrich($shell);
-$view = cartaspresentacion_shell_view_from_payload($shell);
+$view = CartaspresentacionPayload::shellViewFromPayload($shell);
 $mi_dele = $view['mi_dele'];
 
 $aOpcionesCiudad = [

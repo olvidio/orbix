@@ -1,13 +1,13 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qid_grupo = (int)filter_input(INPUT_POST, 'id_grupo');
@@ -26,8 +26,8 @@ $a_campos_backend = [
     'id_item_egm' => $Qid_item_egm,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$payload = inventario_post_payload($data);
-$view = inventario_lista_docs_grupo_from_payload($payload);
+$payload = InventarioPayload::postPayload($data);
+$view = InventarioPayload::listaDocsGrupoFromPayload($payload);
 $a_valores = $view['a_valores'];
 $nombre_valija = $view['nombre_valija'];
 
@@ -55,4 +55,4 @@ $a_campos = [
     'oHashGrupo' => $oHashGrupo,
 ];
 
-ajax_json_render_phtml('frontend\inventario\controller', 'equipajes_doc_maleta.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\inventario\controller', 'equipajes_doc_maleta.phtml', $a_campos);

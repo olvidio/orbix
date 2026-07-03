@@ -5,9 +5,7 @@ namespace src\actividades\application;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use frontend\shared\web\Periodo;
-
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Lista centros encargados de actividades en un periodo dado y, para cada
@@ -33,12 +31,12 @@ final class ListaCentrosActivDatos
      */
     public function ejecutar(array $input): array
     {
-        $Qid_ctr_num = input_int($input, 'id_ctr_num');
+        $Qid_ctr_num = FuncTablasSupport::inputInt($input, 'id_ctr_num');
         $Qa_id_ctr = is_array($input['id_ctr'] ?? null) ? $input['id_ctr'] : [];
-        $Qperiodo = input_string($input, 'periodo');
-        $Qyear = input_string($input, 'year');
-        $Qempiezamin = input_string($input, 'empiezamin');
-        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = FuncTablasSupport::inputString($input, 'year');
+        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
 
         if (empty($Qperiodo)) {
             $Qperiodo = 'actual';

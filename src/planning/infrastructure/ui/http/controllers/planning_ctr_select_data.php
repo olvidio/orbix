@@ -5,18 +5,16 @@ use src\planning\application\PlanningCtrSelectData;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 $error = '';
 $data = [];
 try {
     $input = $_POST;
-    $Qyear = input_int($input, 'year');
-    $Qperiodo = input_string($input, 'periodo');
-    $Qempiezamin = input_string($input, 'empiezamin');
-    $Qempiezamax = input_string($input, 'empiezamax');
+    $Qyear = FuncTablasSupport::inputInt($input, 'year');
+    $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+    $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+    $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
 
     $oPeriodo = Periodo::conCalendarioDesdeBackend();
     $oPeriodo->setDefaultAny('next');

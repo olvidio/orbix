@@ -3,17 +3,19 @@
 use src\shared\domain\DatosUpdateRepo;
 use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FilterPostGet;
+use src\shared\domain\helpers\FuncTablasSupport;
 
-$Qclase_info_encoded = (string)filter_post('clase_info');
-$Qs_pkey = (string)filter_post('s_pkey');
-$Qid_pau = (string)filter_post('id_pau');
-$Qmod = (string)filter_post('mod');
-$Qobj_pau = (string)filter_post('obj_pau');
-$Qgo_to = (string)filter_post('go_to');
+$Qclase_info_encoded = (string)FilterPostGet::post('clase_info');
+$Qs_pkey = (string)FilterPostGet::post('s_pkey');
+$Qid_pau = (string)FilterPostGet::post('id_pau');
+$Qmod = (string)FilterPostGet::post('mod');
+$Qobj_pau = (string)FilterPostGet::post('obj_pau');
+$Qgo_to = (string)FilterPostGet::post('go_to');
 
 // Cuando es eliminar, viene directamente de la tabla (mod_tabla_sql)
 // Como es borrar, no hace falta mantener el scroll
-$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $stack = '';
 if (!empty($a_sel)) { //vengo de un checkbox
     $sel0 = $a_sel[0] ?? '';
@@ -22,7 +24,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
 }
 
-$pkeyJson = src\shared\domain\helpers\urlsafe_b64decode($Qs_pkey);
+$pkeyJson = src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($Qs_pkey);
 $a_pkey = $pkeyJson !== '' ? json_decode($pkeyJson) : null;
 
 // Tiene que ser en dos pasos.

@@ -1,16 +1,16 @@
 <?php
 
+use frontend\ubis\helpers\UbisPayload;
+use frontend\dossiers\helpers\DossiersListaRender;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $bloque = (string)filter_input(INPUT_POST, 'bloque');
 if (!empty($bloque)) {
@@ -36,17 +36,17 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 if (!empty($a_sel)) {
-    $id_ubi = ubis_id_from_sel_item($a_sel[0] ?? '');
+    $id_ubi = UbisPayload::idFromSelItem($a_sel[0] ?? '');
 } else {
     $id_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 }
 
-$home = ubis_home_from_payload(ubis_post_data(PostRequest::getDataFromUrl('/src/ubis/home_ubis_data', ['id_ubi' => $id_ubi])));
+$home = UbisPayload::homeFromPayload(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/home_ubis_data', ['id_ubi' => $id_ubi])));
 
 $base = AppUrlConfig::getPublicAppBaseUrl();
 $gohome = HashFront::link($base . '/frontend/ubis/controller/home_ubis.php?' . http_build_query(['id_ubi' => $id_ubi, 'obj_pau' => $home['obj_pau']]));
@@ -61,7 +61,7 @@ $dos = _("dossiers");
 $txt = ucfirst(_("formato texto"));
 $titulo = $home['nombre_ubi'];
 
-$lista_dossiers_html = orbix_render_lista_dossiers($home['pau'], $home['id_pau'], $home['obj_pau']);
+$lista_dossiers_html = DossiersListaRender::render($home['pau'], $home['id_pau'], $home['obj_pau']);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'godossiers' => $godossiers,

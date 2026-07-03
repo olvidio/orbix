@@ -1,4 +1,10 @@
 <?php
+
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\actividadplazas\helpers\ActividadplazasPostInput;
+use frontend\actividadplazas\helpers\ActividadplazasPayload;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Pantalla de peticiones de plaza de una persona (n / a / agd).
  *
@@ -21,16 +27,13 @@ use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $Qtodos = (int)filter_input(INPUT_POST, 'todos');
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
-$stack2 = actividadplazas_stack_from_post();
+$stack2 = ActividadplazasPostInput::stackFromPost();
 if ($stack2 !== null) {
     $oPosicion2 = new Posicion();
     if ($oPosicion2->goStack($stack2)) {
@@ -38,9 +41,9 @@ if ($stack2 !== null) {
     }
 }
 
-$selParts = actividadplazas_sel_hash_parts();
+$selParts = ActividadplazasPostInput::selHashParts();
 if ($selParts !== null) {
-    $Qid_nom = tessera_imprimir_int($selParts['first']);
+    $Qid_nom = PayloadCoercion::int($selParts['first']);
     $Qna = $selParts['second'];
     $Qsactividad = (string)(filter_input(INPUT_POST, 'sactividad') ?: filter_input(INPUT_POST, 'que'));
     $Qtodos = empty($Qtodos) ? 1 : $Qtodos;
@@ -59,7 +62,7 @@ $campos = [
     'id_ctr_n' => (int)filter_input(INPUT_POST, 'id_ctr_n'),
 ];
 
-$payload = actividadplazas_gestion_plazas_from_payload(
+$payload = ActividadplazasPayload::gestionPlazasFromPayload(
     PostRequest::getDataFromUrl('/src/actividadplazas/peticiones_activ_data', $campos)
 );
 

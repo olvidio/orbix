@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\FrontBootstrap;
 use frontend\shared\model\ViewNewTwig;
@@ -7,13 +6,14 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\shared\infrastructure\DependencyResolver;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qfiltro_ctr = encargossacd_post_string('filtro_ctr');
+$Qfiltro_ctr = EncargossacdPostInput::postString('filtro_ctr');
 
 /** @var EncargoAplicacionService $oService */
 $oService = DependencyResolver::get(EncargoAplicacionService::class);

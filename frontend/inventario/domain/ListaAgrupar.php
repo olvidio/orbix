@@ -2,11 +2,11 @@
 
 namespace frontend\inventario\domain;
 
+use frontend\inventario\helpers\InventarioPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 
-require_once __DIR__ . '/../helpers/inventario_support.php';
 
 class ListaAgrupar
 {
@@ -150,8 +150,8 @@ class ListaAgrupar
         if ($this->aOpciones === []) {
             $url_backend = '/src/inventario/lista_colecciones';
             $data = PostRequest::getDataFromUrl($url_backend);
-            $payload = inventario_post_payload($data);
-            $this->aOpciones = inventario_colecciones_opciones($payload['a_opciones'] ?? []);
+            $payload = InventarioPayload::postPayload($data);
+            $this->aOpciones = InventarioPayload::coleccionesOpciones($payload['a_opciones'] ?? []);
         }
 
         return $this->aOpciones;

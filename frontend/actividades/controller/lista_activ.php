@@ -1,4 +1,10 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPayload;
+use frontend\actividades\helpers\ActividadesListaSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Pantalla que muestra el listado de actividades filtradas. Se usa como
  * `action` del formulario de `actividad_que` (cuando que=list_activ/list_activ_compl)
@@ -20,16 +26,13 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
 use frontend\shared\web\Periodo;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(($aGoBack ?? list_nav_build_return_parametros_from_post()), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
 
 
 $Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
@@ -154,16 +157,16 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_activ_datos', [
     'titulo' => $tituloPrevio,
 ]);
 
-$a_valores = actividades_lista_valores_from_payload($data['a_valores'] ?? []);
+$a_valores = ActividadesPayload::listaValoresFromPayload($data['a_valores'] ?? []);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('lista_activ');
-$oTabla->setCabeceras(actividades_lista_cabeceras($data['a_cabeceras'] ?? []));
+$oTabla->setCabeceras(ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []));
 $oTabla->setBotones([]);
 $oTabla->setDatos($a_valores);
 $html_tabla = $oTabla->mostrar_tabla();
 
-$titulo = tessera_imprimir_string($data['titulo'] ?? '');
+$titulo = PayloadCoercion::string($data['titulo'] ?? '');
 
 $a_campos = [
     'oPosicion' => $oPosicion,

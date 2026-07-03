@@ -2,10 +2,8 @@
 
 namespace src\encargossacd\application;
 
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_int;
-
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Actualización de encargo desde `encargo_ver` (antes `encargo_ajax.php` que=editar).
@@ -24,17 +22,17 @@ final class EncargoVerEditar
      */
     public function execute(array $input): array
     {
-        $Qfiltro_ctr = input_int($input, 'filtro_ctr');
+        $Qfiltro_ctr = FuncTablasSupport::inputInt($input, 'filtro_ctr');
         $Qsf_sv = empty($Qfiltro_ctr) ? 1 : $Qfiltro_ctr;
-        $Qid_enc = input_int($input, 'id_enc');
+        $Qid_enc = FuncTablasSupport::inputInt($input, 'id_enc');
 
-        $Qid_ubi = input_int($input, 'lst_ctrs');
-        $Qid_zona = input_int($input, 'id_zona');
-        $Qdesc_enc = input_string($input, 'desc_enc');
-        $Qidioma_enc = input_string($input, 'idioma_enc');
-        $Qdesc_lugar = input_string($input, 'desc_lugar');
-        $Qobserv = input_string($input, 'observ');
-        $Qid_tipo_enc = input_string($input, 'id_tipo_enc');
+        $Qid_ubi = FuncTablasSupport::inputInt($input, 'lst_ctrs');
+        $Qid_zona = FuncTablasSupport::inputInt($input, 'id_zona');
+        $Qdesc_enc = FuncTablasSupport::inputString($input, 'desc_enc');
+        $Qidioma_enc = FuncTablasSupport::inputString($input, 'idioma_enc');
+        $Qdesc_lugar = FuncTablasSupport::inputString($input, 'desc_lugar');
+        $Qobserv = FuncTablasSupport::inputString($input, 'observ');
+        $Qid_tipo_enc = FuncTablasSupport::inputString($input, 'id_tipo_enc');
 
         if ($Qdesc_enc === '') {
             return ['error' => _('Debe llenar el campo descripción')];

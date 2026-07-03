@@ -1,5 +1,6 @@
 <?php
 
+use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
@@ -7,13 +8,12 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/profesores_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 $url_backend = '/src/profesores/profesor_asignatura_que';
 $data = PostRequest::getDataFromUrl($url_backend);
-$aOpciones = notas_desplegable_opciones($data['aOpciones'] ?? []);
+$aOpciones = NotasFormSupport::desplegableOpciones($data['aOpciones'] ?? []);
 
 $oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
 $oDesplAsignaturas->setNombre('id_asignatura');

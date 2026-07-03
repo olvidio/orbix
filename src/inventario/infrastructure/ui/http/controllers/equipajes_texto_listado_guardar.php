@@ -1,8 +1,7 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 // grabar la cabecera, pie o texto en las maletas.
 use src\inventario\domain\contracts\EgmRepositoryInterface;
@@ -11,9 +10,9 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qtexto = input_string($_POST, 'texto');
-$Qloc = input_string($_POST, 'loc');
-$Qid_equipaje = input_int($_POST, 'id_equipaje');
+$Qtexto = FuncTablasSupport::inputString($_POST, 'texto');
+$Qloc = FuncTablasSupport::inputString($_POST, 'loc');
+$Qid_equipaje = FuncTablasSupport::inputInt($_POST, 'id_equipaje');
 
 /** @var EquipajeRepositoryInterface $EquipajeRepository */
 $EquipajeRepository = DependencyResolver::get(EquipajeRepositoryInterface::class);

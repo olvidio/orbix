@@ -6,9 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder de la pantalla resumen de plazas por actividad.
@@ -45,8 +43,8 @@ final class ResumenPlazasData
      */
     public function execute(array $input): array
     {
-        $id_activ = input_int($input, 'id_activ');
-        $nom_activ = input_string($input, 'nom_activ');
+        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $nom_activ = FuncTablasSupport::inputString($input, 'nom_activ');
         if ($id_activ <= 0) {
             return [
                 'error' => (string)_("falta parametro id_activ"),
@@ -70,7 +68,7 @@ final class ResumenPlazasData
         $otra_dl = false;
         if ($oActividad !== null) {
             $pub = $oActividad->isPublicado();
-            $publicado = is_true($pub) && $pub !== null;
+            $publicado = FuncTablasSupport::isTrue($pub) && $pub !== null;
             if ($oActividad->getDl_org() !== ConfigGlobal::mi_delef()) {
                 $otra_dl = true;
             }

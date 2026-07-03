@@ -1,14 +1,15 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use Mpdf\Mpdf;
 use Mpdf\MpdfException;
 use frontend\shared\security\HashFront;
+use frontend\certificados\helpers\CertificadosPayload;
 
-require_once __DIR__ . '/../helpers/certificados_support.php';
 
-$Qguardar = tessera_imprimir_string($_GET['guardar'] ?? '');
+$Qguardar = PayloadCoercion::string($_GET['guardar'] ?? '');
 
 $footer = '';
 $certificado = '';
@@ -65,7 +66,7 @@ if ($Qguardar !== '') {
     $certificado_base64 = base64_encode($certificado);
 
     require_once __DIR__ . '/certificado_emitido_aviso_html.php';
-    $data = certificados_post_data(PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_guardar_pdf', [
+    $data = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_guardar_pdf', [
         'id_item' => $Qid_item,
         'id_nom' => $id_nom,
         'certificado' => $certificado_base64,
@@ -73,7 +74,7 @@ if ($Qguardar !== '') {
     ], false));
     if (!empty($data['error'])) {
         certificado_emitido_echo_aviso_y_salir(
-            PostRequest::stripInternalCallProvenance(tessera_imprimir_string($data['error']))
+            PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error']))
         );
     }
 }

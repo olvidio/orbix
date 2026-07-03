@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\misas\support;
 
+use frontend\shared\helpers\PayloadCoercion;
+
 /**
  * Tabla HTML de solo lectura para la cuadrícula de zona (encargos × días).
  */
@@ -39,16 +41,16 @@ final class CuadriculaZonaHtmlTable
             }
             $html .= '<tr>';
             $html .= self::td(
-                tessera_imprimir_string($row['encargo'] ?? ''),
+                PayloadCoercion::string($row['encargo'] ?? ''),
                 self::encargoCellClass($row),
                 ''
             );
             foreach ($dayFields as $field) {
                 $meta = is_array($row['meta'] ?? null) ? $row['meta'][$field] ?? null : null;
                 $html .= self::td(
-                    tessera_imprimir_string($row[$field] ?? ''),
-                    is_array($meta) ? tessera_imprimir_string($meta['color'] ?? '') : '',
-                    is_array($meta) ? tessera_imprimir_string($meta['texto'] ?? '') : ''
+                    PayloadCoercion::string($row[$field] ?? ''),
+                    is_array($meta) ? PayloadCoercion::string($meta['color'] ?? '') : '',
+                    is_array($meta) ? PayloadCoercion::string($meta['texto'] ?? '') : ''
                 );
             }
             $html .= '</tr>';
@@ -84,7 +86,7 @@ final class CuadriculaZonaHtmlTable
             usort($dayFields, 'strcmp');
             $sortedHeaders = [_('Encargo')];
             foreach ($dayFields as $field) {
-                $sortedHeaders[] = tessera_imprimir_string($row[$field] ?? $field);
+                $sortedHeaders[] = PayloadCoercion::string($row[$field] ?? $field);
             }
 
             return [$sortedHeaders, $dayFields];
@@ -131,8 +133,8 @@ final class CuadriculaZonaHtmlTable
             if (!is_array($col)) {
                 continue;
             }
-            $field = tessera_imprimir_string($col['field'] ?? $col['id'] ?? '');
-            $name = tessera_imprimir_string($col['name'] ?? $field);
+            $field = PayloadCoercion::string($col['field'] ?? $col['id'] ?? '');
+            $name = PayloadCoercion::string($col['name'] ?? $field);
             if ($field === 'encargo') {
                 $headers[] = $name;
                 continue;
@@ -183,7 +185,7 @@ final class CuadriculaZonaHtmlTable
      */
     private static function encargoCellClass(array $row): string
     {
-        $color = tessera_imprimir_string($row['color_encargo'] ?? '');
+        $color = PayloadCoercion::string($row['color_encargo'] ?? '');
         if ($color !== '' && $color !== 'titulo') {
             return $color;
         }

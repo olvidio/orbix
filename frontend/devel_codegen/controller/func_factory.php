@@ -2,7 +2,8 @@
 
 namespace frontend\devel_codegen\controller;
 
-require_once __DIR__ . '/../helpers/devel_codegen_support.php';
+use frontend\shared\helpers\PayloadCoercion;
+
 /**
  * Devuelve un array con los nombres de los campos que forman la clave primaria de la tabla
  *
@@ -37,7 +38,7 @@ function primaryKey(\PDO $oDB, string $tabla): array
     if (!is_array($row) || !isset($row['attname'])) {
         exit('Quizà falta definir la clave primaria');
     }
-    $campo[] = tessera_imprimir_string($row['attname']);
+    $campo[] = PayloadCoercion::string($row['attname']);
 
     return $campo;
 

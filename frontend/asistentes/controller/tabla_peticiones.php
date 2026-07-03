@@ -1,24 +1,24 @@
 <?php
 
+use frontend\asistentes\helpers\AsistentesPayload;
+use frontend\asistentes\helpers\AsistentesPostInput;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\asistentes\helpers\TablaPeticionesRender;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/asistentes_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 /** @var \frontend\shared\web\Posicion $oPosicion */
 
-$id_activ_old = asistentes_id_from_sel_post('id_activ_old');
+$id_activ_old = AsistentesPostInput::idFromSelPost('id_activ_old');
 
 $campos = array_merge($_GET, $_POST);
 
 // Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
-$stackFromPost = list_nav_stack_from_post();
+$stackFromPost = ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $campos['restored_id_sel']    = $oPosicion->getParametro('id_sel');
     $campos['restored_scroll_id'] = $oPosicion->getParametro('scroll_id');
@@ -27,11 +27,11 @@ if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
 
 // Tras guardar por AJAX, js_atras(0) recarga con `stack` en POST: no volver a recordar() (duplicaría la pila).
 if ($stackFromPost !== 0) {
-    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    list_nav_boot_actividad_select_child_recordar($oPosicion, $Qrefresh);
+    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
 }
-list_nav_persist_actividad_select_child_entry($oPosicion, [
+ListNavSupport::persistActividadSelectChildEntry($oPosicion, [
     'id_activ_old' => $id_activ_old,
 ]);
 
@@ -41,7 +41,7 @@ $oPosicion->setParametros([
 ], 1);
 
 /** @var array<string, mixed> $payload */
-$payload = asistentes_post_data(PostRequest::getDataFromUrl('/src/asistentes/tabla_peticiones_data', $campos));
+$payload = AsistentesPayload::postData(PostRequest::getDataFromUrl('/src/asistentes/tabla_peticiones_data', $campos));
 $payload = TablaPeticionesRender::enrich($payload);
 
 $a_campos = array_merge($payload, ['oPosicion' => $oPosicion]);

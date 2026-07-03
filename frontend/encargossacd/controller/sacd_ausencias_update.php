@@ -1,7 +1,6 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\FrontBootstrap;
 
 /**
@@ -17,4 +16,4 @@ FrontBootstrap::boot();
 $campos = $_POST;
 unset($campos['hh']);
 
-ajax_json_proxy_post_request('/src/encargossacd/sacd_ausencias_update', $campos);
+AjaxJsonSupport::proxyPostRequest('/src/encargossacd/sacd_ausencias_update', $campos);

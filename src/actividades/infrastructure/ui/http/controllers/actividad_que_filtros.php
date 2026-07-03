@@ -1,4 +1,6 @@
 <?php
+
+use src\shared\domain\helpers\FilterPostGet;
 /*
  * Endpoint backend que devuelve los datos del bloque "filtros extra"
  * (filtro_lugar + lugar + organiza + publicada) de la pantalla
@@ -14,18 +16,18 @@ use src\shared\infrastructure\DependencyResolver;
 use src\actividades\application\ActividadQueFiltrosBloque;
 use src\shared\web\ContestarJson;
 
-$sfsv = (int)filter_post('sfsv');
+$sfsv = (int)FilterPostGet::post('sfsv');
 if ($sfsv === 0) {
     $sfsv = (int)ConfigGlobal::mi_sfsv();
 }
-$modo = (string)filter_post('modo');
+$modo = (string)FilterPostGet::post('modo');
 if ($modo === '') {
     $modo = 'buscar';
 }
-$dl_org = (string)filter_post('dl_org');
-$filtro_lugar = (string)filter_post('filtro_lugar');
-$id_ubi = (int)filter_post('id_ubi');
-$publicado = (int)filter_post('publicado');
+$dl_org = (string)FilterPostGet::post('dl_org');
+$filtro_lugar = (string)FilterPostGet::post('filtro_lugar');
+$id_ubi = (int)FilterPostGet::post('id_ubi');
+$publicado = (int)FilterPostGet::post('publicado');
 
 $proceso_installed = ConfigGlobal::is_app_installed('procesos');
 

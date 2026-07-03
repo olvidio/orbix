@@ -4,9 +4,8 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\CamaId;
-use function src\shared\domain\helpers\input_string;
-
-$Qid_cama = input_string($_POST, 'id_cama');
+use src\shared\domain\helpers\FuncTablasSupport;
+$Qid_cama = FuncTablasSupport::inputString($_POST, 'id_cama');
 
 /** @var CamaDlRepositoryInterface $camaRepository */
 $camaRepository = DependencyResolver::get(CamaDlRepositoryInterface::class);

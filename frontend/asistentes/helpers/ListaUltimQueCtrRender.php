@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\asistentes\helpers;
 
-require_once __DIR__ . '/asistentes_support.php';
-
-use function frontend\shared\helpers\payload_string;
-
+use frontend\shared\helpers\FuncTablasSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 
@@ -24,17 +21,17 @@ final class ListaUltimQueCtrRender
     {
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $formRel = payload_string($paths, 'form_action');
+        $formRel = FuncTablasSupport::payloadString($paths, 'form_action');
         $payload['form_action'] = $formRel !== '' ? $base . '/' . ltrim($formRel, '/') : '';
 
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm(payload_string($hashMain, 'campos_form', 'id_ubi'));
-        $cn = payload_string($hashMain, 'campos_no');
+        $oHash->setCamposForm(FuncTablasSupport::payloadString($hashMain, 'campos_form', 'id_ubi'));
+        $cn = FuncTablasSupport::payloadString($hashMain, 'campos_no');
         if ($cn !== '') {
             $oHash->setCamposNo($cn);
         }
-        $hidden = asistentes_hash_campos_hidden($hashMain['campos_hidden'] ?? []);
+        $hidden = AsistentesRenderSupport::hashCamposHidden($hashMain['campos_hidden'] ?? []);
         $oHash->setArrayCamposHidden($hidden);
         $payload['hash_form_html'] = $oHash->getCamposHtml();
 

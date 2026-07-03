@@ -1,9 +1,10 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\helpers\FuncTablasSupport;
 
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
 /**
@@ -16,7 +17,6 @@ use frontend\shared\FrontBootstrap;
  * @subpackage estudios
  */
 
-require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -29,7 +29,7 @@ $payload = PostRequest::getDataFromUrl('/src/notas/informe_stgr_n_data', [
     'lista' => $Qlista,
 ]);
 
-$ce_lugar = tessera_imprimir_string($payload['ce_lugar'] ?? '');
+$ce_lugar = PayloadCoercion::string($payload['ce_lugar'] ?? '');
 unset($payload['ce_lugar']);
 
 if ($ce_lugar === '') {
@@ -42,7 +42,7 @@ if ($ce_lugar === '') {
 $datos = $payload;
 
 $a_campos = [
-    'titulo' => strtoupper_dlb(_("alumnos numerarios")),
+    'titulo' => FuncTablasSupport::strtoupperDlb(_("alumnos numerarios")),
     'curso_txt' => $datos['curso_txt'],
     'res' => $datos['res'],
     'textos' => $datos['textos'],

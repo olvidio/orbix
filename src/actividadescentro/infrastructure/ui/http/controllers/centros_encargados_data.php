@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: devuelve los centros encargados actuales de una
  * actividad en un array serializable, junto con los flags de permiso.
@@ -7,13 +10,10 @@
 use src\actividadescentro\application\CentrosEncargadosData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 $input = [
-    'id_activ' => input_int($_POST, 'id_activ'),
-    'id_tipo_activ' => input_string($_POST, 'id_tipo_activ'),
-    'dl_org' => input_string($_POST, 'dl_org'),
+    'id_activ' => FuncTablasSupport::inputInt($_POST, 'id_activ'),
+    'id_tipo_activ' => FuncTablasSupport::inputString($_POST, 'id_tipo_activ'),
+    'dl_org' => FuncTablasSupport::inputString($_POST, 'dl_org'),
 ];
 
 /** @var CentrosEncargadosData $useCase */

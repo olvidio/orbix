@@ -3,7 +3,8 @@
 use src\encargossacd\application\PropuestasListaEncData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FilterPostGet;
 
 /** @var PropuestasListaEncData $useCase */
 $useCase = DependencyResolver::get(PropuestasListaEncData::class);
-ContestarJson::enviar('', $useCase->execute((int) (filter_post('filtro_ctr') ?? filter_get('filtro_ctr') ?? 0)));
+ContestarJson::enviar('', $useCase->execute((int) (FilterPostGet::post('filtro_ctr') ?? FilterPostGet::get('filtro_ctr') ?? 0)));

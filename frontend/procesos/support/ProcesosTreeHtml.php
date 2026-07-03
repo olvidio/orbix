@@ -2,6 +2,8 @@
 
 namespace frontend\procesos\support;
 
+use frontend\shared\helpers\PayloadCoercion;
+
 /**
  * HTML del árbol de fases a partir de la clave `aPadres` devuelta por
  * {@see \src\procesos\application\ProcesosGet::execute()}.
@@ -20,8 +22,8 @@ final class ProcesosTreeHtml
         $html = '<div id="tree">';
         if (!empty($aPadres[0])) {
             foreach ($aPadres[0] as $padre) {
-                $id_fase_i = \tessera_imprimir_int($padre['id'] ?? 0);
-                $nom = \tessera_imprimir_string($padre['nom'] ?? '');
+                $id_fase_i = PayloadCoercion::int($padre['id'] ?? 0);
+                $nom = PayloadCoercion::string($padre['nom'] ?? '');
                 if (array_key_exists($id_fase_i, $aPadres)) {
                     $html .= '<div class="branch">';
                     $html .= '<div class="entry"><span>' . $nom . '</span>';
@@ -49,8 +51,8 @@ final class ProcesosTreeHtml
         }
         $html = '';
         foreach ($aPadres[$id_fase] as $padre) {
-            $id_fase_i = \tessera_imprimir_int($padre['id'] ?? 0);
-            $nom = \tessera_imprimir_string($padre['nom'] ?? '');
+            $id_fase_i = PayloadCoercion::int($padre['id'] ?? 0);
+            $nom = PayloadCoercion::string($padre['nom'] ?? '');
             if (array_key_exists($id_fase_i, $aPadres)) {
                 $html .= '<div class="branch">';
                 $html .= '<div class="entry"><span>' . $nom . '</span>';

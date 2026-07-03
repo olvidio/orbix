@@ -1,5 +1,8 @@
 <?php
 
+use frontend\notas\helpers\NotasPayload;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Esta página muestra una tabla con las actas.
  *
@@ -22,8 +25,6 @@ use frontend\shared\FrontBootstrap;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\XPermisos;
 
-require_once __DIR__ . '/../helpers/notas_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -31,20 +32,20 @@ $mi_dele = OrbixRuntime::miDelef();
 $mi_region = OrbixRuntime::miRegion();
 
 $stackFromPost = isset($_POST['stack']) ? (int) filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT) : 0;
-$restored = list_nav_restore_selection_from_stack_post();
+$restored = ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !list_nav_id_sel_is_empty($restored['id_sel']) ? $restored['id_sel'] : list_nav_id_sel_from_post();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : list_nav_scroll_id_from_post();
+$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_acta_select_return_to_posicion($oPosicion, 0);
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistActaSelectReturnToPosicion($oPosicion, 0);
 
 $Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
 $Qacta = (string)filter_input(INPUT_POST, 'acta');
 
-list_nav_persist_selection_on_list_page(
+ListNavSupport::persistSelectionOnListPage(
     $oPosicion,
     $Qid_sel,
     $Qscroll_id,
@@ -59,7 +60,7 @@ $d = PostRequest::getDataFromUrl('/src/notas/acta_select_data', [
     'acta' => $Qacta,
     'mes_fin_stgr' => $mesFinStgr,
 ]);
-$presentacion = notas_acta_select_from_payload($d);
+$presentacion = NotasPayload::actaSelectFromPayload($d);
 $titulo = $presentacion['titulo'];
 $a_asignaturas = $presentacion['a_asignaturas'];
 $cActasData = $presentacion['actas'];
@@ -121,7 +122,7 @@ foreach ($cActasData as $oActa) {
     $a_valores[$i][3] = $nombre_corto;
     $a_valores[$i][4] = $hasPdf;
 }
-if (!list_nav_id_sel_is_empty($Qid_sel)) {
+if (!ListNavSupport::idSelIsEmpty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
 if ($Qscroll_id !== '') {

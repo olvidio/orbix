@@ -11,9 +11,7 @@ use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
-
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve los datos que el formulario "ver/editar actividad" necesita para
@@ -78,16 +76,16 @@ final class ActividadVerDatos
      */
     public function ejecutar(array $input): array
     {
-        $id_activ = input_int($input, 'id_activ');
-        $isfsv = input_int($input, 'isfsv');
-        $dl_org = input_string($input, 'dl_org');
-        $Bdl = input_string($input, 'Bdl', 't');
+        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $isfsv = FuncTablasSupport::inputInt($input, 'isfsv');
+        $dl_org = FuncTablasSupport::inputString($input, 'dl_org');
+        $Bdl = FuncTablasSupport::inputString($input, 'Bdl', 't');
         $tarifa = is_scalar($input['tarifa'] ?? '') ? (string) ($input['tarifa'] ?? '') : '';
-        $idioma = input_string($input, 'idioma');
-        $id_repeticion = input_int($input, 'id_repeticion');
-        $id_ubi = input_int($input, 'id_ubi');
-        $lugar_esp = input_string($input, 'lugar_esp');
-        $id_tipo_activ = input_string($input, 'id_tipo_activ');
+        $idioma = FuncTablasSupport::inputString($input, 'idioma');
+        $id_repeticion = FuncTablasSupport::inputInt($input, 'id_repeticion');
+        $id_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
+        $lugar_esp = FuncTablasSupport::inputString($input, 'lugar_esp');
+        $id_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
         $nivel_stgr_raw = $input['nivel_stgr'] ?? self::nivelStgrPorDefectoParaIdTipoActividad($id_tipo_activ);
         $nivel_stgr = is_scalar($nivel_stgr_raw) ? (string) $nivel_stgr_raw : '';
         $calcTarifaInicial = !empty($input['calc_tarifa_inicial']);

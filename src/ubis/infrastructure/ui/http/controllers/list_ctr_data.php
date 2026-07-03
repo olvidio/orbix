@@ -3,12 +3,11 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\ListCtrData;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FuncTablasSupport;
 
-use function src\shared\domain\helpers\input_string;
-
-$Qque_lista = input_string($_POST, 'que_lista');
-$Qloc = input_string($_POST, 'loc');
-$Qid_sel = input_string($_POST, 'id_sel');
-$Qscroll_id = input_string($_POST, 'scroll_id');
+$Qque_lista = FuncTablasSupport::inputString($_POST, 'que_lista');
+$Qloc = FuncTablasSupport::inputString($_POST, 'loc');
+$Qid_sel = FuncTablasSupport::inputString($_POST, 'id_sel');
+$Qscroll_id = FuncTablasSupport::inputString($_POST, 'scroll_id');
 
 ContestarJson::enviar('', DependencyResolver::get(ListCtrData::class)->execute($Qloc, $Qque_lista, $Qid_sel, $Qscroll_id));

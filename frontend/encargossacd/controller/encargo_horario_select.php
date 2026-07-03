@@ -1,5 +1,9 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
+
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
+use frontend\encargossacd\helpers\EncargossacdPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
@@ -15,29 +19,28 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($Qid_sel)) {
     $Qid_enc = (int)strtok((string)$Qid_sel[0], '#');
 } else {
-    $Qid_enc = encargossacd_post_int('id_enc');
+    $Qid_enc = EncargossacdPostInput::postInt('id_enc');
 }
 
-$Qmod = encargossacd_post_string('mod');
-$Qorigen = encargossacd_post_string('origen');
+$Qmod = EncargossacdPostInput::postString('mod');
+$Qorigen = EncargossacdPostInput::postString('origen');
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/encargo_horario_select_data', [
     'id_enc' => $Qid_enc,
 ]);
-$desc_enc = tessera_imprimir_string($data['desc_enc'] ?? '');
+$desc_enc = PayloadCoercion::string($data['desc_enc'] ?? '');
 $filasRaw = $data['filas'] ?? [];
 $filas = is_array($filasRaw) ? $filasRaw : [];
 
@@ -70,7 +73,7 @@ if (!empty($Qid_sel)) {
 }
 $i = 0;
 foreach ($filas as $fila) {
-    $row = encargossacd_horario_row($fila);
+    $row = EncargossacdPayload::horarioRow($fila);
     $i++;
     $id_enc_fila = $row['id_enc'];
     $id_item_h = $row['id_item_h'];

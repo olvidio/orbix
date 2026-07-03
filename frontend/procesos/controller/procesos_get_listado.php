@@ -1,4 +1,8 @@
 <?php
+
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\procesos\helpers\ProcesosPayload;
+
 /**
  * Renderer frontend de la tabla de fases del proceso.
  * Llama a /src/procesos/procesos_get_listado (JSON con a_rows) y pinta
@@ -8,13 +12,11 @@
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $data = PostRequest::getDataFromUrl('/src/procesos/procesos_get_listado', PostRequest::requestPayloadForHash());
-$aRows = procesos_listado_rows($data['a_rows'] ?? null);
+$aRows = ProcesosPayload::listadoRows($data['a_rows'] ?? null);
 
 ob_start();
 echo '<table>';
@@ -41,4 +43,4 @@ foreach ($aRows as $row) {
 }
 
 echo '</table>';
-ajax_json_html((string) ob_get_clean());
+AjaxJsonSupport::html((string) ob_get_clean());

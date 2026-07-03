@@ -2,9 +2,6 @@
 
 namespace src\notas\application;
 
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_int;
-
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -14,6 +11,7 @@ use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Prepara los datos que necesita `form_notas_de_una_persona.phtml` para pintar el form
@@ -42,7 +40,7 @@ final class NotaPersonaFormData
      */
     public function execute(array $input): array
     {
-        $id_pau = input_int($input, 'id_pau');
+        $id_pau = FuncTablasSupport::inputInt($input, 'id_pau');
         $id_asignatura_real = $this->resolveAsignaturaReal($input);
 
         if ($id_asignatura_real !== '') {
@@ -58,7 +56,7 @@ final class NotaPersonaFormData
     private function resolveAsignaturaReal(array $input): string
     {
         $sel = (array)($input['sel'] ?? []);
-        $pau = input_string($input, 'pau');
+        $pau = FuncTablasSupport::inputString($input, 'pau');
         if ($sel !== [] && $pau === 'p') {
             $sel0 = $sel[0];
             if (is_string($sel0)) {
@@ -67,9 +65,9 @@ final class NotaPersonaFormData
                 return is_string($part) ? $part : '';
             }
         }
-        $mod = input_string($input, 'mod');
+        $mod = FuncTablasSupport::inputString($input, 'mod');
         if ($mod !== '' && $mod !== 'nuevo') {
-            return input_string($input, 'id_asignatura_real');
+            return FuncTablasSupport::inputString($input, 'id_asignatura_real');
         }
         return '';
     }

@@ -15,7 +15,7 @@ use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use stdClass;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso para generar la tabla de avisos de cambios.
@@ -145,7 +145,7 @@ class AvisosGenerarTabla
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', (string) ($dl_org ?? ''));
                 $dl_propia = (ConfigGlobal::mi_dele() === $dl_org_no_f);
                 // Si es de otra dl, compruebo que sea una actividad importada, sino no tiene sentido avisar.
-                if (!is_true($dl_propia)) {
+                if (!FuncTablasSupport::isTrue($dl_propia)) {
                     $cImportadas = $ImportadaRepository->findById($id_activ);
                     if (empty($cImportadas)) {
                         $oAvisos->anotado();
@@ -156,7 +156,7 @@ class AvisosGenerarTabla
                 $aWhere = [];
                 $aOperador = [];
                 $aWhere['objeto'] = $sObjeto;
-                $aWhere['dl_org'] = (!is_true($dl_propia)) ? 'x' : $dl_org;
+                $aWhere['dl_org'] = (!FuncTablasSupport::isTrue($dl_propia)) ? 'x' : $dl_org;
                 $aWhere['id_tipo_activ_txt'] = $id_tipo_activ;
                 $aOperador['id_tipo_activ_txt'] = '~INV';
                 $aWhere['_ordre'] = 'aviso_tipo,id_usuario,id_tipo_activ_txt DESC';
@@ -187,7 +187,7 @@ class AvisosGenerarTabla
 
                     $fase_correcta = 0;
                     /////////////////// COMPARAR DATE //////////////////////////////////////////
-                    if (!is_true($aviso_outdate)) {
+                    if (!FuncTablasSupport::isTrue($aviso_outdate)) {
                         $oActividad = $ActividadAllRepository->findById($id_activ);
                         if ($oActividad === null || $oF_cmb === null) {
                             continue;
@@ -213,11 +213,11 @@ class AvisosGenerarTabla
                                     $status_de_fase = $cTareasProceso[0]->getStatus();
                                 }
                             }
-                            if ($id_status_cmb === $status_de_fase && is_true($aviso_on)) {
+                            if ($id_status_cmb === $status_de_fase && FuncTablasSupport::isTrue($aviso_on)) {
                                 $fase_correcta = 1;
                             }
                         } else {
-                            if ($id_status_cmb === $id_fase_ref && is_true($aviso_on)) {
+                            if ($id_status_cmb === $id_fase_ref && FuncTablasSupport::isTrue($aviso_on)) {
                                 $fase_correcta = 1;
                             }
                         }
@@ -225,7 +225,7 @@ class AvisosGenerarTabla
                         /////////////////// COMPARAR FASES //////////////////////////////////////////
                         // fase on
                         if (in_array($id_fase_ref, $aFases_cmb)) {
-                            if (is_true($aviso_on)) {
+                            if (FuncTablasSupport::isTrue($aviso_on)) {
                                 $oPermActividades = $this->makePermisosActividades($id_usuario);
                                 $oPermActividades->setActividad($id_activ);
                                 $oPermActividades->setFasesCompletadas($aFases_cmb);
@@ -250,7 +250,7 @@ class AvisosGenerarTabla
                             }
                         } else {
                             // fase off
-                            if (is_true($aviso_off)) {
+                            if (FuncTablasSupport::isTrue($aviso_off)) {
                                 $oPermActividades = $this->makePermisosActividades($id_usuario);
                                 $oPermActividades->setActividad($id_activ);
                                 $oPermActividades->setFasesCompletadas($aFases_cmb);
@@ -279,10 +279,10 @@ class AvisosGenerarTabla
                                     continue;
                                 } elseif (!empty($valor)) {
                                     $operador = empty($operador) ? '=' : $operador;
-                                    if (is_true($valor_old ?? false)) {
+                                    if (FuncTablasSupport::isTrue($valor_old ?? false)) {
                                         $apuntar = $oAvisos->comparar($valor_old_cmb, $operador, $valor);
                                     }
-                                    if ($apuntar === false && is_true($valor_new ?? false)) {
+                                    if ($apuntar === false && FuncTablasSupport::isTrue($valor_new ?? false)) {
                                         $apuntar = $oAvisos->comparar($valor_new_cmb, $operador, $valor);
                                     }
                                 } else {

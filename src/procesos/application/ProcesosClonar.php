@@ -3,7 +3,7 @@
 namespace src\procesos\application;
 
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: clona las tareas de un proceso de referencia al proceso indicado.
@@ -20,8 +20,8 @@ class ProcesosClonar
      */
     public function execute(array $input): string
     {
-        $Qid_tipo_proceso = input_int($input, 'id_tipo_proceso');
-        $Qid_tipo_proceso_ref = input_int($input, 'id_tipo_proceso_ref');
+        $Qid_tipo_proceso = FuncTablasSupport::inputInt($input, 'id_tipo_proceso');
+        $Qid_tipo_proceso_ref = FuncTablasSupport::inputInt($input, 'id_tipo_proceso_ref');
 
         if ($Qid_tipo_proceso <= 0 || $Qid_tipo_proceso_ref <= 0) {
             return _("no se ha indicado el proceso a clonar");

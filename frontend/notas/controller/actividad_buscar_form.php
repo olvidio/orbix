@@ -1,5 +1,8 @@
 <?php
 
+use frontend\notas\helpers\NotasPayload;
+use frontend\shared\helpers\AjaxJsonSupport;
+
 /**
  * Dialogo "buscar actividad" que abre `form_notas_de_una_persona.phtml` al pulsar
  * "añadir ca".
@@ -10,9 +13,7 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
@@ -24,7 +25,7 @@ $data = PostRequest::getDataFromUrl('/src/notas/actividades_buscar_data', [
     'f_acta_iso' => $Qf_acta_iso,
     'id_activ' => $Qid_activ,
 ]);
-$buscar = notas_actividades_buscar_from_payload($data);
+$buscar = NotasPayload::actividadesBuscarFromPayload($data);
 
 $oDesplDelegaciones = Desplegable::desdeOpciones($buscar['delegaciones'], 'dl_org');
 $oDesplDelegaciones->setOpcion_sel($buscar['dl_org_sel']);
@@ -46,4 +47,4 @@ $a_campos = [
     'oDesplActividades' => $oDesplActividades,
 ];
 
-ajax_json_render_phtml('frontend\\notas\\controller', 'actividad_buscar_form.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\notas\\controller', 'actividad_buscar_form.phtml', $a_campos);

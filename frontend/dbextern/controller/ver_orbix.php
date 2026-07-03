@@ -5,8 +5,8 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\dbextern\helpers\DbexternPayload;
 
-require_once __DIR__ . '/../helpers/dbextern_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -26,14 +26,14 @@ if ($first_load) {
         'dl' => $dl,
         'tipo_persona' => $tipo_persona,
     ]);
-    $a_lista = dbextern_lista_from_backend($data['lista'] ?? []);
+    $a_lista = DbexternPayload::listaFromBackend($data['lista'] ?? []);
 
     session_start();
     $_SESSION['DBOrbix'] = $a_lista;
     session_write_close();
 }
 
-$orbix = dbextern_session_db_orbix();
+$orbix = DbexternPayload::sessionDbOrbix();
 $max = count($orbix);
 $a_lista_bdu = [];
 $persona_orbix = [];
@@ -43,11 +43,11 @@ if ($max === 0) {
     $html_reg = _("No hay registros");
 } else {
     $idInt = is_numeric($id) ? (int) $id : 1;
-    $newIdRaw = dbextern_otro_orbix($idInt, $mov, $max);
+    $newIdRaw = DbexternPayload::otroOrbix($idInt, $mov, $max);
     $new_id = $newIdRaw === false ? 0 : $newIdRaw;
     if ($new_id > 0 && isset($orbix[$new_id])) {
         $persona_orbix = $orbix[$new_id];
-        $id_nom_orbix = dbextern_persona_orbix_row($persona_orbix)['id_nom_orbix'];
+        $id_nom_orbix = DbexternPayload::personaOrbixRow($persona_orbix)['id_nom_orbix'];
 
         $matches = PostRequest::getDataFromUrl('/src/dbextern/ver_orbix_datos', [
             'region' => $region,
@@ -55,7 +55,7 @@ if ($max === 0) {
             'tipo_persona' => $tipo_persona,
             'id_nom_orbix' => $id_nom_orbix,
         ]);
-        $a_lista_bdu = dbextern_lista_bdu_from_matches($matches);
+        $a_lista_bdu = DbexternPayload::listaBduFromMatches($matches);
     }
 
     $html_reg = sprintf(_("registro %s de %s"), $new_id, $max);

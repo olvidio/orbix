@@ -7,8 +7,7 @@ use src\permisos\domain\PermisosActividadesTrue;
 use src\procesos\domain\PermAccion;
 use src\shared\config\ConfigGlobal;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve el listado de centros encargados actuales de una actividad junto
@@ -37,7 +36,7 @@ final class CentrosEncargadosData
      */
     public function execute(array $input): array
     {
-        $id_activ = input_int($input, 'id_activ');
+        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
         if ($id_activ <= 0) {
             return [
                 'id_activ' => 0,
@@ -46,8 +45,8 @@ final class CentrosEncargadosData
                 'centros' => [],
             ];
         }
-        $id_tipo_activ = input_string($input, 'id_tipo_activ');
-        $dl_org = input_string($input, 'dl_org');
+        $id_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $dl_org = FuncTablasSupport::inputString($input, 'dl_org');
 
         $oPermCtr = $this->resolverPermisoCtr($id_activ, $id_tipo_activ, $dl_org);
         $permite_ver = $oPermCtr->have_perm_activ('ver') === true;

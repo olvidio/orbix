@@ -17,8 +17,7 @@ use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\PermAccion;
 use src\procesos\domain\value_objects\FaseId;
 use frontend\shared\web\Periodo;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: construye la tabla principal de la pantalla activ_sacd.
@@ -41,11 +40,11 @@ final class ListaActividadesSacdData
      */
     public function execute(array $input): array
     {
-        $tipo = input_string($input, 'tipo');
-        $year = input_string($input, 'year');
-        $periodo = input_string($input, 'periodo');
-        $empiezamin = input_string($input, 'empiezamin');
-        $empiezamax = input_string($input, 'empiezamax');
+        $tipo = FuncTablasSupport::inputString($input, 'tipo');
+        $year = FuncTablasSupport::inputString($input, 'year');
+        $periodo = FuncTablasSupport::inputString($input, 'periodo');
+        $empiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $empiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
 
         $oPeriodo = new Periodo();
         $oPeriodo->setDefaultAny('next');
@@ -110,7 +109,7 @@ final class ListaActividadesSacdData
             $sacd_aprobado = $tieneProcesos
                 ? $this->actividadProcesoTareaRepository->getSacdAprobado($id_activ)
                 : true;
-            $clase = is_true($sacd_aprobado) ? 'plaza4' : '';
+            $clase = FuncTablasSupport::isTrue($sacd_aprobado) ? 'plaza4' : '';
             if ($status === StatusId::PROYECTO) {
                 $clase = 'wrong-soft';
             }
@@ -151,7 +150,7 @@ final class ListaActividadesSacdData
                 }
             }
 
-            if ($tipo === 'falta_sacd' && (is_true($sacd_aprobado) || count($sacds) === 0)) {
+            if ($tipo === 'falta_sacd' && (FuncTablasSupport::isTrue($sacd_aprobado) || count($sacds) === 0)) {
                 continue;
             }
 

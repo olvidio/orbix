@@ -17,7 +17,7 @@ use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Legacy: anota los avisos de cambio para cada usuario.
@@ -231,7 +231,7 @@ class Avisos
                     return $rta;
                 }
                 // ojo con los boolean.
-                if (is_true($valor_cmb) || is_true($valor)) {
+                if (FuncTablasSupport::isTrue($valor_cmb) || FuncTablasSupport::isTrue($valor)) {
                     return ((bool) $valor_cmb === (bool) $valor);
                 }
                 return ($valor_cmb == $valor);
@@ -374,7 +374,7 @@ class Avisos
                 $cAsistentes = $this->actividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
                 if ($cAsistentes !== [] && isset($cAsistentes[$id_activ])) {
                     $aAsistente = $cAsistentes[$id_activ];
-                    $propio = is_true($aAsistente['propio'] ?? false) === true;
+                    $propio = FuncTablasSupport::isTrue($aAsistente['propio'] ?? false) === true;
                     $id_cargoRaw = $aAsistente['id_cargo'] ?? null;
 
                     if ($id_cargoRaw !== null && $id_cargoRaw !== '' && is_numeric($id_cargoRaw)) {

@@ -1,5 +1,9 @@
 <?php
 
+use frontend\actividadestudios\helpers\ActividadestudiosRenderSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\FuncTablasSupport;
+
 /**
  * Pantalla "actualizar docencia" (menu). Muestra el form de seleccion de
  * periodo; al aceptarlo dispara `DocenciaActualizar`, que graba en
@@ -16,17 +20,15 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
-$Qyear = tessera_imprimir_string(filter_input(INPUT_POST, 'year'));
-$Qperiodo = tessera_imprimir_string(filter_input(INPUT_POST, 'periodo'));
-$Qempiezamin = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamin'));
-$Qempiezamax = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamax'));
+$Qyear = PayloadCoercion::string(filter_input(INPUT_POST, 'year'));
+$Qperiodo = PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
+$Qempiezamin = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
+$Qempiezamax = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));
 $continuar = (int) filter_input(INPUT_POST, 'continuar');
 
 if (empty($continuar)) {
@@ -44,7 +46,7 @@ if (empty($continuar)) {
     ];
     $oFormP = new PeriodoQue();
     $oFormP->setFormName('que');
-    $oFormP->setTitulo(strtoupper_dlb(_('periodo de selección de actividades')));
+    $oFormP->setTitulo(FuncTablasSupport::strtoupperDlb(_('periodo de selección de actividades')));
     $oFormP->setPosiblesPeriodos($aOpciones);
     $oFormP->setDesplAnysOpcion_sel($Qyear);
     $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
@@ -62,7 +64,7 @@ if (empty($continuar)) {
         'oHashPeriodo' => $oHashPeriodo,
     ];
 } else {
-    $data = actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/docencia_actualizar', [
+    $data = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/docencia_actualizar', [
         'continuar' => $continuar,
         'year' => $Qyear,
         'periodo' => $Qperiodo,
@@ -71,7 +73,7 @@ if (empty($continuar)) {
     ]));
     $a_campos = [
         'mod' => 'fin',
-        'txt_rta' => tessera_imprimir_string($data['txt_rta'] ?? ''),
+        'txt_rta' => PayloadCoercion::string($data['txt_rta'] ?? ''),
     ];
 }
 

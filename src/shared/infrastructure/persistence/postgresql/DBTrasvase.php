@@ -41,8 +41,7 @@ use src\utils_database\domain\entity\MapId;
 use src\utils_database\domain\GenerateIdGlobal;
 use src\utils_database\domain\value_objects\MapIdDl;
 use src\utils_database\domain\value_objects\MapIdResto;
-use function src\shared\domain\helpers\is_true;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 class DBTrasvase extends DBAbstract
 {
 
@@ -788,7 +787,7 @@ class DBTrasvase extends DBAbstract
                             $RelacionCasaDlDireccion->asociarDireccion(
                                 $this->idUbicacionAEntero($newIdCasa, 'id_dl'),
                                 $newIdDireccion,
-                                is_true($principal),
+                                FuncTablasSupport::isTrue($principal),
                             );
                             // Eliminar el cross y la direccion
                             $DireccionCasaExRepository->Eliminar($oDireccionEx);
@@ -954,8 +953,8 @@ class DBTrasvase extends DBAbstract
                             $MapIdRepository->Guardar($oMapId);
                             // cross Direccion
                             $newIdCentroInt = $this->idUbicacionAEntero($newIdCentro, 'id_dl');
-                            $RelacionCentroDlDireccion->asociarDireccion($newIdCentroInt, $newIdDireccionCentro, is_true($principal));
-                            $RelacionCentroDlDireccion->updatePropietario($newIdCentroInt, $newIdDireccionCentro, (bool) is_true($propietario));
+                            $RelacionCentroDlDireccion->asociarDireccion($newIdCentroInt, $newIdDireccionCentro, FuncTablasSupport::isTrue($principal));
+                            $RelacionCentroDlDireccion->updatePropietario($newIdCentroInt, $newIdDireccionCentro, (bool) FuncTablasSupport::isTrue($propietario));
                             // Eliminar el cross y la dirección
                             $DireccionCentroExRepository->Eliminar($oDireccionCentroEx);
                             // delete cross (debería borrarse sólo; por el foreign key).

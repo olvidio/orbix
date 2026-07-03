@@ -6,16 +6,16 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\certificados\helpers\CertificadosPayload;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/certificados_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
-$form = certificados_recibido_form_from_payload(certificados_post_data(
+$form = CertificadosPayload::recibidoFormFromPayload(CertificadosPayload::postData(
     PostRequest::getDataFromUrl('/src/certificados/certificado_recibido_modificar_data', $_POST)
 ));
 

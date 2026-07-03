@@ -15,7 +15,7 @@ use src\ubis\domain\value_objects\RegionNameText;
 use src\ubis\domain\value_objects\TipoCentroCode;
 use src\ubis\domain\value_objects\TipoLaborId;
 use src\ubis\domain\value_objects\UbiNombreText;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Clase que implementa la entidad cu_centros_dlf
@@ -420,8 +420,8 @@ class CentroEllas
             if ($direccion !== null) {
                 // Creamos el objeto intermedio con los booleanos de la DB
                 // Aseguramos conversión a bool explícita
-                $esPrincipal = is_true($row['principal']);
-                $esPropietario = is_true($row['propietario']);
+                $esPrincipal = FuncTablasSupport::isTrue($row['principal']);
+                $esPropietario = FuncTablasSupport::isTrue($row['propietario']);
 
                 $direccionDetallada = new DireccionDetalle([
                     'direccion' => $direccion,
@@ -457,8 +457,8 @@ class CentroEllas
             if ($direccion !== null) {
                 // Creamos el objeto intermedio con los booleanos de la DB
                 // Aseguramos conversión a bool explícita
-                $esPrincipal = is_true($row['principal']);
-                $esPropietario = is_true($row['propietario']);
+                $esPrincipal = FuncTablasSupport::isTrue($row['principal']);
+                $esPropietario = FuncTablasSupport::isTrue($row['propietario']);
 
                 $direccionesDetalladas[] = new DireccionDetalle([
                     'direccion' => $direccion,

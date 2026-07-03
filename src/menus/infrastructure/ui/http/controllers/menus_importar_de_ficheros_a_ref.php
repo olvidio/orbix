@@ -7,18 +7,19 @@ use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\shared\domain\helpers\FilterPostGet;
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 $oDBPC = GlobalPdo::get('oDBPC');
 $gestorErrores = $_SESSION['oGestorErrores'] ?? null;
 
-$Qseguro = filter_post('seguro', FILTER_VALIDATE_INT);
+$Qseguro = FilterPostGet::post('seguro', FILTER_VALIDATE_INT);
 if ($Qseguro === false || $Qseguro === null) {
-    $Qseguro = filter_get('seguro', FILTER_VALIDATE_INT);
+    $Qseguro = FilterPostGet::get('seguro', FILTER_VALIDATE_INT);
 }
-$Qtodos = filter_post('todos', FILTER_VALIDATE_INT);
+$Qtodos = FilterPostGet::post('todos', FILTER_VALIDATE_INT);
 if ($Qtodos === false || $Qtodos === null) {
-    $Qtodos = filter_get('todos', FILTER_VALIDATE_INT);
+    $Qtodos = FilterPostGet::get('todos', FILTER_VALIDATE_INT);
 }
 
 $Qseguro = ($Qseguro === false || $Qseguro === null || $Qseguro === 0) ? 2 : $Qseguro;

@@ -1,14 +1,13 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_grupo = input_int($_POST, 'id_grupo');
-$Qid_equipaje = input_int($_POST, 'id_equipaje');
+$Qid_grupo = FuncTablasSupport::inputInt($_POST, 'id_grupo');
+$Qid_equipaje = FuncTablasSupport::inputInt($_POST, 'id_equipaje');
 
 $error_txt = '';
 

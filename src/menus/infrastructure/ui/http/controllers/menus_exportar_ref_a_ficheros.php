@@ -1,8 +1,8 @@
 <?php
 
-use function src\shared\domain\helpers\input_string;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /*
  * Para que no de errror al ejecutar psql. usuario root no coincide con dani
@@ -22,7 +22,7 @@ $config = $oConfigDB->getEsquema('public'); //de la database comun
 $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
-$Qaccion = input_string($_POST, 'accion');
+$Qaccion = FuncTablasSupport::inputString($_POST, 'accion');
 
 //$dir_base = "/var/www/orbix";
 $dir_base = ServerConf::DIR;

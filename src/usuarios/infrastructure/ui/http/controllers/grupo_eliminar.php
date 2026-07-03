@@ -1,5 +1,6 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\shared\web\ContestarJson;
@@ -7,7 +8,7 @@ use src\shared\web\ContestarJson;
 $error_txt = '';
 $id_usuario = 0;
 
-$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if ($a_sel !== []) {
     $id_usuario = (int) strtok((string) $a_sel[0], '#');
 }

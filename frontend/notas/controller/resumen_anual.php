@@ -1,5 +1,7 @@
 <?php
 
+use frontend\notas\helpers\NotasFormSupport;
+use frontend\notas\helpers\NotasPostInput;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
@@ -8,14 +10,12 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $QdlRaw = filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -34,12 +34,12 @@ $a_profesores_numeros = ['lista' => 0];
 $a_profesores_listado = ['lista' => 1];
 
 if ($rstgr && $Qfiltro === 1) {
-    $aChecked = notas_checked_ids_from_post($Qdl);
+    $aChecked = NotasPostInput::checkedIdsFromPost($Qdl);
     $region_stgr = OrbixRuntime::miDele();
     $deleg = PostRequest::getDataFromUrl('/src/ubis/delegaciones_region_stgr_data', [
         'region_stgr' => $region_stgr,
     ]);
-    $a_delegacionesStgr = notas_desplegable_opciones($deleg['a_delegaciones'] ?? []);
+    $a_delegacionesStgr = NotasFormSupport::desplegableOpciones($deleg['a_delegaciones'] ?? []);
 
     $oCuadros = new Desplegable();
     $oCuadros->setNombre('dl');

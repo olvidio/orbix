@@ -6,7 +6,7 @@ use src\actividadtarifas\application\services\TipoTarifaDropdown;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\shared\config\ConfigGlobal;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder para el formulario modificar/nuevo de
@@ -34,7 +34,7 @@ final class RelacionTarifaFormData
      */
     public function execute(array $input): array
     {
-        $id_item = input_string($input, 'id_item');
+        $id_item = FuncTablasSupport::inputString($input, 'id_item');
         $es_nuevo = $id_item === '' || $id_item === 'nuevo';
 
         $id_tipo_activ = 0;

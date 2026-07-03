@@ -1,7 +1,7 @@
 <?php
-
 namespace frontend\planning\controller;
 
+use frontend\planning\helpers\PlanningPayload;
 use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
@@ -10,7 +10,8 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
-use function frontend\shared\helpers\is_true;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
 
 /**
  * Planning (calendario) por zonas sacd. Datos vía `PostRequest` → `/src/planning/planning_zones_select_data`
@@ -21,9 +22,7 @@ use function frontend\shared\helpers\is_true;
  * hacia `echo` de HTML e incluia directamente los CSS y el calendario;
  * ahora la presentacion vive en la vista PHTML.
  */
-require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 
@@ -34,15 +33,15 @@ $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
 $Qactividad = (string)filter_input(INPUT_POST, 'actividad');
 $Qpropuesta = (bool)filter_input(INPUT_POST, 'propuesta');
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros([
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros([
     'modelo' => $Qmodelo,
     'year' => $Qyear,
     'trimestre' => $Qtrimestre,
     'id_zona' => $Qid_zona,
     'actividad' => $Qactividad,
     'propuesta' => $Qpropuesta,
-], list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+], ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
 
 
 $oPosicion->setParametros([
@@ -55,7 +54,7 @@ $oPosicion->setParametros([
 ], 1);
 
 $data = PostRequest::getDataFromUrl('/src/planning/planning_zones_select_data', $_POST);
-$zonesSelect = planning_zones_select_from_payload($data);
+$zonesSelect = PlanningPayload::zonesSelectFromPayload($data);
 $isoIni = $zonesSelect['planning_ini_iso'];
 $isoFin = $zonesSelect['planning_fin_iso'];
 $oIniPlanning = \DateTimeImmutable::createFromFormat('Y-m-d', $isoIni) ?: new \DateTimeImmutable($isoIni);
@@ -63,7 +62,7 @@ $oFinPlanning = \DateTimeImmutable::createFromFormat('Y-m-d', $isoFin) ?: new \D
 
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
-$estilos = planning_calendario_estilos();
+$estilos = PlanningPayload::calendarioEstilos();
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($estilos['colorColumnaUno']);
@@ -75,7 +74,7 @@ $oPlanning->setInicio($oIniPlanning);
 $oPlanning->setFin($oFinPlanning);
 
 $msg_txt = '';
-if (is_true($Qpropuesta)) {
+if (FuncTablasSupport::isTrue($Qpropuesta)) {
     $msg_txt = _("Propuesta de calendario: actividades en cualquier estado (menos borrable)");
 }
 $a_campos = [

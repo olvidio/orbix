@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_int;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\value_objects\CursoStgr;
 use src\personas\application\services\PersonaFinderService;
@@ -34,12 +32,12 @@ final class AsigFaltanPersonasSelectTablaData
 
     public function execute(array $in): array
     {
-        $Qid_asignatura = input_int($in, 'id_asignatura', 0);
-        $Qpersonas_n = input_string($in, 'personas_n');
-        $Qpersonas_agd = input_string($in, 'personas_agd');
-        $Qb_c = input_string($in, 'b_c');
-        $Qc1 = input_string($in, 'c1');
-        $Qc2 = input_string($in, 'c2');
+        $Qid_asignatura = FuncTablasSupport::inputInt($in, 'id_asignatura', 0);
+        $Qpersonas_n = FuncTablasSupport::inputString($in, 'personas_n');
+        $Qpersonas_agd = FuncTablasSupport::inputString($in, 'personas_agd');
+        $Qb_c = FuncTablasSupport::inputString($in, 'b_c');
+        $Qc1 = FuncTablasSupport::inputString($in, 'c1');
+        $Qc2 = FuncTablasSupport::inputString($in, 'c2');
 
         $isTrue = static function (string $v): bool {
             return $v === '1' || $v === 'true' || $v === 'on' || $v === 't';

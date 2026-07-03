@@ -1,4 +1,9 @@
 <?php
+
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Fragmento HTML con la lista de centros y sus actividades en un periodo.
  *
@@ -17,14 +22,10 @@
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qid_ctr_num = (integer)filter_input(INPUT_POST, 'id_ctr_num');
@@ -43,4 +44,4 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_centros_activ_datos'
     'empiezamax' => $Qempiezamax,
 ]);
 
-ajax_json_html(tessera_imprimir_string($data['html'] ?? ''));
+AjaxJsonSupport::html(PayloadCoercion::string($data['html'] ?? ''));

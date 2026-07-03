@@ -5,6 +5,7 @@ use src\shared\infrastructure\GlobalPdo;
 
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\PlanoOperationsTrait;
+
 /**
  * Clase que adapta la tabla u_dir_ctr a la interfaz del repositorio
  *

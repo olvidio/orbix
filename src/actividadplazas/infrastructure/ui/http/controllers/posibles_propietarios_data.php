@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: devuelve el payload JSON estandar de desplegable
  * (`id`, `opciones`, `selected`, `blanco`, `val_blanco`) con los
@@ -12,11 +15,9 @@
 use src\actividadplazas\application\PosiblesPropietariosData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_int;
-
 $input = [
-    'id_nom' => input_int($_POST, 'id_nom'),
-    'id_activ' => input_int($_POST, 'id_activ'),
+    'id_nom' => FuncTablasSupport::inputInt($_POST, 'id_nom'),
+    'id_activ' => FuncTablasSupport::inputInt($_POST, 'id_activ'),
 ];
 
 /** @var PosiblesPropietariosData $useCase */

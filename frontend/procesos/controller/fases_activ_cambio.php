@@ -1,11 +1,13 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Página para cambiar la fase a un grupo de actividades.
@@ -16,21 +18,18 @@ use frontend\shared\FrontBootstrap;
  * @since        2/8/2011.
  */
 
-require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 
-$restored = list_nav_restore_selection_from_stack_post();
+$restored = ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !list_nav_id_sel_is_empty($restored['id_sel']) ? $restored['id_sel'] : list_nav_id_sel_from_post();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : list_nav_scroll_id_from_post();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
@@ -58,7 +57,7 @@ $dataTipo = PostRequest::getDataFromUrl($apiBase . '/src/procesos/fases_activ_ca
     'sactividad' => $Qsactividad,
     'sactividad2' => $Qsactividad2,
 ]);
-$tipo_actividad_html = tessera_imprimir_string($dataTipo['tipo_actividad_html'] ?? '');
+$tipo_actividad_html = PayloadCoercion::string($dataTipo['tipo_actividad_html'] ?? '');
 
 $aOpciones = [
     'tot_any' => _("todo el año"),

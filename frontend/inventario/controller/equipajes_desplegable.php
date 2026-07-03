@@ -1,12 +1,12 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qfiltro = (string)filter_input(INPUT_POST, 'filtro');
@@ -28,8 +28,8 @@ if ($Qfiltro !== '') {
 $url_backend = '/src/inventario/lista_equipajes_desde_fecha';
 $a_campos_backend = ['f_ini_iso' => $f_ini_iso];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$payload = inventario_post_payload($data);
-$a_opciones = inventario_desplegable_opciones($payload['a_opciones'] ?? []);
+$payload = InventarioPayload::postPayload($data);
+$a_opciones = InventarioPayload::desplegableOpciones($payload['a_opciones'] ?? []);
 
 $oDesplEquipajes = new Desplegable('id_equipaje', $a_opciones, '', true);
 if ($Qimprimir !== '') {
@@ -42,4 +42,4 @@ if ($Qeliminar !== '') {
     $oDesplEquipajes->setAction('');
 }
 
-ajax_json_html($oDesplEquipajes->desplegable());
+AjaxJsonSupport::html($oDesplEquipajes->desplegable());

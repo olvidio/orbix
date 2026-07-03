@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace frontend\actividadcargos\helpers;
 
-require_once __DIR__ . '/actividadcargos_support.php';
-
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
 
@@ -28,7 +26,7 @@ final class FormCargosDeActividadHashCompose
      */
     public static function withHashCamposHtml(array $data): array
     {
-        $cfg = actividadcargos_hash_form_config($data['hash_form_config'] ?? null);
+        $cfg = ActividadcargosRenderSupport::hashFormConfig($data['hash_form_config'] ?? null);
         unset($data['hash_form_config']);
         if ($cfg === null) {
             $data['hash_campos_html'] = '';
@@ -79,7 +77,7 @@ final class FormCargosDeActividadHashCompose
      */
     public static function withDesplegablesHtml(array $data): array
     {
-        $personas = actividadcargos_desplegable_select($data['personas_select'] ?? null);
+        $personas = ActividadcargosRenderSupport::desplegableSelect($data['personas_select'] ?? null);
         unset($data['personas_select']);
         if ($personas !== null) {
             $d = Desplegable::desdeOpciones($personas['opciones'], 'id_nom', true);
@@ -91,7 +89,7 @@ final class FormCargosDeActividadHashCompose
             $data['desplegable_personas_html'] = '';
         }
 
-        $cargos = actividadcargos_desplegable_select($data['cargos_select'] ?? null);
+        $cargos = ActividadcargosRenderSupport::desplegableSelect($data['cargos_select'] ?? null);
         unset($data['cargos_select']);
         if ($cargos !== null) {
             $d = Desplegable::desdeOpciones($cargos['opciones'], 'id_cargo', false);

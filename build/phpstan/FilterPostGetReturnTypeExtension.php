@@ -4,40 +4,42 @@ declare(strict_types=1);
 
 namespace Orbix\PHPStan;
 
-use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\StaticCall;
 use PHPStan\Analyser\Scope;
-use PHPStan\Reflection\FunctionReflection;
+use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\Constant\ConstantIntegerType;
-use PHPStan\Type\DynamicFunctionReturnTypeExtension;
+use PHPStan\Type\DynamicStaticMethodReturnTypeExtension;
 use PHPStan\Type\Php\FilterFunctionReturnTypeHelper;
 use PHPStan\Type\Type;
+use src\shared\domain\helpers\FilterPostGet;
 
 /**
- * Da a `filter_post()` / `filter_get()` (src/shared/domain/helpers/func_input.php)
+ * Da a {@see FilterPostGet::post()} / {@see FilterPostGet::get()}
  * la misma inferencia de tipo de retorno que
  * `filter_input(INPUT_POST, ...)` / `filter_input(INPUT_GET, ...)`.
- *
- * Sin esto, los wrappers declaran `mixed` y se perderían cientos de tipos
- * (p. ej. `(int)filter_post('x', FILTER_VALIDATE_INT)` daría `cast.int`).
- * Reaprovecha el helper interno de PHPStan que ya tipa `filter_input`.
  */
-final class FilterPostGetReturnTypeExtension implements DynamicFunctionReturnTypeExtension
+final class FilterPostGetReturnTypeExtension implements DynamicStaticMethodReturnTypeExtension
 {
     public function __construct(private readonly FilterFunctionReturnTypeHelper $helper)
     {
     }
 
-    public function isFunctionSupported(FunctionReflection $functionReflection): bool
+    public function getClass(): string
     {
-        return in_array($functionReflection->getName(), ['filter_post', 'filter_get'], true);
+        return FilterPostGet::class;
     }
 
-    public function getTypeFromFunctionCall(
-        FunctionReflection $functionReflection,
-        FuncCall $functionCall,
-        Scope $scope
+    public function isStaticMethodSupported(MethodReflection $methodReflection): bool
+    {
+        return in_array($methodReflection->getName(), ['post', 'get'], true);
+    }
+
+    public function getTypeFromStaticMethodCall(
+        MethodReflection $methodReflection,
+        StaticCall $methodCall,
+        Scope $scope,
     ): ?Type {
-        $args = $functionCall->getArgs();
+        $args = $methodCall->getArgs();
         if ($args === []) {
             return null;
         }
@@ -46,7 +48,7 @@ final class FilterPostGetReturnTypeExtension implements DynamicFunctionReturnTyp
         $filterType = isset($args[1]) ? $scope->getType($args[1]->value) : null;
         $flagsType = isset($args[2]) ? $scope->getType($args[2]->value) : null;
 
-        $inputConst = $functionReflection->getName() === 'filter_post' ? INPUT_POST : INPUT_GET;
+        $inputConst = $methodReflection->getName() === 'post' ? INPUT_POST : INPUT_GET;
 
         return $this->helper->getInputType(
             new ConstantIntegerType($inputConst),

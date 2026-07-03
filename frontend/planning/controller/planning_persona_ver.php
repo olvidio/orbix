@@ -1,7 +1,8 @@
 <?php
-
 namespace frontend\planning\controller;
 
+use frontend\planning\helpers\PlanningPostInput;
+use frontend\planning\helpers\PlanningPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\OrbixRuntime;
@@ -11,6 +12,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Planning (calendario) de las actividades asignadas a un conjunto
@@ -19,17 +21,15 @@ use frontend\shared\FrontBootstrap;
  * Migrado desde `apps/planning/controller/planning_persona_ver.php`
  * (slice 2 de la migracion del modulo planning).
  */
-require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(($aGoBack ?? list_nav_build_return_parametros_from_post()), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
 
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
-$Qna = planning_post_string('na');
+$Qna = PlanningPostInput::postString('na');
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
 $Qyear = (int)filter_input(INPUT_POST, 'year');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
@@ -64,7 +64,7 @@ if ((int)$interval < 2) {
 
 $cabecera_title = ucfirst(_("persona seleccionada"));
 
-$a_sel = planning_collect_sel_from_post();
+$a_sel = PlanningPostInput::collectSelFromPost();
 $payload = [
     'obj_pau' => $Qobj_pau,
     'year' => $Qyear,
@@ -74,7 +74,7 @@ $payload = [
     'sSeleccionados' => implode(',', $a_sel),
 ];
 $apiData = PostRequest::getDataFromUrl('/src/planning/planning_persona_ver_data', $payload);
-$a_actividades = planning_actividades_map($apiData['a_actividades'] ?? null);
+$a_actividades = PlanningPayload::actividadesMap($apiData['a_actividades'] ?? null);
 
 $aGoBack = [
     'obj_pau' => $Qobj_pau,
@@ -84,13 +84,13 @@ $aGoBack = [
     'periodo' => $Qperiodo,
     'empiezamax' => $Qempiezamax,
     'empiezamin' => $Qempiezamin,
-    'id_sel' => planning_post_string('id_sel'),
-    'scroll_id' => planning_post_string('scroll_id'),
+    'id_sel' => PlanningPostInput::postString('id_sel'),
+    'scroll_id' => PlanningPostInput::postString('scroll_id'),
     'sSeleccionados' => implode(',', $a_sel),
 ];
 $oPosicion->setParametros($aGoBack, 1);
 
-$estilos = planning_calendario_estilos();
+$estilos = PlanningPayload::calendarioEstilos();
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($estilos['colorColumnaUno']);

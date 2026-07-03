@@ -9,7 +9,7 @@ use src\cambios\domain\entity\Cambio;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: registra un cambio en `av_cambios` / `av_cambios_dl`.
@@ -149,8 +149,8 @@ class RegistrarCambio
                     if ($value === $oldValue) {
                         continue;
                     }
-                    if (!is_null(is_true($value))
-                        && is_true($oldValue) === is_true($value)
+                    if (!is_null(FuncTablasSupport::isTrue($value))
+                        && FuncTablasSupport::isTrue($oldValue) === FuncTablasSupport::isTrue($value)
                     ) {
                         continue;
                     }
@@ -220,8 +220,8 @@ class RegistrarCambio
                 break;
 
             case 'FASE':
-                $boolCompletadoNew = !empty($aDadesNew['completado']) && is_true($aDadesNew['completado']);
-                $boolCompletadoActual = !empty($aDadesActuals['completado']) && is_true($aDadesActuals['completado']);
+                $boolCompletadoNew = !empty($aDadesNew['completado']) && FuncTablasSupport::isTrue($aDadesNew['completado']);
+                $boolCompletadoActual = !empty($aDadesActuals['completado']) && FuncTablasSupport::isTrue($aDadesActuals['completado']);
 
                 if ($boolCompletadoNew === $boolCompletadoActual) {
                     break;

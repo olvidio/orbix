@@ -1,30 +1,30 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\entity\PermUsuarioActividad;
 use src\procesos\domain\PermAfectadosBits;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\is_true;
-
 // FIN de  Cabecera global de URL de controlador **********
 
 $error_txt = '';
 
-$Qid_usuario = (integer)filter_post('id_usuario');
-$Qid_tipo_activ = (integer)filter_post('id_tipo_activ');
-$Qid_item = (integer)filter_post('id_item');
-$Qdl_propia = (string)filter_post('dl_propia');
-$QaFase_ref = (array)filter_post('fase_ref', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$QaPerm_on = (array)filter_post('perm_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$QaPerm_off = (array)filter_post('perm_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$QaAfecta_a = (array)filter_post('afecta_a', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
+$Qid_tipo_activ = (integer)FilterPostGet::post('id_tipo_activ');
+$Qid_item = (integer)FilterPostGet::post('id_item');
+$Qdl_propia = (string)FilterPostGet::post('dl_propia');
+$QaFase_ref = (array)FilterPostGet::post('fase_ref', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$QaPerm_on = (array)FilterPostGet::post('perm_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$QaPerm_off = (array)FilterPostGet::post('perm_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$QaAfecta_a = (array)FilterPostGet::post('afecta_a', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 if (empty($Qid_tipo_activ)) {
-    $Qisfsv_val = (string)filter_post('isfsv_val');
-    $Qiasistentes_val = (string)filter_post('iasistentes_val');
-    $Qiactividad_val = (string)filter_post('iactividad_val');
-    $Qinom_tipo_val = (string)filter_post('inom_tipo_val');
+    $Qisfsv_val = (string)FilterPostGet::post('isfsv_val');
+    $Qiasistentes_val = (string)FilterPostGet::post('iasistentes_val');
+    $Qiactividad_val = (string)FilterPostGet::post('iactividad_val');
+    $Qinom_tipo_val = (string)FilterPostGet::post('inom_tipo_val');
 
     $sfsv_val = empty($Qisfsv_val) ? '.' : $Qisfsv_val;
     $asistentes_val = empty($Qiasistentes_val) ? '.' : $Qiasistentes_val;
@@ -70,7 +70,7 @@ foreach (PermAfectadosBits::map() as $afecta_a) {
             }
             $oPermUsuarioActividad->setId_usuario($Qid_usuario);
             $oPermUsuarioActividad->setId_tipo_activ_txt((string) $id_tipo_activ_txt);
-            $oPermUsuarioActividad->setDl_propia(is_true($Qdl_propia) === true);
+            $oPermUsuarioActividad->setDl_propia(FuncTablasSupport::isTrue($Qdl_propia) === true);
             $oPermUsuarioActividad->setAfecta_a($afecta_a);
             $oPermUsuarioActividad->setFaseRefVo(is_numeric($fase_ref) ? (int) $fase_ref : null);
             $oPermUsuarioActividad->setPerm_on(is_numeric($perm_on) ? (int) $perm_on : null);
@@ -82,7 +82,7 @@ foreach (PermAfectadosBits::map() as $afecta_a) {
             $eliminar = false;
         }
     }
-    if (is_true($eliminar)) {
+    if (FuncTablasSupport::isTrue($eliminar)) {
         $cPermUsuarioActividad = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere);
         // Solamente debería haber uno???
         if (count($cPermUsuarioActividad) === 1) {

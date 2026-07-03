@@ -1,8 +1,7 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
@@ -10,7 +9,7 @@ use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qid_tipo_doc = input_int($_POST, 'id_tipo_doc');
+$Qid_tipo_doc = FuncTablasSupport::inputInt($_POST, 'id_tipo_doc');
 $error_txt = '';
 
 // muestra los ctr que no tienen el documento.

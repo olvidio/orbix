@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: datos para el listado de avisos de un usuario.
  * Consumido por `frontend/cambios/controller/usuario_form_avisos.php`.
@@ -8,12 +11,9 @@ use src\cambios\application\UsuarioFormAvisosData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 $input = [
-    'id_usuario' => input_int($_POST, 'id_usuario'),
-    'quien' => input_string($_POST, 'quien'),
+    'id_usuario' => FuncTablasSupport::inputInt($_POST, 'id_usuario'),
+    'quien' => FuncTablasSupport::inputString($_POST, 'quien'),
 ];
 
 /** @var UsuarioFormAvisosData $useCase */

@@ -1,14 +1,15 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\misas\application\NuevoStatusPeriodo;
 use src\shared\web\ContestarJson;
 
-$Qid_zona = (int)filter_post('id_zona', FILTER_VALIDATE_INT);
-$Qperiodo = (string)filter_post('periodo');
-$Qempiezamin = (string)filter_post('empiezamin');
-$Qempiezamax = (string)filter_post('empiezamax');
-$Qestado = (int)filter_post('estado', FILTER_VALIDATE_INT);
+$Qid_zona = (int)FilterPostGet::post('id_zona', FILTER_VALIDATE_INT);
+$Qperiodo = (string)FilterPostGet::post('periodo');
+$Qempiezamin = (string)FilterPostGet::post('empiezamin');
+$Qempiezamax = (string)FilterPostGet::post('empiezamax');
+$Qestado = (int)FilterPostGet::post('estado', FILTER_VALIDATE_INT);
 
 /** @var NuevoStatusPeriodo $useCase */
 $useCase = DependencyResolver::get(NuevoStatusPeriodo::class);

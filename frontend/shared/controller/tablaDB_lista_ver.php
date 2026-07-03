@@ -7,6 +7,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * @return array<int|string, mixed>
@@ -98,7 +99,6 @@ function tablaDB_lista_ver_datos(mixed $value): array
 
 // Archivos requeridos por esta url **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // Crea los objetos de uso global **********************************************
 
@@ -126,8 +126,8 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 // en los menus esta sin codificar, pero a partir de aquí si:

@@ -3,7 +3,8 @@
 namespace frontend\planning\support;
 
 use frontend\shared\web\PeriodoQue;
-use function frontend\shared\helpers\strtoupper_dlb;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\FuncTablasSupport;
 
 /**
  * Helper para construir los `frontend\shared\web\PeriodoQue` usados en los distintos
@@ -44,7 +45,7 @@ final class PeriodoPlanningHelper
         string $titulo = ''
     ): PeriodoQue {
         if ($titulo === '') {
-            $titulo = strtoupper_dlb(_("periodo del planning actividades"));
+            $titulo = FuncTablasSupport::strtoupperDlb(_("periodo del planning actividades"));
         }
 
         $oForm = new PeriodoQue();
@@ -52,7 +53,7 @@ final class PeriodoPlanningHelper
         $oForm->setTitulo($titulo);
         $oForm->setPosiblesPeriodos(self::opcionesTrimestrales());
         $oForm->setDesplPeriodosOpcion_sel($periodo);
-        $yearSel = empty($year) ? (string)date('Y') : \tessera_imprimir_string($year);
+        $yearSel = empty($year) ? (string)date('Y') : PayloadCoercion::string($year);
         $oForm->setDesplAnysOpcion_sel($yearSel);
         $oForm->setEmpiezaMin($empiezaMin);
         $oForm->setEmpiezaMax($empiezaMax);

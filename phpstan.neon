@@ -10,49 +10,9 @@ parameters:
         - libs/vendor/autoload.php
     # Ampliar memoria en CI o monorepos grandes: COMPOSER_MEMORY_LIMIT=2G o --memory-limit
     tmpDir: .phpstan/cache
-    # gettext / helpers cargados vía composer "files"
-    scanFiles:
-        - src/shared/domain/helpers/func_input.php
-        - frontend/shared/helpers/func_tablas.php
-        - frontend/shared/helpers/list_nav_support.php
-        - frontend/shared/helpers/ajax_json_support.php
-        - frontend/notas/helpers/tessera_imprimir_support.php
-        - frontend/notas/helpers/acta_imprimir_support.php
-        - frontend/notas/helpers/notas_support.php
-        - frontend/actividades/helpers/actividades_support.php
-        - frontend/cartaspresentacion/helpers/cartaspresentacion_support.php
-        - frontend/cambios/helpers/cambios_support.php
-        - frontend/casas/helpers/casas_support.php
-        - frontend/ubiscamas/helpers/ubiscamas_support.php
-        - frontend/actividadessacd/helpers/actividadessacd_support.php
-        - frontend/actividadcargos/helpers/actividadcargos_support.php
-        - frontend/actividadplazas/helpers/actividadplazas_support.php
-        - frontend/actividadtarifas/helpers/actividadtarifas_support.php
-        - frontend/misas/helpers/misas_support.php
-        - frontend/dossiers/helpers/dossiers_support.php
-        - frontend/devel_db_admin/helpers/devel_db_admin_support.php
-        - frontend/zonassacd/helpers/zonassacd_support.php
-        - frontend/menus/helpers/menus_support.php
-        - frontend/profesores/helpers/profesores_support.php
-        - frontend/configuracion/helpers/configuracion_support.php
-        - frontend/dbextern/helpers/dbextern_support.php
-        - frontend/pasarela/helpers/pasarela_support.php
-        - frontend/asistentes/helpers/asistentes_support.php
-        - frontend/certificados/helpers/certificados_support.php
-        - frontend/inventario/helpers/inventario_support.php
-        - frontend/personas/helpers/personas_support.php
-        - frontend/ubis/helpers/ubis_support.php
-        - frontend/usuarios/helpers/usuarios_support.php
-        - frontend/actividadestudios/helpers/actividadestudios_support.php
-        - frontend/devel_codegen/helpers/devel_codegen_support.php
-        - frontend/planning/helpers/planning_support.php
-        - frontend/procesos/helpers/procesos_support.php
-        - frontend/encargossacd/helpers/encargossacd_support.php
-        - frontend/dossiers/controller/lista_dossiers.php
-        - src/shared/domain/helpers/func_tablas.php
 
 services:
     -
         class: Orbix\PHPStan\FilterPostGetReturnTypeExtension
         tags:
-            - phpstan.broker.dynamicFunctionReturnTypeExtension
+            - phpstan.broker.dynamicStaticMethodReturnTypeExtension

@@ -18,7 +18,7 @@ class DossiersVerFichaDatosTabla
      */
     public static function render(array $seg): string
     {
-        $parsed = dossiers_segmento_datos_tabla($seg);
+        $parsed = DossiersSegmentSupport::datosTablaFromSegment($seg);
         $titulo = $parsed['titulo'];
         $actionTablaUrl = $parsed['action_tabla_url'];
 

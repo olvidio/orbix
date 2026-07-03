@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FilterPostGet;
+
 /**
  * Endpoint backend que devuelve el payload necesario (datos de desplegable,
  * tabla HTML o valor escalar) segun el parametro POST `salida`. Usado por las
@@ -24,7 +27,7 @@ use src\actividades\application\ActividadTipoGetNivelStgrDefecto;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qsalida = (string)filter_post('salida');
+$Qsalida = (string)FilterPostGet::post('salida');
 
 // Salidas que devuelven el payload estructurado de un desplegable
 // (id, opciones, selected, blanco, val_blanco, action). El frontend construye

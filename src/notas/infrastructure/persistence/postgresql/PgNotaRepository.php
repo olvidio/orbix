@@ -10,7 +10,6 @@ use PDO;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla e_notas_situacion a la interfaz del repositorio

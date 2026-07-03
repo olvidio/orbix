@@ -5,12 +5,13 @@ namespace src\shared;
 use src\shared\domain\DatosTablaRepo;
 use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FilterPostGet;
 
-$Qclase_info_encoded = (string)filter_post('clase_info');
-$Qk_buscar = (string)filter_post('k_buscar');
-$Qpau = (string)filter_post('pau');
-$Qid_pau = (integer)filter_post('id_pau');
-$Qobj_pau = (integer)filter_post('obj_pau');
+$Qclase_info_encoded = (string)FilterPostGet::post('clase_info');
+$Qk_buscar = (string)FilterPostGet::post('k_buscar');
+$Qpau = (string)FilterPostGet::post('pau');
+$Qid_pau = (integer)FilterPostGet::post('id_pau');
+$Qobj_pau = (integer)FilterPostGet::post('obj_pau');
 
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info_encoded);

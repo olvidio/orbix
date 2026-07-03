@@ -1,5 +1,9 @@
 <?php
 
+use frontend\notas\helpers\TesseraImprimirPayload;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Esta página sirve para la tessera de una persona.
  *
@@ -21,9 +25,6 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
-
-require_once __DIR__ . '/../helpers/tessera_imprimir_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 function titulo(int $id_asignatura, string $cara = ''): string
 {
@@ -118,7 +119,7 @@ function titulo(int $id_asignatura, string $cara = ''): string
 
 function data(string $fechaRaw): void
 {
-    echo tessera_imprimir_fecha_local($fechaRaw);
+    echo TesseraImprimirPayload::fechaLocal($fechaRaw);
 }
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -126,8 +127,8 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_tessera_imprimir_parent_return_to_posicion($oPosicion, 1);
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistTesseraImprimirParentReturnToPosicion($oPosicion, 1);
 
 echo "<script>fnjs_left_side_hide()</script>";
 include_once(OrbixRuntime::dirEstilos() . '/tessera.css.php');
@@ -152,9 +153,9 @@ $Qcara = empty($Qcara) ? "A" : $Qcara;
 $payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
     'id_nom' => $id_nom,
 ]);
-$nom = tessera_imprimir_string($payload['nom'] ?? '');
-$cAsignaturas = tessera_imprimir_asignaturas_from_payload($payload);
-$aAprobadas = tessera_imprimir_aprobadas_from_payload($payload);
+$nom = PayloadCoercion::string($payload['nom'] ?? '');
+$cAsignaturas = TesseraImprimirPayload::asignaturasFromPayload($payload);
+$aAprobadas = TesseraImprimirPayload::aprobadasFromPayload($payload);
 $oConfig = $_SESSION['oConfig'] ?? null;
 $region_latin = $oConfig instanceof ConfigSnapshot ? $oConfig->getNomRegionLatin() : '';
 
@@ -162,7 +163,7 @@ $region_latin = $oConfig instanceof ConfigSnapshot ? $oConfig->getNomRegionLatin
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 
 // -----------------------------
-$rowEmpty = tessera_imprimir_empty_row();
+$rowEmpty = TesseraImprimirPayload::emptyRow();
 // -----------------------------  cabecera ---------------------------------
 $caraA = HashFront::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 $caraB = HashFront::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
@@ -231,7 +232,7 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                     reset($aAprobadas);
                                     $rowCurrent = current($aAprobadas);
                                     $row = is_array($rowCurrent)
-                                        ? tessera_imprimir_aprobada_row($rowCurrent)
+                                        ? TesseraImprimirPayload::aprobadaRow($rowCurrent)
                                         : $rowEmpty;
                                     if (key($aAprobadas) === null) { // ha llegado al final
                                         $row = $rowEmpty;
@@ -245,7 +246,7 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                     if ($Qcara === "A" && $oAsignatura['id_nivel'] > 2107) {
                                         $rowCurrent = current($aAprobadas);
                                         $row = is_array($rowCurrent)
-                                            ? tessera_imprimir_aprobada_row($rowCurrent)
+                                            ? TesseraImprimirPayload::aprobadaRow($rowCurrent)
                                             : $rowEmpty;
                                         continue;
                                     }
@@ -259,7 +260,7 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                             } else {
                                                 $rowCurrent = current($aAprobadas);
                                                 $row = is_array($rowCurrent)
-                                                    ? tessera_imprimir_aprobada_row($rowCurrent)
+                                                    ? TesseraImprimirPayload::aprobadaRow($rowCurrent)
                                                     : $rowEmpty;
                                             }
                                             if (next($aAprobadas) === FALSE) {
@@ -277,7 +278,7 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                         }
                                         $rowCurrent = current($aAprobadas);
                                         $row = is_array($rowCurrent)
-                                            ? tessera_imprimir_aprobada_row($rowCurrent)
+                                            ? TesseraImprimirPayload::aprobadaRow($rowCurrent)
                                             : $rowEmpty;
                                         if (next($aAprobadas) === false) {
                                             break;

@@ -8,7 +8,7 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve la lista de sacd candidatos para asignar a una actividad.
@@ -29,8 +29,8 @@ final class SacdsDisponiblesData
      */
     public function execute(array $input): array
     {
-        $id_activ = input_int($input, 'id_activ');
-        $seleccion = input_int($input, 'seleccion');
+        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $seleccion = FuncTablasSupport::inputInt($input, 'seleccion');
 
         $sacds_ctr = [];
         if (ConfigGlobal::is_app_installed('encargossacd') && $id_activ > 0) {

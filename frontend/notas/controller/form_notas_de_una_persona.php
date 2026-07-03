@@ -1,5 +1,9 @@
 <?php
 
+use frontend\notas\helpers\NotasPayload;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Form de alta / edicion de una `PersonaNota` de un dossier.
  *
@@ -27,12 +31,10 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 
-require_once __DIR__ . '/../helpers/notas_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_dossier_child_recordar($oPosicion);
+ListNavSupport::bootDossierChildRecordar($oPosicion);
 
 $obj = 'notas\\model\\entity\\PersonaNotaDB';
 
@@ -52,7 +54,7 @@ $payload = PostRequest::getDataFromUrl('/src/notas/nota_persona_form_data', [
     'pau' => $Qpau,
     'mod' => (string)filter_input(INPUT_POST, 'mod'),
 ]);
-$datos = notas_persona_form_from_payload($payload);
+$datos = NotasPayload::personaFormFromPayload($payload);
 $mod = $datos['mod'];
 $id_asignatura_real = $datos['id_asignatura_real'];
 
@@ -88,7 +90,7 @@ $chk_preceptor = !empty($datos['preceptor']) ? 'checked' : '';
 $tipo_acta = $datos['tipo_acta'];
 $ta = $datos['vo']['TipoActa'];
 if ($tipo_acta !== '' && $tipo_acta !== 0) {
-    $tipoActaInt = tessera_imprimir_int($tipo_acta);
+    $tipoActaInt = PayloadCoercion::int($tipo_acta);
     $chk_acta = $tipoActaInt === ($ta['FORMATO_ACTA'] ?? 0) ? 'checked' : '';
     $chk_certificado = $tipoActaInt === ($ta['FORMATO_CERTIFICADO'] ?? 0) ? 'checked' : '';
 } else {
@@ -99,7 +101,7 @@ if ($tipo_acta !== '' && $tipo_acta !== 0) {
 $epoca = $datos['epoca'];
 $ne = $datos['vo']['NotaEpoca'];
 if ($epoca !== '' && $epoca !== 0) {
-    $epocaInt = tessera_imprimir_int($epoca);
+    $epocaInt = PayloadCoercion::int($epoca);
     $chk_epoca_ca = $epocaInt === ($ne['EPOCA_CA'] ?? 0) ? 'checked' : '';
     $chk_epoca_inv = $epocaInt === ($ne['EPOCA_INVIERNO'] ?? 0) ? 'checked' : '';
     $chk_epoca_otro = $epocaInt === ($ne['EPOCA_OTRO'] ?? 0) ? 'checked' : '';
@@ -165,10 +167,10 @@ $url_persona_nota_nueva = $web . '/src/notas/persona_nota_nueva';
 $url_persona_nota_editar = $web . '/src/notas/persona_nota_editar';
 
 $oConfig = $_SESSION['oConfig'] ?? null;
-$nota_max_default = $oConfig instanceof ConfigSnapshot ? tessera_imprimir_int($oConfig->getNotaMax()) : 0;
+$nota_max_default = $oConfig instanceof ConfigSnapshot ? PayloadCoercion::int($oConfig->getNotaMax()) : 0;
 $nota_max = $datos['nota_max'] === '' || $datos['nota_max'] === 0
     ? $nota_max_default
-    : tessera_imprimir_int($datos['nota_max'], $nota_max_default);
+    : PayloadCoercion::int($datos['nota_max'], $nota_max_default);
 
 $a_campos = [
     'obj' => $obj,

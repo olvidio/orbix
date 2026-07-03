@@ -1,4 +1,8 @@
 <?php
+
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\casas\helpers\CasasPayload;
+
 /**
  * Controlador AJAX HTML: formulario anual con gastos y aportaciones
  * (sv/sf) por mes de una casa. Llamado desde `casa.phtml` cuando
@@ -16,9 +20,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -26,11 +28,11 @@ $campos = [
     'year' => (int)filter_input(INPUT_POST, 'year'),
 ];
 
-$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/casa_ec_gastos_form_data', $campos));
-$form = casas_ec_gastos_from_payload($data);
+$data = CasasPayload::postData(PostRequest::getDataFromUrl('/src/casas/casa_ec_gastos_form_data', $campos));
+$form = CasasPayload::ecGastosFromPayload($data);
 
 if (!$form['ok']) {
-    ajax_json_html('', $form['error'] !== '' ? $form['error'] : (string)_("No se pueden obtener los datos."));
+    AjaxJsonSupport::html('', $form['error'] !== '' ? $form['error'] : (string)_("No se pueden obtener los datos."));
 }
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
@@ -49,4 +51,4 @@ $a_campos = [
     'url_guardar' => $url_guardar,
 ];
 
-ajax_json_render_phtml('frontend\\casas\\controller', 'casa_ec_gastos_lista.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\casas\\controller', 'casa_ec_gastos_lista.phtml', $a_campos);

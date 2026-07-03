@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: elimina el sacd ({id_activ, id_cargo}) de una
  * actividad y la asistencia asociada. Responde JSON
@@ -8,12 +11,10 @@
 use src\actividadessacd\application\SacdEliminar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_int;
-
 $input = [
-    'id_activ' => input_int($_POST, 'id_activ'),
-    'id_cargo' => input_int($_POST, 'id_cargo'),
-    'id_nom' => input_int($_POST, 'id_nom'),
+    'id_activ' => FuncTablasSupport::inputInt($_POST, 'id_activ'),
+    'id_cargo' => FuncTablasSupport::inputInt($_POST, 'id_cargo'),
+    'id_nom' => FuncTablasSupport::inputInt($_POST, 'id_nom'),
 ];
 
 /** @var SacdEliminar $useCase */

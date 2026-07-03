@@ -2,8 +2,8 @@
 
 namespace src\notas\application;
 
-use function src\shared\domain\helpers\input_int;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Copia todas las `PersonaNota` de una persona origen hacia una persona
@@ -26,8 +26,8 @@ final class TesseraCopiar
      */
     public function execute(array $input): string
     {
-        $id_nom_org = input_int($input, 'id_nom_org');
-        $id_nom_dst = input_int($input, 'id_nom_dst');
+        $id_nom_org = FuncTablasSupport::inputInt($input, 'id_nom_org');
+        $id_nom_dst = FuncTablasSupport::inputInt($input, 'id_nom_dst');
 
         if ($id_nom_org === 0 || $id_nom_dst === 0) {
             return _("No se han recibido las personas de origen y destino");

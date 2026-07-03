@@ -22,9 +22,7 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_string_list;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Construye el listado de actividades que cumplen los filtros fijados por
@@ -80,25 +78,25 @@ final class ActividadSelectListado
         $mi_dele = ConfigGlobal::mi_delef();
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-        $Qcontinuar = input_string($input, 'continuar');
-        $Qmodo = input_string($input, 'modo');
-        $Qstatus = input_int($input, 'status');
-        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
-        $Qfiltro_lugar = input_string($input, 'filtro_lugar');
-        $Qid_ubi = input_int($input, 'id_ubi');
-        $Qnom_activ = input_string($input, 'nom_activ');
-        $Qperiodo = input_string($input, 'periodo');
-        $Qyear = input_string($input, 'year');
-        $Qdl_org = input_string($input, 'dl_org');
-        $Qempiezamin = input_string($input, 'empiezamin');
-        $Qempiezamax = input_string($input, 'empiezamax');
-        $Qfases_on = input_string_list($input, 'fases_on');
-        $Qfases_off = input_string_list($input, 'fases_off');
-        $Qpublicado = input_int($input, 'publicado');
-        $Qssfsv = input_string($input, 'ssfsv');
-        $Qsasistentes = input_string($input, 'sasistentes');
-        $Qsactividad = input_string($input, 'sactividad');
-        $Qsactividad2 = input_string($input, 'sactividad2');
+        $Qcontinuar = FuncTablasSupport::inputString($input, 'continuar');
+        $Qmodo = FuncTablasSupport::inputString($input, 'modo');
+        $Qstatus = FuncTablasSupport::inputInt($input, 'status');
+        $Qid_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $Qfiltro_lugar = FuncTablasSupport::inputString($input, 'filtro_lugar');
+        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
+        $Qnom_activ = FuncTablasSupport::inputString($input, 'nom_activ');
+        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = FuncTablasSupport::inputString($input, 'year');
+        $Qdl_org = FuncTablasSupport::inputString($input, 'dl_org');
+        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
+        $Qfases_on = FuncTablasSupport::inputStringList($input, 'fases_on');
+        $Qfases_off = FuncTablasSupport::inputStringList($input, 'fases_off');
+        $Qpublicado = FuncTablasSupport::inputInt($input, 'publicado');
+        $Qssfsv = FuncTablasSupport::inputString($input, 'ssfsv');
+        $Qsasistentes = FuncTablasSupport::inputString($input, 'sasistentes');
+        $Qsactividad = FuncTablasSupport::inputString($input, 'sactividad');
+        $Qsactividad2 = FuncTablasSupport::inputString($input, 'sactividad2');
 
         if (empty($Qperiodo)) {
             $Qperiodo = 'actual';
@@ -519,8 +517,8 @@ final class ActividadSelectListado
         }
 
         $num = $i;
-        $Qid_sel = input_string_list($input, 'sel');
-        $Qscroll_id = input_string($input, 'scroll_id');
+        $Qid_sel = FuncTablasSupport::inputStringList($input, 'sel');
+        $Qscroll_id = FuncTablasSupport::inputString($input, 'scroll_id');
         if (!empty($a_valores)) {
             if (!empty($Qid_sel)) {
                 $a_valores['select'] = $Qid_sel;

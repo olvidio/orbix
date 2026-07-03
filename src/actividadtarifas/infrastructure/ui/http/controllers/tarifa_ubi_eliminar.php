@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: elimina una `TarifaUbi`.
  *
@@ -10,10 +13,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
-$ctxRaw = input_string($_POST, 'ctx_eliminar');
+$ctxRaw = FuncTablasSupport::inputString($_POST, 'ctx_eliminar');
 try {
     $ctx = HashB::open($ctxRaw, 'tarifa_ubi_eliminar');
 } catch (HashBInvalidException $e) {
@@ -22,7 +22,7 @@ try {
 }
 
 $input = [
-    'id_item' => input_int($ctx, 'id_item'),
+    'id_item' => FuncTablasSupport::inputInt($ctx, 'id_item'),
 ];
 
 /** @var TarifaUbiEliminar $useCase */

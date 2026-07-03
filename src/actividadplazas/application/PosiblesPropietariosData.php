@@ -7,7 +7,7 @@ use src\actividadplazas\application\services\ResumenPlazasService;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\helpers\OpcionesDesplegable;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve el payload del desplegable "posibles propietarios de
@@ -40,8 +40,8 @@ final class PosiblesPropietariosData
      */
     public function execute(array $input): array
     {
-        $id_nom = input_int($input, 'id_nom');
-        $id_activ = input_int($input, 'id_activ');
+        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
+        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
 
         if ($id_nom === 0 || $id_activ === 0) {
             return ['error' => (string)_("faltan parametros id_nom / id_activ")];

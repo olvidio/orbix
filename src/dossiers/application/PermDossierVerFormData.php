@@ -5,7 +5,7 @@ namespace src\dossiers\application;
 use src\dossiers\domain\PermisoDossierBits;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\permisos\domain\XPermisos;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Formulario "permisos de acceso" para un tipo de dossier.
@@ -56,7 +56,7 @@ class PermDossierVerFormData
         $permiso_lectura = $oTipoDossier->getPermiso_lectura();
         $permiso_escritura = $oTipoDossier->getPermiso_escritura() ?? 0;
 
-        $chk = is_true($depende_modificar) ? 'checked' : '';
+        $chk = FuncTablasSupport::isTrue($depende_modificar) ? 'checked' : '';
         $campos_chk = 'depende_modificar!permiso_lectura!permiso_escritura';
 
         $hashConfig = [

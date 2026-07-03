@@ -1,10 +1,10 @@
 <?php
 
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint JSON: datos crudos para la tabla `personas_select`.
  */
-
-use function src\shared\domain\helpers\input_string;
 
 use src\personas\application\PersonasSelectData;
 use src\shared\infrastructure\DependencyResolver;
@@ -22,7 +22,7 @@ try {
         $problemas = [];
         RegionStgrAviso::registrar($problemas, $e);
         $result = [
-            'tabla' => input_string($_POST, 'tabla'),
+            'tabla' => FuncTablasSupport::inputString($_POST, 'tabla'),
             'obj_pau' => '',
             'id_tabla' => '',
             'permiso' => 1,

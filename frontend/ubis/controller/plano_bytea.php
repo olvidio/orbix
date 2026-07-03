@@ -1,11 +1,12 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\ubis\helpers\UbisPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\helpers\MultipartUploadHelper;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/ubis_support.php';
 
 $_POST = $_REQUEST;
 
@@ -23,14 +24,13 @@ if (empty($Qact)) {
 
 switch ($Qact) {
 case "eliminar":
-    ubis_plano_borrar($Qobj_dir, $Qid_direccion);
+    UbisPayload::planoBorrar($Qobj_dir, $Qid_direccion);
     echo "<body onload=\"window.close();\" ></body>";
     break;
 case "comprobar":
-    $aDatosPlano = ubis_plano_download($Qobj_dir, $Qid_direccion);
+    $aDatosPlano = UbisPayload::planoDownload($Qobj_dir, $Qid_direccion);
     $plano_doc = $aDatosPlano['plano_doc'];
-    require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-    ajax_json_response('', [
+        AjaxJsonSupport::response('', [
         'exists' => !empty($plano_doc),
         'text' => empty($plano_doc) ? 'no' : 'si',
     ]);
@@ -43,7 +43,7 @@ case "upload":
         echo htmlspecialchars(_("No se ha recibido ningún archivo."), ENT_QUOTES, 'UTF-8');
         break;
     }
-    $upload = ubis_upload_file_from_post($_FILES['userfile']);
+    $upload = UbisPayload::uploadFileFromPost($_FILES['userfile']);
     if ($upload['error'] !== UPLOAD_ERR_OK) {
         echo htmlspecialchars(
             MultipartUploadHelper::messageForPhpUploadError($upload['error'], $upload['name']),
@@ -57,11 +57,11 @@ case "upload":
         echo htmlspecialchars(_("No se ha podido leer el archivo."), ENT_QUOTES, 'UTF-8');
         break;
     }
-    ubis_plano_upload($Qobj_dir, $Qid_direccion, $upload['filename'], $upload['extension'], $fichero);
+    UbisPayload::planoUpload($Qobj_dir, $Qid_direccion, $upload['filename'], $upload['extension'], $fichero);
     echo "<body onload='window.close();' ></body>";
     break;
 case "download":
-    $aDatosPlano = ubis_plano_download($Qobj_dir, $Qid_direccion);
+    $aDatosPlano = UbisPayload::planoDownload($Qobj_dir, $Qid_direccion);
 
     $plano_nom = $aDatosPlano['plano_nom'];
     $plano_extension = $aDatosPlano['plano_extension'];

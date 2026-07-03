@@ -6,28 +6,28 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 
 $Qinventario = (int)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $url_backend = '/src/inventario/lista_tipo_doc';
 $data = PostRequest::getDataFromUrl($url_backend);
-$payload = inventario_post_payload($data);
-$aOpciones = inventario_desplegable_opciones($payload['a_opciones'] ?? []);
+$payload = InventarioPayload::postPayload($data);
+$aOpciones = InventarioPayload::desplegableOpciones($payload['a_opciones'] ?? []);
 
 $oDesplTipoDoc = new Desplegable('', $aOpciones, '', true);
 $oDesplTipoDoc->setNombre('id_tipo_doc');
 if ($Qid_tipo_doc !== 0) {
-    $oDesplTipoDoc->setOpcion_sel(inventario_desplegable_opcion_sel($Qid_tipo_doc));
+    $oDesplTipoDoc->setOpcion_sel(InventarioPayload::desplegableOpcionSel($Qid_tipo_doc));
 }
 
 $url_asignados = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_asignado.php?';

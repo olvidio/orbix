@@ -3,6 +3,7 @@
 use src\notas\application\NotaPersonaFormData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FilterPostGet;
 
 /**
  * Endpoint backend que prepara los datos para `form_notas_de_una_persona.phtml`
@@ -25,11 +26,11 @@ use src\shared\web\ContestarJson;
  * NotaSituacion/TipoActa/NotaEpoca desde el dominio).
  */
 $input = [
-    'id_pau' => (int)filter_post('id_pau'),
-    'id_asignatura_real' => (string)filter_post('id_asignatura_real'),
-    'sel' => (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'pau' => (string)filter_post('pau'),
-    'mod' => (string)filter_post('mod'),
+    'id_pau' => (int)FilterPostGet::post('id_pau'),
+    'id_asignatura_real' => (string)FilterPostGet::post('id_asignatura_real'),
+    'sel' => (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'pau' => (string)FilterPostGet::post('pau'),
+    'mod' => (string)FilterPostGet::post('mod'),
 ];
 
 $data = (DependencyResolver::get(NotaPersonaFormData::class))->execute($input);

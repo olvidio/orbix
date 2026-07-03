@@ -3,7 +3,7 @@
 namespace src\actividadessacd\application;
 
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Devuelve el texto de comunicacion asociado a `{clave, idioma}`.
@@ -21,8 +21,8 @@ final class TextoComunicacionData
      */
     public function execute(array $input): array
     {
-        $clave = input_string($input, 'clave');
-        $idioma = input_string($input, 'idioma');
+        $clave = FuncTablasSupport::inputString($input, 'clave');
+        $idioma = FuncTablasSupport::inputString($input, 'idioma');
         if ($clave === '' || $idioma === '') {
             return ['texto' => ''];
         }

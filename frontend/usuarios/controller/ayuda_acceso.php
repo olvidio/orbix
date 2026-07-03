@@ -1,10 +1,11 @@
 <?php
 
+use frontend\usuarios\helpers\UsuariosPayload;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\UrlBaseProject;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
 require __DIR__ . '/../../../libs/vendor/autoload.php';
 
 $Qusername = (string)filter_input(INPUT_POST, 'username');
@@ -23,18 +24,18 @@ $a_cosas = ['url_base' => $url_base, 'username' => $Qusername, 'ubicacion' => $Q
 $linkEnviarMailPasswd = 'frontend/usuarios/controller/recuperar_password.php?' . http_build_query($a_cosas);
 $linkAyuda2FA = 'frontend/usuarios/controller/ayuda_2fa_reset.php?' . http_build_query($a_cosas);
 
-$data = usuarios_post_data(PostRequest::getDataFromUrl($url_backend, [
+$data = UsuariosPayload::postData(PostRequest::getDataFromUrl($url_backend, [
     'username' => $Qusername,
     'esquema' => $Qesquema,
     'ubicacion' => $Qubicacion,
 ]));
 
 $a_campos = [
-    'error_txt' => tessera_imprimir_string($data['errores'] ?? ''),
+    'error_txt' => PayloadCoercion::string($data['errores'] ?? ''),
     'linkEnviarMailPasswd' => $linkEnviarMailPasswd,
-    'emailOfuscado' => tessera_imprimir_string($data['emailOfuscado'] ?? ''),
+    'emailOfuscado' => PayloadCoercion::string($data['emailOfuscado'] ?? ''),
     'linkAyuda2FA' => $linkAyuda2FA,
-    'mail_admin' => tessera_imprimir_string($data['mail_admin'] ?? ''),
+    'mail_admin' => PayloadCoercion::string($data['mail_admin'] ?? ''),
     'url_base' => $url_base,
 ];
 

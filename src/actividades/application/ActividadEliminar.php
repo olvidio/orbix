@@ -6,8 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\permisos\domain\PermisosActividades;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string_list;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Elimina actividades indicadas por selección masiva o por id único (planning).
@@ -27,8 +26,8 @@ final class ActividadEliminar
     public function execute(array $input): string
     {
         $error_txt = '';
-        $a_sel = input_string_list($input, 'sel');
-        $Qid_activ = input_int($input, 'id_activ');
+        $a_sel = FuncTablasSupport::inputStringList($input, 'sel');
+        $Qid_activ = FuncTablasSupport::inputInt($input, 'id_activ');
 
         if ($a_sel !== []) {
             foreach ($a_sel as $id) {

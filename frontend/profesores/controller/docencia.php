@@ -4,19 +4,18 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\profesores\helpers\ProfesoresPayload;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/profesores_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $url_backend = '/src/profesores/docencia';
 $data = PostRequest::getDataFromUrl($url_backend);
-$tabla = profesores_lista_tabla_from_payload($data);
+$tabla = ProfesoresPayload::listaTablaFromPayload($data);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla($tabla['id_tabla']);

@@ -1,13 +1,13 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $Qid_equipaje = (string)filter_input(INPUT_POST, 'id_equipaje');
@@ -15,7 +15,7 @@ $Qid_equipaje = (string)filter_input(INPUT_POST, 'id_equipaje');
 $url_backend = '/src/inventario/lista_equipajes_posibles_maletas';
 $a_campos_backend = ['id_equipaje' => $Qid_equipaje];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$view = inventario_posibles_maletas_from_payload(inventario_post_payload($data));
+$view = InventarioPayload::posiblesMaletasFromPayload(InventarioPayload::postPayload($data));
 
 $a_opciones = $view['a_opciones'];
 $new_id_grupo = $view['new_id_grupo'];
@@ -48,4 +48,4 @@ echo '</form>';
 echo "<span id='docs_grupo_$new_id_grupo'>";
 echo '</span>';
 echo '</span>';
-ajax_json_html((string) ob_get_clean());
+AjaxJsonSupport::html((string) ob_get_clean());

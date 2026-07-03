@@ -1,12 +1,11 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-use function src\shared\domain\helpers\input_int;
-
-$Qid_usuario = input_int($_POST, 'id_usuario');
+$Qid_usuario = FuncTablasSupport::inputInt($_POST, 'id_usuario');
 
 $GrupoRepository = DependencyResolver::get(GrupoRepositoryInterface::class);
 $oGrupo = $GrupoRepository->findById($Qid_usuario);

@@ -1,4 +1,7 @@
 <?php
+
+use frontend\shared\helpers\AjaxJsonSupport;
+
 /**
  * Devuelve el HTML del grid comparativo A vs B para insertarlo en
  * `#comparativa` de `plazas_balance_que.phtml` (AJAX HTML).
@@ -15,10 +18,9 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\TablaEditable;
 use frontend\shared\FrontBootstrap;
+use frontend\actividadplazas\helpers\ActividadplazasPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
 
 FrontBootstrap::boot();
 $campos = [
@@ -26,7 +28,7 @@ $campos = [
     'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),
 ];
 
-$payload = actividadplazas_gestion_plazas_from_payload(
+$payload = ActividadplazasPayload::gestionPlazasFromPayload(
     PostRequest::getDataFromUrl('/src/actividadplazas/plazas_balance_data', $campos)
 );
 
@@ -36,7 +38,7 @@ $concedidasA2B = $payload['concedidasA2B'];
 $concedidasB2A = $payload['concedidasB2A'];
 
 if ($dlB === '') {
-    ajax_json_html('');
+    AjaxJsonSupport::html('');
 }
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
@@ -60,4 +62,4 @@ $a_campos = [
     'oTabla' => $oTabla,
 ];
 
-ajax_json_render_phtml('frontend\\actividadplazas\\controller', 'plazas_balance_dl.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\actividadplazas\\controller', 'plazas_balance_dl.phtml', $a_campos);

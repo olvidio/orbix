@@ -1,12 +1,13 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\dbextern\helpers\DbexternPayload;
 
-require_once __DIR__ . '/../helpers/dbextern_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -28,15 +29,15 @@ if ($first_load) {
         'tipo_persona' => $tipo_persona,
         'first_load' => '1',
     ]);
-    $a_lista = dbextern_lista_from_backend($data['lista'] ?? []);
-    $cont_sync = tessera_imprimir_int($data['cont_sync'] ?? 0);
+    $a_lista = DbexternPayload::listaFromBackend($data['lista'] ?? []);
+    $cont_sync = PayloadCoercion::int($data['cont_sync'] ?? 0);
 
     session_start();
     $_SESSION['DBListas'] = $a_lista;
     session_write_close();
 }
 
-$listas = dbextern_session_db_listas();
+$listas = DbexternPayload::sessionDbListas();
 $max = count($listas);
 $a_lista_orbix = [];
 $persona_listas = [];
@@ -46,12 +47,12 @@ $id_nom_bdu = '';
 
 if ($max > 0) {
     $idInt = is_numeric($id) ? (int) $id : 1;
-    $new_id = dbextern_otro_listas($idInt, $mov, $max);
+    $new_id = DbexternPayload::otroListas($idInt, $mov, $max);
 }
 
 if ($new_id > 0 && isset($listas[$new_id])) {
     $persona_listas = $listas[$new_id];
-    $id_nom_bdu = dbextern_persona_listas_row($persona_listas)['id_nom_listas'];
+    $id_nom_bdu = DbexternPayload::personaListasRow($persona_listas)['id_nom_listas'];
 
     $matches = PostRequest::getDataFromUrl('/src/dbextern/ver_listas_datos', [
         'region' => $region,
@@ -59,8 +60,8 @@ if ($new_id > 0 && isset($listas[$new_id])) {
         'tipo_persona' => $tipo_persona,
         'id_nom_bdu' => $id_nom_bdu,
     ]);
-    $a_lista_orbix = dbextern_lista_from_backend($matches['posibles_misma_dl'] ?? []);
-    $a_lista_orbix_otradl = dbextern_lista_from_backend($matches['posibles_otra_dl'] ?? []);
+    $a_lista_orbix = DbexternPayload::listaFromBackend($matches['posibles_misma_dl'] ?? []);
+    $a_lista_orbix_otradl = DbexternPayload::listaFromBackend($matches['posibles_otra_dl'] ?? []);
 }
 
 $url_sincro_ver = AppUrlConfig::getApiBaseUrl() . '/frontend/dbextern/controller/ver_listas.php';

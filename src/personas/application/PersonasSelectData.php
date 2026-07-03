@@ -17,9 +17,7 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
-
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/personas_select_data`.
@@ -54,16 +52,16 @@ final class PersonasSelectData
      */
     public function execute(array $input): array
     {
-        $tabla = input_string($input, 'tabla');
-        $Qna = input_string($input, 'na');
-        $tipo = input_string($input, 'tipo');
-        $Qes_sacd = input_int($input, 'es_sacd');
-        $Qexacto = input_string($input, 'exacto');
-        $Qcmb = input_string($input, 'cmb');
-        $Qnombre = input_string($input, 'nombre');
-        $Qapellido1 = input_string($input, 'apellido1');
-        $Qapellido2 = input_string($input, 'apellido2');
-        $Qcentro = input_string($input, 'centro');
+        $tabla = FuncTablasSupport::inputString($input, 'tabla');
+        $Qna = FuncTablasSupport::inputString($input, 'na');
+        $tipo = FuncTablasSupport::inputString($input, 'tipo');
+        $Qes_sacd = FuncTablasSupport::inputInt($input, 'es_sacd');
+        $Qexacto = FuncTablasSupport::inputString($input, 'exacto');
+        $Qcmb = FuncTablasSupport::inputString($input, 'cmb');
+        $Qnombre = FuncTablasSupport::inputString($input, 'nombre');
+        $Qapellido1 = FuncTablasSupport::inputString($input, 'apellido1');
+        $Qapellido2 = FuncTablasSupport::inputString($input, 'apellido2');
+        $Qcentro = FuncTablasSupport::inputString($input, 'centro');
 
         $aWhere = [];
         $aOperador = [];
@@ -221,7 +219,7 @@ final class PersonasSelectData
         $sessionAuth = $_SESSION['session_auth'] ?? null;
         /** @var array<string, mixed>|null $sessionAuthTyped */
         $sessionAuthTyped = is_array($sessionAuth) ? $sessionAuth : null;
-        $idUsuario = $sessionAuthTyped !== null ? input_int($sessionAuthTyped, 'id_usuario') : 0;
+        $idUsuario = $sessionAuthTyped !== null ? FuncTablasSupport::inputInt($sessionAuthTyped, 'id_usuario') : 0;
         $oPreferencia = $PreferenciaRepository->findById($idUsuario, 'tabla_presentacion');
         if ($oPreferencia !== null) {
             $sPrefs = (string)$oPreferencia->getPreferencia();

@@ -2,14 +2,10 @@
 
 namespace frontend\shared\web;
 
-// El front no siempre carga `global_object` (donde se incluye `func_tablas.php`);
-// `use function` no dispara el autoload — requerir antes del alias.
-require_once dirname(__DIR__, 3) . '/src/shared/domain/helpers/func_tablas.php';
-
+use frontend\shared\helpers\FuncTablasSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\domain\value_objects\DateTimeLocal;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
-use function frontend\shared\helpers\curso_est;
 
 /**
  * Classe que passa el periode amb texte a data inici i data fi.
@@ -290,8 +286,8 @@ class Periodo
                 $fin_m = $this->mesFinCrt();
                 $any2 = ($mes > $fin_m) ? $any + 1 : $any;
                 $c = $this->calendarioParaCursoEst();
-                $oInicio = curso_est('inicio', $any2, 'crt', $c);
-                $oFin = curso_est('fin', $any2, 'crt', $c);
+                $oInicio = FuncTablasSupport::cursoEst('inicio', $any2, 'crt', $c);
+                $oFin = FuncTablasSupport::cursoEst('fin', $any2, 'crt', $c);
                 $inicio = $oInicio->getIso();
                 $fin = $oFin->getIso();
                 break;
@@ -299,8 +295,8 @@ class Periodo
                 $fin_m = $this->mesFinStgr();
                 $any2 = ($mes > $fin_m) ? $any + 1 : $any;
                 $c = $this->calendarioParaCursoEst();
-                $oInicio = curso_est('inicio', $any2, 'est', $c);
-                $oFin = curso_est('fin', $any2, 'est', $c);
+                $oInicio = FuncTablasSupport::cursoEst('inicio', $any2, 'est', $c);
+                $oFin = FuncTablasSupport::cursoEst('fin', $any2, 'est', $c);
                 $inicio = $oInicio->getIso();
                 $fin = $oFin->getIso();
                 break;

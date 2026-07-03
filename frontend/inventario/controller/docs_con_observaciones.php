@@ -1,23 +1,24 @@
 <?php
 
+use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // muestra los documentos en búsqueda.
 $url_backend = '/src/inventario/lista_docs_con_observaciones';
 $data = PostRequest::getDataFromUrl($url_backend);
-$payload = inventario_post_payload($data);
+$payload = InventarioPayload::postPayload($data);
 
-$a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
+$a_valores = ActividadesListaSupport::datos($payload['a_valores'] ?? []);
 
 $a_cabeceras = [
     ucfirst(_("centro - lugar")),

@@ -10,7 +10,6 @@ use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\entity\Role;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla aux_roles a la interfaz del repositorio

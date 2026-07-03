@@ -1,4 +1,8 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPermSupport;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Pantalla de filtros para listados particulares de sr/sg. La accion real
  * (`listar`) se delega al controlador frontend lista_activ.php, que a su
@@ -14,18 +18,15 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-$permiso_des = actividades_perm_des();
+$permiso_des = ActividadesPermSupport::permDes();
 
 $url_lista = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/lista_activ.php';
 

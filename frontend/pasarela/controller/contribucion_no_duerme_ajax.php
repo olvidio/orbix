@@ -1,13 +1,15 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\actividades\helpers\ActividadTipo;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\pasarela\helpers\PasarelaPayload;
+use frontend\pasarela\helpers\PasarelaExcepcionRender;
 
-require_once __DIR__ . '/../helpers/pasarela_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -48,12 +50,12 @@ switch ($Qque) {
         break;
     case 'lista':
         $data = PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_lista');
-        $lista = pasarela_excepcion_lista_con_default_from_payload($data);
-        echo pasarela_render_excepcion_lista_con_default_html($lista, 'fnjs_modificar_default()', 'fnjs_modificar');
+        $lista = PasarelaPayload::excepcionListaConDefaultFromPayload($data);
+        echo PasarelaExcepcionRender::listaConDefaultHtml($lista, 'fnjs_modificar_default()', 'fnjs_modificar');
         break;
     case 'form_default':
         $data = PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_default_data');
-        $default = tessera_imprimir_string($data['default'] ?? '');
+        $default = PayloadCoercion::string($data['default'] ?? '');
         $txt = _('Valor por defecto en %');
 
         $oHash = new HashFront();
@@ -80,7 +82,7 @@ switch ($Qque) {
         $data = PostRequest::getDataFromUrl('/src/pasarela/tipo_activ_txt_data', [
             'id_tipo_activ' => $Qid_tipo_activ,
         ]);
-        $tipo_txt = pasarela_tipo_txt_from_payload($data);
+        $tipo_txt = PasarelaPayload::tipoTxtFromPayload($data);
 
         $oHash = new HashFront();
         $oHash->setUrl($url_ajax);

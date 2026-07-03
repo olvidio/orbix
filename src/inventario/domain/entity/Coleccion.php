@@ -8,8 +8,6 @@ use src\inventario\domain\value_objects\ColeccionAgrupar;
 use src\inventario\domain\value_objects\ColeccionId;
 use src\inventario\domain\value_objects\ColeccionName;
 use src\shared\domain\traits\Hydratable;
-use function src\shared\domain\helpers\is_true;
-
 class Coleccion
 {
     use Hydratable;

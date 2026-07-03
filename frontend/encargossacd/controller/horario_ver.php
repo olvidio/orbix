@@ -1,11 +1,13 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
+use frontend\encargossacd\helpers\EncargossacdPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Formulario horario de encargo. Datos: `/src/encargossacd/horario_ver_data`
@@ -14,22 +16,21 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = encargossacd_post_int('refresh');
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+$Qrefresh = EncargossacdPostInput::postInt('refresh');
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
-$Qmod = encargossacd_post_string('mod');
-$Qid_enc = encargossacd_post_int('id_enc');
-$Qorigen = encargossacd_post_string('origen');
-$Qdesc_enc = encargossacd_post_string('desc_enc');
+$Qmod = EncargossacdPostInput::postString('mod');
+$Qid_enc = EncargossacdPostInput::postInt('id_enc');
+$Qorigen = EncargossacdPostInput::postString('origen');
+$Qdesc_enc = EncargossacdPostInput::postString('desc_enc');
 $Qdesc_enc = urldecode($Qdesc_enc);
 
-$id_item_h = encargossacd_post_sel_id_item_h(encargossacd_post_int('id_item_h'));
+$id_item_h = EncargossacdPostInput::postSelIdItemH(EncargossacdPostInput::postInt('id_item_h'));
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/horario_ver_data', [
@@ -38,7 +39,7 @@ $data = PostRequest::getDataFromUrl('/src/encargossacd/horario_ver_data', [
     'id_item_h' => $id_item_h,
 ]);
 
-$horario = encargossacd_horario_ver_from_payload($data);
+$horario = EncargossacdPayload::horarioVerFromPayload($data);
 $f_ini = $horario['f_ini'];
 $f_fin = $horario['f_fin'];
 $dia_ref = $horario['dia_ref'];

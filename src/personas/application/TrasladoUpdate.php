@@ -2,9 +2,6 @@
 
 namespace src\personas\application;
 
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_int;
-
 use src\shared\config\ConfigGlobal;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
@@ -28,6 +25,7 @@ use src\personas\domain\Trasladar;
 use src\personas\domain\value_objects\SituacionCode;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Aplica el traslado de centro y/o delegacion de una persona y asegura
@@ -50,8 +48,8 @@ final class TrasladoUpdate
      */
     public function execute(array $input): string
     {
-        $id_pau = input_int($input, 'id_pau');
-        $obj_pau = input_string($input, 'obj_pau');
+        $id_pau = FuncTablasSupport::inputInt($input, 'id_pau');
+        $obj_pau = FuncTablasSupport::inputString($input, 'obj_pau');
         if (empty($id_pau) || empty($obj_pau)) {
             return _("Faltan id_pau u obj_pau");
         }
@@ -78,13 +76,13 @@ final class TrasladoUpdate
         $error = '';
 
         // Cambio de centro.
-        $new_ctr = input_string($input, 'new_ctr');
-        $f_ctr = input_string($input, 'f_ctr');
+        $new_ctr = FuncTablasSupport::inputString($input, 'new_ctr');
+        $f_ctr = FuncTablasSupport::inputString($input, 'f_ctr');
         if (!empty($new_ctr) && !empty($f_ctr)) {
             $rawF_ctr = DateTimeLocal::createFromLocal($f_ctr);
             $oF_ctr = $rawF_ctr instanceof DateTimeLocal ? $rawF_ctr : null;
-            $id_ctr_o = input_string($input, 'id_ctr_o');
-            $ctr_o = input_string($input, 'ctr_o');
+            $id_ctr_o = FuncTablasSupport::inputString($input, 'id_ctr_o');
+            $ctr_o = FuncTablasSupport::inputString($input, 'ctr_o');
 
             $id_new_ctr = (int)strtok($new_ctr, "#");
             $oCentro = $this->centroRepository->findById($id_new_ctr);
@@ -112,15 +110,15 @@ final class TrasladoUpdate
         }
 
         // Cambio de delegacion.
-        $new_dl = input_string($input, 'new_dl');
-        $f_dl = input_string($input, 'f_dl');
+        $new_dl = FuncTablasSupport::inputString($input, 'new_dl');
+        $f_dl = FuncTablasSupport::inputString($input, 'f_dl');
         if (!empty($new_dl) && !empty($f_dl)) {
             $old_dl = (string)($oPersona->getDl() ?? '');
-            $situacion = SituacionCode::fromNullableString(input_string($input, 'situacion'));
+            $situacion = SituacionCode::fromNullableString(FuncTablasSupport::inputString($input, 'situacion'));
             if ($situacion === null) {
                 return _("Falta una situación válida");
             }
-            $dl_form = input_string($input, 'dl');
+            $dl_form = FuncTablasSupport::inputString($input, 'dl');
             $reg_dl_org = empty($dl_form) ? '' : ConfigGlobal::mi_region() . '-' . $dl_form;
             $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
             $reg_dl_org .= $sfsv_txt;

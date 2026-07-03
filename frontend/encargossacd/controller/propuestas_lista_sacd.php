@@ -3,12 +3,12 @@
 use frontend\shared\FrontBootstrap;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
 
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$Qsel = encargossacd_post_string('sel');
+$Qsel = EncargossacdPostInput::postString('sel');
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/propuestas_lista_sacd_data', ['sel' => $Qsel]);
 

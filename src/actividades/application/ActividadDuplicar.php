@@ -6,7 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\permisos\domain\XPermisos;
-use function src\shared\domain\helpers\input_string_list;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Duplica la primera actividad seleccionada dentro de la propia delegación.
@@ -24,7 +24,7 @@ final class ActividadDuplicar
      */
     public function execute(array $input): string
     {
-        $a_sel = input_string_list($input, 'sel');
+        $a_sel = FuncTablasSupport::inputStringList($input, 'sel');
 
         if ($a_sel === []) {
             return _("no se ha seleccionado ninguna actividad");

@@ -1,13 +1,12 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\shared\web\ContestarJson;
 
-$Qf_ini_iso = input_string($_POST, 'f_ini_iso');
+$Qf_ini_iso = FuncTablasSupport::inputString($_POST, 'f_ini_iso');
 
 $error_txt = '';
 

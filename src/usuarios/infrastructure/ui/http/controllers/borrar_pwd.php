@@ -9,8 +9,6 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Password;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\is_true;
-
 $error_txt = '';
 $data = [];
 

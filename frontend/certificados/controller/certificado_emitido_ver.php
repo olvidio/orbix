@@ -1,44 +1,47 @@
 <?php
 
+use frontend\notas\helpers\NotasFormSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
-use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
+use frontend\certificados\helpers\CertificadosPostInput;
+use frontend\certificados\helpers\CertificadosPayload;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
 
-require_once __DIR__ . '/../helpers/certificados_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 
-$stackFromPost = list_nav_stack_from_post();
+$stackFromPost = ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
-    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    list_nav_boot_recordar($oPosicion, $Qrefresh);
+    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
 }
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
-$Qid_item = certificados_id_item_from_sel_post();
+$Qid_item = CertificadosPostInput::idItemFromSelPost();
 
-$data = certificados_post_data(PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_ver_datos', [
+$data = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_ver_datos', [
     'id_item' => $Qid_item,
 ], false));
 if (!empty($data['error'])) {
     $a_campos = [
         'oPosicion' => $oPosicion,
-        'aviso' => PostRequest::stripInternalCallProvenance(tessera_imprimir_string($data['error'])),
+        'aviso' => PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error'])),
     ];
     $oView = new ViewNewTwig('frontend/certificados/controller');
     $oView->renderizar('certificado_emitido_ver.html.twig', $a_campos);
     return;
 }
 
-$ver = certificados_emitido_ver_from_payload($data);
+$ver = CertificadosPayload::emitidoVerFromPayload($data);
 $id_nom = $ver['id_nom'];
 $nom = $ver['nom'];
 $idioma = $ver['idioma'];
@@ -46,17 +49,17 @@ $destino = $ver['destino'];
 $certificado = $ver['certificado'];
 $f_certificado = $ver['f_certificado'];
 $f_enviado = $ver['f_enviado'];
-$chk_firmado = is_true($ver['firmado']) ? 'checked' : '';
+$chk_firmado = FuncTablasSupport::isTrue($ver['firmado']) ? 'checked' : '';
 $content_pdf = base64_decode($ver['content'], true);
 if ($content_pdf === false) {
     $content_pdf = '';
 }
 $apellidos_nombre = $ver['apellidos_nombre'];
 
-$locData = certificados_post_data(PostRequest::getDataFromUrl('/src/shared/locales_posibles', [
+$locData = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/shared/locales_posibles', [
     'id_nom' => $id_nom,
 ]));
-$a_locales = notas_desplegable_opciones($locData['a_locales'] ?? []);
+$a_locales = NotasFormSupport::desplegableOpciones($locData['a_locales'] ?? []);
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, $idioma, true);
 
 $oHashCertificadoPdf = new HashFront();

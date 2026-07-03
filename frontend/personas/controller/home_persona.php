@@ -1,13 +1,17 @@
 <?php
-
 namespace frontend\personas\controller;
 
+use frontend\personas\helpers\PersonasPayload;
+use frontend\personas\helpers\PersonasPostInput;
+use frontend\dossiers\helpers\DossiersListaRender;
 use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Pantalla de cabecera de una persona (datos basicos + acceso a dossiers y ficha).
@@ -20,21 +24,19 @@ use frontend\shared\FrontBootstrap;
  * `/src/personas/home_persona_data`. Este controlador no importa clases `src\`.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../helpers/personas_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
-$ids = personas_id_from_sel_post();
+$ids = PersonasPostInput::idFromSelPost();
 $id_nom = $ids['id_nom'];
 $id_tabla = $ids['id_tabla'];
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
-personas_session_go_to_set_tabla($Qobj_pau);
+PersonasPostInput::sessionGoToSetTabla($Qobj_pau);
 
 $pau = 'p';
 
@@ -47,7 +49,7 @@ $campos = [
 $data = PostRequest::getDataFromUrl('/src/personas/home_persona_data', $campos, false);
 $aviso = '';
 if (!empty($data['error'])) {
-    $errorHtml = PostRequest::stripInternalCallProvenance(tessera_imprimir_string($data['error']));
+    $errorHtml = PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error']));
     if (
         str_contains($errorHtml, _('persona no válida'))
         || str_contains($errorHtml, 'persona no válida')
@@ -61,8 +63,8 @@ if (!empty($data['error'])) {
         return;
     }
 }
-$payload = personas_post_payload($data);
-$home = personas_home_from_payload($payload, $Qobj_pau, $aviso);
+$payload = PersonasPayload::postPayload($data);
+$home = PersonasPayload::homeFromPayload($payload, $Qobj_pau, $aviso);
 $Qobj_pau = $home['Qobj_pau'];
 $nom = $home['titulo'];
 $dl = $home['dl'];
@@ -84,7 +86,7 @@ $go_ficha = HashFront::link($base . '/frontend/personas/controller/personas_edit
 $a_parametros_dossier = ['pau' => $pau, 'id_pau' => $id_nom, 'obj_pau' => $Qobj_pau];
 $godossiers = HashFront::link($base . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 
-$lista_dossiers_html = orbix_render_lista_dossiers($pau, $id_nom, $Qobj_pau);
+$lista_dossiers_html = DossiersListaRender::render($pau, $id_nom, $Qobj_pau);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

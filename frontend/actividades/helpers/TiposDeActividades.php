@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\actividades\helpers;
 
-require_once __DIR__ . '/../../notas/helpers/tessera_imprimir_support.php';
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Espejo en frontend de {@see \src\actividades\domain\entity\TiposActividades}:
@@ -316,7 +316,7 @@ class TiposDeActividades
 
     public function setSfsvId(mixed $isfsv): void
     {
-        $this->ssfsv = tessera_imprimir_string($isfsv);
+        $this->ssfsv = PayloadCoercion::string($isfsv);
     }
 
     public function getSfsvRegexp(): string
@@ -371,7 +371,7 @@ class TiposDeActividades
 
     public function setAsistentesId(mixed $id): void
     {
-        $this->sasistentes = tessera_imprimir_string($id);
+        $this->sasistentes = PayloadCoercion::string($id);
     }
 
     public function getAsistentesRegexp(): string
@@ -449,7 +449,7 @@ class TiposDeActividades
 
     public function setActividadId(mixed $id): void
     {
-        $this->sactividad = tessera_imprimir_string($id);
+        $this->sactividad = PayloadCoercion::string($id);
     }
 
     public function getActividadRegexp(): string

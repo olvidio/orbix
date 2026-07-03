@@ -5,9 +5,9 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 FrontBootstrap::boot();
 
 $Qid_grupo = (int)filter_input(INPUT_POST, 'id_grupo');
@@ -16,8 +16,8 @@ $Qid_item_egm = (int)filter_input(INPUT_POST, 'id_item_egm');
 
 $url_backend = '/src/inventario/lista_tipo_doc';
 $data = PostRequest::getDataFromUrl($url_backend);
-$payload = inventario_post_payload($data);
-$a_opciones = inventario_desplegable_opciones($payload['a_opciones'] ?? []);
+$payload = InventarioPayload::postPayload($data);
+$a_opciones = InventarioPayload::desplegableOpciones($payload['a_opciones'] ?? []);
 
 $oDesplTiposDoc = new Desplegable('id_tipo_doc', $a_opciones, '', true);
 $oDesplTiposDoc->setAction('fnjs_docs_libres()');

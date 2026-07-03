@@ -2,10 +2,8 @@
 
 namespace src\procesos\application;
 
-use function src\shared\domain\helpers\input_int;
-
 use src\permisos\domain\XPermisos;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Payload para fases_activ_cambio: HTML del selector tipo actividad.
@@ -23,7 +21,7 @@ final class FasesActivCambioTipoActividadHtmlData
      */
     public function execute(array $input): array
     {
-        $extendida = input_string($input, 'sactividad2') !== '';
+        $extendida = FuncTablasSupport::inputString($input, 'sactividad2') !== '';
 
         $permiso_des = false;
         $ssfsv = '';
@@ -53,10 +51,10 @@ final class FasesActivCambioTipoActividadHtmlData
             $permiso_des,
             $ssfsv,
             $extendida,
-            input_string($input, 'id_tipo_activ'),
-            input_string($input, 'sasistentes'),
-            input_string($input, 'sactividad'),
-            input_string($input, 'sactividad2'),
+            FuncTablasSupport::inputString($input, 'id_tipo_activ'),
+            FuncTablasSupport::inputString($input, 'sasistentes'),
+            FuncTablasSupport::inputString($input, 'sactividad'),
+            FuncTablasSupport::inputString($input, 'sactividad2'),
         );
 
         return ['tipo_actividad_html' => $html];

@@ -1,10 +1,13 @@
 <?php
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\encargossacd\helpers\EncargossacdCtrRender;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
+use frontend\encargossacd\helpers\EncargossacdPayload;
 
 /**
  * Ficha de atencion sacerdotal de un centro. Datos de negocio obtenidos del
@@ -14,11 +17,10 @@ use frontend\shared\FrontBootstrap;
  */
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 $oPosicion = FrontBootstrap::boot();
 
-$Qid_ubi = encargossacd_post_int('id_ubi');
-$Qseleccion_sacd = encargossacd_post_int('seleccion_sacd');
+$Qid_ubi = EncargossacdPostInput::postInt('id_ubi');
+$Qseleccion_sacd = EncargossacdPostInput::postInt('seleccion_sacd');
 
 /** @var array<string, mixed> $data */
 $data = PostRequest::getDataFromUrl('/src/encargossacd/ctr_get_ficha_data', [
@@ -26,7 +28,7 @@ $data = PostRequest::getDataFromUrl('/src/encargossacd/ctr_get_ficha_data', [
     'seleccion_sacd' => $Qseleccion_sacd,
 ]);
 
-$ficha = encargossacd_ctr_get_ficha_from_payload($data);
+$ficha = EncargossacdPayload::ctrGetFichaFromPayload($data);
 $mod = $ficha['mod'];
 $tipo_centro = $ficha['tipo_centro'];
 $num_enc = $ficha['num_enc'];
@@ -97,16 +99,16 @@ foreach ($encargos as $idx => $enc) {
     $oDesplTitular = new Desplegable();
     $oDesplTitular->setBlanco(true);
     $oDesplTitular->setOpciones($aOpcionesSacd);
-    $oDesplTitular->setOpcion_sel(encargossacd_desplegable_opcion_sel($enc['actual_id_sacd_titular']));
+    $oDesplTitular->setOpcion_sel(EncargossacdPayload::desplegableOpcionSel($enc['actual_id_sacd_titular']));
     $a_despl_titular[$e] = $oDesplTitular;
 
     $oDesplSuplente = new Desplegable();
     $oDesplSuplente->setBlanco(true);
     $oDesplSuplente->setOpciones($aOpcionesSacd);
-    $oDesplSuplente->setOpcion_sel(encargossacd_desplegable_opcion_sel($enc['actual_id_sacd_suplente']));
+    $oDesplSuplente->setOpcion_sel(EncargossacdPayload::desplegableOpcionSel($enc['actual_id_sacd_suplente']));
     $a_despl_suplente[$e] = $oDesplSuplente;
 
-    $otros_sacd[$e] = encargossacd_construir_otros_sacd(
+    $otros_sacd[$e] = EncargossacdCtrRender::construirOtrosSacd(
         $e,
         $mod_horario_e,
         $enc['colaboradores'],
@@ -164,4 +166,4 @@ $a_campos = [
     'chk_sssc' => $chk_sssc,
 ];
 
-ajax_json_render_phtml('frontend\\encargossacd\\controller', 'ctr_get_ficha.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\encargossacd\\controller', 'ctr_get_ficha.phtml', $a_campos);

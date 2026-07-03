@@ -1,11 +1,13 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\permisos\MenuPermisoMenuHtml;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\FrontBootstrap;
+use frontend\dossiers\helpers\DossiersPayload;
 
 /**
  * Página de visualización de los permisos de los dossiers.
@@ -13,7 +15,6 @@ use frontend\shared\FrontBootstrap;
  */
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/dossiers/helpers/dossiers_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -33,8 +34,8 @@ $hashConfig = is_array($hashConfigRaw) ? $hashConfigRaw : [];
 unset($data['hash_config']);
 
 $oHash = new HashFront();
-$oHash->setCamposForm(tessera_imprimir_string($hashConfig['campos_form'] ?? ''));
-$oHash->setCamposNo(tessera_imprimir_string($hashConfig['campos_no'] ?? ''));
+$oHash->setCamposForm(PayloadCoercion::string($hashConfig['campos_form'] ?? ''));
+$oHash->setCamposNo(PayloadCoercion::string($hashConfig['campos_no'] ?? ''));
 $camposHidden = [];
 $hiddenRaw = $hashConfig['campos_hidden'] ?? null;
 if (is_array($hiddenRaw)) {
@@ -47,19 +48,19 @@ if (is_array($hiddenRaw)) {
 $camposHidden['go_to'] = $goTo;
 $oHash->setArrayCamposHidden($camposHidden);
 
-$dossierMap = dossiers_perm_bit_map($data['permiso_dossier_bit_map'] ?? null);
+$dossierMap = DossiersPayload::permBitMap($data['permiso_dossier_bit_map'] ?? null);
 
-$viewData = dossiers_view_variables($data);
+$viewData = DossiersPayload::viewVariables($data);
 $viewData['go_to'] = $goTo;
 $viewData['hash_campos_html'] = $oHash->getCamposHtml();
 $viewData['permiso_lectura_html'] = MenuPermisoMenuHtml::cuadrosCheck(
     'permiso_lectura',
-    tessera_imprimir_int($data['permiso_lectura'] ?? 0),
+    PayloadCoercion::int($data['permiso_lectura'] ?? 0),
     $dossierMap
 );
 $viewData['permiso_escritura_html'] = MenuPermisoMenuHtml::cuadrosCheck(
     'permiso_escritura',
-    tessera_imprimir_int($data['permiso_escritura'] ?? 0),
+    PayloadCoercion::int($data['permiso_escritura'] ?? 0),
     $dossierMap
 );
 unset($viewData['permiso_dossier_bit_map']);

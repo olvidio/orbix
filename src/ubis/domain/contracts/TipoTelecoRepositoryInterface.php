@@ -4,7 +4,6 @@ namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\TipoTeleco;
 
-use function src\shared\domain\helpers\is_true;
 /**
  * Interfaz de la clase TipoTeleco y su Repositorio
  *

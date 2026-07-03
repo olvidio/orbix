@@ -14,7 +14,7 @@ use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaPub;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * @return array{
@@ -50,8 +50,8 @@ final class MatriculasListaOtrasRData
      */
     public function execute(array $input): array
     {
-        $apellido1 = input_string($input, 'apellido1');
-        $esquemaRegionStgr = $this->resolveEsquemaRegionStgr(input_string($input, 'esquema_region_stgr'));
+        $apellido1 = FuncTablasSupport::inputString($input, 'apellido1');
+        $esquemaRegionStgr = $this->resolveEsquemaRegionStgr(FuncTablasSupport::inputString($input, 'esquema_region_stgr'));
         $tituloBusqueda = _('búsqueda por apellidos');
         $titulo = '';
         $msgErr = '';

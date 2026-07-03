@@ -3,8 +3,7 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\UbisTablaData;
 use src\shared\web\ContestarJson;
-
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 $input = $_POST;
 
@@ -12,7 +11,7 @@ $input = $_POST;
 $useCase = DependencyResolver::get(UbisTablaData::class);
 $data = $useCase->execute($input);
 if (array_key_exists('error', $data)) {
-    ContestarJson::enviar(input_string($data, 'error'), []);
+    ContestarJson::enviar(FuncTablasSupport::inputString($data, 'error'), []);
     return;
 }
 ContestarJson::enviar('', $data);

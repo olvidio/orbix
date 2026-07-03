@@ -1,4 +1,8 @@
 <?php
+
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
+
 /**
  * Pantalla principal del modulo `actividadplazas`.
  *
@@ -19,24 +23,22 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\TablaEditable;
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
+use frontend\actividadplazas\helpers\ActividadplazasPostInput;
+use frontend\actividadplazas\helpers\ActividadplazasPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once 'frontend/actividadplazas/helpers/actividadplazas_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
-$stackFromPost = actividadplazas_stack_from_post() ?? 0;
-list_nav_boot_recordar($oPosicion, $Qrefresh);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+$stackFromPost = ActividadplazasPostInput::stackFromPost() ?? 0;
+ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
-$campos = actividadplazas_gestion_plazas_request_campos($oPosicion, $stackFromPost);
-$Qscroll_id = list_nav_scroll_id_from_post();
+$campos = ActividadplazasPostInput::gestionPlazasRequestCampos($oPosicion, $stackFromPost);
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 
-$payload = actividadplazas_gestion_plazas_from_payload(
+$payload = ActividadplazasPayload::gestionPlazasFromPayload(
     PostRequest::getDataFromUrl('/src/actividadplazas/gestion_plazas_data', $campos)
 );
 
@@ -91,7 +93,7 @@ $aOpciones = [
     'separador1' => '---------',
     'otro' => _("otro"),
 ];
-$titulo = strtoupper_dlb(_("periodo de selección de actividades"));
+$titulo = FuncTablasSupport::strtoupperDlb(_("periodo de selección de actividades"));
 $titulo .= " (" . _("en estado actual") . ")";
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('que');

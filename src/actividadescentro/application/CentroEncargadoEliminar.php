@@ -3,7 +3,7 @@
 namespace src\actividadescentro\application;
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Elimina un `CentroEncargado` ({id_activ, id_ubi}) del listado de centros
@@ -24,8 +24,8 @@ final class CentroEncargadoEliminar
      */
     public function execute(array $input): string
     {
-        $id_activ = input_int($input, 'id_activ');
-        $id_ubi = input_int($input, 'id_ubi');
+        $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+        $id_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
         if ($id_activ <= 0 || $id_ubi <= 0) {
             return _("no se sabe cual borrar");
         }

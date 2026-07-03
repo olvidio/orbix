@@ -4,7 +4,6 @@ namespace src\notas\domain\contracts;
 
 use src\notas\domain\entity\Nota;
 
-use function src\shared\domain\helpers\is_true;
 /**
  * Interfaz de la clase Nota y su Repositorio
  *

@@ -1,4 +1,8 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPermSupport;
+use frontend\shared\helpers\FuncTablasSupport;
+
 /**
  * Pantalla principal del modulo `actividadessacd`.
  *
@@ -20,18 +24,16 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/actividadessacd/helpers/actividadessacd_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qyear = (string)filter_input(INPUT_POST, 'year');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 
-$titulo = strtoupper_dlb(_("periodo del listado del año próximo"));
+$titulo = FuncTablasSupport::strtoupperDlb(_("periodo del listado del año próximo"));
 $titulo .= '. ';
 $titulo .= '(' . sprintf(_("actividades de %s"), $Qtipo) . ')';
 
@@ -52,7 +54,7 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setBoton("<input type=\"button\" name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">");
 
-$perm_des = actividades_have_perm_oficina('des');
+$perm_des = ActividadesPermSupport::havePermOficina('des');
 
 // Por cada endpoint AJAX, construir la URL firmada (`url + linkSinVal()`):
 // la firma cubre URL + nombres de campos; los valores viajan en el body POST.

@@ -1,11 +1,12 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\misas\application\VerEncargosZonaData;
 use src\shared\web\ContestarJson;
 
-$Qid_zona = (int)filter_post('id_zona');
-$Qorden = (string)filter_post('orden');
+$Qid_zona = (int)FilterPostGet::post('id_zona');
+$Qorden = (string)FilterPostGet::post('orden');
 if ($Qorden === '') {
     $Qorden = 'orden';
 }

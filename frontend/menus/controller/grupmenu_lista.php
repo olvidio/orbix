@@ -6,17 +6,17 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\menus\helpers\MenusPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 
 // Crea los objetos de uso global **********************************************
-require_once __DIR__ . '/../helpers/menus_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
@@ -26,7 +26,7 @@ $Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
 $url_backend = '/src/menus/grupmenu_lista';
 $data = PostRequest::getDataFromUrl($url_backend);
 
-$a_valores = menus_lista_datos($data['a_valores'] ?? []);
+$a_valores = MenusPayload::listaDatos($data['a_valores'] ?? []);
 
 $a_cabeceras = [_("grupMenu"),
     _("orden"),

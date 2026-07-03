@@ -9,7 +9,6 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************

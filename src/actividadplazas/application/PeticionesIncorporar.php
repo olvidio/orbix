@@ -15,7 +15,7 @@ use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\actividades\domain\entity\TiposActividades;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Incorpora la primera peticion de plaza de cada numerario/agregado
@@ -45,8 +45,8 @@ final class PeticionesIncorporar
      */
     public function execute(array $input): array
     {
-        $sactividad = input_string($input, 'sactividad');
-        $sasistentes = input_string($input, 'sasistentes');
+        $sactividad = FuncTablasSupport::inputString($input, 'sactividad');
+        $sasistentes = FuncTablasSupport::inputString($input, 'sasistentes');
 
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $ssfsv = $mi_sfsv === 2 ? 'sf' : 'sv';
@@ -70,13 +70,13 @@ final class PeticionesIncorporar
             case 'ca':
             case 'cv':
                 $any = $oConfig->any_final_curs('est');
-                $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'est')->format('Y-m-d');
-                $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'est')->format('Y-m-d');
+                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'est')->format('Y-m-d');
+                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'est')->format('Y-m-d');
                 break;
             case 'crt':
                 $any = $oConfig->any_final_curs('crt');
-                $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->format('Y-m-d');
-                $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->format('Y-m-d');
+                $inicurs = FuncTablasSupport::cursoEst('inicio', $any, 'crt')->format('Y-m-d');
+                $fincurs = FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d');
                 break;
         }
 

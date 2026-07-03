@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FilterPostGet;
+
 /**
  * Endpoint backend AJAX: marca como publicadas las actividades seleccionadas.
  * Responde JSON {success, mensaje?}.
@@ -13,7 +16,7 @@ use src\actividades\application\ActividadPublicar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 /** @var ActividadPublicar $useCase */
 $useCase = DependencyResolver::get(ActividadPublicar::class);

@@ -3,6 +3,7 @@
 namespace src\procesos\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\logging\GestorErrores;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\shared\infrastructure\GlobalPdo;
 
@@ -25,8 +26,6 @@ use src\procesos\domain\value_objects\FaseId;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla a_actividad_proceso_sv a la interfaz del repositorio
@@ -129,7 +128,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             $id_fase = isset($aDades['id_fase']) && is_numeric($aDades['id_fase']) ? (int) $aDades['id_fase'] : 0;
             $id_tarea = isset($aDades['id_tarea']) && is_numeric($aDades['id_tarea']) ? (int) $aDades['id_tarea'] : 0;
             $f = $id_fase . '#' . $id_tarea;
-            $aFasesEstado[$f] = is_true($aDades['completado'] ?? false) ?? false;
+            $aFasesEstado[$f] = FuncTablasSupport::isTrue($aDades['completado'] ?? false) ?? false;
         }
         return $aFasesEstado;
     }
@@ -158,7 +157,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             if (!is_array($aDades)) {
                 return null;
             }
-            return is_true($aDades['completado']);
+            return FuncTablasSupport::isTrue($aDades['completado']);
         }
         return null;
     }
@@ -306,7 +305,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 if (!is_array($aDades)) {
                     continue;
                 }
-                if (is_true($aDades['completado'] ?? false)) {
+                if (FuncTablasSupport::isTrue($aDades['completado'] ?? false)) {
                     if (isset($aDades['id_fase']) && is_numeric($aDades['id_fase'])) {
                         $aFasesCompletadas[] = (int) $aDades['id_fase'];
                     }
@@ -336,7 +335,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 if (!is_array($aDades)) {
                     continue;
                 }
-                return is_true($aDades['completado']) ?? false;
+                return FuncTablasSupport::isTrue($aDades['completado']) ?? false;
             }
         } else {
             // no existe el proceso:
@@ -454,7 +453,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                     $oActividadProcesoTarea->setIdActividadVo($iid_activ);
                 $oActividadProcesoTarea->setIdFaseVo($id_fase);
                 $oActividadProcesoTarea->setIdTareaVo($id_tarea);
-                $oActividadProcesoTarea->setCompletado(is_true($completado));
+                $oActividadProcesoTarea->setCompletado(FuncTablasSupport::isTrue($completado));
                 if ($this->Guardar($oActividadProcesoTarea) === false) {
                     $this->registrarAvisoGenerarProceso(
                         "1.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea"
@@ -464,7 +463,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         } else {
             // Posterior.
             // para el caso de forzar, pongo todo a 0.
-            if (is_true($force)) {
+            if (FuncTablasSupport::isTrue($force)) {
                 $p = 0;
                 $statusNew = '';
                 foreach ($cTareasProceso as $oTareaProceso) {
@@ -548,8 +547,8 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                             $completado = 't';
                         }
                     }
-                    if (is_true($completado)) {
-                        $oActividadProcesoTarea->setCompletado(is_true($completado));
+                    if (FuncTablasSupport::isTrue($completado)) {
+                        $oActividadProcesoTarea->setCompletado(FuncTablasSupport::isTrue($completado));
                         if ($this->Guardar($oActividadProcesoTarea) === false) {
                             $this->registrarAvisoGenerarProceso(
                                 "4.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea"
@@ -595,7 +594,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $aDades['observ'] = $ActividadProcesoTarea->getObservVo()?->value();
         array_walk($aDades, 'src\shared\domain\helpers\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDades['completado'])) {
+        if (FuncTablasSupport::isTrue($aDades['completado'])) {
             $aDades['completado'] = 'true';
         } else {
             $aDades['completado'] = 'false';

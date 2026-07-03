@@ -4,9 +4,9 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 
 FrontBootstrap::boot();
 
@@ -30,10 +30,10 @@ $aOpciones = [
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('modifica');
 $oFormP->setPosiblesPeriodos($aOpciones);
-$oFormP->setDesplPeriodosOpcion_sel(inventario_periodo_sel_string($Qperiodo));
-$oFormP->setDesplAnysOpcion_sel(inventario_periodo_sel_string($Qyear));
-$oFormP->setEmpiezaMin(inventario_periodo_sel_string($Qempiezamin));
-$oFormP->setEmpiezaMax(inventario_periodo_sel_string($Qempiezamax));
+$oFormP->setDesplPeriodosOpcion_sel(InventarioPayload::periodoSelString($Qperiodo));
+$oFormP->setDesplAnysOpcion_sel(InventarioPayload::periodoSelString($Qyear));
+$oFormP->setEmpiezaMin(InventarioPayload::periodoSelString($Qempiezamin));
+$oFormP->setEmpiezaMax(InventarioPayload::periodoSelString($Qempiezamax));
 $oFormP->setTitulo(_('periodo de selección de actividades'));
 
 $oHash = new HashFront();

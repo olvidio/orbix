@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\unit\shared\domain\helpers;
 
+use src\shared\domain\helpers\FuncTablasSupport;
 use PHPUnit\Framework\TestCase;
-
-use function src\shared\domain\helpers\usort_profesores_por_apellidos;
 
 final class UsortProfesoresPorApellidosTest extends TestCase
 {
@@ -17,7 +16,7 @@ final class UsortProfesoresPorApellidosTest extends TestCase
             ['id_nom' => 20, 'ap_nom' => 'Álvarez, Pedro', 'ap1' => 'Álvarez', 'ap2' => '', 'nom' => 'Pedro'],
             ['id_nom' => 30, 'ap_nom' => 'Amador, Luis', 'ap1' => 'Amador', 'ap2' => '', 'nom' => 'Luis'],
         ];
-        usort_profesores_por_apellidos($filas);
+        FuncTablasSupport::usortProfesoresPorApellidos($filas);
 
         $this->assertSame(
             ['Álvarez, Pedro', 'Amador, Luis', 'Zapata, Ana'],

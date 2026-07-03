@@ -3,9 +3,7 @@
 namespace src\procesos\application;
 
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: guarda el estado (completado/observaciones) de una tarea del proceso.
@@ -23,15 +21,15 @@ class ActividadProcesoUpdate
      */
     public function execute(array $input): string
     {
-        $Qid_item = input_int($input, 'id_item');
-        $Qcompletado = input_string($input, 'completado');
-        $Qobserv = input_string($input, 'observ');
+        $Qid_item = FuncTablasSupport::inputInt($input, 'id_item');
+        $Qcompletado = FuncTablasSupport::inputString($input, 'completado');
+        $Qobserv = FuncTablasSupport::inputString($input, 'observ');
 
         $oFicha = $this->actividadProcesoTareaRepository->findById($Qid_item);
         if ($oFicha === null) {
             return _('no se encuentra la tarea del proceso');
         }
-        $oFicha->setCompletado(is_true($Qcompletado));
+        $oFicha->setCompletado(FuncTablasSupport::isTrue($Qcompletado));
         $oFicha->setObserv($Qobserv);
         if ($this->procesoActividadService->guardar($oFicha) === false) {
             $err = $this->procesoActividadService->getErrorTxt();

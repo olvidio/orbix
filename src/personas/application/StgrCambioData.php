@@ -2,11 +2,9 @@
 
 namespace src\personas\application;
 
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_int;
-
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\support\PersonaRepositoryResolver;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/stgr_cambio_data`.
@@ -41,8 +39,8 @@ final class StgrCambioData
             $id_nom = (int)strtok((string)$a_sel[0], '#');
             $id_tabla = (string)strtok('#');
         } else {
-            $id_nom = input_int($input, 'id_nom');
-            $id_tabla = input_string($input, 'id_tabla');
+            $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
+            $id_tabla = FuncTablasSupport::inputString($input, 'id_tabla');
         }
 
         if (empty($id_tabla)) {

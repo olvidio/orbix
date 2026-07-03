@@ -7,8 +7,7 @@ use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
-use function src\shared\domain\helpers\is_true;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 class CertificadoEmitidoSelect
 {
     public function __construct(
@@ -101,7 +100,7 @@ class CertificadoEmitidoSelect
             $a_valores[$i][1] = $certificadoTxt;
             $a_valores[$i][2] = $f_certificado;
             $a_valores[$i][3] = $nom_alumno;
-            $a_valores[$i][4] = is_true($firmado) ? _('Sí') : _('No');
+            $a_valores[$i][4] = FuncTablasSupport::isTrue($firmado) ? _('Sí') : _('No');
             $a_valores[$i][5] = ($pdf === null || $pdf === '') ? '' : _('Sí');
             $a_valores[$i][6] = $idioma;
             $a_valores[$i][7] = $destino;

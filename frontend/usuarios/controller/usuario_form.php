@@ -1,5 +1,9 @@
 <?php
 
+use frontend\actividades\helpers\ActividadesPostInput;
+use frontend\usuarios\helpers\UsuariosPayload;
+use frontend\usuarios\helpers\UsuariosPostInput;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\AppInstalled;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
@@ -7,10 +11,10 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
+
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
@@ -27,44 +31,44 @@ if (isset($_POST['stack'])) {
         if ($oPosicion2->goStack($stack)) {
             $a_sel = $oPosicion2->getParametro('id_sel');
             if (!empty($a_sel)) {
-                $Qid_usuario = usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
+                $Qid_usuario = UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
             } else {
-                $Qid_usuario = actividades_posicion_int($oPosicion2->getParametro('id_usuario'));
-                $Qquien = actividades_posicion_string($oPosicion2->getParametro('quien'));
+                $Qid_usuario = ActividadesPostInput::posicionInt($oPosicion2->getParametro('id_usuario'));
+                $Qquien = ActividadesPostInput::posicionString($oPosicion2->getParametro('quien'));
             }
-            $Qscroll_id = actividades_posicion_int($oPosicion2->getParametro('scroll_id'));
+            $Qscroll_id = ActividadesPostInput::posicionInt($oPosicion2->getParametro('scroll_id'));
             $oPosicion2->olvidar($stack);
         }
     }
 } elseif (!empty($a_sel)) {
     $Qque = (string)filter_input(INPUT_POST, 'que');
     if ($Qque !== 'del_grupmenu') {
-        $Qid_usuario = usuarios_id_from_sel_item(usuarios_sel_first_item($a_sel));
+        $Qid_usuario = UsuariosPostInput::idFromSelItem(UsuariosPostInput::selFirstItem($a_sel));
     }
 }
-$stackFromPost = list_nav_stack_from_post();
+$stackFromPost = ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
-    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    list_nav_boot_recordar($oPosicion, $Qrefresh);
+    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
 }
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), $Qscroll_id));
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), $Qscroll_id));
 
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
-$formData = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_form', [
+$formData = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_form', [
     'id_usuario' => $Qid_usuario,
     'quien' => $Qquien,
 ]));
 $a_camposRaw = $formData['a_campos'] ?? [];
-$a_campos_src = usuarios_form_campos_from_payload(is_array($a_camposRaw) ? $a_camposRaw : []);
+$a_campos_src = UsuariosPayload::formCamposFromPayload(is_array($a_camposRaw) ? $a_camposRaw : []);
 
 $txt_guardar = _("guardar datos usuario");
 $txt_eliminar = _("¿Está seguro que desea quitar este permiso?");
 
 $oDesplRoles = new Desplegable('id_role', $a_campos_src['aOpcionesRoles'], $a_campos_src['id_role'], true);
 $a_campos['oDesplRoles'] = $oDesplRoles;
-$a_campos['oDesplArrayCtrCasas'] = usuarios_desplegable_casas_from_data($a_campos_src['aDataDespl']);
+$a_campos['oDesplArrayCtrCasas'] = UsuariosPayload::desplegableCasasFromData($a_campos_src['aDataDespl']);
 
 $oHash = new HashFront();
 $camposMas = $a_campos_src['camposMas'];
@@ -123,8 +127,8 @@ $oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('usuario_form.phtml', $a_campos);
 
 if (!empty($Qid_usuario)) {
-    $infoData = usuarios_post_data(PostRequest::getDataFromUrl('/src/usuarios/usuario_info', ['id_usuario' => $Qid_usuario]));
-    $a_campos['grupos_txt'] = tessera_imprimir_string($infoData['grupos_txt'] ?? '');
+    $infoData = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_info', ['id_usuario' => $Qid_usuario]));
+    $a_campos['grupos_txt'] = PayloadCoercion::string($infoData['grupos_txt'] ?? '');
 
     $a_campos['procesos_installed'] = AppInstalled::is('procesos');
     $oView = new ViewNewPhtml('frontend\usuarios\controller');

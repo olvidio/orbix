@@ -1,25 +1,24 @@
 <?php
 
+use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
-use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
 
-require_once __DIR__ . '/../helpers/notas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 
-$restored = list_nav_restore_selection_from_stack_post();
+$restored = ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !list_nav_id_sel_is_empty($restored['id_sel']) ? $restored['id_sel'] : list_nav_id_sel_from_post();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : list_nav_scroll_id_from_post();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 
@@ -33,21 +32,21 @@ if ($Qb_c === 'b') {
     $chk_c = 'checked';
 }
 $Qc1 = (string)filter_input(INPUT_POST, 'c1');
-$chk_c1 = is_true($Qc1) ? 'checked' : '';
+$chk_c1 = FuncTablasSupport::isTrue($Qc1) ? 'checked' : '';
 $Qc2 = (string)filter_input(INPUT_POST, 'c2');
-$chk_c2 = is_true($Qc2) ? 'checked' : '';
+$chk_c2 = FuncTablasSupport::isTrue($Qc2) ? 'checked' : '';
 $Qpersonas_n = (string)filter_input(INPUT_POST, 'personas_n');
-$chk_n = is_true($Qpersonas_n) ? 'checked' : '';
+$chk_n = FuncTablasSupport::isTrue($Qpersonas_n) ? 'checked' : '';
 $Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
-$chk_agd = is_true($Qpersonas_agd) ? 'checked' : '';
+$chk_agd = FuncTablasSupport::isTrue($Qpersonas_agd) ? 'checked' : '';
 
 $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
 
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
-$chk_lista = is_true($Qlista) ? 'checked' : '';
+$chk_lista = FuncTablasSupport::isTrue($Qlista) ? 'checked' : '';
 
 $dAsig = PostRequest::getDataFromUrl('/src/asignaturas/asignaturas_con_separador_data', []);
-$aOpciones = notas_desplegable_opciones($dAsig['a_opciones'] ?? []);
+$aOpciones = NotasFormSupport::desplegableOpciones($dAsig['a_opciones'] ?? []);
 $oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
 $oDesplAsignaturas->setNombre('id_asignatura');
 $oDesplAsignaturas->setOpcion_sel($Qid_asignatura);

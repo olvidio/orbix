@@ -3,7 +3,7 @@
 namespace frontend\shared\web;
 
 use frontend\shared\PostRequest;
-use function frontend\shared\helpers\is_true;
+use frontend\shared\helpers\FuncTablasSupport;
 
 /**
  * Classe per gestionar llistes de dades tipus taula (html o SlickGrid).
@@ -540,7 +540,7 @@ class Lista
             $width = self::slickgridDimension($aColsWidth['sel'] ?? null, '30') ?? '30';
             $selCol = '{id: "sel", name: "sel", field: "sel", width:' . $width . ', sortable: false, formatter: checkboxSelectionFormatter}';
             $sColumns .= $selCol;
-            if ($aColsVisible === null || !array_key_exists('sel', $aColsVisible) || is_true($aColsVisible['sel'])) {
+            if ($aColsVisible === null || !array_key_exists('sel', $aColsVisible) || FuncTablasSupport::isTrue($aColsVisible['sel'])) {
                 $sColumnsVisible .= $selCol;
                 $cv = 1;
             }

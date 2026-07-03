@@ -8,8 +8,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 use frontend\actividades\helpers\ActividadTipo;
 use frontend\actividades\helpers\TiposDeActividades;
-
-require_once __DIR__ . '/cambios_support.php';
+use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Completa el JSON de {@see \src\cambios\application\AvisosGenerarListaData} para la vista.
@@ -22,7 +21,7 @@ final class AvisosGenerarListaRender
      */
     public static function enrich(array $payload): array
     {
-        $id_usuario = tessera_imprimir_int($payload['effective_id_usuario'] ?? 0);
+        $id_usuario = PayloadCoercion::int($payload['effective_id_usuario'] ?? 0);
         if ($id_usuario === 0) {
             $payload['url_eliminar'] = '';
             $payload['url_eliminar_fecha'] = '';
@@ -34,13 +33,13 @@ final class AvisosGenerarListaRender
 
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
-        $url_eliminar = $base . '/' . ltrim(tessera_imprimir_string($paths['eliminar'] ?? ''), '/');
-        $url_eliminar_fecha = $base . '/' . ltrim(tessera_imprimir_string($paths['eliminar_fecha'] ?? ''), '/');
+        $url_eliminar = $base . '/' . ltrim(PayloadCoercion::string($paths['eliminar'] ?? ''), '/');
+        $url_eliminar_fecha = $base . '/' . ltrim(PayloadCoercion::string($paths['eliminar_fecha'] ?? ''), '/');
 
         $he = isset($payload['hash_eliminar']) && is_array($payload['hash_eliminar']) ? $payload['hash_eliminar'] : [];
         $oHashElim = new HashFront();
         $oHashElim->setUrl($url_eliminar);
-        $cn = tessera_imprimir_string($he['campos_no'] ?? '');
+        $cn = PayloadCoercion::string($he['campos_no'] ?? '');
         if ($cn !== '') {
             $oHashElim->setCamposNo($cn);
         }
@@ -49,7 +48,7 @@ final class AvisosGenerarListaRender
         $hef = isset($payload['hash_eliminar_fecha']) && is_array($payload['hash_eliminar_fecha']) ? $payload['hash_eliminar_fecha'] : [];
         $oHashElimF = new HashFront();
         $oHashElimF->setUrl($url_eliminar_fecha);
-        $oHashElimF->setCamposForm(tessera_imprimir_string($hef['campos_form'] ?? ''));
+        $oHashElimF->setCamposForm(PayloadCoercion::string($hef['campos_form'] ?? ''));
         $h_eliminar_fecha = $oHashElimF->linkSinValParams();
 
         $payload['url_eliminar'] = $url_eliminar;

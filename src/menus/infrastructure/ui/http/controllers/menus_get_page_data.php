@@ -1,8 +1,5 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\shared\web\ContestarJson;
 use src\menus\application\MenusGetPageData;
 use src\shared\infrastructure\DependencyResolver;

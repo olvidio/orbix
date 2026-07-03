@@ -14,9 +14,6 @@ use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\entity\ProfesorAmpliacion;
 use src\shared\traits\HandlesPdoErrors;
 
-use function src\shared\domain\helpers\usort_profesores_por_apellidos;
-
-
 /**
  * Clase que adapta la tabla d_profesor_ampliacion a la interfaz del repositorio
  *
@@ -60,7 +57,7 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
                 'nom' => $oPersonaDl->getNomVo()?->value() ?? '',
             ];
         }
-        usort_profesores_por_apellidos($aProfesores);
+        \src\shared\domain\helpers\FuncTablasSupport::usortProfesoresPorApellidos($aProfesores);
 
         $aOpciones = [];
         foreach ($aProfesores as $aClave) {

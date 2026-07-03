@@ -1,4 +1,8 @@
 <?php
+
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\casas\helpers\CasasPayload;
+
 /**
  * Controlador AJAX HTML: listado de `GrupoCasa`.
  *
@@ -11,13 +15,11 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
-$data = casas_post_data(PostRequest::getDataFromUrl('/src/casas/grupo_lista_data'));
-$lista = casas_grupo_lista_from_payload($data);
+$data = CasasPayload::postData(PostRequest::getDataFromUrl('/src/casas/grupo_lista_data'));
+$lista = CasasPayload::grupoListaFromPayload($data);
 
 $oLista = new Lista();
 $oLista->setCabeceras($lista['cabeceras']);
@@ -27,4 +29,4 @@ $html = $oLista->lista();
 if ($lista['puede_anadir']) {
     $html .= '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">' . _("nuevo") . '</span>';
 }
-ajax_json_html($html);
+AjaxJsonSupport::html($html);

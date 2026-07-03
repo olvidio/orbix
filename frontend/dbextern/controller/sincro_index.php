@@ -5,8 +5,8 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\dbextern\helpers\DbexternPayload;
 
-require_once __DIR__ . '/../helpers/dbextern_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
@@ -22,13 +22,13 @@ $region = $data['region'];
 $dl_listas = $data['dl_listas'];
 $fecha_actualizacion = $data['fecha_actualizacion'];
 
-$ver_2 = dbextern_signed_link($data['link_spec_ver_traslados'] ?? null);
-$ver_3 = dbextern_signed_link($data['link_spec_ver_desaparecidos_orbix'] ?? null);
-$ver_456 = dbextern_signed_link($data['link_spec_ver_listas'] ?? null);
-$ver_7 = dbextern_signed_link($data['link_spec_ver_orbix_otradl'] ?? null);
-$ver_8 = dbextern_signed_link($data['link_spec_ver_desaparecidos_listas'] ?? null);
-$ver_910 = dbextern_signed_link($data['link_spec_ver_orbix'] ?? null);
-$url_actualizar = dbextern_signed_link($data['link_spec_self'] ?? null);
+$ver_2 = DbexternPayload::signedLink($data['link_spec_ver_traslados'] ?? null);
+$ver_3 = DbexternPayload::signedLink($data['link_spec_ver_desaparecidos_orbix'] ?? null);
+$ver_456 = DbexternPayload::signedLink($data['link_spec_ver_listas'] ?? null);
+$ver_7 = DbexternPayload::signedLink($data['link_spec_ver_orbix_otradl'] ?? null);
+$ver_8 = DbexternPayload::signedLink($data['link_spec_ver_desaparecidos_listas'] ?? null);
+$ver_910 = DbexternPayload::signedLink($data['link_spec_ver_orbix'] ?? null);
+$url_actualizar = DbexternPayload::signedLink($data['link_spec_self'] ?? null);
 
 $url_sincro_syncro =  AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_syncro';
 $oHash1 = new HashFront();

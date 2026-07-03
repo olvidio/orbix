@@ -10,8 +10,6 @@ use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
 use src\cambios\domain\entity\CambioAnotado;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
-use function src\shared\domain\helpers\is_true;
-
 
 /**
  * Clase que adapta la tabla av_cambios_anotados_dl a la interfaz del repositorio

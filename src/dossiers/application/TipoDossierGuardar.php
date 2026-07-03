@@ -3,9 +3,7 @@
 namespace src\dossiers\application;
 
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Guarda los cambios a un `TipoDossier`.
@@ -25,7 +23,7 @@ final class TipoDossierGuardar
      */
     public function execute(array $input): string
     {
-        $Qid_tipo_dossier = input_int($input, 'id_tipo_dossier');
+        $Qid_tipo_dossier = FuncTablasSupport::inputInt($input, 'id_tipo_dossier');
         if ($Qid_tipo_dossier <= 0) {
             return _('falta id_tipo_dossier');
         }
@@ -35,15 +33,15 @@ final class TipoDossierGuardar
             return sprintf(_('No se encuentra el dossier: %s'), $Qid_tipo_dossier);
         }
 
-        $Qdescripcion = input_string($input, 'descripcion');
-        $Qtabla_from = input_string($input, 'tabla_from');
-        $Qtabla_to = input_string($input, 'tabla_to');
-        $Qcampo_to = input_string($input, 'campo_to');
-        $Qid_tipo_dossier_rel = input_int($input, 'id_tipo_dossier_rel');
-        $Qdepende_modificar = input_string($input, 'depende_modificar');
-        $Qapp = input_string($input, 'app');
-        $Qclass = input_string($input, 'class');
-        $Qcodigo = input_string($input, 'codigo');
+        $Qdescripcion = FuncTablasSupport::inputString($input, 'descripcion');
+        $Qtabla_from = FuncTablasSupport::inputString($input, 'tabla_from');
+        $Qtabla_to = FuncTablasSupport::inputString($input, 'tabla_to');
+        $Qcampo_to = FuncTablasSupport::inputString($input, 'campo_to');
+        $Qid_tipo_dossier_rel = FuncTablasSupport::inputInt($input, 'id_tipo_dossier_rel');
+        $Qdepende_modificar = FuncTablasSupport::inputString($input, 'depende_modificar');
+        $Qapp = FuncTablasSupport::inputString($input, 'app');
+        $Qclass = FuncTablasSupport::inputString($input, 'class');
+        $Qcodigo = FuncTablasSupport::inputString($input, 'codigo');
         $aPermiso_lectura = isset($input['Permiso_lectura']) && is_array($input['Permiso_lectura'])
             ? $input['Permiso_lectura']
             : [];
@@ -56,7 +54,7 @@ final class TipoDossierGuardar
         $oTipoDossier->setTabla_to($Qtabla_to);
         $oTipoDossier->setCampo_to($Qcampo_to);
         $oTipoDossier->setId_tipo_dossier_rel($Qid_tipo_dossier_rel);
-        $oTipoDossier->setDepende_modificar(is_true($Qdepende_modificar) ?? false);
+        $oTipoDossier->setDepende_modificar(FuncTablasSupport::isTrue($Qdepende_modificar) ?? false);
         $oTipoDossier->setApp($Qapp);
         $oTipoDossier->setClass($Qclass);
         $oTipoDossier->setCodigo(trim($Qcodigo) !== '' ? trim($Qcodigo) : null);

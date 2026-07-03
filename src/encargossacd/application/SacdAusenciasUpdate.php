@@ -2,14 +2,12 @@
 
 namespace src\encargossacd\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoSacd;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Guarda/modifica las ausencias de un SACD
@@ -30,8 +28,8 @@ final class SacdAusenciasUpdate
      */
     public function execute(array $data): array
     {
-        $enc_num = input_int($data, 'enc_num');
-        $id_nom = input_int($data, 'id_nom');
+        $enc_num = FuncTablasSupport::inputInt($data, 'enc_num');
+        $id_nom = FuncTablasSupport::inputInt($data, 'id_nom');
 
         $a_inicio = is_array($data['inicio'] ?? null) ? $data['inicio'] : [];
         $a_fin = is_array($data['fin'] ?? null) ? $data['fin'] : [];

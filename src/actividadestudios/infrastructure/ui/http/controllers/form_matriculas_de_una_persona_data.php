@@ -4,19 +4,18 @@ use src\actividadestudios\application\FormMatriculasDeUnaPersonaData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\ubis\domain\RegionStgrAviso;
-use function src\shared\domain\helpers\input_int;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 $error = '';
 $data = [];
 try {
-    $idNom = input_int($_POST, 'id_nom');
+    $idNom = FuncTablasSupport::inputInt($_POST, 'id_nom');
     if ($idNom <= 0) {
-        $idNom = input_int($_POST, 'id_pau');
+        $idNom = FuncTablasSupport::inputInt($_POST, 'id_pau');
     }
     $input = [
         'id_nom' => $idNom,
-        'id_activ' => input_int($_POST, 'id_activ'),
-        'id_asignatura' => input_int($_POST, 'id_asignatura'),
+        'id_activ' => FuncTablasSupport::inputInt($_POST, 'id_activ'),
+        'id_asignatura' => FuncTablasSupport::inputInt($_POST, 'id_asignatura'),
         'sel' => isset($_POST['sel']) && is_array($_POST['sel']) ? $_POST['sel'] : null,
     ];
     /** @var FormMatriculasDeUnaPersonaData $useCase */

@@ -1,35 +1,37 @@
 <?php
 
+use frontend\actividades\helpers\ActividadesListaSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
+use frontend\shared\helpers\ListNavSupport;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 // muestra los ctr que NO tienen el documento.
 $url_backend = '/src/inventario/lista_docs_no_asignados_por_tipo';
 $a_campos_backend = [ 'id_tipo_doc' => $Qid_tipo_doc] ;
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$payload = inventario_post_payload($data);
+$payload = InventarioPayload::postPayload($data);
 
-$a_cabeceras = actividades_lista_cabeceras($payload['a_cabeceras'] ?? []);
-$a_botones = actividades_lista_botones($payload['a_botones'] ?? []);
-$a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
-$nombreDoc = tessera_imprimir_string($payload['nombreDoc'] ?? '');
+$a_cabeceras = ActividadesListaSupport::cabeceras($payload['a_cabeceras'] ?? []);
+$a_botones = ActividadesListaSupport::botones($payload['a_botones'] ?? []);
+$a_valores = ActividadesListaSupport::datos($payload['a_valores'] ?? []);
+$nombreDoc = PayloadCoercion::string($payload['nombreDoc'] ?? '');
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('doc_ctr_tabla2');

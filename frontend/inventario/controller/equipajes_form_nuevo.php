@@ -1,12 +1,12 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -19,7 +19,7 @@ $a_campos_backend = [
     'sel' => $a_sel,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$view = inventario_equipajes_form_nuevo_from_payload(inventario_post_payload($data));
+$view = InventarioPayload::equipajesFormNuevoFromPayload(InventarioPayload::postPayload($data));
 
 $nombre_ubi = $view['nombre_ubi'];
 $ini = $view['ini'];
@@ -43,4 +43,4 @@ $a_campos = [
     'nom_equipaje' => $nom_equipaje,
 ];
 
-ajax_json_render_phtml('frontend\inventario\controller', 'equipajes_form_nuevo.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\inventario\controller', 'equipajes_form_nuevo.phtml', $a_campos);

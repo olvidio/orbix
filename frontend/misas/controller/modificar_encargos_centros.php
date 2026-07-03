@@ -1,13 +1,13 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\misas\helpers\MisasDesplegableSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 // Si el use case devuelve error (p.ej. permiso denegado), PostRequest hace
@@ -17,7 +17,7 @@ $data = PostRequest::getDataFromUrl('/src/misas/modificar_encargos_centros_data'
 $a_opciones_zona = $data['a_opciones_zona'] ?? [];
 
 $oDesplZonas = new Desplegable();
-$oDesplZonas->setOpciones(misas_desplegable_opciones($a_opciones_zona));
+$oDesplZonas->setOpciones(MisasDesplegableSupport::opciones($a_opciones_zona));
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_encargos_centros()');
@@ -34,4 +34,4 @@ $a_campos = [
     'h_zona' => $h_zona,
 ];
 
-ajax_json_render_phtml('frontend\\misas\\controller', 'modificar_encargos_centros.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', 'modificar_encargos_centros.phtml', $a_campos);

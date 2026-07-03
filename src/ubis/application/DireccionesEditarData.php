@@ -4,8 +4,7 @@ namespace src\ubis\application;
 
 use src\ubis\application\services\UbiPermisos;
 use src\ubis\application\services\UbiRepositoryResolver;
-use function src\shared\domain\helpers\is_true;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 final class DireccionesEditarData
 {
     public function __construct(
@@ -88,7 +87,7 @@ final class DireccionesEditarData
             $data['direccion'] = $oDireccion->getDireccionVo()?->value() ?? '';
             $data['a_p'] = $oDireccion->getA_p();
             $data['c_p'] = $oDireccion->getC_p();
-            $data['cp_dcha'] = is_true($oDireccion->isCp_dcha());
+            $data['cp_dcha'] = FuncTablasSupport::isTrue($oDireccion->isCp_dcha());
             $data['poblacion'] = $oDireccion->getPoblacion();
             $data['provincia'] = $oDireccion->getProvincia();
             $data['pais'] = $oDireccion->getPais();
@@ -96,8 +95,8 @@ final class DireccionesEditarData
             $data['f_direccion'] = $oDireccion->getF_direccion()?->getFromLocal();
             $data['latitud'] = $oDireccion->getLatitud();
             $data['longitud'] = $oDireccion->getLongitud();
-            $data['propietario'] = is_true($oDireccionDetallada->isPropietario());
-            $data['principal'] = is_true($oDireccionDetallada->isPrincipal());
+            $data['propietario'] = FuncTablasSupport::isTrue($oDireccionDetallada->isPropietario());
+            $data['principal'] = FuncTablasSupport::isTrue($oDireccionDetallada->isPrincipal());
             $data['mas'] = ($idx < $num_dir - 1) ? 1 : 0;
             $data['menos'] = ($idx < 1) ? 0 : 1;
         }

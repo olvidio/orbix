@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FilterPostGet;
+
 /**
  * Endpoint backend AJAX: duplica la primera actividad seleccionada dentro de
  * la propia delegacion (o de la sf si el usuario tiene permiso `des`).
@@ -14,7 +17,7 @@ use src\actividades\application\ActividadDuplicar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)filter_post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 /** @var ActividadDuplicar $useCase */
 $useCase = DependencyResolver::get(ActividadDuplicar::class);

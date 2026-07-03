@@ -1,7 +1,8 @@
 <?php
-
 namespace frontend\personas\controller;
 
+use frontend\personas\helpers\PersonasPayload;
+use frontend\personas\helpers\PersonasPostInput;
 use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
@@ -9,13 +10,12 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Ficha de una persona: edicion (o alta si `$Qnuevo === 1`).
  */
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-require_once __DIR__ . '/../helpers/personas_support.php';
 require_once 'frontend/shared/web/func_web.php';
 $oPosicion = FrontBootstrap::boot();
 
@@ -25,8 +25,8 @@ $Qnuevo = (int)filter_input(INPUT_POST, 'nuevo');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $obj = 'src\\personas\\domain\\entity\\' . $Qobj_pau;
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $Qid_nom = 0;
@@ -36,10 +36,10 @@ if (!empty($Qnuevo)) {
     $Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
     $id_tabla_post = (string)filter_input(INPUT_POST, 'tabla');
 } else {
-    $ids = personas_id_from_sel_post();
+    $ids = PersonasPostInput::idFromSelPost();
     $Qid_nom = $ids['id_nom'];
     $id_tabla_post = $ids['id_tabla'];
-    $stack = personas_stack_from_post();
+    $stack = PersonasPostInput::stackFromPost();
     if ($stack !== null && $stack !== 0) {
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) {
@@ -57,8 +57,8 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/personas/personas_editar_data', $campos);
-$payload = personas_post_payload($data);
-$form = personas_editar_form_from_payload($payload, $Qid_nom, $Qobj_pau);
+$payload = PersonasPayload::postPayload($data);
+$form = PersonasPayload::editarFormFromPayload($payload, $Qid_nom, $Qobj_pau);
 
 $Qid_nom = $form['id_nom'];
 $Qobj_pau = $form['Qobj_pau'];
@@ -118,10 +118,10 @@ $ok_txt = 0;
 $presentacion = 'persona_form.phtml';
 switch ($Qobj_pau) {
     case 'PersonaAgd':
-        if (personas_have_perm_oficina('agd')) {
+        if (PersonasPayload::havePermOficina('agd')) {
             $ok = 1;
         }
-        $presentacion = (personas_have_perm_oficina('agd') || personas_have_perm_oficina('dtor'))
+        $presentacion = (PersonasPayload::havePermOficina('agd') || PersonasPayload::havePermOficina('dtor'))
             ? 'persona_form.phtml'
             : 'p_public_personas.phtml';
         if ($presentacion === 'persona_form.phtml') {
@@ -129,10 +129,10 @@ switch ($Qobj_pau) {
         }
         break;
     case 'PersonaN':
-        if (personas_have_perm_oficina('sm')) {
+        if (PersonasPayload::havePermOficina('sm')) {
             $ok = 1;
         }
-        $presentacion = (personas_have_perm_oficina('sm') || personas_have_perm_oficina('dtor'))
+        $presentacion = (PersonasPayload::havePermOficina('sm') || PersonasPayload::havePermOficina('dtor'))
             ? 'persona_form.phtml'
             : 'p_public_personas.phtml';
         if ($presentacion === 'persona_form.phtml') {
@@ -140,10 +140,10 @@ switch ($Qobj_pau) {
         }
         break;
     case 'PersonaNax':
-        if (personas_have_perm_oficina('sm')) {
+        if (PersonasPayload::havePermOficina('sm')) {
             $ok = 1;
         }
-        $presentacion = (personas_have_perm_oficina('sm') || personas_have_perm_oficina('dtor'))
+        $presentacion = (PersonasPayload::havePermOficina('sm') || PersonasPayload::havePermOficina('dtor'))
             ? 'persona_form.phtml'
             : 'p_public_personas.phtml';
         if ($presentacion === 'persona_form.phtml') {
@@ -151,10 +151,10 @@ switch ($Qobj_pau) {
         }
         break;
     case 'PersonaS':
-        if (personas_have_perm_oficina('sg')) {
+        if (PersonasPayload::havePermOficina('sg')) {
             $ok = 1;
         }
-        $presentacion = (personas_have_perm_oficina('sg') || personas_have_perm_oficina('dtor'))
+        $presentacion = (PersonasPayload::havePermOficina('sg') || PersonasPayload::havePermOficina('dtor'))
             ? 'persona_form.phtml'
             : 'p_public_personas.phtml';
         if ($presentacion === 'persona_form.phtml') {
@@ -162,12 +162,12 @@ switch ($Qobj_pau) {
         }
         break;
     case 'PersonaSSSC':
-        if (personas_have_perm_oficina('des') || personas_have_perm_oficina('vcsd')) {
+        if (PersonasPayload::havePermOficina('des') || PersonasPayload::havePermOficina('vcsd')) {
             $ok = 1;
         }
-        $autorizado = personas_have_perm_oficina('des')
-            || personas_have_perm_oficina('vcsd')
-            || personas_have_perm_oficina('dtor');
+        $autorizado = PersonasPayload::havePermOficina('des')
+            || PersonasPayload::havePermOficina('vcsd')
+            || PersonasPayload::havePermOficina('dtor');
         $presentacion = $autorizado ? 'persona_sss_form.phtml' : 'p_public_personas.phtml';
         if ($autorizado) {
             $ok_txt = 1;
@@ -176,10 +176,10 @@ switch ($Qobj_pau) {
     case 'PersonaEx':
         $presentacion = 'persona_de_paso.phtml';
         if (
-            personas_have_perm_oficina('agd')
-            || personas_have_perm_oficina('sm')
-            || personas_have_perm_oficina('des')
-            || personas_have_perm_oficina('est')
+            PersonasPayload::havePermOficina('agd')
+            || PersonasPayload::havePermOficina('sm')
+            || PersonasPayload::havePermOficina('des')
+            || PersonasPayload::havePermOficina('est')
         ) {
             $ok = 1;
         }

@@ -1,12 +1,13 @@
 <?php
 use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FilterPostGet;
 
-$Qclase_info_encoded = (string)filter_post('clase_info');
-$QpKeyRepository = (string)filter_post('pKeyRepository');
-$Qvalor_depende = (string)filter_post('valor_depende');
+$Qclase_info_encoded = (string)FilterPostGet::post('clase_info');
+$QpKeyRepository = (string)FilterPostGet::post('pKeyRepository');
+$Qvalor_depende = (string)FilterPostGet::post('valor_depende');
 
-$opcion_sel = (string)filter_post('opcion_sel');
+$opcion_sel = (string)FilterPostGet::post('opcion_sel');
 /***************  datos  **********************************/
 
 // Tiene que ser en dos pasos.

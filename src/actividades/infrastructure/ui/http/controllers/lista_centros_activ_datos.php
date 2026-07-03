@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FilterPostGet;
+
 /**
  * Endpoint backend para `lista_centros_activ`.
  * Recibe los filtros via POST y delega en ListaCentrosActivDatos.
@@ -10,12 +13,12 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
 $input = [
-    'id_ctr_num' => (int)filter_post('id_ctr_num'),
-    'id_ctr' => (array)filter_post('id_ctr', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
-    'periodo' => (string)filter_post('periodo'),
-    'year' => (string)filter_post('year'),
-    'empiezamin' => (string)filter_post('empiezamin'),
-    'empiezamax' => (string)filter_post('empiezamax'),
+    'id_ctr_num' => (int)FilterPostGet::post('id_ctr_num'),
+    'id_ctr' => (array)FilterPostGet::post('id_ctr', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'periodo' => (string)FilterPostGet::post('periodo'),
+    'year' => (string)FilterPostGet::post('year'),
+    'empiezamin' => (string)FilterPostGet::post('empiezamin'),
+    'empiezamax' => (string)FilterPostGet::post('empiezamax'),
 ];
 
 /** @var ListaCentrosActivDatos $useCase */

@@ -1,14 +1,14 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\misas\helpers\MisasDesplegableSupport;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
@@ -30,14 +30,14 @@ $idiomas = $data['idiomas'] ?? [];
 
 $oDesplNoms = new Desplegable();
 $oDesplNoms->setNombre('id_tipo_enc');
-$oDesplNoms->setOpciones(misas_desplegable_opciones($tipos_encargo));
+$oDesplNoms->setOpciones(MisasDesplegableSupport::opciones($tipos_encargo));
 $oDesplNoms->setBlanco('t');
 
 $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
-$oDesplCentros->setOpciones(misas_desplegable_opciones($centros));
+$oDesplCentros->setOpciones(MisasDesplegableSupport::opciones($centros));
 
-$oDesplIdiomas = new Desplegable('idioma_enc', misas_desplegable_opciones($idiomas), '', true);
+$oDesplIdiomas = new Desplegable('idioma_enc', MisasDesplegableSupport::opciones($idiomas), '', true);
 
 // URL absoluta del endpoint backend: web\Hash genera el hash a partir de la
 // URL; el JS posteara contra la misma ruta para que el hash coincida.
@@ -74,4 +74,4 @@ $a_campos = [
     'h_ver_encargos_zona' => $h_ver_encargos_zona,
 ];
 
-ajax_json_render_phtml('frontend\\misas\\controller', 'ver_encargos_zona.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', 'ver_encargos_zona.phtml', $a_campos);

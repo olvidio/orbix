@@ -38,9 +38,6 @@ final class ActividadesPorZonasServiceTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        // `src\shared\domain\helpers\is_true` vive en func_tablas.php; el bootstrap solo carga el
-        // global_header, por lo que lo cargamos explicitamente aqui.
-        require_once __DIR__ . '/../../../../src/shared/domain/helpers/func_tablas.php';
     }
 
     protected function setUp(): void

@@ -3,6 +3,8 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
+use frontend\encargossacd\helpers\EncargossacdPayload;
 
 /**
  * Listado de exigencias de atencion por centros / iglesias
@@ -14,20 +16,19 @@ use frontend\shared\FrontBootstrap;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qsf = encargossacd_post_int('sf');
-$Qctr_igl = encargossacd_post_string('ctr_igl');
+$Qsf = EncargossacdPostInput::postInt('sf');
+$Qctr_igl = EncargossacdPostInput::postString('ctr_igl');
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_exigencia_ctr_data', [
     'sf' => $Qsf,
     'ctr_igl' => $Qctr_igl,
 ]);
 
-$listaCampos = encargossacd_listas_campos_from_payload($datos);
+$listaCampos = EncargossacdPayload::listasCamposFromPayload($datos);
 $a_campos = ['oPosicion' => $oPosicion] + $listaCampos;
 
 $oView = new ViewNewPhtml('frontend\\encargossacd\\controller');

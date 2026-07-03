@@ -11,7 +11,6 @@ use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\entity\Centro;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla u_centros a la interfaz del repositorio

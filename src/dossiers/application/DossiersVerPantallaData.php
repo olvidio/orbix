@@ -14,8 +14,7 @@ use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\ubis\application\services\UbiRepositoryResolver;
 use src\ubis\domain\RegionStgrAviso;
 use src\ubis\domain\RegionStgrConfigException;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Cuerpo de dossiers_ver: datos de cabecera + lista o ficha.
@@ -53,12 +52,12 @@ class DossiersVerPantallaData
     private function buildInternal(array $post): array
     {
         $problemasRegionStgr = [];
-        $Qrefresh = input_int($post, 'refresh');
+        $Qrefresh = FuncTablasSupport::inputInt($post, 'refresh');
         $a_sel = isset($post['sel']) && is_array($post['sel']) ? $post['sel'] : [];
         if ($a_sel === []) {
             $a_sel = [];
         }
-        $Qmod = input_string($post, 'mod');
+        $Qmod = FuncTablasSupport::inputString($post, 'mod');
         if ($a_sel !== [] && ($Qmod === 'eliminar' || $Qmod === 'nuevo')) {
             $a_sel = [];
         }
@@ -69,14 +68,14 @@ class DossiersVerPantallaData
             $Qid_sel = $this->idSelScalar($post['restored_id_sel']);
         }
         if (array_key_exists('restored_scroll_id', $post)) {
-            $restoredScroll = input_int($post, 'restored_scroll_id');
+            $restoredScroll = FuncTablasSupport::inputInt($post, 'restored_scroll_id');
             if ($restoredScroll > 0) {
                 $Qscroll_id = $restoredScroll;
             }
         }
         $stack = '';
-        if (isset($post['stack']) && input_string($post, 'stack') !== '') {
-            $stack = (string) filter_var(input_string($post, 'stack'), FILTER_SANITIZE_NUMBER_INT);
+        if (isset($post['stack']) && FuncTablasSupport::inputString($post, 'stack') !== '') {
+            $stack = (string) filter_var(FuncTablasSupport::inputString($post, 'stack'), FILTER_SANITIZE_NUMBER_INT);
         }
         if ($Qid_sel === '' && $a_sel !== []) {
             $first = $a_sel[0] ?? '';
@@ -84,15 +83,15 @@ class DossiersVerPantallaData
         }
         $Qid_sel = $this->idSelFromPost($post, $Qid_sel);
 
-        $Qid_pau = input_int($post, 'id_pau');
-        $pau = input_string($post, 'pau');
-        $Qobj_pau = input_string($post, 'obj_pau');
-        $Qid_dossier = input_string($post, 'id_dossier');
-        $Qpermiso = input_string($post, 'permiso');
-        $QqueSel = input_string($post, 'queSel') !== ''
-            ? input_string($post, 'queSel')
-            : input_string($post, 'que');
-        $Qclase_info_encoded = input_string($post, 'clase_info');
+        $Qid_pau = FuncTablasSupport::inputInt($post, 'id_pau');
+        $pau = FuncTablasSupport::inputString($post, 'pau');
+        $Qobj_pau = FuncTablasSupport::inputString($post, 'obj_pau');
+        $Qid_dossier = FuncTablasSupport::inputString($post, 'id_dossier');
+        $Qpermiso = FuncTablasSupport::inputString($post, 'permiso');
+        $QqueSel = FuncTablasSupport::inputString($post, 'queSel') !== ''
+            ? FuncTablasSupport::inputString($post, 'queSel')
+            : FuncTablasSupport::inputString($post, 'que');
+        $Qclase_info_encoded = FuncTablasSupport::inputString($post, 'clase_info');
 
         if ($Qid_dossier === '' && $Qclase_info_encoded !== '') {
             $obj = urldecode($Qclase_info_encoded);
@@ -122,7 +121,7 @@ class DossiersVerPantallaData
         }
 
         $Qid_activ = 0;
-        $Qmodo_curso = input_int($post, 'modo_curso');
+        $Qmodo_curso = FuncTablasSupport::inputInt($post, 'modo_curso');
 
         switch ($QqueSel) {
             case 'activ':
@@ -130,7 +129,7 @@ class DossiersVerPantallaData
                 $Qpermiso = '3';
                 break;
             case 'matriculas':
-                $Qid_activ = input_int($post, 'id_activ');
+                $Qid_activ = FuncTablasSupport::inputInt($post, 'id_activ');
                 $pau = 'p';
                 $Qpermiso = '3';
                 if ($Qmod === 'sel_es_asistente' && $a_sel !== []) {
@@ -417,7 +416,7 @@ class DossiersVerPantallaData
      */
     private function scrollIdFromPost(array $post): int
     {
-        $direct = input_int($post, 'scroll_id');
+        $direct = FuncTablasSupport::inputInt($post, 'scroll_id');
         if ($direct > 0) {
             return $direct;
         }
@@ -444,9 +443,9 @@ class DossiersVerPantallaData
      */
     private function respuestaSoloAvisoRegionStgr(RegionStgrConfigException $e, array $post): array
     {
-        $pau = input_string($post, 'pau');
-        $id_pau = input_int($post, 'id_pau');
-        $Qobj_pau = input_string($post, 'obj_pau');
+        $pau = FuncTablasSupport::inputString($post, 'pau');
+        $id_pau = FuncTablasSupport::inputInt($post, 'id_pau');
+        $Qobj_pau = FuncTablasSupport::inputString($post, 'obj_pau');
 
         $problemasRegionStgr = [];
         RegionStgrAviso::registrar($problemasRegionStgr, $e);

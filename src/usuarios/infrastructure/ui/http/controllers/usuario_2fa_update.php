@@ -1,5 +1,6 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\Secret2FA;
@@ -8,10 +9,10 @@ use src\shared\web\ContestarJson;
 
 $error_txt = '';
 
-$Qid_usuario = (integer)filter_post('id_usuario');
-$Qsecret_2fa = (string)filter_post('secret_2fa');
-$Qenable_2fa = (bool)filter_post('enable_2fa');
-$Qverification_code = (string)filter_post('verification_code');
+$Qid_usuario = (integer)FilterPostGet::post('id_usuario');
+$Qsecret_2fa = (string)FilterPostGet::post('secret_2fa');
+$Qenable_2fa = (bool)FilterPostGet::post('enable_2fa');
+$Qverification_code = (string)FilterPostGet::post('verification_code');
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);

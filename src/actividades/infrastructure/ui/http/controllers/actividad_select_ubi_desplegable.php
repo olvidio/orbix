@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FilterPostGet;
+
 /**
  * Endpoint backend que devuelve las opciones (value => label) de los
  * desplegables de la pantalla "seleccionar lugar para una actividad".
@@ -20,9 +23,9 @@ use src\actividades\application\ActividadSelectUbiData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qtipo = (string)filter_post('tipo');
-$Qdl_org = (string)filter_post('dl_org');
-$Qisfsv = (int)filter_post('isfsv');
+$Qtipo = (string)FilterPostGet::post('tipo');
+$Qdl_org = (string)FilterPostGet::post('dl_org');
+$Qisfsv = (int)FilterPostGet::post('isfsv');
 
 if ($Qtipo !== 'freq' && $Qtipo !== 'region') {
     ContestarJson::enviar(sprintf(_('opción no definida: tipo=%s'), $Qtipo));

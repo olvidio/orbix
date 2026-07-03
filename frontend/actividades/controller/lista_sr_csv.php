@@ -1,4 +1,10 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPayload;
+use frontend\actividades\helpers\ActividadesListaSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Listado de actividades de SR para exportar como CSV o mostrar en pantalla.
  *
@@ -19,10 +25,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
@@ -47,12 +50,12 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_sr_csv_datos', [
 ]);
 
 if (!empty($data['pref_error'])) {
-    echo tessera_imprimir_string($data['pref_error']);
+    echo PayloadCoercion::string($data['pref_error']);
 }
 
 if ($Qque === 'file') {
-    $a_cabeceras = actividades_lista_cabeceras($data['a_cabeceras'] ?? []);
-    $a_valores = actividades_lista_valores_from_payload($data['a_valores'] ?? []);
+    $a_cabeceras = ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []);
+    $a_valores = ActividadesPayload::listaValoresFromPayload($data['a_valores'] ?? []);
     $oTabla = new Lista();
     $oTabla->setId_tabla('lista_activ');
     $oTabla->setCabeceras($a_cabeceras);
@@ -62,14 +65,14 @@ if ($Qque === 'file') {
 }
 
 if ($Qque === 'lista') {
-    list_nav_boot_recordar($oPosicion);
-    list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+    ListNavSupport::bootRecordar($oPosicion);
+    ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
     $a_campos = [
         'oPosicion' => $oPosicion,
-        'titulo' => tessera_imprimir_string($data['titulo'] ?? ''),
-        'html_tabla' => tessera_imprimir_string($data['html_tabla'] ?? ''),
+        'titulo' => PayloadCoercion::string($data['titulo'] ?? ''),
+        'html_tabla' => PayloadCoercion::string($data['html_tabla'] ?? ''),
     ];
 
     $oView = new ViewNewPhtml('frontend\actividades\controller');

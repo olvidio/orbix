@@ -4,8 +4,7 @@ namespace src\actividades\application;
 
 use frontend\actividades\helpers\TipoActivMetadataLoader;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
-
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Elimina un tipo de actividad. Portado del case `eliminar` del dispatcher
@@ -23,7 +22,7 @@ class TipoActivEliminar
      */
     public function execute(array $input = []): string
     {
-        $Qid_tipo_activ = input_int($input, 'id_tipo_activ');
+        $Qid_tipo_activ = FuncTablasSupport::inputInt($input, 'id_tipo_activ');
 
         $TipoDeActividadRepository = $this->tipoDeActividadRepository;
         $oTipoDeActividad = $TipoDeActividadRepository->findById($Qid_tipo_activ);

@@ -9,7 +9,6 @@ use frontend\shared\FrontBootstrap;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/devel_db_admin/helpers/devel_db_admin_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 

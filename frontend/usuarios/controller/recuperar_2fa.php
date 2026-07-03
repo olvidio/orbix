@@ -10,7 +10,6 @@ use frontend\shared\FrontBootstrap;
  * Genera un token aleatorio, lo guarda en la DB
  * y envia un mail con un link.
  */
-require_once __DIR__ . '/../helpers/usuarios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************

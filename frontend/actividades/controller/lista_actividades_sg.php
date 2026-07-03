@@ -1,4 +1,12 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPostInput;
+use frontend\actividades\helpers\ActividadesPayload;
+use frontend\actividades\helpers\ActividadesListaSupport;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
+
 /**
  * Pantalla que lista actividades sf/sg (crt, cv) con los filtros de
  * periodo, tipo, lugar y delegacion.
@@ -21,10 +29,7 @@ use frontend\shared\security\HashFront;
 use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\web\Lista;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 use frontend\shared\web\PeriodoQue;
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -57,7 +62,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qscroll_id = '';
 } else {
     $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qscroll_id = list_nav_scroll_id_from_post();
+    $Qscroll_id = ListNavSupport::scrollIdFromPost();
     if ($stack !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
@@ -104,8 +109,8 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $oPosicion->setParametros($aGoBack, 1);
 }
 
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_for_recordar(($aGoBack ?? list_nav_build_return_parametros_from_post()), $Qid_sel, $Qscroll_id));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionForRecordar(($aGoBack ?? ListNavSupport::buildReturnParametrosFromPost()), $Qid_sel, $Qscroll_id));
 
 
 if (!empty($Qid_sel) || $Qscroll_id !== '') {
@@ -135,7 +140,7 @@ if (!empty($data['advertencia_demasiadas']) && is_array($data['advertencia_demas
     $ad = $data['advertencia_demasiadas'];
     $go_avant = HashFrontSignedLink::tryFromSpec($ad['continuar_link_spec'] ?? null);
     $go_atras = HashFrontSignedLink::tryFromSpec($ad['volver_link_spec'] ?? null);
-    $numActiv = tessera_imprimir_int($ad['num_actividades'] ?? 0);
+    $numActiv = PayloadCoercion::int($ad['num_actividades'] ?? 0);
     $html_advertencia = '<h2>' . sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."), $numActiv) . '</h2>';
     $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_avant . "') value=" . _("continuar") . ">";
     $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_atras . "') value=" . _("volver") . ">";
@@ -143,17 +148,17 @@ if (!empty($data['advertencia_demasiadas']) && is_array($data['advertencia_demas
     die();
 }
 
-$a_valores = actividades_lista_valores_from_payload($data['a_valores'] ?? []);
+$a_valores = ActividadesPayload::listaValoresFromPayload($data['a_valores'] ?? []);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('lista_actividades_sg');
-$oTabla->setCabeceras(actividades_lista_cabeceras($data['a_cabeceras'] ?? []));
-$oTabla->setBotones(actividades_lista_botones($data['a_botones'] ?? []));
+$oTabla->setCabeceras(ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []));
+$oTabla->setBotones(ActividadesListaSupport::botones($data['a_botones'] ?? []));
 $oTabla->setDatos($a_valores);
 $html_tabla = $oTabla->mostrar_tabla();
 unset($data['a_cabeceras'], $data['a_botones'], $data['a_valores']);
-$result_busqueda = tessera_imprimir_string($data['result_busqueda'] ?? '');
-$Qid_tipo_activ = tessera_imprimir_string($data['id_tipo_activ'] ?? '');
+$result_busqueda = PayloadCoercion::string($data['result_busqueda'] ?? '');
+$Qid_tipo_activ = PayloadCoercion::string($data['id_tipo_activ'] ?? '');
 
 $aOpciones = [
     'tot_any' => _('todo el año'),
@@ -170,12 +175,12 @@ $aOpciones = [
 
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('modifica');
-$oFormP->setAntes(strtoupper_dlb(_("periodo")));
+$oFormP->setAntes(FuncTablasSupport::strtoupperDlb(_("periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
-$oFormP->setDesplPeriodosOpcion_sel(actividades_posicion_string($Qperiodo));
-$oFormP->setDesplAnysOpcion_sel(actividades_posicion_string($Qyear));
-$oFormP->setEmpiezaMin(actividades_posicion_string($Qempiezamin));
-$oFormP->setEmpiezaMax(actividades_posicion_string($Qempiezamax));
+$oFormP->setDesplPeriodosOpcion_sel(ActividadesPostInput::posicionString($Qperiodo));
+$oFormP->setDesplAnysOpcion_sel(ActividadesPostInput::posicionString($Qyear));
+$oFormP->setEmpiezaMin(ActividadesPostInput::posicionString($Qempiezamin));
+$oFormP->setEmpiezaMax(ActividadesPostInput::posicionString($Qempiezamax));
 
 $oHash = new HashFront();
 $oHash->setUrl('frontend/actividades/controller/lista_actividades_sg.php');

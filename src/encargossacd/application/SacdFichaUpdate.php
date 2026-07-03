@@ -2,14 +2,12 @@
 
 namespace src\encargossacd\application;
 
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_int;
-
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoSacdObserv;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Mutacion de la ficha de encargos de un SACD
@@ -35,9 +33,9 @@ final class SacdFichaUpdate
      */
     public function execute(array $post): array
     {
-        $id_nom = input_int($post, 'id_nom');
-        $enc_num = input_int($post, 'enc_num');
-        $observ = input_string($post, 'observ');
+        $id_nom = FuncTablasSupport::inputInt($post, 'id_nom');
+        $enc_num = FuncTablasSupport::inputInt($post, 'enc_num');
+        $observ = FuncTablasSupport::inputString($post, 'observ');
 
         $aId_tipo_enc = is_array($post['id_tipo_enc'] ?? null) ? $post['id_tipo_enc'] : [];
         $aId_enc = is_array($post['id_enc'] ?? null) ? $post['id_enc'] : [];

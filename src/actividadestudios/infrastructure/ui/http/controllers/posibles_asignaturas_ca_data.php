@@ -3,14 +3,12 @@
 use src\actividadestudios\application\PosiblesAsignaturasCaData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 $error = '';
 $data = [];
 try {
-    $idActiv = input_int($_POST, 'id_activ');
-    $nomActiv = input_string($_POST, 'nom_activ');
+    $idActiv = FuncTablasSupport::inputInt($_POST, 'id_activ');
+    $nomActiv = FuncTablasSupport::inputString($_POST, 'nom_activ');
     /** @var PosiblesAsignaturasCaData $useCase */
     $useCase = DependencyResolver::get(PosiblesAsignaturasCaData::class);
     $data = $useCase->execute(['id_activ' => $idActiv, 'nom_activ' => $nomActiv]);

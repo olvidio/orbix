@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: listado agrupado de cartas de presentacion (modo
  * `lista_dl`, `lista_todo` o `get` con filtros).
@@ -12,14 +15,12 @@ use src\cartaspresentacion\application\CartasPresentacionListaData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-use function src\shared\domain\helpers\input_string;
-
 $input = [
-    'que' => input_string($_POST, 'que'),
-    'poblacion' => input_string($_POST, 'poblacion'),
-    'pais' => input_string($_POST, 'pais'),
-    'region' => input_string($_POST, 'region'),
-    'dl' => input_string($_POST, 'dl'),
+    'que' => FuncTablasSupport::inputString($_POST, 'que'),
+    'poblacion' => FuncTablasSupport::inputString($_POST, 'poblacion'),
+    'pais' => FuncTablasSupport::inputString($_POST, 'pais'),
+    'region' => FuncTablasSupport::inputString($_POST, 'region'),
+    'dl' => FuncTablasSupport::inputString($_POST, 'dl'),
 ];
 
 /** @var CartasPresentacionListaData $useCase */

@@ -9,7 +9,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\application\services\PersonaListadoLookup;
 use src\ubis\domain\RegionStgrAviso;
-use function frontend\shared\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Filas para `frontend/actividadestudios/controller/matriculas_pendientes.php`.
@@ -53,7 +53,7 @@ final readonly class MatriculasPendientesData
             $idNom = $oMatricula->getId_nom();
             $idActiv = $oMatricula->getId_activ();
             $idAsignatura = $oMatricula->getIdAsignaturaVo()->value();
-            $preceptorTxt = is_true($oMatricula->isPreceptor()) ? 'x' : '';
+            $preceptorTxt = FuncTablasSupport::isTrue($oMatricula->isPreceptor()) ? 'x' : '';
 
             $oPersona = $personaLookup->resolver($idNom, $msgErr, $problemasRegionStgr);
             if ($oPersona === null) {

@@ -2,13 +2,11 @@
 
 namespace src\menus\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
 use src\menus\domain\PermisoMenuBits;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Datos para `frontend/menus/controller/menus_get.php` (formulario o listado).
@@ -27,9 +25,9 @@ final class MenusGetPageData
      */
     public function execute(array $post): array
     {
-        $Qfiltro_grupo = input_string($post, 'filtro_grupo');
-        $Qnuevo = input_string($post, 'nuevo');
-        $Qid_menu = input_string($post, 'id_menu');
+        $Qfiltro_grupo = FuncTablasSupport::inputString($post, 'filtro_grupo');
+        $Qnuevo = FuncTablasSupport::inputString($post, 'nuevo');
+        $Qid_menu = FuncTablasSupport::inputString($post, 'id_menu');
 
         $aRoles = $this->roleRepository->getArrayRoles();
 

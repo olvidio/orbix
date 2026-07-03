@@ -11,10 +11,7 @@ use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
-
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Caso de uso: construye los datos (cabeceras + filas) de la pantalla
@@ -55,24 +52,24 @@ class ListaActivTabla
      */
     public function execute(array $input, array $opts): array
     {
-        $Qque = input_string($input, 'que');
+        $Qque = FuncTablasSupport::inputString($input, 'que');
         $Qstatus = $input['status'] ?? 0;
-        $Qid_tipo_activ = input_string($input, 'id_tipo_activ');
-        $Qid_ubi = input_int($input, 'id_ubi');
-        $Qperiodo = input_string($input, 'periodo');
-        $Qyear = input_string($input, 'year');
-        $Qdl_org = input_string($input, 'dl_org');
-        $Qempiezamin = input_string($input, 'empiezamin');
-        $Qempiezamax = input_string($input, 'empiezamax');
+        $Qid_tipo_activ = FuncTablasSupport::inputString($input, 'id_tipo_activ');
+        $Qid_ubi = FuncTablasSupport::inputInt($input, 'id_ubi');
+        $Qperiodo = FuncTablasSupport::inputString($input, 'periodo');
+        $Qyear = FuncTablasSupport::inputString($input, 'year');
+        $Qdl_org = FuncTablasSupport::inputString($input, 'dl_org');
+        $Qempiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $Qempiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
         $Qc_activ = is_array($input['c_activ'] ?? null) ? $input['c_activ'] : [];
         $Qasist = is_array($input['asist'] ?? null) ? $input['asist'] : [];
         $Qseccion = is_array($input['seccion'] ?? null) ? $input['seccion'] : [];
-        $Qssfsv = input_string($input, 'ssfsv');
-        $Qsasistentes = input_string($input, 'sasistentes');
-        $Qsactividad = input_string($input, 'sactividad');
-        $Qsnom_tipo = input_string($input, 'snom_tipo');
+        $Qssfsv = FuncTablasSupport::inputString($input, 'ssfsv');
+        $Qsasistentes = FuncTablasSupport::inputString($input, 'sasistentes');
+        $Qsactividad = FuncTablasSupport::inputString($input, 'sactividad');
+        $Qsnom_tipo = FuncTablasSupport::inputString($input, 'snom_tipo');
 
-        $mi_sfsv = input_int($opts, 'mi_sfsv');
+        $mi_sfsv = FuncTablasSupport::inputInt($opts, 'mi_sfsv');
         $perm_vcsd = (bool)($opts['perm_vcsd'] ?? false);
         $perm_des = (bool)($opts['perm_des'] ?? false);
         $perm_sg = (bool)($opts['perm_sg'] ?? false);
@@ -170,7 +167,7 @@ class ListaActivTabla
 
         if ($Qque === 'list_active_inv_sg' || $Qque === 'list_activ_sr') {
             // El titulo lo suele enviar el formulario que_lista_activ_sg / que_lista_activ_sr.
-            $titulo = ucfirst(input_string($input, 'titulo'));
+            $titulo = ucfirst(FuncTablasSupport::inputString($input, 'titulo'));
         } else {
             $titulo = ucfirst(_("listado de actividades"));
         }
@@ -248,13 +245,13 @@ class ListaActivTabla
             $comun = '';
             if ($oCasa !== null) {
                 $nombre_ubi = $oCasa->getNombre_ubi();
-                if (is_true($oCasa->isSv())) {
+                if (FuncTablasSupport::isTrue($oCasa->isSv())) {
                     $comun = 'sv';
                 }
-                if (is_true($oCasa->isSf())) {
+                if (FuncTablasSupport::isTrue($oCasa->isSf())) {
                     $comun = 'sf';
                 }
-                if (is_true($oCasa->isSv()) && is_true($oCasa->isSf())) {
+                if (FuncTablasSupport::isTrue($oCasa->isSv()) && FuncTablasSupport::isTrue($oCasa->isSf())) {
                     $comun = 'comun';
                 }
             }

@@ -4,8 +4,6 @@ namespace src\cambios\domain\entity;
 
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\shared\domain\traits\Hydratable;
-use function src\shared\domain\helpers\is_true;
-
 class CambioUsuario
 {
     use Hydratable;

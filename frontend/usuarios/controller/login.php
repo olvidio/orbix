@@ -2,6 +2,8 @@
 
 namespace frontend\usuarios\controller;
 
+use frontend\usuarios\helpers\UsuariosPayload;
+use frontend\usuarios\helpers\UsuariosPostInput;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
@@ -9,8 +11,8 @@ use frontend\shared\model\ViewNewPhtml;
 use src\shared\application\HydratePermisosActividades;
 use src\shared\web\ContestarJson;
 use src\usuarios\application\LoginProcesar;
+use frontend\shared\helpers\PayloadCoercion;
 
-require_once __DIR__ . '/../helpers/usuarios_support.php';
 
 /**
  * Renderiza el formulario de login con los campos indicados.
@@ -103,7 +105,7 @@ if (!isset($_SESSION['session_auth'])) {
     if (isset($_POST['username']) && isset($_POST['password'])) {
         $_SESSION['private'] = $private_str;
 
-        $loginInput = usuarios_login_input_from_post();
+        $loginInput = UsuariosPostInput::loginInputFromPost();
         $useCase = new LoginProcesar();
         $result = $useCase->execute(
             $loginInput,
@@ -125,13 +127,13 @@ if (!isset($_SESSION['session_auth'])) {
             if (orbix_es_peticion_api_src()) {
                 orbix_responder_login_api_sin_sesion();
             }
-            $error = tessera_imprimir_int($result['error'] ?? 1);
+            $error = PayloadCoercion::int($result['error'] ?? 1);
             $esquema_form = $loginInput['esquema'] !== '' ? $loginInput['esquema'] : $esquema_web_str;
             render_login_form($loginInput['username'], $ubicacion, $idioma, $esquema_form, $error, $esquema_web_str);
             die();
         }
 
-        $loginSession = usuarios_login_ok_session_from_result($result);
+        $loginSession = UsuariosPayload::loginOkSessionFromResult($result);
         if ($loginSession === null) {
             if (orbix_es_peticion_api_src()) {
                 orbix_responder_login_api_sin_sesion();
@@ -144,7 +146,7 @@ if (!isset($_SESSION['session_auth'])) {
         $_SESSION['session_auth'] = $loginSession['session_auth'];
         $_SESSION['config'] = $loginSession['session_config'];
 
-        usuarios_cambiar_idioma();
+        UsuariosPayload::cambiarIdioma();
 
         $time_expire_cookie = time() + (86400 * 30);
         $arr_cookie_options = [
@@ -160,14 +162,14 @@ if (!isset($_SESSION['session_auth'])) {
         if (orbix_es_peticion_api_src()) {
             orbix_responder_login_api_sin_sesion();
         }
-        $esquema = tessera_imprimir_string($_COOKIE['esquema'] ?? '');
-        $idioma = tessera_imprimir_string($_COOKIE['idioma'] ?? '');
-        usuarios_cambiar_idioma($idioma);
+        $esquema = PayloadCoercion::string($_COOKIE['esquema'] ?? '');
+        $idioma = PayloadCoercion::string($_COOKIE['idioma'] ?? '');
+        UsuariosPayload::cambiarIdioma($idioma);
         render_login_form('', $ubicacion, $idioma, $esquema, 0, $esquema_web_str);
         die();
     }
 } else {
-    usuarios_cambiar_idioma();
+    UsuariosPayload::cambiarIdioma();
 }
 
 if (!isset($_SESSION['session_go_to'])) {

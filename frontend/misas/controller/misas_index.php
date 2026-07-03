@@ -5,7 +5,6 @@ use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 // Index estatico: enlaces canonicos `frontend/misas/controller/...` (Slice 11).

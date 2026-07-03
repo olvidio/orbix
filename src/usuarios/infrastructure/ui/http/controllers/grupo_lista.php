@@ -5,10 +5,9 @@ use src\shared\infrastructure\DependencyResolver;
 use src\usuarios\application\GruposLista;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FuncTablasSupport;
 
-use function src\shared\domain\helpers\input_string;
-
-$Qusername = input_string($_POST, 'username');
+$Qusername = FuncTablasSupport::inputString($_POST, 'username');
 
 $error_txt = '';
 

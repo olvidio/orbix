@@ -1,7 +1,8 @@
 <?php
-
 namespace frontend\personas\controller;
 
+use frontend\personas\helpers\PersonasPayload;
+use frontend\personas\helpers\PersonasPostInput;
 use frontend\shared\AppInstalled;
 use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
@@ -11,13 +12,13 @@ use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
 
 /**
  * Tabla de personas que cumplen la condicion introducida en `personas_que`.
  */
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/personas_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 
@@ -27,8 +28,8 @@ $tipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qes_sacd = (int)filter_input(INPUT_POST, 'es_sacd');
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = list_nav_id_sel_from_post();
-$Qscroll_id = list_nav_scroll_id_from_post();
+$Qid_sel = ListNavSupport::idSelFromPost();
+$Qscroll_id = ListNavSupport::scrollIdFromPost();
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qexacto = (string)filter_input(INPUT_POST, 'exacto');
 $Qcmb = (string)filter_input(INPUT_POST, 'cmb');
@@ -37,34 +38,34 @@ $Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
 $Qapellido2 = (string)filter_input(INPUT_POST, 'apellido2');
 $Qcentro = (string)filter_input(INPUT_POST, 'centro');
 
-$stack = personas_stack_from_post();
+$stack = PersonasPostInput::stackFromPost();
 if ($stack !== null && $stack !== 0) {
     $oPosicion2 = new Posicion();
     if ($oPosicion2->goStack($stack)) {
-        $restoredSel = list_nav_id_sel_for_lista($oPosicion2->getParametro('id_sel'));
-        if (!list_nav_id_sel_is_empty($restoredSel)) {
+        $restoredSel = ListNavSupport::idSelForLista($oPosicion2->getParametro('id_sel'));
+        if (!ListNavSupport::idSelIsEmpty($restoredSel)) {
             $Qid_sel = $restoredSel;
         }
         $restoredScroll = $oPosicion2->getParametro('scroll_id');
         if (is_scalar($restoredScroll) && (string) $restoredScroll !== '') {
             $Qscroll_id = (string) $restoredScroll;
         }
-        $Qque = tessera_imprimir_string($oPosicion2->getParametro('que') ?? $Qque);
-        $Qexacto = tessera_imprimir_string($oPosicion2->getParametro('exacto') ?? $Qexacto);
-        $Qcmb = tessera_imprimir_string($oPosicion2->getParametro('cmb') ?? $Qcmb);
-        $Qnombre = tessera_imprimir_string($oPosicion2->getParametro('nombre') ?? $Qnombre);
-        $Qapellido1 = tessera_imprimir_string($oPosicion2->getParametro('apellido1') ?? $Qapellido1);
-        $Qapellido2 = tessera_imprimir_string($oPosicion2->getParametro('apellido2') ?? $Qapellido2);
-        $Qcentro = tessera_imprimir_string($oPosicion2->getParametro('centro') ?? $Qcentro);
-        $tabla = tessera_imprimir_string($oPosicion2->getParametro('tabla') ?? $tabla);
-        $Qna = tessera_imprimir_string($oPosicion2->getParametro('na') ?? $Qna);
-        $tipo = tessera_imprimir_string($oPosicion2->getParametro('tipo') ?? $tipo);
-        $Qes_sacd = personas_posicion_int_param($oPosicion2->getParametro('es_sacd'), $Qes_sacd);
+        $Qque = PayloadCoercion::string($oPosicion2->getParametro('que') ?? $Qque);
+        $Qexacto = PayloadCoercion::string($oPosicion2->getParametro('exacto') ?? $Qexacto);
+        $Qcmb = PayloadCoercion::string($oPosicion2->getParametro('cmb') ?? $Qcmb);
+        $Qnombre = PayloadCoercion::string($oPosicion2->getParametro('nombre') ?? $Qnombre);
+        $Qapellido1 = PayloadCoercion::string($oPosicion2->getParametro('apellido1') ?? $Qapellido1);
+        $Qapellido2 = PayloadCoercion::string($oPosicion2->getParametro('apellido2') ?? $Qapellido2);
+        $Qcentro = PayloadCoercion::string($oPosicion2->getParametro('centro') ?? $Qcentro);
+        $tabla = PayloadCoercion::string($oPosicion2->getParametro('tabla') ?? $tabla);
+        $Qna = PayloadCoercion::string($oPosicion2->getParametro('na') ?? $Qna);
+        $tipo = PayloadCoercion::string($oPosicion2->getParametro('tipo') ?? $tipo);
+        $Qes_sacd = PersonasPostInput::posicionIntParam($oPosicion2->getParametro('es_sacd'), $Qes_sacd);
         $oPosicion2->olvidar($stack);
     }
 }
 
-list_nav_boot_recordar($oPosicion);
+ListNavSupport::bootRecordar($oPosicion);
 $personasReturn = [
     'que' => $Qque,
     'exacto' => $Qexacto,
@@ -78,13 +79,13 @@ $personasReturn = [
     'tipo' => $tipo,
     'es_sacd' => $Qes_sacd,
 ];
-if (!list_nav_id_sel_is_empty($Qid_sel)) {
+if (!ListNavSupport::idSelIsEmpty($Qid_sel)) {
     $personasReturn['id_sel'] = $Qid_sel;
 }
 if ($Qscroll_id !== '' && $Qscroll_id !== '0') {
     $personasReturn['scroll_id'] = $Qscroll_id;
 }
-list_nav_persist_clean_return_to_posicion($oPosicion, $personasReturn, 0);
+ListNavSupport::persistCleanReturnToPosicion($oPosicion, $personasReturn, 0);
 
 $oPosicion->setParametros([
     'que' => $Qque,
@@ -100,7 +101,7 @@ $oPosicion->setParametros([
     'es_sacd' => $Qes_sacd,
 ], 1);
 
-list_nav_persist_selection_on_list_page(
+ListNavSupport::persistSelectionOnListPage(
     $oPosicion,
     $Qid_sel,
     $Qscroll_id,
@@ -123,7 +124,7 @@ $campos = [
 $data = PostRequest::getDataFromUrl('/src/personas/personas_select_data', $campos, false);
 $aviso = '';
 if (!empty($data['error'])) {
-    $errorHtml = PostRequest::stripInternalCallProvenance(tessera_imprimir_string($data['error']));
+    $errorHtml = PostRequest::stripInternalCallProvenance(PayloadCoercion::string($data['error']));
     if (
         str_contains($errorHtml, _('persona no válida'))
         || str_contains($errorHtml, 'persona no válida')
@@ -141,8 +142,8 @@ if (!empty($data['error'])) {
         return;
     }
 }
-$payload = personas_post_payload($data);
-$select = personas_select_tabla_from_payload($payload, $tabla, $aviso);
+$payload = PersonasPayload::postPayload($data);
+$select = PersonasPayload::selectTablaFromPayload($payload, $tabla, $aviso);
 
 $tabla = $select['tabla'];
 $obj_pau = $select['obj_pau'];
@@ -156,7 +157,7 @@ $aviso = $select['aviso'];
 $a_botones = [];
 $script = [];
 
-if (personas_have_perm_oficina('sm')) {
+if (PersonasPayload::havePermOficina('sm')) {
     $a_botones[] = ['txt' => _('cambio de ctr'), 'click' => 'fnjs_modificar_ctr("#seleccionados")'];
 }
 $script['fnjs_modificar_ctr'] = 1;
@@ -174,7 +175,7 @@ if (AppInstalled::is('notas')) {
         $a_botones[] = ['txt' => _('ver tessera'), 'click' => 'fnjs_tessera("#seleccionados")'];
         $script['fnjs_tessera'] = 1;
     }
-    if (personas_have_perm_oficina('est')) {
+    if (PersonasPayload::havePermOficina('est')) {
         $a_botones[] = ['txt' => _('modificar stgr'), 'click' => 'fnjs_modificar("#seleccionados")'];
         $script['fnjs_modificar'] = 1;
         $a_botones[] = ['txt' => _('imprimir tessera'), 'click' => 'fnjs_imp_tessera("#seleccionados")'];
@@ -185,7 +186,7 @@ if (AppInstalled::is('notas')) {
 }
 if (
     AppInstalled::is('actividadestudios')
-    && (personas_have_perm_oficina('sm') || personas_have_perm_oficina('est'))
+    && (PersonasPayload::havePermOficina('sm') || PersonasPayload::havePermOficina('est'))
     && ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex')
 ) {
     $a_botones[] = ['txt' => _('posibles ca'), 'click' => 'fnjs_posibles_ca("#seleccionados")'];
@@ -198,7 +199,7 @@ if (AppInstalled::is('actividadplazas')) {
         $script['fnjs_posibles_activ'] = 1;
     }
 }
-if (personas_have_perm_oficina('est')) {
+if (PersonasPayload::havePermOficina('est')) {
     if (AppInstalled::is('actividadestudios')) {
         $a_botones[] = ['txt' => _('plan estudios'), 'click' => 'fnjs_matriculas("#seleccionados")'];
         $script['fnjs_matriculas'] = 1;
@@ -235,7 +236,7 @@ if (OrbixRuntime::miAmbito() === 'rstgr') {
     ];
 }
 
-if (AppInstalled::is('actividadessacd') && personas_have_perm_oficina('des')) {
+if (AppInstalled::is('actividadessacd') && PersonasPayload::havePermOficina('des')) {
     $a_botones[] = ['txt' => _('atención actividades'), 'click' => 'fnjs_lista_activ("#seleccionados")'];
     $script['fnjs_lista_activ'] = 1;
 }
@@ -287,7 +288,7 @@ foreach ($a_filas as $fila) {
     }
     $a_valores[$c] = $a_val;
 }
-if (!list_nav_id_sel_is_empty($Qid_sel)) {
+if (!ListNavSupport::idSelIsEmpty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
 if ($Qscroll_id !== '') {

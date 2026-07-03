@@ -8,10 +8,7 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\value_objects\StatusId;
 use src\shared\config\ConfigGlobal;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_string_list;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Datos para `form_cargos_personas_en_actividad` (vista por persona).
@@ -50,21 +47,21 @@ final class FormCargosPersonasEnActividadData
         $Qid_item = '';
         $id_cargo = '';
 
-        $Qpermiso = input_int($post, 'permiso');
+        $Qpermiso = FuncTablasSupport::inputInt($post, 'permiso');
 
-        $a_sel = input_string_list($post, 'sel');
+        $a_sel = FuncTablasSupport::inputStringList($post, 'sel');
         $Qque_dl = '';
         $Qid_tipo = 0;
         if ($a_sel !== []) {
             $Qid_item = (int) strtok($a_sel[0], '#');
         } else {
-            $Qque_dl = input_string($post, 'que_dl');
-            $Qid_tipo = input_int($post, 'id_tipo');
+            $Qque_dl = FuncTablasSupport::inputString($post, 'que_dl');
+            $Qid_tipo = FuncTablasSupport::inputInt($post, 'id_tipo');
         }
 
-        $Qmod = input_string($post, 'mod');
-        $Qid_pau = input_int($post, 'id_pau');
-        $Qid_dossier = input_int($post, 'id_dossier');
+        $Qmod = FuncTablasSupport::inputString($post, 'mod');
+        $Qid_pau = FuncTablasSupport::inputInt($post, 'id_pau');
+        $Qid_dossier = FuncTablasSupport::inputInt($post, 'id_dossier');
         if ($Qid_dossier <= 0) {
             $Qid_dossier = 1302;
         }
@@ -118,7 +115,7 @@ final class FormCargosPersonasEnActividadData
             );
         }
 
-        $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
+        $chk = (!empty($puede_agd) && FuncTablasSupport::isTrue($puede_agd)) ? 'checked' : '';
 
         $camposForm = 'id_cargo!observ';
         $camposNo = 'puede_agd';

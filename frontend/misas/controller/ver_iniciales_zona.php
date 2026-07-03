@@ -1,13 +1,13 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
-require_once 'frontend/misas/helpers/misas_support.php';
 
 FrontBootstrap::boot();
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
@@ -18,7 +18,7 @@ $data = PostRequest::getDataFromUrl('/src/misas/ver_iniciales_zona_data', [
 
 $columns = $data['columns'] ?? [];
 $rows = $data['rows'] ?? [];
-$id_zona = misas_int($data['id_zona'] ?? $Qid_zona);
+$id_zona = PayloadCoercion::int($data['id_zona'] ?? $Qid_zona);
 
 // URL absoluta del endpoint backend: web\Hash genera el hash a partir de la
 // URL; el JS posteara contra la misma ruta para que el hash coincida.
@@ -36,4 +36,4 @@ $a_campos = [
     'id_zona' => $id_zona,
 ];
 
-ajax_json_render_phtml('frontend\\misas\\controller', 'ver_iniciales_zona.phtml', $a_campos);
+AjaxJsonSupport::renderPhtml('frontend\\misas\\controller', 'ver_iniciales_zona.phtml', $a_campos);

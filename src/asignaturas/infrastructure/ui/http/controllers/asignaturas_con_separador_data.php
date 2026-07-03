@@ -3,12 +3,11 @@
 use src\asignaturas\application\AsignaturasConSeparadorOpcionesData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_string;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 $error = '';
 $data = [];
 try {
-    $op = input_string($_POST, 'op_genericas', '1') !== '0';
+    $op = FuncTablasSupport::inputString($_POST, 'op_genericas', '1') !== '0';
     /** @var AsignaturasConSeparadorOpcionesData $useCase */
     $useCase = DependencyResolver::get(AsignaturasConSeparadorOpcionesData::class);
     $data = $useCase->execute($op);

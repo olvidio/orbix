@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: guardar gastos/aportaciones mensuales (`casa_ec_gastos_guardar`).
  */
@@ -7,17 +10,14 @@ use src\casas\application\CasaEcGastosGuardar;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 $input = array_merge($_POST, [
-    'id_ubi' => input_int($_POST, 'id_ubi'),
-    'year' => input_int($_POST, 'year'),
+    'id_ubi' => FuncTablasSupport::inputInt($_POST, 'id_ubi'),
+    'year' => FuncTablasSupport::inputInt($_POST, 'year'),
 ]);
 for ($m = 1; $m < 13; $m++) {
-    $input["g$m"] = input_string($_POST, "g$m");
-    $input["ap_sv$m"] = input_string($_POST, "ap_sv$m");
-    $input["ap_sf$m"] = input_string($_POST, "ap_sf$m");
+    $input["g$m"] = FuncTablasSupport::inputString($_POST, "g$m");
+    $input["ap_sv$m"] = FuncTablasSupport::inputString($_POST, "ap_sv$m");
+    $input["ap_sf$m"] = FuncTablasSupport::inputString($_POST, "ap_sf$m");
 }
 
 /** @var CasaEcGastosGuardar $useCase */

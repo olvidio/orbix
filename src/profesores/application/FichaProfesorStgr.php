@@ -31,8 +31,7 @@ use src\profesores\domain\InfoProfesorLatin;
 use src\profesores\domain\InfoProfesorPublicacion;
 use src\profesores\domain\InfoProfesorStgr;
 use src\profesores\domain\InfoProfesorTituloEst;
-use function src\shared\domain\helpers\is_true;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 final class FichaProfesorStgr
 {
     public function __construct(
@@ -122,12 +121,12 @@ final class FichaProfesorStgr
         }
 
         $nom_ap = $oPersona->getNombreApellidosCrSin();
-        $sacd_txt = is_true($oPersona->isSacd()) ? 'si' : '';
+        $sacd_txt = FuncTablasSupport::isTrue($oPersona->isSacd()) ? 'si' : '';
         $id_ctr = $oPersona->getId_ctr();
         $nombre_ubi = $this->resolveNombreCentro($id_ctr);
 
         $latin = $this->profesorLatinRepository->findById($id_nom)?->isLatin();
-        $latin_txt = is_true($latin) ? 'si' : '';
+        $latin_txt = FuncTablasSupport::isTrue($latin) ? 'si' : '';
 
         $cProfesores = $this->profesorStgrRepository->getProfesoresStgr($aWhere, $aOperador);
 

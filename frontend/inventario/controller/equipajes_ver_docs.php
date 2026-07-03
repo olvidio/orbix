@@ -1,14 +1,15 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 // Crea los objetos de uso global **********************************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -22,9 +23,9 @@ $Qid_lugar = (int)filter_input(INPUT_POST, $Qnom_grupo);
 $url_backend = '/src/inventario/lista_docs_de_lugar';
 $a_campos_backend = [ 'id_lugar' => $Qid_lugar];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$payload = inventario_post_payload($data);
+$payload = InventarioPayload::postPayload($data);
 
-$a_valores = actividades_lista_datos($payload['a_valores'] ?? []);
+$a_valores = ActividadesListaSupport::datos($payload['a_valores'] ?? []);
 
 $a_cabeceras[] = ucfirst(_("sigla"));
 $a_cabeceras[] = ucfirst(_("identificador"));
@@ -60,4 +61,4 @@ if ($Qid_lugar === 1) { // nuevo.
 }
 echo $oLista->mostrar_tabla_html();
 echo "</form>";
-ajax_json_html((string) ob_get_clean());
+AjaxJsonSupport::html((string) ob_get_clean());

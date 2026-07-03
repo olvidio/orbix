@@ -1,46 +1,46 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\ubiscamas\helpers\UbiscamasPayload;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/ubiscamas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 
-$stackFromPost = list_nav_stack_from_post();
+$stackFromPost = ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0 && $oPosicion->goStack($stackFromPost)) {
     $oPosicion->olvidar($stackFromPost);
 }
 
 if ($stackFromPost !== 0) {
-    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    list_nav_boot_actividad_select_child_recordar($oPosicion, $Qrefresh);
+    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
 }
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 if ($a_sel !== []) {
-    $first = tessera_imprimir_string($a_sel[0]);
+    $first = PayloadCoercion::string($a_sel[0]);
     $parts = explode('#', $first, 2);
-    $Qid_activ = tessera_imprimir_int($parts[0]);
+    $Qid_activ = PayloadCoercion::int($parts[0]);
 } else {
     $Qid_activ = (int)filter_input(INPUT_POST, 'id_activ');
 }
-list_nav_persist_actividad_select_child_entry(
+ListNavSupport::persistActividadSelectChildEntry(
     $oPosicion,
     $Qid_activ > 0 ? ['id_activ' => $Qid_activ] : [],
 );
 
-$data = ubiscamas_post_data(PostRequest::getDataFromUrl('/src/ubiscamas/actividad_habitaciones_lista', ['id_activ' => $Qid_activ]));
-$view = ubiscamas_habitaciones_lista_from_payload($data);
+$data = UbiscamasPayload::postData(PostRequest::getDataFromUrl('/src/ubiscamas/actividad_habitaciones_lista', ['id_activ' => $Qid_activ]));
+$view = UbiscamasPayload::habitacionesListaFromPayload($data);
 
 if (isset($data['error'])) {
-    exit(tessera_imprimir_string($data['error']));
+    exit(PayloadCoercion::string($data['error']));
 }
 
 $oTabla = new Lista();

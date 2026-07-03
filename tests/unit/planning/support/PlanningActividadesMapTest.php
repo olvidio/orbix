@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
+use frontend\planning\helpers\PlanningPayload;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../../frontend/planning/helpers/planning_support.php';
-
 /**
- * {@see planning_actividades_map}: la vista plana (`planning_persona_ver`) devuelve
+ * {@see PlanningPayload::actividadesMap}: la vista plana (`planning_persona_ver`) devuelve
  * una lista de mapas `p#id#nombre => actividades`; las personas sin actividades
  * deben conservarse con lista vacía.
  */
@@ -21,7 +20,7 @@ final class PlanningActividadesMapTest extends TestCase
             ['p#100517042#Persona 3' => [['nom_curt' => 'x']]],
         ];
 
-        $out = planning_actividades_map($raw);
+        $out = PlanningPayload::actividadesMap($raw);
         $keys = [];
         foreach ($out as $group) {
             $keys = array_merge($keys, array_keys($group));
@@ -45,7 +44,7 @@ final class PlanningActividadesMapTest extends TestCase
             ],
         ];
 
-        $out = planning_actividades_map($raw);
+        $out = PlanningPayload::actividadesMap($raw);
         $keys = array_keys($out[0]);
 
         $this->assertSame(['p#100#A#Centro', 'p#200#B#Centro'], $keys);
@@ -61,7 +60,7 @@ final class PlanningActividadesMapTest extends TestCase
             ],
         ];
 
-        $out = planning_actividades_map($raw);
+        $out = PlanningPayload::actividadesMap($raw);
 
         $this->assertSame([
             0 => ['p#1#Primero#Centro Unico' => []],

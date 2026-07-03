@@ -1,4 +1,9 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPermSupport;
+use frontend\casas\helpers\CasasPayload;
+use frontend\shared\helpers\ListNavSupport;
+
 /**
  * Pantalla `calendario_ubi_resumen`: estudio económico y de ocupación
  * de una casa.
@@ -22,13 +27,10 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
 
-require_once __DIR__ . '/../helpers/casas_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $QG = (int)filter_input(INPUT_POST, 'G');
@@ -36,7 +38,7 @@ $Qinc_t = (int)filter_input(INPUT_POST, 'inc_t');
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 
 $filtro = ['active' => '1'];
-if (!actividades_have_perm_oficina('des') && !actividades_have_perm_oficina('vcsd')) {
+if (!ActividadesPermSupport::havePermOficina('des') && !ActividadesPermSupport::havePermOficina('vcsd')) {
     $miSfsv = OrbixRuntime::miSfsv();
     if ($miSfsv === 1) {
         $filtro['sv'] = '1';
@@ -44,12 +46,12 @@ if (!actividades_have_perm_oficina('des') && !actividades_have_perm_oficina('vcs
         $filtro['sf'] = '1';
     }
 }
-$dataCasas = casas_post_data(PostRequest::getDataFromUrl('/src/ubis/casas_opciones_data', $filtro));
-$aCasas = casas_calendario_casas_opciones($dataCasas)['opciones'];
+$dataCasas = CasasPayload::postData(PostRequest::getDataFromUrl('/src/ubis/casas_opciones_data', $filtro));
+$aCasas = CasasPayload::calendarioCasasOpciones($dataCasas)['opciones'];
 $oDesplCasas = new Desplegable();
 $oDesplCasas->setNombre('id_ubi');
 $oDesplCasas->setOpciones($aCasas);
-$oDesplCasas->setOpcion_sel(casas_desplegable_opcion_sel($Qid_ubi));
+$oDesplCasas->setOpcion_sel(CasasPayload::desplegableOpcionSel($Qid_ubi));
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 

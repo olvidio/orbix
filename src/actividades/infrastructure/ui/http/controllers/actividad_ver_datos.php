@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FilterPostGet;
+
 /**
  * Endpoint backend: devuelve los fragmentos HTML y valores auxiliares que
  * necesita el formulario "ver/editar actividad" para renderizarse sin que
@@ -11,18 +14,18 @@ use src\actividades\application\ActividadVerDatos;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_activ = (int)filter_post('id_activ');
-$Qisfsv = (int)filter_post('isfsv');
-$Qdl_org = (string)filter_post('dl_org');
-$QBdl = (string)filter_post('Bdl');
-$Qtarifa = filter_post('tarifa');
-$Qnivel_stgr = filter_post('nivel_stgr');
-$Qidioma = (string)filter_post('idioma');
-$Qid_repeticion = (int)filter_post('id_repeticion');
-$Qid_ubi = (int)filter_post('id_ubi');
-$Qlugar_esp = (string)filter_post('lugar_esp');
-$Qid_tipo_activ = (string)filter_post('id_tipo_activ');
-$QcalcTarifa = (int)filter_post('calc_tarifa_inicial');
+$Qid_activ = (int)FilterPostGet::post('id_activ');
+$Qisfsv = (int)FilterPostGet::post('isfsv');
+$Qdl_org = (string)FilterPostGet::post('dl_org');
+$QBdl = (string)FilterPostGet::post('Bdl');
+$Qtarifa = FilterPostGet::post('tarifa');
+$Qnivel_stgr = FilterPostGet::post('nivel_stgr');
+$Qidioma = (string)FilterPostGet::post('idioma');
+$Qid_repeticion = (int)FilterPostGet::post('id_repeticion');
+$Qid_ubi = (int)FilterPostGet::post('id_ubi');
+$Qlugar_esp = (string)FilterPostGet::post('lugar_esp');
+$Qid_tipo_activ = (string)FilterPostGet::post('id_tipo_activ');
+$QcalcTarifa = (int)FilterPostGet::post('calc_tarifa_inicial');
 
 /** @var ActividadVerDatos $useCase */
 $useCase = DependencyResolver::get(ActividadVerDatos::class);

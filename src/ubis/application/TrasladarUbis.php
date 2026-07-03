@@ -2,11 +2,10 @@
 
 namespace src\ubis\application;
 
-use function src\shared\domain\helpers\input_string;
-
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\TrasladoUbiRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 final class TrasladarUbis
 {
@@ -20,7 +19,7 @@ final class TrasladarUbis
      */
     public function execute(array $input): string
     {
-        $dl_dst = input_string($input, 'dl_dst');
+        $dl_dst = FuncTablasSupport::inputString($input, 'dl_dst');
         $a_sel = $input['sel'] ?? [];
         if (!is_array($a_sel)) {
             $a_sel = [];

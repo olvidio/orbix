@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\misas\support;
 
+use frontend\shared\helpers\FuncTablasSupport;
 use frontend\shared\web\PeriodoQue;
-use function frontend\shared\helpers\strtoupper_dlb;
 
 /**
  * Helper para construir el `<td>` HTML del desplegable "Período" usado en las
@@ -26,7 +26,7 @@ class PeriodoTdHelper
     {
         $oFormP = new PeriodoQue();
         $oFormP->setFormName('frm_nuevo_periodo');
-        $oFormP->setTitulo(strtoupper_dlb(_('seleccionar un periodo')));
+        $oFormP->setTitulo(FuncTablasSupport::strtoupperDlb(_('seleccionar un periodo')));
         $oFormP->setPosiblesPeriodos($opciones);
         $oFormP->setDesplPeriodosOpcion_sel($selected);
         $oFormP->setisDesplAnysVisible(false);

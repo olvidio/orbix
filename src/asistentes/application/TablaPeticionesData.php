@@ -2,9 +2,6 @@
 
 namespace src\asistentes\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -16,7 +13,7 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\config\ConfigGlobal;
-use function src\shared\domain\helpers\curso_est;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Tabla de peticiones de plaza por actividad (`tabla_peticiones.php`).
@@ -50,7 +47,7 @@ final class TablaPeticionesData
             $nomPart = strtok('#');
             $nom_activ = is_string($nomPart) ? $nomPart : '';
         } else {
-            $id_activ_old = input_int($input, 'id_activ_old', 0);
+            $id_activ_old = FuncTablasSupport::inputInt($input, 'id_activ_old', 0);
             $oActividad = $this->actividadAllRepository->findById($id_activ_old);
             $nom_activ = $oActividad !== null ? $oActividad->getNom_activ() : '';
         }
@@ -227,14 +224,14 @@ final class TablaPeticionesData
             case 'cv':
                 $any = $oConfig->any_final_curs('est');
                 return [
-                    curso_est('inicio', $any, 'est')->format('Y-m-d'),
-                    curso_est('fin', $any, 'est')->format('Y-m-d'),
+                    FuncTablasSupport::cursoEst('inicio', $any, 'est')->format('Y-m-d'),
+                    FuncTablasSupport::cursoEst('fin', $any, 'est')->format('Y-m-d'),
                 ];
             case 'crt':
                 $any = $oConfig->any_final_curs('crt');
                 return [
-                    curso_est('inicio', $any, 'crt')->format('Y-m-d'),
-                    curso_est('fin', $any, 'crt')->format('Y-m-d'),
+                    FuncTablasSupport::cursoEst('inicio', $any, 'crt')->format('Y-m-d'),
+                    FuncTablasSupport::cursoEst('fin', $any, 'crt')->format('Y-m-d'),
                 ];
             default:
                 return null;

@@ -2,14 +2,11 @@
 
 namespace src\asistentes\application;
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_string_list;
-
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asistentes\application\services\AsistenteApplicationService;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Elimina un `Asistente` y las `Matricula`s asociadas, cerrando tambien el dossier 1301.
@@ -30,8 +27,8 @@ final class AsistenteEliminar
      */
     public function execute(array $input): string
     {
-        $Qpau = input_string($input, 'pau');
-        $a_sel = input_string_list($input, 'sel');
+        $Qpau = FuncTablasSupport::inputString($input, 'pau');
+        $a_sel = FuncTablasSupport::inputStringList($input, 'sel');
 
         $id_activ = 0;
         $id_nom = 0;
@@ -39,14 +36,14 @@ final class AsistenteEliminar
             $selKey = $a_sel[0];
             if ($Qpau === 'p') {
                 $id_activ = (int) strtok($selKey, '#');
-                $id_nom = input_int($input, 'id_pau');
+                $id_nom = FuncTablasSupport::inputInt($input, 'id_pau');
             } elseif ($Qpau === 'a') {
                 $id_nom = (int) strtok($selKey, '#');
-                $id_activ = input_int($input, 'id_pau');
+                $id_activ = FuncTablasSupport::inputInt($input, 'id_pau');
             }
         } else {
-            $id_activ = input_int($input, 'id_activ');
-            $id_nom = input_int($input, 'id_nom');
+            $id_activ = FuncTablasSupport::inputInt($input, 'id_activ');
+            $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
         }
 
         if ($id_activ === 0 || $id_nom === 0) {

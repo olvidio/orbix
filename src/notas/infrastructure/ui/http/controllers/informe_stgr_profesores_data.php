@@ -3,13 +3,14 @@
 use src\notas\application\InformeStgrProfesores;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\shared\domain\helpers\FilterPostGet;
 
 
 $error = '';
 $data = [];
 
 try {
-    $Qlista = (string)filter_post('lista');
+    $Qlista = (string)FilterPostGet::post('lista');
     $lista = !empty($Qlista);
 
     /** @var InformeStgrProfesores $informe */

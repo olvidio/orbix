@@ -5,9 +5,9 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\inventario\helpers\InventarioPayload;
 
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../helpers/inventario_support.php';
 FrontBootstrap::boot();
 
 $f_ini_iso = date('Y-m-d');
@@ -15,8 +15,8 @@ $f_ini_iso = date('Y-m-d');
 $url_backend = '/src/inventario/lista_equipajes_desde_fecha';
 $a_campos_backend = ['f_ini_iso' => $f_ini_iso];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$payload = inventario_post_payload($data);
-$a_opciones = inventario_desplegable_opciones($payload['a_opciones'] ?? []);
+$payload = InventarioPayload::postPayload($data);
+$a_opciones = InventarioPayload::desplegableOpciones($payload['a_opciones'] ?? []);
 
 $e = 0;
 $a_valores = [];

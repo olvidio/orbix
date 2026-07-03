@@ -16,8 +16,7 @@ use src\permisos\domain\PermisosActividades;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\actividades\domain\entity\TiposActividades;
-use function src\shared\domain\helpers\curso_est;
-
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Clase que adapta la tabla a_actividades_all a la interfaz del repositorio
@@ -308,7 +307,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             ? (int) $oConfig->any_final_curs('est')
             : (int) date('Y');
         $any = $any_final - 2;
-        $inicurs = curso_est("inicio", $any, "est")->format('Y-m-d');
+        $inicurs = FuncTablasSupport::cursoEst("inicio", $any, "est")->format('Y-m-d');
         $scondicion = "AND f_ini > '$inicurs'";
         $sQuery = "SELECT id_activ, nom_activ
 		   FROM $nom_tabla

@@ -27,7 +27,7 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\value_objects\DelegacionCode;
-use function src\shared\domain\helpers\strtoupper_dlb;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 class PersonaGlobal
 {
@@ -730,7 +730,7 @@ class PersonaGlobal
         $apellidos = trim($apellidos);
 
         $apellidos = empty($apellidos) ? '????' : $apellidos;
-        $ap_nom = strtoupper_dlb($apellidos);
+        $ap_nom = FuncTablasSupport::strtoupperDlb($apellidos);
         $ap_nom .= ', ';
         $ap_nom .= !empty($this->trato) ? $this->trato . ' ' : '';
         $ap_nom .= $this->nom;

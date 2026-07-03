@@ -1,5 +1,7 @@
 <?php
 
+use frontend\notas\helpers\TesseraImprimirPayload;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
@@ -16,8 +18,6 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
  *
  */
 //$_POST['h'] = empty($_GET['h'])? '' : $_GET['h'];
-
-require_once __DIR__ . '/../helpers/tessera_imprimir_support.php';
 
 function tessera_mpdf_titulo(int $id_asignatura): void
 {
@@ -149,7 +149,7 @@ function tessera_mpdf_titulo(int $id_asignatura): void
 
 function tessera_mpdf_data(string $fechaRaw): void
 {
-    echo tessera_imprimir_fecha_local($fechaRaw);
+    echo TesseraImprimirPayload::fechaLocal($fechaRaw);
 }
 
 /**
@@ -159,14 +159,14 @@ require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 $idNomRaw = filter_input(INPUT_GET, 'id_nom', FILTER_VALIDATE_INT);
 $id_nom = is_int($idNomRaw) ? $idNomRaw : 0;
-$id_tabla = tessera_imprimir_string(filter_input(INPUT_GET, 'id_tabla'));
+$id_tabla = PayloadCoercion::string(filter_input(INPUT_GET, 'id_tabla'));
 
 $payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
     'id_nom' => $id_nom,
 ]);
-$nom = tessera_imprimir_string($payload['nom'] ?? '');
-$cAsignaturas = tessera_imprimir_asignaturas_from_payload($payload);
-$aAprobadas = tessera_imprimir_aprobadas_from_payload($payload);
+$nom = PayloadCoercion::string($payload['nom'] ?? '');
+$cAsignaturas = TesseraImprimirPayload::asignaturasFromPayload($payload);
+$aAprobadas = TesseraImprimirPayload::aprobadasFromPayload($payload);
 /* Ahora no hace falta que sea en latín
 $nom_vernacula = $oPersona->getNom();
 $apellidos = $oPersona->getApellidos();
@@ -184,7 +184,7 @@ $region_latin = $oConfig instanceof ConfigSnapshot ? $oConfig->getNomRegionLatin
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 
 // -----------------------------
-$rowEmpty = tessera_imprimir_empty_row();
+$rowEmpty = TesseraImprimirPayload::emptyRow();
 // -----------------------------  cabecera ---------------------------------
 ?>
         <head>
@@ -209,7 +209,7 @@ $rowEmpty = tessera_imprimir_empty_row();
                 $a = 0;
                 $j = 0;
                 reset($aAprobadas);
-                $row = tessera_imprimir_current_aprobada_row($aAprobadas, $rowEmpty);
+                $row = TesseraImprimirPayload::currentAprobadaRow($aAprobadas, $rowEmpty);
                 while ($a < count($cAsignaturas)) {
                     $oAsignatura = $cAsignaturas[$a++];
                     while (($row['id_nivel_asig'] < $oAsignatura['id_nivel']) && ($j < $num_asig)) {
@@ -221,7 +221,7 @@ $rowEmpty = tessera_imprimir_empty_row();
                             $row = $rowEmpty;
                             break;
                         }
-                        $row = tessera_imprimir_current_aprobada_row($aAprobadas, $rowEmpty);
+                        $row = TesseraImprimirPayload::currentAprobadaRow($aAprobadas, $rowEmpty);
                         $j++;
                     }
                     while (($oAsignatura['id_nivel'] < $row['id_nivel_asig']) && ($row['id_nivel'] < 2434)) {

@@ -12,8 +12,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use frontend\shared\web\Periodo;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Data builder para la pantalla "comunicacion de actividades a los sacd".
@@ -107,14 +106,14 @@ final class ComunicacionActividadesSacdData
      */
     public function resolverContexto(array $input): array
     {
-        $que = input_string($input, 'que');
-        $id_nom = input_int($input, 'id_nom');
-        $propuesta = input_string($input, 'propuesta');
+        $que = FuncTablasSupport::inputString($input, 'que');
+        $id_nom = FuncTablasSupport::inputInt($input, 'id_nom');
+        $propuesta = FuncTablasSupport::inputString($input, 'propuesta');
 
-        $periodo = input_string($input, 'periodo');
-        $year = input_string($input, 'year');
-        $empiezamin = input_string($input, 'empiezamin');
-        $empiezamax = input_string($input, 'empiezamax');
+        $periodo = FuncTablasSupport::inputString($input, 'periodo');
+        $year = FuncTablasSupport::inputString($input, 'year');
+        $empiezamin = FuncTablasSupport::inputString($input, 'empiezamin');
+        $empiezamax = FuncTablasSupport::inputString($input, 'empiezamax');
 
         $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         if ($oMiUsuario !== null) {

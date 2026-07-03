@@ -1,5 +1,7 @@
 <?php
 
+use frontend\notas\helpers\ActaImprimirPayload;
+use frontend\notas\helpers\ActaImprimirPostInput;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
@@ -16,14 +18,13 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 *
 */
 
-require_once __DIR__ . '/../helpers/acta_imprimir_support.php';
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 include_once(OrbixRuntime::dirEstilos() . '/actas_mpdf.css.php');
 
-$acta = acta_imprimir_acta_from_request();
+$acta = ActaImprimirPostInput::actaFromRequest();
 
 $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 $oConfig = $_SESSION['oConfig'] ?? null;
@@ -35,7 +36,7 @@ $payload = PostRequest::getDataFromUrl('/src/notas/acta_imprimir_presentacion_da
     'acta' => $acta,
     'mode' => 'mpdf',
 ]);
-$presentacion = acta_imprimir_presentacion_from_payload($payload);
+$presentacion = ActaImprimirPayload::presentacionFromPayload($payload);
 $aPersonasNotas = $presentacion['aPersonasNotas'];
 $num_alumnos = $presentacion['num_alumnos'];
 $lin_tribunal = $presentacion['lin_tribunal'];

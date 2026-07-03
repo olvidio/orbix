@@ -11,9 +11,7 @@ use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaPub;
 use src\shared\config\ConfigGlobal;
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Listado de asistentes a una actividad (`lista_asistentes.php`).
@@ -43,12 +41,12 @@ final readonly class ListaAsistentesData
             $nomPart = strtok('#');
             $nom_activ = is_string($nomPart) ? $nomPart : '';
         } else {
-            $id_pau = input_int($input, 'id_pau', 0);
+            $id_pau = FuncTablasSupport::inputInt($input, 'id_pau', 0);
             $oActividad = $this->actividadAllRepository->findById($id_pau);
             $nom_activ = $oActividad !== null ? $oActividad->getNom_activ() : '';
         }
 
-        $queSel = input_string($input, 'queSel');
+        $queSel = FuncTablasSupport::inputString($input, 'queSel');
 
         $c = 0;
         $num = 0;
@@ -105,13 +103,13 @@ final readonly class ListaAsistentesData
                     $est_ok = $cAsistente[0]->isEst_ok();
                     $observ = $cAsistente[0]->getObserv();
 
-                    if (is_true($propio)) {
+                    if (FuncTablasSupport::isTrue($propio)) {
                         $chk_propio = _('sí');
                     } else {
                         $chk_propio = _('no');
                     }
-                    is_true($falta) ? $chk_falta = _('sí') : $chk_falta = _('no');
-                    is_true($est_ok) ? $chk_est_ok = _('sí') : $chk_est_ok = _('no');
+                    FuncTablasSupport::isTrue($falta) ? $chk_falta = _('sí') : $chk_falta = _('no');
+                    FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = _('sí') : $chk_est_ok = _('no');
                     $asis = 't';
                     $a_valores[$c][3] = $chk_propio;
                     $a_valores[$c][4] = $chk_est_ok;
@@ -160,13 +158,13 @@ final readonly class ListaAsistentesData
                     continue;
                 }
             }
-            if (is_true($propio)) {
+            if (FuncTablasSupport::isTrue($propio)) {
                 $chk_propio = _('sí');
             } else {
                 $chk_propio = _('no');
             }
-            is_true($falta) ? $chk_falta = _('sí') : $chk_falta = _('no');
-            is_true($est_ok) ? $chk_est_ok = _('sí') : $chk_est_ok = _('no');
+            FuncTablasSupport::isTrue($falta) ? $chk_falta = _('sí') : $chk_falta = _('no');
+            FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = _('sí') : $chk_est_ok = _('no');
 
             $a_val[2] = "$nom  ($ctr_dl)";
             $a_val[3] = $chk_propio;

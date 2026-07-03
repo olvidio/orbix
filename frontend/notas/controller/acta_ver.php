@@ -1,5 +1,10 @@
 <?php
 
+use frontend\notas\helpers\NotasPayload;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
+
 /**
  * Esta página muestra un formulario para modificar los datos de un acta.
  *
@@ -19,14 +24,10 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\helpers\SignedDownloadToken;
-use function frontend\shared\helpers\urlsafe_b64encode;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\web\Posicion;
 
 $isIncluded = isset($oPosicion) && $oPosicion instanceof Posicion;
-
-require_once __DIR__ . '/../helpers/notas_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 
 if (isset($oPosicion) && $oPosicion instanceof Posicion) {
     // Incluido desde otro controlador con posición válida.
@@ -57,14 +58,14 @@ $requestPayload = PostRequest::requestPayloadForHash();
 $a_sel = isset($requestPayload['sel']) && is_array($requestPayload['sel'])
     ? $requestPayload['sel']
     : [];
-$Qmod = tessera_imprimir_string($requestPayload['mod'] ?? '');
-$Qsa_actas = tessera_imprimir_string($requestPayload['sa_actas'] ?? '');
-$Qacta = tessera_imprimir_string($requestPayload['acta'] ?? '');
-$Qnotas = tessera_imprimir_string($requestPayload['notas'] ?? '');
+$Qmod = PayloadCoercion::string($requestPayload['mod'] ?? '');
+$Qsa_actas = PayloadCoercion::string($requestPayload['sa_actas'] ?? '');
+$Qacta = PayloadCoercion::string($requestPayload['acta'] ?? '');
+$Qnotas = PayloadCoercion::string($requestPayload['notas'] ?? '');
 
 if (!$isIncluded && $notas === '' && $Qnotas === '') {
     $oPosicion->recordar();
-    list_nav_persist_selection_to_posicion($oPosicion, 1);
+    ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 }
 
 $payload = $requestPayload;
@@ -77,11 +78,11 @@ if (isset($id_activ)) {
     $payload['id_activ_scope'] = $id_activ;
 }
 if (isset($id_asignatura)) {
-    $payload['id_asignatura_scope'] = tessera_imprimir_string($id_asignatura);
+    $payload['id_asignatura_scope'] = PayloadCoercion::string($id_asignatura);
 }
 
 $d = PostRequest::getDataFromUrl('/src/notas/acta_ver_form_data', $payload);
-$form = notas_acta_ver_form_from_payload($d);
+$form = NotasPayload::actaVerFormFromPayload($d);
 
 $notas = $form['notas'] !== '' ? $form['notas'] : $notas;
 $permiso = $form['permiso'];
@@ -130,7 +131,7 @@ if ($Qmod === 'nueva' || $notas === 'nuevo') {
 } else {
     $a_camposHidden['mod'] = '';
     $a_camposHidden['id_activ'] = $id_activ;
-    $a_camposHidden['sa_actas'] = urlsafe_b64encode(json_encode($a_actas, JSON_THROW_ON_ERROR));
+    $a_camposHidden['sa_actas'] = FuncTablasSupport::urlsafeB64encode(json_encode($a_actas, JSON_THROW_ON_ERROR));
     $a_camposHidden['notas'] = $notas;
 }
 $oHashActa->setArrayCamposHidden($a_camposHidden);

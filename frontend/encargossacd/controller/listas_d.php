@@ -1,7 +1,9 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
+use frontend\encargossacd\helpers\EncargossacdPostInput;
 
 /**
  * Listado SACD "d" (cr 9/20, 10).
@@ -12,13 +14,12 @@ use frontend\shared\FrontBootstrap;
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
-require_once __DIR__ . '/../helpers/encargossacd_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qsf = encargossacd_post_int('sf');
+$Qsf = EncargossacdPostInput::postInt('sf');
 
 $datos = PostRequest::getDataFromUrl('/src/encargossacd/listas_d_data', ['sf' => $Qsf]);
 
-echo tessera_imprimir_string($datos['Html'] ?? '');
+echo PayloadCoercion::string($datos['Html'] ?? '');

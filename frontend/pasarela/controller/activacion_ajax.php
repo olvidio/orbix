@@ -1,15 +1,17 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\actividades\helpers\ActividadTipo;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\FrontBootstrap;
+use frontend\pasarela\helpers\PasarelaPayload;
+use frontend\pasarela\helpers\PasarelaExcepcionRender;
 
-require_once __DIR__ . '/../helpers/pasarela_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 $oPosicion = FrontBootstrap::boot();
 /**
@@ -35,29 +37,29 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 switch ($Qque) {
     case 'eliminar':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-        ajax_json_proxy_post_request('/src/pasarela/activacion_excepcion_eliminar', [
+        AjaxJsonSupport::proxyPostRequest('/src/pasarela/activacion_excepcion_eliminar', [
             'id_tipo_activ' => $Qid_tipo_activ,
         ]);
     case 'update':
     case 'nuevo':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qactivacion = (string)filter_input(INPUT_POST, 'activacion');
-        ajax_json_proxy_post_request('/src/pasarela/activacion_excepcion_guardar', [
+        AjaxJsonSupport::proxyPostRequest('/src/pasarela/activacion_excepcion_guardar', [
             'id_tipo_activ' => $Qid_tipo_activ,
             'valor' => $Qactivacion,
         ]);
     case 'update_default':
         $Qdefault = (string)filter_input(INPUT_POST, 'default');
-        ajax_json_proxy_post_request('/src/pasarela/activacion_default_guardar', [
+        AjaxJsonSupport::proxyPostRequest('/src/pasarela/activacion_default_guardar', [
             'default' => $Qdefault,
         ]);
     case 'lista':
         $data = PostRequest::getDataFromUrl('/src/pasarela/activacion_lista');
-        $lista = pasarela_excepcion_lista_con_default_from_payload($data);
-        ajax_json_html(pasarela_render_excepcion_lista_con_default_html($lista, 'fnjs_modificar_activacion_default()', 'fnjs_modificar_activacion'));
+        $lista = PasarelaPayload::excepcionListaConDefaultFromPayload($data);
+        AjaxJsonSupport::html(PasarelaExcepcionRender::listaConDefaultHtml($lista, 'fnjs_modificar_activacion_default()', 'fnjs_modificar_activacion'));
     case 'form_default':
         $data = PostRequest::getDataFromUrl('/src/pasarela/activacion_default_data');
-        $default = tessera_imprimir_string($data['default'] ?? '');
+        $default = PayloadCoercion::string($data['default'] ?? '');
 
         $oHash = new HashFront();
         $oHash->setUrl($url_ajax);
@@ -73,7 +75,7 @@ switch ($Qque) {
         $oView = new ViewNewTwig('frontend\\pasarela\\controller');
         ob_start();
         $oView->renderizar('activacion_default_form.html.twig', $a_campos);
-        ajax_json_html((string) ob_get_clean());
+        AjaxJsonSupport::html((string) ob_get_clean());
     case 'form_modificar':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qactivacion = (string)filter_input(INPUT_POST, 'activacion');
@@ -81,7 +83,7 @@ switch ($Qque) {
         $data = PostRequest::getDataFromUrl('/src/pasarela/tipo_activ_txt_data', [
             'id_tipo_activ' => $Qid_tipo_activ,
         ]);
-        $tipo_txt = pasarela_tipo_txt_from_payload($data);
+        $tipo_txt = PasarelaPayload::tipoTxtFromPayload($data);
 
         $oHash = new HashFront();
         $oHash->setUrl($url_ajax);
@@ -104,7 +106,7 @@ switch ($Qque) {
         $oView = new ViewNewTwig('frontend\\pasarela\\controller');
         ob_start();
         $oView->renderizar('activacion_form.html.twig', $a_campos);
-        ajax_json_html((string) ob_get_clean());
+        AjaxJsonSupport::html((string) ob_get_clean());
     case 'form_nuevo':
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
@@ -137,5 +139,5 @@ switch ($Qque) {
         $oView = new ViewNewTwig('frontend/pasarela/controller');
         ob_start();
         $oView->renderizar('activacion_form_nuevo.html.twig', $a_campos);
-        ajax_json_html((string) ob_get_clean());
+        AjaxJsonSupport::html((string) ob_get_clean());
 }

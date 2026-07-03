@@ -2,8 +2,7 @@
 
 namespace src\personas\application\support;
 
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Extrae id_nom e id_tabla del POST típico de listados (campo sel o campos sueltos).
@@ -34,8 +33,8 @@ final class PersonaSeleccionInput
         }
 
         return [
-            'id_nom' => input_int($input, 'id_nom'),
-            'id_tabla' => input_string($input, 'id_tabla'),
+            'id_nom' => FuncTablasSupport::inputInt($input, 'id_nom'),
+            'id_tabla' => FuncTablasSupport::inputString($input, 'id_tabla'),
         ];
     }
 

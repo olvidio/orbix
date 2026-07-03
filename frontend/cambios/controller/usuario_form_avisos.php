@@ -1,32 +1,31 @@
 <?php
+use frontend\cambios\helpers\CambiosPayload;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
 
-require_once __DIR__ . '/../helpers/cambios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 
-$stackFromPost = list_nav_stack_from_post();
+$stackFromPost = ListNavSupport::stackFromPost();
 if ($stackFromPost !== 0) {
-    list_nav_boot_list_page_after_stack_return($oPosicion, $stackFromPost);
+    ListNavSupport::bootListPageAfterStackReturn($oPosicion, $stackFromPost);
 } else {
-    list_nav_boot_recordar($oPosicion, $Qrefresh);
+    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
 }
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $url_backend = '/src/cambios/usuario_form_avisos_data';
 $a_campos_backend = ['id_usuario' => $Qid_usuario, 'quien' => $Qquien];
-$view = cambios_usuario_form_avisos_from_payload(cambios_post_data(PostRequest::getDataFromUrl($url_backend, $a_campos_backend)));
+$view = CambiosPayload::usuarioFormAvisosFromPayload(CambiosPayload::postData(PostRequest::getDataFromUrl($url_backend, $a_campos_backend)));
 
 $a_cabeceras_avisos = [
     _("objeto"),

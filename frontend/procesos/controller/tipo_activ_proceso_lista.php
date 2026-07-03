@@ -1,23 +1,24 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
+use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
+use frontend\procesos\helpers\ProcesosPayload;
 
-require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/ajax_json_support.php';
 
 FrontBootstrap::boot();
 
 $data = PostRequest::getDataFromUrl('/src/procesos/tipo_activ_proceso_lista', []);
-$a_cabeceras = actividades_lista_cabeceras($data['a_cabeceras'] ?? null);
+$a_cabeceras = ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? null);
 $a_tipos = is_array($data['a_tipos'] ?? null) ? $data['a_tipos'] : [];
 
 $a_valores = [];
 $i = 0;
 foreach ($a_tipos as $fila) {
-    $row = procesos_tipo_activ_row($fila);
+    $row = ProcesosPayload::tipoActivRow($fila);
     $i++;
     $id_tipo_activ = $row['id_tipo_activ'];
     $a_valores[$i][1] = $id_tipo_activ;
@@ -35,4 +36,4 @@ foreach ($a_tipos as $fila) {
 $oLista = new Lista();
 $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_valores);
-ajax_json_html($oLista->lista());
+AjaxJsonSupport::html($oLista->lista());

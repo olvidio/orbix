@@ -13,7 +13,7 @@ use src\procesos\domain\entity\ActividadFase;
 use src\procesos\domain\entity\ActividadProcesoTarea;
 use src\permisos\domain\XPermisos;
 use src\procesos\domain\value_objects\FaseId;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Servicio de aplicación para gestionar los procesos de actividades
@@ -114,7 +114,7 @@ class ProcesoActividadService
             $this->abort(_("No tiene permiso para marcar o desmarcar esta fase"));
         }
         $this->cargarFases($id_activ, $id_tipo_proceso);
-        if (is_true($completado)) {
+        if (FuncTablasSupport::isTrue($completado)) {
             $statusProceso = $oTareaProceso->getStatusVo()->value();
             $this->marcar($id_activ, $id_tipo_proceso, $fase_tarea);
         } else {
@@ -385,7 +385,7 @@ class ProcesoActividadService
             $completado = false;
             if (array_key_exists($fase_tarea_anterior, $this->aFasesEstado)) {
                 $completado = $this->aFasesEstado[$fase_tarea_anterior];
-                if (is_true($completado)) {
+                if (FuncTablasSupport::isTrue($completado)) {
                     // Si es forzado, solo me aseguro de tener permiso.
                     if ($this->bForce) {
                         if ($this->tiene_permiso($id_tipo_proceso, $fase_tarea_anterior)) {

@@ -3,6 +3,8 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\FrontBootstrap;
+use frontend\dossiers\helpers\DossiersListaSupport;
+use frontend\dossiers\helpers\DossiersPayload;
 
 /**
  * Página de selección de los dossiers cuyos permisos deseo visualizar
@@ -11,7 +13,6 @@ use frontend\shared\FrontBootstrap;
  */
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once 'frontend/dossiers/helpers/dossiers_support.php';
 FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -19,7 +20,7 @@ $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $data = PostRequest::getDataFromUrl('/src/dossiers/perm_dossiers_data', [
     'tipo' => $Qtipo,
 ]);
-$viewData = dossiers_view_variables($data);
-$viewData['a_filas'] = dossiers_sign_lista_filas($data['a_filas'] ?? [], ['pagina']);
+$viewData = DossiersPayload::viewVariables($data);
+$viewData['a_filas'] = DossiersListaSupport::signFilas($data['a_filas'] ?? [], ['pagina']);
 $oView = new ViewNewPhtml('frontend\\dossiers\\controller');
 $oView->renderizar('perm_dossiers.phtml', $viewData);

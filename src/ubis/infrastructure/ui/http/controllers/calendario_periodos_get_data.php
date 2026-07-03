@@ -3,9 +3,8 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\CalendarioPeriodosGetData;
 use src\shared\web\ContestarJson;
-
-use function src\shared\domain\helpers\input_int;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 ContestarJson::enviar('', DependencyResolver::get(CalendarioPeriodosGetData::class)->execute(
-    input_int($_POST, 'id_ubi')
+    FuncTablasSupport::inputInt($_POST, 'id_ubi')
 ));

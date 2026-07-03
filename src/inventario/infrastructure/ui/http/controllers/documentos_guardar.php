@@ -1,27 +1,24 @@
 <?php
 
-use function src\shared\domain\helpers\input_int;
-use function src\shared\domain\helpers\input_string;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\is_true;
-
-$Qdocumentos = input_string($_POST, 'documentos');
-$Qchk_f_recibido = input_string($_POST, 'chk_f_recibido');
-$Qf_recibido = input_string($_POST, 'f_recibido');
-$Qchk_f_asignado = input_string($_POST, 'chk_f_asignado');
-$Qf_asignado = input_string($_POST, 'f_asignado');
-$Qchk_eliminado = input_string($_POST, 'chk_eliminado');
-$Qeliminado = input_int($_POST, 'eliminado');
-$Qchk_f_eliminado = input_string($_POST, 'chk_f_eliminado');
-$Qf_eliminado = input_string($_POST, 'f_eliminado');
-$Qchk_num_ini = input_string($_POST, 'chk_num_ini');
-$Qnum_ini = input_string($_POST, 'num_ini');
-$Qchk_num_fin = input_string($_POST, 'chk_num_fin');
-$Qnum_fin = input_string($_POST, 'num_fin');
+$Qdocumentos = FuncTablasSupport::inputString($_POST, 'documentos');
+$Qchk_f_recibido = FuncTablasSupport::inputString($_POST, 'chk_f_recibido');
+$Qf_recibido = FuncTablasSupport::inputString($_POST, 'f_recibido');
+$Qchk_f_asignado = FuncTablasSupport::inputString($_POST, 'chk_f_asignado');
+$Qf_asignado = FuncTablasSupport::inputString($_POST, 'f_asignado');
+$Qchk_eliminado = FuncTablasSupport::inputString($_POST, 'chk_eliminado');
+$Qeliminado = FuncTablasSupport::inputInt($_POST, 'eliminado');
+$Qchk_f_eliminado = FuncTablasSupport::inputString($_POST, 'chk_f_eliminado');
+$Qf_eliminado = FuncTablasSupport::inputString($_POST, 'f_eliminado');
+$Qchk_num_ini = FuncTablasSupport::inputString($_POST, 'chk_num_ini');
+$Qnum_ini = FuncTablasSupport::inputString($_POST, 'num_ini');
+$Qchk_num_fin = FuncTablasSupport::inputString($_POST, 'chk_num_fin');
+$Qnum_fin = FuncTablasSupport::inputString($_POST, 'num_fin');
 
 $error_txt = '';
 
@@ -51,7 +48,7 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
             continue;
         }
 
-        if (is_true($Qchk_f_recibido)) {
+        if (FuncTablasSupport::isTrue($Qchk_f_recibido)) {
             if (empty($Qf_recibido)) {
                 $oF_recibido = null;
             } else {
@@ -60,7 +57,7 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
             }
             $oDocumento->setF_recibido($oF_recibido);
         }
-        if (is_true($Qchk_f_asignado)) {
+        if (FuncTablasSupport::isTrue($Qchk_f_asignado)) {
             if (empty($Qf_asignado)) {
                 $oF_asignado = null;
             } else {
@@ -69,14 +66,14 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
             }
             $oDocumento->setF_asignado($oF_asignado);
         }
-        if (is_true($Qchk_eliminado)) {
+        if (FuncTablasSupport::isTrue($Qchk_eliminado)) {
             if ($Qeliminado === 1) {
                 $oDocumento->setEliminado(TRUE);
             } else if ($Qeliminado === 2) {
                 $oDocumento->setEliminado(false);
             }
         }
-        if (is_true($Qchk_f_eliminado)) {
+        if (FuncTablasSupport::isTrue($Qchk_f_eliminado)) {
             if (empty($Qf_eliminado)) {
                 $oF_eliminado = null;
             } else {
@@ -85,10 +82,10 @@ $Repository = DependencyResolver::get(DocumentoRepositoryInterface::class);
             }
             $oDocumento->setF_eliminado($oF_eliminado);
         }
-        if (is_true($Qchk_num_ini)) {
+        if (FuncTablasSupport::isTrue($Qchk_num_ini)) {
             $oDocumento->setNum_ini($Qnum_ini !== '' && is_numeric($Qnum_ini) ? (int) $Qnum_ini : null);
         }
-        if (is_true($Qchk_num_fin)) {
+        if (FuncTablasSupport::isTrue($Qchk_num_fin)) {
             $oDocumento->setNum_fin($Qnum_fin !== '' && is_numeric($Qnum_fin) ? (int) $Qnum_fin : null);
         }
 

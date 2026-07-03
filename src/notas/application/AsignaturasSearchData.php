@@ -2,9 +2,8 @@
 
 namespace src\notas\application;
 
-use function src\shared\domain\helpers\input_string;
-
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Autocomplete de asignaturas por nombre. Devuelve el JSON (como
@@ -23,7 +22,7 @@ final class AsignaturasSearchData
      */
     public function execute(array $input): string
     {
-        $search = input_string($input, 'search');
+        $search = FuncTablasSupport::inputString($input, 'search');
         $repo = $this->asignaturaRepository;
         return (string)$repo->getJsonAsignaturas(['nombre_asignatura' => $search]);
     }

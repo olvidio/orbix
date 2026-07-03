@@ -17,8 +17,7 @@ use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaN;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
-use function src\shared\domain\helpers\curso_est;
-use function src\shared\domain\helpers\is_true;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Widget del dossier `1303` (codigo `matriculas_de_una_persona`):
@@ -108,7 +107,7 @@ class Select_matriculas_de_una_persona
         $htmlPrefix = '';
         $this->id_activ = $oAsistente->getId_activ();
         $propio = $oAsistente->isPropio();
-        if (!is_true($propio)) {
+        if (!FuncTablasSupport::isTrue($propio)) {
             $htmlPrefix .= _("no está como propio, no debería tener plan de estudios");
         }
 
@@ -140,7 +139,7 @@ class Select_matriculas_de_una_persona
         ]);
 
         $form = "seleccionados" . $ca_num;
-        if (is_true($est_ok)) {
+        if (FuncTablasSupport::isTrue($est_ok)) {
             $chk_1 = "checked";
             $chk_2 = "";
         } else {
@@ -156,7 +155,7 @@ class Select_matriculas_de_una_persona
             $id_asignatura = $oMatricula->getId_asignatura();
             $preceptor = $oMatricula->isPreceptor();
             $id_preceptor = $oMatricula->getId_preceptor();
-            if (is_true($preceptor)) {
+            if (FuncTablasSupport::isTrue($preceptor)) {
                 if (!empty($id_preceptor)) {
                     $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
                     if (!is_object($oPersona)) {
@@ -258,8 +257,8 @@ class Select_matriculas_de_una_persona
         } else {
             $any = date('Y');
         }
-        $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
-        $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
+        $inicurs_ca = FuncTablasSupport::cursoEst("inicio", $any)->format('Y-m-d');
+        $fincurs_ca = FuncTablasSupport::cursoEst("fin", $any)->format('Y-m-d');
 
         if ($this->id_pau < 0) {
             $oPersona = $this->personaExRepository->findById($this->id_pau);

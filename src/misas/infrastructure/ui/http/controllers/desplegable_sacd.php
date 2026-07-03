@@ -1,13 +1,14 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\helpers\FilterPostGet;
 
 use src\misas\application\DesplegableSacdData;
 use src\shared\web\ContestarJson;
 
-$Qid_zona = (int)filter_post('id_zona');
-$Qid_sacd = (int)filter_post('id_sacd');
-$Qseleccion = (int)filter_post('seleccion');
-$Qdia = (string)filter_post('dia');
+$Qid_zona = (int)FilterPostGet::post('id_zona');
+$Qid_sacd = (int)FilterPostGet::post('id_sacd');
+$Qseleccion = (int)FilterPostGet::post('seleccion');
+$Qdia = (string)FilterPostGet::post('dia');
 
 /** @var DesplegableSacdData $useCase */
 $useCase = DependencyResolver::get(DesplegableSacdData::class);

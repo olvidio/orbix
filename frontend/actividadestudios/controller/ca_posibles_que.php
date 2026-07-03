@@ -1,45 +1,48 @@
 <?php
 
+use frontend\actividadestudios\helpers\ActividadestudiosDesplegableSupport;
+use frontend\actividadestudios\helpers\CaPosiblesQuePayload;
+use frontend\actividadestudios\helpers\ActividadestudiosRenderSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\PostRequest;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
-use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
+use src\shared\domain\helpers\FuncTablasSupport;
 
-require_once __DIR__ . '/../helpers/actividadestudios_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 
-$restored = list_nav_restore_selection_from_stack_post();
+$restored = ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */
-$Qid_sel = !list_nav_id_sel_is_empty($restored['id_sel']) ? $restored['id_sel'] : list_nav_id_sel_from_post();
-$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : list_nav_scroll_id_from_post();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), $Qid_sel, $Qscroll_id));
+$Qid_sel = !ListNavSupport::idSelIsEmpty($restored['id_sel']) ? $restored['id_sel'] : ListNavSupport::idSelFromPost();
+$Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), $Qid_sel, $Qscroll_id));
 
 
 
-$Qna = tessera_imprimir_string(filter_input(INPUT_POST, 'na'));
-$Qid_ctr_n = tessera_imprimir_string(filter_input(INPUT_POST, 'id_ctr_n'));
-$Qid_ctr_agd = tessera_imprimir_string(filter_input(INPUT_POST, 'id_ctr_agd'));
-$Qiasistentes_val = tessera_imprimir_string(filter_input(INPUT_POST, 'iasistentes_val'));
-$Qiactividad_val = tessera_imprimir_string(filter_input(INPUT_POST, 'actividad_val'));
-$Qperiodo = tessera_imprimir_string(filter_input(INPUT_POST, 'periodo'));
-$Qyear = tessera_imprimir_string(filter_input(INPUT_POST, 'year'));
-$Qempiezamax = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamax'));
-$Qempiezamin = tessera_imprimir_string(filter_input(INPUT_POST, 'empiezamin'));
-$Qref = tessera_imprimir_string(filter_input(INPUT_POST, 'ref'));
-$Qgrupo_estudios = tessera_imprimir_string(filter_input(INPUT_POST, 'grupo_estudios'));
-$Qca_estudios = tessera_imprimir_string(filter_input(INPUT_POST, 'ca_estudios'));
-$Qca_repaso = tessera_imprimir_string(filter_input(INPUT_POST, 'ca_repaso'));
-$Qca_todos = tessera_imprimir_string(filter_input(INPUT_POST, 'ca_todos'));
+$Qna = PayloadCoercion::string(filter_input(INPUT_POST, 'na'));
+$Qid_ctr_n = PayloadCoercion::string(filter_input(INPUT_POST, 'id_ctr_n'));
+$Qid_ctr_agd = PayloadCoercion::string(filter_input(INPUT_POST, 'id_ctr_agd'));
+$Qiasistentes_val = PayloadCoercion::string(filter_input(INPUT_POST, 'iasistentes_val'));
+$Qiactividad_val = PayloadCoercion::string(filter_input(INPUT_POST, 'actividad_val'));
+$Qperiodo = PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
+$Qyear = PayloadCoercion::string(filter_input(INPUT_POST, 'year'));
+$Qempiezamax = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));
+$Qempiezamin = PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
+$Qref = PayloadCoercion::string(filter_input(INPUT_POST, 'ref'));
+$Qgrupo_estudios = PayloadCoercion::string(filter_input(INPUT_POST, 'grupo_estudios'));
+$Qca_estudios = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_estudios'));
+$Qca_repaso = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_repaso'));
+$Qca_todos = PayloadCoercion::string(filter_input(INPUT_POST, 'ca_todos'));
 
-$dq = actividadestudios_ca_posibles_que_from_payload(
-    actividadestudios_post_data(PostRequest::getDataFromUrl('/src/actividadestudios/ca_posibles_que_data', []))
+$dq = CaPosiblesQuePayload::fromPayload(
+    ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/ca_posibles_que_data', []))
 );
 $grupo_estudios = $dq['grupo_estudios'];
 $mi_grupo = $dq['mi_grupo'];
@@ -50,14 +53,14 @@ $oDesplCtrN = new Desplegable();
 $oDesplCtrN->setNombre('id_ctr_n');
 $oDesplCtrN->setOpciones($aCentrosNExt);
 $oDesplCtrN->setOpcion_sel($Qid_ctr_n);
-$oDesplCtrN->setBlanco(actividadestudios_desplegable_blanco(1));
+$oDesplCtrN->setBlanco(ActividadestudiosDesplegableSupport::blanco(1));
 $oDesplCtrN->setAction("fnjs_n_a('n')");
 
 $oDesplCtrAgd = new Desplegable();
 $oDesplCtrAgd->setNombre('id_ctr_agd');
 $oDesplCtrAgd->setOpciones($aCentrosAgdExt);
 $oDesplCtrAgd->setOpcion_sel($Qid_ctr_agd);
-$oDesplCtrAgd->setBlanco(actividadestudios_desplegable_blanco(1));
+$oDesplCtrAgd->setBlanco(ActividadestudiosDesplegableSupport::blanco(1));
 $oDesplCtrAgd->setAction("fnjs_n_a('agd')");
 
 $any = empty($Qyear) ? date('Y') : $Qyear;
@@ -75,7 +78,7 @@ $aOpciones = array(
 );
 $oFormP = new frontend\shared\web\PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(src\shared\domain\helpers\strtoupper_dlb(_("periodo de las actividades")));
+$oFormP->setTitulo(src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de las actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($any);
@@ -103,9 +106,9 @@ if (empty($stack) && empty($Qca_todos)) {
     $Qca_todos = TRUE;
 }
 
-$chk_estudios = is_true($Qca_estudios) ? 'checked' : '';
-$chk_repaso = is_true($Qca_repaso) ? 'checked' : '';
-$chk_ca_todos = is_true($Qca_todos) ? 'checked' : '';
+$chk_estudios = FuncTablasSupport::isTrue($Qca_estudios) ? 'checked' : '';
+$chk_repaso = FuncTablasSupport::isTrue($Qca_repaso) ? 'checked' : '';
+$chk_ca_todos = FuncTablasSupport::isTrue($Qca_todos) ? 'checked' : '';
 
 $a_campos = [
     'oPosicion' => $oPosicion,

@@ -1,32 +1,34 @@
 <?php
 
+use frontend\notas\helpers\NotasFormSupport;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
-use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
+use frontend\procesos\helpers\ProcesosPostInput;
+use frontend\procesos\helpers\ProcesosPayload;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
 
-require_once __DIR__ . '/../helpers/procesos_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
-
 $oPosicion = FrontBootstrap::boot();
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 
-$sel = procesos_sel_tokens_from_post();
+$sel = ProcesosPostInput::selTokensFromPost();
 $Qid_usuario = $sel['id_usuario'];
-$Qid_item = tessera_imprimir_string($sel['id_item']);
+$Qid_item = PayloadCoercion::string($sel['id_item']);
 $Qid_tipo_activ_txt = $sel['id_tipo_activ_txt'];
 $Qdl_propia = $sel['dl_propia'];
 
-$Qquien = procesos_post_string('quien');
-$Qque = procesos_post_string('que');
+$Qquien = ProcesosPostInput::postString('quien');
+$Qque = ProcesosPostInput::postString('que');
 
 $data = PostRequest::getDataFromUrl($apiBase . '/src/procesos/usuario_perm_activ_data', [
     'id_usuario' => $Qid_usuario,
@@ -34,12 +36,12 @@ $data = PostRequest::getDataFromUrl($apiBase . '/src/procesos/usuario_perm_activ
     'dl_propia' => $Qdl_propia,
 ]);
 
-$nombre = tessera_imprimir_string($data['nombre'] ?? '');
-$Qdl_propia = tessera_imprimir_string($data['dl_propia'] ?? 't');
-$tipo_actividad_html = tessera_imprimir_string($data['tipo_actividad_html'] ?? '');
-$a_fases = notas_desplegable_opciones($data['a_fases'] ?? []);
-$a_acciones = notas_desplegable_opciones($data['a_acciones'] ?? []);
-$aPermData = procesos_usuario_perm_rows($data['aPerm'] ?? null);
+$nombre = PayloadCoercion::string($data['nombre'] ?? '');
+$Qdl_propia = PayloadCoercion::string($data['dl_propia'] ?? 't');
+$tipo_actividad_html = PayloadCoercion::string($data['tipo_actividad_html'] ?? '');
+$a_fases = NotasFormSupport::desplegableOpciones($data['a_fases'] ?? []);
+$a_acciones = NotasFormSupport::desplegableOpciones($data['a_acciones'] ?? []);
+$aPermData = ProcesosPayload::usuarioPermRows($data['aPerm'] ?? null);
 
 $aPerm = [];
 foreach ($aPermData as $i => $fila) {
@@ -79,7 +81,7 @@ $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('dl_propia!id_tipo_activ');
 $h_actualizar = $oHash1->linkSinValParams();
 
-if (is_true($Qdl_propia)) {
+if (FuncTablasSupport::isTrue($Qdl_propia)) {
     $chk_propia = 'checked';
     $chk_otra = '';
 } else {

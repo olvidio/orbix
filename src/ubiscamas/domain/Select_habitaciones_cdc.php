@@ -5,8 +5,7 @@ namespace src\ubiscamas\domain;
 use src\shared\config\ConfigGlobal;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
-use function src\shared\domain\helpers\is_true_txt;
-use function src\shared\domain\helpers\poner_empty_on_null;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
  * Widget dossier 2006 (codigo habitaciones_cdc): habitaciones de un centro.
@@ -99,9 +98,9 @@ class Select_habitaciones_cdc
             $tipoLavabo = $oHabitacion->gettipoLavabo();
             $despacho = $oHabitacion->isDespacho();
 
-            $sillon_txt = is_true_txt($sillon);
-            $adaptada_txt = is_true_txt($adaptada);
-            $despacho_txt = is_true_txt($despacho);
+            $sillon_txt = FuncTablasSupport::isTrueTxt($sillon);
+            $adaptada_txt = FuncTablasSupport::isTrueTxt($adaptada);
+            $despacho_txt = FuncTablasSupport::isTrueTxt($despacho);
 
             $tipoLavabo_txt = $tiposLavabo[$tipoLavabo ?? 0] ?? '';
 
@@ -180,7 +179,7 @@ class Select_habitaciones_cdc
                     'obj_pau' => $obj_pau,
                     'id_pau' => $this->id_pau,
                 ];
-                array_walk($aQuery, poner_empty_on_null(...));
+                array_walk($aQuery, FuncTablasSupport::ponerEmptyOnNull(...));
                 $nom2 = sprintf(_("añadir %s"), $nom);
                 $this->a_links_dl_specs[] = [
                     'label' => $nom2,

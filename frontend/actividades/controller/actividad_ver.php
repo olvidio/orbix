@@ -1,4 +1,12 @@
 <?php
+
+use frontend\actividades\helpers\ActividadesPermSupport;
+use frontend\actividades\helpers\ActividadesPostInput;
+use frontend\actividades\helpers\ActividadesPayload;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
+
 /**
  * Formulario de ver/editar una actividad (tambien para crear nueva o cambiar tipo).
  * Renderiza actividad_form.html.twig (en frontend/actividades/view).
@@ -26,12 +34,9 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\actividades\helpers\PrefillPermActividadesFases;
-use function frontend\shared\helpers\is_true;
 use frontend\shared\FrontBootstrap;
 use src\permisos\domain\PermisosActividades;
 
-require_once __DIR__ . '/../helpers/actividades_support.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
@@ -40,16 +45,16 @@ $oPosicion = FrontBootstrap::boot();
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $gstackFromPost = filter_input(INPUT_POST, 'Gstack', FILTER_VALIDATE_INT);
 if (is_int($gstackFromPost) && $gstackFromPost > 0) {
-    list_nav_boot_actividad_select_child_recordar($oPosicion, $Qrefresh);
-    list_nav_persist_actividad_select_child_entry($oPosicion);
+    ListNavSupport::bootActividadSelectChildRecordar($oPosicion, $Qrefresh);
+    ListNavSupport::persistActividadSelectChildEntry($oPosicion);
 } else {
-    list_nav_boot_recordar($oPosicion, $Qrefresh);
-    list_nav_persist_recordar_entry($oPosicion, list_nav_build_return_parametros_from_post());
+    ListNavSupport::bootRecordar($oPosicion, $Qrefresh);
+    ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::buildReturnParametrosFromPost());
 }
 
-list_nav_persist_selection_to_posicion($oPosicion, 1);
+ListNavSupport::persistSelectionToPosicion($oPosicion, 1);
 
-$Qid_activ = actividades_id_activ_from_post();
+$Qid_activ = ActividadesPostInput::idActivFromPost();
 
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
@@ -64,7 +69,7 @@ $aQuery = array(
 array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
 $godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
-$permiso_des = actividades_perm_des();
+$permiso_des = ActividadesPermSupport::permDes();
 
 $alt = '';
 $dos = '';
@@ -105,13 +110,13 @@ if (!empty($Qid_activ)) { // caso de modificar
     $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
         'with_all' => 't',
     ]);
-    $a_status = actividades_status_labels_from_payload($labelsRow);
+    $a_status = ActividadesPayload::statusLabelsFromPayload($labelsRow);
 
     // Primera pasada: leemos solo la entidad para resolver permisos e isfsv.
     $dataEntidad = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
         'id_activ' => $Qid_activ,
     ]);
-    $entidad = actividades_entidad_from_ver_datos($dataEntidad);
+    $entidad = ActividadesPayload::entidadFromVerDatos($dataEntidad);
 
     $id_tipo_activ = $entidad['id_tipo_activ'];
     $dl_org = $entidad['dl_org'];
@@ -132,7 +137,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $plazas = $entidad['plazas'];
     $idioma = $entidad['idioma'];
 
-    $oPermActividades = actividades_o_perm_actividades();
+    $oPermActividades = ActividadesPermSupport::oPermActividades();
     if (!$oPermActividades instanceof PermisosActividades) {
         die();
     }
@@ -144,7 +149,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         die();
     }
 
-    $renderEntidad = actividades_ver_render_from_payload($dataEntidad);
+    $renderEntidad = ActividadesPayload::verRenderFromPayload($dataEntidad);
     $ssfsv = $renderEntidad['ssfsv'];
     $sasistentes = $renderEntidad['sasistentes'];
     $sactividad = $renderEntidad['sactividad'];
@@ -165,7 +170,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
         'with_all' => 'f',
     ]);
-    $a_status = actividades_status_labels_from_payload($labelsRow);
+    $a_status = ActividadesPayload::statusLabelsFromPayload($labelsRow);
     $dl_org = OrbixRuntime::miDelef();
     $status = ActividadStatusId::PROYECTO;
     $id_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
@@ -175,7 +180,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         $isfsv = (integer)substr($id_tipo_activ, 0, 1);
         $calc_tarifa_inicial = true;
     }
-    if (is_true($permiso_des)) {
+    if (FuncTablasSupport::isTrue($permiso_des)) {
         if (empty($id_tipo_activ)) {
             // valor por defecto. Si esta vacio dira que no tiene permiso.
             $id_tipo_activ = '1';
@@ -212,16 +217,16 @@ if (!empty($Qid_activ)) { // caso de modificar
             'id_tipo_activ' => $id_tipo_activ,
             'dl_propia' => 't',
         ]);
-        $crearPropia = actividades_permiso_crear_from_row($rowPropia);
+        $crearPropia = ActividadesPayload::permisoCrearFromRow($rowPropia);
         if (!empty($rowPropia['aviso'])) {
-            echo '<br>' . tessera_imprimir_string($rowPropia['aviso']);
+            echo '<br>' . PayloadCoercion::string($rowPropia['aviso']);
         }
         if ($crearPropia === null) {
             echo '<br>';
             die (_("No tiene permiso para crear una actividad de este tipo"));
         }
 
-        $oPerm = actividades_o_perm();
+        $oPerm = ActividadesPermSupport::oPerm();
         $of_responsable_txt = $crearPropia['of_responsable_txt'];
         if (!empty($of_responsable_txt) && $oPerm !== null && $oPerm->have_perm_oficina($of_responsable_txt)) {
             $Bdl = 't';
@@ -236,9 +241,9 @@ if (!empty($Qid_activ)) { // caso de modificar
                     'id_tipo_activ' => $id_tipo_activ,
                     'dl_propia' => 'f',
                 ]);
-                $crearEx = actividades_permiso_crear_from_row($rowEx);
+                $crearEx = ActividadesPayload::permisoCrearFromRow($rowEx);
                 if (!empty($rowEx['aviso'])) {
-                    echo '<br>' . tessera_imprimir_string($rowEx['aviso']);
+                    echo '<br>' . PayloadCoercion::string($rowEx['aviso']);
                 }
                 if ($crearEx === null) {
                     die (_("No tiene permiso para crear una actividad de este tipo"));
@@ -260,7 +265,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         $dataNivelDef = PostRequest::getDataFromUrl('/src/actividades/actividad_nivel_stgr_default_datos', [
             'id_tipo_activ' => $id_tipo_activ,
         ]);
-        $nivel_stgr = tessera_imprimir_int($dataNivelDef['nivel_stgr_default'] ?? 9);
+        $nivel_stgr = PayloadCoercion::int($dataNivelDef['nivel_stgr_default'] ?? 9);
     }
 
     // Pedir desplegables + tarifa inicial para el caso 'nuevo'.
@@ -282,7 +287,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     }
 }
 
-$renderForm = actividades_ver_render_from_payload($dataRender);
+$renderForm = ActividadesPayload::verRenderFromPayload($dataRender);
 $html_despl_dl_org = $renderForm['html_despl_dl_org'];
 $html_despl_tarifa = $renderForm['html_despl_tarifa'];
 $html_despl_nivel_stgr = $renderForm['html_despl_nivel_stgr'];
@@ -306,7 +311,7 @@ if (!empty($tarifa) && !empty($calc_tarifa_inicial)) {
         'id_tipo_activ' => $id_tipo_activ,
         'calc_tarifa_inicial' => 0,
     ]);
-    $renderTarifa = actividades_ver_render_from_payload($dataTarifa);
+    $renderTarifa = ActividadesPayload::verRenderFromPayload($dataTarifa);
     if ($renderTarifa['html_despl_tarifa'] !== '') {
         $html_despl_tarifa = $renderTarifa['html_despl_tarifa'];
     }
@@ -347,7 +352,7 @@ $dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_da
     'snom_tipo' => $snom_tipo,
     'extendida' => $extendida ? 't' : '',
 ]);
-$actividad_tipo_html = tessera_imprimir_string($dataTipoBloque['actividad_tipo_html'] ?? '');
+$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 

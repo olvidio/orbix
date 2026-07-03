@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\asistentes\helpers;
 
-require_once __DIR__ . '/asistentes_support.php';
-
-use function frontend\shared\helpers\payload_string;
-
+use frontend\shared\helpers\FuncTablasSupport;
+use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
@@ -31,14 +29,14 @@ final class FormAsistentesAUnaActividadRender
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
         $paths = isset($payload['paths']) && is_array($payload['paths']) ? $payload['paths'] : [];
 
-        $url_guardar = $base . '/' . ltrim(payload_string($paths, 'asistente_guardar'), '/');
-        $url_self = $base . '/' . ltrim(payload_string($paths, 'form_self'), '/');
+        $url_guardar = $base . '/' . ltrim(FuncTablasSupport::payloadString($paths, 'asistente_guardar'), '/');
+        $url_self = $base . '/' . ltrim(FuncTablasSupport::payloadString($paths, 'form_self'), '/');
 
         $plazas_installed = !empty($payload['plazas_installed']);
         $url_ajax = '';
         $h1 = '';
         if ($plazas_installed) {
-            $ajaxPath = payload_string($paths, 'posibles_propietarios_data');
+            $ajaxPath = FuncTablasSupport::payloadString($paths, 'posibles_propietarios_data');
             if ($ajaxPath !== '') {
                 $url_ajax = $base . '/' . ltrim($ajaxPath, '/');
                 $ajaxMeta = isset($payload['ajax_propietarios']) && is_array($payload['ajax_propietarios'])
@@ -46,20 +44,20 @@ final class FormAsistentesAUnaActividadRender
                     : [];
                 $oHash1 = new HashFront();
                 $oHash1->setUrl($url_ajax);
-                $oHash1->setCamposForm(payload_string($ajaxMeta, 'campos_form', 'id_activ!id_nom'));
+                $oHash1->setCamposForm(FuncTablasSupport::payloadString($ajaxMeta, 'campos_form', 'id_activ!id_nom'));
                 $h1 = $oHash1->linkSinValParams();
             }
         }
 
         $hashMain = isset($payload['hash_main']) && is_array($payload['hash_main']) ? $payload['hash_main'] : [];
         $oHash = new HashFront();
-        $oHash->setCamposForm(payload_string($hashMain, 'campos_form'));
-        $oHash->setCamposNo(payload_string($hashMain, 'campos_no'));
-        $hidden = asistentes_hash_campos_hidden($hashMain['campos_hidden'] ?? []);
+        $oHash->setCamposForm(FuncTablasSupport::payloadString($hashMain, 'campos_form'));
+        $oHash->setCamposNo(FuncTablasSupport::payloadString($hashMain, 'campos_no'));
+        $hidden = AsistentesRenderSupport::hashCamposHidden($hashMain['campos_hidden'] ?? []);
         $oHash->setArrayCamposHidden($hidden);
 
         $desplegable_personas_html = '';
-        $personasOpciones = notas_desplegable_opciones($payload['personas_opciones'] ?? []);
+        $personasOpciones = NotasFormSupport::desplegableOpciones($payload['personas_opciones'] ?? []);
         if ($personasOpciones !== []) {
             $oDespl = new Desplegable();
             $oDespl->setNombre('id_nom');
@@ -74,18 +72,18 @@ final class FormAsistentesAUnaActividadRender
         $desplegable_plaza_html = '';
         $desplegable_propietarios_html = '';
         if ($plazas_installed) {
-            $plazaOpciones = notas_desplegable_opciones($payload['plaza_opciones'] ?? []);
+            $plazaOpciones = NotasFormSupport::desplegableOpciones($payload['plaza_opciones'] ?? []);
             $oPlaza = new Desplegable();
             $oPlaza->setNombre('plaza');
             $oPlaza->setOpciones($plazaOpciones);
-            $oPlaza->setOpcion_sel(payload_string($payload, 'plaza_selected'));
+            $oPlaza->setOpcion_sel(FuncTablasSupport::payloadString($payload, 'plaza_selected'));
             $desplegable_plaza_html = $oPlaza->desplegable();
 
-            $propOpciones = notas_desplegable_opciones($payload['propietario_opciones'] ?? []);
+            $propOpciones = NotasFormSupport::desplegableOpciones($payload['propietario_opciones'] ?? []);
             $oProp = new Desplegable();
             $oProp->setNombre('propietario');
             $oProp->setOpciones($propOpciones);
-            $oProp->setOpcion_sel(payload_string($payload, 'propietario_selected'));
+            $oProp->setOpcion_sel(FuncTablasSupport::payloadString($payload, 'propietario_selected'));
             if (!empty($payload['propietario_select_blanco'])) {
                 $oProp->setBlanco(true);
             }

@@ -1,4 +1,7 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
+
 /**
  * Endpoint backend: devuelve el listado de actividades del tipo + periodo
  * elegidos junto con los sacd encargados y los flags de permiso.
@@ -7,14 +10,12 @@
 use src\actividadessacd\application\ListaActividadesSacdData;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_string;
-
 $input = [
-    'tipo' => input_string($_POST, 'tipo'),
-    'year' => input_string($_POST, 'year'),
-    'periodo' => input_string($_POST, 'periodo'),
-    'empiezamin' => input_string($_POST, 'empiezamin'),
-    'empiezamax' => input_string($_POST, 'empiezamax'),
+    'tipo' => FuncTablasSupport::inputString($_POST, 'tipo'),
+    'year' => FuncTablasSupport::inputString($_POST, 'year'),
+    'periodo' => FuncTablasSupport::inputString($_POST, 'periodo'),
+    'empiezamin' => FuncTablasSupport::inputString($_POST, 'empiezamin'),
+    'empiezamax' => FuncTablasSupport::inputString($_POST, 'empiezamax'),
 ];
 
 /** @var ListaActividadesSacdData $useCase */

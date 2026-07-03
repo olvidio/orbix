@@ -1,7 +1,7 @@
 <?php
-
 namespace frontend\planning\controller;
 
+use frontend\planning\helpers\PlanningPayload;
 use frontend\planning\support\PeriodoPlanningHelper;
 use frontend\shared\PostRequest;
 use frontend\shared\config\OrbixRuntime;
@@ -9,9 +9,9 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\CasasQue;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
-use function frontend\shared\helpers\is_true;
-use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\FuncTablasSupport;
 
 /**
  * Formulario de filtros para el planning por casas (se selecciona el
@@ -23,9 +23,7 @@ use frontend\shared\FrontBootstrap;
  * Migrado desde `apps/planning/controller/planning_casa_que.php`
  * (slice 2 de la migracion del modulo planning).
  */
-require_once __DIR__ . '/../helpers/planning_support.php';
 require_once 'frontend/shared/FrontBootstrap.php';
-require_once __DIR__ . '/../../shared/helpers/list_nav_support.php';
 $oPosicion = FrontBootstrap::boot();
 /** @var Posicion $oPosicion */
 if (isset($_POST['stack'])) {
@@ -37,13 +35,13 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-list_nav_boot_recordar($oPosicion);
-list_nav_persist_recordar_entry($oPosicion, list_nav_merge_selection_into_return_parametros(list_nav_build_return_parametros_from_post(), list_nav_id_sel_from_post(), list_nav_scroll_id_from_post()));
+ListNavSupport::bootRecordar($oPosicion);
+ListNavSupport::persistRecordarEntry($oPosicion, ListNavSupport::mergeSelectionIntoReturnParametros(ListNavSupport::buildReturnParametrosFromPost(), ListNavSupport::idSelFromPost(), ListNavSupport::scrollIdFromPost()));
 
 
 
 $queCasasPayload = PostRequest::getDataFromUrl('/src/planning/planning_casa_que_data', []);
-$casaQue = planning_casa_que_from_payload($queCasasPayload);
+$casaQue = PlanningPayload::casaQueFromPayload($queCasasPayload);
 $filtroCasasQue = $casaQue['filtro'];
 $modoCasasQue = $casaQue['modo_casas'];
 
@@ -59,7 +57,7 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $QsSeleccionados = (string)filter_input(INPUT_POST, 'sSeleccionados');
 
-if ($Qyear === 0 && is_true($Qpropuesta_calendario)) {
+if ($Qyear === 0 && FuncTablasSupport::isTrue($Qpropuesta_calendario)) {
     $Qyear = (int) date('Y') + 1;
 }
 
@@ -73,7 +71,7 @@ $oHash->setArraycamposHidden([
 $oFormP = PeriodoPlanningHelper::formPeriodo($Qperiodo, $Qyear, $Qempiezamin, $Qempiezamax);
 
 $oForm = new CasasQue();
-$oForm->setTitulo(strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
+$oForm->setTitulo(FuncTablasSupport::strtoupperDlb(_("búsqueda de casas cuyo planning interesa")));
 
 $oForm->setFiltroCasas($filtroCasasQue);
 $oForm->setCasas($modoCasasQue);

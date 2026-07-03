@@ -1,4 +1,6 @@
 <?php
+
+use src\shared\domain\helpers\FuncTablasSupport;
 /*
  * Se queda en la capa de infraestructura porque ataca directamente a la base de datos !!!!
  */
@@ -9,18 +11,15 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\web\ContestarJson;
-use function src\shared\domain\helpers\input_string;
-use function src\shared\domain\helpers\is_true;
-
-$Qnombre = input_string($_POST, 'nombre');
-$Qsobreescribir = input_string($_POST, 'sobreescribir');
+$Qnombre = FuncTablasSupport::inputString($_POST, 'nombre');
+$Qsobreescribir = FuncTablasSupport::inputString($_POST, 'sobreescribir');
 
 $error_txt = '';
 
 /** @var TemplateMenuRepositoryInterface $TemplateMenuRepository */
 $TemplateMenuRepository = DependencyResolver::get(TemplateMenuRepositoryInterface::class);
 $oTemplateMenu = $TemplateMenuRepository->findByName($Qnombre);
-if ($oTemplateMenu !== null && !is_true($Qsobreescribir)) {
+if ($oTemplateMenu !== null && !FuncTablasSupport::isTrue($Qsobreescribir)) {
     ContestarJson::enviar('ya existe', 'ok');
     exit();
 }

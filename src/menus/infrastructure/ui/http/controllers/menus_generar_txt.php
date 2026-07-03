@@ -1,5 +1,6 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+
 /**
  * Esta página genera un fichero con todos los textos de los menús que hay en la base de datos,
  * para poder traducirlos por gettex
