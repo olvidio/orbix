@@ -3,13 +3,6 @@
 namespace src\personas\domain;
 
 use PDO;
-use src\shared\infrastructure\persistence\ConfigDB;
-use src\shared\config\ConfigGlobal;
-use src\shared\infrastructure\persistence\DBConnection;
-use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
-use src\notas\application\EditarPersonaNota;
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
-use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -21,20 +14,22 @@ use src\certificados\domain\entity\CertificadoEmitido;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\notas\application\EditarPersonaNota;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
+use src\personas\domain\contracts\TrasladoRepositoryInterface;
 use src\personas\domain\entity\PersonaAgd;
 use src\personas\domain\entity\PersonaN;
 use src\personas\domain\entity\PersonaNax;
 use src\personas\domain\entity\PersonaS;
 use src\personas\domain\entity\PersonaSSSC;
-use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
-use src\personas\domain\contracts\TrasladoRepositoryInterface;
 use src\personas\domain\entity\Traslado;
 use src\personas\domain\value_objects\SituacionCode;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
@@ -46,11 +41,16 @@ use src\profesores\domain\contracts\ProfesorLatinRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorPublicacionRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTituloEstRepositoryInterface;
+use src\shared\config\ConfigGlobal;
 use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\GlobalPdo;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\ubis\application\services\DelegacionUtils;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use src\shared\infrastructure\GlobalPdo;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 
 class Trasladar
@@ -74,13 +74,14 @@ class Trasladar
     private PDO $oDBR;
 
     public function __construct(
-        private DelegacionRepositoryInterface $delegacionRepository,
-        private AsignaturaRepositoryInterface $asignaturaRepository,
-        private ActividadAllRepositoryInterface $actividadAllRepository,
-        private TipoDossierRepositoryInterface $tipoDossierRepository,
+        private DelegacionRepositoryInterface         $delegacionRepository,
+        private AsignaturaRepositoryInterface         $asignaturaRepository,
+        private ActividadAllRepositoryInterface       $actividadAllRepository,
+        private TipoDossierRepositoryInterface        $tipoDossierRepository,
         private CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository,
-        private ConnectionRepositoryFactoryInterface $connectionRepositoryFactory,
-    ) {
+        private ConnectionRepositoryFactoryInterface  $connectionRepositoryFactory,
+    )
+    {
         $this->oDBR = GlobalPdo::get('oDBR');
     }
 
@@ -640,8 +641,9 @@ class Trasladar
      */
     private function guardarPersonaTraslado(
         PersonaNRepositoryInterface|PersonaAgdRepositoryInterface|PersonaNaxRepositoryInterface|PersonaSRepositoryInterface|PersonaSSSCRepositoryInterface $repository,
-        PersonaN|PersonaAgd|PersonaNax|PersonaS|PersonaSSSC $persona,
-    ): bool {
+        PersonaN|PersonaAgd|PersonaNax|PersonaS|PersonaSSSC                                                                                                $persona,
+    ): bool
+    {
         if ($repository instanceof PersonaNRepositoryInterface && $persona instanceof PersonaN) {
             return $repository->Guardar($persona);
         }
@@ -1123,7 +1125,7 @@ class Trasladar
 
         $certificadoRecibidoRepository = $this->repositoryWithConnection(CertificadoRecibidoRepositoryInterface::class, $oDBdst);
         $newId_item = $certificadoRecibidoRepository->getNewId_item();
-        $CertificadoRecibido->setId_item(is_numeric($newId_item) ? (int) $newId_item : 0);
+        $CertificadoRecibido->setId_item(is_numeric($newId_item) ? (int)$newId_item : 0);
         if ($certificadoRecibidoRepository->Guardar($CertificadoRecibido) === FALSE) {
             $error .= $certificadoRecibidoRepository->getErrorTxt();
         }
@@ -1157,7 +1159,7 @@ class Trasladar
 
         $certificadoRecibidoRepository = $this->repositoryWithConnection(CertificadoRecibidoRepositoryInterface::class, $oDBdst);
         $newId_item = $certificadoRecibidoRepository->getNewId_item();
-        $CertificadoRecibido->setId_item(is_numeric($newId_item) ? (int) $newId_item : 0);
+        $CertificadoRecibido->setId_item(is_numeric($newId_item) ? (int)$newId_item : 0);
         if ($certificadoRecibidoRepository->Guardar($CertificadoRecibido) === FALSE) {
             $error .= $certificadoRecibidoRepository->getErrorTxt();
         }
@@ -1233,6 +1235,7 @@ class Trasladar
             if (!is_object($Objeto)) {
                 continue;
             }
+            $ObjetoOrg = clone $Objeto;
             if (method_exists($Objeto, 'setId_item') && method_exists($repo_dst, 'getNewId')) {
                 $newIdMethod = new \ReflectionMethod($repo_dst, 'getNewId');
                 $newId = $newIdMethod->invoke($repo_dst);
@@ -1250,7 +1253,17 @@ class Trasladar
             }
             if ($class !== 'Traslado' && method_exists($repo, 'Eliminar')) {
                 $eliminarMethod = new \ReflectionMethod($repo, 'Eliminar');
-                $eliminarMethod->invoke($repo, $Objeto);
+                $eliminarMethod->invoke($repo, $ObjetoOrg);
+            }
+            if ($class === 'Traslado' && method_exists($repo, 'Eliminar')) {
+                // solamente gurado el último, para saber donde ha ido.
+                $oF_traslado = $Objeto->getF_traslado();
+                $hoy = new DateTimeLocal();
+                //solamente comparo el dia, no la hora
+                if ($oF_traslado->format('Y-m-d') < $hoy->format('Y-m-d')) {
+                    $eliminarMethod = new \ReflectionMethod($repo, 'Eliminar');
+                    $eliminarMethod->invoke($repo, $ObjetoOrg);
+                }
             }
         }
 

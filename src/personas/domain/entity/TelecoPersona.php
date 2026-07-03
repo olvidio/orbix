@@ -133,10 +133,9 @@ class TelecoPersona
     // la conversión a texto debe realizarse en la capa repositorio de descripciones.
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    /** @return array<string, string> */
-    public function getPrimary_key(): array
+    public function getPrimary_key(): string
     {
-        return ['id_item' => (string)$this->id_item];
+        return 'id_item';
     }
 
     /** @return list<DatosCampo> */

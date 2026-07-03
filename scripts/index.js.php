@@ -505,8 +505,20 @@ if (!isset($h)) {
         }
     }
 
+    function fnjs_normalizar_bloque(bloque) {
+        if (!bloque) {
+            return '#main';
+        }
+        bloque = String(bloque).trim();
+        while (bloque.charAt(0) === '#') {
+            bloque = bloque.substring(1);
+        }
+        return bloque === '' ? '#main' : '#' + bloque;
+    }
+
     function fnjs_mostrar_atras(id_div, htmlForm) {
         fnjs_borrar_posibles_atras();
+        id_div = fnjs_normalizar_bloque(id_div);
         var name_div = id_div.substring(1);
 
         if ($(id_div).length) {
@@ -585,6 +597,9 @@ if (!isset($h)) {
     }
 
     function fnjs_ir_a(id_div) {
+        if (id_div && typeof id_div === 'string') {
+            id_div = fnjs_normalizar_bloque(id_div);
+        }
         var $target = (id_div && id_div.jquery) ? id_div : $(id_div);
         if (!$target.length) {
             return false;
@@ -606,6 +621,7 @@ if (!isset($h)) {
         var url = $target.find("[name='url']").val();
         var parametros = $target.find("[name='parametros']").val();
         var bloque = $target.find("[name='id_div']").val();
+        bloque = fnjs_normalizar_bloque(bloque);
 
         fnjs_left_side_hide();
 
@@ -683,6 +699,7 @@ if (!isset($h)) {
     }
 
     function fnjs_update_div(bloque, ref, mantener_atras = 0) {
+        bloque = fnjs_normalizar_bloque(bloque);
         if (bloque === '#main') {
             fnjs_guardar_estado();
         }

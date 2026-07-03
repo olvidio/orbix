@@ -225,14 +225,50 @@ abstract class DatosInfoRepo
                 break;
             case 'eliminar':
             case 'editar':
-                if (!empty($this->a_pkey)) {
+                $findByIdArgs = $this->resolveFindByIdArguments($this->a_pkey);
+                if ($findByIdArgs !== []) {
                     /** @var DatosFichaInterface|null $oFicha */
-                    $oFicha = $oRepository->findById($this->a_pkey);
+                    $oFicha = $oRepository->findById(...$findByIdArgs);
                 }
                 break;
         }
 
         return $oFicha;
+    }
+
+    /**
+     * Convierte a_pkey (escalar, array o stdClass desde json_decode) en argumentos para findById().
+     *
+     * @return list<mixed>
+     */
+    private function resolveFindByIdArguments(mixed $a_pkey): array
+    {
+        if ($a_pkey === null || $a_pkey === '' || $a_pkey === []) {
+            return [];
+        }
+        if (is_object($a_pkey)) {
+            $a_pkey = (array) $a_pkey;
+        }
+        if (is_array($a_pkey)) {
+            return array_map(
+                fn (mixed $value): mixed => $this->normalizePkeyScalar($value),
+                array_values($a_pkey)
+            );
+        }
+
+        return [$this->normalizePkeyScalar($a_pkey)];
+    }
+
+    private function normalizePkeyScalar(mixed $value): mixed
+    {
+        if (is_object($value) && method_exists($value, 'value')) {
+            $value = $value->value();
+        }
+        if (is_string($value) && preg_match('/^-?\d+$/', $value) === 1) {
+            return (int) $value;
+        }
+
+        return $value;
     }
 
     public function getOpcionesParaCondicion(

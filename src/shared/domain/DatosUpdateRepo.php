@@ -111,7 +111,7 @@ class DatosUpdateRepo
         }
 
         $primaryKey = $ficha->getPrimary_key();
-        $pkName = is_string($primaryKey) ? $primaryKey : '';
+        $pkName = is_array($primaryKey) ? (string) array_key_first($primaryKey) : $primaryKey;
         $pks1 = 'set' . ucfirst($pkName);
         $ficha->$pks1($new_id);
 

@@ -55,11 +55,34 @@ class Posicion
      * @param array<string, mixed> $raw
      * @return PositionEntry
      */
+    private static function normalizeBloqueSelector(string $bloque): string
+    {
+        $bloque = ltrim(trim($bloque), '#');
+
+        return $bloque === '' ? '#main' : '#' . $bloque;
+    }
+
+    private static function normalizeDomId(string $id): string
+    {
+        return ltrim(trim($id), '#');
+    }
+
+    private static function resolveBloqueFromEntry(string $sbloque, array $aParam): string
+    {
+        if (!empty($aParam['bloque']) && is_string($aParam['bloque'])) {
+            return self::normalizeBloqueSelector($aParam['bloque']);
+        }
+
+        return self::normalizeBloqueSelector($sbloque);
+    }
+
     private static function normalizeEntry(array $raw, int $stackKey): array
     {
+        $bloque = isset($raw['bloque']) && is_string($raw['bloque']) ? $raw['bloque'] : '';
+
         return [
             'url' => isset($raw['url']) && is_string($raw['url']) ? $raw['url'] : '',
-            'bloque' => isset($raw['bloque']) && is_string($raw['bloque']) ? $raw['bloque'] : '',
+            'bloque' => self::normalizeBloqueSelector($bloque),
             'parametros' => isset($raw['parametros']) && is_array($raw['parametros']) ? $raw['parametros'] : [],
             'stack' => isset($raw['stack']) && is_numeric($raw['stack']) ? (int) $raw['stack'] : $stackKey,
         ];
@@ -227,16 +250,13 @@ class Posicion
         if ($this->surl === '') {
             return '';
         }
-        $id_div = $this->getId_div();
+        $id_div = self::normalizeDomId($this->getId_div());
         $id_div = $id_div === '' ? 'go_atras' : $id_div;
 
         $url = $this->surl;
         $aParam = $this->aParametros;
-        if (!empty($aParam['bloque']) && is_string($aParam['bloque'])) {
-            $this->sbloque = '#' . $aParam['bloque'];
-        }
         $sparametros = HashFront::add_hash($aParam, $url);
-        $bloque = $this->sbloque;
+        $bloque = self::resolveBloqueFromEntry($this->sbloque, $aParam);
 
         $html = '<div id="' . $id_div . '" style="display: none;">';
         $html .= '	<form id="go">';
@@ -255,13 +275,13 @@ class Posicion
         if ($this->surl === '') {
             return '';
         }
-        $id_div = $this->getId_div();
+        $id_div = self::normalizeDomId($this->getId_div());
         $id_div = $id_div === '' ? 'js_atras' : $id_div;
 
         $url = $this->surl;
         $aParam = $this->aParametros;
         $sparametros = HashFront::add_hash($aParam, $url);
-        $bloque = $this->sbloque;
+        $bloque = self::normalizeBloqueSelector($this->sbloque);
 
         $html = '<form id="go">';
         $html .= '	<input name="url" type="text" value="' . $url . '" size=70><br>';
@@ -270,7 +290,7 @@ class Posicion
         $html .= '</form>';
 
         $this->goEnd();
-        return "fnjs_mostrar_atras('#$id_div','$html');";
+        return "fnjs_mostrar_atras('#" . $id_div . "','$html');";
     }
 
     public function mostrar_left_slide(int $n = 0): string
@@ -279,16 +299,13 @@ class Posicion
         if ($this->surl === '') {
             return '';
         }
-        $id_div = $this->getId_div();
+        $id_div = self::normalizeDomId($this->getId_div());
         $id_div = $id_div === '' ? 'ir_atras' : $id_div;
 
         $url = $this->surl;
         $aParam = $this->aParametros;
-        if (!empty($aParam['bloque']) && is_string($aParam['bloque'])) {
-            $this->sbloque = '#' . $aParam['bloque'];
-        }
         $sparametros = HashFront::add_hash($aParam, $url);
-        $bloque = $this->sbloque;
+        $bloque = self::resolveBloqueFromEntry($this->sbloque, $aParam);
 
         $html = '<div id="' . $id_div . '" style="display: none;">';
         $html .= '	<form id="go">';
@@ -308,13 +325,13 @@ class Posicion
         if ($this->surl === '') {
             return '';
         }
-        $id_div = $this->getId_div();
+        $id_div = self::normalizeDomId($this->getId_div());
         $id_div = $id_div === '' ? 'ir_atras2' : $id_div;
 
         $url = $this->surl;
         $aParam = $this->aParametros;
         $sparametros = HashFront::add_hash($aParam, $url);
-        $bloque = $this->sbloque;
+        $bloque = self::normalizeBloqueSelector($this->sbloque);
 
         $html = '<div id="' . $id_div . '" style="display: none;">';
         $html .= '<form id="go">';
@@ -323,7 +340,7 @@ class Posicion
         $html .= '	<input name="id_div" type="hidden" value="' . $bloque . '" size=70>';
         $html .= '</form>';
         $html .= '</div>';
-        $html .= "<img onclick=fnjs_ir_a('#$id_div') src=" . OrbixRuntime::getWebIcons() . '/flechas/left.gif border=0 height=40>';
+        $html .= "<img onclick=fnjs_ir_a('#" . $id_div . "') src=" . OrbixRuntime::getWebIcons() . '/flechas/left.gif border=0 height=40>';
 
         $this->goEnd();
         return $html;
@@ -366,7 +383,7 @@ class Posicion
 
     public function setBloque(string $bloque): void
     {
-        $this->sbloque = $bloque;
+        $this->sbloque = self::normalizeBloqueSelector($bloque);
     }
 
     public function getBloque(): string

@@ -167,9 +167,13 @@ class DatosTablaRepo
         foreach ($coleccion as $oFila) {
             $v = 0;
             $primaryKey = $oFila->getPrimary_key();
-            $pkName = is_string($primaryKey) ? $primaryKey : '';
-            $pks1 = 'get' . ucfirst($pkName);
-            $val_pks = $oFila->$pks1();
+            if (is_array($primaryKey)) {
+                $val_pks = $primaryKey;
+            } else {
+                $pks1 = 'get' . ucfirst($primaryKey);
+                $val_pks = $oFila->$pks1();
+            }
+            $val_pks = $this->normalizePkeyForEncode($val_pks);
             $pks = urlsafe_b64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
             /** @var array<string, mixed> $filaValores */
             $filaValores = ['sel' => $pks];
@@ -403,5 +407,28 @@ class DatosTablaRepo
     public function setA_valores(?array $a_valores): void
     {
         $this->a_valores = $a_valores;
+    }
+
+    private function normalizePkeyForEncode(mixed $val_pks): mixed
+    {
+        if (!is_array($val_pks)) {
+            return $this->normalizePkeyScalarForEncode($val_pks);
+        }
+
+        $normalized = [];
+        foreach ($val_pks as $key => $value) {
+            $normalized[$key] = $this->normalizePkeyScalarForEncode($value);
+        }
+
+        return $normalized;
+    }
+
+    private function normalizePkeyScalarForEncode(mixed $value): mixed
+    {
+        if (is_object($value) && method_exists($value, 'value')) {
+            return $value->value();
+        }
+
+        return $value;
     }
 }
